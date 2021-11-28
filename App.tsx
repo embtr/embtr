@@ -1,16 +1,19 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Linking } from 'react-native';
 import tailwind from 'tailwind-rn';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Welcome to embtr. Coming Soon! Follow our progress on <a href="https:www.twitter.com/_embtr">
-        <Text style={tailwind('underline text-blue-600 hover:text-blue-800 visited:text-purple-600')}>
-          Twitter 👋
-        </Text>
-        </a>.
+      <Text style={tailwind('text-center')}>
+        Welcome to embtr.
+        {"\n"}
+        {"\n"}
+        Coming Soon! Follow our progress on{" "}
+        <Text style={tailwind('underline text-blue-600')} onPress={() => Linking.openURL('http://google.com')}>
+          Twitter 🐦
+        </Text>.
       </Text>
       <StatusBar style="auto" />
     </View>
