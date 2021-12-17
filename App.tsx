@@ -1,32 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View, Linking } from 'react-native';
-import tailwind from 'tailwind-rn';
+import { useColorScheme } from 'react-native-appearance';
+import { ThemeProvider, Button } from 'react-native-elements';
 
-const TWITTER_LINK = "https://www.twitter.com/_embtr"
+const theme = {
+  Button: {
+    titleStyle: {
+      color: 'red',
+    },
+  },
+};
 
 export default function App() {
+    let colorScheme = useColorScheme();
   return (
-    <View style={styles.container}>
-      <Text style={tailwind('text-center')}>
-        Welcome to embtr.
-        {"\n"}
-        {"\n"}
-        Coming Soon! Follow our progress on{" "}
-        <Text style={tailwind('underline text-blue-600')} onPress={() => Linking.openURL(TWITTER_LINK)}>
-          Twitter 🐦
-        </Text>.
-      </Text>
-      <StatusBar style="auto" />
-    </View>
+    <ThemeProvider useDark={true} theme={theme}>
+      <Button title="My Button" titleStyle={{ color: 'pink' }} />
+    </ThemeProvider>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
