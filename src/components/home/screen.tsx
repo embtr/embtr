@@ -16,6 +16,7 @@ export const Screen = (props: { children: any; }) => {
             <View style={{
                 flex: 1,
                 alignItems: 'center',
+                overflow: 'scroll',
                 /* 
                 * the colors.background value will change dynamicly with
                 * so if we wanna change its value we can go directly to the pallet
