@@ -49,7 +49,7 @@ export const Home = () => {
             </View>
 
             <View style={[logoViewStyle, { flex: 2 }]}>
-                <Image source={require('../../../src/assets/logo.png')} style={{ width: 200, height: 200 }} />
+                <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
             </View>
 
             <View style={[textViewStyle, {alignContent: "center", alignItems: "center"}, { flex: 3 }]}>
