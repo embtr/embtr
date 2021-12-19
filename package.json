@@ -1,6 +1,6 @@
 {
   "name": "embtr",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -12,12 +12,13 @@
     "deploy-hosting": "npm run predeploy && firebase deploy --only hosting"
   },
   "dependencies": {
+    "@unimodules/react-native-adapter": "^6.3.9",
     "expo": "~43.0.2",
     "expo-cli": "^4.13.0",
     "expo-status-bar": "~1.1.0",
-    "react": "17.0.1",
+    "react": "^17.0.1",
     "react-dom": "17.0.1",
-    "react-native": "0.64.3",
+    "react-native": "^0.64.3",
     "react-native-appearance": "^0.3.4",
     "react-native-elements": "^3.4.2",
     "react-native-web": "0.17.1",
@@ -28,8 +29,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@types/react": "~17.0.21",
-    "@types/react-native": "~0.64.12",
+    "@types/react": "^17.0.21",
+    "@types/react-native": "^0.66.9",
     "typescript": "~4.3.5"
   },
   "private": true

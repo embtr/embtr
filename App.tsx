@@ -1,11 +1,9 @@
 import React from 'react';
 import { StyleSheet } from 'react-native'
 import { AppearanceProvider } from 'react-native-appearance';
-import { Message } from './src/components/home/message';
 import { Screen } from './src/components/home/screen';
 import { ThemeProvider } from './src/components/theme/ThemeProvider';
-import { Logo } from './src/components/home/logo';
-import { Switchh } from './src/components/home/switch';
+import { Home } from './src/components/home/home';
 
 const styles = StyleSheet.create({
     box: {
@@ -23,15 +21,13 @@ export default function App() {
 
     return (
         <React.StrictMode>
-        <AppearanceProvider>
-            <ThemeProvider>
-                <Screen>
-                    <Logo />
-                    <Switchh />
-                    <Message />
-                </Screen>
-            </ThemeProvider>
-        </AppearanceProvider>
+            <AppearanceProvider>
+                <ThemeProvider>
+                    <Screen>
+                        <Home />
+                    </Screen>
+                </ThemeProvider>
+            </AppearanceProvider>
         </React.StrictMode>
     );
 };

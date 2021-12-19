@@ -4,9 +4,9 @@
     "slug": "embtr",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "src/assets/logo.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "src/assets/logo.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,13 +17,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.brentryczak.embtr",
+      "userInterfaceStyle": "automatic"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "foregroundImage": "src/assets/logo.png",
+        "backgroundColor": "#FFFFFF"       
+      },
+      "userInterfaceStyle": "automatic"
     },
     "web": {
       "favicon": "src/assets/favicon.png"
