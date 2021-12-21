@@ -1,13 +1,12 @@
 import React from 'react';
 import { View, StatusBar } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const Screen = (props: { children: any; }) => {
     const { children } = props;
 
     // Using the custom hook we made to pull the theme colors
     const { colors, isDark } = useTheme();
-
 
     return (
         <>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Switch } from 'react-native';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 
 export const ThemeToggle = () => {
