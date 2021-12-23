@@ -4,7 +4,10 @@
     "paths": {
       "src/*": [
         "./src/*"
-      ]
+      ],
+      "assets/*": [
+        "./assets/*"
+      ],
     },
     "target": "es6",
     "lib": [

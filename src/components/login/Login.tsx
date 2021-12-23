@@ -1,6 +1,7 @@
 import React from "react";
 import { View, ViewStyle } from "react-native";
-import LoginScreen from "./GoogleSignIn";
+import { Screen } from 'src/components/common/screen';
+import GoogleSignIn from "src/components/login/GoogleSignIn";
 
 const container = {
     flex: 1,
@@ -10,8 +11,11 @@ const container = {
 
 export const Login = () => {
     return (
-        <View style={container}>
-            <LoginScreen />
-        </View>
+        <Screen>
+            <View style={container}>
+                <GoogleSignIn />
+            </View>
+        </Screen>
+
     )
 };
