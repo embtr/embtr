@@ -1,17 +1,11 @@
 import * as React from 'react';
-import { Text, TextStyle, Image, TouchableOpacity, View, ViewStyle, Platform } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { Text, TextStyle, Image, View, ViewStyle, Platform } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
-import { useNavigation } from '@react-navigation/native';
 import GoogleSignIn from 'src/components/login/GoogleSignIn';
-
-type homeScreenProps = StackNavigationProp<RootStackParamList, 'Home'>;
 
 export const Home = () => {
     const { colors } = useTheme();
-    const navigation = useNavigation<homeScreenProps>();
 
     const headerTextStyle = {
         fontSize: 30,
@@ -37,17 +31,6 @@ export const Home = () => {
 
     const textViewStyle = {
         width: Platform.OS === "web" ? "60%" : "100%"
-    } as ViewStyle;
-
-    const containerStyle = {
-        margin: 24,
-        padding: 12,
-        width: 200,
-        borderRadius: 4,
-        borderWidth: 2,
-        borderColor: colors.primary,
-        alignContent: "center",
-        alignItems: "center"
     } as ViewStyle;
 
     return (
