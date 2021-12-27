@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { Text, TextStyle, View } from 'react-native';
+import { Button, Text, TextStyle, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Screen } from 'src/components/common/screen';
+import { useAppDispatch } from 'src/redux/hooks';
+import { clearUser, setUser } from 'src/redux/user/UserSlice';
 
 function HomeScreen() {
     const { colors } = useTheme();
@@ -26,12 +28,14 @@ function ProfileScreen() {
         fontSize: 18,
         color: colors.text,
     } as TextStyle;
-    
+
+    const dispatch = useAppDispatch();
 
     return (
         <Screen>
             <View style={{flex: 1, justifyContent: 'center'}}>
                 <Text style={textStyle}>Profile!</Text>
+                <Button title='logout' onPress={() => {dispatch(clearUser());}}></Button>
             </View>
         </Screen>
     );
