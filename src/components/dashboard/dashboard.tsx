@@ -1,18 +1,51 @@
 import * as React from 'react';
-import { useAppDispatch } from "src/redux/hooks";
-import { clearUser } from "src/redux/user/UserSlice";
+import { Text, TextStyle, View } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import { Screen } from 'src/components/common/screen';
 
-export const Dashboard = () => {
-    const dispatch = useAppDispatch();
-
-    const onLogout = () => {
-        dispatch(clearUser());
-        alert("You have successfully logged out.");
-    }
+function HomeScreen() {
+    const { colors } = useTheme();
+    const textStyle = {
+        fontSize: 18,
+        color: colors.text,
+    } as TextStyle;
 
     return (
-        <div>
-            dashboard !
-        </div>
-    )
-};
+        <Screen>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text style={textStyle}>Home!</Text>
+            </View>
+        </Screen>
+    );
+}
+
+function ProfileScreen() {
+    const { colors } = useTheme();
+    const textStyle = {
+        fontSize: 18,
+        color: colors.text,
+    } as TextStyle;
+    
+
+    return (
+        <Screen>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text style={textStyle}>Profile!</Text>
+            </View>
+        </Screen>
+    );
+}
+
+const Tab = createBottomTabNavigator();
+
+export const Dashboard = () => {
+    const { colors } = useTheme();
+
+    return (
+        <Tab.Navigator screenOptions={{ headerShown: false, tabBarStyle:{backgroundColor: colors.background}} }>
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Profile" component={ProfileScreen} />
+        </Tab.Navigator>
+    );
+}
