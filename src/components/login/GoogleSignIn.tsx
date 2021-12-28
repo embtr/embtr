@@ -5,7 +5,6 @@ import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image } from 'react
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useAppDispatch } from 'src/redux/hooks';
 import { createUserObject, setUser } from "src/redux/user/UserSlice";
-import { useNavigation } from '@react-navigation/native';
 
 WebBrowser.maybeCompleteAuthSession();
 
