@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Text, TextStyle, Image, View, ViewStyle, Platform } from 'react-native';
+import { Text, TextStyle, Image, View, ViewStyle } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import GoogleSignIn from 'src/components/login/GoogleSignIn';
+import { isBrowser, isMobile } from 'react-device-detect';
 
 export const Home = () => {
     const { colors } = useTheme();
@@ -30,7 +31,7 @@ export const Home = () => {
     } as TextStyle;
 
     const textViewStyle = {
-        width: Platform.OS === "web" ? "60%" : "100%"
+        width: isBrowser && !isMobile ? "60%" : "100%"
     } as ViewStyle;
 
     return (
