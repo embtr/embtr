@@ -10,7 +10,7 @@ export const lightColors = {
   // Dark theme colors
   export const darkColors = {
     background: '#121212',
-    background_secondary: '#171717',
+    background_secondary: '#1A1A1A',
     primary: '#B39DDB',
     text: '#FFFFFF',
     error: '#EF9A9A',

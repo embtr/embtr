@@ -6,6 +6,7 @@ import { Screen } from 'src/components/common/screen';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import { clearUser, getUser } from 'src/redux/user/UserSlice';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ThemeToggle } from 'src/components/theme/themeToggle';
 
 function HomeScreen() {
     const { colors } = useTheme();
@@ -36,18 +37,19 @@ function ProfileScreen() {
     return (
         <Screen>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <View style={{ flex: 4 }} />
-
-                <View style={{ flex: 4, justifyContent: 'center', alignItems: 'center' }}>
+                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
                     <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: user.profileUrl }} />
                     <Text style={textStyle}>{user.firstName + " " + user.lastName}</Text>
                     <Text style={textStyle}>{user.email}</Text>
                 </View>
-                <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
+
+                <View style={{ flex: 2 }}>
+                    <ThemeToggle />
+                </View>
+
+                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
                     <Button title='logout' onPress={() => { dispatch(clearUser()); }}></Button>
                 </View>
-                <View style={{ flex: 4 }} />
-
             </View>
         </Screen>
     );

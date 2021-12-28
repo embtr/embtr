@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Switch } from 'react-native';
+import { Switch } from 'react-native-switch';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { darkColors, lightColors } from 'src/theme/colorThemes';
 
 
 export const ThemeToggle = () => {
@@ -11,6 +12,6 @@ export const ThemeToggle = () => {
     }
 
     return (
-        <Switch value={isDark} onValueChange={toggleScheme} />
+        <Switch backgroundActive={darkColors.background_secondary} backgroundInactive={lightColors.background_secondary} activeText='🌚' inActiveText='☀️' value={isDark} onValueChange={toggleScheme} />
     );
 }
