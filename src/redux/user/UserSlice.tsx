@@ -2,15 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/redux/store";
 
 const INVALID_USER: User = {
-    firstName: undefined,
-    lastName: undefined,
+    uid: undefined,
+    displayName: undefined,
     email: undefined,
     profileUrl: undefined
 };
 
 export interface User {
-    firstName?: string,
-    lastName?: string,
+    uid?: string,
+    displayName?: string,
     email?: string,
     profileUrl?: string
 }
@@ -22,24 +22,24 @@ export const UserSlice = createSlice({
     initialState,
     reducers: {
         setUser(state, action) {
-            state.firstName = action.payload.firstName;
-            state.lastName = action.payload.lastName;
+            state.uid = action.payload.uid;
+            state.displayName = action.payload.displayName;
             state.email = action.payload.email;
             state.profileUrl = action.payload.profileUrl;
         },
         clearUser(state) {
-            state.firstName = undefined;
-            state.lastName = undefined;
+            state.uid = undefined;
+            state.displayName = undefined;
             state.email = undefined;
             state.profileUrl = undefined;
         }
     }
 });
 
-export const getUser = (state: RootState) => {
+export const getUser = (state: RootState): User => {
     return {
-        firstName: state.user.firstName,
-        lastName: state.user.lastName,
+        uid: state.user.uid,
+        displayName: state.user.displayName,
         email: state.user.email,
         profileUrl: state.user.profileUrl,
     }
@@ -48,18 +48,18 @@ export const getUser = (state: RootState) => {
 export const userIsSet = (state: RootState): boolean => {
     const user = getUser(state);
     const userIsInvalid =
-        user.firstName === INVALID_USER.firstName
-        && user.lastName === INVALID_USER.lastName
+        user.uid === INVALID_USER.uid
+        && user.displayName === INVALID_USER.displayName
         && user.email === INVALID_USER.email
         && user.profileUrl === INVALID_USER.profileUrl;
 
     return !userIsInvalid;
 }
 
-export const createUserObject = (firstName: string, lastName: string, email: string, profileUrl: string) => {
+export const createUserObject = (uid: string, displayName: string, email: string, profileUrl: string) => {
     return {
-        firstName: firstName,
-        lastName: lastName,
+        uid: uid,
+        displayName: displayName,
         email: email,
         profileUrl: profileUrl
     }

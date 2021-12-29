@@ -39,7 +39,7 @@ function ProfileScreen() {
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
                     <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: user.profileUrl }} />
-                    <Text style={textStyle}>{user.firstName + " " + user.lastName}</Text>
+                    <Text style={textStyle}>{user.displayName}</Text>
                     <Text style={textStyle}>{user.email}</Text>
                 </View>
 
