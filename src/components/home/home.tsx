@@ -3,7 +3,8 @@ import { Text, TextStyle, Image, View, ViewStyle } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import GoogleSignIn from 'src/components/login/GoogleSignIn';
-import { isBrowser, isMobile } from 'react-device-detect';
+import { isBrowser } from 'react-device-detect';
+import Constants from 'expo-constants';
 
 export const Home = () => {
     const { colors } = useTheme();
@@ -31,9 +32,8 @@ export const Home = () => {
     } as TextStyle;
 
     const textViewStyle = {
-        width: isBrowser && !isMobile ? "60%" : "100%"
+        width: isBrowser ? "60%" : "100%"
     } as ViewStyle;
-
     return (
         <Screen>
             <View style={[headerViewStyle, { flex: 2 }]}>
@@ -50,6 +50,9 @@ export const Home = () => {
             <View style={[textViewStyle, { alignContent: "center", alignItems: "center" }, { flex: 3 }]}>
                 <GoogleSignIn />
             </View>
+            {isBrowser && <View style={{justifyContent: "flex-end", width:"100%"}}>
+                <Text style={[textStyle, {textAlign: "right", fontSize: 12}]}>v{Constants.manifest!.version}</Text>
+            </View>}
         </Screen>
     );
 };
