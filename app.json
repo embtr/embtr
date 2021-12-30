@@ -2,13 +2,13 @@
   "expo": {
     "name": "embtr",
     "slug": "embtr",
-    "version": "0.0.6",
+    "version": "0.0.8",
     "orientation": "portrait",
-    "icon": "assets/logo.png",
+    "icon": "assets/app_icon.png",
     "splash": {
-      "image": "assets/logo.png",
+      "image": "assets/app_icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000000"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -27,7 +27,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "assets/logo.png",
-        "backgroundColor": "#FFFFFF"       
+        "backgroundColor": "#000000"       
       },
       "userInterfaceStyle": "automatic"
     },
