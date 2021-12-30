@@ -2,7 +2,7 @@
   "expo": {
     "name": "embtr",
     "slug": "embtr",
-    "version": "0.0.10",
+    "version": "0.0.12",
     "orientation": "portrait",
     "icon": "assets/app_icon.png",
     "splash": {
@@ -22,14 +22,17 @@
       "userInterfaceStyle": "automatic",
       "config": {
         "usesNonExemptEncryption": false
-      }
+      },
+      "buildNumber": "0.0.12"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "assets/logo.png",
-        "backgroundColor": "#000000"       
+        "backgroundColor": "#000000"
       },
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "package": "com.brentryczak.embtr",
+      "versionCode": 430000012
     },
     "web": {
       "favicon": "assets/favicon.png"
