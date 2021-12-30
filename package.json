@@ -41,7 +41,8 @@
     "react-navigation": "^4.4.4",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.2",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "expo-linking": "~2.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

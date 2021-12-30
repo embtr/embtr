@@ -5,6 +5,8 @@ import { useAppSelector } from 'src/redux/hooks';
 import { userIsSet } from 'src/redux/user/UserSlice';
 import { Dashboard } from 'src/components/dashboard/dashboard';
 import { Home } from 'src/components/home/home';
+import { About } from 'src/static/About';
+import { ReleaseNotes } from 'src/static/ReleaseNotes';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +16,8 @@ const linking = {
         screens: {
             Home: '',
             Dashboard: 'dashboard',
+            About: 'about',
+            ReleaseNotes: 'releaseNotes'
         }
     },
 };
@@ -30,6 +34,9 @@ export const Main = () => {
                 ) : (
                     <Stack.Screen name="Dashboard" component={Dashboard} />
                 )}
+
+                <Stack.Screen name="About" component={About} />
+                <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
 
             </Stack.Navigator>
         </NavigationContainer>
