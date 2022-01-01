@@ -41,7 +41,7 @@ export default function GoogleSignIn() {
         {
             expoClientId: '376803163073-nivsntdkkej9ltf8lm7o46u1m2o63hcg.apps.googleusercontent.com',
             iosClientId: '376803163073-8pb7iligkf6p5ea4roucb23fe8v857r8.apps.googleusercontent.com',
-            androidClientId: 'GOOGLE_GUID.apps.googleusercontent.com',
+            androidClientId: '376803163073-dn4cpjpj65nn3fm5e2f6r6hqc5hp7agf.apps.googleusercontent.com',
             webClientId: '376803163073-qle8k2tk1phjd3mmatmdknvafnivgcba.apps.googleusercontent.com',
         }
     );
