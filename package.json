@@ -1,6 +1,6 @@
 {
   "name": "embtr",
-  "version": "0.0.13",
+  "version": "0.0.19",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -22,7 +22,6 @@
     "expo": "~43.0.2",
     "expo-auth-session": "^3.5.0",
     "expo-cli": "^4.13.0",
-    "expo-device": "~4.0.3",
     "expo-linking": "~2.4.2",
     "expo-random": "~12.0.1",
     "expo-status-bar": "~1.1.0",

@@ -3,8 +3,8 @@ import { Text, TextStyle, Image, View, ViewStyle } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import GoogleSignIn from 'src/components/login/GoogleSignIn';
-import { isBrowser } from 'react-device-detect';
 import { BrowserFooter } from 'src/components/home/BrowserFooter';
+import { isDesktopBrowser } from 'src/util/DeviceUtil';
 
 export const Home = () => {
     const { colors } = useTheme();
@@ -30,7 +30,7 @@ export const Home = () => {
     } as TextStyle;
 
     const textViewStyle = {
-        width: isBrowser ? "60%" : "100%"
+        width: isDesktopBrowser() ? "60%" : "100%"
     } as ViewStyle;
 
     return (
@@ -53,7 +53,7 @@ export const Home = () => {
                 </View>
             </View>
 
-            {isBrowser && <BrowserFooter />}
+            {isDesktopBrowser() && <BrowserFooter />}
         </Screen>
     );
 };
