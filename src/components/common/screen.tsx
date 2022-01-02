@@ -14,7 +14,6 @@ export const Screen = (props: { children: any; }) => {
             <StatusBar animated barStyle={isDark ? "light-content" : "dark-content"} />
             <View style={{
                 flex: 1,
-                alignItems: 'center',
                 overflow: 'scroll',
                 /* 
                 * the colors.background value will change dynamicly with

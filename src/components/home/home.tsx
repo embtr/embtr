@@ -14,16 +14,6 @@ export const Home = () => {
         color: colors.text,
     } as TextStyle;
 
-    const headerViewStyle = {
-        justifyContent: "center",
-        alignItems: "center",
-    } as ViewStyle;
-
-    const logoViewStyle = {
-        justifyContent: "center",
-        alignItems: "center",
-    } as ViewStyle;
-
     const textStyle = {
         fontSize: 18,
         color: colors.text,
@@ -35,25 +25,34 @@ export const Home = () => {
 
     return (
         <Screen>
-            <View style={{ width: "100%", flexDirection: "column", flex: 1, alignItems: 'center', }}>
-                <View style={[headerViewStyle, { flex: 2 }]}>
-                    <Text style={headerTextStyle}>welcome to embtr.</Text>
+            <View style={{ width: "100%", flex: 10000, justifyContent: "center", alignItems: "flex-start" }}>
+                <View style={{ width: "100%", height: 600, justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+
+                    <View style={{ alignItems: "center", flex: 4 }}>
+                        <Text style={headerTextStyle}>welcome to embtr.</Text>
+                    </View>
+
+                    <View style={{ alignItems: "center", flex: 6 }}>
+                        <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
+                    </View>
+
+                    <View style={[textViewStyle, { flex: 3 }]} />
+
+                    <View style={[textViewStyle, { flex: 4 }]}>
+                        <Text style={[textStyle, { textAlign: 'center' }]}>embtr. is a network of go-getters holding eachother accountable to reach their greatest potential, together.</Text>
+                    </View>
+
+                    <View style={[textViewStyle, { alignItems: "center", flex: 5 }]}>
+                        <GoogleSignIn />
+                    </View>
                 </View>
 
-                <View style={[logoViewStyle, { flex: 3 }]}>
-                    <Image source={require('../../../assets/logo.png')} style={{ width: 200, height: 200 }} />
-                </View>
-
-                <View style={[textViewStyle, { alignContent: "center", alignItems: "center" }, { flex: 1 }]}>
-                    <Text style={[textStyle, { textAlign: 'center' }]}>embtr. is a network of go-getters holding eachother accountable to reach their greatest potential, together.</Text>
-                </View>
-
-                <View style={[textViewStyle, { alignContent: "center", alignItems: "center" }, { flex: 3 }]}>
-                    <GoogleSignIn />
-                </View>
             </View>
-
-            {isDesktopBrowser() && <BrowserFooter />}
+            { isDesktopBrowser() &&
+                <View style={{ justifyContent: "flex-end", flex: 1, width: "100%" }}>
+                    <BrowserFooter />
+                </View>
+            }
         </Screen>
     );
 };
