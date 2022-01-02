@@ -20,7 +20,7 @@ export const Home = () => {
     } as TextStyle;
 
     const textViewStyle = {
-        width: isDesktopBrowser() ? "60%" : "100%"
+        width: isDesktopBrowser() ? "60%" : "95%"
     } as ViewStyle;
 
     return (
