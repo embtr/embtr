@@ -1,8 +1,12 @@
 import { getFirestore, Firestore, doc, setDoc, Timestamp } from 'firebase/firestore';
 import firebaseApp from "src/firebase/Firebase"
+import { Store } from 'src/redux/store';
 
 class AuditLogDao {
-    public static addLog(email: string, action: string) {
+    public static addLog(action: string) {
+        const state = Store.getState();
+        const email = state.user.email;
+
         const db: Firestore = getFirestore(firebaseApp);
 
         const timestamp: Timestamp = Timestamp.now();

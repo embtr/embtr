@@ -62,8 +62,7 @@ export default function GoogleSignIn() {
             //auth with firebase specifically
             signInWithCredential(getAuth(), credential).then(userCredential => {
                 storeUserCredential(userCredential);
-
-                AuditLogDao.addLog(userCredential.user.email!, "login");
+                AuditLogDao.addLog("login");
             });
         }
     }, [response]);
