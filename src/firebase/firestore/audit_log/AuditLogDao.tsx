@@ -12,7 +12,7 @@ class AuditLogDao {
         const timestamp: Timestamp = Timestamp.now();
         const key = action + "_" + timestamp.toMillis();
 
-        setDoc(doc(db, 'audit_log/' + email + "/logs/", key), {
+        setDoc(doc(db, "audit_log/" + email + "/logs/", key), {
             "action": action,
             "timestamp": timestamp
         });
