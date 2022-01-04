@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TextStyle, Image, View, ViewStyle } from 'react-native';
+import { Text, TextStyle, Image, View, ViewStyle, ActivityIndicator } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { BrowserFooter } from 'src/components/home/BrowserFooter';
@@ -28,12 +28,11 @@ export const Home = () => {
     } as TextStyle;
 
     const betaRequestStatusViewStyle = {
-        textAlign: 'center',
-        justifyContent: "flex-end",
         width: "95%"
     } as ViewStyle;
 
     const betaRequestStatusTextStyle = {
+        textAlign: 'center',
         fontSize: 14,
         color: colors.secondary_border
     } as TextStyle;
@@ -58,15 +57,13 @@ export const Home = () => {
             <View style={{ width: "100%", flex: 10000, justifyContent: "center", alignItems: "flex-start" }}>
                 <View style={{ width: "100%", height: 600, justifyContent: "center", alignContent: "center", alignItems: "center" }}>
 
-                    <View style={{ alignItems: "center", flex: 4 }}>
+                    <View style={{ alignItems: "center", flex: 1 }}>
                         <Text style={headerTextStyle}>embtr.</Text>
                     </View>
 
-                    <View style={{ alignItems: "center", flex: 6 }}>
+                    <View style={{ alignItems: "center", flex: 3 }}>
                         <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
                     </View>
-
-                    <View style={[textViewStyle, { flex: 3 }]} />
 
                     <View style={[textViewStyle, { flex: 1 }]}>
                         <Text style={textStyle}>
@@ -74,11 +71,16 @@ export const Home = () => {
                         </Text>
                     </View>
 
+
                     {
                         // todo move to own component
                     }
 
-                    {registrationStatus === "invalid" && <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]} />}
+                    {registrationStatus === "loading" &&
+                        <View style={{flex: REGISTRATION_STATUS_SIZE }}>
+                            <ActivityIndicator size="large" color="#00ff00" />
+                        </View>
+                    }
 
                     {registrationStatus === "initial_pending" &&
                         <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
@@ -94,15 +96,6 @@ export const Home = () => {
                                 Your beta request has been previously submitted and is currently pending ✅.
                             </Text>
                         </View>
-                    }
-
-                    {registrationStatus === "accepted" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
-                                Your beta request has been accepted 👍. Head over to the Beta Login from the Home Page.
-                            </Text>
-                        </View>
-
                     }
 
                     {registrationStatus === "denied" &&
@@ -131,10 +124,11 @@ export const Home = () => {
                         </View>
                     }
 
-                    <View style={{ flexDirection: "row", flex: 5 }}>
-                        {registrationStatus === "invalid" &&
+                    {registrationStatus === "invalid" &&
+                        <View style={{ flexDirection: "row", flex: REGISTRATION_STATUS_SIZE }}>
                             <View style={{ flex: 1, alignItems: "center" }}>
                                 <FirebaseAuthenticate buttonText="Beta Access" callback={(userCredential: UserCredential) => {
+                                    console.log("in 1");
                                     if (userCredential?.user?.email) {
                                         { /* todo convert data to interface to enforce type */ }
                                         BetaController.requestBetaAccess(userCredential.user.email, (status: string) => {
@@ -155,8 +149,8 @@ export const Home = () => {
                                     }
                                 }} />
                             </View>
-                        }
-                    </View>
+                        </View>
+                    }
 
                 </View>
             </View>
