@@ -71,7 +71,7 @@ export const Home = () => {
                         // todo move to own component
                     }
 
-                    { registrationStatus === "invalid" && <View style={[betaRequestStatusTextStyle, { flex: 1, backgroundColor:"green" }]} /> }
+                    { registrationStatus === "invalid" && <View style={[betaRequestStatusTextStyle, { flex: 1 }]} /> }
 
                     {registrationStatus === "initial_pending" &&
                         <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
