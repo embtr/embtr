@@ -27,10 +27,15 @@ export const Home = () => {
         textAlign: 'center'
     } as TextStyle;
 
+    const betaRequestStatusViewStyle = {
+        textAlign: 'center',
+        justifyContent: "flex-end",
+        width: "95%"
+    } as ViewStyle;
+
     const betaRequestStatusTextStyle = {
         fontSize: 14,
-        color: colors.secondary_border,
-        textAlign: 'center'
+        color: colors.secondary_border
     } as TextStyle;
 
     const textViewStyle = {
@@ -57,13 +62,13 @@ export const Home = () => {
                         <Text style={headerTextStyle}>embtr.</Text>
                     </View>
 
-                    <View style={{ alignItems: "center", flex: 8 }}>
+                    <View style={{ alignItems: "center", flex: 6 }}>
                         <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
                     </View>
 
                     <View style={[textViewStyle, { flex: 3 }]} />
 
-                    <View style={[textViewStyle, { flex: 4 }]}>
+                    <View style={[textViewStyle, { flex: 1 }]}>
                         <Text style={textStyle}>
                             embtr is a network of people achieving their wildest dreams. together.
                         </Text>
@@ -73,42 +78,57 @@ export const Home = () => {
                         // todo move to own component
                     }
 
-                    { registrationStatus === "invalid" && <View style={[betaRequestStatusTextStyle, { flex: REGISTRATION_STATUS_SIZE }]} /> }
+                    {registrationStatus === "invalid" && <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]} />}
 
                     {registrationStatus === "initial_pending" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
-                            Thank you for your beta request! Please check your inbox for further steps.
-                        </Text>
+                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                            <Text style={betaRequestStatusTextStyle}>
+                                Thank you for your beta request! Please check your inbox for further steps.
+                            </Text>
+                        </View>
                     }
 
                     {registrationStatus === "pending" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
-                            Your beta request has been previously submitted and is currently pending ✅.
-                        </Text>
+                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                            <Text style={betaRequestStatusTextStyle}>
+                                Your beta request has been previously submitted and is currently pending ✅.
+                            </Text>
+                        </View>
                     }
 
                     {registrationStatus === "accepted" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
-                            Your beta request has been accepted 👍. Head over to the Beta Login from the Home Page.
-                        </Text>
+                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                            <Text style={betaRequestStatusTextStyle}>
+                                Your beta request has been accepted 👍. Head over to the Beta Login from the Home Page.
+                            </Text>
+                        </View>
+
                     }
 
                     {registrationStatus === "denied" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
-                            Beta registration is currently closed. We will send an email when we open access again.
-                        </Text>
+                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                            <Text style={betaRequestStatusTextStyle}>
+                                Beta registration is currently closed. We will send an email when we open access again.
+                            </Text>
+                        </View>
+
                     }
 
                     {registrationStatus === "error_auth" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE, color: "red" }]}>
-                            We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
-                        </Text>
+                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                            <Text style={betaRequestStatusTextStyle}>
+                                We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
+                            </Text>
+                        </View>
+
                     }
 
                     {registrationStatus === "error_data" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE, color: "red" }]}>
-                            An error occured while requesting beta access. Reach out to support@embtr.com if this error continues.
-                        </Text>
+                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                            <Text style={betaRequestStatusTextStyle}>
+                                An error occured while requesting beta access. Reach out to support@embtr.com if this error continues.
+                            </Text>
+                        </View>
                     }
 
                     <View style={{ flexDirection: "row", flex: 5 }}>
