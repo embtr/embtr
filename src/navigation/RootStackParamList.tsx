@@ -4,5 +4,4 @@ export type RootStackParamList = {
     About: undefined;
     ReleaseNotes: undefined;
     Contact: undefined;
-    BetaRegistration: undefined;
 };

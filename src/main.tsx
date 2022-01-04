@@ -7,7 +7,6 @@ import { Dashboard } from 'src/components/dashboard/dashboard';
 import { Home } from 'src/components/home/home';
 import { About } from 'src/static/About';
 import { ReleaseNotes } from 'src/static/ReleaseNotes';
-import { BetaRegistration } from 'src/components/login/beta/BetaRegistration';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,8 +17,7 @@ const linking = {
             Home: '',
             Dashboard: 'dashboard',
             About: 'about',
-            ReleaseNotes: 'releaseNotes',
-            BetaRegistration: 'betaRegistration'
+            ReleaseNotes: 'releaseNotes'
         }
     },
 };
@@ -39,7 +37,6 @@ export const Main = () => {
 
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
-                <Stack.Screen name="BetaRegistration" component={BetaRegistration} />
 
             </Stack.Navigator>
         </NavigationContainer>

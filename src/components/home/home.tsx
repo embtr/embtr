@@ -4,7 +4,12 @@ import { Screen } from 'src/components/common/screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { BrowserFooter } from 'src/components/home/BrowserFooter';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import BetaOptions from 'src/components/login/beta/BetaOptions';
+import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
+import { UserCredential } from 'firebase/auth';
+import BetaController from 'src/controller/beta/BetaController';
+import AuditLogController from 'src/controller/audit_log/AuditLogController';
+import { useAppDispatch } from 'src/redux/hooks';
+import { createUserObject, setUser, User } from 'src/redux/user/UserSlice';
 
 export const Home = () => {
     const { colors } = useTheme();
@@ -17,11 +22,29 @@ export const Home = () => {
     const textStyle = {
         fontSize: 18,
         color: colors.text,
+        textAlign: 'center'
+    } as TextStyle;
+
+    const betaRequestStatusTextStyle = {
+        fontSize: 14,
+        color: colors.secondary_border,
+        textAlign: 'center'
     } as TextStyle;
 
     const textViewStyle = {
         width: isDesktopBrowser() ? "60%" : "95%"
     } as ViewStyle;
+
+    const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
+
+    const dispatch = useAppDispatch();
+
+    const storeUserCredential = (userCredential: UserCredential) => {
+        const { uid, displayName, email, photoURL } = userCredential.user;
+        const user: User = createUserObject(uid!, displayName!, email!, photoURL!);
+
+        dispatch(setUser(user));
+    };
 
     return (
         <Screen>
@@ -39,13 +62,78 @@ export const Home = () => {
                     <View style={[textViewStyle, { flex: 3 }]} />
 
                     <View style={[textViewStyle, { flex: 4 }]}>
-                        <Text style={[textStyle, { textAlign: 'center' }]}>
+                        <Text style={textStyle}>
                             embtr is a network of people achieving their wildest dreams. together.
                         </Text>
                     </View>
 
-                    <View style={[textViewStyle, { alignItems: "center", flex: 5 }]}>
-                        <BetaOptions />
+                    {
+                        // todo move to own component
+                    }
+
+                    { registrationStatus === "invalid" && <View style={[betaRequestStatusTextStyle, { flex: 1, backgroundColor:"green" }]} /> }
+
+                    {registrationStatus === "initial_pending" &&
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                            Thank you for your beta request! Please check your inbox for further steps.
+                        </Text>
+                    }
+
+                    {registrationStatus === "pending" &&
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                            Your beta request has been previously submitted and is currently pending ✅.
+                        </Text>
+                    }
+
+                    {registrationStatus === "accepted" &&
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                            Your beta request has been accepted 👍. Head over to the Beta Login from the Home Page.
+                        </Text>
+                    }
+
+                    {registrationStatus === "denied" &&
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                            Beta registration is currently closed. We will send an email when we open access again.
+                        </Text>
+                    }
+
+                    {registrationStatus === "error_auth" &&
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1, color: "red" }]}>
+                            We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
+                        </Text>
+                    }
+
+                    {registrationStatus === "error_data" &&
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1, color: "red" }]}>
+                            An error occured while requesting beta access. Reach out to support@embtr.com if this error continues.
+                        </Text>
+                    }
+
+                    <View style={{ flexDirection: "row", flex: 5 }}>
+                        {registrationStatus === "invalid" &&
+                            <View style={{ flex: 1, alignItems: "center" }}>
+                                <FirebaseAuthenticate buttonText="Beta Access" callback={(userCredential: UserCredential) => {
+                                    if (userCredential?.user?.email) {
+                                        { /* todo convert data to interface to enforce type */ }
+                                        BetaController.requestBetaAccess(userCredential.user.email, (status: string) => {
+                                            if (status) {
+                                                if (status === "accepted") {
+                                                    storeUserCredential(userCredential);
+                                                    AuditLogController.addLog("login");
+                                                } else {
+                                                    setRegistrationStatus(status);
+                                                }
+
+                                            } else {
+                                                setRegistrationStatus("error_data");
+                                            }
+                                        })
+                                    } else {
+                                        setRegistrationStatus("error_auth");
+                                    }
+                                }} />
+                            </View>
+                        }
                     </View>
 
                 </View>
