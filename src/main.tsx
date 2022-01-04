@@ -7,6 +7,7 @@ import { Dashboard } from 'src/components/dashboard/dashboard';
 import { Home } from 'src/components/home/home';
 import { About } from 'src/static/About';
 import { ReleaseNotes } from 'src/static/ReleaseNotes';
+import { BetaRegistration } from 'src/components/login/beta/BetaRegistration';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +18,8 @@ const linking = {
             Home: '',
             Dashboard: 'dashboard',
             About: 'about',
-            ReleaseNotes: 'releaseNotes'
+            ReleaseNotes: 'releaseNotes',
+            BetaRegistration: 'betaRegistration'
         }
     },
 };
@@ -29,14 +31,15 @@ export const Main = () => {
     return (
         <NavigationContainer linking={linking}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {!userIsLoggedIn ? (
-                    <Stack.Screen name="Home" component={Home} />
-                ) : (
+                {userIsLoggedIn ? (
                     <Stack.Screen name="Dashboard" component={Dashboard} />
+                ) : (
+                    <Stack.Screen name="Home" component={Home} />
                 )}
 
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
+                <Stack.Screen name="BetaRegistration" component={BetaRegistration} />
 
             </Stack.Navigator>
         </NavigationContainer>

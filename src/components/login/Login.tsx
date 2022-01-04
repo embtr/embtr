@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ViewStyle } from "react-native";
 import { Screen } from 'src/components/common/screen';
-import GoogleSignIn from "src/components/login/GoogleSignIn";
+import { GoogleSignIn } from "src/components/login/google/GoogleSignIn";
 
 const container = {
     flex: 1,

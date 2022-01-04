@@ -1,6 +1,6 @@
 {
   "name": "embtr",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "~1.15.0",
-    "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
@@ -21,22 +20,14 @@
     "@reduxjs/toolkit": "^1.7.1",
     "expo": "~43.0.2",
     "expo-auth-session": "^3.5.0",
-    "expo-cli": "^4.13.0",
     "expo-linking": "~2.4.2",
     "expo-random": "~12.0.1",
-    "expo-status-bar": "~1.1.0",
     "expo-web-browser": "^10.1.0",
     "firebase": "^9.6.1",
     "react": "17.0.1",
     "react-device-detect": "^2.1.2",
-    "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-appearance": "^0.3.4",
-    "react-native-elements": "^3.4.2",
-    "react-native-gesture-handler": "~1.10.2",
-    "react-native-reanimated": "~2.2.0",
-    "react-native-safe-area-context": "3.3.2",
-    "react-native-screens": "~3.8.0",
     "react-native-switch": "^2.0.0",
     "react-native-web": "0.17.1",
     "react-navigation": "^4.4.4",
@@ -50,7 +41,8 @@
     "@types/react-native": "~0.66.9",
     "standard-version": "^7.1.0",
     "standard-version-expo": "^1.0.3",
-    "typescript": "~4.3.5"
+    "typescript": "~4.3.5",
+    "expo-cli": "^4.13.0"
   },
   "private": true
 }

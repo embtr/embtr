@@ -2,7 +2,7 @@
   "expo": {
     "name": "embtr",
     "slug": "embtr",
-    "version": "0.0.26",
+    "version": "0.0.27",
     "orientation": "portrait",
     "icon": "assets/app_icon.png",
     "splash": {
@@ -23,7 +23,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "0.0.26"
+      "buildNumber": "0.0.27"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,7 +32,7 @@
       },
       "userInterfaceStyle": "automatic",
       "package": "com.brentryczak.embtr",
-      "versionCode": 430000026
+      "versionCode": 430000027
     },
     "web": {
       "favicon": "assets/favicon.png"

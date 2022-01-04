@@ -70,14 +70,14 @@ export const Dashboard = () => {
                         if (focused) {
                             return (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <Ionicons name={iconName} size={size} color={colors.primary} />
-                                    <Text style={{ color: colors.primary }}>home</Text>
+                                    <Ionicons name={iconName} size={size} color={colors.primary_border} />
+                                    <Text style={{ color: colors.primary_border }}>home</Text>
                                 </View>
                             )
                         } else {
                             return (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <Ionicons name={iconName} size={size} color={colors.primary} />
+                                    <Ionicons name={iconName} size={size} color={colors.primary_border} />
                                     <Text style={{ color: colors.text }}>home</Text>
                                 </View>
                             )
@@ -88,10 +88,10 @@ export const Dashboard = () => {
                         if (focused) {
                             return (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <View style={{ width: size + 2, height: size + 2, borderRadius: 50, backgroundColor: colors.primary, alignItems: "center", justifyContent: "center" }}>
+                                    <View style={{ width: size + 2, height: size + 2, borderRadius: 50, backgroundColor: colors.primary_border, alignItems: "center", justifyContent: "center" }}>
                                         <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: user.profileUrl }} />
                                     </View>
-                                    <Text style={{ color: colors.primary }}>you</Text>
+                                    <Text style={{ color: colors.primary_border }}>you</Text>
                                 </View>
                             )
                         } else {
