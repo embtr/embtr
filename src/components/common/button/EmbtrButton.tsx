@@ -4,11 +4,12 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
     image?: ImageURISource,
+    borderColor?: string,
     buttonText: string,
     callback: Function,
 }
 
-export const EmbtrButton = ({ image, buttonText, callback }: Props) => {
+export const EmbtrButton = ({ image, borderColor, buttonText, callback }: Props) => {
     const { colors } = useTheme();
 
     const containerStyle = {
@@ -17,7 +18,7 @@ export const EmbtrButton = ({ image, buttonText, callback }: Props) => {
         width: 170,
         borderRadius: 4,
         borderWidth: 2,
-        borderColor: colors.primary_border,
+        borderColor: borderColor === "secondary" ? colors.secondary_border : colors.primary_border,
         alignContent: "center",
         alignItems: "center",
     } as ViewStyle;

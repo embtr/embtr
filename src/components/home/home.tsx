@@ -40,7 +40,7 @@ export const Home = () => {
 
                     <View style={[textViewStyle, { flex: 4 }]}>
                         <Text style={[textStyle, { textAlign: 'center' }]}>
-                            embtr. is a network of go-getters holding eachother accountable to reach their greatest potential, together.
+                            embtr is a network of people achieving their wildest dreams. together.
                         </Text>
                     </View>
 

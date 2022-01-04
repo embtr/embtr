@@ -18,7 +18,7 @@ export default function BetaOptions() {
         padding: 12,
         borderRadius: 4,
         borderWidth: 2,
-        width:170,
+        width:200,
         alignContent: "center",
         alignItems: "center"
     } as ViewStyle;
@@ -34,15 +34,17 @@ export default function BetaOptions() {
         <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1, alignItems:"center" }}>
                 <TouchableOpacity style={[containerStyle, { borderColor: colors.primary_border }]} onPress={() => { navigation.navigate('BetaRegistration'); }}>
-                    <Text style={textStyle}>Request Beta</Text>
+                    <Text style={textStyle}>Request Beta Access</Text>
                 </TouchableOpacity>
             </View>
 
-            <View style={{ flex: 1, alignItems:"center" }}>
-                <TouchableOpacity style={[containerStyle, { borderColor: colors.secondary_border }]} onPress={() => { alert("login!"); }}>
-                    <Text style={textStyle}>Login To Beta</Text>
-                </TouchableOpacity>
-            </View>
+            {
+            //<View style={{ flex: 1, alignItems:"center" }}>
+            //    <TouchableOpacity style={[containerStyle, { borderColor: colors.secondary_border }]} onPress={() => { alert("login!"); }}>
+            //        <Text style={textStyle}>Login To Beta</Text>
+            //    </TouchableOpacity>
+            //</View>
+            }
         </View>
     );
 }
