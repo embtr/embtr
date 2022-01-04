@@ -11,6 +11,8 @@ import AuditLogController from 'src/controller/audit_log/AuditLogController';
 import { useAppDispatch } from 'src/redux/hooks';
 import { createUserObject, setUser, User } from 'src/redux/user/UserSlice';
 
+const REGISTRATION_STATUS_SIZE = 2;
+
 export const Home = () => {
     const { colors } = useTheme();
 
@@ -71,40 +73,40 @@ export const Home = () => {
                         // todo move to own component
                     }
 
-                    { registrationStatus === "invalid" && <View style={[betaRequestStatusTextStyle, { flex: 1 }]} /> }
+                    { registrationStatus === "invalid" && <View style={[betaRequestStatusTextStyle, { flex: REGISTRATION_STATUS_SIZE }]} /> }
 
                     {registrationStatus === "initial_pending" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
                             Thank you for your beta request! Please check your inbox for further steps.
                         </Text>
                     }
 
                     {registrationStatus === "pending" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
                             Your beta request has been previously submitted and is currently pending ✅.
                         </Text>
                     }
 
                     {registrationStatus === "accepted" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
                             Your beta request has been accepted 👍. Head over to the Beta Login from the Home Page.
                         </Text>
                     }
 
                     {registrationStatus === "denied" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1 }]}>
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE }]}>
                             Beta registration is currently closed. We will send an email when we open access again.
                         </Text>
                     }
 
                     {registrationStatus === "error_auth" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1, color: "red" }]}>
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE, color: "red" }]}>
                             We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
                         </Text>
                     }
 
                     {registrationStatus === "error_data" &&
-                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: 1, color: "red" }]}>
+                        <Text style={[betaRequestStatusTextStyle, { width: "95%", flex: REGISTRATION_STATUS_SIZE, color: "red" }]}>
                             An error occured while requesting beta access. Reach out to support@embtr.com if this error continues.
                         </Text>
                     }
