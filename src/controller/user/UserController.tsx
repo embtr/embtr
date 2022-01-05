@@ -1,13 +1,13 @@
-import BetaDao from "src/firebase/firestore/beta/BetaDao";
+import UserDao from "src/firebase/firestore/user/UserDao";
 
-class BetaController {
+class UserController {
     public static requestBetaAccess(email: string, callback: Function) {
-        const result = BetaDao.getBetaRequestStatus(email);
+        const result = UserDao.getBetaRequestStatus(email);
         result.then(document => {
             if (document.exists() && document.data() && document.data()["status"]) {
                 callback(document.data()["status"]);
             } else {
-                const betaCreateResult = BetaDao.requestBetaAccess(email);
+                const betaCreateResult = UserDao.requestBetaAccess(email);
                 betaCreateResult.then(() => {
                     callback("initial_pending");
                 });
@@ -16,4 +16,4 @@ class BetaController {
     }
 }
 
-export default BetaController;
+export default UserController;

@@ -6,10 +6,10 @@ import { BrowserFooter } from 'src/components/home/BrowserFooter';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
 import { UserCredential } from 'firebase/auth';
-import BetaController from 'src/controller/beta/BetaController';
 import AuditLogController from 'src/controller/audit_log/AuditLogController';
 import { useAppDispatch } from 'src/redux/hooks';
 import { createUserObject, setUser, User } from 'src/redux/user/UserSlice';
+import UserController from 'src/controller/user/UserController';
 
 const REGISTRATION_STATUS_SIZE = 2;
 
@@ -41,7 +41,13 @@ export const Home = () => {
         width: isDesktopBrowser() ? "60%" : "95%"
     } as ViewStyle;
 
-    const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
+    const [registrationStatus, setRegistrationStatus] = React.useState("invalid"); 
+    
+    React.useEffect(() => {
+        return () => {
+          console.log("cleaned up");
+        };
+      }, []);
 
     const dispatch = useAppDispatch();
 
@@ -104,7 +110,6 @@ export const Home = () => {
                                 Beta registration is currently closed. We will send an email when we open access again.
                             </Text>
                         </View>
-
                     }
 
                     {registrationStatus === "error_auth" &&
@@ -113,7 +118,6 @@ export const Home = () => {
                                 We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
                             </Text>
                         </View>
-
                     }
 
                     {registrationStatus === "error_data" &&
@@ -128,10 +132,9 @@ export const Home = () => {
                         <View style={{ flexDirection: "row", flex: REGISTRATION_STATUS_SIZE }}>
                             <View style={{ flex: 1, alignItems: "center" }}>
                                 <FirebaseAuthenticate buttonText="Beta Access" callback={(userCredential: UserCredential) => {
-                                    console.log("in 1");
                                     if (userCredential?.user?.email) {
                                         { /* todo convert data to interface to enforce type */ }
-                                        BetaController.requestBetaAccess(userCredential.user.email, (status: string) => {
+                                        UserController.requestBetaAccess(userCredential.user.email, (status: string) => {
                                             if (status) {
                                                 if (status === "accepted") {
                                                     storeUserCredential(userCredential);
@@ -139,7 +142,6 @@ export const Home = () => {
                                                 } else {
                                                     setRegistrationStatus(status);
                                                 }
-
                                             } else {
                                                 setRegistrationStatus("error_data");
                                             }

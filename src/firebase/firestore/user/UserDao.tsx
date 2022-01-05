@@ -1,7 +1,7 @@
 import { getFirestore, Firestore, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
 import firebaseApp from "src/firebase/Firebase"
 
-class BetaDao {
+class UserDao {
 
     public static async getBetaRequestStatus(email: string) {
         const db: Firestore = getFirestore(firebaseApp);
@@ -27,4 +27,4 @@ class BetaDao {
     }
 }
 
-export default BetaDao;
+export default UserDao;
