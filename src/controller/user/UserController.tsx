@@ -4,12 +4,12 @@ class UserController {
     public static requestBetaAccess(email: string, callback: Function) {
         const result = UserDao.getBetaRequestStatus(email);
         result.then(document => {
-            if (document.exists() && document.data() && document.data()["status"]) {
-                callback(document.data()["status"]);
+            if (document.exists() && document.data() && document.data()["access_level"]) {
+                callback(document.data()["access_level"]);
             } else {
                 const betaCreateResult = UserDao.requestBetaAccess(email);
                 betaCreateResult.then(() => {
-                    callback("initial_pending");
+                    callback("initial_beta_pending");
                 });
             }
         });

@@ -41,13 +41,13 @@ export const Home = () => {
         width: isDesktopBrowser() ? "60%" : "95%"
     } as ViewStyle;
 
-    const [registrationStatus, setRegistrationStatus] = React.useState("invalid"); 
-    
+    const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
+
     React.useEffect(() => {
         return () => {
-          console.log("cleaned up");
+            console.log("cleaned up");
         };
-      }, []);
+    }, []);
 
     const dispatch = useAppDispatch();
 
@@ -82,13 +82,7 @@ export const Home = () => {
                         // todo move to own component
                     }
 
-                    {registrationStatus === "loading" &&
-                        <View style={{flex: REGISTRATION_STATUS_SIZE }}>
-                            <ActivityIndicator size="large" color="#00ff00" />
-                        </View>
-                    }
-
-                    {registrationStatus === "initial_pending" &&
+                    {registrationStatus === "initial_beta_pending" &&
                         <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
                             <Text style={betaRequestStatusTextStyle}>
                                 Thank you for your beta request! Please check your inbox for further steps.
@@ -96,7 +90,7 @@ export const Home = () => {
                         </View>
                     }
 
-                    {registrationStatus === "pending" &&
+                    {registrationStatus === "beta_pending" &&
                         <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
                             <Text style={betaRequestStatusTextStyle}>
                                 Your beta request has been previously submitted and is currently pending ✅.
@@ -104,7 +98,7 @@ export const Home = () => {
                         </View>
                     }
 
-                    {registrationStatus === "denied" &&
+                    {registrationStatus === "beta_denied" &&
                         <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
                             <Text style={betaRequestStatusTextStyle}>
                                 Beta registration is currently closed. We will send an email when we open access again.
@@ -114,7 +108,7 @@ export const Home = () => {
 
                     {registrationStatus === "error_auth" &&
                         <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
+                            <Text style={[betaRequestStatusTextStyle, {color:"red"} ]}>
                                 We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
                             </Text>
                         </View>
@@ -122,7 +116,7 @@ export const Home = () => {
 
                     {registrationStatus === "error_data" &&
                         <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
+                            <Text style={[betaRequestStatusTextStyle, {color:"red"} ]}>
                                 An error occured while requesting beta access. Reach out to support@embtr.com if this error continues.
                             </Text>
                         </View>
@@ -134,13 +128,13 @@ export const Home = () => {
                                 <FirebaseAuthenticate buttonText="Beta Access" callback={(userCredential: UserCredential) => {
                                     if (userCredential?.user?.email) {
                                         { /* todo convert data to interface to enforce type */ }
-                                        UserController.requestBetaAccess(userCredential.user.email, (status: string) => {
-                                            if (status) {
-                                                if (status === "accepted") {
+                                        UserController.requestBetaAccess(userCredential.user.email, (accessLevel: string) => {
+                                            if (accessLevel) {
+                                                if (accessLevel === "beta_approved") {
                                                     storeUserCredential(userCredential);
                                                     AuditLogController.addLog("login");
                                                 } else {
-                                                    setRegistrationStatus(status);
+                                                    setRegistrationStatus(accessLevel);
                                                 }
                                             } else {
                                                 setRegistrationStatus("error_data");

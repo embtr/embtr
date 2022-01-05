@@ -5,7 +5,7 @@ class UserDao {
 
     public static async getBetaRequestStatus(email: string) {
         const db: Firestore = getFirestore(firebaseApp);
-        const result = await getDoc(doc(db, "beta/", email));
+        const result = await getDoc(doc(db, "users/", email));
 
         return result;
     }
@@ -13,17 +13,17 @@ class UserDao {
     public static async requestBetaAccess(email: string) {
         const db: Firestore = getFirestore(firebaseApp);
 
-        const result = await getDoc(doc(db, "beta/", email))
+        const result = await getDoc(doc(db, "users/", email))
             .then(result => {
                 if (!result.exists()) {
-                    setDoc(doc(db, "beta/", email), {
-                        "status": "pending",
+                    setDoc(doc(db, "users/", email), {
+                        "access_level": "beta_pending",
                         "timestamp": Timestamp.now()
                     });
                 }
             });
 
-            return result;
+        return result;
     }
 }
 
