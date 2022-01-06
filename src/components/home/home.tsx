@@ -1,161 +1,63 @@
 import * as React from 'react';
-import { Text, TextStyle, Image, View, ViewStyle, ActivityIndicator } from 'react-native';
-import { Screen } from 'src/components/common/screen';
+import { Text, View, Image } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { BrowserFooter } from 'src/components/home/BrowserFooter';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { UserCredential } from 'firebase/auth';
-import AuditLogController from 'src/controller/audit_log/AuditLogController';
-import { useAppDispatch } from 'src/redux/hooks';
-import { createUserObject, setUser, User } from 'src/redux/user/UserSlice';
-import UserController from 'src/controller/user/UserController';
+import { useAppSelector } from 'src/redux/hooks';
+import { Ionicons } from '@expo/vector-icons';
+import { UserProfile } from 'src/components/profile/UserProfle';
+import { Timeline } from 'src/components/timeline/Timeline';
+import { getUser } from 'src/redux/user/UserSlice';
 
-const REGISTRATION_STATUS_SIZE = 2;
+const Tab = createBottomTabNavigator();
 
-export const Home = () => {
+const TABS = {
+    USER_PROFILE: "UserProfile",
+    TIMELINE: "Timeline"
+}
+
+export const Dashboard = () => {
     const { colors } = useTheme();
-
-    const headerTextStyle = {
-        fontSize: 30,
-        color: colors.text,
-    } as TextStyle;
-
-    const textStyle = {
-        fontSize: 18,
-        color: colors.text,
-        textAlign: 'center'
-    } as TextStyle;
-
-    const betaRequestStatusViewStyle = {
-        width: "95%"
-    } as ViewStyle;
-
-    const betaRequestStatusTextStyle = {
-        textAlign: 'center',
-        fontSize: 14,
-        color: colors.secondary_border
-    } as TextStyle;
-
-    const textViewStyle = {
-        width: isDesktopBrowser() ? "60%" : "95%"
-    } as ViewStyle;
-
-    const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
-
-    React.useEffect(() => {
-        return () => {
-            console.log("cleaned up");
-        };
-    }, []);
-
-    const dispatch = useAppDispatch();
-
-    const storeUserCredential = (userCredential: UserCredential) => {
-        const { uid, displayName, email, photoURL } = userCredential.user;
-        const user: User = createUserObject(uid!, displayName!, email!, photoURL!);
-
-        dispatch(setUser(user));
-    };
+    const user = useAppSelector(getUser);
 
     return (
-        <Screen>
-            <View style={{ width: "100%", flex: 10000, justifyContent: "center", alignItems: "flex-start" }}>
-                <View style={{ width: "100%", height: 600, justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+        <View style={{ height:"100%", backgroundColor: "green" }}>
+            <Tab.Navigator
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ focused, color, size }) => {
+                        if (route.name === TABS.TIMELINE) {
+                            let icon: any = focused ? 'ios-home' : 'ios-home-outline';
+                            let color = focused ? colors.primary_border : colors.text;
+                            return (
+                                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                    <Ionicons name={icon} size={size} color={color} />
+                                    <Text style={{ color: color }}>timeline</Text>
+                                </View>
+                            )
+                        }
 
-                    <View style={{ alignItems: "center", flex: 1 }}>
-                        <Text style={headerTextStyle}>embtr.</Text>
-                    </View>
-
-                    <View style={{ alignItems: "center", flex: 3 }}>
-                        <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
-                    </View>
-
-                    <View style={[textViewStyle, { flex: 1 }]}>
-                        <Text style={textStyle}>
-                            embtr is a network of people achieving their wildest dreams. together.
-                        </Text>
-                    </View>
-
-
-                    {
-                        // todo move to own component
-                    }
-
-                    {registrationStatus === "initial_beta_pending" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
-                                Thank you for your beta request! Please check your inbox for further steps.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "beta_pending" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
-                                Your beta request has been previously submitted and is currently pending ✅.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "beta_denied" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
-                                Beta registration is currently closed. We will send an email when we open access again.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "error_auth" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={[betaRequestStatusTextStyle, {color:"red"} ]}>
-                                We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "error_data" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={[betaRequestStatusTextStyle, {color:"red"} ]}>
-                                An error occured while requesting beta access. Reach out to support@embtr.com if this error continues.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "invalid" &&
-                        <View style={{ flexDirection: "row", flex: REGISTRATION_STATUS_SIZE }}>
-                            <View style={{ flex: 1, alignItems: "center" }}>
-                                <FirebaseAuthenticate buttonText="Beta Access" callback={(userCredential: UserCredential) => {
-                                    if (userCredential?.user?.email) {
-                                        { /* todo convert data to interface to enforce type */ }
-                                        UserController.requestBetaAccess(userCredential.user.email, (accessLevel: string) => {
-                                            if (accessLevel) {
-                                                if (accessLevel === "beta_approved") {
-                                                    storeUserCredential(userCredential);
-                                                    AuditLogController.addLog("login");
-                                                } else {
-                                                    setRegistrationStatus(accessLevel);
-                                                }
-                                            } else {
-                                                setRegistrationStatus("error_data");
-                                            }
-                                        })
-                                    } else {
-                                        setRegistrationStatus("error_auth");
-                                    }
-                                }} />
-                            </View>
-                        </View>
-                    }
-
-                </View>
-            </View>
-
-            {isDesktopBrowser() &&
-                <View style={{ justifyContent: "flex-end", flex: 1, width: "100%" }}>
-                    <BrowserFooter />
-                </View>
-            }
-        </Screen>
+                        if (route.name === TABS.USER_PROFILE) {
+                            let textColor = focused ? colors.primary_border : colors.text;
+                            let backgroundColor = focused ? colors.primary_border : undefined;
+                            return (
+                                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                    <View style={{ width: size + 2, height: size + 2, borderRadius: 50, backgroundColor: backgroundColor, alignItems: "center", justifyContent: "center" }}>
+                                        <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: user.profileUrl }} />
+                                    </View>
+                                    <Text style={{ color: textColor }}>you</Text>
+                                </View>
+                            )
+                        }
+                    },
+                    tabBarShowLabel: false,
+                    headerShown: false,
+                    tabBarActiveBackgroundColor: colors.background_secondary,
+                    tabBarInactiveBackgroundColor: colors.background,
+                })}
+            >
+                <Tab.Screen name={TABS.TIMELINE} component={Timeline} />
+                <Tab.Screen name={TABS.USER_PROFILE} component={UserProfile} />
+            </Tab.Navigator>
+            <View style={{height:1, backgroundColor: "white"}}></View>
+        </View>
     );
-};
+}

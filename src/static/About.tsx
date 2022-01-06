@@ -6,7 +6,7 @@ import { useTheme } from "src/components/theme/ThemeProvider";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { useNavigation } from "@react-navigation/native";
 
-type homeScreenProp = StackNavigationProp<RootStackParamList, 'Home'>;
+type landingPageScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage'>;
 
 export const About = () => {
     const { colors } = useTheme();
@@ -29,7 +29,7 @@ export const About = () => {
         justifyContent: "center"
     } as ViewStyle;
 
-    const navigation = useNavigation<homeScreenProp>();
+    const navigation = useNavigation<landingPageScreenProp>();
 
     return (
         <Screen>
@@ -45,7 +45,7 @@ export const About = () => {
                 <Text style={textStyle}>This is just a placeholder "About" page as we work finding better and deeper words to explain what our mission is. Please keep up to date with our progress on Twitter, or visit the Release Notes page to see what is new!</Text>
                 <Text>{"\n\n\n\n"}</Text>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Button title='home' onPress={() => { navigation.navigate('Home') }}></Button>
+                    <Button title='home' onPress={() => { navigation.navigate('LandingPage') }}></Button>
                 </View>
             </View>
         </Screen>

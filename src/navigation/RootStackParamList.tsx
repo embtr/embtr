@@ -1,7 +1,8 @@
 export type RootStackParamList = {
-    Home: undefined;
+    LandingPage: undefined;
     Dashboard: undefined;
     About: undefined;
     ReleaseNotes: undefined;
     Contact: undefined;
+    UserSettings: undefined;
 };

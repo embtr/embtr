@@ -10,7 +10,7 @@ import * as Linking from 'expo-linking';
 type aboutScreenProp = StackNavigationProp<RootStackParamList, 'About'>;
 type releaseNotesScreenProp = StackNavigationProp<RootStackParamList, 'ReleaseNotes'>;
 
-export const BrowserFooter = () => {
+export const LandingFooter = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<aboutScreenProp | releaseNotesScreenProp>();
