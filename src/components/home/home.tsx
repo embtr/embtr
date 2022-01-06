@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { UserProfile } from 'src/components/profile/UserProfle';
 import { Timeline } from 'src/components/timeline/Timeline';
 import { getUser } from 'src/redux/user/UserSlice';
+import { isDesktopBrowser } from 'src/util/DeviceUtil';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,9 +21,11 @@ export const Dashboard = () => {
     const user = useAppSelector(getUser);
 
     return (
-        <View style={{ height:"100%", backgroundColor: "green" }}>
+        <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>
+
             <Tab.Navigator
                 screenOptions={({ route }) => ({
+                    tabBarStyle: { backgroundColor: colors.background },
                     tabBarIcon: ({ focused, color, size }) => {
                         if (route.name === TABS.TIMELINE) {
                             let icon: any = focused ? 'ios-home' : 'ios-home-outline';
@@ -57,7 +60,6 @@ export const Dashboard = () => {
                 <Tab.Screen name={TABS.TIMELINE} component={Timeline} />
                 <Tab.Screen name={TABS.USER_PROFILE} component={UserProfile} />
             </Tab.Navigator>
-            <View style={{height:1, backgroundColor: "white"}}></View>
         </View>
     );
 }
