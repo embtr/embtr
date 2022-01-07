@@ -1,32 +1,39 @@
 import * as React from 'react';
-import { useTheme } from "src/components/theme/ThemeProvider";
 import { useAppSelector } from "src/redux/hooks";
 import { getUser } from "src/redux/user/UserSlice";
-import { Text, TextStyle, View, Image, SafeAreaView } from 'react-native';
+import { View, SafeAreaView } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { Banner } from 'src/components/common/Banner';
+import { isDesktopBrowser } from 'src/util/DeviceUtil';
+import ProfileController from 'src/controller/profile/ProfileController';
+import { Profile } from 'src/components/profile/Profile';
+import { ProfileHeader } from 'src/components/profile/ProfileHeader';
 
 export const UserProfile = () => {
-    const { colors } = useTheme();
-    const textStyle = {
-        fontSize: 18,
-        color: colors.text,
-    } as TextStyle;
+
+    const [userProfile, setUserProfile] = React.useState<Profile | undefined>(undefined);
 
     const user = useAppSelector(getUser);
+
+    React.useEffect(() => {
+        ProfileController.getProfile(user.email!, (profile: Profile) => {
+            setUserProfile(profile);
+        });
+    }, [user]);
 
     return (
         <Screen>
             <SafeAreaView style={{ flex: 1 }}>
                 <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
 
-                <View style={{ flexDirection: "column", flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
-                        <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: user.profileUrl }} />
-                        <Text style={textStyle}>{user.displayName}</Text>
-                        <Text style={textStyle}>{user.email}</Text>
+                <View style={{ alignItems: "center" }}>
+                    <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
+                        <ProfileHeader user={user} profile={userProfile} />
                     </View>
                 </View>
+
+
+
             </SafeAreaView>
         </Screen>
 

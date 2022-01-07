@@ -43,12 +43,6 @@ export const LandingPage = () => {
 
     const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
 
-    React.useEffect(() => {
-        return () => {
-            console.log("cleaned up");
-        };
-    }, []);
-
     const dispatch = useAppDispatch();
 
     const storeUserCredential = (userCredential: UserCredential) => {
