@@ -6,8 +6,6 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
 import { UserCredential } from 'firebase/auth';
 import AuditLogController from 'src/controller/audit_log/AuditLogController';
-import { useAppDispatch } from 'src/redux/hooks';
-import { createUserObject, setUser, User } from 'src/redux/user/UserSlice';
 import UserController from 'src/controller/user/UserController';
 import { LandingFooter } from 'src/components/landing/LandingFooter';
 
@@ -42,15 +40,6 @@ export const LandingPage = () => {
     } as ViewStyle;
 
     const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
-
-    const dispatch = useAppDispatch();
-
-    const storeUserCredential = (userCredential: UserCredential) => {
-        const { uid, displayName, email, photoURL } = userCredential.user;
-        const user: User = createUserObject(uid!, displayName!, email!, photoURL!);
-
-        dispatch(setUser(user));
-    };
 
     return (
         <Screen>
@@ -125,7 +114,6 @@ export const LandingPage = () => {
                                         UserController.requestBetaAccess(userCredential.user.email, (accessLevel: string) => {
                                             if (accessLevel) {
                                                 if (accessLevel === "beta_approved") {
-                                                    storeUserCredential(userCredential);
                                                     AuditLogController.addLog("login");
                                                 } else {
                                                     setRegistrationStatus(accessLevel);
