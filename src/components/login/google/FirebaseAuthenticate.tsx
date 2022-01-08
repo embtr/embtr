@@ -11,7 +11,7 @@ interface Props {
     callback: Function
 }
 
-export const FirebaseAuthenticate  = ({ buttonText, callback }: Props) => {
+export const FirebaseAuthenticate = ({ buttonText, callback }: Props) => {
 
     const onLoginResponse = (response: AuthSessionResult) => {
         if (response.type === 'success') {

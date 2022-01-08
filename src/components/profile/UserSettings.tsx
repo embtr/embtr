@@ -5,6 +5,7 @@ import { View, SafeAreaView, Button } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { Banner } from 'src/components/common/Banner';
 import { ThemeToggle } from 'src/components/theme/themeToggle';
+import { getAuth } from 'firebase/auth';
 
 export const UserSettings = () => {
 
@@ -18,7 +19,7 @@ export const UserSettings = () => {
                 <View style={{ flexDirection: "column", flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ThemeToggle />
                     <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-                        <Button title='logout' onPress={() => { dispatch(clearUser()); }}></Button>
+                        <Button title='logout' onPress={() => { getAuth().signOut(); }}></Button>
                     </View>
                 </View>
             </SafeAreaView>

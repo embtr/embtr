@@ -8,6 +8,7 @@ import { ReleaseNotes } from 'src/static/ReleaseNotes';
 import { Dashboard } from 'src/components/home/home';
 import { LandingPage } from 'src/components/landing/LandingPage';
 import { UserSettings } from 'src/components/profile/UserSettings';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,9 +26,16 @@ const linking = {
 };
 
 export const Main = () => {
-    const userIsLoggedIn: boolean = useAppSelector(userIsSet);
+    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState(false);
 
-    // https://reactnavigation.org/docs/auth-flow/
+    onAuthStateChanged(getAuth(), (user) => {
+        if (user) {
+            setUserIsLoggedIn(true);
+        } else {
+            setUserIsLoggedIn(false);
+        }
+    });
+
     return (
         <NavigationContainer linking={linking}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -37,7 +45,7 @@ export const Main = () => {
                     <Stack.Screen name="Dashboard" component={Dashboard} />
                 )}
 
-                { userIsLoggedIn && <Stack.Screen name="UserSettings" component={UserSettings} /> }
+                {userIsLoggedIn && <Stack.Screen name="UserSettings" component={UserSettings} />}
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
 
