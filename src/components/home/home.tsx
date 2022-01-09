@@ -7,7 +7,7 @@ import { Timeline } from 'src/components/timeline/Timeline';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { getCurrentUserEmail } from 'src/session/CurrentUserProvider';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { UserProfile } from 'src/components/profile/UserProfle';
+import { ProfileTab } from 'src/components/profile/ProfileTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -60,7 +60,7 @@ export const Dashboard = () => {
                 })}
             >
                 <Tab.Screen name={TABS.TIMELINE} component={Timeline} />
-                <Tab.Screen name={TABS.USER_PROFILE} component={UserProfile} />
+                <Tab.Screen name={TABS.USER_PROFILE} component={ProfileTab} />
             </Tab.Navigator>
         </View>
     );
