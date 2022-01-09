@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import UserDao from "src/firebase/firestore/user/UserDao";
 
 class UserController {
@@ -13,6 +14,10 @@ class UserController {
                 });
             }
         });
+    }
+
+    public static updateProfile() {
+        //console.log(getAuth().currentUser);
     }
 }
 

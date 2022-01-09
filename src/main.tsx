@@ -2,13 +2,14 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAppSelector } from 'src/redux/hooks';
-import { userIsSet } from 'src/redux/user/UserSlice';
+import { getAccessLevel } from 'src/redux/user/GlobalState';
 import { About } from 'src/static/About';
 import { ReleaseNotes } from 'src/static/ReleaseNotes';
 import { Dashboard } from 'src/components/home/home';
 import { LandingPage } from 'src/components/landing/LandingPage';
 import { UserSettings } from 'src/components/profile/UserSettings';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,20 +27,21 @@ const linking = {
 };
 
 export const Main = () => {
+    const accessLevel = useAppSelector(getAccessLevel);
     const [userIsLoggedIn, setUserIsLoggedIn] = React.useState(false);
-
-    onAuthStateChanged(getAuth(), (user) => {
-        if (user) {
-            setUserIsLoggedIn(true);
-        } else {
-            setUserIsLoggedIn(false);
-        }
+    
+    registerAuthStateListener((user : User) => {
+        setUserIsLoggedIn(user !== null);
     });
+
+    const isSuccessfullyLoggedIn = () => {
+        return accessLevel === "beta_approved" && userIsLoggedIn;
+    }
 
     return (
         <NavigationContainer linking={linking}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {!userIsLoggedIn ? (
+                {!isSuccessfullyLoggedIn() ? (
                     <Stack.Screen name="Home" component={LandingPage} />
                 ) : (
                     <Stack.Screen name="Dashboard" component={Dashboard} />

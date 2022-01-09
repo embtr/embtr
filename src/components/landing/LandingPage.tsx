@@ -8,6 +8,9 @@ import { UserCredential } from 'firebase/auth';
 import AuditLogController from 'src/controller/audit_log/AuditLogController';
 import UserController from 'src/controller/user/UserController';
 import { LandingFooter } from 'src/components/landing/LandingFooter';
+import { LandingBetaStatus } from 'src/components/landing/LandingBetaStatus';
+import { useAppDispatch } from 'src/redux/hooks';
+import { setAccessLevel } from 'src/redux/user/GlobalState';
 
 const REGISTRATION_STATUS_SIZE = 2;
 
@@ -29,17 +32,31 @@ export const LandingPage = () => {
         width: "95%"
     } as ViewStyle;
 
-    const betaRequestStatusTextStyle = {
-        textAlign: 'center',
-        fontSize: 14,
-        color: colors.secondary_border
-    } as TextStyle;
-
     const textViewStyle = {
         width: isDesktopBrowser() ? "60%" : "95%"
     } as ViewStyle;
 
     const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
+
+    const dispatch = useAppDispatch();
+
+    const onAuthenticated = (userCredential: UserCredential) => {
+        if (userCredential?.user?.email) {
+            UserController.requestBetaAccess(userCredential.user.email, (accessLevel: string) => {
+                if (accessLevel) {
+                    dispatch(setAccessLevel(accessLevel));
+
+                    if (accessLevel !== "beta_approved") {
+                        setRegistrationStatus(accessLevel);
+                    }
+                } else {
+                    setRegistrationStatus("error_data");
+                }
+            })
+        } else {
+            setRegistrationStatus("error_auth");
+        }
+    }
 
     return (
         <Screen>
@@ -60,72 +77,14 @@ export const LandingPage = () => {
                         </Text>
                     </View>
 
-
-                    {
-                        // todo move to own component
-                    }
-
-                    {registrationStatus === "initial_beta_pending" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
-                                Thank you for your beta request! Please check your inbox for further steps.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "beta_pending" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
-                                Your beta request has been previously submitted and is currently pending ✅.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "beta_denied" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={betaRequestStatusTextStyle}>
-                                Beta registration is currently closed. We will send an email when we open access again.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "error_auth" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={[betaRequestStatusTextStyle, {color:"red"} ]}>
-                                We failed to authenticate your account. Reach out to support@embtr.com if this error continues.
-                            </Text>
-                        </View>
-                    }
-
-                    {registrationStatus === "error_data" &&
-                        <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
-                            <Text style={[betaRequestStatusTextStyle, {color:"red"} ]}>
-                                An error occured while requesting beta access. Reach out to support@embtr.com if this error continues.
-                            </Text>
-                        </View>
-                    }
+                    {registrationStatus !== "invalid" && <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                        <LandingBetaStatus registrationStatus={registrationStatus} />
+                    </View>}
 
                     {registrationStatus === "invalid" &&
                         <View style={{ flexDirection: "row", flex: REGISTRATION_STATUS_SIZE }}>
                             <View style={{ flex: 1, alignItems: "center" }}>
-                                <FirebaseAuthenticate buttonText="Beta Access" callback={(userCredential: UserCredential) => {
-                                    if (userCredential?.user?.email) {
-                                        { /* todo convert data to interface to enforce type */ }
-                                        UserController.requestBetaAccess(userCredential.user.email, (accessLevel: string) => {
-                                            if (accessLevel) {
-                                                if (accessLevel === "beta_approved") {
-                                                    AuditLogController.addLog("login");
-                                                } else {
-                                                    setRegistrationStatus(accessLevel);
-                                                }
-                                            } else {
-                                                setRegistrationStatus("error_data");
-                                            }
-                                        })
-                                    } else {
-                                        setRegistrationStatus("error_auth");
-                                    }
-                                }} />
+                                <FirebaseAuthenticate buttonText="Beta Access" callback={onAuthenticated} />
                             </View>
                         </View>
                     }

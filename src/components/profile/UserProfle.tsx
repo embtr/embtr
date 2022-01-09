@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useAppSelector } from "src/redux/hooks";
-import { getUser } from "src/redux/user/UserSlice";
 import { View, SafeAreaView } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { Banner } from 'src/components/common/Banner';
@@ -13,13 +12,11 @@ export const UserProfile = () => {
 
     const [userProfile, setUserProfile] = React.useState<Profile | undefined>(undefined);
 
-    const user = useAppSelector(getUser);
-
-    React.useEffect(() => {
-        ProfileController.getProfile(user.email!, (profile: Profile) => {
-            setUserProfile(profile);
-        });
-    }, [user]);
+    //React.useEffect(() => {
+    //    ProfileController.getProfile(user.email!, (profile: Profile) => {
+    //        setUserProfile(profile);
+    //    });
+    //}, [user]);
 
     return (
         <Screen>
@@ -28,7 +25,7 @@ export const UserProfile = () => {
 
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                        <ProfileHeader user={user} profile={userProfile} />
+                        <ProfileHeader profile={userProfile} />
                     </View>
                 </View>
 

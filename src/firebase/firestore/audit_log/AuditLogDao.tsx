@@ -5,7 +5,7 @@ import { Store } from 'src/redux/store';
 class AuditLogDao {
     public static addLog(action: string) {
         const state = Store.getState();
-        const email = state.user.email;
+        const email = "tester";
 
         const db: Firestore = getFirestore(firebaseApp);
 

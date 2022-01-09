@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import UserSlice from "src/redux/user/UserSlice";
+import GlobalState from "src/redux/user/GlobalState";
 
 export default combineReducers({
-    user: UserSlice
+    globalState: GlobalState
 });

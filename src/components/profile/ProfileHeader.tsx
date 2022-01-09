@@ -3,15 +3,12 @@ import { Text, TextStyle, View, Image } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { Profile } from 'src/components/profile/Profile';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { User } from 'src/redux/user/UserSlice';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
 
 interface Props {
-    user: User,
     profile?: Profile
 }
 
-export const ProfileHeader = ({ user, profile }: Props) => {
+export const ProfileHeader = ({ profile }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -23,8 +20,8 @@ export const ProfileHeader = ({ user, profile }: Props) => {
         <View>
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 12 }}>
-                    <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: user.profileUrl }} /></View>
-                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{user.displayName}</Text></View>
+                    <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: "" }} /></View>
+                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>brent</Text></View>
                 </View>
 
                 <View style={{ flex: 12, flexDirection: "row" }}>
