@@ -2,7 +2,6 @@ import { getFirestore, Firestore, doc, setDoc, getDoc, Timestamp } from 'firebas
 import firebaseApp from "src/firebase/Firebase"
 
 class UserDao {
-
     public static async getBetaRequestStatus(email: string) {
         const db: Firestore = getFirestore(firebaseApp);
         const result = await getDoc(doc(db, "users/", email));

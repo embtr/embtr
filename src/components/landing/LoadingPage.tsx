@@ -1,7 +1,15 @@
 import * as React from 'react';
-import { Screen } from 'src/components/common/screen';
+import { useTheme } from "src/components/theme/ThemeProvider";
+import { View, ViewStyle } from 'react-native';
 
 export const LoadingPage = () => {
+    const { colors } = useTheme();
 
-    return <Screen> </Screen>
+    const loadingPageView = {
+        width: "100%",
+        height: "100%",
+        backgroundColor: colors.background
+    } as ViewStyle;
+    
+    return <View style={loadingPageView}></View>
 };

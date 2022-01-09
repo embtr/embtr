@@ -1,5 +1,12 @@
-import { getFirestore, Firestore, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, Firestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import firebaseApp from "src/firebase/Firebase"
+
+export interface UserProfileModel {
+    name?: string,
+    email?: string,
+    photoUrl?: string,
+    bio?: string
+}
 
 class ProfileDao {
 
@@ -9,6 +16,16 @@ class ProfileDao {
 
         return result;
     }
+
+    public static updateProfile(userProfile: UserProfileModel) {
+       const db: Firestore = getFirestore(firebaseApp);
+
+       setDoc(doc(db, "profiles/", userProfile.email!), {
+           "name": userProfile.name,
+           "email": userProfile.email,
+           "photoUrl": userProfile.photoUrl
+       }, {merge: true});
+   }
 
 }
 

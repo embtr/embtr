@@ -5,7 +5,6 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
 import { UserCredential } from 'firebase/auth';
-import AuditLogController from 'src/controller/audit_log/AuditLogController';
 import UserController from 'src/controller/user/UserController';
 import { LandingFooter } from 'src/components/landing/LandingFooter';
 import { LandingBetaStatus } from 'src/components/landing/LandingBetaStatus';
@@ -42,7 +41,7 @@ export const LandingPage = () => {
 
     const onAuthenticated = (userCredential: UserCredential) => {
         if (userCredential?.user?.email) {
-            UserController.requestBetaAccess(userCredential.user.email, (accessLevel: string) => {
+            UserController.getAccessLevel(userCredential.user.email, (accessLevel: string) => {
                 if (accessLevel) {
                     dispatch(setAccessLevel(accessLevel));
 

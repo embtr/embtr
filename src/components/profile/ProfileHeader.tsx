@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { Text, TextStyle, View, Image } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
-import { Profile } from 'src/components/profile/Profile';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 
 interface Props {
-    profile?: Profile
+    userProfileModel?: UserProfileModel
 }
 
-export const ProfileHeader = ({ profile }: Props) => {
+export const ProfileHeader = ({ userProfileModel }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -20,8 +20,8 @@ export const ProfileHeader = ({ profile }: Props) => {
         <View>
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 12 }}>
-                    <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: "" }} /></View>
-                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>brent</Text></View>
+                    <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel?.photoUrl }} /></View>
+                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{ userProfileModel?.name }</Text></View>
                 </View>
 
                 <View style={{ flex: 12, flexDirection: "row" }}>
@@ -41,7 +41,7 @@ export const ProfileHeader = ({ profile }: Props) => {
 
             </View>
             <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, paddingBottom: 15 }}>
-                <Text style={textStyle}>{profile?.bio ? profile.bio : ""}</Text>
+                <Text style={textStyle}>{ userProfileModel?.bio }</Text>
             </View>
             <HorizontalLine />
         </View>

@@ -1,22 +1,22 @@
 import * as React from 'react';
-import { useAppSelector } from "src/redux/hooks";
 import { View, SafeAreaView } from 'react-native';
 import { Screen } from 'src/components/common/screen';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import ProfileController from 'src/controller/profile/ProfileController';
-import { Profile } from 'src/components/profile/Profile';
 import { ProfileHeader } from 'src/components/profile/ProfileHeader';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import ProfileController from 'src/controller/profile/ProfileController';
+import { getCurrentUserEmail } from 'src/session/CurrentUserProvider';
 
 export const UserProfile = () => {
 
-    const [userProfile, setUserProfile] = React.useState<Profile | undefined>(undefined);
+    const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
 
-    //React.useEffect(() => {
-    //    ProfileController.getProfile(user.email!, (profile: Profile) => {
-    //        setUserProfile(profile);
-    //    });
-    //}, [user]);
+    React.useEffect(() => {
+        ProfileController.getProfile(getCurrentUserEmail()!, (profile: UserProfileModel) => {
+            setUserProfileModel(profile);
+        });
+    }, []);
 
     return (
         <Screen>
@@ -25,11 +25,9 @@ export const UserProfile = () => {
 
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                        <ProfileHeader profile={userProfile} />
+                        <ProfileHeader userProfileModel={userProfileModel} />
                     </View>
                 </View>
-
-
 
             </SafeAreaView>
         </Screen>

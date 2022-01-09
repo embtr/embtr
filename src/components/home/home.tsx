@@ -3,9 +3,11 @@ import { Text, View, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { UserProfile } from 'src/components/profile/UserProfle';
 import { Timeline } from 'src/components/timeline/Timeline';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
+import { getCurrentUserEmail } from 'src/session/CurrentUserProvider';
+import ProfileController from 'src/controller/profile/ProfileController';
+import { UserProfile } from 'src/components/profile/UserProfle';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +18,9 @@ const TABS = {
 
 export const Dashboard = () => {
     const { colors } = useTheme();
+
+    const [userProfilePhoto, setUserProfilePhoto] = React.useState<string | undefined>(undefined);
+    ProfileController.getProfile(getCurrentUserEmail()!, (profileData : any) => {setUserProfilePhoto(profileData['photoUrl'])});
 
     return (
         <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>
@@ -41,7 +46,7 @@ export const Dashboard = () => {
                             return (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                                     <View style={{ width: size + 2, height: size + 2, borderRadius: 50, backgroundColor: backgroundColor, alignItems: "center", justifyContent: "center" }}>
-                                        <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: "" }} />
+                                        <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfilePhoto }} />
                                     </View>
                                     <Text style={{ color: textColor }}>you</Text>
                                 </View>
