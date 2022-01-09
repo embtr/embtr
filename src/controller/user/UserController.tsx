@@ -28,10 +28,11 @@ class UserController {
 
     private static updateProfile(user: User) {
         const name: string = user.displayName!;
+        const nameLower: string = user.displayName!.toLowerCase()
         const email: string = user.email!;
         const photoUrl: string = user.photoURL!;
 
-        ProfileDao.updateProfile({ name: name, email: email, photoUrl: photoUrl });
+        ProfileDao.updateProfile({ name: name, nameLower: nameLower, email: email, photoUrl: photoUrl });
     }
 }
 

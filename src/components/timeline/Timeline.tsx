@@ -14,7 +14,7 @@ export const Timeline = () => {
     return (
         <Screen>
             <SafeAreaView style={{ flex: 1 }}>
-                <Banner name="Timeline" />
+                <Banner name="Timeline" leftIcon={'search-circle-outline'} leftRoute='UserSearch' />
 
                 <View style={{ flex: 1, justifyContent: 'center' }}>
                     <Text style={textStyle}>welcome to the embtr. timeline!</Text>

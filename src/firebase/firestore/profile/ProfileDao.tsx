@@ -3,6 +3,7 @@ import firebaseApp from "src/firebase/Firebase"
 
 export interface UserProfileModel {
     name?: string,
+    nameLower?: string,
     email?: string,
     photoUrl?: string,
     bio?: string
@@ -22,6 +23,7 @@ class ProfileDao {
 
        setDoc(doc(db, "profiles/", userProfile.email!), {
            "name": userProfile.name,
+           "nameLower": userProfile.nameLower,
            "email": userProfile.email,
            "photoUrl": userProfile.photoUrl
        }, {merge: true});

@@ -1,4 +1,4 @@
-import { getFirestore, Firestore, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
+import { getFirestore, Firestore, doc, setDoc, getDoc, Timestamp} from 'firebase/firestore';
 import firebaseApp from "src/firebase/Firebase"
 
 class UserDao {

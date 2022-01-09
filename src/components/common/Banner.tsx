@@ -7,7 +7,7 @@ import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 
-type userSettingsScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage' | 'Dashboard' | 'About' | 'ReleaseNotes' | 'Contact' | 'UserSettings'>;
+type userSettingsScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage' | 'Dashboard' | 'About' | 'ReleaseNotes' | 'Contact' | 'UserSettings' | 'UserSearch'>;
 
 interface Props {
     name: string,

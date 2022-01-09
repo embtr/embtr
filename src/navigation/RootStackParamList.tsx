@@ -5,4 +5,5 @@ export type RootStackParamList = {
     ReleaseNotes: undefined;
     Contact: undefined;
     UserSettings: undefined;
+    UserSearch: undefined;
 };

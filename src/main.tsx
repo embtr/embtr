@@ -12,6 +12,7 @@ import { User } from 'firebase/auth';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import UserController from 'src/controller/user/UserController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
+import { UserSearch } from 'src/components/profile/search/UserSearch';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,7 +24,8 @@ const linking = {
             Dashboard: 'dashboard',
             About: 'about',
             ReleaseNotes: 'releaseNotes',
-            UserSettings: 'userSettings'
+            UserSettings: 'userSettings',
+            UserSearch: 'userSearch'
         }
     },
 };
@@ -60,6 +62,7 @@ export const Main = () => {
                         <Stack.Screen name="Dashboard" component={Dashboard} />
                     )}
 
+                {userIsLoggedIn && <Stack.Screen name="UserSearch" component={UserSearch} />}
                 {userIsLoggedIn && <Stack.Screen name="UserSettings" component={UserSettings} />}
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
