@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
+import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { UserSearchResult } from 'src/components/profile/search/UserSearchResult';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 
@@ -10,17 +12,17 @@ interface Props {
 export const UserSearchResults = ({ searchResults }: Props) => {
     const { colors } = useTheme();
 
-
     let resultViews: JSX.Element[] = [];
-    searchResults.forEach(element => {
+    searchResults.forEach(userProfileModel => {
         resultViews.push(
-            <View>
-                <Text style={{ color: colors.text }}>{element.name} {element.email}</Text>
+            <View key={userProfileModel.email} style={{width:"100%"}}>
+                <UserSearchResult userProfileModel={userProfileModel} />
+                <HorizontalLine />
             </View>
         );
     });
     return (
-        <View>
+        <View style={{width:"100%"}}>
             {resultViews}
         </View>
     );

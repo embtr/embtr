@@ -21,7 +21,7 @@ export const ProfileHeader = ({ userProfileModel }: Props) => {
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 12 }}>
                     <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel?.photoUrl }} /></View>
-                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{ userProfileModel?.name }</Text></View>
+                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{userProfileModel?.name}</Text></View>
                 </View>
 
                 <View style={{ flex: 12, flexDirection: "row" }}>
@@ -41,7 +41,7 @@ export const ProfileHeader = ({ userProfileModel }: Props) => {
 
             </View>
             <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, paddingBottom: 15 }}>
-                <Text style={textStyle}>{ userProfileModel?.bio }</Text>
+                <Text style={textStyle}>{userProfileModel?.bio}</Text>
             </View>
             <HorizontalLine />
         </View>

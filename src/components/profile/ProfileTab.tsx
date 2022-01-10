@@ -2,7 +2,7 @@ import * as React from 'react';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getCurrentUserEmail } from 'src/session/CurrentUserProvider';
-import { UserProfile } from 'src/components/profile/UserProfle';
+import { CurrentUserProfile } from 'src/components/profile/CurrentUserProfle';
 import { Screen } from 'src/components/common/screen';
 import { SafeAreaView } from 'react-native';
 
@@ -19,7 +19,7 @@ export const ProfileTab = () => {
 
     return (<Screen>
         <SafeAreaView>
-            {userProfileModel && <UserProfile userProfileModel={userProfileModel} />}
+            {userProfileModel && <CurrentUserProfile userProfileModel={userProfileModel} />}
         </SafeAreaView>
     </Screen>)
 

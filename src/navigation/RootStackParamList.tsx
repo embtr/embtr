@@ -1,3 +1,5 @@
+import { UserProfileModel } from "src/firebase/firestore/profile/ProfileDao";
+
 export type RootStackParamList = {
     LandingPage: undefined;
     Dashboard: undefined;
@@ -6,4 +8,5 @@ export type RootStackParamList = {
     Contact: undefined;
     UserSettings: undefined;
     UserSearch: undefined;
+    UserProfile: { userProfileModel: UserProfileModel };
 };

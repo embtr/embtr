@@ -30,7 +30,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon }: Pro
         <View>
             <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
                 <View style={{ flex: 1, paddingLeft: 10, paddingTop: 5 }}>
-                    {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
+                    {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
                 </View>
 
                 <View style={{ flex: 1, justifyContent: "center" }}>

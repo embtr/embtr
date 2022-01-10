@@ -13,6 +13,7 @@ import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import UserController from 'src/controller/user/UserController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { UserSearch } from 'src/components/profile/search/UserSearch';
+import { UserProfile } from 'src/components/profile/UserProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +26,8 @@ const linking = {
             About: 'about',
             ReleaseNotes: 'releaseNotes',
             UserSettings: 'userSettings',
-            UserSearch: 'userSearch'
+            UserSearch: 'userSearch',
+            UserProfile: 'userProfile'
         }
     },
 };
@@ -64,6 +66,8 @@ export const Main = () => {
 
                 {userIsLoggedIn && <Stack.Screen name="UserSearch" component={UserSearch} />}
                 {userIsLoggedIn && <Stack.Screen name="UserSettings" component={UserSettings} />}
+                {userIsLoggedIn && <Stack.Screen name="UserProfile" component={UserProfile} />}
+                
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
 
