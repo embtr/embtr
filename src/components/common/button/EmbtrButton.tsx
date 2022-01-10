@@ -7,15 +7,15 @@ interface Props {
     borderColor?: string,
     buttonText: string,
     callback: Function,
+    size?: string
 }
 
-export const EmbtrButton = ({ image, borderColor, buttonText, callback }: Props) => {
+export const EmbtrButton = ({ image, borderColor, buttonText, callback, size }: Props) => {
     const { colors } = useTheme();
 
     const containerStyle = {
-        margin: 10,
-        padding: 12,
-        width: 170,
+        padding: size === "small" ? 6 : 12,
+        width: size === "small" ? 120 : 170,
         borderRadius: 4,
         borderWidth: 2,
         borderColor: borderColor === "secondary" ? colors.secondary_border : colors.primary_border,

@@ -8,12 +8,15 @@ import UsersController from 'src/controller/user/UsersController';
 import { UserSearchResults } from 'src/components/profile/search/UserSearchResults';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
+import FollowerController from 'src/controller/follower/FollowerController';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 
 export const UserSearch = () => {
     const { colors } = useTheme();
 
     const [searchText, setSearchText] = React.useState("");
     const [searchResults, setSearchResults] = React.useState<UserSearchResultObject | undefined>(undefined);
+    const [followingUids, setFollowingUids] = React.useState<string[]>([]);
 
     const onSearchChange = (text: string) => {
         const runDownSubQuery: boolean = text.includes(searchText);
@@ -30,7 +33,7 @@ export const UserSearch = () => {
             });
 
         } else if (searchResults && runDownUpQuery) {
-                setSearchResults(searchResults.parentSearch);
+            setSearchResults(searchResults.parentSearch);
 
         } else {
             UsersController.getUsersByDisplayName(text, (results: UserSearchResultObject) => {
@@ -38,6 +41,10 @@ export const UserSearch = () => {
             });
         }
     }
+
+    React.useEffect(() => {
+        FollowerController.getFollowing(getCurrentUserUid(), setFollowingUids);
+      }, []);
 
     return (
         <Screen>
@@ -56,9 +63,9 @@ export const UserSearch = () => {
                             placeholder={"enter search"}
                         />
                     </View>
-                    <View style={{ paddingTop: 20, width: "100%" }}>
+                    <View style={{ paddingTop: 20, width:"100%"}}>
                         <HorizontalLine />
-                        {searchResults?.results ? <UserSearchResults searchResults={searchResults.results!} /> : <UserSearchResults searchResults={[]} />}
+                        {searchResults?.results ? <UserSearchResults followingUids={followingUids} searchResults={searchResults.results!} /> : <UserSearchResults followingUids={followingUids} searchResults={[]} />}
                     </View>
                 </View>
             </SafeAreaView>
