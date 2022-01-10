@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAppSelector } from 'src/redux/hooks';
@@ -41,7 +41,6 @@ export const Main = () => {
     React.useEffect(() => {
         registerAuthStateListener((user: User) => {
             setComponentIsMounted(true);
-
             setUserIsLoggedIn(user !== null);
         });
 

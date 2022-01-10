@@ -4,13 +4,13 @@ import UserDao from "src/firebase/firestore/user/UserDao";
 import { registerAuthStateListener } from "src/session/CurrentUserProvider";
 
 class UserController {
-    public static getAccessLevel(email: string, callback: Function) {
-        const result = UserDao.getBetaRequestStatus(email);
+    public static getAccessLevel(uid: string, email: string, callback: Function) {
+        const result = UserDao.getBetaRequestStatus(uid);
         result.then(document => {
             if (document.exists() && document.data() && document.data()["access_level"]) {
                 callback(document.data()["access_level"]);
             } else {
-                const betaCreateResult = UserDao.requestBetaAccess(email);
+                const betaCreateResult = UserDao.requestBetaAccess(uid, email);
                 betaCreateResult.then(() => {
                     callback("initial_beta_pending");
                 });
@@ -27,12 +27,13 @@ class UserController {
     }
 
     private static updateProfile(user: User) {
+        const uid : string = user.uid;
         const name: string = user.displayName!;
         const nameLower: string = user.displayName!.toLowerCase()
         const email: string = user.email!;
         const photoUrl: string = user.photoURL!;
 
-        ProfileDao.updateProfile({ name: name, nameLower: nameLower, email: email, photoUrl: photoUrl });
+        ProfileDao.updateProfile({ uid: uid, name: name, nameLower: nameLower, email: email, photoUrl: photoUrl });
     }
 }
 

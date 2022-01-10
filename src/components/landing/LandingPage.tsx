@@ -40,8 +40,8 @@ export const LandingPage = () => {
     const dispatch = useAppDispatch();
 
     const onAuthenticated = (userCredential: UserCredential) => {
-        if (userCredential?.user?.email) {
-            UserController.getAccessLevel(userCredential.user.email, (accessLevel: string) => {
+        if (userCredential?.user?.uid && userCredential?.user?.email) {
+            UserController.getAccessLevel(userCredential.user.uid, userCredential.user.email, (accessLevel: string) => {
                 if (accessLevel) {
                     dispatch(setAccessLevel(accessLevel));
 

@@ -1,8 +1,8 @@
 import ProfileDao from "src/firebase/firestore/profile/ProfileDao";
 
 class ProfileController {
-    public static getProfile(email: string, callback: Function) {
-        const result = ProfileDao.getProfile(email);
+    public static getProfile(uid: string, callback: Function) {
+        const result = ProfileDao.getProfile(uid);
         result.then(document => {
             if (document.exists()) {
                 callback(document.data());

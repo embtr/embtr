@@ -7,10 +7,10 @@ export const registerAuthStateListener = (callback: Function) => {
     });
 }
 
-export const getCurrentUserEmail = () => {
+export const getCurrentUserUid = () => {
     const user : User | null = getAuth().currentUser;
     if (user) {
-        return user.email;
+        return user.uid;
     }
 
     return "";

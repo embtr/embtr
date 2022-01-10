@@ -5,9 +5,10 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { Timeline } from 'src/components/timeline/Timeline';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import { getCurrentUserEmail } from 'src/session/CurrentUserProvider';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { ProfileTab } from 'src/components/profile/ProfileTab';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +21,7 @@ export const Dashboard = () => {
     const { colors } = useTheme();
 
     const [userProfilePhoto, setUserProfilePhoto] = React.useState<string | undefined>(undefined);
-    ProfileController.getProfile(getCurrentUserEmail()!, (profileData : any) => {setUserProfilePhoto(profileData['photoUrl'])});
+    ProfileController.getProfile(getCurrentUserUid(), (profileData : UserProfileModel) => {setUserProfilePhoto(profileData?.photoUrl ? profileData?.photoUrl : undefined)});
 
     return (
         <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>
@@ -28,7 +29,7 @@ export const Dashboard = () => {
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarStyle: { backgroundColor: colors.background },
-                    tabBarIcon: ({ focused, color, size }) => {
+                    tabBarIcon: ({ focused, size }) => {
                         if (route.name === TABS.TIMELINE) {
                             let icon: any = focused ? 'ios-home' : 'ios-home-outline';
                             let color = focused ? colors.primary_border : colors.text;

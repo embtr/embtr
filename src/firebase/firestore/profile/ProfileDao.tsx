@@ -2,6 +2,7 @@ import { getFirestore, Firestore, doc, getDoc, setDoc } from 'firebase/firestore
 import firebaseApp from "src/firebase/Firebase"
 
 export interface UserProfileModel {
+    uid?: string,
     name?: string,
     nameLower?: string,
     email?: string,
@@ -11,9 +12,9 @@ export interface UserProfileModel {
 
 class ProfileDao {
 
-    public static async getProfile(email: string) {
+    public static async getProfile(uid: string) {
         const db: Firestore = getFirestore(firebaseApp);
-        const result = await getDoc(doc(db, "profiles/", email));
+        const result = await getDoc(doc(db, "profiles/", uid));
 
         return result;
     }
@@ -21,7 +22,12 @@ class ProfileDao {
     public static updateProfile(userProfile: UserProfileModel) {
        const db: Firestore = getFirestore(firebaseApp);
 
-       setDoc(doc(db, "profiles/", userProfile.email!), {
+       if (!userProfile.uid) {
+           return;
+       }
+
+       setDoc(doc(db, "profiles/", userProfile.uid), {
+           "uid": userProfile.uid,
            "name": userProfile.name,
            "nameLower": userProfile.nameLower,
            "email": userProfile.email,
