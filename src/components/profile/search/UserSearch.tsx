@@ -43,12 +43,10 @@ export const UserSearch = () => {
     }
 
     const onAddFollowUid = (uid: string) => {
-        console.log("adding: " + uid)
         followingUids.push(uid);
     }
 
     const onRemoveFollowUid = (uid: string) => {
-        console.log("removing: " + uid)
         for (var i = followingUids.length - 1; i >= 0; i--) {
             if (followingUids[i] === uid) {
                 followingUids.splice(i, 1);
