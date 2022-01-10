@@ -35,7 +35,7 @@ export const UserSearchResult = ({ userProfileModel, following }: Props) => {
                 <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10 }}>
                     <View style={{ marginRight: 10 }}><Image style={{ width: 35, height: 35, borderRadius: 50, marginLeft: 10, marginRight: 10 }} source={{ uri: userProfileModel?.photoUrl }} /></View>
                     <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10, flex: 1 }}>
-                        <View style={{ flex: 8 }}><Text style={textStyle}>{userProfileModel?.name}</Text></View>
+                        <View style={{ flex: 7 }}><Text style={textStyle}>{userProfileModel?.name}</Text></View>
                         {followOverride
                             ? <View style={{ flex: 5 }}>
                                 <EmbtrButton buttonText='unfollow' size='small' callback={() => {
