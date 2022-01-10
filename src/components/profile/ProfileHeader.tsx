@@ -21,16 +21,18 @@ export const ProfileHeader = ({ userProfileModel }: Props) => {
     const [followerCount, setFollowerCount] = React.useState<number>(0);
     const [followingCount, setFollowingCount] = React.useState<number>(0);
 
-    useFocusEffect(() => {
-        FollowerController.getFollowers(userProfileModel.uid!, (followers: string[]) => {
-            setFollowerCount(followers.length);
-        });
+    useFocusEffect(
+        React.useCallback(() => {
+            FollowerController.getFollowers(userProfileModel.uid!, (followers: string[]) => {
+                setFollowerCount(followers.length);
+            });
 
-        FollowerController.getFollowing(userProfileModel.uid!, (following: string[]) => {
-            setFollowingCount(following.length);
+            FollowerController.getFollowing(userProfileModel.uid!, (following: string[]) => {
+                setFollowingCount(following.length);
 
-        });
-    });
+            });
+        }, [userProfileModel])
+    );
 
     return (
         <View>
