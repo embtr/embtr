@@ -42,9 +42,24 @@ export const UserSearch = () => {
         }
     }
 
+    const onAddFollowUid = (uid: string) => {
+        console.log("adding: " + uid)
+        followingUids.push(uid);
+    }
+
+    const onRemoveFollowUid = (uid: string) => {
+        console.log("removing: " + uid)
+        for (var i = followingUids.length - 1; i >= 0; i--) {
+            if (followingUids[i] === uid) {
+                followingUids.splice(i, 1);
+                return;
+            }
+        }
+    }
+
     React.useEffect(() => {
         FollowerController.getFollowing(getCurrentUserUid(), setFollowingUids);
-      }, []);
+    }, []);
 
     return (
         <Screen>
@@ -63,9 +78,11 @@ export const UserSearch = () => {
                             placeholder={"enter search"}
                         />
                     </View>
-                    <View style={{ paddingTop: 20, width:"100%"}}>
+                    <View style={{ paddingTop: 20, width: "100%" }}>
                         <HorizontalLine />
-                        {searchResults?.results ? <UserSearchResults followingUids={followingUids} searchResults={searchResults.results!} /> : <UserSearchResults followingUids={followingUids} searchResults={[]} />}
+                        {searchResults?.results
+                            ? <UserSearchResults followingUids={followingUids} onAddFollowUid={onAddFollowUid} onRemoveFollowUid={onRemoveFollowUid} searchResults={searchResults.results!} />
+                            : <UserSearchResults followingUids={followingUids} onAddFollowUid={onAddFollowUid} onRemoveFollowUid={onRemoveFollowUid} searchResults={[]} />}
                     </View>
                 </View>
             </SafeAreaView>

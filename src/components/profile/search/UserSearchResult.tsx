@@ -14,13 +14,13 @@ type userProfileScreenProp = StackNavigationProp<RootStackParamList, 'UserProfil
 
 interface Props {
     userProfileModel: UserProfileModel,
+    onAddFollowUid: Function,
+    onRemoveFollowUid: Function,
     following: boolean
 }
 
-export const UserSearchResult = ({ userProfileModel, following }: Props) => {
+export const UserSearchResult = ({ userProfileModel, onAddFollowUid, onRemoveFollowUid, following }: Props) => {
     const { colors } = useTheme();
-
-    const [followOverride, setFollowOverride] = React.useState<boolean>(following);
 
     const textStyle = {
         fontSize: 18,
@@ -29,6 +29,8 @@ export const UserSearchResult = ({ userProfileModel, following }: Props) => {
 
     const navigation = useNavigation<userProfileScreenProp>();
 
+    const [isFollowing, setIsFollowing] = React.useState(following);
+
     return (
         <View style={{ width: isDesktopBrowser() ? "60%" : "100%" }}>
             <TouchableOpacity onPress={() => { navigation.navigate('UserProfile', { userProfileModel: userProfileModel }) }}>
@@ -36,21 +38,25 @@ export const UserSearchResult = ({ userProfileModel, following }: Props) => {
                     <View style={{ marginRight: 10 }}><Image style={{ width: 35, height: 35, borderRadius: 50, marginLeft: 10, marginRight: 10 }} source={{ uri: userProfileModel?.photoUrl }} /></View>
                     <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10, flex: 1 }}>
                         <View style={{ flex: 7 }}><Text style={textStyle}>{userProfileModel?.name}</Text></View>
-                        {followOverride
+                        
+                        {isFollowing
                             ? <View style={{ flex: 5 }}>
                                 <EmbtrButton buttonText='unfollow' size='small' callback={() => {
                                     FollowerController.unfollowUser(getCurrentUserUid(), userProfileModel.uid!, () => {
-                                        setFollowOverride(false);
+                                        onRemoveFollowUid(userProfileModel.uid);
+                                        setIsFollowing(false);
                                     })
                                 }} />
                             </View>
                             : <View style={{ flex: 5 }}>
                                 <EmbtrButton buttonText='follow' size='small' callback={() => {
                                     FollowerController.followUser(getCurrentUserUid(), userProfileModel.uid!, () => {
-                                        setFollowOverride(true);
+                                        onAddFollowUid(userProfileModel.uid);
+                                        setIsFollowing(true);
                                     })
                                 }} />
                             </View>}
+                            
                     </View>
                 </View>
             </TouchableOpacity>

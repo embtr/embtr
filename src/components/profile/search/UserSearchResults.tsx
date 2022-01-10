@@ -6,10 +6,12 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 
 interface Props {
     followingUids: string[],
+    onAddFollowUid: Function,
+    onRemoveFollowUid: Function,
     searchResults: UserProfileModel[]
 }
 
-export const UserSearchResults = ({ followingUids, searchResults }: Props) => {
+export const UserSearchResults = ({ followingUids, onAddFollowUid, onRemoveFollowUid, searchResults }: Props) => {
 
     let resultViews: JSX.Element[] = [];
     searchResults.forEach(userProfileModel => {
@@ -18,7 +20,7 @@ export const UserSearchResults = ({ followingUids, searchResults }: Props) => {
         resultViews.push(
             <View key={userProfileModel.email}>
                 <View style={{ alignItems: "center" }}>
-                    <UserSearchResult following={following} userProfileModel={userProfileModel} />
+                    <UserSearchResult following={following} onAddFollowUid={onAddFollowUid} onRemoveFollowUid={onRemoveFollowUid} userProfileModel={userProfileModel} />
                 </View>
                 <HorizontalLine />
             </View>

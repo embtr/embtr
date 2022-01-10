@@ -1,5 +1,3 @@
-import { getFirestore, Firestore, doc, setDoc, getDoc, Timestamp} from 'firebase/firestore';
-import firebaseApp from "src/firebase/Firebase"
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 
 class UserSearchResultObject {
