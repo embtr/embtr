@@ -10,6 +10,7 @@ import { LandingFooter } from 'src/components/landing/LandingFooter';
 import { LandingBetaStatus } from 'src/components/landing/LandingBetaStatus';
 import { useAppDispatch } from 'src/redux/hooks';
 import { setAccessLevel } from 'src/redux/user/GlobalState';
+import MailController from 'src/controller/mail/MailController';
 
 const REGISTRATION_STATUS_SIZE = 2;
 
@@ -44,6 +45,10 @@ export const LandingPage = () => {
             UserController.getAccessLevel(userCredential.user.uid, userCredential.user.email, (accessLevel: string) => {
                 if (accessLevel) {
                     dispatch(setAccessLevel(accessLevel));
+
+                    if (accessLevel === "initial_beta_pending") {
+                        MailController.sendWelcomeToBetaMail(userCredential.user.email!);
+                    }
 
                     if (accessLevel !== "beta_approved") {
                         setRegistrationStatus(accessLevel);
