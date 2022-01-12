@@ -6,6 +6,7 @@ import { UserFollowButton } from 'src/components/profile/UserFollowButton';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import FollowerController from 'src/controller/follower/FollowerController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
     userProfileModel: UserProfileModel,

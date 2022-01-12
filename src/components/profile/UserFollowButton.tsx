@@ -13,6 +13,12 @@ interface Props {
 }
 
 export const UserFollowButton = ({ userProfileModel, onFollowUser, onUnfollowUser, following }: Props) => {
+    const isCurrentUsersProfile = getCurrentUserUid() === userProfileModel.uid;
+    
+    if (isCurrentUsersProfile) {
+        return <View />
+    }
+
     return (
         <View>
             {following
