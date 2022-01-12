@@ -13,9 +13,15 @@ interface Props {
 }
 
 export const UserFollowButton = ({ userProfileModel, onFollowUser, onUnfollowUser, following }: Props) => {
-    const isCurrentUsersProfile = getCurrentUserUid() === userProfileModel.uid;
+
+    const [isCurrentUsersProfile, setIsCurrentUsersProfile] = React.useState<boolean | undefined>(undefined);
+
+    const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
+    React.useEffect(() => {
+        getCurrentUserUid(setCurrentUserId);
+    }, []);
     
-    if (isCurrentUsersProfile) {
+    if (isCurrentUsersProfile === undefined || isCurrentUsersProfile) {
         return <View />
     }
 
@@ -23,12 +29,12 @@ export const UserFollowButton = ({ userProfileModel, onFollowUser, onUnfollowUse
         <View>
             {following
                 ? <EmbtrButton buttonText='following' size='small' callback={() => {
-                    FollowerController.unfollowUser(getCurrentUserUid(), userProfileModel.uid!, () => {
+                    FollowerController.unfollowUser(currentUserId!, userProfileModel.uid!, () => {
                         onUnfollowUser(userProfileModel.uid);
                     })
                 }} />
                 : <EmbtrButton buttonText='follow' size='small' callback={() => {
-                    FollowerController.followUser(getCurrentUserUid(), userProfileModel.uid!, () => {
+                    FollowerController.followUser(currentUserId!, userProfileModel.uid!, () => {
                         onFollowUser(userProfileModel.uid);
                     })
                 }} />}

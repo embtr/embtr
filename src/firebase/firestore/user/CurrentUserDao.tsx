@@ -1,7 +1,7 @@
 import { getFirestore, Firestore, doc, setDoc, getDoc, Timestamp} from 'firebase/firestore';
 import firebaseApp from "src/firebase/Firebase"
 
-class UserDao {
+class CurrentUserDao {
     public static async getBetaRequestStatus(uid: string) {
         const db: Firestore = getFirestore(firebaseApp);
         const result = await getDoc(doc(db, "users/", uid));
@@ -27,4 +27,4 @@ class UserDao {
     }
 }
 
-export default UserDao;
+export default CurrentUserDao;

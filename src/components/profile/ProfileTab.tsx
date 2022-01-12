@@ -11,11 +11,18 @@ export const ProfileTab = () => {
 
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
 
+    const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
     React.useEffect(() => {
-        ProfileController.getProfile(getCurrentUserUid()!, (profile: UserProfileModel) => {
-            setUserProfileModel(profile);
-        });
+        getCurrentUserUid(setCurrentUserId);
     }, []);
+
+    React.useEffect(() => {
+        if (currentUserId) {
+            ProfileController.getProfile(currentUserId, (profile: UserProfileModel) => {
+                setUserProfileModel(profile);
+            });
+        }
+    }, [currentUserId]);
 
     return (<Screen>
         <SafeAreaView>

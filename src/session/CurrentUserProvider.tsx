@@ -7,11 +7,13 @@ export const registerAuthStateListener = (callback: Function) => {
     });
 }
 
-export const getCurrentUserUid = () => {
+export const getCurrentUserUid = (callback: Function) => {
     const user : User | null = getAuth().currentUser;
     if (user) {
-        return user.uid;
+        callback(user.uid);
+    } else {
+        registerAuthStateListener((user: User) => {
+            callback(user.uid);
+        });
     }
-
-    return "";
 }

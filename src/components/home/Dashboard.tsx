@@ -20,8 +20,15 @@ const TABS = {
 export const Dashboard = () => {
     const { colors } = useTheme();
 
+    const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
+    React.useEffect(() => {
+        getCurrentUserUid(setCurrentUserId);
+    }, []);
+
     const [userProfilePhoto, setUserProfilePhoto] = React.useState<string | undefined>(undefined);
-    ProfileController.getProfile(getCurrentUserUid(), (profileData: UserProfileModel) => { setUserProfilePhoto(profileData?.photoUrl ? profileData?.photoUrl : undefined) });
+    if (currentUserId) {
+        ProfileController.getProfile(currentUserId, (profileData: UserProfileModel) => { setUserProfilePhoto(profileData?.photoUrl ? profileData?.photoUrl : undefined) });
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>

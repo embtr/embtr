@@ -29,7 +29,7 @@ export const UserSearchResult = ({ userProfileModel, onFollowUser, onUnfollowUse
 
     return (
         <View style={{ width: isDesktopBrowser() ? "60%" : "100%" }}>
-            <TouchableOpacity onPress={() => { navigation.navigate('UserProfile', { userProfileModel: userProfileModel }) }}>
+            <TouchableOpacity onPress={() => { navigation.navigate('UserProfile', { id: userProfileModel.uid! }) }}>
                 <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10 }}>
                     <View style={{ marginRight: 10 }}><Image style={{ width: 35, height: 35, borderRadius: 50, marginLeft: 10, marginRight: 10 }} source={{ uri: userProfileModel?.photoUrl }} /></View>
                     <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10, flex: 1 }}>

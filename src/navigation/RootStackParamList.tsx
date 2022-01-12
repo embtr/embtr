@@ -8,5 +8,5 @@ export type RootStackParamList = {
     Contact: undefined;
     UserSettings: undefined;
     UserSearch: undefined;
-    UserProfile: { userProfileModel: UserProfileModel };
+    UserProfile: { id: string };
 };

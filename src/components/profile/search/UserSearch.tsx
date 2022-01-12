@@ -19,6 +19,11 @@ export const UserSearch = () => {
     const [searchResults, setSearchResults] = React.useState<UserSearchResultObject | undefined>(undefined);
     const [followingUids, setFollowingUids] = React.useState<string[]>([]);
 
+    const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
+    React.useEffect(() => {
+        getCurrentUserUid(setCurrentUserId);
+    }, []);
+
     const onSearchChange = (text: string) => {
         const runDownSubQuery: boolean = text.includes(searchText);
         const runDownUpQuery: boolean = searchText.includes(text);
@@ -44,16 +49,18 @@ export const UserSearch = () => {
     }
 
     const onFollowUser = (uid: string) => {
-        FollowerController.followUser(getCurrentUserUid(), uid, () => { });
-
+        if (currentUserId) {
+            FollowerController.followUser(currentUserId, uid, () => { });
+        }
         let followingUidsCopy = followingUids.slice(0);
         followingUidsCopy.push(uid);
         setFollowingUids(followingUidsCopy);
     }
 
     const onUnfollowUser = (uid: string) => {
-        FollowerController.unfollowUser(getCurrentUserUid(), uid, () => { });
-
+        if (currentUserId) {
+            FollowerController.unfollowUser(currentUserId, uid, () => { });
+        }
         let followingUidsCopy = followingUids.slice(0);
         for (var i = followingUidsCopy.length - 1; i >= 0; i--) {
             if (followingUidsCopy[i] === uid) {
@@ -66,8 +73,10 @@ export const UserSearch = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            FollowerController.getFollowing(getCurrentUserUid(), setFollowingUids);
-        }, [getCurrentUserUid()])
+            if (currentUserId) {
+                FollowerController.getFollowing(currentUserId, setFollowingUids);
+            }
+        }, [currentUserId])
     );
 
     return (

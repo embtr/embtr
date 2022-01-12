@@ -6,10 +6,9 @@ import { UserFollowButton } from 'src/components/profile/UserFollowButton';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import FollowerController from 'src/controller/follower/FollowerController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
-    userProfileModel: UserProfileModel,
+    userProfileModel?: UserProfileModel,
     onFollowUser: Function,
     onUnfollowUser: Function,
     isFollowingUser: boolean
@@ -28,24 +27,28 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
     useFocusEffect(
         React.useCallback(() => {
-            FollowerController.getFollowers(userProfileModel.uid!, (followers: string[]) => {
+            if (!userProfileModel?.uid) {
+                return;
+            }
+
+            FollowerController.getFollowers(userProfileModel!.uid!, (followers: string[]) => {
                 setFollowerCount(followers.length);
             });
 
-            FollowerController.getFollowing(userProfileModel.uid!, (following: string[]) => {
+            FollowerController.getFollowing(userProfileModel!.uid!, (following: string[]) => {
                 setFollowingCount(following.length);
 
             });
 
-        }, [userProfileModel])
+        }, [userProfileModel?.uid])
     );
 
     return (
         <View>
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 12 }}>
-                    <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} /></View>
-                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{userProfileModel.name}</Text></View>
+                    <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : "" }} /></View>
+                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{userProfileModel ? userProfileModel.name : ""}</Text></View>
                 </View>
 
                 <View style={{ flex: 12, flexDirection: "column" }}>
@@ -69,7 +72,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                         <View style={{ flex: 10, flexDirection: "column", alignItems: "center" }}>
                             <View style={{ flex: 1 }} />
                             <View style={{ flex: 10 }}>
-                                <UserFollowButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={isFollowingUser} />
+                                {userProfileModel && <UserFollowButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={isFollowingUser} />}
                             </View>
                         </View>
                         <View style={{ flex: 2 }} />
@@ -80,7 +83,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
             </View>
             <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, paddingBottom: 15 }}>
-                <Text style={textStyle}>{userProfileModel.bio}</Text>
+                <Text style={textStyle}>{userProfileModel ? userProfileModel.bio : ""}</Text>
             </View>
             <HorizontalLine />
         </View>

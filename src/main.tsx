@@ -27,7 +27,7 @@ const linking = {
             ReleaseNotes: 'releaseNotes',
             UserSettings: 'userSettings',
             UserSearch: 'userSearch',
-            UserProfile: 'userProfile'
+            UserProfile: 'user',
         }
     },
 };
@@ -63,9 +63,9 @@ export const Main = () => {
                         <Stack.Screen name="Dashboard" component={Dashboard} />
                     )}
 
-                {userIsLoggedIn && <Stack.Screen name="UserSearch" component={UserSearch} />}
-                {userIsLoggedIn && <Stack.Screen name="UserSettings" component={UserSettings} />}
-                {userIsLoggedIn && <Stack.Screen name="UserProfile" component={UserProfile} />}
+                {<Stack.Screen name="UserSearch" component={UserSearch} />}
+                {<Stack.Screen name="UserSettings" component={UserSettings} />}
+                {<Stack.Screen name="UserProfile" component={UserProfile} />}
                 
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
