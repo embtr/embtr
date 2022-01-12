@@ -4,11 +4,14 @@ import { View, Text, TextStyle, ViewStyle, Image, Button } from "react-native";
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
+import { useAppDispatch } from "src/redux/hooks";
+import { getAuth } from "firebase/auth";
+import { setAccessLevel } from "src/redux/user/GlobalState";
 
-type homeScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage'>;
+type landingPageScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage'>;
 
-export const ReleaseNotes = () => {
+export const Logout = () => {
     const { colors } = useTheme();
 
     const logoViewStyle = {
@@ -23,26 +26,30 @@ export const ReleaseNotes = () => {
     } as TextStyle;
 
     const textViewStyle = {
-        width: "60%",
         height: "100%",
         alignContent: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        width: "100%",
     } as ViewStyle;
 
-    const navigation = useNavigation<homeScreenProp>();
+    const dispatch = useAppDispatch();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getAuth().signOut();
+            //dispatch(setAccessLevel("invalid"));
+
+        }, [])
+    );
 
     return (
         <Screen>
             <View style={textViewStyle}>
                 <View style={logoViewStyle}>
-                    <Image source={require('../../assets/logo.png')} style={{ width: 200, height: 200 }} />
+                    <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
                 </View>
                 <Text>{"\n\n\n\n"}</Text>
-                <Text style={textStyle}>Coming Soon</Text>
-                <Text>{"\n\n\n\n"}</Text>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <Button title='home' onPress={() => { navigation.navigate('LandingPage') }}></Button>
-                </View>
+                <Text style={textStyle}>You have logged out ✌️</Text>
             </View>
         </Screen>
     )

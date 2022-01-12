@@ -14,6 +14,7 @@ import UserController from 'src/controller/user/UserController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { UserSearch } from 'src/components/profile/search/UserSearch';
 import { UserProfile } from 'src/components/profile/UserProfile';
+import { Logout } from 'src/components/logout/Logout';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,13 +22,14 @@ const linking = {
     prefixes: ['https://embtr.com', 'embtr://'],
     config: {
         screens: {
-            Home: '',
+            LandingPage: '',
             Dashboard: 'dashboard',
             About: 'about',
             ReleaseNotes: 'releaseNotes',
             UserSettings: 'userSettings',
             UserSearch: 'userSearch',
             UserProfile: 'user',
+            Logout: 'logout',
         }
     },
 };
@@ -51,22 +53,52 @@ export const Main = () => {
         return accessLevel === "beta_approved" && userIsLoggedIn;
     }
 
+    const isForceLogout = () => {
+        return accessLevel === "force_logout";
+    }
+
     return (
         <NavigationContainer linking={linking}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {!componentIsMounted ? (
-                    <Stack.Screen name="Home" component={LoadingPage} />
+                    <Stack.Screen name="LandingPage" component={LoadingPage} />
                 ) :
                     !isSuccessfullyLoggedIn() ? (
-                        <Stack.Screen name="Home" component={LandingPage} />
+                        <Stack.Screen name="LandingPage" component={LandingPage} />
                     ) : (
                         <Stack.Screen name="Dashboard" component={Dashboard} />
                     )}
 
-                {<Stack.Screen name="UserSearch" component={UserSearch} />}
-                {<Stack.Screen name="UserSettings" component={UserSettings} />}
-                {<Stack.Screen name="UserProfile" component={UserProfile} />}
-                
+                {!componentIsMounted ? (
+                    <Stack.Screen name="UserSearch" component={LoadingPage} />
+                ) :
+                    !isSuccessfullyLoggedIn() ? (
+                        <Stack.Screen name="UserSearch" component={LandingPage} />
+                    ) : (
+                        <Stack.Screen name="UserSearch" component={UserSearch} />
+                    )}
+
+                {!componentIsMounted ? (
+                    <Stack.Screen name="UserSettings" component={LoadingPage} />
+                ) :
+                    !isSuccessfullyLoggedIn() ? (
+                        <Stack.Screen name="UserSettings" component={LandingPage} />
+                    ) : (
+                        <Stack.Screen name="UserSettings" component={UserSettings} />
+                    )}
+
+                {!componentIsMounted ? (
+                    <Stack.Screen name="UserProfile" component={LoadingPage} />
+                ) :
+                    !isSuccessfullyLoggedIn() ? (
+                        <Stack.Screen name="UserProfile" component={LandingPage} />
+                    ) : (
+                        <Stack.Screen name="UserProfile" component={UserProfile} />
+                    )}
+
+                <Stack.Screen name="Logout" component={Logout} />
+
+
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
 
