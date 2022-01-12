@@ -10,6 +10,7 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
 import FollowerController from 'src/controller/follower/FollowerController';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const UserSearch = () => {
     const { colors } = useTheme();
@@ -42,22 +43,32 @@ export const UserSearch = () => {
         }
     }
 
-    const onAddFollowUid = (uid: string) => {
-        followingUids.push(uid);
+    const onFollowUser = (uid: string) => {
+        FollowerController.followUser(getCurrentUserUid(), uid, () => { });
+
+        let followingUidsCopy = followingUids.slice(0);
+        followingUidsCopy.push(uid);
+        setFollowingUids(followingUidsCopy);
     }
 
-    const onRemoveFollowUid = (uid: string) => {
-        for (var i = followingUids.length - 1; i >= 0; i--) {
-            if (followingUids[i] === uid) {
-                followingUids.splice(i, 1);
+    const onUnfollowUser = (uid: string) => {
+        FollowerController.unfollowUser(getCurrentUserUid(), uid, () => { });
+
+        let followingUidsCopy = followingUids.slice(0);
+        for (var i = followingUidsCopy.length - 1; i >= 0; i--) {
+            if (followingUidsCopy[i] === uid) {
+                followingUidsCopy.splice(i, 1);
+                setFollowingUids(followingUidsCopy);
                 return;
             }
         }
     }
 
-    React.useEffect(() => {
-        FollowerController.getFollowing(getCurrentUserUid(), setFollowingUids);
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            FollowerController.getFollowing(getCurrentUserUid(), setFollowingUids);
+        }, [getCurrentUserUid()])
+    );
 
     return (
         <Screen>
@@ -79,8 +90,8 @@ export const UserSearch = () => {
                     <View style={{ paddingTop: 20, width: "100%" }}>
                         <HorizontalLine />
                         {searchResults?.results
-                            ? <UserSearchResults followingUids={followingUids} onAddFollowUid={onAddFollowUid} onRemoveFollowUid={onRemoveFollowUid} searchResults={searchResults.results!} />
-                            : <UserSearchResults followingUids={followingUids} onAddFollowUid={onAddFollowUid} onRemoveFollowUid={onRemoveFollowUid} searchResults={[]} />}
+                            ? <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={searchResults.results!} />
+                            : <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />}
                     </View>
                 </View>
             </SafeAreaView>

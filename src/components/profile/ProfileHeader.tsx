@@ -2,15 +2,19 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react';
 import { Text, TextStyle, View, Image } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { UserFollowButton } from 'src/components/profile/UserFollowButton';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import FollowerController from 'src/controller/follower/FollowerController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 
 interface Props {
-    userProfileModel: UserProfileModel
+    userProfileModel: UserProfileModel,
+    onFollowUser: Function,
+    onUnfollowUser: Function,
+    isFollowingUser: boolean
 }
 
-export const ProfileHeader = ({ userProfileModel }: Props) => {
+export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, isFollowingUser }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -31,6 +35,7 @@ export const ProfileHeader = ({ userProfileModel }: Props) => {
                 setFollowingCount(following.length);
 
             });
+
         }, [userProfileModel])
     );
 
@@ -42,18 +47,33 @@ export const ProfileHeader = ({ userProfileModel }: Props) => {
                     <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{userProfileModel.name}</Text></View>
                 </View>
 
-                <View style={{ flex: 12, flexDirection: "row" }}>
+                <View style={{ flex: 12, flexDirection: "column" }}>
+                    <View style={{ flex: 1, flexDirection: "row" }}>
 
-                    <View style={{ flex: 5, flexDirection: "column" }}>
-                        <View><Text style={[textStyle, { textAlign: "center", paddingTop: 30 }]}>{followerCount}</Text></View>
-                        <View><Text style={[textStyle, { textAlign: "center", paddingTop: 5 }]}>followers</Text></View>
+                        <View style={{ flex: 5, flexDirection: "column" }}>
+                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 30 }]}>{followerCount}</Text></View>
+                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 5 }]}>followers</Text></View>
+                        </View>
+
+                        <View style={{ flex: 5, flexDirection: "column" }}>
+                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 30 }]}>{followingCount}</Text></View>
+                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 5 }]}>following</Text></View>
+                        </View>
+                        <View style={{ flex: 2 }} />
+
                     </View>
 
-                    <View style={{ flex: 5, flexDirection: "column" }}>
-                        <View><Text style={[textStyle, { textAlign: "center", paddingTop: 30 }]}>{followingCount}</Text></View>
-                        <View><Text style={[textStyle, { textAlign: "center", paddingTop: 5 }]}>following</Text></View>
+                    <View style={{ flex: 1, flexDirection: "row" }}>
+
+                        <View style={{ flex: 10, flexDirection: "column", alignItems: "center" }}>
+                            <View style={{ flex: 1 }} />
+                            <View style={{ flex: 10 }}>
+                                <UserFollowButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={isFollowingUser} />
+                            </View>
+                        </View>
+                        <View style={{ flex: 2 }} />
+
                     </View>
-                    <View style={{ flex: 2 }} />
 
                 </View>
 

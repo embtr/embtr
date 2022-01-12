@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import FollowerDao from "src/firebase/firestore/follower/FollowerDao";
 
 class FollowerController {
@@ -41,14 +42,20 @@ class FollowerController {
         });
     }
 
-    public static followUser(uidfollowing: string, uidToFollow: string, callback: Function) {
-        FollowerDao.followUser(uidfollowing, uidToFollow);
+    public static followUser(uid: string, uidToFollow: string, callback: Function) {
+        FollowerDao.followUser(uid, uidToFollow);
         callback();
     }
 
-    public static unfollowUser(uidUnfollowing: string, uidToUnfollow: string, callback: Function) {
-        FollowerDao.unfollowUser(uidUnfollowing, uidToUnfollow);
+    public static unfollowUser(uid: string, uidToUnfollow: string, callback: Function) {
+        FollowerDao.unfollowUser(uid, uidToUnfollow);
         callback();
+    }
+
+    public static isFollowingUser(uid: string, uidInQuestion: string, callback: Function) {
+        this.getFollowing(uid, (followers: string[]) => {
+            callback(followers.includes(uidInQuestion));
+        });
     }
 
 }
