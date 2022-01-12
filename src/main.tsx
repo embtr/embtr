@@ -5,7 +5,7 @@ import { useAppSelector } from 'src/redux/hooks';
 import { getAccessLevel } from 'src/redux/user/GlobalState';
 import { About } from 'src/static/About';
 import { ReleaseNotes } from 'src/static/ReleaseNotes';
-import { Dashboard } from 'src/components/home/home';
+import { Dashboard } from 'src/components/home/Dashboard';
 import { LandingPage } from 'src/components/landing/LandingPage';
 import { UserSettings } from 'src/components/profile/UserSettings';
 import { User } from 'firebase/auth';
