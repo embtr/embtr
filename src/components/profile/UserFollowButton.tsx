@@ -13,15 +13,13 @@ interface Props {
 }
 
 export const UserFollowButton = ({ userProfileModel, onFollowUser, onUnfollowUser, following }: Props) => {
-
-    const [isCurrentUsersProfile, setIsCurrentUsersProfile] = React.useState<boolean | undefined>(undefined);
-
     const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
+
     React.useEffect(() => {
         getCurrentUserUid(setCurrentUserId);
     }, []);
     
-    if (isCurrentUsersProfile === undefined || isCurrentUsersProfile) {
+    if (currentUserId === undefined || currentUserId === userProfileModel.uid) {
         return <View />
     }
 
