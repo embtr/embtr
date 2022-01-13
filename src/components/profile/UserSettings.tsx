@@ -13,7 +13,7 @@ export const UserSettings = () => {
     return (
         <Screen>
             <SafeAreaView style={{ flex: 1 }}>
-                <Banner name='Settings' leftIcon={"arrow-back"} leftRoute="Dashboard" />
+                <Banner name='Settings' leftIcon={"arrow-back"} leftRoute="BACK" />
 
                 <View style={{ flexDirection: "column", flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ThemeToggle />
@@ -23,6 +23,5 @@ export const UserSettings = () => {
                 </View>
             </SafeAreaView>
         </Screen>
-
     );
 }

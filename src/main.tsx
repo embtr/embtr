@@ -7,13 +7,10 @@ import { About } from 'src/static/About';
 import { ReleaseNotes } from 'src/static/ReleaseNotes';
 import { Dashboard } from 'src/components/home/Dashboard';
 import { LandingPage } from 'src/components/landing/LandingPage';
-import { UserSettings } from 'src/components/profile/UserSettings';
 import { User } from 'firebase/auth';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import UserController from 'src/controller/user/UserController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
-import { UserSearch } from 'src/components/profile/search/UserSearch';
-import { UserProfile } from 'src/components/profile/UserProfile';
 import { Logout } from 'src/components/logout/Logout';
 
 const Stack = createNativeStackNavigator();
@@ -28,6 +25,7 @@ const linking = {
             ReleaseNotes: 'releaseNotes',
             UserSettings: 'userSettings',
             UserSearch: 'userSearch',
+            Profile: 'profile',
             UserProfile: 'user',
             Logout: 'logout',
         }
@@ -41,20 +39,21 @@ export const Main = () => {
     const [componentIsMounted, setComponentIsMounted] = React.useState(false);
 
     React.useEffect(() => {
+        setComponentIsMounted(true);
+    }, []);
+
+    React.useEffect(() => {
+        UserController.registerProfileUpdateListener();
+    }, []);
+
+    React.useEffect(() => {
         registerAuthStateListener((user: User) => {
-            setComponentIsMounted(true);
             setUserIsLoggedIn(user !== null);
         });
-
-        UserController.registerProfileUpdateListener();
     }, []);
 
     const isSuccessfullyLoggedIn = () => {
         return accessLevel === "beta_approved" && userIsLoggedIn;
-    }
-
-    const isForceLogout = () => {
-        return accessLevel === "force_logout";
     }
 
     return (
@@ -69,36 +68,7 @@ export const Main = () => {
                         <Stack.Screen name="Dashboard" component={Dashboard} />
                     )}
 
-                {!componentIsMounted ? (
-                    <Stack.Screen name="UserSearch" component={LoadingPage} />
-                ) :
-                    !isSuccessfullyLoggedIn() ? (
-                        <Stack.Screen name="UserSearch" component={LandingPage} />
-                    ) : (
-                        <Stack.Screen name="UserSearch" component={UserSearch} />
-                    )}
-
-                {!componentIsMounted ? (
-                    <Stack.Screen name="UserSettings" component={LoadingPage} />
-                ) :
-                    !isSuccessfullyLoggedIn() ? (
-                        <Stack.Screen name="UserSettings" component={LandingPage} />
-                    ) : (
-                        <Stack.Screen name="UserSettings" component={UserSettings} />
-                    )}
-
-                {!componentIsMounted ? (
-                    <Stack.Screen name="UserProfile" component={LoadingPage} />
-                ) :
-                    !isSuccessfullyLoggedIn() ? (
-                        <Stack.Screen name="UserProfile" component={LandingPage} />
-                    ) : (
-                        <Stack.Screen name="UserProfile" component={UserProfile} />
-                    )}
-
                 <Stack.Screen name="Logout" component={Logout} />
-
-
                 <Stack.Screen name="About" component={About} />
                 <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
 

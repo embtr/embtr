@@ -7,10 +7,9 @@ import { Screen } from 'src/components/common/screen';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import FollowerController from 'src/controller/follower/FollowerController';
-import { getCurrentUserUid, registerAuthStateListener } from 'src/session/CurrentUserProvider';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { User } from 'firebase/auth';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'UserProfile'>>();

@@ -3,18 +3,18 @@ import { Text, View, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { Timeline } from 'src/components/timeline/Timeline';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { ProfileTab } from 'src/components/profile/ProfileTab';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { TimelineTab } from 'src/components/navigation/TimelineTab';
+import { ProfileTab } from 'src/components/navigation/ProfileTab';
 
 const Tab = createBottomTabNavigator();
 
 const TABS = {
-    USER_PROFILE: "UserProfile",
-    TIMELINE: "Timeline"
+    USER_PROFILE: "CurrentUserTab",
+    TIMELINE: "TimelineTab"
 }
 
 export const Dashboard = () => {
@@ -67,7 +67,7 @@ export const Dashboard = () => {
                     tabBarInactiveBackgroundColor: colors.background,
                 })}
             >
-                <Tab.Screen name={TABS.TIMELINE} component={Timeline} />
+                <Tab.Screen name={TABS.TIMELINE} component={TimelineTab} />
                 <Tab.Screen name={TABS.USER_PROFILE} component={ProfileTab} />
             </Tab.Navigator>
         </View>

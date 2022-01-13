@@ -2,12 +2,14 @@ import * as React from 'react';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
-import { CurrentUserProfile } from 'src/components/profile/CurrentUserProfle';
 import { Screen } from 'src/components/common/screen';
-import { SafeAreaView } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
+import { Banner } from 'src/components/common/Banner';
+import { isDesktopBrowser } from 'src/util/DeviceUtil';
+import { ProfileHeader } from 'src/components/profile/ProfileHeader';
 
 
-export const ProfileTab = () => {
+export const Profile = () => {
 
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
 
@@ -26,7 +28,17 @@ export const ProfileTab = () => {
 
     return (<Screen>
         <SafeAreaView>
-            {userProfileModel && <CurrentUserProfile userProfileModel={userProfileModel} />}
+            <Screen>
+                <View>
+                    <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
+
+                    <View style={{ alignItems: "center" }}>
+                        <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
+                            <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} isFollowingUser={false} />
+                        </View>
+                    </View>
+                </View>
+            </Screen>
         </SafeAreaView>
     </Screen>)
 
