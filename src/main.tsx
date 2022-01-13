@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAppSelector } from 'src/redux/hooks';
 import { getAccessLevel } from 'src/redux/user/GlobalState';
@@ -7,27 +7,40 @@ import { About } from 'src/static/About';
 import { ReleaseNotes } from 'src/static/ReleaseNotes';
 import { Dashboard } from 'src/components/home/Dashboard';
 import { LandingPage } from 'src/components/landing/LandingPage';
-import { User } from 'firebase/auth';
-import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import UserController from 'src/controller/user/UserController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { Logout } from 'src/components/logout/Logout';
+import { RootStackParamList } from 'src/navigation/RootStackParamList';
 
 const Stack = createNativeStackNavigator();
 
-const linking = {
+const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
     config: {
         screens: {
             LandingPage: '',
-            Dashboard: 'dashboard',
-            About: 'about',
-            ReleaseNotes: 'releaseNotes',
-            UserSettings: 'userSettings',
-            UserSearch: 'userSearch',
-            Profile: 'profile',
-            UserProfile: 'user',
-            Logout: 'logout',
+            Dashboard: {
+                screens: {
+                    CurrentUserTab: {
+                        screens: {
+                            Profile: "profile",
+                            UserSettings: "userSettings"
+                        }
+                    },
+                    TimelineTab: {
+                        screens : {
+                            UserSearch: "userSearch",
+                            Timeline: "timeline",
+                            UserProfile: "userProfile"
+                        }
+                    }
+                }
+            },
+            About: "about",
+            ReleaseNotes: "releaseNotes",
+            Contact: "contact",
+            Logout: "logout"
         }
     },
 };
@@ -47,7 +60,7 @@ export const Main = () => {
     }, []);
 
     React.useEffect(() => {
-        registerAuthStateListener((user: User) => {
+        getCurrentUserUid((user: string) => {
             setUserIsLoggedIn(user !== null);
         });
     }, []);
@@ -57,7 +70,7 @@ export const Main = () => {
     }
 
     return (
-        <NavigationContainer linking={linking}>
+        <NavigationContainer linking={linking} fallback={<LoadingPage />}>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 {!componentIsMounted ? (
                     <Stack.Screen name="LandingPage" component={LoadingPage} />

@@ -5,6 +5,7 @@
     "version": "0.0.48",
     "orientation": "portrait",
     "icon": "assets/app_icon.png",
+    "scheme": "embtr",
     "splash": {
       "image": "assets/app_icon.png",
       "resizeMode": "contain",
