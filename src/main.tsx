@@ -25,14 +25,14 @@ const linking: LinkingOptions<RootStackParamList> = {
                     CurrentUserTab: {
                         screens: {
                             Profile: "profile",
-                            UserSettings: "userSettings"
+                            UserSettings: "settings"
                         }
                     },
                     TimelineTab: {
                         screens : {
-                            UserSearch: "userSearch",
+                            UserSearch: "search",
                             Timeline: "timeline",
-                            UserProfile: "userProfile"
+                            UserProfile: "user"
                         }
                     }
                 }
