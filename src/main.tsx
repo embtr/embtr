@@ -12,6 +12,7 @@ import UserController from 'src/controller/user/UserController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { Logout } from 'src/components/logout/Logout';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { MainStack } from 'src/components/home/MainStack';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +30,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                         }
                     },
                     TimelineTab: {
-                        screens : {
+                        screens: {
                             UserSearch: "search",
                             Timeline: "timeline",
                             UserProfile: "user"
@@ -47,7 +48,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 
 export const Main = () => {
     const accessLevel = useAppSelector(getAccessLevel);
-    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState(false);
+    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | null>(null);
 
     const [componentIsMounted, setComponentIsMounted] = React.useState(false);
 
@@ -71,21 +72,7 @@ export const Main = () => {
 
     return (
         <NavigationContainer linking={linking} fallback={<LoadingPage />}>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                {!componentIsMounted ? (
-                    <Stack.Screen name="LandingPage" component={LoadingPage} />
-                ) :
-                    !isSuccessfullyLoggedIn() ? (
-                        <Stack.Screen name="LandingPage" component={LandingPage} />
-                    ) : (
-                        <Stack.Screen name="Dashboard" component={Dashboard} />
-                    )}
-
-                <Stack.Screen name="Logout" component={Logout} />
-                <Stack.Screen name="About" component={About} />
-                <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
-
-            </Stack.Navigator>
+            <MainStack />
         </NavigationContainer>
     );
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, Linking } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
+import { useLinkTo } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,6 +30,19 @@ export const Dashboard = () => {
     if (currentUserId) {
         ProfileController.getProfile(currentUserId, (profileData: UserProfileModel) => { setUserProfilePhoto(profileData?.photoUrl ? profileData?.photoUrl : undefined) });
     }
+
+    const x = useLinkTo();
+    React.useEffect(() => {
+        Linking.getInitialURL().then(result => {
+            if (result) {
+                const pieces = result.split(/[\s/]+/)
+                const last = "/" + pieces[pieces.length - 1]
+                try {
+                    x(last);
+                } catch (e) { }
+            }
+        });
+    }, []);
 
     return (
         <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>

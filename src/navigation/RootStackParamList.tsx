@@ -23,4 +23,5 @@ export type RootStackParamList = {
     ReleaseNotes: undefined;
     Contact: undefined;
     Logout: undefined;
+    LoadingPage: undefined;
 };
