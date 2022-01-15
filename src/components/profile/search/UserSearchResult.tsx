@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, Image, TextStyle, TouchableOpacity } from 'react-native';
+import { Text, View, Image, TextStyle, TouchableOpacity, StyleSheet } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList, TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FollowUserButton } from 'src/components/profile/FollowUserButton';
 
@@ -31,7 +31,7 @@ export const UserSearchResult = ({ userProfileModel, onFollowUser, onUnfollowUse
         <View style={{ width: isDesktopBrowser() ? "60%" : "100%" }}>
             <TouchableOpacity onPress={() => { navigation.navigate('UserProfile', { id: userProfileModel.uid! }) }}>
                 <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10 }}>
-                    <View style={{ marginRight: 10 }}><Image style={{ width: 35, height: 35, borderRadius: 50, marginLeft: 10, marginRight: 10 }} source={{ uri: userProfileModel?.photoUrl }} /></View>
+                    <View style={{ marginRight: 10 }}><Image style={{ width: 35, height: 35, borderRadius: 50, borderColor:colors.text, borderWidth:StyleSheet.hairlineWidth, marginLeft: 10, marginRight: 10 }} source={{ uri: userProfileModel?.photoUrl }} /></View>
                     <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10, flex: 1 }}>
                         <View style={{ flex: 7 }}><Text style={textStyle}>{userProfileModel?.name}</Text></View>
 
