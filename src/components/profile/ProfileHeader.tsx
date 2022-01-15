@@ -33,7 +33,8 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
     const [shouldDisplayFollowButton, setShouldDisplayFollowButton] = React.useState(false);
     const [shouldDisplayEditProfileButton, setShouldDisplayEditProfileButton] = React.useState(false);
 
-    const [newProfileText, setNewProfileText] = React.useState<string | undefined>(undefined);
+    const [newBioText, setNewBioText] = React.useState<string | undefined>(undefined);
+    const [newNameText, setNewNameText] = React.useState<string | undefined>(undefined);
     const [profileIsEditable, setProfileIsEditable] = React.useState(false);
 
     React.useEffect(() => {
@@ -62,9 +63,23 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
     );
 
     const saveProfile = () => {
-        if (userProfileModel && newProfileText !== undefined) {
-            userProfileModel.bio = newProfileText;
-            ProfileController.updateProfile(userProfileModel);
+        let executeUpdate = false;
+
+        if (userProfileModel) {
+            if (newBioText !== undefined) {
+                userProfileModel.bio = newBioText;
+                executeUpdate = true;
+            }
+
+            if (newNameText !== undefined) {
+                userProfileModel.name = newNameText;
+                userProfileModel.nameLower = newNameText.toLowerCase();
+                executeUpdate = true;
+            }
+
+            if (executeUpdate) {
+                ProfileController.updateProfile(userProfileModel);
+            }
         }
     }
 
@@ -81,7 +96,9 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 12 }}>
                     <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : "" }} /></View>
-                    <View style={{ paddingLeft: 15, paddingTop: 15 }}><Text style={[textStyle, { fontSize: 24 }]}>{userProfileModel ? userProfileModel.name : ""}</Text></View>
+                    <View style={{ paddingLeft: 15, paddingTop: 15 }}>
+                        <EditableTextBox text={newNameText !== undefined ? newNameText : userProfileModel?.name ? userProfileModel.name : ""} textSize={24} onChangeText={setNewNameText} editable={profileIsEditable} />
+                    </View>
                 </View>
 
                 <View style={{ flex: 12, flexDirection: "column" }}>
@@ -116,7 +133,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
             </View>
             <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, paddingBottom: 15 }}>
-                <EditableTextBox text={newProfileText !== undefined ? newProfileText : userProfileModel?.bio ? userProfileModel.bio : ""} onChangeText={setNewProfileText} editable={profileIsEditable} />
+                <EditableTextBox text={newBioText !== undefined ? newBioText : userProfileModel?.bio ? userProfileModel.bio : ""} textSize={14} onChangeText={setNewBioText} editable={profileIsEditable} />
             </View>
             <HorizontalLine />
         </View>

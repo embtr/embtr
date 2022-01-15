@@ -4,15 +4,15 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
     text: string,
+    textSize: number,
     editable: boolean,
     onChangeText: Function
 }
 
-export const EditableTextBox = ({ text, editable, onChangeText }: Props) => {
+export const EditableTextBox = ({ text, textSize, editable, onChangeText }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
-        fontSize: 14,
         color: colors.text,
     } as TextStyle;
 
@@ -30,7 +30,7 @@ export const EditableTextBox = ({ text, editable, onChangeText }: Props) => {
 
     return (
         editable
-            ? <TextInput style={[textStyle, inputStyle]} onChangeText={updateText} value={text} />
-            : <Text style={textStyle}>{text}</Text>
+            ? <TextInput style={[textStyle, inputStyle, {fontSize: textSize}]} onChangeText={updateText} value={text} />
+            : <Text style={[textStyle, {fontSize: textSize}]}>{text}</Text>
     )
 }
