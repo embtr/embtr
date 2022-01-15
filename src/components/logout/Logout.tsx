@@ -1,15 +1,11 @@
 import React from "react";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { View, Text, TextStyle, ViewStyle, Image, Button } from "react-native";
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from "src/components/theme/ThemeProvider";
-import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { useFocusEffect } from "@react-navigation/native";
 import { useAppDispatch } from "src/redux/hooks";
 import { getAuth } from "firebase/auth";
 import { setAccessLevel } from "src/redux/user/GlobalState";
-
-type landingPageScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage'>;
 
 export const Logout = () => {
     const { colors } = useTheme();

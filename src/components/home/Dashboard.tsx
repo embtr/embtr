@@ -31,15 +31,16 @@ export const Dashboard = () => {
         ProfileController.getProfile(currentUserId, (profileData: UserProfileModel) => { setUserProfilePhoto(profileData?.photoUrl ? profileData?.photoUrl : undefined) });
     }
 
-    const x = useLinkTo();
+    const changeLinkTo = useLinkTo();
     React.useEffect(() => {
         Linking.getInitialURL().then(result => {
             if (result) {
-                const pieces = result.split(/[\s/]+/)
-                const last = "/" + pieces[pieces.length - 1]
-                try {
-                    x(last);
-                } catch (e) { }
+                const splitUrl = result.split(/[\s/]+/)
+                const endpoint = "/" + splitUrl[splitUrl.length - 1]
+
+                if (endpoint !== "/") {
+                    try { changeLinkTo(endpoint); } catch (e) { }
+                }
             }
         });
     }, []);
