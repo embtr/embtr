@@ -28,6 +28,7 @@ class ProfileDao {
 
        setDoc(doc(db, "profiles/", userProfile.uid), {
            "uid": userProfile.uid,
+           "bio": userProfile.bio ? userProfile.bio : "",
            "name": userProfile.name,
            "nameLower": userProfile.nameLower,
            "email": userProfile.email,

@@ -3,11 +3,11 @@ import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { useAppSelector } from 'src/redux/hooks';
 import { getAccessLevel } from 'src/redux/user/GlobalState';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
-import UserController from 'src/controller/user/UserController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
+import ProfileController from 'src/controller/profile/ProfileController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -43,8 +43,9 @@ export const Main = () => {
     const accessLevel = useAppSelector(getAccessLevel);
     const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | null>(null);
 
+    //TODO - only do this on very first login
     React.useEffect(() => {
-        UserController.registerProfileUpdateListener();
+        ProfileController.registerInitialProfileUpdateListener();
     }, []);
 
     React.useEffect(() => {

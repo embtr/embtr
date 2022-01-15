@@ -5,14 +5,14 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/ProfileHeader';
 import { Screen } from 'src/components/common/screen';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import FollowerController from 'src/controller/follower/FollowerController';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 
 export const UserProfile = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'UserProfile'>>();
+    const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
 
     const [user, setUser] = React.useState<UserProfileModel | undefined>(undefined);
     const [isFollowingUser, setIsFollowingUser] = React.useState(false);

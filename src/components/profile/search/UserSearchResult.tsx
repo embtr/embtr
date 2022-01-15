@@ -4,11 +4,11 @@ import { Text, View, Image, TextStyle, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RootStackParamList, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import { UserFollowButton } from 'src/components/profile/UserFollowButton';
+import { FollowUserButton } from 'src/components/profile/FollowUserButton';
 
-type userProfileScreenProp = StackNavigationProp<RootStackParamList, 'UserProfile'>;
+type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
 interface Props {
     userProfileModel: UserProfileModel,
@@ -36,7 +36,7 @@ export const UserSearchResult = ({ userProfileModel, onFollowUser, onUnfollowUse
                         <View style={{ flex: 7 }}><Text style={textStyle}>{userProfileModel?.name}</Text></View>
 
                         <View style={{ flex: 5 }}>
-                            <UserFollowButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
+                            <FollowUserButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
                         </View>
                     </View>
                 </View>

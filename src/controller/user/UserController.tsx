@@ -17,24 +17,6 @@ class UserController {
             }
         });
     }
-
-    public static registerProfileUpdateListener() {
-        registerAuthStateListener((user: User) => {
-            if (user) {
-                this.updateProfile(user);
-            }
-        });
-    }
-
-    private static updateProfile(user: User) {
-        const uid: string = user.uid;
-        const name: string = user.displayName!;
-        const nameLower: string = user.displayName!.toLowerCase()
-        const email: string = user.email!;
-        const photoUrl: string = user.photoURL!;
-
-        ProfileDao.updateProfile({ uid: uid, name: name, nameLower: nameLower, email: email, photoUrl: photoUrl });
-    }
 }
 
 export default UserController;
