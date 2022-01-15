@@ -81,29 +81,27 @@ export const UserSearch = () => {
 
     return (
         <Screen>
-            <SafeAreaView style={{ flex: 1 }}>
-                <Banner name='User Search' leftIcon={"arrow-back"} leftRoute="Timeline" />
+            <Banner name='User Search' leftIcon={"arrow-back"} leftRoute="Timeline" />
 
-                <View style={{ alignItems: "center" }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", width: "60%" }} >
-                        <View style={{ position: "absolute", zIndex: 1, paddingTop: 30, paddingLeft: 18 }} >
-                            <Ionicons name={'search'} size={22} color={colors.text} />
-                        </View>
-                        <TextInput
-                            style={{ marginTop: 30, paddingLeft: 60, height: 40, width: "100%", borderColor: 'white', borderWidth: 1, borderRadius: 50, color: colors.text, fontSize: 20 }}
-                            onChangeText={onSearchChange}
-                            value={searchText}
-                            placeholder={"enter search"}
-                        />
+            <View style={{ alignItems: "center" }}>
+                <View style={{ flexDirection: "row", alignItems: "center", width: "60%" }} >
+                    <View style={{ position: "absolute", zIndex: 1, paddingTop: 30, paddingLeft: 18 }} >
+                        <Ionicons name={'search'} size={22} color={colors.text} />
                     </View>
-                    <View style={{ paddingTop: 20, width: "100%" }}>
-                        <HorizontalLine />
-                        {searchResults?.results
-                            ? <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={searchResults.results!} />
-                            : <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />}
-                    </View>
+                    <TextInput
+                        style={{ marginTop: 30, paddingLeft: 60, height: 40, width: "100%", borderColor: 'white', borderWidth: 1, borderRadius: 50, color: colors.text, fontSize: 20 }}
+                        onChangeText={onSearchChange}
+                        value={searchText}
+                        placeholder={"enter search"}
+                    />
                 </View>
-            </SafeAreaView>
+                <View style={{ paddingTop: 20, width: "100%" }}>
+                    <HorizontalLine />
+                    {searchResults?.results
+                        ? <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={searchResults.results!} />
+                        : <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />}
+                </View>
+            </View>
         </Screen>
 
     );

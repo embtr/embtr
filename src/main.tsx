@@ -8,6 +8,8 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import ProfileController from 'src/controller/profile/ProfileController';
+import { Screen } from 'src/components/common/screen';
+import { SafeAreaView } from 'react-native';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -59,8 +61,12 @@ export const Main = () => {
     }
 
     return (
-        <NavigationContainer linking={linking} fallback={<LoadingPage />}>
-            {isSuccessfullyLoggedIn() ? <SecureMainStack /> : <InsecureMainStack />}
-        </NavigationContainer>
+        <Screen>
+            <SafeAreaView style={{ flex: 1 }}>
+                <NavigationContainer linking={linking} fallback={<LoadingPage />}>
+                    {isSuccessfullyLoggedIn() ? <SecureMainStack /> : <InsecureMainStack />}
+                </NavigationContainer>
+            </SafeAreaView>
+        </Screen>
     );
 };

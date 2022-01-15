@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, View } from 'react-native';
+import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/ProfileHeader';
@@ -53,17 +53,15 @@ export const UserProfile = () => {
 
     return (
         <Screen>
-            <SafeAreaView style={{ flex: 1 }}>
-                <View>
-                    <Banner name='You' leftIcon={"arrow-back"} leftRoute="BACK" />
+            <View>
+                <Banner name='You' leftIcon={"arrow-back"} leftRoute="BACK" />
 
-                    <View style={{ alignItems: "center" }}>
-                        <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                            <ProfileHeader userProfileModel={user} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} isFollowingUser={isFollowingUser} />
-                        </View>
+                <View style={{ alignItems: "center" }}>
+                    <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
+                        <ProfileHeader userProfileModel={user} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} isFollowingUser={isFollowingUser} />
                     </View>
                 </View>
-            </SafeAreaView>
+            </View>
         </Screen>
     );
 }

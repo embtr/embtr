@@ -47,7 +47,6 @@ export const Dashboard = () => {
 
     return (
         <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>
-
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     tabBarStyle: { backgroundColor: colors.background },

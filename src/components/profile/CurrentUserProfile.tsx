@@ -3,13 +3,13 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { Screen } from 'src/components/common/screen';
-import { SafeAreaView, View } from 'react-native';
+import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/ProfileHeader';
 
 
-export const Profile = () => {
+export const CurrentUserProfile = () => {
 
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
 
@@ -26,20 +26,18 @@ export const Profile = () => {
         }
     }, [currentUserId]);
 
-    return (<Screen>
-        <SafeAreaView>
-            <Screen>
-                <View>
-                    <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
+    return (
+        <Screen>
+            <View>
+                <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
 
-                    <View style={{ alignItems: "center" }}>
-                        <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                            <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} isFollowingUser={false} />
-                        </View>
+                <View style={{ alignItems: "center" }}>
+                    <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
+                        <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} isFollowingUser={false} />
                     </View>
                 </View>
-            </Screen>
-        </SafeAreaView>
-    </Screen>)
+            </View>
+        </Screen>
+    )
 
 }
