@@ -37,8 +37,7 @@ export const Logout = () => {
     useFocusEffect(
         React.useCallback(() => {
             getAuth().signOut();
-            //dispatch(setAccessLevel("invalid"));
-
+            dispatch(setAccessLevel("invalid"));
         }, [])
     );
 
