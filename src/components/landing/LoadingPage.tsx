@@ -10,6 +10,6 @@ export const LoadingPage = () => {
         height: "100%",
         backgroundColor: colors.background
     } as ViewStyle;
-    
+
     return <View style={loadingPageView}></View>
 };

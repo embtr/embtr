@@ -4,13 +4,14 @@ import { Screen } from 'src/components/common/screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { getAuth, UserCredential } from 'firebase/auth';
+import { UserCredential } from 'firebase/auth';
 import UserController from 'src/controller/user/UserController';
 import { LandingFooter } from 'src/components/landing/LandingFooter';
 import { LandingBetaStatus } from 'src/components/landing/LandingBetaStatus';
 import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
 import { getAccessLevel, setAccessLevel } from 'src/redux/user/GlobalState';
 import MailController from 'src/controller/mail/MailController';
+import { LoadingPage } from 'src/components/landing/LoadingPage';
 
 const REGISTRATION_STATUS_SIZE = 2;
 
@@ -39,6 +40,7 @@ export const LandingPage = () => {
     const [registrationStatus, setRegistrationStatus] = React.useState("invalid");
 
     const dispatch = useAppDispatch();
+    const accessLevel = useAppSelector(getAccessLevel);
 
     const onAuthenticated = (userCredential: UserCredential) => {
         if (userCredential?.user?.uid && userCredential?.user?.email) {
@@ -60,6 +62,14 @@ export const LandingPage = () => {
         } else {
             setRegistrationStatus("error_auth");
         }
+    }
+
+    const shouldDisplayLoadingPage = () => {
+        return accessLevel === "beta_approved" && registrationStatus === "invalid";
+    }
+
+    if (shouldDisplayLoadingPage()) {
+        return <LoadingPage />
     }
 
     return (
