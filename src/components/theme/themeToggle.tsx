@@ -12,6 +12,6 @@ export const ThemeToggle = () => {
     }
 
     return (
-        <Switch circleActiveColor={darkColors.toggle_color} circleInActiveColor={lightColors.toggle_color} backgroundActive={darkColors.toggle_color} backgroundInactive={lightColors.toggle_color} activeText='🌚' inActiveText='☀️' value={isDark} onValueChange={toggleScheme} />
+        <Switch circleActiveColor={darkColors.toggle_color} circleInActiveColor={lightColors.toggle_color} backgroundActive={darkColors.toggle_color} backgroundInactive={lightColors.toggle_color} activeText='🌜' inActiveText='☀️' value={isDark} onValueChange={toggleScheme} />
     );
 }

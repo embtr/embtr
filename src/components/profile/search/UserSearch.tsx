@@ -89,10 +89,12 @@ export const UserSearch = () => {
                         <Ionicons name={'search'} size={22} color={colors.text} />
                     </View>
                     <TextInput
-                        style={{ marginTop: 30, paddingLeft: 60, height: 40, width: "100%", borderColor: 'white', borderWidth: 1, borderRadius: 50, color: colors.text, fontSize: 20 }}
+                        style={{ marginTop: 30, paddingLeft: 60, height: 40, width: "100%", borderColor: colors.text, borderWidth: 1, borderRadius: 50, color: colors.text, fontSize: 20 }}
                         onChangeText={onSearchChange}
                         value={searchText}
+                        placeholderTextColor={colors.secondary_text}
                         placeholder={"enter search"}
+                        autoCapitalize='none'
                     />
                 </View>
                 <View style={{ paddingTop: 20, width: "100%" }}>
