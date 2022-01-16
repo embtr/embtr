@@ -7,6 +7,7 @@ export const lightColors = {
   secondary_border: '#4d4d4d',
   text: '#121212',
   secondary_text: '#c7c7c7',
+  pillar_attribute: '#c7c7c7',
   error: '#D32F2F',
 };
 
@@ -18,6 +19,7 @@ export const darkColors = {
   primary_border: '#C811EC',
   secondary_border: '#3BC0FF',
   text: '#FFFFFF',
-  secondary_text: '#5e5e5e',
+  secondary_text: '#a6a6a6',
+  pillar_attribute: '#1e5e5e',
   error: '#EF9A9A',
 };

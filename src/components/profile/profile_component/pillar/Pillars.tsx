@@ -28,7 +28,7 @@ export const Pillars = () => {
     pillars.forEach(pillarModel => {
         pillarViews.push(
             <View style={pillarContainerViewStyle} key={pillarModel.name}>
-                <Pillar name={pillarModel.name} />
+                <Pillar pillarModel={pillarModel} />
             </View>
         );
     });
