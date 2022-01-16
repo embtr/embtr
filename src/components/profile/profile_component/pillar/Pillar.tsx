@@ -32,7 +32,7 @@ export const Pillar = ({ name }: Props) => {
             <HorizontalLine />
             <View style={pillarViewStyle}>
                 <Text style={nameTextStyle}>{name}</Text>
-                <View style={{ flexDirection: "row", paddingTop: 10 }}>
+                <View style={{ flexDirection: "row", paddingTop: 10, width:"100%" }}>
                     <Text style={[attributeTextStyle, { flex: 1, textAlign: "center" }]}>attribute 1</Text>
                     <Text style={[attributeTextStyle, { flex: 1, textAlign: "center" }]}>attribute 2</Text>
                     <Text style={[attributeTextStyle, { flex: 1, textAlign: "center" }]}>attribute 3</Text>
