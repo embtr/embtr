@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useColorScheme} from 'react-native-appearance';
-import { darkColors, lightColors } from 'src/theme/colorThemes';
+import { darkColors, lightColors } from 'src/theme/ColorThemes';
 
 export const ThemeContext = React.createContext({
     isDark: false,

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import FollowerController from 'src/controller/follower/FollowerController';

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';

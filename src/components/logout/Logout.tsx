@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, TextStyle, ViewStyle, Image } from "react-native";
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { useFocusEffect } from "@react-navigation/native";
-import { useAppDispatch } from "src/redux/hooks";
+import { useAppDispatch } from "src/redux/Hooks";
 import { getAuth } from "firebase/auth";
 import { setAccessLevel } from "src/redux/user/GlobalState";
 

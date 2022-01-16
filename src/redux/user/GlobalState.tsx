@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "src/redux/store";
+import { RootState } from "src/redux/Store";
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: "invalid"

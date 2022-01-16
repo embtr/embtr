@@ -1,7 +1,7 @@
 import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { View, Text, TextStyle, ViewStyle, Image, Button } from "react-native";
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { useNavigation } from "@react-navigation/native";

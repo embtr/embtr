@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { View, Button } from 'react-native';
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { ThemeToggle } from 'src/components/theme/themeToggle';
+import { ThemeToggle } from 'src/components/theme/ThemeToggle';
 import { getAuth } from 'firebase/auth';
-import { useAppDispatch } from 'src/redux/hooks';
+import { useAppDispatch } from 'src/redux/Hooks';
 import { setAccessLevel } from 'src/redux/user/GlobalState';
 
 export const UserSettings = () => {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Switch } from 'react-native-switch';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { darkColors, lightColors } from 'src/theme/colorThemes';
+import { darkColors, lightColors } from 'src/theme/ColorThemes';
 
 
 export const ThemeToggle = () => {

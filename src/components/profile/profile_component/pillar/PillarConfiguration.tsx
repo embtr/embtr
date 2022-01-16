@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, ViewStyle, Text, TextStyle, TextInput } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';

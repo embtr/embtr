@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { SafeAreaView, TextInput, View } from 'react-native';
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';

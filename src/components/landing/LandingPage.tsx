@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, TextStyle, Image, View, ViewStyle } from 'react-native';
-import { Screen } from 'src/components/common/screen';
+import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
@@ -8,7 +8,7 @@ import { UserCredential } from 'firebase/auth';
 import UserController from 'src/controller/user/UserController';
 import { LandingFooter } from 'src/components/landing/LandingFooter';
 import { LandingBetaStatus } from 'src/components/landing/LandingBetaStatus';
-import { useAppDispatch, useAppSelector } from 'src/redux/hooks';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getAccessLevel, setAccessLevel } from 'src/redux/user/GlobalState';
 import MailController from 'src/controller/mail/MailController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
