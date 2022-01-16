@@ -1,23 +1,24 @@
-import { getFirestore, Firestore, collection, getDocs, doc, setDoc, Timestamp } from 'firebase/firestore';
-import firebaseApp from "src/firebase/Firebase"
+import { Firestore, collection, getDocs, doc, setDoc, Timestamp } from 'firebase/firestore';
+import { getFirebaseConnection as getFirestoreConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class FollowerDao {
     public static async getFollowers(uid: string) {
-        const db: Firestore = getFirestore(firebaseApp);
+        const db: Firestore = getFirestoreConnection(this.name, "getFollowers");
+        
         const result = await getDocs(collection(db, "follows/" + uid + "/followers"));
 
         return result;
     }
 
     public static async getFollowing(uid: string) {
-        const db: Firestore = getFirestore(firebaseApp);
+        const db: Firestore = getFirestoreConnection(this.name, "getFollowing");
         const result = await getDocs(collection(db, "follows/" + uid + "/following"));
 
         return result;
     }
 
     public static async followUser(uid: string, uidToFollow: string) {
-        const db: Firestore = getFirestore(firebaseApp);
+        const db: Firestore = getFirestoreConnection(this.name, "followUser");
 
         const timestamp = Timestamp.now()
 
@@ -33,7 +34,7 @@ class FollowerDao {
     }
 
     public static async unfollowUser(uid: string, uidToUnfollow: string) {
-        const db: Firestore = getFirestore(firebaseApp);
+        const db: Firestore = getFirestoreConnection(this.name, "unfollowUser");
 
         const timestamp = Timestamp.now()
 

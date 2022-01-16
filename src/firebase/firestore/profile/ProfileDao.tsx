@@ -1,5 +1,5 @@
-import { getFirestore, Firestore, doc, getDoc, setDoc } from 'firebase/firestore';
-import firebaseApp from "src/firebase/Firebase"
+import { Firestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 export interface UserProfileModel {
     uid?: string,
@@ -13,14 +13,14 @@ export interface UserProfileModel {
 class ProfileDao {
 
     public static async getProfile(uid: string) {
-        const db: Firestore = getFirestore(firebaseApp);
+        const db: Firestore = getFirebaseConnection(this.name, "getProfile");
         const result = await getDoc(doc(db, "profiles/", uid));
 
         return result;
     }
 
     public static updateProfile(userProfile: UserProfileModel) {
-       const db: Firestore = getFirestore(firebaseApp);
+       const db: Firestore = getFirebaseConnection(this.name, "updateProfile");
 
        if (!userProfile.uid) {
            return;

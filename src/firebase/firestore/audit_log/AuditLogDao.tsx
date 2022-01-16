@@ -1,8 +1,6 @@
-import { current } from '@reduxjs/toolkit';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, Firestore, doc, setDoc, Timestamp } from 'firebase/firestore';
-import firebaseApp from "src/firebase/Firebase"
-import { Store } from 'src/redux/store';
+import { Firestore, doc, setDoc, Timestamp } from 'firebase/firestore';
+import { getFirebaseConnection as getFirestoreConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class AuditLogDao {
     public static addLog(action: string) {
@@ -13,7 +11,7 @@ class AuditLogDao {
 
         const uid = currentUser.uid;
 
-        const db: Firestore = getFirestore(firebaseApp);
+        const db: Firestore = getFirestoreConnection(this.name, "addLog");
 
         const timestamp: Timestamp = Timestamp.now();
         const key = action + "_" + timestamp.toMillis();
