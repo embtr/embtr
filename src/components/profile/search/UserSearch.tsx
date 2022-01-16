@@ -97,6 +97,7 @@ export const UserSearch = () => {
                         autoCapitalize='none'
                     />
                 </View>
+                
                 <View style={{ paddingTop: 20, width: "100%" }}>
                     <HorizontalLine />
                     {searchResults?.results

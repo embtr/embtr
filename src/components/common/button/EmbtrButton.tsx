@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image, ImageURISource } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { Ionicons } from '@expo/vector-icons';
+
 
 interface Props {
     image?: ImageURISource,
+    icon?: any,
     borderColor?: string,
     buttonText: string,
     callback: Function,
     size?: string
 }
 
-export const EmbtrButton = ({ image, borderColor, buttonText, callback, size }: Props) => {
+export const EmbtrButton = ({ image, icon, borderColor, buttonText, callback, size }: Props) => {
     const { colors } = useTheme();
 
     const containerStyle = {
@@ -35,24 +38,31 @@ export const EmbtrButton = ({ image, borderColor, buttonText, callback, size }: 
     } as ViewStyle;
 
     return (
-        image ?
-            (
-                <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
-                    <View style={{ flexDirection: "row" }}>
-                        <View style={[logoViewStyle, { flex: 1 }]}>
-                            <Image source={image} style={{ width: 18, height: 18 }} />
-                        </View>
-                        <Text style={[textStyle, { flex: 9 }]}>{buttonText}</Text>
+        image ? (
+            <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
+                <View style={{ flexDirection: "row" }}>
+                    <View style={[logoViewStyle, { flex: 1 }]}>
+                        <Image source={image} style={{ width: 18, height: 18 }} />
                     </View>
-                </TouchableOpacity>
-            ) :
-            (
-                <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
-                    <View>
-                        <Text style={textStyle}>{buttonText}</Text>
-                    </View>
-                </TouchableOpacity>
-            )
+                    <Text style={[textStyle, { flex: 9 }]}>{buttonText}</Text>
+                </View>
+            </TouchableOpacity>
+
+        ) : icon ? (
+            <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
+                <View style={{ flexDirection: "row" }}>
+                    <Ionicons name={icon} size={32} color={colors.text} onPress={() => { }} />
+                    <Text style={[textStyle, { flex: 9 }]}>{buttonText}</Text>
+                </View>
+            </TouchableOpacity>
+
+        ) : (
+            <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
+                <View>
+                    <Text style={textStyle}>{buttonText}</Text>
+                </View>
+            </TouchableOpacity>
+        )
 
     );
 }

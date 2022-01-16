@@ -7,8 +7,6 @@ import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 
-type userSettingsScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage' | 'Dashboard' | 'About' | 'ReleaseNotes' | 'Contact' | 'UserSettings' | 'UserSearch'>;
-
 interface Props {
     name: string,
     leftRoute?: string,
@@ -24,7 +22,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon }: Pro
         color: colors.text,
     } as TextStyle;
 
-    const navigation = useNavigation<userSettingsScreenProp>();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     return (
         <View>
@@ -33,11 +31,11 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon }: Pro
                     {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
                 </View>
 
-                <View style={{ flex: 1, justifyContent: "center" }}>
+                <View style={{ flex: 2, justifyContent: "center" }}>
                     <Text style={[textStyle, { textAlign: "center", fontWeight: "bold" }]}>{name}</Text>
                 </View>
 
-                <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent:"flex-end", paddingTop: 5 }}>
+                <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
                     {rightIcon ? <Ionicons name={rightIcon} size={32} color={colors.text} onPress={() => { navigation.navigate(rightRoute as keyof RootStackParamList) }} /> : <View />}
                 </View>
             </View>
