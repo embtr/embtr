@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TextStyle, ViewStyle, Image, Button } from "react-native";
+import { View, Text, TextStyle, ViewStyle, Image } from "react-native";
 import { Screen } from 'src/components/common/screen';
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { useFocusEffect } from "@react-navigation/native";

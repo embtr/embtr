@@ -6,7 +6,8 @@ import { Screen } from 'src/components/common/screen';
 import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import { ProfileHeader } from 'src/components/profile/ProfileHeader';
+import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
+import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
 
 
 export const CurrentUserProfile = () => {
@@ -34,6 +35,7 @@ export const CurrentUserProfile = () => {
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
                         <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} isFollowingUser={false} />
+                        {userProfileModel && <ProfileBody userProfileModel={userProfileModel} /> }
                     </View>
                 </View>
             </View>
