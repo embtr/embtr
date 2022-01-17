@@ -12,7 +12,7 @@ interface Props {
     userProfileModel: UserProfileModel
 }
 
-type pillarConfigurationProps = StackNavigationProp<ProfileTabScreens, 'PillarConfiguration'>;
+type pillarsConfigurationProps = StackNavigationProp<ProfileTabScreens, 'PillarsConfiguration'>;
 
 export const ProfileBody = ({ userProfileModel }: Props) => {
     const { colors } = useTheme();
@@ -22,7 +22,7 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
         color: colors.text,
     } as TextStyle;
 
-    const navigation = useNavigation<pillarConfigurationProps>();
+    const navigation = useNavigation<pillarsConfigurationProps>();
 
     const [isCurrentUser, setIsCurrentUser] = React.useState<boolean>(false);
     React.useEffect(() => {
@@ -37,7 +37,7 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
             </View>
             <Pillars />
             {isCurrentUser && <View style={{ paddingTop: 20 }}>
-                <Button title='configure' onPress={() => { navigation.navigate('PillarConfiguration') }}></Button>
+                <Button title='configure' onPress={() => { navigation.navigate('PillarsConfiguration') }}></Button>
             </View>}
         </View>
     )

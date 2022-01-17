@@ -4,8 +4,12 @@ import PillarDao from "src/firebase/firestore/pillar/PillarDao";
 import { PillarModel } from "src/model/PillarModel";
 
 class PillarController {
-    public static addUserPillar(pillar: string) {
+    public static addPillar(pillar: string) {
         PillarDao.addPillar(pillar);
+    }
+
+    public static deletePillar(pillar: string, callback: Function): void {
+        PillarDao.deletePillar(pillar, callback);
     }
 
     public static getPillars(callback: Function) {

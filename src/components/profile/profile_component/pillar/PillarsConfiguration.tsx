@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, ViewStyle, Text, TextStyle, TextInput } from 'react-native';
+import { View, ViewStyle, Text, TextStyle, TextInput, Alert } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
+import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
 import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import PillarController from 'src/controller/pillar/PillarController';
 import { PillarModel } from 'src/model/PillarModel';
@@ -33,7 +33,7 @@ export const PillarsConfiguration = () => {
 
     const addPillar = () => {
         if (addPillarText) {
-            PillarController.addUserPillar(addPillarText);
+            PillarController.addPillar(addPillarText);
             setAddPillarText("");
             getPillars();
         }
@@ -45,22 +45,35 @@ export const PillarsConfiguration = () => {
 
     let pillarViews: JSX.Element[] = [];
     pillars.forEach(pillarModel => {
+        const confirmDelete = () => {
+            isDesktopBrowser() || isMobileBrowser() ?
+                confirm("Delete pillar '" + pillarModel.name + "'?") && PillarController.deletePillar(pillarModel.name, getPillars) :
+                Alert.alert("Delete Pillar?", "Delete pillar '" + pillarModel.name + "'?", [
+                    { text: 'Cancel', onPress: () => { }, style: 'cancel', },
+                    { text: 'Delete', onPress: () => PillarController.deletePillar(pillarModel.name, getPillars) },
+                ]);
+        };
+
         pillarViews.push(
             <View style={pillarContainerViewStyle} key={pillarModel.name}>
-                <Pillar pillarModel={pillarModel} />
+                <Pillar pillarModel={pillarModel} enableDelete={true} deleteOnPress={confirmDelete} />
             </View>
         );
     });
 
+    React.useEffect(() => {
+        getPillars();
+    }, []);
+
     useFocusEffect(
         React.useCallback(() => {
-            getPillars();
+            
         }, [])
     );
 
     return (
         <Screen>
-            <Banner name='Pillar Configuration' leftIcon={"arrow-back"} leftRoute="BACK" />
+            <Banner name='Pillars Configuration' leftIcon={"arrow-back"} leftRoute="BACK" />
 
             <View style={{ width: "100%", alignItems: "center" }}>
                 <View style={{ width: isDesktopBrowser() ? "60%" : "100%" }}>
@@ -79,12 +92,12 @@ export const PillarsConfiguration = () => {
                         </View>
 
                         {!maxPillersUsed() &&
-                        <View style={{ flex: 1 }} >
+                            <View style={{ flex: 1 }} >
                                 <View style={{ marginLeft: 10, borderWidth: 1, borderRadius: 5, borderColor: colors.text, height: 40, width: 40, alignItems: "center", justifyContent: "center" }}>
                                     <Ionicons name={"add"} size={25} color={colors.text} onPress={addPillar} />
                                 </View>
-                        </View>
-                    }
+                            </View>
+                        }
                     </View>
 
                     <View style={{ marginTop: 20 }}>

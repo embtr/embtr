@@ -10,10 +10,6 @@ desktop browser web
     isBrowser: true
     useEffectPlatformOs: web
 
-
-if (isMobile === false && isBrowser === true)
-
-
 android mobile web
     Platform.OS: web
     Device.osName: Android
@@ -45,4 +41,8 @@ ios app
 
 export const isDesktopBrowser = (): boolean => {
     return isMobile === false && isBrowser === true;
+}
+
+export const isMobileBrowser = (): boolean => {
+    return isMobile === true;
 }

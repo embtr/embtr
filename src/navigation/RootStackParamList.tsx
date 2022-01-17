@@ -9,7 +9,7 @@ export type TimelineTabScreens = {
 export type ProfileTabScreens = {
     Profile: undefined;
     UserSettings: undefined;
-    PillarConfiguration: undefined;
+    PillarsConfiguration: undefined;
 };
 
 export type MainTabScreens = {
