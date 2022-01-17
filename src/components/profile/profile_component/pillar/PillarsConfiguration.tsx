@@ -10,7 +10,7 @@ import PillarController from 'src/controller/pillar/PillarController';
 import { PillarModel } from 'src/model/PillarModel';
 import { useFocusEffect } from '@react-navigation/native';
 
-export const PillarConfiguration = () => {
+export const PillarsConfiguration = () => {
     const { colors } = useTheme();
 
     const textStyle = {
