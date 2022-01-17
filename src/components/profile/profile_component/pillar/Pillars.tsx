@@ -3,9 +3,14 @@ import * as React from 'react';
 import { View, ViewStyle } from 'react-native';
 import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import PillarController from 'src/controller/pillar/PillarController';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { PillarModel } from 'src/model/PillarModel';
 
-export const Pillars = () => {
+interface Props {
+    userProfileModel: UserProfileModel
+}
+
+export const Pillars = ({ userProfileModel }: Props) => {
     const pillarContainerViewStyle = {
         paddingBottom: 5,
     } as ViewStyle;
@@ -13,9 +18,11 @@ export const Pillars = () => {
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     const getPillars = () => {
-        PillarController.getPillars((updatedPillars: PillarModel[]) => {
-            setPillars(updatedPillars);
-        });
+        if (userProfileModel?.uid) {
+            PillarController.getPillars(userProfileModel.uid, (updatedPillars: PillarModel[]) => {
+                setPillars(updatedPillars);
+            });
+        }
     };
 
     useFocusEffect(

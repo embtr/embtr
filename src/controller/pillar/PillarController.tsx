@@ -1,21 +1,19 @@
-import MailController from "src/controller/mail/MailController";
-import FollowerDao from "src/firebase/firestore/follower/FollowerDao";
 import PillarDao from "src/firebase/firestore/pillar/PillarDao";
 import { PillarModel } from "src/model/PillarModel";
 
 class PillarController {
-    public static addPillar(pillar: string) {
-        PillarDao.addPillar(pillar);
+    public static addPillar(pillar: string, callback: Function) {
+        PillarDao.addPillar(pillar, callback);
     }
 
     public static deletePillar(pillar: string, callback: Function): void {
         PillarDao.deletePillar(pillar, callback);
     }
 
-    public static getPillars(callback: Function) {
+    public static getPillars(uid: string, callback: Function) {
         let pillars: PillarModel[] = [];
 
-        const result = PillarDao.getPillars();
+        const result = PillarDao.getPillars(uid);
         result.then(documents => {
             if (documents === undefined) {
                 callback([]);

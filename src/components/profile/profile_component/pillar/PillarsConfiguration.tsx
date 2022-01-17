@@ -9,6 +9,9 @@ import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import PillarController from 'src/controller/pillar/PillarController';
 import { PillarModel } from 'src/model/PillarModel';
 import { useFocusEffect } from '@react-navigation/native';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
+
 
 export const PillarsConfiguration = () => {
     const { colors } = useTheme();
@@ -22,20 +25,22 @@ export const PillarsConfiguration = () => {
         paddingBottom: 5,
     } as ViewStyle;
 
+    const [currentUid, setCurrentUid] = React.useState<string | undefined>(undefined);
     const [addPillarText, setAddPillarText] = React.useState("");
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     const getPillars = () => {
-        PillarController.getPillars((updatedPillars: PillarModel[]) => {
-            setPillars(updatedPillars);
-        });
+        if (currentUid) {
+            PillarController.getPillars(currentUid, (updatedPillars: PillarModel[]) => {
+                setPillars(updatedPillars);
+            });
+        }
     };
 
     const addPillar = () => {
         if (addPillarText) {
-            PillarController.addPillar(addPillarText);
+            PillarController.addPillar(addPillarText, getPillars);
             setAddPillarText("");
-            getPillars();
         }
     }
 
@@ -63,13 +68,11 @@ export const PillarsConfiguration = () => {
 
     React.useEffect(() => {
         getPillars();
-    }, []);
+    }, [currentUid]);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            
-        }, [])
-    );
+    React.useEffect(() => {
+        getCurrentUserUid(setCurrentUid);
+    }, []);
 
     return (
         <Screen>

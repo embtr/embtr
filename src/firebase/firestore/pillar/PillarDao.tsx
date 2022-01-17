@@ -4,9 +4,10 @@ import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 
 class PillarDao {
-    public static async addPillar(pillar: string) {
+    public static async addPillar(pillar: string, callback: Function) {
         getCurrentUserUid((uid: string | undefined) => {
             if (!uid) {
+                callback();
                 return;
             }
 
@@ -16,7 +17,9 @@ class PillarDao {
 
             setDoc(doc(db, "pillars/" + uid + "/active/" + pillar), {
                 "timestamp": timestamp
-            }, { merge: true });
+            }, { merge: true }).then(() => {
+                callback();
+            });
         });
     }
 
@@ -44,9 +47,7 @@ class PillarDao {
             });
     }
 
-    public static async getPillars() {
-        const uid = getAuth().currentUser?.uid;
-
+    public static async getPillars(uid: string) {
         if (uid) {
             const db: Firestore = getFirebaseConnection(this.name, "getPillars");
             const result = await getDocs(collection(db, "pillars/" + uid + "/active"));

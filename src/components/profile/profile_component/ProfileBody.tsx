@@ -35,7 +35,7 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
             <View style={{ alignItems: "center", paddingBottom: 25, paddingTop: 25 }}>
                 <Text style={textStyle}>Pillars</Text>
             </View>
-            <Pillars />
+            <Pillars userProfileModel={userProfileModel} />
             {isCurrentUser && <View style={{ paddingTop: 20 }}>
                 <Button title='configure' onPress={() => { navigation.navigate('PillarsConfiguration') }}></Button>
             </View>}

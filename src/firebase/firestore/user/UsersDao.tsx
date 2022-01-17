@@ -1,4 +1,4 @@
-import { Firestore, getDocs, query, collection, where } from 'firebase/firestore';
+import { Firestore, getDocs, query, collection, where, orderBy } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class UsersDao {
@@ -8,7 +8,7 @@ class UsersDao {
 
         const db: Firestore = getFirebaseConnection(this.name, "getUsersByDisplayName");
         
-        const q = query(collection(db, "profiles"), where("nameLower", ">=", nameLower), where("nameLower", "<=", nameLower + "\uF7FF"));
+        const q = query(collection(db, "profiles"), where("nameLower", ">=", nameLower), where("nameLower", "<=", nameLower + "\uF7FF"), orderBy("nameLower", "asc"));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;

@@ -26,19 +26,16 @@ export const UserSearch = () => {
 
     const onSearchChange = (text: string) => {
         const runDownSubQuery: boolean = text.includes(searchText);
-        const runDownUpQuery: boolean = searchText.includes(text);
+        const runUpQuery: boolean = searchText.includes(text);
 
         setSearchText(text);
 
-        if (text === "") {
-            setSearchResults(undefined);
-
-        } else if (searchResults && runDownSubQuery) {
+        if (searchResults && runDownSubQuery) {
             UsersController.getUsersByDisplayNameSubQuery(text, searchResults, (newResults: UserSearchResultObject) => {
                 setSearchResults(newResults);
             });
 
-        } else if (searchResults && runDownUpQuery) {
+        } else if (searchResults && runUpQuery) {
             setSearchResults(searchResults.parentSearch);
 
         } else {
@@ -70,6 +67,10 @@ export const UserSearch = () => {
             }
         }
     }
+
+    React.useEffect(() => {
+        onSearchChange("");
+    }, []);
 
     useFocusEffect(
         React.useCallback(() => {
