@@ -81,8 +81,32 @@ export const Dashboard = () => {
                     tabBarInactiveBackgroundColor: colors.background,
                 })}
             >
-                <Tab.Screen name={TABS.TIMELINE} component={TimelineTab} />
-                <Tab.Screen name={TABS.USER_PROFILE} component={ProfileTab} />
+                <Tab.Screen
+                    name={TABS.TIMELINE}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: e => {
+                            const currentlyInFocus = navigation.isFocused();
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Profile") {
+                                e.preventDefault();
+                                navigation.navigate('Timeline');
+                            }
+                        },
+                    })}
+                    component={TimelineTab}
+                />
+                <Tab.Screen
+                    name={TABS.USER_PROFILE}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: e => {
+                            const currentlyInFocus = navigation.isFocused();
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Profile") {
+                                e.preventDefault();
+                                navigation.navigate('Profile');
+                            }
+                        },
+                    })}
+                    component={ProfileTab}
+                />
             </Tab.Navigator>
         </View>
     );
