@@ -22,10 +22,10 @@ export const TimelineElement = ({ title, body }: Props) => {
     } as TextStyle;
 
     return (
-        <View style={{}}>
+        <View>
             <HorizontalLine />
 
-            <View style={{ marginTop: 15, marginBottom: 15 }}>
+            <View style={{ marginTop: 15, marginBottom: 15, marginLeft: 10, marginRight: 10 }}>
                 <View>
                     <Text style={[headerTextStyle, { textAlign: "center" }]}>{title}</Text>
                 </View>

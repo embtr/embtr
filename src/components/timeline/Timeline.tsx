@@ -18,7 +18,7 @@ export const Timeline = () => {
 
             <View style={{ flex: 1, justifyContent: 'center' }}>
                 <View style={{marginTop:10, marginBottom:10}}>
-                    <TimelineElement title='Welcome 👋' body={"Welcome to embtr.! Can't wait for you to crush your goals alongside the rest of us. Come on inside and say hello!"} />
+                    <TimelineElement title='Welcome 👋' body={"Welcome to embtr.! We cannot wait for you to reach your wildest dreams alongside us. Come on inside and say hello!"} />
                 </View>
             </View>
         </Screen>
