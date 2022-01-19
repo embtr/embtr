@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SafeAreaView, TextInput, View } from 'react-native';
+import { SafeAreaView, ScrollView, TextInput, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
@@ -78,28 +78,30 @@ export const UserSearch = () => {
         <Screen>
             <Banner name='User Search' leftIcon={"arrow-back"} leftRoute="Timeline" />
 
-            <View style={{ alignItems: "center" }}>
-                <View style={{ flexDirection: "row", alignItems: "center", width: "60%" }} >
-                    <View style={{ position: "absolute", zIndex: 1, paddingTop: 30, paddingLeft: 18 }} >
-                        <Ionicons name={'search'} size={22} color={colors.text} />
+            <ScrollView>
+                <View style={{ alignItems: "center" }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", width: "60%" }} >
+                        <View style={{ position: "absolute", zIndex: 1, paddingTop: 30, paddingLeft: 18 }} >
+                            <Ionicons name={'search'} size={22} color={colors.text} />
+                        </View>
+                        <TextInput
+                            style={{ marginTop: 30, paddingLeft: 60, height: 40, width: "100%", borderColor: colors.text, borderWidth: 1, borderRadius: 50, color: colors.text, fontSize: 20 }}
+                            onChangeText={onSearchChange}
+                            value={searchText}
+                            placeholderTextColor={colors.secondary_text}
+                            placeholder={"enter search"}
+                            autoCapitalize='none'
+                        />
                     </View>
-                    <TextInput
-                        style={{ marginTop: 30, paddingLeft: 60, height: 40, width: "100%", borderColor: colors.text, borderWidth: 1, borderRadius: 50, color: colors.text, fontSize: 20 }}
-                        onChangeText={onSearchChange}
-                        value={searchText}
-                        placeholderTextColor={colors.secondary_text}
-                        placeholder={"enter search"}
-                        autoCapitalize='none'
-                    />
+
+                    <View style={{ paddingTop: 20, width: "100%" }}>
+                        <HorizontalLine />
+                        {searchResults?.results
+                            ? <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={searchResults.results!} />
+                            : <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />}
+                    </View>
                 </View>
-                
-                <View style={{ paddingTop: 20, width: "100%" }}>
-                    <HorizontalLine />
-                    {searchResults?.results
-                        ? <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={searchResults.results!} />
-                        : <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />}
-                </View>
-            </View>
+            </ScrollView>
         </Screen>
 
     );

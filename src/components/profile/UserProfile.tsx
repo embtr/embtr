@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
@@ -65,16 +65,16 @@ export const UserProfile = () => {
 
     return (
         <Screen>
-            <View>
-                <Banner name='User Profile' leftIcon={"arrow-back"} leftRoute="BACK" />
+            <Banner name='User Profile' leftIcon={"arrow-back"} leftRoute="BACK" />
 
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
                         <ProfileHeader userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} followerCount={followerCount} followingCount={followingCount} isFollowingUser={isFollowingUser} />
                         {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </Screen>
     );
 }

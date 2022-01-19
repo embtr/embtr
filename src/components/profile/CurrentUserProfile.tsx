@@ -3,7 +3,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { Screen } from 'src/components/common/Screen';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
@@ -47,16 +47,16 @@ export const CurrentUserProfile = () => {
 
     return (
         <Screen>
-            <View>
-                <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
+            <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
+            <ScrollView showsVerticalScrollIndicator={false}>
 
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                        <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => {}} onUnfollowUser={() => {}} followerCount={followerCount} followingCount={followingCount} isFollowingUser={false} />
+                        <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} followerCount={followerCount} followingCount={followingCount} isFollowingUser={false} />
                         {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </Screen>
     )
 
