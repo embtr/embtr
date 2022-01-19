@@ -6,9 +6,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
-import { useLinkTo } from '@react-navigation/native';
+import { CommonActions, useLinkTo } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import FollowerController from 'src/controller/follower/FollowerController';
+import { NavigationActions } from 'react-navigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -79,12 +80,13 @@ export const Dashboard = () => {
                             const currentlyInFocus = navigation.isFocused();
                             if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Profile") {
                                 e.preventDefault();
-                                navigation.navigate('Timeline');
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Timeline' }], }));
                             }
                         },
                     })}
                     component={TimelineTab}
                 />
+
                 <Tab.Screen
                     name={TABS.USER_PROFILE}
                     listeners={({ navigation, route }) => ({
@@ -92,7 +94,7 @@ export const Dashboard = () => {
                             const currentlyInFocus = navigation.isFocused();
                             if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Profile") {
                                 e.preventDefault();
-                                navigation.navigate('Profile');
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }], }));
                             }
                         },
                     })}
