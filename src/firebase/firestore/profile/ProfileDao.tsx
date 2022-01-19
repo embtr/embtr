@@ -11,7 +11,6 @@ export interface UserProfileModel {
 }
 
 class ProfileDao {
-
     public static async getProfile(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, "getProfile");
         const result = await getDoc(doc(db, "profiles/", uid));

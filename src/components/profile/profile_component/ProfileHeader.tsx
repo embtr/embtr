@@ -5,7 +5,7 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { EditUserProfileButton } from 'src/components/profile/EditUserProfileButton';
 import { FollowUserButton } from 'src/components/profile/FollowUserButton';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import FollowerController from 'src/controller/follower/FollowerController';
+import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { EditableTextBox } from 'src/components/common/textbox/EditableTextBox';
@@ -48,13 +48,9 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                 return;
             }
 
-            FollowerController.getFollowers(userProfileModel!.uid!, (followers: string[]) => {
-                setFollowerCount(followers.length);
-            });
-
-            FollowerController.getFollowing(userProfileModel!.uid!, (following: string[]) => {
-                setFollowingCount(following.length);
-
+            FollowerController.getFollowCounts(userProfileModel.uid, (followCounts: FollowCounts) => {
+                setFollowerCount(followCounts.follower_count);
+                setFollowingCount(followCounts.following_count);
             });
 
             getCurrentUserUid(setCurrentUserId);

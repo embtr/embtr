@@ -4,12 +4,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
-import ProfileController from 'src/controller/profile/ProfileController';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
 import { useLinkTo } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
+import FollowerController from 'src/controller/follower/FollowerController';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,15 +20,7 @@ const TABS = {
 export const Dashboard = () => {
     const { colors } = useTheme();
 
-    const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
-    React.useEffect(() => {
-        getCurrentUserUid(setCurrentUserId);
-    }, []);
-
-    const [userProfilePhoto, setUserProfilePhoto] = React.useState<string | undefined>(undefined);
-    if (currentUserId) {
-        ProfileController.getProfile(currentUserId, (profileData: UserProfileModel) => { setUserProfilePhoto(profileData?.photoUrl ? profileData?.photoUrl : undefined) });
-    }
+    const userProfileUrl = getAuth().currentUser?.photoURL;
 
     const changeLinkTo = useLinkTo();
     React.useEffect(() => {
@@ -68,7 +59,7 @@ export const Dashboard = () => {
                             return (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                                     <View style={{ width: size + 2, height: size + 2, borderRadius: 50, backgroundColor: backgroundColor, alignItems: "center", justifyContent: "center" }}>
-                                        <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfilePhoto }} />
+                                        <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileUrl! }} />
                                     </View>
                                     <Text style={{ color: textColor }}>you</Text>
                                 </View>

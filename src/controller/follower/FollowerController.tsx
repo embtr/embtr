@@ -1,6 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
 import FollowerDao from "src/firebase/firestore/follower/FollowerDao";
 
+export interface FollowCounts {
+    follower_count: number;
+    following_count: number;
+}
+
 class FollowerController {
     public static getFollowers(uid: string, callback: Function) {
         let followerIds: string[] = [];
@@ -19,6 +24,32 @@ class FollowerController {
             callback(followerIds);
         }).catch(() => {
             callback(followerIds);
+        });
+    }
+
+    public static getFollowCounts(uid: string, callback: Function) {
+        const result = FollowerDao.getFollow(uid);
+        result.then(document => {
+            if (document && document.exists()) {
+                let followCounts: FollowCounts = document.data() as FollowCounts;
+                if (followCounts?.follower_count === undefined || followCounts?.following_count === undefined) {
+                    this.initFollowCounts(uid, callback);
+                } else {
+                    callback(followCounts);
+                }
+            } else {
+                this.initFollowCounts(uid, callback);
+            }
+        });
+    }
+
+    private static initFollowCounts(uid: string, callback: Function) {
+        this.getFollowers(uid, (followers: string[]) => {
+            this.getFollowing(uid, (following: string[]) => {
+                let followCounts: FollowCounts = { "follower_count": followers.length, "following_count": following.length };
+                FollowerDao.setFollow(uid, followCounts);
+                callback(followCounts);
+            });
         });
     }
 

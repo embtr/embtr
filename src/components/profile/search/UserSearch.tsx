@@ -46,18 +46,12 @@ export const UserSearch = () => {
     }
 
     const onFollowUser = (uid: string) => {
-        if (currentUserId) {
-            FollowerController.followUser(currentUserId, uid, () => { });
-        }
         let followingUidsCopy = followingUids.slice(0);
         followingUidsCopy.push(uid);
         setFollowingUids(followingUidsCopy);
     }
 
     const onUnfollowUser = (uid: string) => {
-        if (currentUserId) {
-            FollowerController.unfollowUser(currentUserId, uid, () => { });
-        }
         let followingUidsCopy = followingUids.slice(0);
         for (var i = followingUidsCopy.length - 1; i >= 0; i--) {
             if (followingUidsCopy[i] === uid) {

@@ -25,16 +25,10 @@ export const UserProfile = () => {
 
     const onFollowUser = (uid: string) => {
         setIsFollowingUser(true);
-        if (currentUserId) {
-            FollowerController.followUser(currentUserId, uid, () => { })
-        }
     };
 
     const onUnfollowUser = (uid: string) => {
         setIsFollowingUser(false);
-        if (currentUserId) {
-            FollowerController.unfollowUser(currentUserId, uid, () => { })
-        }
     };
 
     useFocusEffect(
@@ -55,7 +49,7 @@ export const UserProfile = () => {
     return (
         <Screen>
             <View>
-                <Banner name='You' leftIcon={"arrow-back"} leftRoute="BACK" />
+                <Banner name='User Profile' leftIcon={"arrow-back"} leftRoute="BACK" />
 
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>

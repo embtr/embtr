@@ -35,7 +35,7 @@ export const CurrentUserProfile = () => {
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
                         <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} isFollowingUser={false} />
-                        {userProfileModel && <ProfileBody userProfileModel={userProfileModel} /> }
+                        {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                     </View>
                 </View>
             </View>
