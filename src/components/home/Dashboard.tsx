@@ -78,7 +78,7 @@ export const Dashboard = () => {
                     listeners={({ navigation, route }) => ({
                         tabPress: e => {
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Profile") {
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Timeline") {
                                 e.preventDefault();
                                 navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Timeline' }], }));
                             }
