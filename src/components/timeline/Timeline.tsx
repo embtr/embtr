@@ -17,7 +17,7 @@ export const Timeline = () => {
             <Banner name="Timeline" leftIcon={'search-circle-outline'} leftRoute='UserSearch' />
 
             <View style={{ flex: 1, justifyContent: 'center' }}>
-                <View style={{marginTop:10, marginBottom:10}}>
+                <View style={{ marginTop: 1 }}>
                     <TimelineElement title='Welcome 👋' body={"Welcome to embtr.! We cannot wait for you to reach your wildest dreams alongside us. Come on inside and say hello!"} />
                 </View>
             </View>
