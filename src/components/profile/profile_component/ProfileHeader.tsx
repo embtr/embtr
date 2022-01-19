@@ -15,10 +15,12 @@ interface Props {
     userProfileModel?: UserProfileModel,
     onFollowUser: Function,
     onUnfollowUser: Function,
+    followerCount: number,
+    followingCount: number,
     isFollowingUser: boolean
 }
 
-export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, isFollowingUser }: Props) => {
+export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, followerCount, followingCount, isFollowingUser }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -26,8 +28,6 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
         color: colors.text,
     } as TextStyle;
 
-    const [followerCount, setFollowerCount] = React.useState<number>(0);
-    const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
 
     const [shouldDisplayFollowButton, setShouldDisplayFollowButton] = React.useState(false);
@@ -44,18 +44,8 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
     useFocusEffect(
         React.useCallback(() => {
-            if (!userProfileModel?.uid) {
-                return;
-            }
-
-            FollowerController.getFollowCounts(userProfileModel.uid, (followCounts: FollowCounts) => {
-                setFollowerCount(followCounts.follower_count);
-                setFollowingCount(followCounts.following_count);
-            });
-
             getCurrentUserUid(setCurrentUserId);
-
-        }, [userProfileModel])
+        }, [])
     );
 
     const saveProfile = () => {
