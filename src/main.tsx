@@ -38,7 +38,11 @@ const linking: LinkingOptions<RootStackParamList> = {
             ReleaseNotes: "releaseNotes",
             Contact: "contact",
             Logout: "logout",
-            Goggins: "goggins"
+
+            Goggins: "goggins",
+            GogginsRegister: "goggins/register",
+            GogginsSponsor: "goggins/sponsor",
+            GogginsDonate: "goggins/donate"
         }
     },
 };

@@ -4,7 +4,10 @@ import { About } from 'src/static/About';
 import { ReleaseNotes } from 'src/static/ReleaseNotes';
 import { LandingPage } from 'src/components/landing/LandingPage';
 import { Logout } from 'src/components/logout/Logout';
-import { Goggins } from 'src/static/Goggins';
+import { Goggins } from 'src/static/events/goggins/Goggins';
+import { GogginsRegister } from 'src/static/events/goggins/GogginsRegister';
+import { GogginsSponsor } from 'src/static/events/goggins/GogginsSponsor';
+import { GogginsDonate } from 'src/static/events/goggins/GogginsDonate';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,7 +18,11 @@ export const InsecureMainStack = () => {
             <Stack.Screen name="Logout" component={Logout} />
             <Stack.Screen name="About" component={About} />
             <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
+
             <Stack.Screen name="Goggins" component={Goggins} />
+            <Stack.Screen name="GogginsRegister" component={GogginsRegister} />
+            <Stack.Screen name="GogginsSponsor" component={GogginsSponsor} />
+            <Stack.Screen name="GogginsDonate" component={GogginsDonate} />
         </Stack.Navigator>
     );
 };

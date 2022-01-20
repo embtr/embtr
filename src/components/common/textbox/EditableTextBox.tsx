@@ -6,10 +6,11 @@ interface Props {
     text: string,
     textSize: number,
     editable: boolean,
-    onChangeText: Function
+    onChangeText: Function,
+    placeholder?: string
 }
 
-export const EditableTextBox = ({ text, textSize, editable, onChangeText }: Props) => {
+export const EditableTextBox = ({ text, textSize, editable, onChangeText, placeholder }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -30,7 +31,7 @@ export const EditableTextBox = ({ text, textSize, editable, onChangeText }: Prop
 
     return (
         editable
-            ? <TextInput style={[textStyle, inputStyle, {fontSize: textSize}]} onChangeText={updateText} value={text} />
+            ? <TextInput style={[textStyle, inputStyle, {fontSize: textSize}]} onChangeText={updateText} value={text} placeholder={placeholder} />
             : <Text style={[textStyle, {fontSize: textSize}]}>{text}</Text>
     )
 }
