@@ -5,6 +5,7 @@ import { ReleaseNotes } from 'src/static/ReleaseNotes';
 import { Dashboard } from 'src/components/home/Dashboard';
 import { Logout } from 'src/components/logout/Logout';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
+import { Goggins } from 'src/static/Goggins';
 
 const Stack = createNativeStackNavigator();
 
@@ -16,6 +17,7 @@ export const SecureMainStack = () => {
             <Stack.Screen name="Logout" component={Logout} />
             <Stack.Screen name="About" component={About} />
             <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
+            <Stack.Screen name="Goggins" component={Goggins} />
         </Stack.Navigator>
     );
 };

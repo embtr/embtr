@@ -25,4 +25,5 @@ export type RootStackParamList = {
     Contact: undefined;
     Logout: undefined;
     LoadingPage: undefined;
+    Goggins: undefined;
 };

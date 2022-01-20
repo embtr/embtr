@@ -37,7 +37,8 @@ const linking: LinkingOptions<RootStackParamList> = {
             About: "about",
             ReleaseNotes: "releaseNotes",
             Contact: "contact",
-            Logout: "logout"
+            Logout: "logout",
+            Goggins: "goggins"
         }
     },
 };
