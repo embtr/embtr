@@ -8,8 +8,6 @@ import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
 import { CommonActions, useLinkTo } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
-import FollowerController from 'src/controller/follower/FollowerController';
-import { NavigationActions } from 'react-navigation';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,20 +20,6 @@ export const Dashboard = () => {
     const { colors } = useTheme();
 
     const userProfileUrl = getAuth().currentUser?.photoURL;
-
-    const changeLinkTo = useLinkTo();
-    React.useEffect(() => {
-        Linking.getInitialURL().then(result => {
-            if (result) {
-                const splitUrl = result.split(/[\s/]+/)
-                const endpoint = "/" + splitUrl[splitUrl.length - 1]
-
-                if (endpoint !== "/") {
-                    try { changeLinkTo(endpoint); } catch (e) { }
-                }
-            }
-        });
-    }, []);
 
     return (
         <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>
