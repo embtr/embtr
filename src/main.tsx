@@ -31,6 +31,11 @@ const linking: LinkingOptions<RootStackParamList> = {
                             Timeline: "timeline",
                             UserProfile: "user"
                         }
+                    },
+                    ExploreTab: {
+                        screens: {
+                            Explore: "explore"
+                        }
                     }
                 }
             },

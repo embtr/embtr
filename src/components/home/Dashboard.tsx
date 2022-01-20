@@ -8,12 +8,14 @@ import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
 import { CommonActions } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
+import { ExploreTab } from 'src/components/navigation/ExploreTab';
 
 const Tab = createBottomTabNavigator();
 
 const TABS = {
+    EXPLORE: "ExploreTab",
     USER_PROFILE: "CurrentUserTab",
-    TIMELINE: "TimelineTab"
+    TIMELINE: "TimelineTab",
 }
 
 export const Dashboard = () => {
@@ -27,6 +29,17 @@ export const Dashboard = () => {
                 screenOptions={({ route }) => ({
                     tabBarStyle: { backgroundColor: colors.background },
                     tabBarIcon: ({ focused, size }) => {
+                        if (route.name === TABS.EXPLORE) {
+                            let icon: any = focused ? 'compass' : 'compass-outline';
+                            let color = focused ? colors.primary_border : colors.text;
+                            return (
+                                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                    <Ionicons name={icon} size={size} color={color} />
+                                    <Text style={{ color: color }}>explore</Text>
+                                </View>
+                            )
+                        }
+
                         if (route.name === TABS.TIMELINE) {
                             let icon: any = focused ? 'ios-home' : 'ios-home-outline';
                             let color = focused ? colors.primary_border : colors.text;
@@ -57,6 +70,20 @@ export const Dashboard = () => {
                     tabBarInactiveBackgroundColor: colors.background,
                 })}
             >
+                <Tab.Screen
+                    name={TABS.EXPLORE}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: e => {
+                            const currentlyInFocus = navigation.isFocused();
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Explore") {
+                                e.preventDefault();
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Explore' }], }));
+                            }
+                        },
+                    })}
+                    component={ExploreTab}
+                />
+
                 <Tab.Screen
                     name={TABS.TIMELINE}
                     listeners={({ navigation, route }) => ({

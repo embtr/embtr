@@ -4,11 +4,11 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { TimelineElement } from 'src/components/timeline/TimelineElement';
 
-export const Timeline = () => {
+export const Explore = () => {
 
     return (
         <Screen>
-            <Banner name="Timeline" leftIcon={'search-circle-outline'} leftRoute='UserSearch' />
+            <Banner name="Explore" />
 
             <View style={{ flex: 1, justifyContent: 'center' }}>
                 <View style={{ marginTop: 1 }}>

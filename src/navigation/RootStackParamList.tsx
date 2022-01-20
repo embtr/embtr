@@ -1,5 +1,11 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
 
+export type MainTabScreens = {
+    TimelineTab: NavigatorScreenParams<TimelineTabScreens>
+    CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>
+    ExploreTab: NavigatorScreenParams<ExploreTabScreens>
+}
+
 export type TimelineTabScreens = {
     UserSearch: undefined;
     Timeline: undefined;
@@ -12,9 +18,8 @@ export type ProfileTabScreens = {
     PillarsConfiguration: undefined;
 };
 
-export type MainTabScreens = {
-    CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>
-    TimelineTab: NavigatorScreenParams<TimelineTabScreens>
+export type ExploreTabScreens = {
+    Explore: undefined;
 }
 
 export type RootStackParamList = {
