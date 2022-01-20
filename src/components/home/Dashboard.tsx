@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Text, View, Image, Linking } from 'react-native';
+import { Text, View, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
-import { CommonActions, useLinkTo } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 
 const Tab = createBottomTabNavigator();
