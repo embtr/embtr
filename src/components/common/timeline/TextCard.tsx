@@ -46,9 +46,17 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                     <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5 }]}>view more...</Text>
                 </View>
             </View>
-            <HorizontalLine />
 
-            <View style={{ paddingRight: 15, marginTop: 10, marginBottom: 10, flexDirection: "row", justifyContent: "flex-end" }}>
+            <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
+
+                <View style={{ borderColor: colors.text, marginRight: 5, justifyContent:"center" }}>
+                    <Text style={{ color: "grey", fontSize: 12 }}>12 loves</Text>
+                </View>
+
+                <View style={{ borderColor: colors.text, marginRight: 5, justifyContent:"center" }}>
+                    <Text style={{ color: "grey", fontSize: 12 }}>18 comments</Text>
+                </View>
+
                 <View style={{ borderColor: colors.text, marginRight: 5 }}>
                     <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={() => { setHeartPressed(true) }} />
                 </View>
