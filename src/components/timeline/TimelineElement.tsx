@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Text, TextStyle, View } from 'react-native';
+import { Text, TextStyle, View, Image, ImageURISource } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
     title: string,
-    body: string
+    body: string,
+    image?: ImageURISource,
 }
 
-export const TimelineElement = ({ title, body }: Props) => {
+export const TimelineElement = ({ title, body, image }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -25,16 +26,20 @@ export const TimelineElement = ({ title, body }: Props) => {
         <View>
             <HorizontalLine />
 
-            <View style={{ marginTop: 15, marginBottom: 15, marginLeft: 10, marginRight: 10 }}>
+            <View style={{ height: 275, marginLeft: 10, marginRight: 10 }}>
                 <View>
-                    <Text style={[headerTextStyle, { textAlign: "center" }]}>{title}</Text>
+                    <Text style={[headerTextStyle, { paddingTop: 20, textAlign: "center" }]}>{title}</Text>
                 </View>
 
-                <View style={{ marginTop: 10 }}>
-                    <Text style={[bodyTextStyle, { textAlign: "center" }]}>{body}</Text>
-                </View>
+                {image && <View style={{ alignItems: "center", paddingTop: 20 }}>
+                    <Image source={image} style={{ width: 200, height: 200 }} />
+                </View>}
             </View>
 
+            <HorizontalLine />
+            <View style={{ marginTop: 15, marginBottom:15}}>
+                <Text style={[bodyTextStyle, {paddingLeft:"2.5%", paddingRight:"2.5%", textAlign: "left" }]}>{body}</Text>
+            </View>
             <HorizontalLine />
         </View>
     );

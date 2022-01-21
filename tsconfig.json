@@ -30,7 +30,8 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src",
+    "./src/type.d.ts"
   ],
   "extends": "expo/tsconfig.base"
 }
