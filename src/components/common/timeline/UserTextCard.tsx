@@ -1,11 +1,11 @@
+import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as React from 'react';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { RootStackParamList, TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 
-type userProfileScreenProp = StackNavigationProp<RootStackParamList>;
+type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
 interface Props {
     userProfileModel: UserProfileModel,
