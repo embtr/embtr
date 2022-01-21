@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { Text, TextStyle, View, Image, ImageSourcePropType } from 'react-native';
+import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
     staticImage?: ImageSourcePropType,
     httpImage?: string,
+    onTouchImage?: Function
     name: string,
     title: string,
     body: string,
 }
 
-export const TextCard = ({ staticImage, httpImage, name, title, body }: Props) => {
+export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -31,7 +32,7 @@ export const TextCard = ({ staticImage, httpImage, name, title, body }: Props) =
             <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
                 <View style={{ width: "100%" }}><Text style={[bodyTextStyle, { textAlign: "right", color: "gray", fontSize: 12 }]}>Jan 20, 2022</Text></View>
                 {staticImage && <View><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={staticImage} /></View>}
-                {httpImage && <View><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></View>}
+                {httpImage && <View><TouchableOpacity disabled={!onTouchImage} onPress={() => { onTouchImage!() }} ><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></TouchableOpacity></View> }
                 <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
                 <View>
                     <Text style={[headerTextStyle, { paddingTop: 5, textAlign: "center" }]}>{title}</Text>
