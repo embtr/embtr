@@ -34,7 +34,7 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
 
             <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
                 <View style={{ width: "100%" }}><Text style={[bodyTextStyle, { textAlign: "right", color: "gray", fontSize: 12 }]}>Jan 20, 2022</Text></View>
-                {staticImage && <View><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={staticImage} /></View>}
+                {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
                 {httpImage && <View><TouchableOpacity disabled={!onTouchImage} onPress={() => { onTouchImage!() }} ><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></TouchableOpacity></View>}
                 <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
                 <View>
@@ -53,7 +53,7 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                     <Text style={{ color: "grey", fontSize: 12 }}>12 loves</Text>
                 </View>
 
-                <View style={{ borderColor: colors.text, marginRight: 5, justifyContent:"center" }}>
+                <View style={{ borderColor: colors.text, marginRight: 10, justifyContent:"center" }}>
                     <Text style={{ color: "grey", fontSize: 12 }}>18 comments</Text>
                 </View>
 
