@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity, ViewStyle } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
+import { DropDownTextBox } from 'src/components/common/textbox/DropDownTextBox';
 
 interface Props {
     staticImage?: ImageSourcePropType,
@@ -30,7 +31,9 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         color: colors.text,
     } as TextStyle;
 
-    const [heartPressed, setHeartPressed] = React.useState(isLiked);
+    const [ heartPressed, setHeartPressed ] = React.useState(isLiked);
+    const [ displayCommentBox, setDisplayCommentBox ] = React.useState(false);
+    const [ commentText, setCommentText ] = React.useState("");
 
     const onHeartPressed = () => {
         if (heartPressed) {
@@ -75,9 +78,11 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                 </View>
 
                 <View style={{ borderColor: colors.text, marginLeft: 5 }}>
-                    <Ionicons name={'chatbox-outline'} size={22} color={colors.text} onPress={() => { alert("on press chat") }} />
+                    <Ionicons name={'chatbox-outline'} size={22} color={colors.text} onPress={() => { setDisplayCommentBox(!displayCommentBox); }} />
                 </View>
             </View>
+
+            <DropDownTextBox text={commentText} textSize={14} onChangeText={setCommentText} placeholder='add a comment...' display={displayCommentBox} />
 
             <HorizontalLine />
         </View>
