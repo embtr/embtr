@@ -1,4 +1,4 @@
-import { Firestore, query, collection, orderBy, getDocs } from 'firebase/firestore';
+import { Firestore, query, collection, orderBy, getDocs, setDoc, doc, increment, arrayUnion } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class ExploreDao {
@@ -9,6 +9,14 @@ class ExploreDao {
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;
+    }
+
+    public static likeChallenge(challengeId: string, userUid: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "likeChallenge");
+
+        setDoc(doc(db, "challenges/" + challengeId), {
+            likes: arrayUnion(userUid)
+        }, { merge: true })
     }
 }
 

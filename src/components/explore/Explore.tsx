@@ -33,7 +33,7 @@ export const Explore = () => {
     challenges.forEach(challenge => {
         challengeViews.push(
             <View key={challenge.title} style={{ marginTop: 5 }}>
-                <EmbtrTextCard challengeModel={challenge} />
+                <EmbtrTextCard challengeModel={challenge} userProfileModel={userProfileModel!} />
             </View>
         );
     });
@@ -43,7 +43,7 @@ export const Explore = () => {
             <Banner name="Explore" />
             <ScrollView>
                 <View style={{ flex: 1 }}>
-                    { challengeViews }
+                    {challengeViews}
                 </View>
             </ScrollView>
         </Screen>

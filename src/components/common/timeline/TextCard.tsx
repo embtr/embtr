@@ -11,9 +11,13 @@ interface Props {
     name: string,
     title: string,
     body: string,
+    likes: number,
+    comments: number
+    onLike: Function
+    isLiked: boolean
 }
 
-export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body }: Props) => {
+export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, onLike, isLiked }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -26,7 +30,16 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         color: colors.text,
     } as TextStyle;
 
-    const [heartPressed, setHeartPressed] = React.useState(false);
+    const [heartPressed, setHeartPressed] = React.useState(isLiked);
+
+    const onHeartPressed = () => {
+        if (heartPressed) {
+            return;
+        }
+
+        setHeartPressed(true);
+        onLike();
+    };
 
     return (
         <View>
@@ -49,16 +62,16 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
 
             <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
 
-                <View style={{ borderColor: colors.text, marginRight: 5, justifyContent:"center" }}>
-                    <Text style={{ color: "grey", fontSize: 12 }}>12 loves</Text>
+                <View style={{ borderColor: colors.text, marginRight: 5, justifyContent: "center" }}>
+                    <Text style={{ color: "grey", fontSize: 12 }}>{likes} likes</Text>
                 </View>
 
-                <View style={{ borderColor: colors.text, marginRight: 10, justifyContent:"center" }}>
-                    <Text style={{ color: "grey", fontSize: 12 }}>18 comments</Text>
+                <View style={{ borderColor: colors.text, marginRight: 10, justifyContent: "center" }}>
+                    <Text style={{ color: "grey", fontSize: 12 }}>{comments} comments</Text>
                 </View>
 
                 <View style={{ borderColor: colors.text, marginRight: 5 }}>
-                    <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={() => { setHeartPressed(true) }} />
+                    <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={onHeartPressed} />
                 </View>
 
                 <View style={{ borderColor: colors.text, marginLeft: 5 }}>
