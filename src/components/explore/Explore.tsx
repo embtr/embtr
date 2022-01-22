@@ -7,9 +7,12 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
+import { useFocusEffect } from '@react-navigation/native';
+import ExploreController, { ChallangeModel } from 'src/controller/explore/ExploreController';
 
 export const Explore = () => {
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
+    const [challenges, setChallenges] = React.useState<ChallangeModel[]>([]);
 
     React.useEffect(() => {
         const uid = getAuth().currentUser?.uid;
@@ -20,18 +23,27 @@ export const Explore = () => {
         }
     }, []);
 
+    useFocusEffect(
+        React.useCallback(() => {
+            ExploreController.getChallenges(setChallenges);
+        }, [])
+    );
+
+    let challengeViews: JSX.Element[] = [];
+    challenges.forEach(challenge => {
+        challengeViews.push(
+            <View key={challenge.title} style={{ marginTop: 5 }}>
+                <EmbtrTextCard challengeModel={challenge} />
+            </View>
+        );
+    });
+
     return (
         <Screen>
             <Banner name="Explore" />
-            <ScrollView style={{}}>
+            <ScrollView>
                 <View style={{ flex: 1 }}>
-                    <View style={{ marginTop: 5 }}>
-                        <EmbtrTextCard title={'Challenge: Goggins - 4x4x48'} body={"embtr. is taking on Goggins 4x4x48 - and we want you to join us!"} />
-                    </View>
-
-                    <View style={{ marginTop: 5 }}>
-                        {userProfileModel && <UserTextCard userProfileModel={userProfileModel} title='Pillar System - Yes Please!' body={"Starting the Pillar System has completed transformed every aspect of my day. I went from chasing success to living it."} />}
-                    </View>
+                    { challengeViews }
                 </View>
             </ScrollView>
         </Screen>
