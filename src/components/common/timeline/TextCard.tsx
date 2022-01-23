@@ -14,11 +14,12 @@ interface Props {
     body: string,
     likes: number,
     comments: number
-    onLike: Function
+    onLike: Function,
+    onCommented: Function,
     isLiked: boolean
 }
 
-export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, onLike, isLiked }: Props) => {
+export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, onLike, onCommented, isLiked }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -31,9 +32,9 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         color: colors.text,
     } as TextStyle;
 
-    const [ heartPressed, setHeartPressed ] = React.useState(isLiked);
-    const [ displayCommentBox, setDisplayCommentBox ] = React.useState(false);
-    const [ commentText, setCommentText ] = React.useState("");
+    const [heartPressed, setHeartPressed] = React.useState(isLiked);
+    const [displayCommentBox, setDisplayCommentBox] = React.useState(false);
+    const [commentText, setCommentText] = React.useState("");
 
     const onHeartPressed = () => {
         if (heartPressed) {
@@ -43,6 +44,12 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         setHeartPressed(true);
         onLike();
     };
+
+    const onSubmitText = () => {
+        onCommented(commentText);
+        setDisplayCommentBox(false);
+        setCommentText("");
+    }
 
     return (
         <View>
@@ -82,7 +89,7 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                 </View>
             </View>
 
-            <DropDownTextBox text={commentText} textSize={14} onChangeText={setCommentText} placeholder='add a comment...' display={displayCommentBox} />
+            <DropDownTextBox text={commentText} textSize={14} onChangeText={setCommentText} placeholder='add a comment...' display={displayCommentBox} onSubmitText={onSubmitText} />
 
             <HorizontalLine />
         </View>

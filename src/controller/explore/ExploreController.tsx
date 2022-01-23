@@ -33,6 +33,10 @@ class ExploreController {
     public static likeChallenge(challengeId: string, userUid: string) {
         ExploreDao.likeChallenge(challengeId, userUid);
     }
+
+    public static addComment(challengeId: string, userUid: string, text: string) {
+        ExploreDao.addChallengeComment(challengeId, userUid, text);
+    }
 }
 
 export default ExploreController;

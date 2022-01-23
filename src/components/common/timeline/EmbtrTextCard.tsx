@@ -10,13 +10,27 @@ interface Props {
 
 export const EmbtrTextCard = ({ challengeModel, userProfileModel }: Props) => {
     const [likes, setLikes] = React.useState(challengeModel.likes.length);
+    const [comments, setComments] = React.useState(challengeModel.comments.length);
 
     const onLike = () => {
         ExploreController.likeChallenge(challengeModel.id, userProfileModel.uid!);
         setLikes(likes + 1);
     }
 
+    const onCommented = (text: string) => {
+        ExploreController.addComment(challengeModel.id, userProfileModel.uid!, text);
+        setComments(comments + 1);
+    };
+
     const isLiked = challengeModel.likes.includes(userProfileModel.uid!);
 
-    return <TextCard staticImage={require('assets/logo.png')} name={"embtr."} title={challengeModel.title} body={challengeModel.synopsis} likes={likes} comments={challengeModel.comments.length} isLiked={isLiked} onLike={onLike} />
+    return <TextCard
+        staticImage={require('assets/logo.png')}
+        name={"embtr."} title={challengeModel.title}
+        body={challengeModel.synopsis}
+        likes={likes}
+        comments={comments}
+        isLiked={isLiked} onLike={onLike}
+        onCommented={onCommented}
+    />
 }
