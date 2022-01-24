@@ -73,9 +73,6 @@ export const DropDownTextBox = ({ text, textSize, onChangeText, onSubmitText, pl
     return (
         <View ref={defaultRef}>
             <Animated.View style={{ height: textWindowAnimatedHeight, alignItems: "flex-end" }}>
-                <ScrollView style={{ width: "100%", height: 200 }} ref={scrollViewRef}>
-
-                </ScrollView>
                 <View style={{ width: "100%", height: !display ? 0 : "auto", alignItems: "flex-end", justifyContent: "center", overflow: "hidden" }}>
                     <TextInput
                         style={[textStyle, inputStyle, {
@@ -102,9 +99,6 @@ export const DropDownTextBox = ({ text, textSize, onChangeText, onSubmitText, pl
                     </View>
                 </View>
             </Animated.View>
-            {(display || !collapsed) && <View style={{ paddingTop: 10 }}>
-                <HorizontalLine />
-            </View>}
         </View>
     );
 }

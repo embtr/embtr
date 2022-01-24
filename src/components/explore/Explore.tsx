@@ -6,11 +6,13 @@ import { getAuth } from 'firebase/auth';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
-import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useFocusEffect } from '@react-navigation/native';
 import ExploreController, { ChallangeModel } from 'src/controller/explore/ExploreController';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const Explore = () => {
+    const { colors } = useTheme();
+    
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
     const [challenges, setChallenges] = React.useState<ChallangeModel[]>([]);
 
@@ -32,7 +34,7 @@ export const Explore = () => {
     let challengeViews: JSX.Element[] = [];
     challenges.forEach(challenge => {
         challengeViews.push(
-            <View key={challenge.title} style={{ marginTop: 5 }}>
+            <View key={challenge.title} style={{ marginBottom: 7.5, backgroundColor: colors.background }}>
                 <EmbtrTextCard challengeModel={challenge} userProfileModel={userProfileModel!} />
             </View>
         );
@@ -41,7 +43,7 @@ export const Explore = () => {
     return (
         <Screen>
             <Banner name="Explore" />
-            <ScrollView>
+            <ScrollView style={{backgroundColor:colors.background_secondary}}>
                 <View style={{ flex: 1 }}>
                     {challengeViews}
                 </View>

@@ -54,21 +54,22 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
 
     return (
         <View>
-            <HorizontalLine />
-
             <TouchableWithoutFeedback onPressIn={undefined} onPress={() => { alert("touch") }}>
                 <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
                     <View style={{ width: "100%" }}><Text style={[bodyTextStyle, { textAlign: "right", color: "gray", fontSize: 12 }]}>Jan 20, 2022</Text></View>
                     {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
                     {httpImage && <View><TouchableOpacity disabled={!onTouchImage} onPress={() => { onTouchImage!() }} ><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></TouchableOpacity></View>}
                     <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
+                </View>
+                <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
+                  
                     <View>
                         <Text style={[headerTextStyle, { paddingTop: 5, textAlign: "center" }]}>{title}</Text>
                     </View>
 
                     <View style={{ marginTop: 15, marginBottom: 5 }}>
-                        <Text style={[bodyTextStyle, { paddingLeft: "2.5%", paddingRight: "2.5%", textAlign: "left" }]}>{body}</Text>
-                        <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5 }]}>view more...</Text>
+                        <Text style={[bodyTextStyle, {  textAlign: "left" }]}>{body}</Text>
+                        <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight:10 }]}>view more...</Text>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -93,7 +94,6 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                 </View>
             </View>
 
-            <HorizontalLine />
             <DropDownTextBox text={commentText} textSize={14} onChangeText={setCommentText} placeholder='add a comment...' display={displayCommentBox} onSubmitText={onSubmitText} />
         </View>
     );
