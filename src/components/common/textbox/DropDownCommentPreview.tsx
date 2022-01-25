@@ -10,7 +10,7 @@ interface Props {
 export const DropDownCommentPreview = ({comment} : Props) => {
     return (
         <View style={{ width: "100%", overflow: "hidden" }}>
-            <View><CommentBoxComment comment={comment} /></View>
+            <CommentBoxComment comment={comment} />
         </View>
     );
 };

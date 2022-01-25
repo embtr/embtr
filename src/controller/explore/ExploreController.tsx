@@ -1,6 +1,11 @@
 import { Timestamp } from "firebase/firestore";
 import ExploreDao from "src/firebase/firestore/explore/ExploreDao";
 
+export interface ChallengeParticipant {
+    uid: string,
+    accepted: Timestamp
+}
+
 export interface Comment {
     uid: string,
     comment: string
@@ -9,6 +14,7 @@ export interface Comment {
 export interface ChallangeModel {
     id: string,
     added: Timestamp,
+    participants: ChallengeParticipant[],
     likes: string[],
     comments: Comment[],
     synopsis: string,
@@ -37,6 +43,11 @@ class ExploreController {
 
     public static addComment(challengeId: string, userUid: string, text: string) {
         ExploreDao.addChallengeComment(challengeId, userUid, text);
+    }
+
+    public static acceptChallenge(challengeId: string, userUid: string) {
+        ExploreDao.acceptChallenge(challengeId, userUid);
+
     }
 }
 

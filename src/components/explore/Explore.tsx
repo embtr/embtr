@@ -30,7 +30,7 @@ export const Explore = () => {
     return (
         <Screen>
             <Banner name="Explore" />
-            <ScrollView style={{backgroundColor:colors.background_secondary}}>
+            <ScrollView keyboardShouldPersistTaps={'handled'} style={{backgroundColor:colors.background_secondary}}>
                 <View style={{ flex: 1 }}>
                     {challengeViews}
                 </View>

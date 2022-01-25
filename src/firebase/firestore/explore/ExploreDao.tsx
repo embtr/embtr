@@ -1,8 +1,9 @@
-import { Firestore, query, collection, orderBy, getDocs, setDoc, doc, increment, arrayUnion } from 'firebase/firestore';
+import { Firestore, query, collection, orderBy, getDocs, setDoc, doc, increment, arrayUnion, Timestamp } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 
 class ExploreDao {
+
     public static async getChallenges() {
         const db: Firestore = getFirebaseConnection(this.name, "getChallenges");
 
@@ -20,16 +21,29 @@ class ExploreDao {
         }, { merge: true })
     }
 
-    static addChallengeComment(challengeId: string, userUid: string, comment: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "likeChallenge");
+    public static addChallengeComment(challengeId: string, userUid: string, comment: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "addChallengeComment");
 
 
         setDoc(doc(db, "challenges/" + challengeId), {
             comments: arrayUnion({
                 uid: userUid,
-                comment: comment
+                comment: comment,
+                timestamp: Timestamp.now()
             })
-        }, { merge: true })
+        }, { merge: true });
+    }
+
+    public static acceptChallenge(challengeId: string, userUid: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "acceptChallenge");
+
+
+        setDoc(doc(db, "challenges/" + challengeId), {
+            participants: arrayUnion({
+                uid: userUid,
+                timestamp: Timestamp.now()
+            })
+        }, { merge: true });
     }
 }
 

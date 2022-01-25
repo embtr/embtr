@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { TextStyle, Animated, ViewStyle, TextInput, Text, View, ScrollView } from 'react-native';
+import { TextStyle, Animated, ViewStyle, TextInput, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useRef } from 'react';
 import { DropDownCommentPreview } from 'src/components/common/textbox/DropDownCommentPreview';
 import { Comment } from 'src/controller/explore/ExploreController';
+import { Keyboard } from 'react-native'; 
 
 interface Props {
     onSubmitText: Function,
@@ -27,11 +28,7 @@ export const DropDownCommentBox = ({ onSubmitText, placeholder, display, display
     } as ViewStyle;
 
     const [text, setText] = React.useState("");
-
     const [collapsed, setCollapsed] = React.useState(display);
-
-    const scrollViewRef = useRef<ScrollView>(null);
-
 
     const commentWindowAnimatedHeight = useRef(new Animated.Value(0)).current;
     const textWindowAnimatedHeight = useRef(new Animated.Value(0)).current;
@@ -63,19 +60,24 @@ export const DropDownCommentBox = ({ onSubmitText, placeholder, display, display
     };
 
     if (display) {
-        fadeIn(commentWindowAnimatedHeight, 25);
+        fadeIn(commentWindowAnimatedHeight, 45);
         fadeIn(textWindowAnimatedHeight, MAX_DROPDOWN_HEIGHT);
-        scrollViewRef.current?.scrollToEnd();
     } else {
         fadeOut(commentWindowAnimatedHeight, 0);
         fadeOut(textWindowAnimatedHeight, 0);
     }
 
+    const handleSubmitText = () => {
+        Keyboard.dismiss();
+        onSubmitText(text);
+        setText("");
+    };
+
 
     return (
         <View>
-            <Animated.View style={{ height: commentWindowAnimatedHeight, overflow: "hidden", alignItems: "flex-end" }}>
-                <View style={{ width: "100%" }}>
+            <Animated.View style={{ height: commentWindowAnimatedHeight, overflow: "hidden", alignItems: "flex-end", justifyContent:"flex-end" }}>
+                <View style={{ width: "100%", marginBottom:10 }}>
                     {displayComment !== undefined && <DropDownCommentPreview comment={displayComment!} /> }
                 </View>
             </Animated.View>
@@ -89,10 +91,11 @@ export const DropDownCommentBox = ({ onSubmitText, placeholder, display, display
                             paddingTop: 5,
                             paddingBottom: 5,
                             borderWidth: collapsed ? 0 : 1,
-                            paddingLeft: 15
+                            paddingLeft: 15,
+                            paddingRight:55
                         }]}
                         onChangeText={(text: string) => { setText(text) }}
-                        onSubmitEditing={() => { onSubmitText(text); setText(""); }}
+                        onSubmitEditing={handleSubmitText}
                         value={display ? text : ""}
                         placeholder={display ? placeholder : ""}
                         placeholderTextColor={colors.secondary_text}
@@ -101,7 +104,7 @@ export const DropDownCommentBox = ({ onSubmitText, placeholder, display, display
 
                     <View style={{ zIndex: 1, position: "absolute", paddingRight: "5%" }}>
                         {display && <View>
-                            <Text onPress={() => { onSubmitText(text); setText(""); }} style={{ fontSize: 16, color: colors.primary_border, }}>send   </Text>
+                            <Text onPress={handleSubmitText} style={{ fontSize: 16, color: colors.primary_border, }}>send   </Text>
                         </View>}
                     </View>
                 </View>
