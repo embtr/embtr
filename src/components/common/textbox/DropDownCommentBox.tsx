@@ -2,21 +2,19 @@ import * as React from 'react';
 import { TextStyle, Animated, ViewStyle, TextInput, Text, View, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useRef } from 'react';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
-import { useFocusEffect } from '@react-navigation/native';
+import { DropDownCommentPreview } from 'src/components/common/textbox/DropDownCommentPreview';
+import { Comment } from 'src/controller/explore/ExploreController';
 
 interface Props {
-    text: string,
-    textSize: number,
-    onChangeText: Function,
     onSubmitText: Function,
     placeholder?: string,
-    display: boolean
+    display: boolean,
+    displayComment?: Comment
 }
 
 const MAX_DROPDOWN_HEIGHT = 40;
 
-export const DropDownTextBox = ({ text, textSize, onChangeText, onSubmitText, placeholder, display }: Props) => {
+export const DropDownCommentBox = ({ onSubmitText, placeholder, display, displayComment }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -28,12 +26,14 @@ export const DropDownTextBox = ({ text, textSize, onChangeText, onSubmitText, pl
         borderColor: colors.pillar_attribute,
     } as ViewStyle;
 
+    const [text, setText] = React.useState("");
+
     const [collapsed, setCollapsed] = React.useState(display);
 
     const scrollViewRef = useRef<ScrollView>(null);
-    const defaultRef = useRef<View>(null);
 
 
+    const commentWindowAnimatedHeight = useRef(new Animated.Value(0)).current;
     const textWindowAnimatedHeight = useRef(new Animated.Value(0)).current;
     textWindowAnimatedHeight.addListener((result) => {
         if (result.value == 0) {
@@ -63,17 +63,24 @@ export const DropDownTextBox = ({ text, textSize, onChangeText, onSubmitText, pl
     };
 
     if (display) {
+        fadeIn(commentWindowAnimatedHeight, 25);
         fadeIn(textWindowAnimatedHeight, MAX_DROPDOWN_HEIGHT);
         scrollViewRef.current?.scrollToEnd();
     } else {
+        fadeOut(commentWindowAnimatedHeight, 0);
         fadeOut(textWindowAnimatedHeight, 0);
     }
 
 
     return (
-        <View ref={defaultRef}>
+        <View>
+            <Animated.View style={{ height: commentWindowAnimatedHeight, overflow: "hidden", alignItems: "flex-end" }}>
+                <View style={{ width: "100%" }}>
+                    {displayComment !== undefined && <DropDownCommentPreview comment={displayComment!} /> }
+                </View>
+            </Animated.View>
             <Animated.View style={{ height: textWindowAnimatedHeight, alignItems: "flex-end" }}>
-                <View style={{ width: "100%", height: !display ? 0 : "auto", alignItems: "flex-end", justifyContent: "center", overflow: "hidden" }}>
+                <View style={{ marginBottom: 10, width: "100%", height: !display ? 0 : "auto", alignItems: "flex-end", justifyContent: "center", overflow: "hidden" }}>
                     <TextInput
                         style={[textStyle, inputStyle, {
                             width: "90%",
@@ -84,8 +91,8 @@ export const DropDownTextBox = ({ text, textSize, onChangeText, onSubmitText, pl
                             borderWidth: collapsed ? 0 : 1,
                             paddingLeft: 15
                         }]}
-                        onChangeText={(text: string) => { onChangeText(text) }}
-                        onSubmitEditing={() => { onSubmitText() }}
+                        onChangeText={(text: string) => { setText(text) }}
+                        onSubmitEditing={() => { onSubmitText(text); setText(""); }}
                         value={display ? text : ""}
                         placeholder={display ? placeholder : ""}
                         placeholderTextColor={colors.secondary_text}
@@ -94,7 +101,7 @@ export const DropDownTextBox = ({ text, textSize, onChangeText, onSubmitText, pl
 
                     <View style={{ zIndex: 1, position: "absolute", paddingRight: "5%" }}>
                         {display && <View>
-                            <Text onPress={() => { onSubmitText() }} style={{ fontSize: 16, color: colors.primary_border, }}>send   </Text>
+                            <Text onPress={() => { onSubmitText(text); setText(""); }} style={{ fontSize: 16, color: colors.primary_border, }}>send   </Text>
                         </View>}
                     </View>
                 </View>

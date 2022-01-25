@@ -1,7 +1,8 @@
 import { Timestamp } from "firebase/firestore";
 import ExploreDao from "src/firebase/firestore/explore/ExploreDao";
 
-interface Comment {
+export interface Comment {
+    uid: string,
     comment: string
 }
 

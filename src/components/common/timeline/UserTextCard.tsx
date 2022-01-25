@@ -19,5 +19,5 @@ export const UserTextCard = ({ userProfileModel, title, body }: Props) => {
         navigation.navigate('UserProfile', { id: userProfileModel.uid! })
     };
 
-    return <TextCard httpImage={userProfileModel.photoUrl!} onTouchImage={toUserProfile} name={userProfileModel.name!} title={title} body={body} likes={0} comments={0} />
+    return <TextCard httpImage={userProfileModel.photoUrl!} onTouchImage={toUserProfile} name={userProfileModel.name!} isLiked={false} title={title} body={body} likes={0} comments={0} onLike={() => {}} onCommented={() => {}} />
 }

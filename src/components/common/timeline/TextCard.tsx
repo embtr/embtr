@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity, ViewStyle } from 'react-native';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { DropDownTextBox } from 'src/components/common/textbox/DropDownTextBox';
+import { DropDownCommentBox } from 'src/components/common/textbox/DropDownCommentBox';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Comment } from 'src/controller/explore/ExploreController';
 
 interface Props {
     staticImage?: ImageSourcePropType,
@@ -18,9 +18,10 @@ interface Props {
     onLike: Function,
     onCommented: Function,
     isLiked: boolean
+    latestComment?: Comment
 }
 
-export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, onLike, onCommented, isLiked }: Props) => {
+export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, onLike, onCommented, isLiked, latestComment }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -35,7 +36,6 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
 
     const [heartPressed, setHeartPressed] = React.useState(isLiked);
     const [displayCommentBox, setDisplayCommentBox] = React.useState(false);
-    const [commentText, setCommentText] = React.useState("");
 
     const onHeartPressed = () => {
         if (heartPressed) {
@@ -46,10 +46,8 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         onLike();
     };
 
-    const onSubmitText = () => {
-        onCommented(commentText);
-        setDisplayCommentBox(false);
-        setCommentText("");
+    const onSubmitText = (text: string) => {
+        onCommented(text);
     }
 
     return (
@@ -62,18 +60,17 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                     <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
                 </View>
                 <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
-                  
+
                     <View>
                         <Text style={[headerTextStyle, { paddingTop: 5, textAlign: "center" }]}>{title}</Text>
                     </View>
 
                     <View style={{ marginTop: 15, marginBottom: 5 }}>
-                        <Text style={[bodyTextStyle, {  textAlign: "left" }]}>{body}</Text>
-                        <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight:10 }]}>view more...</Text>
+                        <Text style={[bodyTextStyle, { textAlign: "left" }]}>{body}</Text>
+                        <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>view more...</Text>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
-
 
             <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
 
@@ -94,7 +91,7 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                 </View>
             </View>
 
-            <DropDownTextBox text={commentText} textSize={14} onChangeText={setCommentText} placeholder='add a comment...' display={displayCommentBox} onSubmitText={onSubmitText} />
+            <DropDownCommentBox placeholder='add a comment...' display={displayCommentBox} onSubmitText={onSubmitText} displayComment={latestComment} />
         </View>
     );
 }
