@@ -22,11 +22,9 @@ interface Props {
     onCommented: Function,
     isLiked: boolean
     isAccepted: boolean,
-    latestComment?: Comment,
-    scrollToEnd?: Function
 }
 
-export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted, latestComment, scrollToEnd }: Props) => {
+export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -116,8 +114,6 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                 </View>
 
             </View>
-
-            <DropDownCommentBox placeholder='add a comment...' display={displayCommentBox} onSubmitText={onSubmitText} displayComment={latestComment} scrollToEnd={scrollToEnd} />
         </View>
     );
 }
