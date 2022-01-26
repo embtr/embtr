@@ -29,7 +29,7 @@ export const CommentBoxComment = ({ comment }: Props) => {
                 <Image style={{ width: 20, height: 20, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
 
             </View>
-            <View style={{ marginLeft: 5, marginRight: 20 }}>
+            <View style={{ marginLeft: 5, marginRight: 20, flexShrink: 1 }}>
                 <Text numberOfLines={2} style={{ color: colors.text }}><Text style={{ fontWeight:"bold"}}>{userProfileModel?.name}: </Text>{comment.comment}</Text>
             </View>
         </View>

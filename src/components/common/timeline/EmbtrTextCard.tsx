@@ -6,10 +6,11 @@ import ExploreController, { ChallangeModel as ChallengeModel } from 'src/control
 import { Comment } from 'src/controller/explore/ExploreController';
 
 interface Props {
-    challengeModel: ChallengeModel
+    challengeModel: ChallengeModel,
+    scrollToEnd?: Function
 }
 
-export const EmbtrTextCard = ({ challengeModel }: Props) => {
+export const EmbtrTextCard = ({ challengeModel, scrollToEnd }: Props) => {
     const [likes, setLikes] = React.useState(challengeModel.likes.length);
     const [comments, setComments] = React.useState(challengeModel.comments.length);
     const [participants, setParticipants] = React.useState(challengeModel.participants.length);
@@ -64,5 +65,6 @@ export const EmbtrTextCard = ({ challengeModel }: Props) => {
         onLike={onLike}
         onCommented={onCommented}
         latestComment={latestComment}
+        scrollToEnd={scrollToEnd}
     />
 }

@@ -24,7 +24,7 @@ export const Dashboard = () => {
     const userProfileUrl = getAuth().currentUser?.photoURL;
 
     return (
-        <View style={{ flex: 1, backgroundColor: "red", overflow: isDesktopBrowser() ? "hidden" : undefined }}>
+        <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
             <Tab.Navigator
                 initialRouteName='TimelineTab'
                 screenOptions={({ route }) => ({

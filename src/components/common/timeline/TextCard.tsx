@@ -22,10 +22,11 @@ interface Props {
     onCommented: Function,
     isLiked: boolean
     isAccepted: boolean,
-    latestComment?: Comment
+    latestComment?: Comment,
+    scrollToEnd?: Function
 }
 
-export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted, latestComment }: Props) => {
+export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted, latestComment, scrollToEnd }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -65,60 +66,58 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
     }
 
     return (
-        <View style={{ width: "100%", alignItems: "center" }}>
-            <View style={{ width: isDesktopBrowser() ? "30%" : "100%" }}>
-                <TouchableWithoutFeedback onPressIn={undefined} onPress={() => { alert("touch") }}>
-                    <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
-                        <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
-                            <Text style={{ color: "green", fontSize: 12, textAlign:"left", flex: 1 }}>{acceptedPressed ? "challenge accepted" : ""}</Text>
-                            <Text style={[bodyTextStyle, { flex: 1, textAlign: "right", color: "gray", fontSize: 12 }]}>Jan 20, 2022</Text>
-                        </View>
-                        {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
-                        {httpImage && <View><TouchableOpacity disabled={!onTouchImage} onPress={() => { onTouchImage!() }} ><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></TouchableOpacity></View>}
-                        <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
+        <View>
+            <TouchableWithoutFeedback onPressIn={undefined} onPress={() => { alert("touch") }}>
+                <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
+                    <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
+                        <Text style={{ color: "green", fontSize: 12, textAlign: "left", flex: 1 }}>{acceptedPressed ? "challenge accepted" : ""}</Text>
+                        <Text style={[bodyTextStyle, { flex: 1, textAlign: "right", color: "gray", fontSize: 12 }]}>Jan 20, 2022</Text>
                     </View>
-                    <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
+                    {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
+                    {httpImage && <View><TouchableOpacity disabled={!onTouchImage} onPress={() => { onTouchImage!() }} ><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></TouchableOpacity></View>}
+                    <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
+                </View>
+                <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
 
-                        <View>
-                            <Text style={[headerTextStyle, { paddingTop: 5, textAlign: "center" }]}>{title}</Text>
-                        </View>
-
-                        <View style={{ marginTop: 15, marginBottom: 5 }}>
-                            <Text style={[bodyTextStyle, { textAlign: "left" }]}>{body}</Text>
-                            <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>view more...</Text>
-                        </View>
-                    </View>
-                </TouchableWithoutFeedback>
-
-                <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
-                    <View style={{ marginRight: 5, justifyContent: "center" }}>
-                        <Text style={{ color: "grey", fontSize: 12 }}>{participants} {participants === 1 ? "participant" : "participants"}</Text>
+                    <View>
+                        <Text style={[headerTextStyle, { paddingTop: 5, textAlign: "center" }]}>{title}</Text>
                     </View>
 
-                    <View style={{ marginRight: 5, justifyContent: "center" }}>
-                        <Text style={{ color: "grey", fontSize: 12 }}>{likes} {likes === 1 ? "like" : "likes"}</Text>
+                    <View style={{ marginTop: 15, marginBottom: 5 }}>
+                        <Text style={[bodyTextStyle, { textAlign: "left" }]}>{body}</Text>
+                        <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>view more...</Text>
                     </View>
+                </View>
+            </TouchableWithoutFeedback>
 
-                    <View style={{ marginRight: 10, justifyContent: "center" }}>
-                        <Text style={{ color: "grey", fontSize: 12 }}>{comments} {comments === 1 ? "comment" : "comments"}</Text>
-                    </View>
-
-                    <View style={{ borderColor: colors.text, marginRight: 5 }}>
-                        <Ionicons name={acceptedPressed ? 'checkmark-circle-outline' : 'checkmark-circle-outline'} size={22} color={acceptedPressed ? "green" : colors.text} onPress={isAccepted ? undefined : onAcceptedPressed} />
-                    </View>
-
-                    <View style={{ borderColor: colors.text, marginRight: 2.5 }}>
-                        <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
-                    </View>
-
-                    <View style={{ borderColor: colors.text, marginLeft: 5 }}>
-                        <Ionicons name={displayCommentBox ? 'chatbox' : 'chatbox-outline'} size={22} color={colors.text} onPress={() => { setDisplayCommentBox(!displayCommentBox); }} />
-                    </View>
-
+            <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
+                <View style={{ marginRight: 5, justifyContent: "center" }}>
+                    <Text style={{ color: "grey", fontSize: 12 }}>{participants} {participants === 1 ? "participant" : "participants"}</Text>
                 </View>
 
-                <DropDownCommentBox placeholder='add a comment...' display={displayCommentBox} onSubmitText={onSubmitText} displayComment={latestComment} />
+                <View style={{ marginRight: 5, justifyContent: "center" }}>
+                    <Text style={{ color: "grey", fontSize: 12 }}>{likes} {likes === 1 ? "like" : "likes"}</Text>
+                </View>
+
+                <View style={{ marginRight: 10, justifyContent: "center" }}>
+                    <Text style={{ color: "grey", fontSize: 12 }}>{comments} {comments === 1 ? "comment" : "comments"}</Text>
+                </View>
+
+                <View style={{ borderColor: colors.text, marginRight: 5 }}>
+                    <Ionicons name={acceptedPressed ? 'checkmark-circle-outline' : 'checkmark-circle-outline'} size={22} color={acceptedPressed ? "green" : colors.text} onPress={isAccepted ? undefined : onAcceptedPressed} />
+                </View>
+
+                <View style={{ borderColor: colors.text, marginRight: 2.5 }}>
+                    <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
+                </View>
+
+                <View style={{ borderColor: colors.text, marginLeft: 5 }}>
+                    <Ionicons name={displayCommentBox ? 'chatbox' : 'chatbox-outline'} size={22} color={colors.text} onPress={() => { setDisplayCommentBox(!displayCommentBox); }} />
+                </View>
+
             </View>
+
+            <DropDownCommentBox placeholder='add a comment...' display={displayCommentBox} onSubmitText={onSubmitText} displayComment={latestComment} scrollToEnd={scrollToEnd} />
         </View>
     );
 }
