@@ -4,13 +4,13 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { useFocusEffect } from '@react-navigation/native';
-import ExploreController, { ChallangeModel } from 'src/controller/explore/ExploreController';
+import ExploreController, { ChallengeModel } from 'src/controller/explore/ExploreController';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const Explore = () => {
     const { colors } = useTheme();
 
-    const [challenges, setChallenges] = React.useState<ChallangeModel[]>([]);
+    const [challenges, setChallenges] = React.useState<ChallengeModel[]>([]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -30,11 +30,11 @@ export const Explore = () => {
     return (
         <Screen>
             <Banner name="Explore" />
-                <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_secondary }}>
-                    <View style={{ flex: 1 }}>
-                        {challengeViews}
-                    </View>
-                </ScrollView>
+            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_secondary }}>
+                <View style={{ flex: 1 }}>
+                    {challengeViews}
+                </View>
+            </ScrollView>
         </Screen>
     );
 }

@@ -2,10 +2,7 @@ import * as React from 'react';
 import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { DropDownCommentBox } from 'src/components/common/textbox/DropDownCommentBox';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Comment } from 'src/controller/explore/ExploreController';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
 
 interface Props {
     staticImage?: ImageSourcePropType,
@@ -59,9 +56,9 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         onLike();
     };
 
-    const onSubmitText = (text: string) => {
-        onCommented(text);
-    }
+    const onCommentPressed = () => {
+        onCommented();
+    };
 
     return (
         <View>
@@ -106,11 +103,11 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                 </View>
 
                 <View style={{ borderColor: colors.text, marginRight: 2.5 }}>
-                    <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
+                    <Ionicons name={heartPressed ? 'heart-outline' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
                 </View>
 
                 <View style={{ borderColor: colors.text, marginLeft: 5 }}>
-                    <Ionicons name={displayCommentBox ? 'chatbox' : 'chatbox-outline'} size={22} color={colors.text} onPress={() => { setDisplayCommentBox(!displayCommentBox); }} />
+                    <Ionicons name={displayCommentBox ? 'chatbox' : 'chatbox-outline'} size={22} color={colors.text} onPress={onCommentPressed} />
                 </View>
 
             </View>

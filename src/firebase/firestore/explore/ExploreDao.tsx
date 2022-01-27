@@ -1,9 +1,8 @@
-import { Firestore, query, collection, orderBy, getDocs, setDoc, doc, increment, arrayUnion, Timestamp } from 'firebase/firestore';
+import { Firestore, query, collection, orderBy, getDocs, setDoc, doc, increment, arrayUnion, Timestamp, getDoc } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 
 class ExploreDao {
-
     public static async getChallenges() {
         const db: Firestore = getFirebaseConnection(this.name, "getChallenges");
 
@@ -11,6 +10,13 @@ class ExploreDao {
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;
+    }
+
+    public static async getChallenge(id: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "getChallenge");
+
+        const result = await getDoc(doc(db, "challenges/" + id));
+        return result;
     }
 
     public static likeChallenge(challengeId: string, userUid: string) {

@@ -1,28 +1,26 @@
 import * as React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { TextCard } from 'src/components/common/timeline/TextCard';
-import ExploreController, { ChallangeModel as ChallengeModel } from 'src/controller/explore/ExploreController';
-import { Comment } from 'src/controller/explore/ExploreController';
+import ExploreController, { ChallengeModel as ChallengeModel } from 'src/controller/explore/ExploreController';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ExploreTabScreens } from 'src/navigation/RootStackParamList';
+
+type challengeCommentsNavigationProp = StackNavigationProp<ExploreTabScreens, 'ChallengeComments'>;
 
 interface Props {
-    challengeModel: ChallengeModel,
-    scrollToEnd?: Function
+    challengeModel: ChallengeModel
 }
 
-export const EmbtrTextCard = ({ challengeModel, scrollToEnd }: Props) => {
+export const EmbtrTextCard = ({ challengeModel }: Props) => {
     const [likes, setLikes] = React.useState(challengeModel.likes.length);
     const [comments, setComments] = React.useState(challengeModel.comments.length);
     const [participants, setParticipants] = React.useState(challengeModel.participants.length);
-    const [latestComment, setLatestComment] = React.useState<Comment | undefined>(undefined);
 
     const uid = getAuth().currentUser?.uid;
 
-    useFocusEffect(
-        React.useCallback(() => {
-            setLatestComment(challengeModel.comments.length > 0 ? challengeModel.comments[challengeModel.comments.length - 1] : undefined);
-        }, [challengeModel.comments])
-    );
+    const navigation = useNavigation<challengeCommentsNavigationProp>();
+
 
     const onChallengeAccepted = () => {
         ExploreController.acceptChallenge(challengeModel.id, uid!);
@@ -35,10 +33,9 @@ export const EmbtrTextCard = ({ challengeModel, scrollToEnd }: Props) => {
     }
 
     const onCommented = (text: string) => {
-        let newComment: Comment = { uid: uid!, comment: text };
-        setLatestComment(newComment);
-        ExploreController.addComment(challengeModel.id, uid!, text);
-        setComments(comments + 1);
+        navigation.navigate('ChallengeComments', { id: challengeModel.id })
+        //ExploreController.addComment(challengeModel.id, uid!, text);
+        //setComments(comments + 1);
     };
 
     const isLiked = challengeModel.likes.includes(uid!);
@@ -50,21 +47,21 @@ export const EmbtrTextCard = ({ challengeModel, scrollToEnd }: Props) => {
             return;
         }
     });
-    
 
-    return <TextCard
-        staticImage={require('assets/logo.png')}
-        name={"embtr."} title={challengeModel.title}
-        body={challengeModel.synopsis}
-        likes={likes}
-        comments={comments}
-        participants={participants}
-        isLiked={isLiked}
-        isAccepted={isChallengeAccepted}
-        onAccepted={onChallengeAccepted}
-        onLike={onLike}
-        onCommented={onCommented}
-        latestComment={latestComment}
-        scrollToEnd={scrollToEnd}
-    />
+
+    return (
+        <TextCard
+            staticImage={require('assets/logo.png')}
+            name={"embtr."} title={challengeModel.title}
+            body={challengeModel.synopsis}
+            likes={likes}
+            comments={comments}
+            participants={participants}
+            isLiked={isLiked}
+            isAccepted={isChallengeAccepted}
+            onAccepted={onChallengeAccepted}
+            onLike={onLike}
+            onCommented={onCommented}
+        />
+    )
 }

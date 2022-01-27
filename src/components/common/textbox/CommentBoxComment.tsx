@@ -24,13 +24,16 @@ export const CommentBoxComment = ({ comment }: Props) => {
     );
 
     return (
-        <View style={{ flexDirection: "row", marginRight: 10, marginLeft: 30 }}>
-            <View>
-                <Image style={{ width: 20, height: 20, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
+        <View>
+            <View style={{ flexDirection: "row", marginRight: 10, marginLeft: 10 }}>
+                <View>
+                    <Image style={{ width: 30, height: 30, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
 
-            </View>
-            <View style={{ marginLeft: 5, marginRight: 20, flexShrink: 1 }}>
-                <Text numberOfLines={2} style={{ color: colors.text }}><Text style={{ fontWeight:"bold"}}>{userProfileModel?.name}: </Text>{comment.comment}</Text>
+                </View>
+                <View style={{ marginLeft: 5, marginRight: 20, flexShrink: 1 }}>
+                    <Text style={{ color: colors.text, fontWeight: "bold" }}>{userProfileModel?.name} <Text style={{ color: colors.text, fontWeight: "normal" }}>{comment.comment}</Text></Text>
+                    <Text style={{ color: "gray", fontSize: 12 }}>2 minutes ago</Text>
+                </View>
             </View>
         </View>
     )

@@ -20,6 +20,7 @@ export type ProfileTabScreens = {
 
 export type ExploreTabScreens = {
     Explore: undefined;
+    ChallengeComments: { id: string };
 }
 
 export type RootStackParamList = {

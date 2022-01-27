@@ -11,7 +11,7 @@ export interface Comment {
     comment: string
 }
 
-export interface ChallangeModel {
+export interface ChallengeModel {
     id: string,
     added: Timestamp,
     participants: ChallengeParticipant[],
@@ -25,15 +25,28 @@ class ExploreController {
     public static getChallenges(callback: Function) {
         const result = ExploreDao.getChallenges();
 
-        let challenges: ChallangeModel[] = [];
+        let challenges: ChallengeModel[] = [];
         result.then(response => {
             response.docs.forEach(doc => {
-                const challenge: ChallangeModel = doc.data() as ChallangeModel;
+                const challenge: ChallengeModel = doc.data() as ChallengeModel;
                 challenge.id = doc.id;
                 challenges.push(challenge);
             });
         }).then(() => {
             callback(challenges);
+        });
+    }
+
+    public static getChallenge(id: string, callback: Function) {
+        const result = ExploreDao.getChallenge(id);
+        result.then(challenge => {
+            if (!challenge || !challenge.exists()) {
+                callback(undefined);
+                return;
+            }
+
+            let challengeModel: ChallengeModel = challenge.data() as ChallengeModel;
+            callback(challengeModel);
         });
     }
 
@@ -47,7 +60,6 @@ class ExploreController {
 
     public static acceptChallenge(challengeId: string, userUid: string) {
         ExploreDao.acceptChallenge(challengeId, userUid);
-
     }
 }
 
