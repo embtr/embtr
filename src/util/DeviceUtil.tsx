@@ -1,4 +1,5 @@
 import { isBrowser, isMobile } from 'react-device-detect';
+import { Platform } from 'react-native';
 //import * as Device from 'expo-device';
 //import { Platform } from 'react-native';
 
@@ -45,4 +46,8 @@ export const isDesktopBrowser = (): boolean => {
 
 export const isMobileBrowser = (): boolean => {
     return isMobile === true;
+}
+
+export const isIosApp = () : boolean => {
+    return Platform.OS === "ios"
 }
