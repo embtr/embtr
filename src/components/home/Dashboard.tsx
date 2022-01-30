@@ -65,7 +65,7 @@ export const Dashboard = () => {
                             )
                         }
                     },
-                    tabBarHideOnKeyboard: true,
+                    tabBarHideOnKeyboard: false,
                     tabBarShowLabel: false,
                     headerShown: false,
                     tabBarActiveBackgroundColor: colors.background_secondary,
