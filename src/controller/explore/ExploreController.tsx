@@ -8,7 +8,8 @@ export interface ChallengeParticipant {
 
 export interface Comment {
     uid: string,
-    comment: string
+    comment: string,
+    timestamp: Timestamp
 }
 
 export interface ChallengeModel {
@@ -46,6 +47,7 @@ class ExploreController {
             }
 
             let challengeModel: ChallengeModel = challenge.data() as ChallengeModel;
+            challengeModel.id = challenge.id;
             callback(challengeModel);
         });
     }
@@ -54,8 +56,11 @@ class ExploreController {
         ExploreDao.likeChallenge(challengeId, userUid);
     }
 
-    public static addComment(challengeId: string, userUid: string, text: string) {
-        ExploreDao.addChallengeComment(challengeId, userUid, text);
+    public static addComment(challengeId: string, userUid: string, text: string, callback: Function) {
+        const result = ExploreDao.addChallengeComment(challengeId, userUid, text);
+        result.then(() => {
+            callback();
+        });
     }
 
     public static acceptChallenge(challengeId: string, userUid: string) {

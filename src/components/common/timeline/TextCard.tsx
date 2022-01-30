@@ -11,14 +11,17 @@ interface Props {
     name: string,
     title: string,
     body: string,
+
     likes: number,
-    comments: number,
-    participants: number,
     onLike: Function,
-    onAccepted: Function,
-    onCommented: Function,
     isLiked: boolean
-    isAccepted: boolean,
+
+    comments: number,
+    onCommented: Function,
+
+    participants?: number,
+    onAccepted?: Function,
+    isAccepted?: boolean,
 }
 
 export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted }: Props) => {
@@ -36,7 +39,6 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
 
     const [acceptedPressed, setAcceptedPressed] = React.useState(isAccepted);
     const [heartPressed, setHeartPressed] = React.useState(isLiked);
-    const [displayCommentBox, setDisplayCommentBox] = React.useState(false);
 
     const onAcceptedPressed = () => {
         if (acceptedPressed) {
@@ -44,7 +46,7 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         }
 
         setAcceptedPressed(true);
-        onAccepted();
+        onAccepted!();
     };
 
     const onHeartPressed = () => {
@@ -86,9 +88,9 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
             </TouchableWithoutFeedback>
 
             <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
-                <View style={{ marginRight: 5, justifyContent: "center" }}>
+                { participants &&  <View style={{ marginRight: 5, justifyContent: "center" }}>
                     <Text style={{ color: "grey", fontSize: 12 }}>{participants} {participants === 1 ? "participant" : "participants"}</Text>
-                </View>
+                </View> }
 
                 <View style={{ marginRight: 5, justifyContent: "center" }}>
                     <Text style={{ color: "grey", fontSize: 12 }}>{likes} {likes === 1 ? "like" : "likes"}</Text>
@@ -98,16 +100,16 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
                     <Text style={{ color: "grey", fontSize: 12 }}>{comments} {comments === 1 ? "comment" : "comments"}</Text>
                 </View>
 
-                <View style={{ borderColor: colors.text, marginRight: 5 }}>
+                { participants && <View style={{ borderColor: colors.text, marginRight: 5 }}>
                     <Ionicons name={acceptedPressed ? 'checkmark-circle-outline' : 'checkmark-circle-outline'} size={22} color={acceptedPressed ? "green" : colors.text} onPress={isAccepted ? undefined : onAcceptedPressed} />
-                </View>
+                </View> }
 
                 <View style={{ borderColor: colors.text, marginRight: 2.5 }}>
                     <Ionicons name={heartPressed ? 'heart-outline' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
                 </View>
 
                 <View style={{ borderColor: colors.text, marginLeft: 5 }}>
-                    <Ionicons name={displayCommentBox ? 'chatbox' : 'chatbox-outline'} size={22} color={colors.text} onPress={onCommentPressed} />
+                    <Ionicons name={'chatbox-outline'} size={22} color={colors.text} onPress={onCommentPressed} />
                 </View>
 
             </View>

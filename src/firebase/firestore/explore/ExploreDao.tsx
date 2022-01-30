@@ -30,8 +30,7 @@ class ExploreDao {
     public static addChallengeComment(challengeId: string, userUid: string, comment: string) {
         const db: Firestore = getFirebaseConnection(this.name, "addChallengeComment");
 
-
-        setDoc(doc(db, "challenges/" + challengeId), {
+        return setDoc(doc(db, "challenges/" + challengeId), {
             comments: arrayUnion({
                 uid: userUid,
                 comment: comment,
