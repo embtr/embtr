@@ -80,7 +80,7 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
 
                 <View style={{ marginTop: 15, marginBottom: 5 }}>
                     <Text style={[bodyTextStyle, { textAlign: "left" }]}>{body}</Text>
-                    <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>view more...</Text>
+                    <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{/*"view more..."*/}</Text>
                 </View>
             </View>
 
