@@ -24,6 +24,7 @@ export const ChallengeComments = () => {
     const [challengeModel, setChallengeModel] = React.useState<ChallengeModel | undefined>(undefined);
     const [commentText, setCommentText] = React.useState("");
     const [comments, setComments] = React.useState<JSX.Element[]>([]);
+    const [commentAdded, setCommentAdded] = React.useState<boolean>(false);
 
     const scrollRef = React.useRef<ScrollView>(null);
 
@@ -38,6 +39,7 @@ export const ChallengeComments = () => {
             return;
         }
 
+        setCommentAdded(true);
         Keyboard.dismiss();
 
         const user = getAuth().currentUser;
@@ -63,6 +65,12 @@ export const ChallengeComments = () => {
         setComments(challengeViews);
     }, [challengeModel]);
 
+    const onCommentCountChanged = () => {
+        if (commentAdded) {
+            scrollRef.current?.scrollToEnd();
+        }
+    }
+
     return (
         <Screen>
             <Banner name='Comments' leftIcon={"arrow-back"} leftRoute="BACK" />
@@ -72,7 +80,7 @@ export const ChallengeComments = () => {
             </View>
 
             <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 45 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-                <ScrollView onContentSizeChange={() => { scrollRef.current?.scrollToEnd() }} ref={scrollRef}>
+                <ScrollView onContentSizeChange={onCommentCountChanged} ref={scrollRef}>
                     {comments}
                 </ScrollView>
 
