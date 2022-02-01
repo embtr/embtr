@@ -20,7 +20,7 @@ export const Timeline = () => {
     }, []);
     return (
         <Screen>
-            <Banner name="Timeline" leftIcon={'search-circle-outline'} leftRoute='UserSearch' />
+            <Banner name="Timeline" leftIcon={'people-outline'} leftRoute='UserSearch' innerLeftIcon={'add-outline'} />
             <ScrollView style={{ marginTop: 20 }}>
                 <View style={{ flex: 1 }}>
                 <View style={{ marginTop: 5 }}>

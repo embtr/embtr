@@ -4,6 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { Timestamp } from 'firebase/firestore';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
@@ -19,9 +20,12 @@ export const UserTextCard = ({ userProfileModel, title, body }: Props) => {
         navigation.navigate('UserProfile', { id: userProfileModel.uid! })
     };
 
+    const time = Timestamp.now()
+
     return <TextCard
         httpImage={userProfileModel.photoUrl!}
         onTouchImage={toUserProfile}
+        added={time}
         name={userProfileModel.name!}
         isLiked={false} title={title}
         body={body} likes={0}

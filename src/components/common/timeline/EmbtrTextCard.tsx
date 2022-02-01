@@ -52,7 +52,9 @@ export const EmbtrTextCard = ({ challengeModel }: Props) => {
     return (
         <TextCard
             staticImage={require('assets/logo.png')}
-            name={"embtr."} title={challengeModel.title}
+            name={"embtr."}
+            added={challengeModel.added}
+            title={challengeModel.title}
             body={challengeModel.synopsis}
             likes={likes}
             comments={comments}

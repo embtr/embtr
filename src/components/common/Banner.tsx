@@ -13,9 +13,12 @@ interface Props {
     leftIcon?: any
     rightRoute?: string,
     rightIcon?: any
+
+    innerLeftIcon?: any
+    innerLeftCallback?: Function
 }
 
-export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon }: Props) => {
+export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon, innerLeftIcon, innerLeftCallback }: Props) => {
     const { colors } = useTheme();
     const textStyle = {
         fontSize: 18,
@@ -27,9 +30,11 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon }: Pro
     return (
         <View>
             <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
-                <View style={{ flex: 1, paddingLeft: 10, paddingTop: 5 }}>
+                <View style={{ flexDirection:"row", flex: 1, paddingLeft: 10, paddingTop: 5 }}>
                     {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
+                    {innerLeftIcon ? <Ionicons style={{paddingLeft: 10}} name={innerLeftIcon} size={32} color={colors.text} onPress={() => { if (innerLeftCallback) innerLeftCallback() }} /> : <View />}
                 </View>
+                
 
                 <View style={{ flex: 2, justifyContent: "center" }}>
                     <Text style={[textStyle, { textAlign: "center", fontWeight: "bold" }]}>{name}</Text>

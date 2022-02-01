@@ -2,11 +2,15 @@ import * as React from 'react';
 import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
+import { Timestamp } from 'firebase/firestore';
+import { formatDistance } from 'date-fns';
 
 interface Props {
     staticImage?: ImageSourcePropType,
     httpImage?: string,
     onTouchImage?: Function
+
+    added: Timestamp,
     name: string,
     title: string,
     body: string,
@@ -23,7 +27,7 @@ interface Props {
     isAccepted?: boolean,
 }
 
-export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted }: Props) => {
+export const TextCard = ({ staticImage, httpImage, onTouchImage, added, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -61,12 +65,14 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, name, title, bo
         onCommented();
     };
 
+    const time = formatDistance(added.toDate(), new Date(), { addSuffix: true });
+
     return (
         <View>
             <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
                 <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
                     <Text style={{ color: "green", fontSize: 12, textAlign: "left", flex: 1 }}>{acceptedPressed ? "challenge accepted" : ""}</Text>
-                    <Text style={[bodyTextStyle, { flex: 1, textAlign: "right", color: "gray", fontSize: 12 }]}>Jan 20, 2022</Text>
+                    <Text style={[bodyTextStyle, { flex: 1, textAlign: "right", color: "gray", fontSize: 12 }]}>{time}</Text>
                 </View>
                 {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
                 {httpImage && <View><TouchableOpacity disabled={!onTouchImage} onPress={() => { onTouchImage!() }} ><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></TouchableOpacity></View>}
