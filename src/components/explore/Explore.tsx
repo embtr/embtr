@@ -13,14 +13,15 @@ export const Explore = () => {
     const card = {
         backgroundColor: colors.background,
         width: '100%',
-        marginBottom: 7.5,
-        marginTop: 7.5,
+        marginBottom: 8.5,
+        marginTop: 8.5,
     }
 
     const shadowTopProp = {
         shadowColor: 'orange',
-        shadowOpacity: 0.3,
-        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: .5,
+        shadowRadius: 3.5,
     }
 
     const [challenges, setChallenges] = React.useState<ChallengeModel[]>([]);
@@ -34,7 +35,7 @@ export const Explore = () => {
     let challengeViews: JSX.Element[] = [];
     challenges.forEach(challenge => {
         challengeViews.push(
-            <View key={challenge.title} style={[ card, shadowTopProp ]}>
+            <View key={challenge.title} style={[card, shadowTopProp]}>
                 <EmbtrTextCard challengeModel={challenge} />
             </View>
         );
