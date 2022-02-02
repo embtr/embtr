@@ -1,10 +1,10 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, Timestamp, collection, addDoc } from 'firebase/firestore';
-import { Story } from 'src/controller/story/StoryController';
+import { Firestore, collection, addDoc } from 'firebase/firestore';
+import { StoryModel } from 'src/controller/story/StoryController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class StoryDao {
-    public static async addStory(story: Story, callback: Function) {
+    public static async addStory(story: StoryModel, callback: Function) {
         const uid = getAuth().currentUser?.uid;
 
         if (!uid) {

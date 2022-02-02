@@ -3,7 +3,7 @@ import { Timestamp } from "firebase/firestore";
 import { Comment, Like } from "src/controller/explore/ExploreController";
 import StoryDao from "src/firebase/firestore/story/StoryDao";
 
-export interface Story {
+export interface StoryModel {
     added: Timestamp,
     type: string,
     uid: string,
@@ -17,7 +17,7 @@ export interface Story {
     }
 }
 
-export const createStory = (uid: string, title: string, story: string): Story => {
+export const createStory = (uid: string, title: string, story: string): StoryModel => {
     return {
         added: Timestamp.now(),
         type: "STORY",
@@ -39,8 +39,8 @@ class StoryController {
         if (!uid) {
             return;
         }
-        const storyObject = createStory(uid, title, story);
-        StoryDao.addStory(storyObject, callback);
+        const storyModel = createStory(uid, title, story);
+        StoryDao.addStory(storyModel, callback);
     }
 }
 
