@@ -12,6 +12,11 @@ export interface Comment {
     timestamp: Timestamp
 }
 
+export interface Like {
+    uid: string,
+    added: Timestamp    
+}
+
 export interface ChallengeModel {
     id: string,
     added: Timestamp,

@@ -5,6 +5,7 @@ import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import StoryController from 'src/controller/story/StoryController';
 
 export const CreateTimelineStory = () => {
     const { colors } = useTheme();
@@ -29,7 +30,10 @@ export const CreateTimelineStory = () => {
         }
 
         if (readyToSubmit) {
-            alert("sending!");
+            StoryController.addStory(title, body, () => {
+                //TODO - navigate back
+                alert("story Sent!");
+            });
         }
     }
 
