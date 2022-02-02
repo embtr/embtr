@@ -10,15 +10,17 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 interface Props {
     name: string,
     leftRoute?: string,
-    leftIcon?: any
-    rightRoute?: string,
-    rightIcon?: any
+    leftIcon?: any,
 
-    innerLeftIcon?: any
+    rightRoute?: string,
+    rightIcon?: any,
+    rightOnClick?: Function,
+
+    innerLeftIcon?: any,
     innerLeftCallback?: Function
 }
 
-export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon, innerLeftIcon, innerLeftCallback }: Props) => {
+export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, innerLeftIcon, innerLeftCallback }: Props) => {
     const { colors } = useTheme();
     const textStyle = {
         fontSize: 18,
@@ -26,6 +28,16 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon, inner
     } as TextStyle;
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+    const handleRightClick = () => {
+        if (rightOnClick) {
+            rightOnClick();
+        }
+
+        if (rightRoute) {
+            navigation.navigate(rightRoute as keyof RootStackParamList);
+        }
+    };
 
     return (
         <View>
@@ -41,7 +53,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightIcon, inner
                 </View>
 
                 <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
-                    {rightIcon ? <Ionicons name={rightIcon} size={32} color={colors.text} onPress={() => { navigation.navigate(rightRoute as keyof RootStackParamList) }} /> : <View />}
+                    {rightIcon ? <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} /> : <View />}
                 </View>
             </View>
 

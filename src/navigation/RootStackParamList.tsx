@@ -9,6 +9,7 @@ export type MainTabScreens = {
 export type TimelineTabScreens = {
     UserSearch: undefined;
     Timeline: undefined;
+    CreateTimelineStory: undefined;
     UserProfile: { id: string };
 };
 
