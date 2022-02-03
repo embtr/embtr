@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, addDoc, query, orderBy, getDocs } from 'firebase/firestore';
+import { Firestore, collection, addDoc, query, orderBy, getDocs, setDoc, doc, arrayUnion } from 'firebase/firestore';
 import { StoryModel } from 'src/controller/story/StoryController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
@@ -26,6 +26,13 @@ class StoryDao {
         return querySnapshot;
     }
 
+    public static likeStory(storyId: string, userUid: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "likeStory");
+
+        setDoc(doc(db, "timeline/" + storyId), {
+            likes: arrayUnion(userUid)
+        }, { merge: true })
+    }
 }
 
 export default StoryDao;

@@ -18,7 +18,7 @@ export const Timeline = () => {
         backgroundColor: colors.background,
         width: '100%',
         marginBottom: 4,
-        marginTop: 4 ,
+        marginTop: 4,
     }
 
     const shadowTopProp = {
@@ -62,7 +62,7 @@ export const Timeline = () => {
             if (profile) {
                 views.push(
                     <View key={timelineEntry.id} style={[card]}>
-                        <UserTextCard userProfileModel={profile} title={timelineEntry.data.title} body={timelineEntry.data.story} added={timelineEntry.added} />
+                        <UserTextCard userProfileModel={profile} storyModel={timelineEntry} />
                     </View>
                 );
             }

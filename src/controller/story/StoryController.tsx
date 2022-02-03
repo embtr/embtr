@@ -51,12 +51,17 @@ class StoryController {
         let stories: StoryModel[] = [];
         result.then(response => {
             response.docs.forEach(doc => {
-                const story: StoryModel = doc.data() as StoryModel;
+                let story: StoryModel = doc.data() as StoryModel;
+                story.id = doc.id;
                 stories.push(story);
             });
         }).then(() => {
             callback(stories);
         });    
+    }
+
+    public static likeStory(challengeId: string, userUid: string) {
+        StoryDao.likeStory(challengeId, userUid);
     }
 }
 
