@@ -30,7 +30,9 @@ class StoryDao {
         const db: Firestore = getFirebaseConnection(this.name, "likeStory");
 
         setDoc(doc(db, "timeline/" + storyId), {
-            likes: arrayUnion(userUid)
+            public: {
+                likes: arrayUnion(userUid)
+            }
         }, { merge: true })
     }
 }
