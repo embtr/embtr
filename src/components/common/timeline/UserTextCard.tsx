@@ -12,20 +12,21 @@ interface Props {
     userProfileModel: UserProfileModel,
     title: string,
     body: string,
+    added: Timestamp
 }
 
-export const UserTextCard = ({ userProfileModel, title, body }: Props) => {
+export const UserTextCard = ({ userProfileModel, title, body, added }: Props) => {
     const navigation = useNavigation<userProfileScreenProp>();
     const toUserProfile = () => {
         navigation.navigate('UserProfile', { id: userProfileModel.uid! })
     };
 
-    const time = Timestamp.now()
+    
 
     return <TextCard
         httpImage={userProfileModel.photoUrl!}
         onTouchImage={toUserProfile}
-        added={time}
+        added={added}
         name={userProfileModel.name!}
         isLiked={false} title={title}
         body={body} likes={0}

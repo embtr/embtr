@@ -62,7 +62,7 @@ export const Timeline = () => {
             if (profile) {
                 views.push(
                     <View key={timelineEntry.id} style={[card]}>
-                        <UserTextCard userProfileModel={profile} title={timelineEntry.data.title} body={timelineEntry.data.story} />
+                        <UserTextCard userProfileModel={profile} title={timelineEntry.data.title} body={timelineEntry.data.story} added={timelineEntry.added} />
                     </View>
                 );
             }
