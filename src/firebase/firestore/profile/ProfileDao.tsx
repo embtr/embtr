@@ -1,4 +1,4 @@
-import { Firestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { Firestore, doc, getDoc, setDoc, getDocs, collection, where, query } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 export interface UserProfileModel {
@@ -16,6 +16,14 @@ class ProfileDao {
         const result = await getDoc(doc(db, "profiles/", uid));
 
         return result;
+    }
+
+    public static async getProfiles(uids: string[]) {
+        const db: Firestore = getFirebaseConnection(this.name, "getProfiles");
+        const q = query(collection(db, "profiles"), where("uid", "in", uids));
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot;
     }
 
     public static updateProfile(userProfile: UserProfileModel) {

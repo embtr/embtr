@@ -1,9 +1,11 @@
 import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
+import { Dispatch, SetStateAction } from "react";
 import { Comment, Like } from "src/controller/explore/ExploreController";
 import StoryDao from "src/firebase/firestore/story/StoryDao";
 
 export interface StoryModel {
+    id?: string,
     added: Timestamp,
     type: string,
     uid: string,
@@ -41,6 +43,20 @@ class StoryController {
         }
         const storyModel = createStory(uid, title, story);
         StoryDao.addStory(storyModel, callback);
+    }
+
+    public static getStories(callback: Function) {
+        const result = StoryDao.getStories();
+
+        let stories: StoryModel[] = [];
+        result.then(response => {
+            response.docs.forEach(doc => {
+                const story: StoryModel = doc.data() as StoryModel;
+                stories.push(story);
+            });
+        }).then(() => {
+            callback(stories);
+        });    
     }
 }
 

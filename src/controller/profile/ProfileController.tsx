@@ -14,6 +14,21 @@ class ProfileController {
         });
     }
 
+    public static getProfiles(uids: string[], callback: Function) {
+        const result = ProfileDao.getProfiles(uids);
+
+        let profiles: UserProfileModel[] = [];
+        result.then(documents => {
+            documents.forEach(document => {
+                let profile: UserProfileModel = document.data();
+                profiles.push(profile);
+            });
+            callback(profiles);
+        }).catch(() => {
+            callback([]);
+        });
+    }
+
     public static registerInitialProfileUpdateListener() {
         registerAuthStateListener((user: User) => {
             if (user) {
