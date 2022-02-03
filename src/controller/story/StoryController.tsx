@@ -19,6 +19,18 @@ export interface StoryModel {
     }
 }
 
+export const storyWasLikedBy = (storyModel: StoryModel, uid: string) : boolean => {
+    let isLiked = false;
+    storyModel.public.likes.forEach(like => {
+        if (like.uid === uid) {
+            isLiked = true;
+            return;
+        }
+    });
+
+    return isLiked;
+};
+
 export const createStory = (uid: string, title: string, story: string): StoryModel => {
     return {
         added: Timestamp.now(),
@@ -60,8 +72,8 @@ class StoryController {
         });    
     }
 
-    public static likeStory(challengeId: string, userUid: string) {
-        StoryDao.likeStory(challengeId, userUid);
+    public static likeStory(storyId: string, userUid: string) {
+        StoryDao.likeStory(storyId, userUid);
     }
 }
 

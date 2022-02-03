@@ -14,7 +14,6 @@ interface Props {
 
 export const EmbtrTextCard = ({ challengeModel }: Props) => {
     const [likes, setLikes] = React.useState(challengeModel.likes.length);
-    const [comments, setComments] = React.useState(challengeModel.comments.length);
     const [participants, setParticipants] = React.useState(challengeModel.participants.length);
 
     const uid = getAuth().currentUser?.uid;
@@ -48,6 +47,7 @@ export const EmbtrTextCard = ({ challengeModel }: Props) => {
         }
     });
 
+    const comments = challengeModel.comments.length;
 
     return (
         <TextCard

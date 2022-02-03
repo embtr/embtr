@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import StoryController, { StoryModel } from 'src/controller/story/StoryController';
+import StoryController, { StoryModel, storyWasLikedBy } from 'src/controller/story/StoryController';
 import { getAuth } from 'firebase/auth';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
@@ -32,12 +32,15 @@ export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
         //setComments(comments + 1);
     };
 
+    const isLiked = storyWasLikedBy(storyModel, getAuth().currentUser!.uid);
+
     return <TextCard
         httpImage={userProfileModel.photoUrl!}
         onTouchImage={toUserProfile}
         added={storyModel.added}
         name={userProfileModel.name!}
-        isLiked={false} title={storyModel.data.title}
+        isLiked={isLiked}
+        title={storyModel.data.title}
         body={storyModel.data.story}
         likes={storyModel.public.likes.length}
         comments={storyModel.public.comments.length}
