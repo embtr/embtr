@@ -17,13 +17,15 @@ interface Props {
 export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
     const navigation = useNavigation<userProfileScreenProp>();
 
+    const [likes, setLikes] = React.useState(storyModel.public.likes.length);
+
     const toUserProfile = () => {
         navigation.navigate('UserProfile', { id: userProfileModel.uid! })
     };
 
     const onLike = () => {
         StoryController.likeStory(storyModel.id!, getAuth().currentUser!.uid);
-        //setLikes(likes + 1);
+        setLikes(likes + 1);
     }
 
     const onCommented = (text: string) => {
@@ -42,7 +44,7 @@ export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
         isLiked={isLiked}
         title={storyModel.data.title}
         body={storyModel.data.story}
-        likes={storyModel.public.likes.length}
+        likes={likes}
         comments={storyModel.public.comments.length}
         onLike={onLike}
         onCommented={onCommented}
