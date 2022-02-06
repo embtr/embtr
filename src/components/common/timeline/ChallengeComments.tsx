@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
-import { Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TextStyle, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Text, TextInput, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import ExploreController, { ChallengeModel as ChallengeModel } from 'src/controller/explore/ExploreController';
 import { ExploreTabScreens } from 'src/navigation/RootStackParamList';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComment';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { getAuth } from 'firebase/auth';
-import { useEffect } from 'react';
+import { Comments } from 'src/components/common/comments/Comments';
+import { CommentsTextInput } from 'src/components/common/comments/CommentsTextInput';
 
 export const ChallengeComments = () => {
     const { colors } = useTheme();
@@ -22,11 +22,7 @@ export const ChallengeComments = () => {
     const route = useRoute<RouteProp<ExploreTabScreens, 'ChallengeComments'>>();
 
     const [challengeModel, setChallengeModel] = React.useState<ChallengeModel | undefined>(undefined);
-    const [commentText, setCommentText] = React.useState("");
-    const [comments, setComments] = React.useState<JSX.Element[]>([]);
-    const [commentAdded, setCommentAdded] = React.useState<boolean>(false);
 
-    const scrollRef = React.useRef<ScrollView>(null);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -34,42 +30,14 @@ export const ChallengeComments = () => {
         }, [])
     );
 
-    const submitComment = () => {
-        if (commentText === "") {
-            return;
-        }
-
-        setCommentAdded(true);
-        Keyboard.dismiss();
-
+    const submitComment = (text: string) => {
         const user = getAuth().currentUser;
         if (challengeModel?.id && user?.uid) {
-            ExploreController.addComment(challengeModel.id, user.uid, commentText, () => {
+            ExploreController.addComment(challengeModel.id, user.uid, text, () => {
                 ExploreController.getChallenge(route.params.id, setChallengeModel);
             });
         }
-
-        setCommentText("");
     };
-
-    useEffect(() => {
-        let challengeViews: JSX.Element[] = [];
-        challengeModel?.comments.forEach(comment => {
-            challengeViews.push(
-                <View key={comment.uid + comment.comment + comment.timestamp} style={{ marginBottom: 7.5, backgroundColor: colors.background }}>
-                    <CommentBoxComment comment={comment} />
-                </View>
-            );
-        });
-
-        setComments(challengeViews);
-    }, [challengeModel]);
-
-    const onCommentCountChanged = () => {
-        if (commentAdded) {
-            scrollRef.current?.scrollToEnd();
-        }
-    }
 
     return (
         <Screen>
@@ -80,22 +48,8 @@ export const ChallengeComments = () => {
             </View>
 
             <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 45 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-                <ScrollView onContentSizeChange={onCommentCountChanged} ref={scrollRef}>
-                    {comments}
-                </ScrollView>
-
-                <View style={{ backgroundColor: "yellow", flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
-                    <TextInput
-                        style={{ padding: 15, color: colors.text, backgroundColor: colors.background_secondary, width: "100%", paddingRight: 65 }}
-                        placeholder={"add a comment..."}
-                        onChangeText={accText => setCommentText(accText)}
-                        value={commentText}
-                        onSubmitEditing={() => { submitComment() }}
-                    />
-                    <View style={{ zIndex: 1, position: "absolute", paddingRight: 20 }}>
-                        <Text onPress={() => { submitComment() }} style={{ fontSize: 16, color: colors.primary_border }}>send</Text>
-                    </View>
-                </View>
+                <Comments comments={challengeModel?.comments ? challengeModel?.comments : []} />
+                <CommentsTextInput submitComment={submitComment} />
             </KeyboardAvoidingView>
         </Screen>
     )
