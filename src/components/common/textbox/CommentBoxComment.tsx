@@ -1,11 +1,15 @@
 import * as React from 'react';
-import { View, Image, Text } from "react-native"
-import { useFocusEffect } from "@react-navigation/native";
+import { View, Image, Text, TouchableOpacity } from "react-native"
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Comment } from 'src/controller/explore/ExploreController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { formatDistance } from 'date-fns';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+
+type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'TimelineComments'>;
 
 interface Props {
     comment: Comment
@@ -15,6 +19,11 @@ export const CommentBoxComment = ({ comment }: Props) => {
     const { colors } = useTheme();
 
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
+
+    const navigation = useNavigation<timelineCommentsScreenProp>();
+    const toUserProfile = () => {
+        navigation.navigate('UserProfile', { id: userProfileModel?.uid ? userProfileModel.uid : "" })
+    };
 
     useFocusEffect(
         React.useCallback(() => {
@@ -30,7 +39,7 @@ export const CommentBoxComment = ({ comment }: Props) => {
         <View>
             <View style={{ flexDirection: "row", marginRight: 10, marginLeft: 10 }}>
                 <View>
-                    <Image style={{ width: 30, height: 30, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
+                    <View><TouchableOpacity onPress={toUserProfile} ><Image style={{ width: 30, height: 30, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} /></TouchableOpacity></View>
 
                 </View>
                 <View style={{ marginLeft: 5, marginRight: 20, flexShrink: 1 }}>
