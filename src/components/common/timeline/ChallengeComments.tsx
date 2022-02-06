@@ -6,12 +6,12 @@ import ExploreController, { ChallengeModel as ChallengeModel } from 'src/control
 import { ExploreTabScreens } from 'src/navigation/RootStackParamList';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Comment } from 'src/components/common/timeline/comments/Comment';
+import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComment';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { getAuth } from 'firebase/auth';
 import { useEffect } from 'react';
 
-export const Comments = () => {
+export const ChallengeComments = () => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -57,7 +57,7 @@ export const Comments = () => {
         challengeModel?.comments.forEach(comment => {
             challengeViews.push(
                 <View key={comment.uid + comment.comment + comment.timestamp} style={{ marginBottom: 7.5, backgroundColor: colors.background }}>
-                    <Comment comment={comment} />
+                    <CommentBoxComment comment={comment} />
                 </View>
             );
         });
