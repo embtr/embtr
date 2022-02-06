@@ -19,10 +19,6 @@ export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
 
     const [likes, setLikes] = React.useState(storyModel.public.likes.length);
 
-    const toUserProfile = () => {
-        navigation.navigate('UserProfile', { id: userProfileModel.uid! })
-    };
-
     const onLike = () => {
         StoryController.likeStory(storyModel.id!, getAuth().currentUser!.uid);
         setLikes(likes + 1);
@@ -35,8 +31,7 @@ export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
     const isLiked = storyWasLikedBy(storyModel, getAuth().currentUser!.uid);
 
     return <TextCard
-        httpImage={userProfileModel.photoUrl!}
-        onTouchImage={toUserProfile}
+        userProfileModel={userProfileModel}
         added={storyModel.added}
         name={userProfileModel.name!}
         isLiked={isLiked}

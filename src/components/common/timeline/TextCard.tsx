@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Text, TextStyle, View, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
+import { Text, TextStyle, View, Image, ImageSourcePropType } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { Timestamp } from 'firebase/firestore';
 import { formatDistance } from 'date-fns';
+import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 
 interface Props {
     staticImage?: ImageSourcePropType,
-    httpImage?: string,
-    onTouchImage?: Function
+    userProfileModel?: UserProfileModel,
 
     added: Timestamp,
     name: string,
@@ -27,7 +28,7 @@ interface Props {
     isAccepted?: boolean,
 }
 
-export const TextCard = ({ staticImage, httpImage, onTouchImage, added, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted }: Props) => {
+export const TextCard = ({ staticImage, userProfileModel, added, name, title, body, likes, comments, participants, onLike, onAccepted, onCommented, isLiked, isAccepted }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -75,7 +76,7 @@ export const TextCard = ({ staticImage, httpImage, onTouchImage, added, name, ti
                     <Text style={[bodyTextStyle, { flex: 1, textAlign: "right", color: "gray", fontSize: 12 }]}>{time}</Text>
                 </View>
                 {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
-                {httpImage && <View><TouchableOpacity disabled={!onTouchImage} onPress={() => { onTouchImage!() }} ><Image style={{ width: 45, height: 45, borderRadius: 50 }} source={{ uri: httpImage }} /></TouchableOpacity></View>}
+                {userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}
                 <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
             </View>
             <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
