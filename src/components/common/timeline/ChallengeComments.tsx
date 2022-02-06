@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
-import { Keyboard, KeyboardAvoidingView, Text, TextInput, TextStyle, View } from 'react-native';
+import { KeyboardAvoidingView, Text, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import ExploreController, { ChallengeModel as ChallengeModel } from 'src/controller/explore/ExploreController';
 import { ExploreTabScreens } from 'src/navigation/RootStackParamList';
@@ -22,7 +22,6 @@ export const ChallengeComments = () => {
     const route = useRoute<RouteProp<ExploreTabScreens, 'ChallengeComments'>>();
 
     const [challengeModel, setChallengeModel] = React.useState<ChallengeModel | undefined>(undefined);
-
 
     useFocusEffect(
         React.useCallback(() => {
