@@ -28,7 +28,7 @@ export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
         setLikes(likes + 1);
     }
 
-    const onCommented = (text: string) => {
+    const onCommented = () => {
         navigation.navigate('TimelineComments', { id: storyModel?.id ? storyModel.id : "" })
     };
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
-import ExploreController, { ChallengeModel as ChallengeModel } from 'src/controller/explore/ExploreController';
 import { ExploreTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import { Comments } from 'src/components/common/comments/Comments';
@@ -19,12 +18,11 @@ export const TimelineComments = () => {
 
     const submitComment = (text: string) => {
         const user = getAuth().currentUser;
-        alert("sending: " + text);
-        //if (challengeModel?.id && user?.uid) {
-        //    ExploreController.addComment(challengeModel.id, user.uid, text, () => {
-        //        ExploreController.getChallenge(route.params.id, setChallengeModel);
-        //    });
-        //}
+        if (storyModel?.id && user?.uid) {
+            StoryController.addComment(storyModel.id, user.uid, text, () => {
+                StoryController.getStory(route.params.id, setStoryModel);
+            });
+        }
     };
 
     return (
