@@ -29,6 +29,7 @@ export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
     }
 
     const onCommented = (text: string) => {
+        alert("clicked");
         //navigation.navigate('ChallengeComments', { id: challengeModel.id })
         //ExploreController.addComment(challengeModel.id, uid!, text);
         //setComments(comments + 1);
