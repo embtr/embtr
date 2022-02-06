@@ -69,11 +69,30 @@ class StoryController {
             });
         }).then(() => {
             callback(stories);
-        });    
+        });
+    }
+
+    public static getStory(id: string, callback: Function) {
+        const result = StoryDao.getStory(id);
+        result.then(doc => {
+            if (!doc || !doc.exists()) {
+                callback(undefined);
+            } else {
+                let story : StoryModel = doc.data() as StoryModel;
+                story.id = doc.id;
+                callback(story);
+            }
+        });
     }
 
     public static likeStory(storyId: string, userUid: string) {
         StoryDao.likeStory(storyId, userUid);
+    }
+
+    public static addComment(id: string, uid: string, commentText: string, callback: Function) {
+        StoryDao.addComment(id, uid, commentText).then(() => {
+            callback();
+        });
     }
 }
 

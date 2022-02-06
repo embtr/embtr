@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, addDoc, query, orderBy, getDocs, setDoc, doc, arrayUnion, Timestamp } from 'firebase/firestore';
+import { Firestore, collection, addDoc, query, orderBy, getDocs, setDoc, doc, arrayUnion, Timestamp, getDoc } from 'firebase/firestore';
 import { Like } from 'src/controller/explore/ExploreController';
 import { StoryModel } from 'src/controller/story/StoryController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
@@ -27,7 +27,14 @@ class StoryDao {
         return querySnapshot;
     }
 
-    public static likeStory(storyId: string, userUid: string) {
+    public static async getStory(id: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "getStory");
+
+        const result = await getDoc(doc(db, "timeline/" + id));
+        return result;
+    }
+
+    public static likeStory(id: string, userUid: string) {
         const db: Firestore = getFirebaseConnection(this.name, "likeStory");
 
         const like: Like = {
@@ -35,11 +42,25 @@ class StoryDao {
             added: Timestamp.now()
         };
 
-        setDoc(doc(db, "timeline/" + storyId), {
+        setDoc(doc(db, "timeline/" + id), {
             public: {
                 likes: arrayUnion(like)
             }
         }, { merge: true })
+    }
+
+    public static addComment(id: string, uid: string, comment: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "addComment");
+
+        return setDoc(doc(db, "timeline/" + id), {
+            public: {
+                comments: arrayUnion({
+                    uid: uid,
+                    comment: comment,
+                    timestamp: Timestamp.now()
+                })
+            }
+        }, { merge: true });
     }
 }
 
