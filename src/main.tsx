@@ -29,7 +29,16 @@ const linking: LinkingOptions<RootStackParamList> = {
                         screens: {
                             UserSearch: "search",
                             Timeline: "timeline",
-                            UserProfile: "user"
+                            UserProfile: "user",
+                            TimelineComments: {
+                                path: "timeline/:id/comments",
+                                parse: {
+                                    id: (id) => id,
+                                },
+                                //                                  stringify: {
+                                //                                    id: (id) => id.replace(/^user-/, ''),
+                                //                                  },
+                            },
                         }
                     },
                     ExploreTab: {
@@ -39,11 +48,11 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 path: "challenge/:id/comments",
                                 parse: {
                                     id: (id) => id,
-                                  },
-//                                  stringify: {
-//                                    id: (id) => id.replace(/^user-/, ''),
-//                                  },
-                            },       
+                                },
+                                //                                  stringify: {
+                                //                                    id: (id) => id.replace(/^user-/, ''),
+                                //                                  },
+                            },
                         }
                     }
                 }

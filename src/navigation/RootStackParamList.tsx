@@ -10,6 +10,7 @@ export type TimelineTabScreens = {
     UserSearch: undefined;
     Timeline: undefined;
     CreateTimelineStory: undefined;
+    TimelineComments: { id: string };
     UserProfile: { id: string };
 };
 

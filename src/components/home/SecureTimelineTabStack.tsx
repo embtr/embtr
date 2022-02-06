@@ -4,6 +4,7 @@ import { UserSearch } from 'src/components/profile/search/UserSearch';
 import { UserProfile } from 'src/components/profile/UserProfile';
 import { Timeline } from 'src/components/timeline/Timeline';
 import { CreateTimelineStory } from 'src/components/timeline/CreateTimelineStory';
+import { TimelineComments } from 'src/components/common/timeline/TimelineComments';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="CreateTimelineStory" component={CreateTimelineStory} />
             <Stack.Screen name="UserSearch" component={UserSearch} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
+            <Stack.Screen name="TimelineComments" component={TimelineComments} />
         </Stack.Navigator>
     );
 };

@@ -7,7 +7,7 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import StoryController, { StoryModel, storyWasLikedBy } from 'src/controller/story/StoryController';
 import { getAuth } from 'firebase/auth';
 
-type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
+type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'TimelineComments'>;
 
 interface Props {
     userProfileModel: UserProfileModel,
@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
-    const navigation = useNavigation<userProfileScreenProp>();
+    const navigation = useNavigation<timelineCommentsScreenProp>();
 
     const [likes, setLikes] = React.useState(storyModel.public.likes.length);
 
@@ -29,10 +29,7 @@ export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
     }
 
     const onCommented = (text: string) => {
-        alert("clicked");
-        //navigation.navigate('ChallengeComments', { id: challengeModel.id })
-        //ExploreController.addComment(challengeModel.id, uid!, text);
-        //setComments(comments + 1);
+        navigation.navigate('TimelineComments', { id: storyModel?.id ? storyModel.id : "" })
     };
 
     const isLiked = storyWasLikedBy(storyModel, getAuth().currentUser!.uid);
