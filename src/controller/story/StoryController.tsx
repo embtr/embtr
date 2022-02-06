@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { Dispatch, SetStateAction } from "react";
-import { Comment, Like } from "src/controller/explore/ExploreController";
+import { CommentModel, LikeModel } from "src/controller/explore/ExploreController";
 import StoryDao from "src/firebase/firestore/story/StoryDao";
 
 export interface StoryModel {
@@ -10,8 +10,8 @@ export interface StoryModel {
     type: string,
     uid: string,
     public: {
-        comments: Comment[],
-        likes: Like[]
+        comments: CommentModel[],
+        likes: LikeModel[]
     },
     data: {
         title: string,

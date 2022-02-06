@@ -6,13 +6,13 @@ export interface ChallengeParticipant {
     accepted: Timestamp
 }
 
-export interface Comment {
+export interface CommentModel {
     uid: string,
     comment: string,
     timestamp: Timestamp
 }
 
-export interface Like {
+export interface LikeModel {
     uid: string,
     added: Timestamp    
 }
@@ -22,7 +22,7 @@ export interface ChallengeModel {
     added: Timestamp,
     participants: ChallengeParticipant[],
     likes: string[],
-    comments: Comment[],
+    comments: CommentModel[],
     synopsis: string,
     title: string
 }

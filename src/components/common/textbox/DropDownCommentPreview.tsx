@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComment';
-import { Comment } from 'src/controller/explore/ExploreController';
+import { Comment } from 'src/components/common/timeline/comments/Comment';
+import { CommentModel } from 'src/controller/explore/ExploreController';
 
 interface Props {
-    comment: Comment
+    comment: CommentModel
 }
 
 export const DropDownCommentPreview = ({comment} : Props) => {
     return (
         <View style={{ width: "100%", overflow: "hidden" }}>
-            <CommentBoxComment comment={comment} />
+            <Comment comment={comment} />
         </View>
     );
 };

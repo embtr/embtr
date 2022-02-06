@@ -2,16 +2,16 @@ import * as React from 'react';
 import { View, Image, Text } from "react-native"
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Comment } from 'src/controller/explore/ExploreController';
+import { CommentModel } from 'src/controller/explore/ExploreController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { formatDistance } from 'date-fns';
 
 interface Props {
-    comment: Comment
+    comment: CommentModel
 }
 
-export const CommentBoxComment = ({ comment }: Props) => {
+export const Comment = ({ comment }: Props) => {
     const { colors } = useTheme();
 
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);

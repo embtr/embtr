@@ -3,14 +3,14 @@ import { TextStyle, Animated, ViewStyle, TextInput, Text, View, InputAccessoryVi
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useRef } from 'react';
 import { DropDownCommentPreview } from 'src/components/common/textbox/DropDownCommentPreview';
-import { Comment } from 'src/controller/explore/ExploreController';
+import { CommentModel } from 'src/controller/explore/ExploreController';
 import { Keyboard } from 'react-native';
 
 interface Props {
     onSubmitText: Function,
     placeholder?: string,
     display: boolean,
-    displayComment?: Comment,
+    displayComment?: CommentModel,
     scrollToEnd?: Function
 }
 

@@ -1,6 +1,6 @@
 import { getAuth } from 'firebase/auth';
 import { Firestore, collection, addDoc, query, orderBy, getDocs, setDoc, doc, arrayUnion, Timestamp, getDoc } from 'firebase/firestore';
-import { Like } from 'src/controller/explore/ExploreController';
+import { LikeModel } from 'src/controller/explore/ExploreController';
 import { StoryModel } from 'src/controller/story/StoryController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
@@ -37,7 +37,7 @@ class StoryDao {
     public static likeStory(id: string, userUid: string) {
         const db: Firestore = getFirebaseConnection(this.name, "likeStory");
 
-        const like: Like = {
+        const like: LikeModel = {
             uid: userUid,
             added: Timestamp.now()
         };
