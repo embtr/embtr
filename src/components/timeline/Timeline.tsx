@@ -26,8 +26,8 @@ export const Timeline = () => {
     const challengeShadow = {
         shadowColor: 'orange',
         shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: .7,
-        shadowRadius: 5,
+        shadowOpacity: 1,
+        shadowRadius: 6.5,
         marginBottom: 5,
         marginTop: 5,
     }
