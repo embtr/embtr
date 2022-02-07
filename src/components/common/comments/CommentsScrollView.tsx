@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ScrollView, View } from 'react-native';
 import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComment';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Comment } from 'src/controller/explore/ExploreController';
+import { Comment } from 'src/controller/timeline/TimelineController';
 
 interface Props {
     comments: Comment[]

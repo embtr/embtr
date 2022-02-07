@@ -2,11 +2,11 @@ import * as React from 'react';
 import { View, Text } from "react-native"
 import { useFocusEffect } from "@react-navigation/native";
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Comment } from 'src/controller/explore/ExploreController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
+import { Comment } from 'src/controller/timeline/TimelineController';
 
 interface Props {
     comment: Comment

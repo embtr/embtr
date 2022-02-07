@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { KeyboardAvoidingView, Text, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
-import { Comment } from 'src/controller/explore/ExploreController';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { CommentsTextInput } from 'src/components/common/comments/CommentsTextInput';
+import { Comment } from 'src/controller/timeline/TimelineController';
 
 interface Props {
     title: string,
