@@ -68,7 +68,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
 
     const time = formatDistance(added.toDate(), new Date(), { addSuffix: true });
 
-    let bb = body.replaceAll("\\n", "\n");
+    let bodyWithNewLines = body.replaceAll("\\n", "\n");
 
     return (
         <View>
@@ -95,21 +95,21 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                 </View>
 
                 <View style={{ marginTop: 15, marginBottom: 5 }}>
-                    <Text style={[bodyTextStyle, { textAlign: "left" }]}>{bb}</Text>
+                    <Text style={[bodyTextStyle, { textAlign: "left" }]}>{bodyWithNewLines}</Text>
                     <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{/*"view more..."*/}</Text>
                 </View>
             </View>
 
             <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
-                {participants !== undefined && <View style={{ marginRight: 5, justifyContent: "center" }}>
+                {participants !== undefined && <View style={{ marginRight: 5, justifyContent: "flex-end" }}>
                     <Text style={{ color: "grey", fontSize: 12 }}>{participants} {participants === 1 ? "participant" : "participants"}</Text>
                 </View>}
 
-                <View style={{ marginRight: 5, justifyContent: "center" }}>
+                <View style={{ marginRight: 5, justifyContent: "flex-end" }}>
                     <Text style={{ color: "grey", fontSize: 12 }}>{likes} {likes === 1 ? "like" : "likes"}</Text>
                 </View>
 
-                <View style={{ marginRight: 10, justifyContent: "center" }}>
+                <View style={{ marginRight: 10, justifyContent: "flex-end" }}>
                     <Text style={{ color: "grey", fontSize: 12 }}>{comments} {comments === 1 ? "comment" : "comments"}</Text>
                 </View>
 
