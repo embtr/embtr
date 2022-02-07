@@ -14,9 +14,9 @@ interface Props {
 
 export const EmbtrTextCard = ({ challengeModel }: Props) => {
     const [likes, setLikes] = React.useState(challengeModel.public.likes.length);
-    const [comments, setComments] = React.useState(challengeModel.public.comments.length);
     const [participants, setParticipants] = React.useState(challengeModel.public.participants.length);
 
+    const comments = challengeModel.public.comments.length;
     const uid = getAuth().currentUser?.uid;
     const navigation = useNavigation<commentsNavigationProp>();
     const isLiked = challengeWasLikedBy(challengeModel, uid!);
@@ -32,10 +32,8 @@ export const EmbtrTextCard = ({ challengeModel }: Props) => {
         setLikes(likes + 1);
     }
 
-    const onCommented = (text: string) => {
+    const onCommented = () => {
         navigation.navigate('ChallengeComments', { id: challengeModel?.id ? challengeModel.id : "" })
-        //ChallengeController.addComment(challengeModel.id, uid!, text, () => { });
-        //setComments(comments + 1);
     };
 
     return (
