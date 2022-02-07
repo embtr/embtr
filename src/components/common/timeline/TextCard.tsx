@@ -68,25 +68,34 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
 
     const time = formatDistance(added.toDate(), new Date(), { addSuffix: true });
 
+    let bb = body.replaceAll("\\n", "\n");
+
     return (
         <View>
             <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
+
                 <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
-                    <Text style={{ color: "green", fontSize: 12, textAlign: "left", flex: 1 }}>{acceptedPressed ? "challenge accepted" : ""}</Text>
+                    <Text style={{ color: "orange", flex: 1, textAlign: "left" }}>{participants !== undefined ? "CHALLENGE" : ""}</Text>
                     <Text style={[bodyTextStyle, { flex: 1, textAlign: "right", color: "gray", fontSize: 12 }]}>{time}</Text>
                 </View>
+
+                <View style={{ position: "absolute", zIndex: 1, width: "100%", paddingTop: 12 }}>
+                    <Text style={{ color: "green", textAlign: "left", fontSize: 12 }}>{participants !== undefined ? "accepted" : ""}</Text>
+                </View>
+
                 {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
                 {userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}
+
                 <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
             </View>
-            <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
 
+            <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
                 <View>
                     <Text style={[headerTextStyle, { paddingTop: 5, textAlign: "center" }]}>{title}</Text>
                 </View>
 
                 <View style={{ marginTop: 15, marginBottom: 5 }}>
-                    <Text style={[bodyTextStyle, { textAlign: "left" }]}>{body}</Text>
+                    <Text style={[bodyTextStyle, { textAlign: "left" }]}>{bb}</Text>
                     <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{/*"view more..."*/}</Text>
                 </View>
             </View>
@@ -115,8 +124,8 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                 <View style={{ borderColor: colors.text, marginLeft: 5 }}>
                     <Ionicons name={'chatbox-outline'} size={22} color={colors.text} onPress={onCommentPressed} />
                 </View>
-
             </View>
+
         </View>
     );
 }
