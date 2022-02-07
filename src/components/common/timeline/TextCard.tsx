@@ -92,7 +92,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
             </View>
 
             <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
-                {participants && <View style={{ marginRight: 5, justifyContent: "center" }}>
+                {participants !== undefined && <View style={{ marginRight: 5, justifyContent: "center" }}>
                     <Text style={{ color: "grey", fontSize: 12 }}>{participants} {participants === 1 ? "participant" : "participants"}</Text>
                 </View>}
 
@@ -104,7 +104,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                     <Text style={{ color: "grey", fontSize: 12 }}>{comments} {comments === 1 ? "comment" : "comments"}</Text>
                 </View>
 
-                {participants && <View style={{ borderColor: colors.text, marginRight: 5 }}>
+                {participants !== undefined && <View style={{ borderColor: colors.text, marginRight: 5 }}>
                     <Ionicons name={acceptedPressed ? 'checkmark-circle-outline' : 'checkmark-circle-outline'} size={22} color={acceptedPressed ? "green" : colors.text} onPress={isAccepted ? undefined : onAcceptedPressed} />
                 </View>}
 

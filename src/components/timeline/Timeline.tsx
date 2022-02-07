@@ -8,8 +8,10 @@ import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import StoryController, { StoryModel } from 'src/controller/story/StoryController';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import TimelineController, { TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
+import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -21,20 +23,13 @@ export const Timeline = () => {
         marginTop: 4,
     }
 
-    const shadowTopProp = {
-        shadowColor: 'orange',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: .5,
-        shadowRadius: 3.5,
-    }
-
-    const [timelineEntries, setTimelineEntries] = React.useState<StoryModel[]>([]);
+    const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
 
     useFocusEffect(
         React.useCallback(() => {
-            StoryController.getStories(setTimelineEntries);
+            TimelineController.getTimelinePosts(setTimelineEntries);
         }, [])
     );
 
@@ -62,7 +57,8 @@ export const Timeline = () => {
             if (profile) {
                 views.push(
                     <View key={timelineEntry.id} style={[card]}>
-                        <UserTextCard userProfileModel={profile} storyModel={timelineEntry} />
+                        { timelineEntry.type === "STORY" && <UserTextCard userProfileModel={profile} storyModel={timelineEntry} /> }
+                        { timelineEntry.type === "CHALLENGE" && <EmbtrTextCard challengeModel={timelineEntry as ChallengeModel1} /> }
                     </View>
                 );
             }

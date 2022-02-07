@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
-import { ExploreTabScreens } from 'src/navigation/RootStackParamList';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import { Comments } from 'src/components/common/comments/Comments';
-import StoryController, { StoryModel } from 'src/controller/story/StoryController';
+import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 
 export const TimelineComments = () => {
-    const route = useRoute<RouteProp<ExploreTabScreens, 'ChallengeComments'>>();
+    const route = useRoute<RouteProp<TimelineTabScreens, 'ChallengeComments'>>();
 
     const [storyModel, setStoryModel] = React.useState<StoryModel | undefined>(undefined);
 

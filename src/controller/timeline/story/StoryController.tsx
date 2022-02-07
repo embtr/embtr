@@ -1,22 +1,10 @@
 import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
-import { Dispatch, SetStateAction } from "react";
-import { Comment, Like } from "src/controller/explore/ExploreController";
+import { TimelinePostModel } from "src/controller/timeline/TimelineController";
 import StoryDao from "src/firebase/firestore/story/StoryDao";
 
-export interface StoryModel {
-    id?: string,
-    added: Timestamp,
-    type: string,
-    uid: string,
-    public: {
-        comments: Comment[],
-        likes: Like[]
-    },
-    data: {
-        title: string,
-        story: string
-    }
+export interface StoryModel extends TimelinePostModel {
+    
 }
 
 export const storyWasLikedBy = (storyModel: StoryModel, uid: string) : boolean => {
@@ -33,6 +21,7 @@ export const storyWasLikedBy = (storyModel: StoryModel, uid: string) : boolean =
 
 export const createStory = (uid: string, title: string, story: string): StoryModel => {
     return {
+        id: "",
         added: Timestamp.now(),
         type: "STORY",
         uid: uid,

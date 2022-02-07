@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import StoryController, { StoryModel, storyWasLikedBy } from 'src/controller/story/StoryController';
+import StoryController, { StoryModel, storyWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getAuth } from 'firebase/auth';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'TimelineComments'>;

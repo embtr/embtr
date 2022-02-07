@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import { Firestore, collection, addDoc, query, orderBy, getDocs, setDoc, doc, arrayUnion, Timestamp, getDoc } from 'firebase/firestore';
-import { Like } from 'src/controller/explore/ExploreController';
-import { StoryModel } from 'src/controller/story/StoryController';
+import { StoryModel } from 'src/controller/timeline/story/StoryController';
+import { Comment, Like } from 'src/controller/timeline/TimelineController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class StoryDao {

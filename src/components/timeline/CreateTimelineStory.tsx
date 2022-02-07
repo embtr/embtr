@@ -5,7 +5,7 @@ import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import StoryController from 'src/controller/story/StoryController';
+import StoryController from 'src/controller/timeline/story/StoryController';
 
 export const CreateTimelineStory = () => {
     const { colors } = useTheme();

@@ -1,61 +1,50 @@
 import * as React from 'react';
 import { getAuth } from 'firebase/auth';
 import { TextCard } from 'src/components/common/timeline/TextCard';
-import ExploreController, { ChallengeModel as ChallengeModel } from 'src/controller/explore/ExploreController';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ExploreTabScreens } from 'src/navigation/RootStackParamList';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import ChallengeController, { ChallengeModel1, challengeWasAcceptedBy, challengeWasLikedBy } from 'src/controller/timeline/challenge/ChallengeController';
 
-type challengeCommentsNavigationProp = StackNavigationProp<ExploreTabScreens, 'ChallengeComments'>;
+type commentsNavigationProp = StackNavigationProp<TimelineTabScreens, 'ChallengeComments'>;
 
 interface Props {
-    challengeModel: ChallengeModel
+    challengeModel: ChallengeModel1
 }
 
 export const EmbtrTextCard = ({ challengeModel }: Props) => {
-    const [likes, setLikes] = React.useState(challengeModel.likes.length);
-    const [participants, setParticipants] = React.useState(challengeModel.participants.length);
+    const [likes, setLikes] = React.useState(challengeModel.public.likes.length);
+    const [comments, setComments] = React.useState(challengeModel.public.comments.length);
+    const [participants, setParticipants] = React.useState(challengeModel.public.participants.length);
 
     const uid = getAuth().currentUser?.uid;
-
-    const navigation = useNavigation<challengeCommentsNavigationProp>();
-
+    const navigation = useNavigation<commentsNavigationProp>();
+    const isLiked = challengeWasLikedBy(challengeModel, uid!);
+    const isChallengeAccepted = challengeWasAcceptedBy(challengeModel, uid!);
 
     const onChallengeAccepted = () => {
-        ExploreController.acceptChallenge(challengeModel.id, uid!);
+        ChallengeController.addParticipant(challengeModel.id, uid!);
         setParticipants(participants + 1);
     };
 
     const onLike = () => {
-        ExploreController.likeChallenge(challengeModel.id, uid!);
+        ChallengeController.likeChallenge(challengeModel.id, uid!);
         setLikes(likes + 1);
     }
 
     const onCommented = (text: string) => {
-        navigation.navigate('ChallengeComments', { id: challengeModel.id })
-        //ExploreController.addComment(challengeModel.id, uid!, text);
+        navigation.navigate('ChallengeComments', { id: challengeModel?.id ? challengeModel.id : "" })
+        //ChallengeController.addComment(challengeModel.id, uid!, text, () => { });
         //setComments(comments + 1);
     };
-
-    const isLiked = challengeModel.likes.includes(uid!);
-
-    let isChallengeAccepted = false;
-    challengeModel.participants.forEach(participant => {
-        if (participant.uid === uid) {
-            isChallengeAccepted = true;
-            return;
-        }
-    });
-
-    const comments = challengeModel.comments.length;
 
     return (
         <TextCard
             staticImage={require('assets/logo.png')}
             name={"embtr."}
             added={challengeModel.added}
-            title={challengeModel.title}
-            body={challengeModel.synopsis}
+            title={challengeModel.data.title}
+            body={challengeModel.data.story}
             likes={likes}
             comments={comments}
             participants={participants}

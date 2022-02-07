@@ -39,11 +39,6 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
                                 //                                  },
                             },
-                        }
-                    },
-                    ExploreTab: {
-                        screens: {
-                            Explore: "explore",
                             ChallengeComments: {
                                 path: "challenge/:id/comments",
                                 parse: {

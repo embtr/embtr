@@ -3,7 +3,6 @@ import { NavigatorScreenParams } from "@react-navigation/native";
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>
     CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>
-    ExploreTab: NavigatorScreenParams<ExploreTabScreens>
 }
 
 export type TimelineTabScreens = {
@@ -11,6 +10,7 @@ export type TimelineTabScreens = {
     Timeline: undefined;
     CreateTimelineStory: undefined;
     TimelineComments: { id: string };
+    ChallengeComments: { id: string };
     UserProfile: { id: string };
 };
 
@@ -19,11 +19,6 @@ export type ProfileTabScreens = {
     UserSettings: undefined;
     PillarsConfiguration: undefined;
 };
-
-export type ExploreTabScreens = {
-    Explore: undefined;
-    ChallengeComments: { id: string };
-}
 
 export type RootStackParamList = {
     LandingPage: undefined;
