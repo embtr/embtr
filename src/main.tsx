@@ -86,7 +86,7 @@ export const Main = () => {
 
     return (
         <Screen>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
                     {isSuccessfullyLoggedIn() ? <SecureMainStack /> : <InsecureMainStack />}
                 </NavigationContainer>
