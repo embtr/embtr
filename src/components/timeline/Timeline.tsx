@@ -23,6 +23,15 @@ export const Timeline = () => {
         marginTop: 4,
     }
 
+    const challengeShadow = {
+        shadowColor: 'orange',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: .7,
+        shadowRadius: 5,
+        marginBottom: 5,
+        marginTop: 5,
+    }
+
     const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
@@ -50,18 +59,42 @@ export const Timeline = () => {
 
     }, [timelineEntries]);
 
+    const createStoryView = (timelineEntry: TimelinePostModel) => {
+        const profile = timelineProfiles.get(timelineEntry.uid);
+        if (profile) {
+            return <View key={timelineEntry.id} style={[card]}>
+                <UserTextCard userProfileModel={profile} storyModel={timelineEntry} />
+            </View>;
+        }
+
+        return <View />;
+    };
+
+    const createChallengeView = (timelineEntry: TimelinePostModel) => {
+        return <View key={timelineEntry.id} style={[card, challengeShadow]}>
+            <EmbtrTextCard challengeModel={timelineEntry as ChallengeModel1} />
+        </View>
+    };
+
+    const createTimelineView = (timelineEntry: TimelinePostModel) => {
+        switch (timelineEntry.type) {
+            case "STORY":
+                return createStoryView(timelineEntry);
+
+            case "CHALLENGE":
+                return createChallengeView(timelineEntry);
+
+            default:
+                return <View />
+
+        }
+    };
+
     React.useEffect(() => {
         let views: JSX.Element[] = [];
         timelineEntries.forEach(timelineEntry => {
-            const profile = timelineProfiles.get(timelineEntry.uid);
-            if (profile) {
-                views.push(
-                    <View key={timelineEntry.id} style={[card]}>
-                        { timelineEntry.type === "STORY" && <UserTextCard userProfileModel={profile} storyModel={timelineEntry} /> }
-                        { timelineEntry.type === "CHALLENGE" && <EmbtrTextCard challengeModel={timelineEntry as ChallengeModel1} /> }
-                    </View>
-                );
-            }
+            const view: JSX.Element = createTimelineView(timelineEntry);
+            views.push(view);
         });
 
         setTimelineViews(views);
