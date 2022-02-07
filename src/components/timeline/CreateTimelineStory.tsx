@@ -6,13 +6,17 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import StoryController from 'src/controller/timeline/story/StoryController';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 
 export const CreateTimelineStory = () => {
     const { colors } = useTheme();
 
+    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+
     const [title, setTitle] = React.useState<string>("");
     const [body, setBody] = React.useState<string>("");
-
     const [titleError, setTitleError] = React.useState(false);
     const [storyError, setStoryError] = React.useState(false);
 
@@ -31,8 +35,7 @@ export const CreateTimelineStory = () => {
 
         if (readyToSubmit) {
             StoryController.addStory(title, body, () => {
-                //TODO - navigate back
-                alert("story Sent!");
+                navigation.navigate("Timeline");
             });
         }
     }
@@ -50,7 +53,7 @@ export const CreateTimelineStory = () => {
 
             <View style={{ paddingTop: 10 }}>
                 <View style={{ paddingLeft: 5 }}>
-                    <Text style={{ color: "red", fontSize: 12 }}>{ titleError && "title is required" }</Text>
+                    <Text style={{ color: "red", fontSize: 12 }}>{titleError && "title is required"}</Text>
                 </View>
                 <TextInput
                     style={{ padding: 15, color: colors.text, backgroundColor: colors.background_secondary, width: "100%" }}
@@ -64,9 +67,9 @@ export const CreateTimelineStory = () => {
 
             <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 45 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                 <View style={{ paddingTop: 10, height: "100%" }}>
-                <View style={{ paddingLeft: 5 }}>
-                    <Text style={{ color: "red", fontSize: 12 }}>{ storyError && "share your story." }</Text>
-                </View>
+                    <View style={{ paddingLeft: 5 }}>
+                        <Text style={{ color: "red", fontSize: 12 }}>{storyError && "share your story."}</Text>
+                    </View>
                     <TextInput
                         style={{ height: "95%", color: colors.text, backgroundColor: colors.background_secondary, width: "100%", paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}
                         multiline={true}

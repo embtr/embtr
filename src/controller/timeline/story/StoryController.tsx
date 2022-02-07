@@ -42,6 +42,7 @@ class StoryController {
         if (!uid) {
             return;
         }
+        
         const storyModel = createStory(uid, title, story);
         StoryDao.addStory(storyModel, callback);
     }

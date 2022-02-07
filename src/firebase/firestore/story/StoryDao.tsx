@@ -9,13 +9,14 @@ class StoryDao {
         const uid = getAuth().currentUser?.uid;
 
         if (!uid) {
-            callback(undefined);
+            callback();
             return;
         }
 
         const db: Firestore = getFirebaseConnection(this.name, "addStory");
 
         await addDoc(collection(db, "timeline"), story);
+        callback();
     };
 
     public static async getStories() {

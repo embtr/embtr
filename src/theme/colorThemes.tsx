@@ -6,8 +6,8 @@ export const lightColors = {
   primary_border: '#ad1111',
   secondary_border: '#4d4d4d',
   text: '#121212',
-  secondary_text: '#c7c7c7',
-  pillar_attribute: '#c7c7c7',
+  secondary_text: 'gray',
+  pillar_attribute: '#1e5e5e',
   error: '#D32F2F',
 };
 
