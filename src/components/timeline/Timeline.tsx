@@ -17,7 +17,7 @@ export const Timeline = () => {
     const { colors } = useTheme();
 
     const card = {
-        backgroundColor: colors.background,
+        backgroundColor: "black",
         width: '100%',
         marginBottom: 4,
         marginTop: 4,
@@ -30,6 +30,7 @@ export const Timeline = () => {
         shadowRadius: 6.5,
         marginBottom: 5,
         marginTop: 5,
+        elevation: 1,
     }
 
     const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
