@@ -68,7 +68,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
 
     const time = formatDistance(added.toDate(), new Date(), { addSuffix: true });
 
-    let bodyWithNewLines = body.replaceAll("\\n", "\n");
+    let bodyWithNewLines = body;
 
     return (
         <View>

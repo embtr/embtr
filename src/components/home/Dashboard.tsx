@@ -8,12 +8,16 @@ import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
 import { CommonActions } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
+import { TodayTab } from 'src/components/today/TodayTab';
+import { PlanTab } from 'src/components/plan/PlanTab';
 
 const Tab = createBottomTabNavigator();
 
 const TABS = {
     USER_PROFILE: "CurrentUserTab",
     TIMELINE: "TimelineTab",
+    TODAY: "TodayTab",
+    PLAN: "PlanTab"
 }
 
 export const Dashboard = () => {
@@ -33,12 +37,34 @@ export const Dashboard = () => {
                             return (
                                 <View style={{ alignItems: "center", justifyContent: "center" }}>
                                     <Ionicons name={icon} size={size} color={color} />
-                                    <Text style={{ color: color }}>timeline</Text>
+                                    <Text style={{ color: color }}>feed</Text>
                                 </View>
                             )
                         }
 
-                        if (route.name === TABS.USER_PROFILE) {
+                        else if (route.name === TABS.TODAY) {
+                            let icon: any = focused ? 'sunny' : 'sunny-outline';
+                            let color = focused ? colors.primary_border : colors.text;
+                            return (
+                                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                    <Ionicons name={icon} size={size} color={color} />
+                                    <Text style={{ color: color }}>today</Text>
+                                </View>
+                            )
+                        }
+
+                        else if (route.name === TABS.PLAN) {
+                            let icon: any = focused ? 'calendar' : 'calendar-outline';
+                            let color = focused ? colors.primary_border : colors.text;
+                            return (
+                                <View style={{ alignItems: "center", justifyContent: "center" }}>
+                                    <Ionicons name={icon} size={size} color={color} />
+                                    <Text style={{ color: color }}>plan</Text>
+                                </View>
+                            )
+                        }
+
+                        else if (route.name === TABS.USER_PROFILE) {
                             let textColor = focused ? colors.primary_border : colors.text;
                             let backgroundColor = focused ? colors.primary_border : undefined;
                             return (
@@ -70,6 +96,34 @@ export const Dashboard = () => {
                         },
                     })}
                     component={TimelineTab}
+                />
+
+                <Tab.Screen
+                    name={TABS.TODAY}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: e => {
+                            const currentlyInFocus = navigation.isFocused();
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Timeline") {
+                                e.preventDefault();
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Timeline' }], }));
+                            }
+                        },
+                    })}
+                    component={TodayTab}
+                />
+
+                <Tab.Screen
+                    name={TABS.PLAN}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: e => {
+                            const currentlyInFocus = navigation.isFocused();
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Timeline") {
+                                e.preventDefault();
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Timeline' }], }));
+                            }
+                        },
+                    })}
+                    component={PlanTab}
                 />
 
                 <Tab.Screen
