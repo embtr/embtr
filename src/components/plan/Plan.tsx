@@ -11,7 +11,7 @@ export const Plan = ({ name }: Props) => {
     const { colors } = useTheme();
 
     return (
-        <View style={{ backgroundColor: "black" }}>
+        <View style={{ backgroundColor: colors.card_background }}>
             <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
                 <View style={{ padding: 5 }}>
                     <Text style={{ color: colors.text, textAlign: "center" }}>

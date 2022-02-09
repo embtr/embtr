@@ -17,7 +17,7 @@ export const Timeline = () => {
     const { colors } = useTheme();
 
     const card = {
-        backgroundColor: "black",
+        backgroundColor: colors.card_background,
         width: '100%',
         marginBottom: 4,
         marginTop: 4,
