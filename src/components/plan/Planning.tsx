@@ -14,7 +14,9 @@ export const Planning = () => {
     return (
         <Screen>
             <Banner name="Planning" />
+
             <PlanningSummaryHeader />
+
             <ScrollView style={{ backgroundColor: colors.background_secondary }}>
                 <View style={{ paddingBottom: 5 }}>
                     <Plan name={"Workout"} />
@@ -32,9 +34,9 @@ export const Planning = () => {
                     <Plan name={"Play Video Games"} />
                 </View>
             </ScrollView>
+            
             <View style={{ position: "absolute", right: 0, bottom: 0 }}>
-                <AddButton />
-
+                <AddButton onPress={() => { alert("navigate to create screen!") }} />
             </View>
         </Screen>
     );

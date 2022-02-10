@@ -16,20 +16,12 @@ export const PlanningSummaryHeader = () => {
 
                     <View style={{ flexDirection: "row", padding: 5 }}>
                         <Text style={{ flex: 1, color: colors.text, textAlign: "center" }}>
-                            Total Shards: 10
-                        </Text>
-
-                        <Text style={{ flex: 1, color: colors.text, textAlign: "center" }}>
-                            Total Shards: 10
-                        </Text>
-
-                        <Text style={{ flex: 1, color: colors.text, textAlign: "center" }}>
-                            Total Shards: 10
+                            Total Routines: 10
                         </Text>
                     </View>
                 </View>
             </View>
-            
+
             <HorizontalLine />
         </View>
     );

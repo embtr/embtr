@@ -20,7 +20,7 @@ export interface RoutineModel {
     days: DaysModel
 }
 
-export const createDays = ({ monday, tuesday, wednesday, thursday, friday, saturday, sunday }: Days) => {
+export const createDays = ({ monday, tuesday, wednesday, thursday, friday, saturday, sunday }: DaysModel) => {
     const days: DaysModel = {
         monday: monday,
         tuesday: tuesday,
