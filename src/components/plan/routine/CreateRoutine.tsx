@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
-export const createRoutine = () => {
+export const CreateRoutine = () => {
     const { colors } = useTheme();
 
     return (
