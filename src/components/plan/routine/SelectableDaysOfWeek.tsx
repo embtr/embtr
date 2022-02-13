@@ -1,25 +1,39 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SelectableDayOfWeek } from 'src/components/plan/routine/SelectableDayOfWeek';
+import { createDays, DaysModel } from 'src/controller/planning/RoutineController';
 
-export const SelectableDaysOfWeek = () => {
-    const [mondayIsSelected, setMondayIsSelected] = React.useState(false);
-    const [tuesdayIsSelected, setTuesdayIsSelected] = React.useState(false);
-    const [wednesdayIsSelected, setWednesdayIsSelected] = React.useState(false);
-    const [thursdayIsSelected, setThursdayIsSelected] = React.useState(false);
-    const [fridayIsSelected, setFridayIsSelected] = React.useState(false);
-    const [saturdayIsSelected, setSaturdayIsSelected] = React.useState(false);
-    const [sundayIsSelected, setSundayIsSelected] = React.useState(false);
+interface Props {
+    daysOfWeek: DaysModel
+    onDaysOfWeekUpdated: Function
+}
+
+export const SelectableDaysOfWeek = ({ daysOfWeek, onDaysOfWeekUpdated }: Props) => {
+
+    const updateDayOfWeekSelected = (dayOfWeek: string, selected: boolean) => {
+        let updatedDaysOfWeek = createDays(daysOfWeek.sunday, daysOfWeek.monday, daysOfWeek.tuesday, daysOfWeek.wednesday, daysOfWeek.thursday, daysOfWeek.friday, daysOfWeek.saturday);
+        switch (dayOfWeek) {
+            case "sunday": updatedDaysOfWeek.sunday = selected; break;
+            case "monday": updatedDaysOfWeek.monday = selected; break;
+            case "tuesday": updatedDaysOfWeek.tuesday = selected; break;
+            case "wednesday": updatedDaysOfWeek.wednesday = selected; break;
+            case "thursday": updatedDaysOfWeek.thursday = selected; break;
+            case "friday": updatedDaysOfWeek.friday = selected; break;
+            case "saturday": updatedDaysOfWeek.saturday = selected; break;
+        }
+
+        onDaysOfWeekUpdated(updatedDaysOfWeek);
+    }
 
     return (
         <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"S"} selected={sundayIsSelected} onPress={() => { setSundayIsSelected(!sundayIsSelected) }} /></View>
-            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"M"} selected={mondayIsSelected} onPress={() => { setMondayIsSelected(!mondayIsSelected) }} /></View>
-            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"T"} selected={tuesdayIsSelected} onPress={() => { setTuesdayIsSelected(!tuesdayIsSelected) }} /></View>
-            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"W"} selected={wednesdayIsSelected} onPress={() => { setWednesdayIsSelected(!wednesdayIsSelected) }} /></View>
-            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"T"} selected={thursdayIsSelected} onPress={() => { setThursdayIsSelected(!thursdayIsSelected) }} /></View>
-            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"F"} selected={fridayIsSelected} onPress={() => { setFridayIsSelected(!fridayIsSelected) }} /></View>
-            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"S"} selected={saturdayIsSelected} onPress={() => { setSaturdayIsSelected(!saturdayIsSelected) }} /></View>
+            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"S"} selected={daysOfWeek.sunday} onPress={() => { updateDayOfWeekSelected("sunday", !daysOfWeek.sunday) }} /></View>
+            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"M"} selected={daysOfWeek.monday} onPress={() => { updateDayOfWeekSelected("monday", !daysOfWeek.monday) }} /></View>
+            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"T"} selected={daysOfWeek.tuesday} onPress={() => { updateDayOfWeekSelected("tuesday", !daysOfWeek.tuesday) }} /></View>
+            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"W"} selected={daysOfWeek.wednesday} onPress={() => { updateDayOfWeekSelected("wednesday", !daysOfWeek.wednesday) }} /></View>
+            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"T"} selected={daysOfWeek.thursday} onPress={() => { updateDayOfWeekSelected("thursday", !daysOfWeek.thursday) }} /></View>
+            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"F"} selected={daysOfWeek.friday} onPress={() => { updateDayOfWeekSelected("friday", !daysOfWeek.friday) }} /></View>
+            <View style={{ padding: 2 }}><SelectableDayOfWeek day={"S"} selected={daysOfWeek.saturday} onPress={() => { updateDayOfWeekSelected("saturday", !daysOfWeek.saturday) }} /></View>
         </View>
     );
 };

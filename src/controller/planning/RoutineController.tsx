@@ -2,13 +2,13 @@ import { Timestamp } from "firebase/firestore";
 import RoutineDao from "src/firebase/firestore/planning/RoutineDao";
 
 export interface DaysModel {
+    sunday: boolean,
     monday: boolean,
     tuesday: boolean,
     wednesday: boolean,
     thursday: boolean,
     friday: boolean,
-    saturday: boolean,
-    sunday: boolean
+    saturday: boolean
 }
 
 export interface RoutineModel {
@@ -19,15 +19,15 @@ export interface RoutineModel {
     days: DaysModel
 }
 
-export const createDays = (monday: boolean, tuesday: boolean, wednesday: boolean, thursday: boolean, friday: boolean, saturday: boolean, sunday: boolean) => {
+export const createDays = (sunday: boolean, monday: boolean, tuesday: boolean, wednesday: boolean, thursday: boolean, friday: boolean, saturday: boolean) => {
     const days: DaysModel = {
+        sunday: sunday,
         monday: monday,
         tuesday: tuesday,
         wednesday: wednesday,
         thursday: thursday,
         friday: friday,
-        saturday: saturday,
-        sunday: sunday
+        saturday: saturday
     };
 
     return days;

@@ -20,6 +20,8 @@ export const CreateDailyRoutine = ({ name }: Props) => {
     const [durationHours, setDurationHours] = React.useState(0);
     const [durationMinutes, setDurationMinutes] = React.useState(0);
 
+    const [selectedDaysOfWeek, setSelectedDaysOfWeek] = React.useState(createDays(false, false, false, false, false, false, false));
+
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
         hourPickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
@@ -42,10 +44,8 @@ export const CreateDailyRoutine = ({ name }: Props) => {
 
     const createRoutine = () => {
         const startMinute = hour * 60 + minute;
-        alert(startMinute);
         const duration = durationHours * 60 + durationMinutes;
-        const days = createDays(true, true, true, true, true, true, true);
-        const routineModel = createRoutineModel(name, startMinute, duration, days);
+        const routineModel = createRoutineModel(name, startMinute, duration, selectedDaysOfWeek);
 
         RoutineController.createRoutine(routineModel, () => { });
     };
@@ -55,7 +55,7 @@ export const CreateDailyRoutine = ({ name }: Props) => {
             <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", paddingBottom: 10 }}>
                 <View>
                     <Text style={{ color: colors.text, textAlign: "center", fontSize: 20, paddingTop: 25, paddingBottom: 25 }}>on the following days</Text>
-                    <SelectableDaysOfWeek />
+                    <SelectableDaysOfWeek daysOfWeek={selectedDaysOfWeek} onDaysOfWeekUpdated={setSelectedDaysOfWeek} />
                 </View>
             </View>
 
