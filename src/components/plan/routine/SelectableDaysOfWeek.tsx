@@ -1,11 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { SelectableDayOfWeek } from 'src/components/plan/routine/SelectableDayOfWeek';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const SelectableDaysOfWeek = () => {
-    const { colors } = useTheme();
-
     const [mondayIsSelected, setMondayIsSelected] = React.useState(false);
     const [tuesdayIsSelected, setTuesdayIsSelected] = React.useState(false);
     const [wednesdayIsSelected, setWednesdayIsSelected] = React.useState(false);
