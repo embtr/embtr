@@ -1,0 +1,22 @@
+import React from 'react';
+import { View, Text } from 'react-native';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+
+interface Props {
+    day: string,
+    selected: boolean
+}
+
+export const SelectableDayOfWeek = ({ day, selected }: Props) => {
+    const { colors } = useTheme();
+
+    return (
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
+            <View style={{ alignContent: "center", alignItems: "center" }}>
+                <View style={{ borderWidth: 1, borderRadius: 5, width: 40, height: 40, alignContent: "center", alignItems: "center", justifyContent: "center", backgroundColor: selected ? "green" : "gray" }}>
+                    <Text style={{ color: colors.text, fontSize: 20 }}>{day}</Text>
+                </View>
+            </View>
+        </View>
+    );
+};

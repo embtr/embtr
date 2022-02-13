@@ -1,12 +1,15 @@
 import { Picker } from '@react-native-picker/picker';
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
+import { SelectableDaysOfWeek } from 'src/components/plan/routine/SelectableDaysOfWeek';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const CreateRoutine = () => {
     const { colors } = useTheme();
+
+    const [name, setName] = React.useState("");
 
     const [frequency, setFrequency] = React.useState("daily");
 
@@ -23,8 +26,8 @@ export const CreateRoutine = () => {
     }
 
     let dailyMinutePickerItems: JSX.Element[] = [];
-    for (let i = 1; i <= 60; i++) {
-        dailyMinutePickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
+    for (let i = 0; i < 60; i += 5) {
+        dailyMinutePickerItems.push(<Picker.Item color={colors.text} label={(i < 10 ? "0" : "") + i} value={i} />);
     }
 
     let dailyDurationHoursPickerItems: JSX.Element[] = [];
@@ -32,25 +35,37 @@ export const CreateRoutine = () => {
         dailyDurationHoursPickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
     }
 
-    let dailyDurationMinutesPickerItems: JSX.Element[] = [
-        <Picker.Item color={colors.text} label={"0"} value={0} />,
-        <Picker.Item color={colors.text} label={"15"} value={15} />,
-        <Picker.Item color={colors.text} label={"30"} value={30} />,
-        <Picker.Item color={colors.text} label={"45"} value={45} />
-    ];
+    let dailyDurationMinutesPickerItems: JSX.Element[] = [];
+    for (let i = 0; i < 60; i += 5) {
+        dailyDurationMinutesPickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
+    }
 
     return (
         <Screen>
             <Banner name={"Create Routine"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
             <View>
+                <View style={{ marginBottom: 60, paddingTop: 10, paddingLeft: 5, paddingRight: 5 }}>
+                    <Text style={{ color: colors.text, textAlign: "center" }}>Add a new routine to your life.</Text>
+                </View>
+
+
+                { /*********************/}
+                { /* NAME/ DESCRIPTION */}
+                { /*********************/}
                 <View>
-                    <Text style={{ color: colors.text }}>Add a new routine to your life.</Text>
+                    <TextInput
+                        style={{ textAlign: "center", marginLeft: "10%", marginRight: "10%", paddingLeft: 10, height: 40, borderColor: colors.background_secondary, backgroundColor: colors.background_secondary, borderWidth: 1, borderRadius: 10, color: colors.text, fontSize: 20 }}
+                        onChangeText={setName}
+                        value={name}
+                        placeholderTextColor={colors.secondary_text}
+                        placeholder={"Routine Name"}
+                    />
                 </View>
 
                 { /*************/}
                 { /* FREQUENCY */}
                 { /*************/}
-                <View style={{ paddingTop: 20, flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+                <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
                     <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>I will run this routine</Text>
                     <View style={{ alignItems: "flex-start" }}>
                         <Picker
@@ -67,66 +82,18 @@ export const CreateRoutine = () => {
                     </View>
                 </View>
 
-                {frequency === "yearly" &&
-                    <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
-                        <Text style={{ color: colors.text, fontSize: 20, flex: 1, textAlign: "right" }}>On Day</Text>
-                        <View style={{ flex: 1, alignItems: "flex-start" }}>
-                            <Picker
-                                style={{ width: 100, color: colors.text }}
-
-                                selectedValue={frequency}
-                                onValueChange={(itemValue) => setFrequency(itemValue)}>
-                                <Picker.Item color={colors.text} label="Daily" value="daily" />
-                                <Picker.Item color={colors.text} label="Weekly" value="Weekly" />
-                                <Picker.Item color={colors.text} label="Monthly" value="monthly" />
-                                <Picker.Item color={colors.text} label="Yearly" value="yearly" />
-                            </Picker>
-                        </View>
-                    </View>
-                }
-
-                {frequency === "monthly" &&
-                    <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
-                        <Text style={{ color: colors.text, fontSize: 20, flex: 1, textAlign: "right" }}>I will run this routine</Text>
-                        <View style={{ flex: 1, alignItems: "flex-start" }}>
-                            <Picker
-                                style={{ width: 100, color: colors.text }}
-
-                                selectedValue={frequency}
-                                onValueChange={(itemValue) => setFrequency(itemValue)}>
-                                <Picker.Item color={colors.text} label="Daily" value="daily" />
-                                <Picker.Item color={colors.text} label="Weekly" value="Weekly" />
-                                <Picker.Item color={colors.text} label="Monthly" value="monthly" />
-                                <Picker.Item color={colors.text} label="Yearly" value="yearly" />
-                            </Picker>
-                        </View>
-                    </View>
-                }
-
-                {frequency === "weekly" &&
-                    <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
-                        <Text style={{ color: colors.text, fontSize: 20, flex: 1, textAlign: "right" }}>I will run this routine</Text>
-                        <View style={{ flex: 1, alignItems: "flex-start" }}>
-                            <Picker
-                                style={{ width: 100, color: colors.text }}
-
-                                selectedValue={frequency}
-                                onValueChange={(itemValue) => setFrequency(itemValue)}>
-                                <Picker.Item color={colors.text} label="Daily" value="daily" />
-                                <Picker.Item color={colors.text} label="Weekly" value="Weekly" />
-                                <Picker.Item color={colors.text} label="Monthly" value="monthly" />
-                                <Picker.Item color={colors.text} label="Yearly" value="yearly" />
-                            </Picker>
-                        </View>
-                    </View>
-                }
-
                 { /*************/}
                 { /*   DAILY   */}
                 { /*************/}
-
                 {frequency === "daily" &&
                     <View>
+                        <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", paddingBottom: 10 }}>
+                            <View>
+                                <Text style={{ color: colors.text, textAlign: "center", fontSize: 20, paddingTop: 25, paddingBottom: 25 }}>on the following days</Text>
+                                <SelectableDaysOfWeek />
+                            </View>
+                        </View>
+
                         <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
                             <Text style={{ color: colors.text, fontSize: 20 }}>with a start time of</Text>
                             <View style={{ flexDirection: "row" }} >
@@ -190,8 +157,6 @@ export const CreateRoutine = () => {
                             </View>
                         </View>
                     </View>
-
-
                 }
             </View>
         </Screen>
