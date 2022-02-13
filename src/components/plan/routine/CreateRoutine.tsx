@@ -2,6 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import React from 'react';
 import { View, Text, TextInput } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
+import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Screen } from 'src/components/common/Screen';
 import { SelectableDaysOfWeek } from 'src/components/plan/routine/SelectableDaysOfWeek';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -44,15 +45,11 @@ export const CreateRoutine = () => {
         <Screen>
             <Banner name={"Create Routine"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
             <View>
-                <View style={{ marginBottom: 60, paddingTop: 10, paddingLeft: 5, paddingRight: 5 }}>
-                    <Text style={{ color: colors.text, textAlign: "center" }}>Add a new routine to your life.</Text>
-                </View>
-
 
                 { /*********************/}
                 { /* NAME/ DESCRIPTION */}
                 { /*********************/}
-                <View>
+                <View style={{ paddingTop: 20, paddingBottom: 40 }}>
                     <TextInput
                         style={{ textAlign: "center", marginLeft: "10%", marginRight: "10%", paddingLeft: 10, height: 40, borderColor: colors.background_secondary, backgroundColor: colors.background_secondary, borderWidth: 1, borderRadius: 10, color: colors.text, fontSize: 20 }}
                         onChangeText={setName}
@@ -142,7 +139,7 @@ export const CreateRoutine = () => {
                                         {dailyDurationHoursPickerItems}
                                     </Picker>
                                 </View>
-                                <Text style={{ color: colors.text, fontSize: 20 }}>hours and</Text>
+                                <Text style={{ color: colors.text, fontSize: 20 }}>{dailyDurationHours == "1" ? "hour and" : "hours and"}</Text>
                                 <View style={{ width: 60 }}>
                                     <Picker
                                         itemStyle={{ height: 120 }}
@@ -153,8 +150,11 @@ export const CreateRoutine = () => {
                                     </Picker>
                                 </View>
                                 <Text style={{ color: colors.text, fontSize: 20 }}>minutes</Text>
-
                             </View>
+                        </View>
+
+                        <View style={{ paddingTop: 70, alignItems: "center" }}>
+                            <EmbtrButton buttonText={'create'} callback={() => { }} />
                         </View>
                     </View>
                 }
