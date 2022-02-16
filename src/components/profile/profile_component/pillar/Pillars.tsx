@@ -26,25 +26,19 @@ export const Pillars = ({ userProfileModel }: Props) => {
 
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
-    const getPillars = () => {
+    React.useEffect(() => {
         if (userProfileModel?.uid) {
             PillarController.getPillars(userProfileModel.uid, (updatedPillars: PillarModel[]) => {
                 setPillars(updatedPillars);
             });
         }
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            getPillars();
-        }, [])
-    );
+    }, []);
 
     let pillarViews: JSX.Element[] = [];
     pillarViews.push(
         <View style={pillarContainerViewStyle} key={"N/A"}>
             <HorizontalLine />
-            <Text style={[nameTextStyle, { textAlign:"center", marginTop: 10, marginBottom: 10 }]}>{userProfileModel.name} has no Core Pillars 🤯</Text>
+            <Text style={[nameTextStyle, { textAlign: "center", marginTop: 10, marginBottom: 10 }]}>{userProfileModel.name} has no Core Pillars 🤯</Text>
             <HorizontalLine />
         </View>
     );
