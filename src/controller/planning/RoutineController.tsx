@@ -12,6 +12,7 @@ export interface DaysModel {
 }
 
 export interface RoutineModel {
+    id?: string,
     added: Timestamp,
     name: string,
     startMinute: number,
@@ -45,11 +46,50 @@ export const createRoutineModel = (name: string, startMinute: number, duration: 
     return routine;
 };
 
+export const startMinuteToString = (startMinute: number) => {
+    const hours = Math.floor(startMinute / 60);
+    const minutes = startMinute % 60;
+    
+    const hoursString = "" + (hours <= 12 ? hours : hours - 12);
+    const minutesString = (minutes < 10 ? "0" : "") + minutes;
+    const AMPMString = hours <= 12 ? "AM" : "PM";
+
+    return "" + hoursString + ":" + minutesString + " " + AMPMString;
+}
+
+export const durationToString = (duration: number) => {
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+
+    if (hours === 0) {
+        return minutes + " minutes"
+    }
+
+    return hours + " hours and " + minutes + " minutes";
+};
+
 class RoutineController {
     public static createRoutine(routineModel: RoutineModel, callback: Function) {
         const result = RoutineDao.createRoutine(routineModel);
         result.then(document => {
             callback();
+        });
+    }
+
+    static getRoutines(uid: string, callback: Function) {
+        const result = RoutineDao.getRoutines(uid);
+
+        let routines: RoutineModel[] = [];
+        result.then(documents => {
+            documents.docs.forEach(document => {
+                let routine: RoutineModel = document.data() as RoutineModel;
+                routine.id = document.id;
+                routines.push(routine);
+            });
+        }).then(() => {
+            callback(routines);
+        }).catch(() => {
+            callback([]);
         });
     }
 }

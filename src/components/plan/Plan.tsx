@@ -2,12 +2,13 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { DaysOfWeek } from 'src/components/plan/DaysOfWeek';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { durationToString, RoutineModel, startMinuteToString } from 'src/controller/planning/RoutineController';
 
 interface Props {
-    name: string
+    routine: RoutineModel
 }
 
-export const Plan = ({ name }: Props) => {
+export const Plan = ({ routine }: Props) => {
     const { colors } = useTheme();
 
     return (
@@ -15,16 +16,16 @@ export const Plan = ({ name }: Props) => {
             <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
                 <View style={{ padding: 5 }}>
                     <Text style={{ color: colors.text, textAlign: "center" }}>
-                        {name}
+                        {routine.name}
                     </Text>
                 </View>
 
                 <View style={{ paddingTop: 5 }}>
-                    <DaysOfWeek />
+                    <DaysOfWeek days={routine.days} />
                 </View>
 
                 <Text style={{ color: colors.text, textAlign: "center", paddingTop: 5 }}>
-                    At 11:45 AM for 1 Hour
+                    {startMinuteToString(routine.startMinute) + " for " + durationToString(routine.duration)}
                 </Text>
                 <View style={{ flex: 1 }} />
 

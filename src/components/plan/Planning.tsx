@@ -1,6 +1,7 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { getAuth } from 'firebase/auth';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Banner } from 'src/components/common/Banner';
@@ -9,12 +10,30 @@ import { Screen } from 'src/components/common/Screen';
 import { Plan } from 'src/components/plan/Plan';
 import { PlanningSummaryHeader } from 'src/components/plan/PlanningSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import RoutineController, { RoutineModel } from 'src/controller/planning/RoutineController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 export const Planning = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-    
+
+    const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            RoutineController.getRoutines(getAuth().currentUser!.uid, setRoutines);
+        }, [])
+    );
+
+    let routineViews: JSX.Element[] = [];
+    routines.forEach(routine => {
+        routineViews.push(
+            <View key={routine.id} style={{ paddingBottom: 5 }}>
+                <Plan routine={routine} />
+            </View>
+        );
+    });
+
     return (
         <Screen>
             <Banner name="Planning" />
@@ -22,23 +41,9 @@ export const Planning = () => {
             <PlanningSummaryHeader />
 
             <ScrollView style={{ backgroundColor: colors.background_secondary }}>
-                <View style={{ paddingBottom: 5 }}>
-                    <Plan name={"Workout"} />
-                </View>
-                <View style={{ paddingBottom: 5 }}>
-                    <Plan name={"Read"} />
-                </View>
-                <View style={{ paddingBottom: 5 }}>
-                    <Plan name={"Program"} />
-                </View>
-                <View style={{ paddingBottom: 5 }}>
-                    <Plan name={"Watch TV"} />
-                </View>
-                <View style={{ paddingBottom: 5 }}>
-                    <Plan name={"Play Video Games"} />
-                </View>
+                {routineViews}
             </ScrollView>
-            
+
             <View style={{ position: "absolute", right: 0, bottom: 0 }}>
                 <AddButton onPress={() => { navigation.navigate('CreateRoutine') }} />
             </View>

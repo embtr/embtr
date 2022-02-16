@@ -15,7 +15,7 @@ export const CreateDailyRoutine = ({ name }: Props) => {
 
     const [hour, setHour] = React.useState(1);
     const [minute, setMinute] = React.useState(0);
-    const [AMPM, setAMPM] = React.useState("");
+    const [AMPM, setAMPM] = React.useState("AM");
 
     const [durationHours, setDurationHours] = React.useState(0);
     const [durationMinutes, setDurationMinutes] = React.useState(0);
@@ -43,7 +43,8 @@ export const CreateDailyRoutine = ({ name }: Props) => {
     }
 
     const createRoutine = () => {
-        const startMinute = hour * 60 + minute;
+        const AMPMHour = AMPM == "AM" ? hour : 12 + hour;
+        const startMinute = AMPMHour * 60 + minute;
         const duration = durationHours * 60 + durationMinutes;
         const routineModel = createRoutineModel(name, startMinute, duration, selectedDaysOfWeek);
 
@@ -88,8 +89,8 @@ export const CreateDailyRoutine = ({ name }: Props) => {
                             style={{ width: 60, color: colors.text }}
                             selectedValue={AMPM}
                             onValueChange={setAMPM}>
-                            <Picker.Item color={colors.text} label="AM" value="am" />
-                            <Picker.Item color={colors.text} label="PM" value="pm" />
+                            <Picker.Item color={colors.text} label="AM" value="AM" />
+                            <Picker.Item color={colors.text} label="PM" value="PM" />
                         </Picker>
                     </View>
                 </View>
