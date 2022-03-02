@@ -30,15 +30,15 @@ export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
     } as TextStyle;
 
     const pillarViewStyle = {
+        backgroundColor: "black",
         marginBottom: 10,
-        marginTop: 10,
-        paddingLeft: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
         alignItems: "center"
     } as ViewStyle;
 
     return (
         <View>
-            <HorizontalLine />
             <View style={[pillarViewStyle, { flexDirection: "row" }]}>
                 <View style={{ flex: 1 }}>
                     <Text style={[nameTextStyle, { textAlign: "center" }]}>{pillarModel.name}</Text>
@@ -53,9 +53,8 @@ export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
                         <Text style={[attributeValueTextStyle, { flex: 1, textAlign: "center" }]}>12</Text>
                     </View>
                 </View>
-                {enableDelete && <View style={{ marginRight: 10 }}><Ionicons name={"trash-bin-outline"} size={18} color={colors.text} onPress={() => {deleteOnPress && deleteOnPress()}} /></View>}
+                {enableDelete && <View style={{ marginRight: 10 }}><Ionicons name={"trash-bin-outline"} size={18} color={colors.text} onPress={() => { deleteOnPress && deleteOnPress() }} /></View>}
             </View>
-            <HorizontalLine />
         </View>
     );
 };

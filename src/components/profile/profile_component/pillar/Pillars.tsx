@@ -1,7 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react';
-import { Text, TextStyle, View, ViewStyle } from 'react-native';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { Text, TextStyle, View } from 'react-native';
 import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PillarController from 'src/controller/pillar/PillarController';
@@ -20,10 +18,6 @@ export const Pillars = ({ userProfileModel }: Props) => {
         color: colors.text
     } as TextStyle;
 
-    const pillarContainerViewStyle = {
-        paddingBottom: 5
-    } as ViewStyle;
-
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     React.useEffect(() => {
@@ -36,10 +30,8 @@ export const Pillars = ({ userProfileModel }: Props) => {
 
     let pillarViews: JSX.Element[] = [];
     pillarViews.push(
-        <View style={pillarContainerViewStyle} key={"N/A"}>
-            <HorizontalLine />
+        <View key={"N/A"}>
             <Text style={[nameTextStyle, { textAlign: "center", marginTop: 10, marginBottom: 10 }]}>{userProfileModel.name} has no Core Pillars 🤯</Text>
-            <HorizontalLine />
         </View>
     );
 
@@ -47,7 +39,7 @@ export const Pillars = ({ userProfileModel }: Props) => {
         pillarViews.pop();
         pillars.forEach(pillarModel => {
             pillarViews.push(
-                <View style={pillarContainerViewStyle} key={pillarModel.name}>
+                <View key={pillarModel.name}>
                     <Pillar pillarModel={pillarModel} />
                 </View>
             );
