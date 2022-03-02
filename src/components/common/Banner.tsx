@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { color } from 'react-native-reanimated';
 
 interface Props {
     name: string,
@@ -15,12 +16,13 @@ interface Props {
     rightRoute?: string,
     rightIcon?: any,
     rightOnClick?: Function,
+    rightIconNotificationCount?: number,
 
     innerLeftIcon?: any,
     innerLeftCallback?: Function
 }
 
-export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, innerLeftIcon, innerLeftCallback }: Props) => {
+export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, innerLeftCallback }: Props) => {
     const { colors } = useTheme();
     const textStyle = {
         fontSize: 18,
@@ -42,18 +44,28 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
     return (
         <View>
             <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
-                <View style={{ flexDirection:"row", flex: 1, paddingLeft: 10, paddingTop: 5 }}>
+                <View style={{ flexDirection: "row", flex: 1, paddingLeft: 10, paddingTop: 5 }}>
                     {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
-                    {innerLeftIcon ? <Ionicons style={{paddingLeft: 10}} name={innerLeftIcon} size={32} color={colors.text} onPress={() => { if (innerLeftCallback) innerLeftCallback() }} /> : <View />}
+                    {innerLeftIcon ? <Ionicons style={{ paddingLeft: 10 }} name={innerLeftIcon} size={32} color={colors.text} onPress={() => { if (innerLeftCallback) innerLeftCallback() }} /> : <View />}
                 </View>
-                
+
 
                 <View style={{ flex: 2, justifyContent: "center" }}>
                     <Text style={[textStyle, { textAlign: "center", fontWeight: "bold" }]}>{name}</Text>
                 </View>
 
                 <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
-                    {rightIcon ? <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} /> : <View />}
+                    {rightIcon
+                        ?
+                        <View style={{ alignItems: "flex-end" }}>
+                            <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
+                                <Text style={{ color: "black", fontSize: 11 }}>4</Text>
+                            </View>
+                            <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
+                        </View>
+                        :
+                        <View />
+                    }
                 </View>
             </View>
 

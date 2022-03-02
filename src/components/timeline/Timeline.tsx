@@ -105,7 +105,14 @@ export const Timeline = () => {
 
     return (
         <Screen>
-            <Banner name="Timeline" leftIcon={'people-outline'} leftRoute='UserSearch' innerLeftIcon={'add-outline'} innerLeftCallback={() => { navigation.navigate('CreateTimelineStory') }} />
+            <Banner
+                name="Timeline"
+                leftIcon={'people-outline'}
+                leftRoute={'UserSearch'}
+                innerLeftIcon={'add-outline'}
+                innerLeftCallback={() => { navigation.navigate('CreateTimelineStory') }}
+                rightIcon={'notifications-outline'}
+            />
             <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_secondary }}>
                 <View style={{ flex: 1 }}>
                     {timelineViews}
