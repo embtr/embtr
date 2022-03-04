@@ -58,9 +58,9 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
                     {rightIcon
                         ?
                         <View style={{ alignItems: "flex-end" }}>
-                            <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                                <Text style={{ color: "black", fontSize: 11 }}>4</Text>
-                            </View>
+                            {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
+                                <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
+                            </View> : <></>}
                             <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
                         </View>
                         :

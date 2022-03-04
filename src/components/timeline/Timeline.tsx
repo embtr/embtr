@@ -112,6 +112,7 @@ export const Timeline = () => {
                 innerLeftIcon={'add-outline'}
                 innerLeftCallback={() => { navigation.navigate('CreateTimelineStory') }}
                 rightIcon={'notifications-outline'}
+                rightIconNotificationCount={3}
             />
             <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_secondary }}>
                 <View style={{ flex: 1 }}>
