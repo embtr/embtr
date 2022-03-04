@@ -6,7 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
-import { color } from 'react-native-reanimated';
 
 interface Props {
     name: string,

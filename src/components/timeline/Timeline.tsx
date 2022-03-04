@@ -12,6 +12,8 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import TimelineController, { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
+import NotificationController, { NotificationModel } from 'src/controller/notification/NotificationController';
+import { getAuth } from 'firebase/auth';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -36,10 +38,17 @@ export const Timeline = () => {
     const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
+    const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
 
     useFocusEffect(
         React.useCallback(() => {
             TimelineController.getTimelinePosts(setTimelineEntries);
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
         }, [])
     );
 
@@ -112,7 +121,7 @@ export const Timeline = () => {
                 innerLeftIcon={'add-outline'}
                 innerLeftCallback={() => { navigation.navigate('CreateTimelineStory') }}
                 rightIcon={'notifications-outline'}
-                rightIconNotificationCount={3}
+                rightIconNotificationCount={notifications.length}
             />
             <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_secondary }}>
                 <View style={{ flex: 1 }}>
