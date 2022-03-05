@@ -48,6 +48,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
                                 //                                  },
                             },
+                            Notifications: "notifications",
                         }
                     }
                 }

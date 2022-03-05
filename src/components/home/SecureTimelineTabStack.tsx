@@ -6,6 +6,7 @@ import { Timeline } from 'src/components/timeline/Timeline';
 import { CreateTimelineStory } from 'src/components/timeline/CreateTimelineStory';
 import { TimelineComments } from 'src/components/common/timeline/TimelineComments';
 import { ChallengeComments } from 'src/components/common/timeline/ChallengeComments';
+import { Notifications } from 'src/components/notification/Notifications';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="TimelineComments" component={TimelineComments} />
             <Stack.Screen name="ChallengeComments" component={ChallengeComments} />
+            <Stack.Screen name="Notifications" component={Notifications} />
         </Stack.Navigator>
     );
 };

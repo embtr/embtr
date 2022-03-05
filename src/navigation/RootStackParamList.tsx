@@ -18,6 +18,7 @@ export type TimelineTabScreens = {
     TimelineComments: { id: string };
     ChallengeComments: { id: string };
     UserProfile: { id: string };
+    Notifications: undefined;
 };
 
 export type ProfileTabScreens = {
