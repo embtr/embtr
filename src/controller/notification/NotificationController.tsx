@@ -7,6 +7,8 @@ export interface NotificationModel {
     link: string
     read: boolean
     summary: string
+    notifier_uid: string
+    url: string
 }
 
 class NotificationController {

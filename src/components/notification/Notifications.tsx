@@ -29,6 +29,7 @@ export const Notifications = () => {
             <View key={notification.id} style={{ paddingBottom: 5 }}>
                 <Notification notification={notification} />
             </View>
+            
         );
     });
 
