@@ -9,23 +9,35 @@ type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfil
 
 interface Props {
     userProfileModel: UserProfileModel,
-    size: number
+    size: number,
+    denyNavigation?: boolean
 }
 
-export const NavigatableUserImage = ({ userProfileModel, size }: Props) => {
+export const NavigatableUserImage = ({ userProfileModel, size, denyNavigation }: Props) => {
     const navigation = useNavigation<userProfileScreenProp>();
     const toUserProfile = () => {
         navigation.navigate('UserProfile', { id: userProfileModel?.uid ? userProfileModel.uid : "" })
     };
 
     return (
-        <View>
-            <TouchableOpacity onPress={toUserProfile} >
-                <Image
-                    style={{ width: size, height: size, borderRadius: 50 }}
-                    source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
-            </TouchableOpacity>
-        </View>
-
+        denyNavigation
+            ?
+            (
+                <View>
+                    <Image
+                        style={{ width: size, height: size, borderRadius: 50 }}
+                        source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
+                </View>
+            )
+            :
+            (
+                <View>
+                    <TouchableOpacity onPress={toUserProfile} >
+                        <Image
+                            style={{ width: size, height: size, borderRadius: 50 }}
+                            source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
+                    </TouchableOpacity>
+                </View>
+            )
     );
 }
