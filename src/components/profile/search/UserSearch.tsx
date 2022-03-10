@@ -4,44 +4,27 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import UsersController from 'src/controller/user/UsersController';
 import { UserSearchResults } from 'src/components/profile/search/UserSearchResults';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
 import FollowerController from 'src/controller/follower/FollowerController';
-import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { useFocusEffect } from '@react-navigation/native';
+import { UserSearchUtility } from 'src/util/user/UserSearchUtility';
+import { getAuth } from 'firebase/auth';
 
 export const UserSearch = () => {
     const { colors } = useTheme();
 
+    const [userSearchUtility, setUserSearchUtility] = React.useState<UserSearchUtility | undefined>(undefined);
     const [searchText, setSearchText] = React.useState("");
+
     const [searchResults, setSearchResults] = React.useState<UserSearchResultObject | undefined>(undefined);
     const [followingUids, setFollowingUids] = React.useState<string[]>([]);
 
-    const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
-    React.useEffect(() => {
-        getCurrentUserUid(setCurrentUserId);
-    }, []);
-
     const onSearchChange = (text: string) => {
-        const runDownSubQuery: boolean = text.includes(searchText);
-        const runUpQuery: boolean = searchText.includes(text);
-
         setSearchText(text);
-
-        if (searchResults && runDownSubQuery) {
-            UsersController.getUsersByDisplayNameSubQuery(text, searchResults, (newResults: UserSearchResultObject) => {
-                setSearchResults(newResults);
-            });
-
-        } else if (searchResults && runUpQuery) {
-            setSearchResults(searchResults.parentSearch);
-
-        } else {
-            UsersController.getUsersByDisplayName(text, (results: UserSearchResultObject) => {
-                setSearchResults(results);
-            });
+        if (userSearchUtility) {
+            userSearchUtility.updateSearch(text, setSearchResults);
         }
     }
 
@@ -63,15 +46,17 @@ export const UserSearch = () => {
     }
 
     React.useEffect(() => {
-        onSearchChange("");
+        setUserSearchUtility(new UserSearchUtility());
     }, []);
+
+    React.useEffect(() => {
+        onSearchChange("");
+    }, [userSearchUtility]);
 
     useFocusEffect(
         React.useCallback(() => {
-            if (currentUserId) {
-                FollowerController.getFollowing(currentUserId, setFollowingUids);
-            }
-        }, [currentUserId])
+            FollowerController.getFollowing(getAuth().currentUser!.uid, setFollowingUids);
+        }, [])
     );
 
     return (
