@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
     submitComment: Function
@@ -22,9 +23,15 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
         setCommentText("");
     };
 
+    const applyUsername = (username: string) => {
+        let newComment = UsernameTagTracker.clearUsernameTag(commentText);
+        newComment += username + " ";
+        setCommentText(newComment);
+    }
+
     return (
         <View>
-            <UserTagBox input={commentText} />
+            <UserTagBox input={commentText} userTagged={applyUsername} />
 
             <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
                 <TextInput

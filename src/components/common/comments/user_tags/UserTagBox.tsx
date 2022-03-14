@@ -10,12 +10,11 @@ import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
 
 interface Props {
-    input: string
+    input: string,
+    userTagged: Function
 }
 
-
-
-export const UserTagBox = ({ input }: Props) => {
+export const UserTagBox = ({ input, userTagged }: Props) => {
     const { colors } = useTheme();
 
     const [userSearchUtility, setUserSearchUtility] = React.useState<UserSearchUtility | undefined>(undefined);
@@ -54,10 +53,8 @@ export const UserTagBox = ({ input }: Props) => {
     let usernameTagOptionsViews: JSX.Element[] = [];
     if (usernameTagOptions) {
         usernameTagOptions.forEach(usernameTagOption => {
-            usernameTagOptionsViews.push(<UserTag userProfile={usernameTagOption} />);
+            usernameTagOptionsViews.push(<UserTag userProfile={usernameTagOption} onPress={userTagged} />);
         });
-
-        console.log(usernameTagOptionsViews)
     }
 
     return (
