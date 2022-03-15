@@ -21,6 +21,6 @@ export const NavigatableUsername = ({ userProfile }: Props) => {
     };
 
     return (
-        <Text onPress={toUserProfile} style={{ color: colors.primary_border, fontWeight: "normal" }}> {userProfile.name} </Text>
+        <Text onPress={toUserProfile} style={{ color: colors.primary_border, fontWeight: "normal" }}>{userProfile.name}</Text>
     );
 }

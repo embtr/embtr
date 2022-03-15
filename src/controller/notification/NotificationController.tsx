@@ -4,7 +4,6 @@ import NotificationDao from "src/firebase/firestore/notification/NotificationDao
 export interface NotificationModel {
     id: string
     added: Timestamp
-    link: string
     read: boolean
     summary: string
     notifier_uid: string
