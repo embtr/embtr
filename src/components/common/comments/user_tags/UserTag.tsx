@@ -14,7 +14,7 @@ export const UserTag = ({ userProfile, onPress }: Props) => {
     const { colors } = useTheme();
 
     return (
-        <TouchableOpacity onPress={() => { onPress(userProfile.name) }}>
+        <TouchableOpacity onPress={() => { onPress(userProfile) }}>
             <View style={{ flexDirection: "row", padding: 5, margin: 1, backgroundColor: colors.background }}>
                 <View>
                     <UserImage userProfileModel={userProfile} size={20} />

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
 import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
@@ -12,26 +13,39 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
     const { colors } = useTheme();
 
     const [commentText, setCommentText] = React.useState("");
+    const [taggedUsers, setTaggedUsers] = React.useState<UserProfileModel[]>([]);
 
     const submitCommentPressed = () => {
         if (commentText === "") {
             return;
         }
 
+        const encodedComment: string = UsernameTagTracker.encodeTaggedUsers(commentText, taggedUsers);
+
         Keyboard.dismiss();
-        submitComment(commentText);
+        submitComment(encodedComment);
         setCommentText("");
     };
 
-    const applyUsername = (username: string) => {
+    const applyUsernameTag = (userProfile: UserProfileModel) => {
         let newComment = UsernameTagTracker.clearUsernameTag(commentText);
-        newComment += username + " ";
+        newComment += userProfile.name + " ";
         setCommentText(newComment);
+
+        taggedUsers.forEach(taggedUser => {
+            if (taggedUser.uid === userProfile.uid) {
+                return;
+            }
+        });
+
+        let newTaggedUsers: UserProfileModel[] = taggedUsers.slice();
+        newTaggedUsers.push(userProfile);
+        setTaggedUsers(newTaggedUsers);
     }
 
     return (
         <View>
-            <UserTagBox input={commentText} userTagged={applyUsername} />
+            <UserTagBox input={commentText} userTagged={applyUsernameTag} />
 
             <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
                 <TextInput

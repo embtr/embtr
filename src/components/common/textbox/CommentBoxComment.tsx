@@ -7,6 +7,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { Comment } from 'src/controller/timeline/TimelineController';
+import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
     comment: Comment
@@ -16,6 +17,7 @@ export const CommentBoxComment = ({ comment }: Props) => {
     const { colors } = useTheme();
 
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
+    const [decodedComment, setDecodedComment] = React.useState<string>("");
 
     useFocusEffect(
         React.useCallback(() => {
@@ -26,6 +28,7 @@ export const CommentBoxComment = ({ comment }: Props) => {
     );
 
     const time = formatDistance(comment.timestamp.toDate(), new Date(), { addSuffix: true });
+    UsernameTagTracker.dencodeTaggedUsers(comment.comment, setDecodedComment);
 
     return (
         <View>
@@ -35,7 +38,7 @@ export const CommentBoxComment = ({ comment }: Props) => {
 
                 </View>
                 <View style={{ marginLeft: 5, marginRight: 20, flexShrink: 1 }}>
-                    <Text style={{ color: colors.text, fontWeight: "bold" }}>{userProfileModel?.name} <Text style={{ color: colors.text, fontWeight: "normal" }}>{comment.comment}</Text></Text>
+                    <Text style={{ color: colors.text, fontWeight: "bold" }}>{userProfileModel?.name} <Text style={{ color: colors.text, fontWeight: "normal" }}>{decodedComment}</Text></Text>
                     <Text style={{ color: "gray", fontSize: 12 }}>{time}</Text>
                 </View>
             </View>
