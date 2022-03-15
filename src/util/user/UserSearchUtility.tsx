@@ -6,8 +6,6 @@ export class UserSearchUtility {
     private searchResults : UserSearchResultObject | undefined = undefined;
 
     public updateSearch (text: string, callback: Function) {
-        console.log("updating")
-        
         const runDownSubQuery: boolean = text.includes(this.searchText);
         const runUpQuery: boolean = this.searchText.includes(text);
 

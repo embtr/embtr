@@ -1,5 +1,11 @@
+import * as React from 'react';
+
 import ProfileController from "src/controller/profile/ProfileController";
 import { UserProfileModel } from "src/firebase/firestore/profile/ProfileDao";
+import { Text, View } from 'react-native';
+import { ThemeContext } from 'src/components/theme/ThemeProvider';
+import { NavigatableUsername } from 'src/components/profile/NavigatableUsername';
+
 
 export class UsernameTagTracker {
     public static isTypingUsername(text: string): boolean {
@@ -41,26 +47,43 @@ export class UsernameTagTracker {
         return newCommentText;
     }
 
-    public static dencodeTaggedUsers(commentText: string, callback: Function) {
+    public static dencodeTaggedUsers(commentText: string, colors: any, callback: Function) {
         const uids: string[] = this.getUidsFromEncodedComment(commentText);
+        if (uids.length === 0) {
+            callback(<Text style={{ color: colors.text, fontWeight: "normal" }}>{commentText}</Text>);
+            return;
+        }
+
         ProfileController.getProfiles(uids, (userProfiles: UserProfileModel[]) => {
-            let newCommentText = commentText;
-            if (newCommentText.includes("user_uid")) {
-                const startIndex = newCommentText.indexOf("{user_uid:") + "{user_uid:".length;
-                if (startIndex + 29 >= commentText.length) {
-                    callback(newCommentText);
-                    return;
-                }
-                const uid = newCommentText.substring(startIndex, startIndex + 28);
-                userProfiles.forEach(userProfile => {
-                    if (uid === userProfile.uid) {
-                        newCommentText = newCommentText.replaceAll("{user_uid:" + uid + "}", userProfile.name!);
+            let textElements: JSX.Element[] = [];
+
+            const splitComment: string[] = commentText.split(" ");
+            let currentText = "";
+            splitComment.forEach(token => {
+                if (!token.startsWith("{user_uid:")) {
+                    currentText += token + " ";
+                } else {
+                    if (currentText.length > 0) {
+                        textElements.push(<Text style={{ color: colors.text, fontWeight: "normal" }}>{currentText}</Text>);
                     }
-                });
+
+                    const uid = token.substring("{user_uid:".length, token.length - 1);
+                    userProfiles.forEach(userProfile => {
+                        if (userProfile.uid === uid) {
+                            textElements.push(<NavigatableUsername userProfile={userProfile}></NavigatableUsername>);
+                        }
+                    });
+
+                    currentText = "";
+                }
+            });
+
+            if (currentText.length > 0) {
+                textElements.push(<Text style={{ color: colors.text, fontWeight: "normal" }}>{currentText}</Text>);
             }
 
-            callback(newCommentText);
-            return;
+            callback(<Text>{textElements}</Text>);
+
         });
     }
 
