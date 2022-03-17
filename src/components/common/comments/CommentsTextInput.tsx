@@ -23,8 +23,9 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
         const encodedComment: string = UsernameTagTracker.encodeTaggedUsers(commentText, taggedUsers);
 
         Keyboard.dismiss();
-        submitComment(encodedComment);
+        submitComment(encodedComment, taggedUsers);
         setCommentText("");
+        setTaggedUsers([]);
     };
 
     const applyUsernameTag = (userProfile: UserProfileModel) => {

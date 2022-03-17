@@ -53,7 +53,7 @@ export const UserTagBox = ({ input, userTagged }: Props) => {
     let usernameTagOptionsViews: JSX.Element[] = [];
     if (usernameTagOptions) {
         usernameTagOptions.forEach(usernameTagOption => {
-            usernameTagOptionsViews.push(<UserTag userProfile={usernameTagOption} onPress={userTagged} />);
+            usernameTagOptionsViews.push(<UserTag key={usernameTagOption.uid} userProfile={usernameTagOption} onPress={userTagged} />);
         });
     }
 
