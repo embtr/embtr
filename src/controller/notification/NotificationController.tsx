@@ -9,11 +9,13 @@ export interface NotificationModel {
     summary: string
     uid: string
     notifier_uid: string
-    url: string
+    target_uid: string
+    target_page: string
 }
 
 export enum NotificationType {
-    TIMELINE_COMMENT
+    TIMELINE_COMMENT,
+    CHALLENGE_COMMENT
 }
 
 class NotificationController {
@@ -47,7 +49,7 @@ class NotificationController {
 
     private static addNotification(fromUid: string, toUid: string, notificationType: NotificationType, targetUid: string) {
         const summary: string = this.getSummary(notificationType);
-        const url: string = this.getUrl(notificationType, targetUid);
+        const targetPage: string = this.getTargetPage(notificationType);
 
         const notificationModel: NotificationModel = {
             added: Timestamp.now(),
@@ -55,18 +57,26 @@ class NotificationController {
             summary: summary,
             notifier_uid: fromUid,
             uid: toUid,
-            url: url
+            target_uid: targetUid,
+            target_page: targetPage
         };
 
         NotificationDao.addNotification(notificationModel);
     }
 
     private static getSummary(notificationType: NotificationType): string {
-        return "tagged you in a comment";
+        return "tagged you in a comment.";
     }
-    
-    static getUrl(notificationType: NotificationType, targetUid: string): string {
-        return "timeline/" + targetUid + "/comments";
+
+    private static getTargetPage(notificationType: NotificationType): string {
+        switch(notificationType) {
+            case NotificationType.CHALLENGE_COMMENT:
+                return "ChallengeComments";
+            case NotificationType.TIMELINE_COMMENT:
+                return "TimelineComments";
+            default:
+                return "";
+        }
     }
 }
 

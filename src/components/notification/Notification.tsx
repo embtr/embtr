@@ -2,9 +2,8 @@ import React from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text } from 'react-native';
-import * as Linking from 'expo-linking';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { NotificationModel } from 'src/controller/notification/NotificationController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
@@ -17,7 +16,7 @@ interface Props {
 
 export const Notification = ({ notification }: Props) => {
     const { colors } = useTheme();
-    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
+    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const [notifier, setNotifier] = React.useState<UserProfileModel>();
 
@@ -27,10 +26,8 @@ export const Notification = ({ notification }: Props) => {
         }, [])
     );
 
-    const url = Linking.createURL(notification.url);
-
     return (
-        <TouchableOpacity onPress={() => { Linking.openURL(url) }} >
+        <TouchableOpacity onPress={() => { navigation.navigate(notification.target_page as keyof TimelineTabScreens, { id: notification.target_uid }) }} >
             <View style={{ backgroundColor: colors.card_background }}>
                 <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
                     <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10 }}>

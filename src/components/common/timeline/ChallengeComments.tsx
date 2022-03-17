@@ -22,7 +22,7 @@ export const ChallengeComments = () => {
         const user = getAuth().currentUser;
         if (challengeModel?.id && user?.uid) {
             ChallengeController.addComment(challengeModel.id, user.uid, text, () => {
-                NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.TIMELINE_COMMENT, route.params.id);
+                NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.CHALLENGE_COMMENT, route.params.id);
                 ChallengeController.getChallenge(route.params.id, setChallengeModel);
             });
         }
