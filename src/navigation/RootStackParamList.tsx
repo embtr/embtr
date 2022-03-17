@@ -35,9 +35,4 @@ export type RootStackParamList = {
     Contact: undefined;
     Logout: undefined;
     LoadingPage: undefined;
-
-    Goggins: undefined;
-    GogginsRegister: undefined;
-    GogginsSponsor: { athlete?: string };
-    GogginsDonate: undefined;
 };
