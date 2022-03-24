@@ -8,7 +8,7 @@ import { AddButton } from 'src/components/common/button/AddButton';
 import { Plan } from 'src/components/plan/Plan';
 import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { createDays, RoutineModel } from 'src/controller/planning/RoutineController';
+import RoutineController, { createDays, DaysModel, RoutineModel, taskRunsOnSelectedDay } from 'src/controller/planning/RoutineController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 export const Tasks = () => {
@@ -24,18 +24,33 @@ export const Tasks = () => {
         }, [])
     );
 
+    const getVisibleRoutines = (): RoutineModel[] => {
+        let visibleRoutines: RoutineModel[] = [];
+        routines.forEach(routine => {
+            if (taskRunsOnSelectedDay(routine, selectedDaysOfWeek)) {
+                visibleRoutines.push(routine);
+            }
+        });
+
+        return visibleRoutines;
+    };
+
+    const visibleRoutines = getVisibleRoutines();
+
     let routineViews: JSX.Element[] = [];
-    routines.forEach(routine => {
-        routineViews.push(
-            <View key={routine.id} style={{ paddingBottom: 5 }}>
-                <Plan routine={routine} />
-            </View>
-        );
+    visibleRoutines.forEach(routine => {
+        if (taskRunsOnSelectedDay(routine, selectedDaysOfWeek)) {
+            routineViews.push(
+                <View key={routine.id} style={{ paddingBottom: 5 }}>
+                    <Plan routine={routine} />
+                </View>
+            );
+        }
     });
 
     return (
         <View style={{height: "100%"}}>
-            <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} routines={routines} />
+            <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} routines={visibleRoutines} />
 
             <ScrollView style={{ backgroundColor: colors.background_secondary }}>
                 {routineViews}
