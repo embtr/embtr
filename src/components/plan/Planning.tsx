@@ -4,9 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { getAuth } from 'firebase/auth';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Banner } from 'src/components/common/Banner';
 import { AddButton } from 'src/components/common/button/AddButton';
-import { Screen } from 'src/components/common/Screen';
 import { Plan } from 'src/components/plan/Plan';
 import { PlanningSummaryHeader } from 'src/components/plan/PlanningSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -35,18 +33,16 @@ export const Planning = () => {
     });
 
     return (
-        <Screen>
-            <Banner name="Planning" />
-
+        <View style={{height: "100%"}}>
             <PlanningSummaryHeader />
 
             <ScrollView style={{ backgroundColor: colors.background_secondary }}>
                 {routineViews}
             </ScrollView>
 
-            <View style={{ position: "absolute", right: 0, bottom: 0 }}>
+            <View style={{ position: "absolute", right: 0, bottom: 50 }}>
                 <AddButton onPress={() => { navigation.navigate('CreateRoutine') }} />
             </View>
-        </Screen>
+        </View>
     );
 };

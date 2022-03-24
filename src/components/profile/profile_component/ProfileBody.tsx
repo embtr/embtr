@@ -7,6 +7,10 @@ import PillarsTabRoute from 'src/components/profile/profile_component/profile_ta
 import { ActivityTabRoute } from 'src/components/profile/profile_component/profile_tabs/ActivityTabRoute';
 import { RoutineTabRoute } from 'src/components/profile/profile_component/profile_tabs/RoutineTabRoute';
 
+/*
+ * Avoid rerenders
+ * https://github.com/satya164/react-native-tab-view#avoid-unnecessary-re-renders
+*/
 interface Props {
     userProfileModel: UserProfileModel
 }
