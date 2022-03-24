@@ -4,7 +4,7 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
 import { Banner } from 'src/components/common/Banner';
-import { Planning } from 'src/components/plan/Planning';
+import { Tasks } from 'src/components/plan/tasks/Tasks';
 
 /*
  * Avoid rerenders
@@ -19,8 +19,8 @@ export const PlanMain = () => {
             case 'tomorrow':
                 return <View><Text style={{ color: colors.text }}>⚠️ tomorrow tab - coming soon!</Text></View>
 
-            case 'routines':
-                return <Planning />
+            case 'tasks':
+                return <Tasks />
 
             case 'pillars':
                 return <View><Text style={{ color: colors.text }}>pillars tab</Text></View>
@@ -33,7 +33,7 @@ export const PlanMain = () => {
 
     const [routes] = React.useState([
         { key: 'tomorrow', title: 'Tomorrow' },
-        { key: 'routines', title: 'Routines' },
+        { key: 'tasks', title: 'Tasks' },
         { key: 'pillars', title: 'Pillars' },
     ]);
 

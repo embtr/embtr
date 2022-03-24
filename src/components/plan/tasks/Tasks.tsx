@@ -6,16 +6,17 @@ import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { AddButton } from 'src/components/common/button/AddButton';
 import { Plan } from 'src/components/plan/Plan';
-import { PlanningSummaryHeader } from 'src/components/plan/PlanningSummaryHeader';
+import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { RoutineModel } from 'src/controller/planning/RoutineController';
+import RoutineController, { createDays, RoutineModel } from 'src/controller/planning/RoutineController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
-export const Planning = () => {
+export const Tasks = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
+    const [selectedDaysOfWeek, setSelectedDaysOfWeek] = React.useState(createDays(true, true, true, true, true, true, true));
 
     useFocusEffect(
         React.useCallback(() => {
@@ -34,7 +35,7 @@ export const Planning = () => {
 
     return (
         <View style={{height: "100%"}}>
-            <PlanningSummaryHeader />
+            <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} routines={routines} />
 
             <ScrollView style={{ backgroundColor: colors.background_secondary }}>
                 {routineViews}
