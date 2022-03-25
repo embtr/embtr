@@ -5,6 +5,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
 import { Banner } from 'src/components/common/Banner';
 import { Tasks } from 'src/components/plan/tasks/Tasks';
+import { Tomorrow } from 'src/components/plan/tomorrow/Tomorrow';
 
 /*
  * Avoid rerenders
@@ -17,7 +18,7 @@ export const PlanMain = () => {
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string; }; }) => {
         switch (props.route.key) {
             case 'tomorrow':
-                return <View><Text style={{ color: colors.text }}>⚠️ tomorrow tab - coming soon!</Text></View>
+                return <Tomorrow />
 
             case 'tasks':
                 return <Tasks />

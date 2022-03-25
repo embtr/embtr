@@ -16,9 +16,9 @@ export const CreateRoutine = () => {
     return (
         <Screen>
             <Banner name={"Create Routine"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
-            <View>
 
-                <View style={{ paddingTop: 20, paddingBottom: 40 }}>
+            <View style={{ flexDirection: "column", flex: 1 }}>
+                <View style={{ flex: 1, justifyContent: "center" }}>
                     <TextInput
                         style={{ textAlign: "center", marginLeft: "10%", marginRight: "10%", paddingLeft: 10, height: 40, borderColor: colors.background_secondary, backgroundColor: colors.background_secondary, borderWidth: 1, borderRadius: 10, color: colors.text, fontSize: 20 }}
                         onChangeText={setName}
@@ -28,7 +28,7 @@ export const CreateRoutine = () => {
                     />
                 </View>
 
-                <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+                <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 1 }}>
                     <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>I will run this routine</Text>
                     <View style={{ alignItems: "flex-start" }}>
                         <Picker
@@ -45,7 +45,9 @@ export const CreateRoutine = () => {
                     </View>
                 </View>
 
-                {frequency === "daily" && <CreateDailyRoutine name={name} />}
+                <View style={{ flex: 5 }}>
+                    {frequency === "daily" && <CreateDailyRoutine name={name} />}
+                </View>
             </View>
         </Screen>
     );

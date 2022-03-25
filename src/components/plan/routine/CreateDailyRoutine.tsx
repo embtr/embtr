@@ -52,15 +52,16 @@ export const CreateDailyRoutine = ({ name }: Props) => {
     };
 
     return (
-        <View>
-            <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", paddingBottom: 10 }}>
+        <View style={{ flex: 1 }} >
+
+            <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
                 <View>
-                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 20, paddingTop: 25, paddingBottom: 25 }}>on the following days</Text>
+                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 20 }}>on the following days</Text>
                     <SelectableDaysOfWeek daysOfWeek={selectedDaysOfWeek} onDaysOfWeekUpdated={setSelectedDaysOfWeek} />
                 </View>
             </View>
 
-            <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+            <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
                 <Text style={{ color: colors.text, fontSize: 20 }}>with a start time of</Text>
                 <View style={{ flexDirection: "row" }} >
                     <View style={{ width: 45 }}>
@@ -96,8 +97,8 @@ export const CreateDailyRoutine = ({ name }: Props) => {
                 </View>
             </View>
 
-            <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center" }}>
-                <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center" }} >
+            <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }} >
                     <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>for</Text>
                     <View style={{ width: 60 }}>
                         <Picker
@@ -122,9 +123,12 @@ export const CreateDailyRoutine = ({ name }: Props) => {
                 </View>
             </View>
 
-            <View style={{ paddingTop: 70, alignItems: "center" }}>
+            <View style={{ flex: 1 }} />
+
+            <View style={{ alignItems: "center", justifyContent: "center", flex: 2 }}>
                 <EmbtrButton buttonText={'create'} callback={createRoutine} />
             </View>
+
         </View>
 
     );
