@@ -26,7 +26,7 @@ export const Tomorrow = () => {
         let checked = true;
         routineViews.push(
             <View key={routine.id} style={{ paddingBottom: 5 }}>
-                <PlanningTask routine={routine} checked={checked} onChecked={() => {  }} />
+                <PlanningTask routine={routine} onChecked={() => { }} />
             </View>
         );
     });
@@ -47,8 +47,8 @@ export const Tomorrow = () => {
                 </View>
 
                 <View>
-                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 10, paddingTop: 4 }}>
-                        unlocked 🔓
+                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 11, paddingTop: 4 }}>
+                        <Text style={{ color: "red" }} >unlocked 🔓</Text>
                     </Text>
                 </View>
             </View>
