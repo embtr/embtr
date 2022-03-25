@@ -23,13 +23,33 @@ export const Notifications = () => {
         }, [])
     );
 
+    useFocusEffect(
+        React.useCallback(() => {
+            const shouldClearNotifications = containsUnreadNotification();
+            if (shouldClearNotifications) {
+                NotificationController.clearNotifications(notifications);
+            }
+        }, [notifications])
+    );
+
+    const containsUnreadNotification = (): boolean => {
+        let containsUnread = false;
+        notifications.forEach(notification => {
+            if (!notification.read) {
+                containsUnread = true;
+            }
+        });
+
+        return containsUnread;
+    }
+
     let notificationViews: JSX.Element[] = [];
     notifications.forEach(notification => {
         notificationViews.push(
             <View key={notification.id} style={{ paddingBottom: 5 }}>
                 <Notification notification={notification} />
             </View>
-            
+
         );
     });
 

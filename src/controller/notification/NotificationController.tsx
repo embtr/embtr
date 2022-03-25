@@ -41,9 +41,15 @@ class NotificationController {
         });
     }
 
-    static addNotifications(fromUid: string, toUsers: UserProfileModel[], notificationType: NotificationType, targetUid: string) {
+    public static addNotifications(fromUid: string, toUsers: UserProfileModel[], notificationType: NotificationType, targetUid: string) {
         toUsers.forEach(toUser => {
             this.addNotification(fromUid, toUser.uid!, notificationType, targetUid);
+        });
+    }
+
+    public static clearNotifications(notifications: NotificationModel[]) {
+        notifications.forEach(notification => {
+            NotificationDao.clearNotification(notification);
         });
     }
 
