@@ -8,7 +8,7 @@ import { AddButton } from 'src/components/common/button/AddButton';
 import { Plan } from 'src/components/plan/Plan';
 import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { createDays, DaysModel, RoutineModel, taskRunsOnSelectedDay } from 'src/controller/planning/RoutineController';
+import RoutineController, { createDays, RoutineModel, taskRunsOnSelectedDay } from 'src/controller/planning/RoutineController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 export const Tasks = () => {
