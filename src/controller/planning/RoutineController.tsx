@@ -41,7 +41,7 @@ export const taskRunsOnSelectedDay = (routine: RoutineModel, selectedDaysOfWeek:
 export const getTomorrow = () => {
     const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
     const dayNumber = new Date().getDay();
-    const tomorrowNumber = dayNumber < 7 ? dayNumber + 1 : 0;
+    const tomorrowNumber = dayNumber < 6 ? dayNumber + 1 : 0;
     const tomorrow = days[tomorrowNumber];
 
     return tomorrow;
