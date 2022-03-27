@@ -18,6 +18,17 @@ export enum NotificationType {
     CHALLENGE_COMMENT
 }
 
+export const getUnreadNotificationCount = (notifications: NotificationModel[]): number => {
+    let count = 0;
+    notifications.forEach(notification => {
+        if (!notification.read) {
+            count++;
+        }
+    });
+
+    return count;
+}
+
 class NotificationController {
     public static getNotifications(uid: string, callback: Function) {
         let notifications: NotificationModel[] = [];

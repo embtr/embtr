@@ -12,7 +12,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import TimelineController, { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
-import NotificationController, { NotificationModel } from 'src/controller/notification/NotificationController';
+import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';
 import { getAuth } from 'firebase/auth';
 
 export const Timeline = () => {
@@ -110,6 +110,8 @@ export const Timeline = () => {
         setTimelineViews(views);
     }, [timelineProfiles]);
 
+    const unreadNotificationCount = getUnreadNotificationCount(notifications);
+
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     return (
@@ -122,7 +124,7 @@ export const Timeline = () => {
                 innerLeftCallback={() => { navigation.navigate('CreateTimelineStory') }}
                 rightIcon={'notifications-outline'}
                 rightRoute={'Notifications'}
-                rightIconNotificationCount={notifications.length}
+                rightIconNotificationCount={unreadNotificationCount}
             />
             <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_secondary }}>
                 <View style={{ flex: 1 }}>
