@@ -39,7 +39,7 @@ export const taskRunsOnSelectedDay = (routine: RoutineModel, selectedDaysOfWeek:
 }
 
 export const getTomorrow = () => {
-    const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const dayNumber = new Date().getDay();
     const tomorrowNumber = dayNumber < 6 ? dayNumber + 1 : 0;
     const tomorrow = days[tomorrowNumber];
@@ -62,7 +62,7 @@ export const createRoutineModel = (name: string, startMinute: number, duration: 
 export const startMinuteToString = (startMinute: number) => {
     const hours = Math.floor(startMinute / 60);
     const minutes = startMinute % 60;
-    
+
     const hoursString = "" + (hours <= 12 ? hours : hours - 12);
     const minutesString = (minutes < 10 ? "0" : "") + minutes;
     const AMPMString = hours <= 12 ? "AM" : "PM";
@@ -103,6 +103,22 @@ class RoutineController {
             callback(routines);
         }).catch(() => {
             callback([]);
+        });
+    }
+
+    static getRoutinesForDay(uid: string, day: string, callback: Function) {
+        let routinesForDay: RoutineModel[] = [];
+
+        this.getRoutines(uid, (routines: RoutineModel[]) => {
+            routines.forEach(routine => {
+                Object.entries(routine.days).forEach(dayModel => {
+                    if (dayModel[0] === day && dayModel[1]) {
+                        routinesForDay.push(routine);
+                    }
+                });
+            });
+
+            callback(routinesForDay);
         });
     }
 }

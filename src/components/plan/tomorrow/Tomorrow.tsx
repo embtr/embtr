@@ -17,7 +17,7 @@ export const Tomorrow = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            RoutineController.getRoutines(getAuth().currentUser!.uid, setRoutines);
+            RoutineController.getRoutinesForDay(getAuth().currentUser!.uid, tomorrow, setRoutines);
         }, [])
     );
 
@@ -30,7 +30,6 @@ export const Tomorrow = () => {
             </View>
         );
     });
-
 
     return (
         <View style={{ flex: 1, flexDirection: "column" }}>
