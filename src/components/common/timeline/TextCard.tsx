@@ -118,7 +118,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                 </View>}
 
                 <View style={{ borderColor: colors.text, marginRight: 2.5 }}>
-                    <Ionicons name={heartPressed ? 'heart-outline' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
+                    <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
                 </View>
 
                 <View style={{ borderColor: colors.text, marginLeft: 5 }}>
