@@ -47,7 +47,7 @@ export const Countdown = () => {
 
     return (
         <Text style={{ color: colors.text, textAlign: "center", fontSize: 10, paddingTop: 2 }}>
-            {hoursString}:{minutesString}:{secondsString}
+            {hoursString}h {minutesString}m {secondsString}s
         </Text>
     );
 };
