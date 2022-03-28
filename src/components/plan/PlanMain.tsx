@@ -40,9 +40,9 @@ export const PlanMain = () => {
 
     return (
         <Screen>
-            <Banner name={"Planning"} />
-
             <View style={{ height: "100%" }}>
+                <Banner name={"Planning"} />
+
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
