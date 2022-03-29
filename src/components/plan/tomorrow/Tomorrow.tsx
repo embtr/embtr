@@ -93,10 +93,13 @@ export const Tomorrow = () => {
             </View>
 
             <View style={{ flex: 8 }}>
-                <Text style={{ color: colors.text, textAlign: "center", paddingBottom: "1%" }}>
-                    plan your day
+                <Text style={{ color: colors.text, textAlign: "center", paddingTop: "1%" }}>
+                    Plan Your Day
                 </Text>
-                <ScrollView style={{ backgroundColor: colors.background_secondary, paddingTop: 5, height: "99%" }}>
+                <Text style={{ color: colors.text, textAlign: "center", paddingBottom: "2%", fontSize: 12, paddingLeft: "5%", paddingRight: "5%" }}>
+                    { locked ? "You can unlock tomorrows schedule if you need to make changes." :  "Select the tasks that you intend on completing tomorrow. You can update the start time and duration. Lock in your plans once you feel confident about tomorrows schedule!" }
+                </Text>
+                <ScrollView style={{ backgroundColor: colors.background_secondary, paddingTop: 5, height: "97%" }}>
                     {taskViews}
                 </ScrollView>
             </View>
