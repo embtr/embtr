@@ -3,7 +3,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { getTomorrow, RoutineModel } from 'src/controller/planning/RoutineController';
+import RoutineController, { createRoutineModel, getTomorrow, RoutineModel } from 'src/controller/planning/RoutineController';
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Plan } from 'src/components/plan/Plan';
@@ -16,6 +16,7 @@ export const Tomorrow = () => {
     const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
     const [locked, setLocked] = React.useState<boolean>(false);
+    const [checkedTasks, setCheckedTasks] = React.useState(new Map<string, boolean>());
 
     const tomorrow = getTomorrow();
     const tomorrowCapitalized = tomorrow.charAt(0).toUpperCase() + tomorrow.slice(1);
@@ -26,20 +27,27 @@ export const Tomorrow = () => {
         }, [])
     );
 
+    const onChecked = (taskId: string, checked: boolean) => {
+        let newCheckedTasks: Map<string, boolean> = new Map(checkedTasks);
+        newCheckedTasks.set(taskId, checked);
+        setCheckedTasks(newCheckedTasks);
+    };
+
     useFocusEffect(
         React.useCallback(() => {
             let routineViews: JSX.Element[] = [];
             routines.forEach(routine => {
-                let checked = true;
                 if (locked) {
-                    routineViews.push(<View key={routine.id} style={{ paddingBottom: 5 }}><Plan routine={routine} /></View>);
+                    if (checkedTasks.get(routine.id!) !== false) {
+                        routineViews.push(<View key={routine.id} style={{ paddingBottom: 5 }}><Plan routine={routine} /></View>);
+                    }
                 } else {
-                    routineViews.push(<View key={routine.id} style={{ paddingBottom: 5 }}><PlanningTask routine={routine} onChecked={() => { }} /></View>);
+                    routineViews.push(<View key={routine.id} style={{ paddingBottom: 5 }}><PlanningTask routine={routine} isChecked={checkedTasks.get(routine.id!) !== false} onCheckboxToggled={onChecked} /></View>);
                 }
             });
 
             setTaskViews(routineViews);
-        }, [locked, routines])
+        }, [locked, routines, checkedTasks])
     );
 
     const toggleLock = () => {
@@ -72,7 +80,7 @@ export const Tomorrow = () => {
                     Plan Your Day
                 </Text>
                 <Text style={{ color: colors.text, textAlign: "center", paddingBottom: "2%", fontSize: 12, paddingLeft: "5%", paddingRight: "5%" }}>
-                    { locked ? "You can unlock tomorrows schedule if you need to make changes." :  "Select the tasks that you intend on completing tomorrow. You can update the start time and duration. Lock in your plans once you feel confident about tomorrows schedule!" }
+                    {locked ? "You can unlock tomorrows schedule if you need to make changes." : "Select the tasks that you intend on completing tomorrow. You can update the start time and duration. Lock in your plans once you feel confident about tomorrows schedule!"}
                 </Text>
                 <ScrollView style={{ backgroundColor: colors.background_secondary, paddingTop: 5, height: "97%" }}>
                     {taskViews}

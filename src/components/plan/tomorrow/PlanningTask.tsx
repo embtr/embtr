@@ -8,15 +8,14 @@ import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     routine: RoutineModel,
-    onChecked: Function
+    isChecked: boolean,
+    onCheckboxToggled: Function
 }
 
-export const PlanningTask = ({ routine, onChecked }: Props) => {
+export const PlanningTask = ({ routine, isChecked, onCheckboxToggled }: Props) => {
     const { colors } = useTheme();
 
-    const [checked, setChecked] = React.useState(true);
-
-    const backgroundColor: ColorValue = checked ? colors.card_background : "#302B2A";
+    const backgroundColor: ColorValue = isChecked ? colors.card_background : "#302B2A";
 
     return (
         <View>
@@ -27,7 +26,7 @@ export const PlanningTask = ({ routine, onChecked }: Props) => {
             <View style={{ backgroundColor: backgroundColor, flexDirection: "row" }} >
                 <View style={{ flex: 1 }} >
                     <View style={{ alignItems: "center", paddingTop: 5, paddingBottom: 5 }}>
-                        <Ionicons name={"checkbox"} size={20} color={checked ? "green" : colors.text} onPress={() => { setChecked(!checked) }} />
+                        <Ionicons name={"checkbox"} size={20} color={isChecked ? "green" : colors.text} onPress={() => { onCheckboxToggled(routine.id, !isChecked); }} />
                     </View>
                 </View>
 
