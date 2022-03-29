@@ -16,9 +16,6 @@ export const Tomorrow = () => {
     const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
     const [locked, setLocked] = React.useState<boolean>(false);
-    const [hours, setHours] = React.useState(24 - new Date().getHours());
-    const [minutes, setMinutes] = React.useState(60 - new Date().getMinutes());
-    const [seconds, setSeconds] = React.useState(60 - new Date().getSeconds());
 
     const tomorrow = getTomorrow();
     const tomorrowCapitalized = tomorrow.charAt(0).toUpperCase() + tomorrow.slice(1);
@@ -27,28 +24,6 @@ export const Tomorrow = () => {
         React.useCallback(() => {
             RoutineController.getRoutinesForDay(getAuth().currentUser!.uid, tomorrow, setRoutines);
         }, [])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            setTimeout(() => setSeconds(60 - new Date().getSeconds() - 1), 1000);
-        }, [seconds])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            if (seconds == 59) {
-                setMinutes(60 - new Date().getMinutes());
-            }
-        }, [seconds])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            if (minutes == 59) {
-                setHours(24 - new Date().getHours());
-            }
-        }, [minutes])
     );
 
     useFocusEffect(
