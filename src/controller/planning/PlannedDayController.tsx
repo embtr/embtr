@@ -7,10 +7,9 @@ export interface PlannedDay {
 }
 
 export interface PlannedTask {
-    routineUid: string,
+    routine: RoutineModel,
     startMinute?: number,
     duration?: number
-    routine?: RoutineModel,
 }
 
 class PlannedDayController {

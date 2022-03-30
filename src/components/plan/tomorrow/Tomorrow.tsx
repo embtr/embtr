@@ -57,7 +57,7 @@ export const Tomorrow = () => {
         routines.forEach(routine => {
             if (checkedTasks.get(routine.id!) !== false) {
                 const plannedTask: PlannedTask = {
-                    routineUid: routine.id!
+                    routine: routine
                 }
 
                 plannedtasks.push(plannedTask);
