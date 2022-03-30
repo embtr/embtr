@@ -3,11 +3,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { createRoutineModel, getTomorrow, RoutineModel } from 'src/controller/planning/RoutineController';
+import RoutineController, { getTomorrow, RoutineModel } from 'src/controller/planning/RoutineController';
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Plan } from 'src/components/plan/Plan';
 import { Countdown } from 'src/components/common/time/Countdown';
+import PlannedDayController, { PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
+import { DateUtil } from 'src/util/DateUtil';
 
 
 export const Tomorrow = () => {
@@ -50,8 +52,38 @@ export const Tomorrow = () => {
         }, [locked, routines, checkedTasks])
     );
 
+    const getPlannedDay = (): PlannedDay => {
+        let plannedtasks: PlannedTask[] = [];
+        routines.forEach(routine => {
+            if (checkedTasks.get(routine.id!) !== false) {
+                const plannedTask: PlannedTask = {
+                    routineUid: routine.id!
+                }
+
+                plannedtasks.push(plannedTask);
+            }
+        });
+
+        const plannedDay: PlannedDay = {
+            plannedTasks: plannedtasks,
+            id: DateUtil.getTomorrowKey()
+        };
+
+        return plannedDay;
+    };
+
     const toggleLock = () => {
-        setLocked(!locked);
+        const lockPlans = !locked;
+        DateUtil.getTomorrowKey();
+
+        if (lockPlans) {
+            PlannedDayController.delete(DateUtil.getTomorrowKey(), () => {
+                const plannedDay: PlannedDay = getPlannedDay();
+                PlannedDayController.create(plannedDay);
+            });
+        }
+
+        setLocked(lockPlans);
     };
 
     return (
