@@ -4,7 +4,7 @@ import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class PlannedDayDao {
-    public static async update(plannedDay: PlannedDay) {
+    public static update(plannedDay: PlannedDay) {
         this.delete(plannedDay.id!, () => {
             this.create(plannedDay);
         });
@@ -38,7 +38,7 @@ class PlannedDayDao {
         callback();
     }
 
-    public static async create(plannedDay: PlannedDay) {
+    public static create(plannedDay: PlannedDay) {
         const db: Firestore = getFirebaseConnection(this.name, "create");
 
         const userUid = getAuth().currentUser?.uid;

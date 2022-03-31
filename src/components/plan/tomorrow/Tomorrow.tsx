@@ -9,7 +9,6 @@ import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedDayMetadata, PlannedTask } from 'src/controller/planning/PlannedDayController';
 import { Plan } from 'src/components/plan/Plan';
-import { Timestamp } from 'firebase/firestore';
 
 
 export const Tomorrow = () => {
@@ -85,7 +84,7 @@ export const Tomorrow = () => {
         return newPlannedDay;
     };
 
-    const isNewPlannedDay = () : boolean => {
+    const isNewPlannedDay = (): boolean => {
         return plannedDay?.metadata === undefined;
     };
 
@@ -94,10 +93,23 @@ export const Tomorrow = () => {
         PlannedDayController.create(updatedPlannedDay, setPlannedDay);
     };
 
-    const updatePlannedDay = () => {
+    const updatePlannedDayAsLocked = () => {
         const updatedPlannedDay = getUpdatedPlannedDay();
+        updatedPlannedDay.metadata!.locked = true;
         PlannedDayController.update(updatedPlannedDay);
         setPlannedDay(updatedPlannedDay);
+    };
+
+    const updatePlannedDayAsUnlocked = () => {
+        const newPlannedDay: PlannedDay = {
+            id: plannedDay!.id,
+            metadata: plannedDay!.metadata,
+            plannedTasks: plannedDay!.plannedTasks
+        };
+        newPlannedDay.metadata!.locked = false;
+
+        PlannedDayController.update(newPlannedDay);
+        setPlannedDay(newPlannedDay);
     };
 
     const toggleLock = () => {
@@ -108,8 +120,10 @@ export const Tomorrow = () => {
             if (isNewPlannedDay()) {
                 createPlannedDay();
             } else {
-                updatePlannedDay();
+                updatePlannedDayAsLocked();
             }
+        } else {
+            updatePlannedDayAsUnlocked();
         }
     };
 
