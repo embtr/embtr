@@ -6,9 +6,9 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import RoutineController, { getTomorrowDayOfWeek, RoutineModel } from 'src/controller/planning/RoutineController';
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
-import { Plan } from 'src/components/plan/Plan';
 import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
+import { Plan } from 'src/components/plan/Plan';
 
 
 export const Tomorrow = () => {
@@ -42,7 +42,7 @@ export const Tomorrow = () => {
 
             if (locked) {
                 plannedDay?.plannedTasks.forEach(plannedTask => {
-                    routineViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><PlanningTask routine={plannedTask.routine} isChecked={checkedTasks.get(plannedTask.routine.id!) !== false} onCheckboxToggled={onChecked} /></View>);
+                    routineViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><Plan routine={plannedTask.routine} /></View>);
                 });
             } else {
                 routines.forEach(routine => {
