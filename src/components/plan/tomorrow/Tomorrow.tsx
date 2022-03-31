@@ -21,6 +21,8 @@ export const Tomorrow = () => {
     const [locked, setLocked] = React.useState<boolean>(false);
     const [checkedTasks, setCheckedTasks] = React.useState(new Map<string, boolean>());
 
+    const [modificationsWereMade, setModificationsWereMade] = React.useState<boolean>(false);
+
     const tomorrow = getTomorrowDayOfWeek();
     const tomorrowCapitalized = tomorrow.charAt(0).toUpperCase() + tomorrow.slice(1);
 
@@ -58,6 +60,7 @@ export const Tomorrow = () => {
         let newCheckedTasks: Map<string, boolean> = new Map(checkedTasks);
         newCheckedTasks.set(taskId, checked);
         setCheckedTasks(newCheckedTasks);
+        setModificationsWereMade(true);
     };
 
     const getPlannedDay = (): PlannedDay => {
@@ -80,18 +83,27 @@ export const Tomorrow = () => {
         return plannedDay;
     };
 
-    const toggleLock = () => {
-        const lockPlans = !locked;
-
-        if (lockPlans) {
-            PlannedDayController.delete(getTomorrowKey(), () => {
-                const plannedDay: PlannedDay = getPlannedDay();
-                PlannedDayController.create(plannedDay);
-                setPlannedDay(plannedDay);
-            });
+    const updatePlannedDay = () => {
+        if (!modificationsWereMade && plannedDay && plannedDay?.plannedTasks.length > 0) {
+            return;
         }
 
+        PlannedDayController.delete(getTomorrowKey(), () => {
+            const plannedDay: PlannedDay = getPlannedDay();
+            PlannedDayController.create(plannedDay);
+            setPlannedDay(plannedDay);
+        });
+
+        setModificationsWereMade(false);
+    };
+
+    const toggleLock = () => {
+        const lockPlans = !locked;
         setLocked(lockPlans);
+
+        if (lockPlans) {
+            updatePlannedDay();
+        }
     };
 
     return (
