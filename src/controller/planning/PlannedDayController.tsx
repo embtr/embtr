@@ -1,15 +1,24 @@
+import { Timestamp } from "firebase/firestore";
 import { RoutineModel } from "src/controller/planning/RoutineController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
 
 export interface PlannedDay {
     id?: string,
+    metadata?: PlannedDayMetadata,
     plannedTasks: PlannedTask[]
 }
 
 export interface PlannedTask {
+    id?: string,
     routine: RoutineModel,
     startMinute?: number,
     duration?: number
+}
+
+export interface PlannedDayMetadata {
+    added: Timestamp,
+    modified: Timestamp,
+    locked: boolean
 }
 
 export const getTomorrowKey = () => {
@@ -28,13 +37,20 @@ class PlannedDayController {
     public static get(id: string, callback: Function) {
         let plannedDay: PlannedDay = {
             id: id,
+            metadata: undefined,
             plannedTasks: []
         }
 
         const response = PlannedDayDao.get(id);
         response.then(collection => {
-            collection?.forEach(plannedTask => {
-                plannedDay.plannedTasks.push(plannedTask.data() as PlannedTask);
+            collection?.forEach(currentPlannedTask => {
+                if (currentPlannedTask.id === "metadata") {
+                    plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
+                } else {
+                    let plannedTask: PlannedTask = currentPlannedTask.data() as PlannedTask;
+                    plannedTask.id = currentPlannedTask.id;
+                    plannedDay.plannedTasks.push(plannedTask);
+                }
             });
         }).then(() => {
             callback(plannedDay);
@@ -45,8 +61,26 @@ class PlannedDayController {
         PlannedDayDao.delete(id, callback);
     }
 
-    public static create(plannedDay: PlannedDay) {
+    public static create(plannedDay: PlannedDay, callback: Function) {
+        plannedDay.metadata = this.createMetadata();
         PlannedDayDao.create(plannedDay);
+        
+        callback(plannedDay);
+    }
+
+    public static update(plannedDay: PlannedDay) {
+        plannedDay.metadata!.modified = Timestamp.now();
+        PlannedDayDao.update(plannedDay);
+    }
+
+    private static createMetadata(): PlannedDayMetadata {
+        const metadata: PlannedDayMetadata = {
+            added: Timestamp.now(),
+            modified: Timestamp.now(),
+            locked: true
+        };
+
+        return metadata;
     }
 }
 

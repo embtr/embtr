@@ -7,8 +7,9 @@ import RoutineController, { getTomorrowDayOfWeek, RoutineModel } from 'src/contr
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
-import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedDayMetadata, PlannedTask } from 'src/controller/planning/PlannedDayController';
 import { Plan } from 'src/components/plan/Plan';
+import { Timestamp } from 'firebase/firestore';
 
 
 export const Tomorrow = () => {
@@ -20,8 +21,6 @@ export const Tomorrow = () => {
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
     const [locked, setLocked] = React.useState<boolean>(false);
     const [checkedTasks, setCheckedTasks] = React.useState(new Map<string, boolean>());
-
-    const [modificationsWereMade, setModificationsWereMade] = React.useState<boolean>(false);
 
     const tomorrow = getTomorrowDayOfWeek();
     const tomorrowCapitalized = tomorrow.charAt(0).toUpperCase() + tomorrow.slice(1);
@@ -60,10 +59,12 @@ export const Tomorrow = () => {
         let newCheckedTasks: Map<string, boolean> = new Map(checkedTasks);
         newCheckedTasks.set(taskId, checked);
         setCheckedTasks(newCheckedTasks);
-        setModificationsWereMade(true);
     };
 
-    const getPlannedDay = (): PlannedDay => {
+    /*
+     * move me to the controller!
+    */
+    const getUpdatedPlannedDay = (): PlannedDay => {
         let plannedtasks: PlannedTask[] = [];
         routines.forEach(routine => {
             if (checkedTasks.get(routine.id!) !== false) {
@@ -75,26 +76,28 @@ export const Tomorrow = () => {
             }
         });
 
-        const plannedDay: PlannedDay = {
-            plannedTasks: plannedtasks,
-            id: getTomorrowKey()
+        const newPlannedDay: PlannedDay = {
+            id: plannedDay?.id,
+            metadata: plannedDay?.metadata,
+            plannedTasks: plannedtasks
         };
 
-        return plannedDay;
+        return newPlannedDay;
+    };
+
+    const isNewPlannedDay = () : boolean => {
+        return plannedDay?.metadata === undefined;
+    };
+
+    const createPlannedDay = () => {
+        const updatedPlannedDay = getUpdatedPlannedDay();
+        PlannedDayController.create(updatedPlannedDay, setPlannedDay);
     };
 
     const updatePlannedDay = () => {
-        if (!modificationsWereMade && plannedDay && plannedDay?.plannedTasks.length > 0) {
-            return;
-        }
-
-        PlannedDayController.delete(getTomorrowKey(), () => {
-            const plannedDay: PlannedDay = getPlannedDay();
-            PlannedDayController.create(plannedDay);
-            setPlannedDay(plannedDay);
-        });
-
-        setModificationsWereMade(false);
+        const updatedPlannedDay = getUpdatedPlannedDay();
+        PlannedDayController.update(updatedPlannedDay);
+        setPlannedDay(updatedPlannedDay);
     };
 
     const toggleLock = () => {
@@ -102,7 +105,11 @@ export const Tomorrow = () => {
         setLocked(lockPlans);
 
         if (lockPlans) {
-            updatePlannedDay();
+            if (isNewPlannedDay()) {
+                createPlannedDay();
+            } else {
+                updatePlannedDay();
+            }
         }
     };
 

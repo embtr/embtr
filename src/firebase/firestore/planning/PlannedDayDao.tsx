@@ -1,9 +1,15 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, getDocs, deleteDoc, doc, addDoc } from 'firebase/firestore';
+import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class PlannedDayDao {
+    public static async update(plannedDay: PlannedDay) {
+        this.delete(plannedDay.id!, () => {
+            this.create(plannedDay);
+        });
+    }
+
     public static async get(id: string) {
         const db: Firestore = getFirebaseConnection(this.name, "get");
 
@@ -43,6 +49,8 @@ class PlannedDayDao {
         plannedDay.plannedTasks.forEach(plannedTask => {
             addDoc(collection(db, "planned_day", userUid, plannedDay.id!), plannedTask);
         });
+
+        setDoc(doc(db, "planned_day/", userUid, plannedDay.id!, "metadata"), plannedDay.metadata);
     }
 }
 
