@@ -4,7 +4,19 @@ import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class PlannedDayDao {
-    public static async delete(plannedDayUid: string, callback: Function) {
+    public static async get(id: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "get");
+
+        const userUid = getAuth().currentUser?.uid;
+        if (!userUid) {
+            return;
+        }
+
+        const result = await getDocs(collection(db, "planned_day", userUid, id));
+        return result;
+    }
+
+    public static async delete(id: string, callback: Function) {
         const db: Firestore = getFirebaseConnection(this.name, "delete");
 
         const userUid = getAuth().currentUser?.uid;
@@ -12,9 +24,9 @@ class PlannedDayDao {
             return;
         }
 
-        const result = await getDocs(collection(db, "planned_day", userUid, plannedDayUid));
+        const result = await getDocs(collection(db, "planned_day", userUid, id));
         result.forEach(plannedDay => {
-            deleteDoc(doc(db, "planned_day", userUid, plannedDayUid, plannedDay.id));
+            deleteDoc(doc(db, "planned_day", userUid, id, plannedDay.id));
         });
 
         callback();

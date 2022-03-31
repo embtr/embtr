@@ -3,24 +3,25 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { getTomorrow, RoutineModel } from 'src/controller/planning/RoutineController';
+import RoutineController, { getTomorrowDayOfWeek, RoutineModel } from 'src/controller/planning/RoutineController';
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Plan } from 'src/components/plan/Plan';
 import { Countdown } from 'src/components/common/time/Countdown';
-import PlannedDayController, { PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
-import { DateUtil } from 'src/util/DateUtil';
+import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
 
 
 export const Tomorrow = () => {
     const { colors } = useTheme();
 
     const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
+
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
     const [locked, setLocked] = React.useState<boolean>(false);
     const [checkedTasks, setCheckedTasks] = React.useState(new Map<string, boolean>());
 
-    const tomorrow = getTomorrow();
+    const tomorrow = getTomorrowDayOfWeek();
     const tomorrowCapitalized = tomorrow.charAt(0).toUpperCase() + tomorrow.slice(1);
 
     useFocusEffect(
@@ -29,11 +30,11 @@ export const Tomorrow = () => {
         }, [])
     );
 
-    const onChecked = (taskId: string, checked: boolean) => {
-        let newCheckedTasks: Map<string, boolean> = new Map(checkedTasks);
-        newCheckedTasks.set(taskId, checked);
-        setCheckedTasks(newCheckedTasks);
-    };
+    useFocusEffect(
+        React.useCallback(() => {
+            PlannedDayController.get(getTomorrowKey(), setPlannedDay);
+        }, [])
+    );
 
     useFocusEffect(
         React.useCallback(() => {
@@ -52,6 +53,12 @@ export const Tomorrow = () => {
         }, [locked, routines, checkedTasks])
     );
 
+    const onChecked = (taskId: string, checked: boolean) => {
+        let newCheckedTasks: Map<string, boolean> = new Map(checkedTasks);
+        newCheckedTasks.set(taskId, checked);
+        setCheckedTasks(newCheckedTasks);
+    };
+
     const getPlannedDay = (): PlannedDay => {
         let plannedtasks: PlannedTask[] = [];
         routines.forEach(routine => {
@@ -66,7 +73,7 @@ export const Tomorrow = () => {
 
         const plannedDay: PlannedDay = {
             plannedTasks: plannedtasks,
-            id: DateUtil.getTomorrowKey()
+            id: getTomorrowKey()
         };
 
         return plannedDay;
@@ -74,10 +81,9 @@ export const Tomorrow = () => {
 
     const toggleLock = () => {
         const lockPlans = !locked;
-        DateUtil.getTomorrowKey();
 
         if (lockPlans) {
-            PlannedDayController.delete(DateUtil.getTomorrowKey(), () => {
+            PlannedDayController.delete(getTomorrowKey(), () => {
                 const plannedDay: PlannedDay = getPlannedDay();
                 PlannedDayController.create(plannedDay);
             });
