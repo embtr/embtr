@@ -39,18 +39,19 @@ export const Tomorrow = () => {
     useFocusEffect(
         React.useCallback(() => {
             let routineViews: JSX.Element[] = [];
-            routines.forEach(routine => {
-                if (locked) {
-                    if (checkedTasks.get(routine.id!) !== false) {
-                        routineViews.push(<View key={routine.id} style={{ paddingBottom: 5 }}><Plan routine={routine} /></View>);
-                    }
-                } else {
+
+            if (locked) {
+                plannedDay?.plannedTasks.forEach(plannedTask => {
+                    routineViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><PlanningTask routine={plannedTask.routine} isChecked={checkedTasks.get(plannedTask.routine.id!) !== false} onCheckboxToggled={onChecked} /></View>);
+                });
+            } else {
+                routines.forEach(routine => {
                     routineViews.push(<View key={routine.id} style={{ paddingBottom: 5 }}><PlanningTask routine={routine} isChecked={checkedTasks.get(routine.id!) !== false} onCheckboxToggled={onChecked} /></View>);
-                }
-            });
+                });
+            }
 
             setTaskViews(routineViews);
-        }, [locked, routines, checkedTasks])
+        }, [locked, routines, plannedDay, checkedTasks])
     );
 
     const onChecked = (taskId: string, checked: boolean) => {
@@ -86,6 +87,7 @@ export const Tomorrow = () => {
             PlannedDayController.delete(getTomorrowKey(), () => {
                 const plannedDay: PlannedDay = getPlannedDay();
                 PlannedDayController.create(plannedDay);
+                setPlannedDay(plannedDay);
             });
         }
 
