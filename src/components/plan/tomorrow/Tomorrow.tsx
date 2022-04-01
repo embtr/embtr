@@ -7,7 +7,7 @@ import RoutineController, { getTomorrowDayOfWeek, RoutineModel } from 'src/contr
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
-import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedDayMetadata, PlannedTask } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
 import { Plan } from 'src/components/plan/Plan';
 
 
