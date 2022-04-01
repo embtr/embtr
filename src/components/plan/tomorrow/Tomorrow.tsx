@@ -161,11 +161,21 @@ export const Tomorrow = () => {
                     Plan Your Day
                 </Text>
                 <Text style={{ color: colors.text, textAlign: "center", paddingBottom: "2%", fontSize: 12, paddingLeft: "5%", paddingRight: "5%" }}>
-                    {locked ? "You can unlock tomorrows schedule if you need to make changes." : "Select the tasks that you intend on completing tomorrow. You can update the start time and duration. Lock in your plans once you feel confident about tomorrows schedule!"}
+                    {locked ? "You can unlock tomorrow's schedule if you need to make changes." : "Select the tasks that you intend on completing tomorrow. You can update the start time and duration. Lock in your plans once you feel confident about tomorrows schedule!"}
                 </Text>
-                <ScrollView style={{ backgroundColor: colors.background_medium, paddingTop: 5, height: "97%" }}>
-                    {taskViews}
-                </ScrollView>
+                {
+                    taskViews.length > 0
+                        ?
+                        <ScrollView style={{ backgroundColor: colors.background_medium, paddingTop: 5, height: "97%" }}>
+                            {taskViews}
+                        </ScrollView>
+                        :
+                        <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
+                            <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
+                                You have no tasks scheduled to run on a {tomorrowCapitalized}. Head on over to the Tasks tab to configure some.
+                            </Text>
+                        </View>
+                }
             </View>
 
             <View style={{ flex: 1.5, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
