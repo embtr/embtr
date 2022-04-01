@@ -56,7 +56,7 @@ export const Tasks = () => {
                 {routineViews}
             </ScrollView>
 
-            <View style={{ position: "absolute", right: 0, bottom: 50 }}>
+            <View style={{ position: "absolute", right: 0, bottom: 0 }}>
                 <AddButton onPress={() => { navigation.navigate('CreateRoutine') }} />
             </View>
         </View>
