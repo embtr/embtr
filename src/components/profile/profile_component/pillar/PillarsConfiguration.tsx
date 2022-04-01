@@ -21,10 +21,6 @@ export const PillarsConfiguration = () => {
         color: colors.text,
     } as TextStyle;
 
-    const pillarContainerViewStyle = {
-        paddingBottom: 5,
-    } as ViewStyle;
-
     const [currentUid, setCurrentUid] = React.useState<string | undefined>(undefined);
     const [addPillarText, setAddPillarText] = React.useState("");
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
@@ -60,7 +56,7 @@ export const PillarsConfiguration = () => {
         };
 
         pillarViews.push(
-            <View style={pillarContainerViewStyle} key={pillarModel.name}>
+            <View key={pillarModel.name}>
                 <Pillar pillarModel={pillarModel} enableDelete={true} deleteOnPress={confirmDelete} />
             </View>
         );
@@ -111,7 +107,7 @@ export const PillarsConfiguration = () => {
                         <Text style={[textStyle, { textAlign: "center", fontSize: 12 }]}>Core Life Pillars are your personal values that mean the most to you. Rank your Pillars from highest to lowest priority.</Text>
                     </View>
 
-                    <View style={{ marginTop: 10 }}>
+                    <View style={{ marginTop: 10, backgroundColor: colors.background_medium }}>
                         {pillarViews}
                     </View>
 

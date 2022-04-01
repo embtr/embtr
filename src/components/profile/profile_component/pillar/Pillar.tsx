@@ -30,7 +30,7 @@ export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
     } as TextStyle;
 
     const pillarViewStyle = {
-        backgroundColor: "black",
+        backgroundColor: colors.background_heavy,
         marginBottom: 10,
         paddingTop: 10,
         paddingBottom: 10,

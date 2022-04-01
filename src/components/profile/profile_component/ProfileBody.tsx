@@ -57,7 +57,7 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
                             </Text>
                         );
                     }}
-                    style={{ backgroundColor: 'black' }} />
+                    style={{ backgroundColor: colors.background_medium }} />
                 }
             />
         </View>

@@ -47,7 +47,7 @@ export const Pillars = ({ userProfileModel }: Props) => {
     }
 
     return (
-        <View>
+        <View style={{backgroundColor: colors.background_medium}}>
             {pillarViews}
         </View>
     );
