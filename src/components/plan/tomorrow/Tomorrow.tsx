@@ -97,13 +97,11 @@ export const Tomorrow = () => {
     };
 
     const createPlannedDay = () => {
-        console.log("creating planned day");
         const updatedPlannedDay = getUpdatedPlannedDay();
         PlannedDayController.create(updatedPlannedDay, setPlannedDay);
     };
 
     const updatePlannedDayAsLocked = () => {
-        console.log("updating planned day");
         const updatedPlannedDay = getUpdatedPlannedDay();
         updatedPlannedDay.metadata!.locked = true;
         PlannedDayController.update(updatedPlannedDay);
@@ -111,7 +109,6 @@ export const Tomorrow = () => {
     };
 
     const updatePlannedDayAsUnlocked = () => {
-        console.log("updating planned day as unlocked");
         const newPlannedDay: PlannedDay = {
             id: plannedDay!.id,
             metadata: plannedDay!.metadata,
