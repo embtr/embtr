@@ -19,7 +19,7 @@ export const LandingFooter = () => {
         width: '100%',
         paddingTop: 4,
         paddingBottom: 4,
-        backgroundColor: colors.background_secondary,
+        backgroundColor: colors.background_medium,
     } as ViewStyle;
 
     const footerTextStyle = {

@@ -8,7 +8,7 @@ export const LoadingPage = () => {
     const loadingPageView = {
         width: "100%",
         height: "100%",
-        backgroundColor: colors.background
+        backgroundColor: colors.background_heavy
     } as ViewStyle;
 
     return <View style={loadingPageView}></View>

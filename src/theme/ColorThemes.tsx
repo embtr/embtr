@@ -1,7 +1,10 @@
 // Light theme colors
 export const lightColors = {
-  background: '#FFFFFF',
-  background_secondary: '#EDEDED',
+  background_heavy: '#FFFFFF',
+  background_medium: '#EDEDED',
+  background_light: '#d4d4d4',
+
+
   toggle_color: '#4d4d4d',
   primary_border: '#ad1111',
   secondary_border: '#4d4d4d',
@@ -14,8 +17,11 @@ export const lightColors = {
 
 // Dark theme colors
 export const darkColors = {
-  background: '#121212',
-  background_secondary: '#212121',
+  background_heavy: '#000000',
+  background_medium: '#121212',
+  background_light: '#303030',
+
+
   toggle_color: '#4d4d4d',
   primary_border: '#C811EC',
   secondary_border: '#3BC0FF',

@@ -56,7 +56,7 @@ export const CreateTimelineStory = () => {
                     <Text style={{ color: "red", fontSize: 12 }}>{titleError && "title is required"}</Text>
                 </View>
                 <TextInput
-                    style={{ padding: 15, color: colors.text, backgroundColor: colors.background_secondary, width: "100%" }}
+                    style={{ padding: 15, color: colors.text, backgroundColor: colors.background_medium, width: "100%" }}
                     placeholder={"Title"}
                     placeholderTextColor={colors.secondary_text}
                     onChangeText={setTitle}
@@ -71,7 +71,7 @@ export const CreateTimelineStory = () => {
                         <Text style={{ color: "red", fontSize: 12 }}>{storyError && "share your story."}</Text>
                     </View>
                     <TextInput
-                        style={{ height: "95%", color: colors.text, backgroundColor: colors.background_secondary, width: "100%", paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}
+                        style={{ height: "95%", color: colors.text, backgroundColor: colors.background_medium, width: "100%", paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}
                         multiline={true}
                         placeholder={"Story. Be someone's inspiration."}
                         placeholderTextColor={colors.secondary_text}

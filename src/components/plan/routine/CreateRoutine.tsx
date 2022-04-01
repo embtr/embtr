@@ -20,7 +20,7 @@ export const CreateRoutine = () => {
             <View style={{ flexDirection: "column", flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: "center" }}>
                     <TextInput
-                        style={{ textAlign: "center", marginLeft: "10%", marginRight: "10%", paddingLeft: 10, height: 40, borderColor: colors.background_secondary, backgroundColor: colors.background_secondary, borderWidth: 1, borderRadius: 10, color: colors.text, fontSize: 20 }}
+                        style={{ textAlign: "center", marginLeft: "10%", marginRight: "10%", paddingLeft: 10, height: 40, borderColor: colors.background_medium, backgroundColor: colors.background_medium, borderWidth: 1, borderRadius: 10, color: colors.text, fontSize: 20 }}
                         onChangeText={setName}
                         value={name}
                         placeholderTextColor={colors.secondary_text}

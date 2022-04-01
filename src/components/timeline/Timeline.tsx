@@ -126,7 +126,7 @@ export const Timeline = () => {
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount}
             />
-            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_secondary }}>
+            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_medium }}>
                 <View style={{ flex: 1 }}>
                     {timelineViews}
                 </View>

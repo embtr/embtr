@@ -52,7 +52,7 @@ export const Tasks = () => {
         <View style={{height: "100%"}}>
             <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} routines={visibleRoutines} />
 
-            <ScrollView style={{ backgroundColor: colors.background_secondary }}>
+            <ScrollView style={{ backgroundColor: colors.background_medium }}>
                 {routineViews}
             </ScrollView>
 

@@ -16,7 +16,7 @@ export const CommentsScrollView = ({ comments }: Props) => {
     let commentViews: JSX.Element[] = [];
     comments.forEach(comment => {
         commentViews.push(
-            <View key={comment.uid + comment.comment + comment.timestamp} style={{ marginBottom: 7.5, backgroundColor: colors.background }}>
+            <View key={comment.uid + comment.comment + comment.timestamp} style={{ marginBottom: 7.5, backgroundColor: colors.background_heavy }}>
                 <CommentBoxComment comment={comment} />
             </View>
         );

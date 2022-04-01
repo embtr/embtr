@@ -50,7 +50,7 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
 
             <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
                 <TextInput
-                    style={{ padding: 15, color: colors.text, backgroundColor: colors.background_secondary, width: "100%", paddingRight: 65 }}
+                    style={{ padding: 15, color: colors.text, backgroundColor: colors.background_medium, width: "100%", paddingRight: 65 }}
                     placeholder={"add a comment..."}
                     onChangeText={text => setCommentText(text)}
                     value={commentText}

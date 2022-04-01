@@ -16,11 +16,11 @@ export const Screen = (props: { children: any; }) => {
                 flex: 1,
                 overflow: 'scroll',
                 /* 
-                * the colors.background value will change dynamicly with
+                * the colors.background_heavy value will change dynamicly with
                 * so if we wanna change its value we can go directly to the pallet
                 * this will make super easy to change and maintain mid or end project
                 */
-                backgroundColor: colors.background,
+                backgroundColor: colors.background_heavy,
             }}>
                 {children}
             </View>

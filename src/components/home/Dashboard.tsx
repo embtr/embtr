@@ -29,7 +29,7 @@ export const Dashboard = () => {
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
-                    tabBarStyle: { backgroundColor: colors.background },
+                    tabBarStyle: { backgroundColor: colors.background_heavy },
                     tabBarIcon: ({ focused, size }) => {
                         if (route.name === TABS.TIMELINE) {
                             let icon: any = focused ? 'ios-home' : 'ios-home-outline';
@@ -80,8 +80,8 @@ export const Dashboard = () => {
                     tabBarHideOnKeyboard: false,
                     tabBarShowLabel: false,
                     headerShown: false,
-                    tabBarActiveBackgroundColor: colors.background_secondary,
-                    tabBarInactiveBackgroundColor: colors.background,
+                    tabBarActiveBackgroundColor: colors.background_medium,
+                    tabBarInactiveBackgroundColor: colors.background_heavy,
                 })}
             >
                 <Tab.Screen

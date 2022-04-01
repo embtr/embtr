@@ -38,6 +38,14 @@ export const Tomorrow = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            if (plannedDay?.metadata) {
+                setLocked(plannedDay?.metadata?.locked);
+            }
+        }, [plannedDay])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
             let routineViews: JSX.Element[] = [];
 
             if (locked) {
@@ -89,11 +97,13 @@ export const Tomorrow = () => {
     };
 
     const createPlannedDay = () => {
+        console.log("creating planned day");
         const updatedPlannedDay = getUpdatedPlannedDay();
         PlannedDayController.create(updatedPlannedDay, setPlannedDay);
     };
 
     const updatePlannedDayAsLocked = () => {
+        console.log("updating planned day");
         const updatedPlannedDay = getUpdatedPlannedDay();
         updatedPlannedDay.metadata!.locked = true;
         PlannedDayController.update(updatedPlannedDay);
@@ -101,6 +111,7 @@ export const Tomorrow = () => {
     };
 
     const updatePlannedDayAsUnlocked = () => {
+        console.log("updating planned day as unlocked");
         const newPlannedDay: PlannedDay = {
             id: plannedDay!.id,
             metadata: plannedDay!.metadata,
@@ -155,7 +166,7 @@ export const Tomorrow = () => {
                 <Text style={{ color: colors.text, textAlign: "center", paddingBottom: "2%", fontSize: 12, paddingLeft: "5%", paddingRight: "5%" }}>
                     {locked ? "You can unlock tomorrows schedule if you need to make changes." : "Select the tasks that you intend on completing tomorrow. You can update the start time and duration. Lock in your plans once you feel confident about tomorrows schedule!"}
                 </Text>
-                <ScrollView style={{ backgroundColor: colors.background_secondary, paddingTop: 5, height: "97%" }}>
+                <ScrollView style={{ backgroundColor: colors.background_medium, paddingTop: 5, height: "97%" }}>
                     {taskViews}
                 </ScrollView>
             </View>

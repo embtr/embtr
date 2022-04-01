@@ -57,7 +57,7 @@ export const Notifications = () => {
         <Screen>
             <Banner name="Notifications" leftIcon={"arrow-back"} leftRoute={"BACK"} />
 
-            <ScrollView style={{ backgroundColor: colors.background_secondary }}>
+            <ScrollView style={{ backgroundColor: colors.background_medium }}>
                 {notificationViews}
             </ScrollView>
         </Screen>

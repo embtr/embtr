@@ -59,7 +59,7 @@ export const UserTagBox = ({ input, userTagged }: Props) => {
 
     return (
         display ?
-            (<View style={{ padding: 1, backgroundColor: colors.background_secondary, borderWidth: 1, borderColor: colors.background, borderRadius: 5 }} >
+            (<View style={{ padding: 1, backgroundColor: colors.background_medium, borderWidth: 1, borderColor: colors.background_heavy, borderRadius: 5 }} >
                 {usernameTagOptionsViews}
             </View >)
             :

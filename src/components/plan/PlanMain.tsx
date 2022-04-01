@@ -57,7 +57,7 @@ export const PlanMain = () => {
                                 </Text>
                             );
                         }}
-                        style={{ backgroundColor: 'black' }} />
+                        style={{ backgroundColor: colors.background_medium }} />
                     }
                 />
             </View>
