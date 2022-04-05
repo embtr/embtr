@@ -7,7 +7,6 @@ import RoutineController, { durationToString, RoutineModel, startMinuteToString 
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
