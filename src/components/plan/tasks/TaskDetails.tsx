@@ -24,13 +24,9 @@ export const TaskDetails = () => {
         }, [])
     );
 
-    const onRetire = () => {
-
-    };
-
     return (
         <Screen>
-            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"menu"} />
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
@@ -90,20 +86,7 @@ export const TaskDetails = () => {
                     </View>
                 </View>
 
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 10, flexDirection: "row", alignItems: "flex-end" }}>
-                        <View style={{ flex: 1 }} />
-                        <View style={{ flex: 2, alignItems: "center" }}>
-                            <EmbtrButton buttonText={"Copy"} size="small" callback={() => { }} />
-                        </View>
-
-                        <View style={{ flex: 2, alignItems: "center" }}>
-                            <EmbtrButton buttonText={"Retire"} size="small" callback={() => { }} />
-                        </View>
-                        <View style={{ flex: 1 }} />
-                    </View>
-                    <View style={{ flex: 1 }} />
-                </View>
+                <View style={{ flex: 1 }} />
             </View>
         </Screen>
     );
