@@ -89,6 +89,17 @@ class RoutineController {
         });
     }
 
+    static getRoutine(uid: string, id: string, callback: Function) {
+        const result = RoutineDao.getRoutine(uid, id);
+        result.then(document => {
+            let routine: RoutineModel = document.data() as RoutineModel;
+            routine.id = document.id;
+            callback(routine);
+        }).catch(() => {
+            callback(undefined);
+        });
+    }
+
     static getRoutines(uid: string, callback: Function) {
         const result = RoutineDao.getRoutines(uid);
 
