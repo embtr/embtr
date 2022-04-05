@@ -3,12 +3,13 @@ import { NavigatorScreenParams } from "@react-navigation/native";
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>
     CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>
-    TodayTab: NavigatorScreenParams<PlanTabScreens>;
-    PlanTab: undefined;
+    PlanTab: NavigatorScreenParams<PlanTabScreens>;
+    TodayTab: undefined;
 }
 
 export type PlanTabScreens = {
     CreateRoutine: undefined;
+    TaskDetails: { id: string };
 };
 
 export type TimelineTabScreens = {

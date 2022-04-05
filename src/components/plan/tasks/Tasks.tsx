@@ -5,11 +5,11 @@ import { getAuth } from 'firebase/auth';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { AddButton } from 'src/components/common/button/AddButton';
-import { Plan } from 'src/components/plan/Plan';
 import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import RoutineController, { createDays, RoutineModel, taskRunsOnSelectedDay } from 'src/controller/planning/RoutineController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { Task } from 'src/components/plan/tasks/Task';
 
 export const Tasks = () => {
     const { colors } = useTheme();
@@ -41,15 +41,13 @@ export const Tasks = () => {
     visibleRoutines.forEach(routine => {
         if (taskRunsOnSelectedDay(routine, selectedDaysOfWeek)) {
             routineViews.push(
-                <View key={routine.id} style={{ paddingBottom: 5 }}>
-                    <Plan routine={routine} />
-                </View>
+                <Task routine={routine} />
             );
         }
     });
 
     return (
-        <View style={{height: "100%"}}>
+        <View style={{ height: "100%" }}>
             <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} routines={visibleRoutines} />
 
             <ScrollView style={{ backgroundColor: colors.background_medium }}>

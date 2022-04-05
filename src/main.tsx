@@ -50,6 +50,19 @@ const linking: LinkingOptions<RootStackParamList> = {
                             },
                             Notifications: "notifications",
                         }
+                    },
+                    PlanTab: {
+                        screens: {
+                            TaskDetails: {
+                                path: "tasks/:id/details",
+                                parse: {
+                                    id: (id) => id,
+                                },
+                                //                                  stringify: {
+                                //                                    id: (id) => id.replace(/^user-/, ''),
+                                //                                  },
+                            }
+                        }
                     }
                 }
             },
