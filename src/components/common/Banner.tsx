@@ -6,7 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
-import { HoldItem } from 'react-native-hold-menu';
 import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 import { EmbtrMenu } from 'src/components/common/menu/EmbtrMenu';
 
