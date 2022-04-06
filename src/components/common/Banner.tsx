@@ -6,6 +6,8 @@ import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { HoldItem } from 'react-native-hold-menu';
+import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 
 interface Props {
     name: string,
@@ -19,9 +21,11 @@ interface Props {
 
     innerLeftIcon?: any,
     innerLeftCallback?: Function
+
+    menuItems?: MenuItemProps[]
 }
 
-export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, innerLeftCallback }: Props) => {
+export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, innerLeftCallback, menuItems }: Props) => {
     const { colors } = useTheme();
     const textStyle = {
         fontSize: 18,
@@ -56,12 +60,25 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
                 <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
                     {rightIcon
                         ?
-                        <View style={{ alignItems: "flex-end" }}>
-                            {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                                <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
-                            </View> : <></>}
-                            <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
-                        </View>
+                        menuItems ?
+                            <HoldItem
+                                activateOn='tap'
+                                items={menuItems}
+                            >
+                                <View style={{ alignItems: "flex-end" }}>
+                                    {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
+                                        <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
+                                    </View> : <></>}
+                                    <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
+                                </View>
+                            </HoldItem>
+                            :
+                            <View style={{ alignItems: "flex-end" }}>
+                                {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
+                                    <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
+                                </View> : <></>}
+                                <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
+                            </View>
                         :
                         <View />
                     }

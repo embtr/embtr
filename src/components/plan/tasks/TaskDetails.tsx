@@ -23,9 +23,16 @@ export const TaskDetails = () => {
         }, [])
     );
 
+    const menuItems = [
+        { text: 'Actions', isTitle: true, onPress: () => { alert("hello!") } },
+        { text: 'Action 1', onPress: () => { alert("action 1!") } },
+        { text: 'Action 2', withSeparator: true, onPress: () => { } },
+        { text: 'Action 3', isDestructive: true, onPress: () => { } },
+    ];
+
     return (
         <Screen>
-            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"menu"} />
+            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"menu"} menuItems={menuItems} />
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
