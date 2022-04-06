@@ -32,7 +32,7 @@ export const TaskDetails = () => {
 
     return (
         <Screen>
-            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"menu"} menuItems={menuItems} />
+            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuItems={menuItems} />
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
