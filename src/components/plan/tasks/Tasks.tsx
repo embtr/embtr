@@ -41,7 +41,7 @@ export const Tasks = () => {
     visibleRoutines.forEach(routine => {
         if (taskRunsOnSelectedDay(routine, selectedDaysOfWeek)) {
             routineViews.push(
-                <Task routine={routine} />
+                <Task key={routine.id} routine={routine} />
             );
         }
     });
