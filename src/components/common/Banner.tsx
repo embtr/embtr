@@ -8,6 +8,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { HoldItem } from 'react-native-hold-menu';
 import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
+import { EmbtrMenu } from 'src/components/common/menu/EmbtrMenu';
 
 interface Props {
     name: string,
@@ -61,17 +62,14 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
                     {rightIcon
                         ?
                         menuItems ?
-                            <HoldItem
-                                activateOn='tap'
-                                items={menuItems}
-                            >
+                            <EmbtrMenu menuItems={menuItems} >
                                 <View style={{ alignItems: "flex-end" }}>
                                     {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
                                         <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
                                     </View> : <></>}
                                     <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
                                 </View>
-                            </HoldItem>
+                            </EmbtrMenu>
                             :
                             <View style={{ alignItems: "flex-end" }}>
                                 {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
