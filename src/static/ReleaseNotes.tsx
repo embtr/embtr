@@ -1,11 +1,10 @@
 import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { TouchableOpacity, View, Text, TextStyle, ViewStyle, Image, Button, StyleSheet } from "react-native";
+import { TouchableOpacity, View, Text, Image, StyleSheet } from "react-native";
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { color } from "react-native-reanimated";
 import ReleaseNotesController, { ReleaseNotesModel } from "src/controller/release_notes/ReleaseNotesController";
 
 type landingPageScreenProp = StackNavigationProp<RootStackParamList, 'LandingPage'>;
@@ -24,7 +23,7 @@ export const ReleaseNotes = () => {
 
     
     let releaseNotesView: JSX.Element[] = [];
-    let orderedReleaseNotes = releaseNotes.sort((a, b) => (a.version > b.version) ? 1 : -1).reverse();
+    releaseNotes.sort((a, b) => (a.version > b.version) ? 1 : -1).reverse();
     
     releaseNotes.forEach(releaseNote => {
         const notes = releaseNote.notes;

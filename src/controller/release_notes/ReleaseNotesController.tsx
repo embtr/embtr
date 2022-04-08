@@ -5,7 +5,7 @@ export interface ReleaseNotesModel {
     id?: string,
     added: Timestamp,
     notes: string[],
-    version: number
+    version: string
 }
 
 class ReleaseNotesController {
