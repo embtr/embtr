@@ -8,7 +8,7 @@ interface Props {
     menuItems: MenuItemProps[]
 }
 
-export const EmbtrMenu = ({ children, menuItems }: Props) => {
+export const EmbtrMenuMobile = ({ children, menuItems }: Props) => {
     return (
         <HoldItem activateOn='tap' items={menuItems} children={children} />
     )
