@@ -10,6 +10,7 @@ import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/
 import { EmbtrMenuMobile } from 'src/components/common/menu/EmbtrMenuMobile';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { EmbtrMenuWeb } from 'src/components/common/menu/EmbtrMenuWeb';
+import { EmbtrMenu } from 'src/components/common/menu/EmbtrMenu';
 
 interface Props {
     name: string,
@@ -63,24 +64,14 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
                     {rightIcon
                         ?
                         menuItems ?
-                            isDesktopBrowser() ?
-                                <EmbtrMenuWeb menuItems={[]}>
-                                    <View style={{ alignItems: "flex-end" }}>
-                                        {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                                            <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
-                                        </View> : <></>}
-                                        <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
-                                    </View>
-                                </EmbtrMenuWeb>
-                                :
-                                <EmbtrMenuMobile menuItems={menuItems} >
-                                    <View style={{ alignItems: "flex-end" }}>
-                                        {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                                            <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
-                                        </View> : <></>}
-                                        <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
-                                    </View>
-                                </EmbtrMenuMobile>
+                            <EmbtrMenu menuItems={menuItems} >
+                                <View style={{ alignItems: "flex-end" }}>
+                                    {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
+                                        <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
+                                    </View> : <></>}
+                                    <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
+                                </View>
+                            </EmbtrMenu>
                             :
                             <View style={{ alignItems: "flex-end" }}>
                                 {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
