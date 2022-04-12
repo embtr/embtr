@@ -2,9 +2,7 @@ import * as React from 'react';
 import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image, ImageURISource } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from "src/navigation/RootStackParamList";
+
 
 interface Props {
     image?: ImageURISource,
@@ -39,11 +37,10 @@ export const EmbtrButton = ({ image, icon, borderColor, buttonText, callback, si
         paddingRight: 10
     } as ViewStyle;
 
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     return (
         image ? (
-            <TouchableOpacity style={containerStyle} onPress={() => { callback(); navigation.goBack(); }}>
+            <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
                 <View style={{ flexDirection: "row" }}>
                     <View style={[logoViewStyle, { flex: 1 }]}>
                         <Image source={image} style={{ width: 18, height: 18 }} />
@@ -53,7 +50,7 @@ export const EmbtrButton = ({ image, icon, borderColor, buttonText, callback, si
             </TouchableOpacity>
 
         ) : icon ? (
-            <TouchableOpacity style={containerStyle} onPress={() => { callback(); navigation.goBack(); }}>
+            <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
                 <View style={{ flexDirection: "row" }}>
                     <Ionicons name={icon} size={32} color={colors.text} onPress={() => { }} />
                     <Text style={[textStyle, { flex: 9 }]}>{buttonText}</Text>
@@ -61,7 +58,7 @@ export const EmbtrButton = ({ image, icon, borderColor, buttonText, callback, si
             </TouchableOpacity>
 
         ) : (
-            <TouchableOpacity style={containerStyle} onPress={() => { callback(); navigation.goBack(); }}>
+            <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
                 <View>
                     <Text style={textStyle}>{buttonText}</Text>
                 </View>
