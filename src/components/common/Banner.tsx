@@ -7,9 +7,6 @@ import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
-import { EmbtrMenuMobile } from 'src/components/common/menu/EmbtrMenuMobile';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import { EmbtrMenuWeb } from 'src/components/common/menu/EmbtrMenuWeb';
 import { EmbtrMenu } from 'src/components/common/menu/EmbtrMenu';
 
 interface Props {
