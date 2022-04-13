@@ -16,8 +16,9 @@ export interface RoutineModel {
     added: Timestamp,
     name: string,
     startMinute: number,
-    duration: number
-    days: DaysModel
+    duration: number,
+    days: DaysModel,
+    active?: boolean
 }
 
 export const createDays = (sunday: boolean, monday: boolean, tuesday: boolean, wednesday: boolean, thursday: boolean, friday: boolean, saturday: boolean) => {
@@ -82,10 +83,17 @@ export const durationToString = (duration: number) => {
 };
 
 class RoutineController {
-    public static createRoutine(routineModel: RoutineModel, callback: Function) {
-        const result = RoutineDao.createRoutine(routineModel);
+    public static createRoutine(routine: RoutineModel, callback: Function) {
+        const result = RoutineDao.createRoutine(routine);
         result.then(document => {
             callback();
+        });
+    }
+
+    public static archiveRoutine(routine: RoutineModel, callback: Function) {
+        const result = RoutineDao.deleteRoutine(routine);
+        result.then(document => {
+        callback();
         });
     }
 
@@ -107,6 +115,11 @@ class RoutineController {
         result.then(documents => {
             documents.docs.forEach(document => {
                 let routine: RoutineModel = document.data() as RoutineModel;
+
+                if (routine.active === false) {
+                    return;
+                }
+
                 routine.id = document.id;
                 routines.push(routine);
             });

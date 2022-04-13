@@ -8,8 +8,6 @@ import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
 import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import PillarController from 'src/controller/pillar/PillarController';
 import { PillarModel } from 'src/model/PillarModel';
-import { useFocusEffect } from '@react-navigation/native';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 
 

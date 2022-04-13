@@ -1,15 +1,19 @@
 import React from 'react';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import RoutineController, { durationToString, RoutineModel, startMinuteToString } from 'src/controller/planning/RoutineController';
-import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
+import { isDesktopBrowser } from 'src/util/DeviceUtil';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
+
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const leftFlex = 3;
     const rightFlex = 8;
@@ -24,10 +28,31 @@ export const TaskDetails = () => {
     );
 
     const menuItems = [
-        { text: 'Actions', isTitle: true, onPress: () => { alert("hello!") } },
-        { text: 'Action 1', onPress: () => { alert("action 1!") } },
-        { text: 'Action 2', withSeparator: true, onPress: () => { } },
-        { text: 'Action 3', isDestructive: true, onPress: () => { } },
+        { text: 'Actions', isTitle: true },
+        {
+            text: 'Archive', onPress: () => {
+                if (isDesktopBrowser()) {
+                    if (confirm("archive task '" + routine?.name + "'")) {
+                        if (routine) {
+                            RoutineController.archiveRoutine(routine, () => { navigation.goBack() });
+                        }
+                    }
+                } else {
+                    Alert.alert("Archive Task?", "Archive task '" + route.name + "'?", [
+                        { text: 'Cancel', onPress: () => { }, style: 'cancel', },
+                        {
+                            text: 'Archive', onPress: () => {
+                                if (routine) {
+                                    RoutineController.archiveRoutine(routine, () => { navigation.goBack() });
+                                }
+                            }
+                        },
+                    ]);
+                }
+            }
+        }
+        //{ text: 'Action 2', withSeparator: true, onPress: () => { } },
+        //{ text: 'Action 3', isDestructive: true, onPress: () => { } },
     ];
 
     return (

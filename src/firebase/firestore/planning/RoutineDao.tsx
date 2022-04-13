@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, addDoc, getDocs, orderBy, query, where, getDoc, doc } from 'firebase/firestore';
+import { Firestore, collection, addDoc, getDocs, orderBy, query, where, getDoc, doc, setDoc } from 'firebase/firestore';
 import { RoutineModel } from 'src/controller/planning/RoutineController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
@@ -13,6 +13,21 @@ class RoutineDao {
         }
 
         const result = await addDoc(collection(db, "planning", uid, "routines"), routineModel);
+        return result;
+    }
+
+    public static async deleteRoutine(routine: RoutineModel) {
+        const db: Firestore = getFirebaseConnection(this.name, "deleteRoutine");
+
+        const uid = getAuth().currentUser?.uid;
+        if (!uid) {
+            return undefined;
+        }
+
+        const result = setDoc(doc(db, "planning", uid, "routines", routine.id!), {
+            active: false
+        }, { merge: true });
+
         return result;
     }
 
