@@ -62,38 +62,40 @@ export const CreateDailyRoutine = ({ name }: Props) => {
             </View>
 
             <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
-                <Text style={{ color: colors.text, fontSize: 20 }}>with a start time of</Text>
-                <View style={{ flexDirection: "row" }} >
-                    <View style={{ width: 45 }}>
+                <Text style={{ color: colors.text, fontSize: 20, textAlign: "right", flex: 1 }}>with a start time of</Text>
+                <View style={{ flexDirection: "row", flex: 1 }} >
+                    <View style={{ flex: 1 }}>
                         <Picker
                             itemStyle={{ height: 120 }}
-                            style={{ width: 60, color: colors.text }}
+                            style={{ width: 70, color: colors.text }}
                             selectedValue={hour}
                             onValueChange={setHour}>
                             {hourPickerItems}
                         </Picker>
                     </View>
 
-                    <View style={{ width: 45 }}>
+                    <View style={{ flex: 1 }}>
                         <Picker
                             itemStyle={{ height: 120 }}
-                            style={{ width: 60, color: colors.text }}
+                            style={{ width: 70, color: colors.text }}
                             selectedValue={minute}
                             onValueChange={setMinute}>
                             {minutePickerItems}
                         </Picker>
                     </View>
 
-                    <View style={{ width: 45 }}>
+                    <View style={{ flex: 1 }}>
                         <Picker
                             itemStyle={{ height: 120 }}
-                            style={{ width: 60, color: colors.text }}
+                            style={{ width: 75, color: colors.text }}
                             selectedValue={AMPM}
                             onValueChange={setAMPM}>
                             <Picker.Item color={colors.text} label="AM" value="AM" />
                             <Picker.Item color={colors.text} label="PM" value="PM" />
                         </Picker>
                     </View>
+
+                    <View style={{ flex: 1 }} />
                 </View>
             </View>
 
