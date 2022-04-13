@@ -48,15 +48,13 @@ export const CurrentUserProfile = () => {
     return (
         <Screen>
             <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
-            <ScrollView showsVerticalScrollIndicator={false}>
 
-                <View style={{ alignItems: "center" }}>
-                    <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                        <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} followerCount={followerCount} followingCount={followingCount} isFollowingUser={false} />
-                        {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
-                    </View>
+            <View style={{ alignItems: "center" }}>
+                <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
+                    <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} followerCount={followerCount} followingCount={followingCount} isFollowingUser={false} />
+                    {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                 </View>
-            </ScrollView>
+            </View>
         </Screen>
     )
 

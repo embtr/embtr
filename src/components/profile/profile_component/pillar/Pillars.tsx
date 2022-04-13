@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TextStyle, View } from 'react-native';
+import { ScrollView, Text, TextStyle, View } from 'react-native';
 import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PillarController from 'src/controller/pillar/PillarController';
@@ -47,8 +47,8 @@ export const Pillars = ({ userProfileModel }: Props) => {
     }
 
     return (
-        <View style={{backgroundColor: colors.background_medium}}>
+        <ScrollView style={{backgroundColor: colors.background_medium}}>
             {pillarViews}
-        </View>
+        </ScrollView>
     );
 };
