@@ -35,6 +35,7 @@
     "react-native-gesture-handler": "~2.1.0",
     "react-native-hold-menu": "^0.1.2",
     "react-native-keyboard-accessory": "^0.1.16",
+    "react-native-menu-view": "^1.2.2",
     "react-native-pager-view": "5.4.9",
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
