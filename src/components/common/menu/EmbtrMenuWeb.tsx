@@ -15,10 +15,16 @@ export const EmbtrMenuWeb = ({ children, menuItems }: Props) => {
 
     let actions: MenuAction[] = [];
     menuItems.forEach(menuItem => {
+        if (menuItem.text === "Actions") {
+            return;
+        }
+
         let action: MenuAction = {
+            id: menuItem.text,
             title: menuItem.text,
             titleColor: colors.text
         };
+
         actions.push(action);
     });
 
@@ -27,7 +33,11 @@ export const EmbtrMenuWeb = ({ children, menuItems }: Props) => {
             <MenuView
                 title="Actions"
                 onPressAction={({ nativeEvent }) => {
-                    console.warn(JSON.stringify(nativeEvent));
+                    menuItems.forEach(menuItem => {
+                        if (menuItem.text === nativeEvent.event.toString() && menuItem.onPress) {
+                            menuItem.onPress();
+                        }
+                    });
                 }}
                 actions={actions}
                 shouldOpenOnLongPress={true}
