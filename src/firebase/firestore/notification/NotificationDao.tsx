@@ -1,12 +1,12 @@
 import { id } from 'date-fns/locale';
-import { Firestore, collection, getDocs, where, query, addDoc, arrayUnion, doc, setDoc } from 'firebase/firestore';
+import { Firestore, collection, getDocs, where, query, addDoc, arrayUnion, doc, setDoc, orderBy } from 'firebase/firestore';
 import { NotificationModel } from 'src/controller/notification/NotificationController';
 import { getFirebaseConnection} from 'src/firebase/firestore/ConnectionProvider';
 
 class NotificationDao {
     public static async getNotifications(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, "getNotifications");
-        const q = query(collection(db, "notifications"), where("uid", "==", uid));
+        const q = query(collection(db, "notifications"), where("uid", "==", uid) );
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;

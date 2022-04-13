@@ -16,8 +16,8 @@ class RoutineDao {
         return result;
     }
 
-    public static async deleteRoutine(routine: RoutineModel) {
-        const db: Firestore = getFirebaseConnection(this.name, "deleteRoutine");
+    public static async archiveRoutine(routine: RoutineModel) {
+        const db: Firestore = getFirebaseConnection(this.name, "archiveRoutine");
 
         const uid = getAuth().currentUser?.uid;
         if (!uid) {

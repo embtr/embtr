@@ -11,34 +11,34 @@ type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'Timel
 
 interface Props {
     userProfileModel: UserProfileModel,
-    storyModel: StoryModel
+    story: StoryModel
 }
 
-export const UserTextCard = ({ userProfileModel, storyModel }: Props) => {
+export const UserTextCard = ({ userProfileModel, story }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
 
-    const [likes, setLikes] = React.useState(storyModel.public.likes.length);
+    const [likes, setLikes] = React.useState(story.public.likes.length);
 
     const onLike = () => {
-        StoryController.likeStory(storyModel.id!, getAuth().currentUser!.uid);
+        StoryController.likeStory(story, getAuth().currentUser!.uid);
         setLikes(likes + 1);
     }
 
     const onCommented = () => {
-        navigation.navigate('TimelineComments', { id: storyModel?.id ? storyModel.id : "" })
+        navigation.navigate('TimelineComments', { id: story?.id ? story.id : "" })
     };
 
-    const isLiked = storyWasLikedBy(storyModel, getAuth().currentUser!.uid);
+    const isLiked = storyWasLikedBy(story, getAuth().currentUser!.uid);
 
     return <TextCard
         userProfileModel={userProfileModel}
-        added={storyModel.added}
+        added={story.added}
         name={userProfileModel.name!}
         isLiked={isLiked}
-        title={storyModel.data.title}
-        body={storyModel.data.story}
+        title={story.data.title}
+        body={story.data.story}
         likes={likes}
-        comments={storyModel.public.comments.length}
+        comments={story.public.comments.length}
         onLike={onLike}
         onCommented={onCommented}
     />

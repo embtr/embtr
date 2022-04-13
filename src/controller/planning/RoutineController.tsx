@@ -91,7 +91,7 @@ class RoutineController {
     }
 
     public static archiveRoutine(routine: RoutineModel, callback: Function) {
-        const result = RoutineDao.deleteRoutine(routine);
+        const result = RoutineDao.archiveRoutine(routine);
         result.then(document => {
         callback();
         });

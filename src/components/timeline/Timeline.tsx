@@ -73,7 +73,7 @@ export const Timeline = () => {
         const profile = timelineProfiles.get(timelineEntry.uid);
         if (profile) {
             return <View key={timelineEntry.id} style={[card]}>
-                <UserTextCard userProfileModel={profile} storyModel={timelineEntry} />
+                <UserTextCard userProfileModel={profile} story={timelineEntry} />
             </View>;
         }
 

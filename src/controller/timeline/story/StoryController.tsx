@@ -1,5 +1,6 @@
 import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
+import NotificationController, { NotificationType } from "src/controller/notification/NotificationController";
 import { TimelinePostModel } from "src/controller/timeline/TimelineController";
 import StoryDao from "src/firebase/firestore/story/StoryDao";
 
@@ -75,8 +76,9 @@ class StoryController {
         });
     }
 
-    public static likeStory(storyId: string, userUid: string) {
-        StoryDao.likeStory(storyId, userUid);
+    public static likeStory(story: StoryModel, userUid: string) {
+        StoryDao.likeStory(story.id, userUid);
+        NotificationController.addNotification(userUid, story.uid, NotificationType.TIMELINE_LIKE, story.id);
     }
 
     public static addComment(id: string, uid: string, commentText: string, callback: Function) {

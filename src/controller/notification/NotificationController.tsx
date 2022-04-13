@@ -15,7 +15,8 @@ export interface NotificationModel {
 
 export enum NotificationType {
     TIMELINE_COMMENT,
-    CHALLENGE_COMMENT
+    CHALLENGE_COMMENT,
+    TIMELINE_LIKE,
 }
 
 export const getUnreadNotificationCount = (notifications: NotificationModel[]): number => {
@@ -58,13 +59,7 @@ class NotificationController {
         });
     }
 
-    public static clearNotifications(notifications: NotificationModel[]) {
-        notifications.forEach(notification => {
-            NotificationDao.clearNotification(notification);
-        });
-    }
-
-    private static addNotification(fromUid: string, toUid: string, notificationType: NotificationType, targetUid: string) {
+    public static addNotification(fromUid: string, toUid: string, notificationType: NotificationType, targetUid: string) {
         const summary: string = this.getSummary(notificationType);
         const targetPage: string = this.getTargetPage(notificationType);
 
@@ -81,15 +76,28 @@ class NotificationController {
         NotificationDao.addNotification(notificationModel);
     }
 
+    public static clearNotifications(notifications: NotificationModel[]) {
+        notifications.forEach(notification => {
+            NotificationDao.clearNotification(notification);
+        });
+    }
+
     private static getSummary(notificationType: NotificationType): string {
-        return "tagged you in a comment.";
+        switch (notificationType) {
+            case NotificationType.TIMELINE_LIKE:
+                return "liked your post"
+            default:
+                return "tagged you in a comment";
+        }
     }
 
     private static getTargetPage(notificationType: NotificationType): string {
-        switch(notificationType) {
+        switch (notificationType) {
             case NotificationType.CHALLENGE_COMMENT:
                 return "ChallengeComments";
             case NotificationType.TIMELINE_COMMENT:
+                return "TimelineComments";
+            case NotificationType.TIMELINE_LIKE:
                 return "TimelineComments";
             default:
                 return "";
