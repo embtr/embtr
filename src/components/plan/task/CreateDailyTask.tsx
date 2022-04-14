@@ -28,22 +28,22 @@ export const CreateDailyTask = ({ name }: Props) => {
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
-        hourPickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
+        hourPickerItems.push(<Picker.Item key={"hour_" + i} color={colors.text} label={"" + i} value={i} />);
     }
 
     let minutePickerItems: JSX.Element[] = [];
     for (let i = 0; i < 60; i += 5) {
-        minutePickerItems.push(<Picker.Item color={colors.text} label={(i < 10 ? "0" : "") + i} value={i} />);
+        minutePickerItems.push(<Picker.Item key={"minute_" + i} color={colors.text} label={(i < 10 ? "0" : "") + i} value={i} />);
     }
 
     let durationHoursPickerItems: JSX.Element[] = [];
     for (let i = 0; i <= 23; i++) {
-        durationHoursPickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
+        durationHoursPickerItems.push(<Picker.Item key={"durationhour_" + i} color={colors.text} label={"" + i} value={i} />);
     }
 
     let durationMinutesPickerItems: JSX.Element[] = [];
     for (let i = 0; i < 60; i += 5) {
-        durationMinutesPickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
+        durationMinutesPickerItems.push(<Picker.Item key={"durationminute_" + i} color={colors.text} label={"" + i} value={i} />);
     }
 
     const createTask = () => {
