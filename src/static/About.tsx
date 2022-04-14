@@ -23,7 +23,7 @@ export const About = () => {
     } as TextStyle;
 
     const textViewStyle = {
-        width: "60%",
+        width: "40%",
         height: "100%",
         alignContent: "center",
         alignItems: "center",
