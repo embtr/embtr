@@ -1,24 +1,24 @@
 import React from 'react';
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { RoutineModel } from 'src/controller/planning/TaskController';
+import { TaskModel } from 'src/controller/planning/TaskController';
 import { Plan } from 'src/components/plan/Plan';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
-    routine: RoutineModel
+    task: TaskModel
 }
 
-export const Task = ({ routine }: Props) => {
+export const Task = ({ task }: Props) => {
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     return (
-        <TouchableOpacity key={routine.id} onPress={() => { navigation.navigate('TaskDetails', { id: routine.id! }) }}>
+        <TouchableOpacity key={task.id} onPress={() => { navigation.navigate('TaskDetails', { id: task.id! }) }}>
             <View style={{ paddingBottom: 5 }}>
-                <Plan routine={routine} />
+                <Plan task={task} />
             </View>
         </TouchableOpacity>
     );

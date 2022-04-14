@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
-import { SelectableDaysOfWeek } from 'src/components/plan/routine/SelectableDaysOfWeek';
+import { SelectableDaysOfWeek } from 'src/components/plan/task/SelectableDaysOfWeek';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { createDays, DaysModel, RoutineModel } from 'src/controller/planning/TaskController';
+import { createDays, DaysModel, TaskModel } from 'src/controller/planning/TaskController';
 
 interface Props {
     selectedDaysOfWeek: DaysModel,
     setSelectedDaysOfWeek: Function,
-    routines: RoutineModel[]
+    tasks: TaskModel[]
 }
 
-export const TasksSummaryHeader = ({selectedDaysOfWeek, setSelectedDaysOfWeek, routines} : Props) => {
+export const TasksSummaryHeader = ({selectedDaysOfWeek, setSelectedDaysOfWeek, tasks} : Props) => {
     const { colors } = useTheme();
 
     return (
@@ -24,9 +24,9 @@ export const TasksSummaryHeader = ({selectedDaysOfWeek, setSelectedDaysOfWeek, r
 
                     <View style={{ flexDirection: "row", padding: 5 }}>
                         <Text style={{ flex: 1, color: colors.text, textAlign: "center" }}>
-                            Total Tasks: {routines.length}
+                            Total Tasks: {tasks.length}
                         </Text>
-                    </View>
+                    </View> 
                 </View>
                 <SelectableDaysOfWeek daysOfWeek={selectedDaysOfWeek} onDaysOfWeekUpdated={setSelectedDaysOfWeek} />
             </View>

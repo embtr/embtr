@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import RoutineDao from "src/firebase/firestore/planning/TaskDao";
+import TaskDao from "src/firebase/firestore/planning/TaskDao";
 
 export interface DaysModel {
     sunday: boolean,
@@ -11,7 +11,7 @@ export interface DaysModel {
     saturday: boolean
 }
 
-export interface RoutineModel {
+export interface TaskModel {
     id?: string,
     added: Timestamp,
     name: string,
@@ -35,8 +35,8 @@ export const createDays = (sunday: boolean, monday: boolean, tuesday: boolean, w
     return days;
 }
 
-export const taskRunsOnSelectedDay = (routine: RoutineModel, selectedDaysOfWeek: DaysModel): boolean => {
-    return (routine.days.monday && selectedDaysOfWeek.monday) || (routine.days.tuesday && selectedDaysOfWeek.tuesday) || (routine.days.wednesday && selectedDaysOfWeek.wednesday) || (routine.days.thursday && selectedDaysOfWeek.thursday) || (routine.days.friday && selectedDaysOfWeek.friday) || (routine.days.saturday && selectedDaysOfWeek.saturday) || (routine.days.sunday && selectedDaysOfWeek.sunday);
+export const taskRunsOnSelectedDay = (task: TaskModel, selectedDaysOfWeek: DaysModel): boolean => {
+    return (task.days.monday && selectedDaysOfWeek.monday) || (task.days.tuesday && selectedDaysOfWeek.tuesday) || (task.days.wednesday && selectedDaysOfWeek.wednesday) || (task.days.thursday && selectedDaysOfWeek.thursday) || (task.days.friday && selectedDaysOfWeek.friday) || (task.days.saturday && selectedDaysOfWeek.saturday) || (task.days.sunday && selectedDaysOfWeek.sunday);
 }
 
 export const getTomorrowDayOfWeek = () => {
@@ -48,8 +48,8 @@ export const getTomorrowDayOfWeek = () => {
     return tomorrow;
 };
 
-export const createRoutineModel = (name: string, startMinute: number, duration: number, days: DaysModel) => {
-    const routine: RoutineModel = {
+export const createTaskModel = (name: string, startMinute: number, duration: number, days: DaysModel) => {
+    const task: TaskModel = {
         added: Timestamp.now(),
         name: name,
         startMinute: startMinute,
@@ -57,7 +57,7 @@ export const createRoutineModel = (name: string, startMinute: number, duration: 
         days: days
     }
 
-    return routine;
+    return task;
 };
 
 export const startMinuteToString = (startMinute: number) => {
@@ -82,69 +82,69 @@ export const durationToString = (duration: number) => {
     return hours + " hours and " + minutes + " minutes";
 };
 
-class RoutineController {
-    public static createRoutine(routine: RoutineModel, callback: Function) {
-        const result = RoutineDao.createRoutine(routine);
+class TaskController {
+    public static createTask(task: TaskModel, callback: Function) {
+        const result = TaskDao.createTask(task);
         result.then(document => {
             callback();
         });
     }
 
-    public static archiveRoutine(routine: RoutineModel, callback: Function) {
-        const result = RoutineDao.archiveRoutine(routine);
+    public static archiveTask(task: TaskModel, callback: Function) {
+        const result = TaskDao.archiveTask(task);
         result.then(document => {
         callback();
         });
     }
 
-    static getRoutine(uid: string, id: string, callback: Function) {
-        const result = RoutineDao.getRoutine(uid, id);
+    static getTask(uid: string, id: string, callback: Function) {
+        const result = TaskDao.getTask(uid, id);
         result.then(document => {
-            let routine: RoutineModel = document.data() as RoutineModel;
-            routine.id = document.id;
-            callback(routine);
+            let task: TaskModel = document.data() as TaskModel;
+            task.id = document.id;
+            callback(task);
         }).catch(() => {
             callback(undefined);
         });
     }
 
-    static getRoutines(uid: string, callback: Function) {
-        const result = RoutineDao.getRoutines(uid);
+    static getTasks(uid: string, callback: Function) {
+        const result = TaskDao.getTasks(uid);
 
-        let routines: RoutineModel[] = [];
+        let tasks: TaskModel[] = [];
         result.then(documents => {
             documents.docs.forEach(document => {
-                let routine: RoutineModel = document.data() as RoutineModel;
+                let task: TaskModel = document.data() as TaskModel;
 
-                if (routine.active === false) {
+                if (task.active === false) {
                     return;
                 }
 
-                routine.id = document.id;
-                routines.push(routine);
+                task.id = document.id;
+                tasks.push(task);
             });
         }).then(() => {
-            callback(routines);
+            callback(tasks);
         }).catch(() => {
             callback([]);
         });
     }
 
-    static getRoutinesForDay(uid: string, day: string, callback: Function) {
-        let routinesForDay: RoutineModel[] = [];
+    static getTasksForDay(uid: string, day: string, callback: Function) {
+        let tasksForDay: TaskModel[] = [];
 
-        this.getRoutines(uid, (routines: RoutineModel[]) => {
-            routines.forEach(routine => {
-                Object.entries(routine.days).forEach(dayModel => {
+        this.getTasks(uid, (tasks: TaskModel[]) => {
+            tasks.forEach(task => {
+                Object.entries(task.days).forEach(dayModel => {
                     if (dayModel[0] === day && dayModel[1]) {
-                        routinesForDay.push(routine);
+                        tasksForDay.push(task);
                     }
                 });
             });
 
-            callback(routinesForDay);
+            callback(tasksForDay);
         });
     }
 }
 
-export default RoutineController;
+export default TaskController;

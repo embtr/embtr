@@ -7,7 +7,7 @@ interface Props {
     userProfileModel: UserProfileModel
 }
 
-export const RoutineTabRoute = ({ userProfileModel }: Props) => {
+export const TasksTabRoute = ({ userProfileModel }: Props) => {
     const { colors } = useTheme();
 
     return (

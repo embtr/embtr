@@ -3,7 +3,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { getTomorrowDayOfWeek, RoutineModel } from 'src/controller/planning/TaskController';
+import TaskController, { getTomorrowDayOfWeek, TaskModel } from 'src/controller/planning/TaskController';
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
@@ -14,7 +14,7 @@ import { Plan } from 'src/components/plan/Plan';
 export const Tomorrow = () => {
     const { colors } = useTheme();
 
-    const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
+    const [tasks, setTasks] = React.useState<TaskModel[]>([]);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
 
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
@@ -26,7 +26,7 @@ export const Tomorrow = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            RoutineController.getRoutinesForDay(getAuth().currentUser!.uid, tomorrow, setRoutines);
+            TaskController.getTasksForDay(getAuth().currentUser!.uid, tomorrow, setTasks);
         }, [])
     );
 
@@ -46,20 +46,20 @@ export const Tomorrow = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            let routineViews: JSX.Element[] = [];
+            let taskViews: JSX.Element[] = [];
 
             if (locked) {
                 plannedDay?.plannedTasks.forEach(plannedTask => {
-                    routineViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><Plan routine={plannedTask.routine} /></View>);
+                    taskViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><Plan task={plannedTask.routine} /></View>);
                 });
             } else {
-                routines.forEach(routine => {
-                    routineViews.push(<View key={routine.id} style={{ paddingBottom: 5 }}><PlanningTask routine={routine} isChecked={checkedTasks.get(routine.id!) !== false} onCheckboxToggled={onChecked} /></View>);
+                tasks.forEach(task => {
+                    taskViews.push(<View key={task.id} style={{ paddingBottom: 5 }}><PlanningTask task={task} isChecked={checkedTasks.get(task.id!) !== false} onCheckboxToggled={onChecked} /></View>);
                 });
             }
 
-            setTaskViews(routineViews);
-        }, [locked, routines, plannedDay, checkedTasks])
+            setTaskViews(taskViews);
+        }, [locked, tasks, plannedDay, checkedTasks])
     );
 
     const onChecked = (taskId: string, checked: boolean) => {
@@ -73,10 +73,10 @@ export const Tomorrow = () => {
     */
     const getUpdatedPlannedDay = (): PlannedDay => {
         let plannedtasks: PlannedTask[] = [];
-        routines.forEach(routine => {
-            if (checkedTasks.get(routine.id!) !== false) {
+        tasks.forEach(task => {
+            if (checkedTasks.get(task.id!) !== false) {
                 const plannedTask: PlannedTask = {
-                    routine: routine
+                    routine: task
                 }
 
                 plannedtasks.push(plannedTask);

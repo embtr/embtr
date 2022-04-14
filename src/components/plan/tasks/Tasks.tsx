@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { AddButton } from 'src/components/common/button/AddButton';
 import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { createDays, RoutineModel, taskRunsOnSelectedDay } from 'src/controller/planning/TaskController';
+import TaskController, { createDays, TaskModel, taskRunsOnSelectedDay } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/tasks/Task';
 
@@ -15,47 +15,47 @@ export const Tasks = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
-    const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
+    const [tasks, setTasks] = React.useState<TaskModel[]>([]);
     const [selectedDaysOfWeek, setSelectedDaysOfWeek] = React.useState(createDays(true, true, true, true, true, true, true));
 
     useFocusEffect(
         React.useCallback(() => {
-            RoutineController.getRoutines(getAuth().currentUser!.uid, setRoutines);
+            TaskController.getTasks(getAuth().currentUser!.uid, setTasks);
         }, [])
     );
 
-    const getVisibleRoutines = (): RoutineModel[] => {
-        let visibleRoutines: RoutineModel[] = [];
-        routines.forEach(routine => {
-            if (taskRunsOnSelectedDay(routine, selectedDaysOfWeek)) {
-                visibleRoutines.push(routine);
+    const getVisibleTasks = (): TaskModel[] => {
+        let visibleTasks: TaskModel[] = [];
+        tasks.forEach(task => {
+            if (taskRunsOnSelectedDay(task, selectedDaysOfWeek)) {
+                visibleTasks.push(task);
             }
         });
 
-        return visibleRoutines;
+        return visibleTasks;
     };
 
-    const visibleRoutines = getVisibleRoutines();
+    const visibleTasks = getVisibleTasks();
 
-    let routineViews: JSX.Element[] = [];
-    visibleRoutines.forEach(routine => {
-        if (taskRunsOnSelectedDay(routine, selectedDaysOfWeek)) {
-            routineViews.push(
-                <Task key={routine.id} routine={routine} />
+    let taskViews: JSX.Element[] = [];
+    visibleTasks.forEach(task => {
+        if (taskRunsOnSelectedDay(task, selectedDaysOfWeek)) {
+            taskViews.push(
+                <Task key={task.id} task={task} />
             );
         }
     });
 
     return (
         <View style={{ height: "100%" }}>
-            <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} routines={visibleRoutines} />
+            <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} tasks={visibleTasks} />
 
             <ScrollView style={{ backgroundColor: colors.background_medium }}>
-                {routineViews}
+                {taskViews}
             </ScrollView>
 
             <View style={{ position: "absolute", right: 0, bottom: 0 }}>
-                <AddButton onPress={() => { navigation.navigate('CreateRoutine') }} />
+                <AddButton onPress={() => { navigation.navigate('CreateTask') }} />
             </View>
         </View>
     );

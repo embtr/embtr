@@ -4,9 +4,9 @@ import { View, Text, TextInput } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CreateDailyRoutine } from 'src/components/plan/routine/CreateDailyRoutine';
+import { CreateDailyTask } from 'src/components/plan/task/CreateDailyTask';
 
-export const CreateRoutine = () => {
+export const CreateTask = () => {
     const { colors } = useTheme();
 
     const [name, setName] = React.useState("");
@@ -15,7 +15,7 @@ export const CreateRoutine = () => {
 
     return (
         <Screen>
-            <Banner name={"Create Routine"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+            <Banner name={"Create Task"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
 
             <View style={{ flexDirection: "column", flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: "center" }}>
@@ -24,12 +24,12 @@ export const CreateRoutine = () => {
                         onChangeText={setName}
                         value={name}
                         placeholderTextColor={colors.secondary_text}
-                        placeholder={"Routine Name"}
+                        placeholder={"Task Name"}
                     />
                 </View>
 
                 <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 1 }}>
-                    <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>I will run this routine</Text>
+                    <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>I will run this task</Text>
                     <View style={{ alignItems: "flex-start" }}>
                         <Picker
                             itemStyle={{ height: 120 }}
@@ -46,7 +46,7 @@ export const CreateRoutine = () => {
                 </View>
 
                 <View style={{ flex: 5 }}>
-                    {frequency === "daily" && <CreateDailyRoutine name={name} />}
+                    {frequency === "daily" && <CreateDailyTask name={name} />}
                 </View>
             </View>
         </Screen>

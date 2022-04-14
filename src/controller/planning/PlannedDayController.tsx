@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { RoutineModel } from "src/controller/planning/TaskController";
+import { TaskModel } from "src/controller/planning/TaskController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
 
 export interface PlannedDay {
@@ -10,7 +10,7 @@ export interface PlannedDay {
 
 export interface PlannedTask {
     id?: string,
-    routine: RoutineModel,
+    routine: TaskModel,
     startMinute?: number,
     duration?: number
 }

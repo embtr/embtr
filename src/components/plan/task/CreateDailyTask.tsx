@@ -2,9 +2,9 @@ import React from 'react';
 import { Picker } from "@react-native-picker/picker";
 import { View, Text } from "react-native";
 import { EmbtrButton } from "src/components/common/button/EmbtrButton";
-import { SelectableDaysOfWeek } from "src/components/plan/routine/SelectableDaysOfWeek";
+import { SelectableDaysOfWeek } from "src/components/plan/task/SelectableDaysOfWeek";
 import { useTheme } from "src/components/theme/ThemeProvider";
-import RoutineController, { createDays, createRoutineModel } from 'src/controller/planning/TaskController';
+import TaskController, { createDays, createTaskModel } from 'src/controller/planning/TaskController';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "src/navigation/RootStackParamList";
@@ -13,7 +13,7 @@ interface Props {
     name: string
 }
 
-export const CreateDailyRoutine = ({ name }: Props) => {
+export const CreateDailyTask = ({ name }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -46,13 +46,13 @@ export const CreateDailyRoutine = ({ name }: Props) => {
         durationMinutesPickerItems.push(<Picker.Item color={colors.text} label={"" + i} value={i} />);
     }
 
-    const createRoutine = () => {
+    const createTask = () => {
         const AMPMHour = AMPM == "AM" ? hour : 12 + hour;
         const startMinute = AMPMHour * 60 + minute;
         const duration = durationHours * 60 + durationMinutes;
-        const routineModel = createRoutineModel(name, startMinute, duration, selectedDaysOfWeek);
+        const task = createTaskModel(name, startMinute, duration, selectedDaysOfWeek);
 
-        RoutineController.createRoutine(routineModel, () => { navigation.goBack() });
+        TaskController.createTask(task, () => { navigation.goBack() });
     };
 
     return (
@@ -132,7 +132,7 @@ export const CreateDailyRoutine = ({ name }: Props) => {
             <View style={{ flex: 1 }} />
 
             <View style={{ alignItems: "center", justifyContent: "center", flex: 2 }}>
-                <EmbtrButton buttonText={'create'} callback={createRoutine} />
+                <EmbtrButton buttonText={'create'} callback={createTask} />
             </View>
 
         </View>

@@ -3,7 +3,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text, Alert } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { durationToString, RoutineModel, startMinuteToString } from 'src/controller/planning/TaskController';
+import TaskController, { durationToString, TaskModel, startMinuteToString } from 'src/controller/planning/TaskController';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
@@ -19,11 +19,11 @@ export const TaskDetails = () => {
     const rightFlex = 8;
 
     const route = useRoute<RouteProp<PlanTabScreens, 'TaskDetails'>>();
-    const [routine, setRoutine] = React.useState<RoutineModel | undefined>();
+    const [task, setTask] = React.useState<TaskModel | undefined>();
 
     useFocusEffect(
         React.useCallback(() => {
-            RoutineController.getRoutine(getAuth().currentUser!.uid, route.params.id, setRoutine);
+            TaskController.getTask(getAuth().currentUser!.uid, route.params.id, setTask);
         }, [])
     );
 
@@ -32,9 +32,9 @@ export const TaskDetails = () => {
         {
             text: 'Archive', onPress: () => {
                 if (isDesktopBrowser()) {
-                    if (confirm("archive task '" + routine?.name + "'")) {
-                        if (routine) {
-                            RoutineController.archiveRoutine(routine, () => { navigation.goBack() });
+                    if (confirm("archive task '" + task?.name + "'")) {
+                        if (task) {
+                            TaskController.archiveTask(task, () => { navigation.goBack() });
                         }
                     }
                 } else {
@@ -42,8 +42,8 @@ export const TaskDetails = () => {
                         { text: 'Cancel', onPress: () => { }, style: 'cancel', },
                         {
                             text: 'Archive', onPress: () => {
-                                if (routine) {
-                                    RoutineController.archiveRoutine(routine, () => { navigation.goBack() });
+                                if (task) {
+                                    TaskController.archiveTask(task, () => { navigation.goBack() });
                                 }
                             }
                         },
@@ -64,7 +64,7 @@ export const TaskDetails = () => {
                     <View style={{ flex: 1 }} />
                     <View style={{ flex: 10, alignItems: "center" }}>
                         <Text style={{ color: colors.text, fontSize: 20 }}>
-                            {routine?.name}
+                            {task?.name}
                         </Text>
                     </View>
                 </View>
@@ -76,7 +76,7 @@ export const TaskDetails = () => {
                             created:
                         </Text>
                         <Text style={{ color: colors.text, flex: rightFlex, paddingLeft: 10 }}>
-                            {routine?.added.toDate().toString()}
+                            {task?.added.toDate().toString()}
                         </Text>
                     </View>
 
@@ -94,7 +94,7 @@ export const TaskDetails = () => {
                             longest streak:
                         </Text>
                         <Text style={{ color: colors.text, flex: rightFlex, paddingLeft: 10 }}>
-                            3 routines
+                            3 tasks
                         </Text>
                     </View>
 
@@ -103,7 +103,7 @@ export const TaskDetails = () => {
                             start time:
                         </Text>
                         <Text style={{ color: colors.text, flex: rightFlex, paddingLeft: 10 }}>
-                            {routine?.startMinute && startMinuteToString(routine!.startMinute)}
+                            {task?.startMinute && startMinuteToString(task!.startMinute)}
                         </Text>
                     </View>
 
@@ -112,7 +112,7 @@ export const TaskDetails = () => {
                             duration:
                         </Text>
                         <Text style={{ color: colors.text, flex: rightFlex, paddingLeft: 10 }}>
-                            {routine?.duration && durationToString(routine!.duration)}
+                            {task?.duration && durationToString(task!.duration)}
                         </Text>
                     </View>
                 </View>

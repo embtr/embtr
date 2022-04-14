@@ -8,7 +8,7 @@ export type MainTabScreens = {
 }
 
 export type PlanTabScreens = {
-    CreateRoutine: undefined;
+    CreateTask: undefined;
     TaskDetails: { id: string };
 };
 
