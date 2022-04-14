@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { RoutineModel } from "src/controller/planning/RoutineController";
+import { RoutineModel } from "src/controller/planning/TaskController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
 
 export interface PlannedDay {

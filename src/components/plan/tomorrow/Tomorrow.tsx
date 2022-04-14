@@ -3,7 +3,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { getTomorrowDayOfWeek, RoutineModel } from 'src/controller/planning/RoutineController';
+import RoutineController, { getTomorrowDayOfWeek, RoutineModel } from 'src/controller/planning/TaskController';
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';

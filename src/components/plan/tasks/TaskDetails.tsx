@@ -3,7 +3,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text, Alert } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { durationToString, RoutineModel, startMinuteToString } from 'src/controller/planning/RoutineController';
+import RoutineController, { durationToString, RoutineModel, startMinuteToString } from 'src/controller/planning/TaskController';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';

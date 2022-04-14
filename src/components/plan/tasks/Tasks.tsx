@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { AddButton } from 'src/components/common/button/AddButton';
 import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import RoutineController, { createDays, RoutineModel, taskRunsOnSelectedDay } from 'src/controller/planning/RoutineController';
+import RoutineController, { createDays, RoutineModel, taskRunsOnSelectedDay } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/tasks/Task';
 

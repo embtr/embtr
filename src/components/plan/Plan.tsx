@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, ColorValue } from 'react-native';
 import { DaysOfWeek } from 'src/components/plan/DaysOfWeek';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { durationToString, RoutineModel, startMinuteToString } from 'src/controller/planning/RoutineController';
+import { durationToString, RoutineModel, startMinuteToString } from 'src/controller/planning/TaskController';
 
 interface Props {
     routine: RoutineModel,

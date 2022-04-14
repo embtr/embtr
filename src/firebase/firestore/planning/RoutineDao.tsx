@@ -1,6 +1,6 @@
 import { getAuth } from 'firebase/auth';
 import { Firestore, collection, addDoc, getDocs, orderBy, query, where, getDoc, doc, setDoc } from 'firebase/firestore';
-import { RoutineModel } from 'src/controller/planning/RoutineController';
+import { RoutineModel } from 'src/controller/planning/TaskController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class RoutineDao {

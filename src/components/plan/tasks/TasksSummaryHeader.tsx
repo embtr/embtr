@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { SelectableDaysOfWeek } from 'src/components/plan/routine/SelectableDaysOfWeek';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { createDays, DaysModel, RoutineModel } from 'src/controller/planning/RoutineController';
+import { createDays, DaysModel, RoutineModel } from 'src/controller/planning/TaskController';
 
 interface Props {
     selectedDaysOfWeek: DaysModel,

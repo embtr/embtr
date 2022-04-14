@@ -3,7 +3,7 @@ import { View, Text, ColorValue } from "react-native";
 import { HorizontalLine } from "src/components/common/HorizontalLine";
 import { Plan } from "src/components/plan/Plan";
 import { useTheme } from "src/components/theme/ThemeProvider";
-import { RoutineModel } from "src/controller/planning/RoutineController";
+import { RoutineModel } from "src/controller/planning/TaskController";
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {

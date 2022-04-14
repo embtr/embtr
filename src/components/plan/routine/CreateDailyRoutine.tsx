@@ -4,7 +4,7 @@ import { View, Text } from "react-native";
 import { EmbtrButton } from "src/components/common/button/EmbtrButton";
 import { SelectableDaysOfWeek } from "src/components/plan/routine/SelectableDaysOfWeek";
 import { useTheme } from "src/components/theme/ThemeProvider";
-import RoutineController, { createDays, createRoutineModel } from 'src/controller/planning/RoutineController';
+import RoutineController, { createDays, createRoutineModel } from 'src/controller/planning/TaskController';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from "src/navigation/RootStackParamList";

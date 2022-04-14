@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { DaysModel } from 'src/controller/planning/RoutineController';
+import { DaysModel } from 'src/controller/planning/TaskController';
 
 interface Props {
     days: DaysModel

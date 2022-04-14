@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SelectableDayOfWeek } from 'src/components/plan/routine/SelectableDayOfWeek';
-import { createDays, DaysModel } from 'src/controller/planning/RoutineController';
+import { createDays, DaysModel } from 'src/controller/planning/TaskController';
 
 interface Props {
     daysOfWeek: DaysModel
