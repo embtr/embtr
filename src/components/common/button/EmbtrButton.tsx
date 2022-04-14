@@ -37,7 +37,6 @@ export const EmbtrButton = ({ image, icon, borderColor, buttonText, callback, si
         paddingRight: 10
     } as ViewStyle;
 
-
     return (
         image ? (
             <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
