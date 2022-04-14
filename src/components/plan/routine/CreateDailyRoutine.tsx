@@ -5,6 +5,9 @@ import { EmbtrButton } from "src/components/common/button/EmbtrButton";
 import { SelectableDaysOfWeek } from "src/components/plan/routine/SelectableDaysOfWeek";
 import { useTheme } from "src/components/theme/ThemeProvider";
 import RoutineController, { createDays, createRoutineModel } from 'src/controller/planning/RoutineController';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from "src/navigation/RootStackParamList";
 
 interface Props {
     name: string
@@ -12,6 +15,7 @@ interface Props {
 
 export const CreateDailyRoutine = ({ name }: Props) => {
     const { colors } = useTheme();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const [hour, setHour] = React.useState(1);
     const [minute, setMinute] = React.useState(0);
@@ -48,7 +52,7 @@ export const CreateDailyRoutine = ({ name }: Props) => {
         const duration = durationHours * 60 + durationMinutes;
         const routineModel = createRoutineModel(name, startMinute, duration, selectedDaysOfWeek);
 
-        RoutineController.createRoutine(routineModel, () => { });
+        RoutineController.createRoutine(routineModel, () => { navigation.goBack() });
     };
 
     return (
