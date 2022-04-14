@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import RoutineDao from "src/firebase/firestore/planning/RoutineDao";
+import RoutineDao from "src/firebase/firestore/planning/TaskDao";
 
 export interface DaysModel {
     sunday: boolean,
