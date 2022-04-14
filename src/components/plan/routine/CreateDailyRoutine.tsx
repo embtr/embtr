@@ -15,6 +15,7 @@ interface Props {
 
 export const CreateDailyRoutine = ({ name }: Props) => {
     const { colors } = useTheme();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const [hour, setHour] = React.useState(1);
     const [minute, setMinute] = React.useState(0);
@@ -50,13 +51,9 @@ export const CreateDailyRoutine = ({ name }: Props) => {
         const startMinute = AMPMHour * 60 + minute;
         const duration = durationHours * 60 + durationMinutes;
         const routineModel = createRoutineModel(name, startMinute, duration, selectedDaysOfWeek);
-        
-        navigation.goBack();
 
-        RoutineController.createRoutine(routineModel, () => { });
+        RoutineController.createRoutine(routineModel, () => { navigation.goBack() });
     };
-
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     return (
         <View style={{ flex: 1 }} >
