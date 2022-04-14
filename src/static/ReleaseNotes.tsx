@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
     button: {
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: "column",
-        cursor: "pointer"
+        flexDirection: "column"
     }
 });
