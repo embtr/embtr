@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, addDoc, getDocs, orderBy, query, where, getDoc, doc, setDoc } from 'firebase/firestore';
+import { Firestore, collection, addDoc, getDocs, query, getDoc, doc, setDoc } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
@@ -34,6 +34,7 @@ class TaskDao {
     public static async getTask(uid: string, id: string) {
         const db: Firestore = getFirebaseConnection(this.name, "getTask");
         const result = await getDoc(doc(db, "planning", uid, "routines", id));
+        
         return result;
     }
 

@@ -1,10 +1,10 @@
 import { Timestamp } from "firebase/firestore";
 import { TaskModel } from "src/controller/planning/TaskController";
-import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
+import TodayDao from "src/firebase/firestore/today/TodayDao";
 
-export interface PlannedDay {
+export interface TodayModel {
     id?: string,
-    metadata?: PlannedDayMetadata,
+    metadata?: TodayMedadata,
     plannedTasks: PlannedTask[]
 }
 
@@ -15,7 +15,7 @@ export interface PlannedTask {
     duration?: number
 }
 
-export interface PlannedDayMetadata {
+export interface TodayMedadata {
     added: Timestamp,
     modified: Timestamp,
     locked: boolean
@@ -33,48 +33,48 @@ export const getTomorrowKey = () => {
     return month + day + year;
 }
 
-class PlannedDayController {
+class TodayController {
     public static get(id: string, callback: Function) {
-        let plannedDay: PlannedDay = {
+        let todayModel: TodayModel = {
             id: id,
             metadata: undefined,
             plannedTasks: []
         }
 
-        const response = PlannedDayDao.get(id);
+        const response = TodayDao.get(id);
         response.then(collection => {
             collection?.forEach(currentPlannedTask => {
                 if (currentPlannedTask.id === "metadata") {
-                    plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
+                    todayModel.metadata = currentPlannedTask.data() as TodayMedadata;
                 } else {
                     let plannedTask: PlannedTask = currentPlannedTask.data() as PlannedTask;
                     plannedTask.id = currentPlannedTask.id;
-                    plannedDay.plannedTasks.push(plannedTask);
+                    todayModel.plannedTasks.push(plannedTask);
                 }
             });
         }).then(() => {
-            callback(plannedDay);
+            callback(todayModel);
         });
     }
 
     public static delete(id: string, callback: Function) {
-        PlannedDayDao.delete(id, callback);
+        TodayDao.delete(id, callback);
     }
 
-    public static create(plannedDay: PlannedDay, callback: Function) {
-        plannedDay.metadata = this.createMetadata();
-        PlannedDayDao.create(plannedDay);
+    public static create(todayModel: TodayModel, callback: Function) {
+        todayModel.metadata = this.createMetadata();
+        TodayDao.create(todayModel);
         
-        callback(plannedDay);
+        callback(todayModel);
     }
 
-    public static update(plannedDay: PlannedDay) {
-        plannedDay.metadata!.modified = Timestamp.now();
-        PlannedDayDao.update(plannedDay);
+    public static update(todayModel: TodayModel) {
+        todayModel.metadata!.modified = Timestamp.now();
+        TodayDao.update(todayModel);
     }
 
-    private static createMetadata(): PlannedDayMetadata {
-        const metadata: PlannedDayMetadata = {
+    private static createMetadata(): TodayMedadata {
+        const metadata: TodayMedadata = {
             added: Timestamp.now(),
             modified: Timestamp.now(),
             locked: true
@@ -84,4 +84,4 @@ class PlannedDayController {
     }
 }
 
-export default PlannedDayController;
+export default TodayController;

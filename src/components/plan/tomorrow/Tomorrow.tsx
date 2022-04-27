@@ -7,7 +7,7 @@ import TaskController, { getTomorrowDayOfWeek, TaskModel } from 'src/controller/
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
-import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
+import TodayController, { getTomorrowKey, TodayModel, PlannedTask } from 'src/controller/planning/TodayController';
 import { Plan } from 'src/components/plan/Plan';
 
 
@@ -15,7 +15,7 @@ export const Tomorrow = () => {
     const { colors } = useTheme();
 
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
+    const [todayModel, setTodayModel] = React.useState<TodayModel | undefined>(undefined);
 
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
     const [locked, setLocked] = React.useState<boolean>(false);
@@ -32,16 +32,16 @@ export const Tomorrow = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            PlannedDayController.get(getTomorrowKey(), setPlannedDay);
+            TodayController.get(getTomorrowKey(), setTodayModel);
         }, [])
     );
 
     useFocusEffect(
         React.useCallback(() => {
-            if (plannedDay?.metadata) {
-                setLocked(plannedDay?.metadata?.locked);
+            if (todayModel?.metadata) {
+                setLocked(todayModel?.metadata?.locked);
             }
-        }, [plannedDay])
+        }, [todayModel])
     );
 
     useFocusEffect(
@@ -49,7 +49,7 @@ export const Tomorrow = () => {
             let taskViews: JSX.Element[] = [];
 
             if (locked) {
-                plannedDay?.plannedTasks.forEach(plannedTask => {
+                todayModel?.plannedTasks.forEach(plannedTask => {
                     taskViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><Plan task={plannedTask.routine} /></View>);
                 });
             } else {
@@ -59,7 +59,7 @@ export const Tomorrow = () => {
             }
 
             setTaskViews(taskViews);
-        }, [locked, tasks, plannedDay, checkedTasks])
+        }, [locked, tasks, todayModel, checkedTasks])
     );
 
     const onChecked = (taskId: string, checked: boolean) => {
@@ -71,7 +71,7 @@ export const Tomorrow = () => {
     /*
      * move me to the controller!
     */
-    const getUpdatedPlannedDay = (): PlannedDay => {
+    const getUpdatedTodayModel = (): TodayModel => {
         let plannedtasks: PlannedTask[] = [];
         tasks.forEach(task => {
             if (checkedTasks.get(task.id!) !== false) {
@@ -83,41 +83,41 @@ export const Tomorrow = () => {
             }
         });
 
-        const newPlannedDay: PlannedDay = {
-            id: plannedDay?.id,
-            metadata: plannedDay?.metadata,
+        const newTodayModel: TodayModel = {
+            id: todayModel?.id,
+            metadata: todayModel?.metadata,
             plannedTasks: plannedtasks
         };
 
-        return newPlannedDay;
+        return newTodayModel;
     };
 
-    const isNewPlannedDay = (): boolean => {
-        return plannedDay?.metadata === undefined;
+    const isNewTodayModel = (): boolean => {
+        return todayModel?.metadata === undefined;
     };
 
-    const createPlannedDay = () => {
-        const updatedPlannedDay = getUpdatedPlannedDay();
-        PlannedDayController.create(updatedPlannedDay, setPlannedDay);
+    const createTodayModel = () => {
+        const updatedTodayModel = getUpdatedTodayModel();
+        TodayController.create(updatedTodayModel, setTodayModel);
     };
 
-    const updatePlannedDayAsLocked = () => {
-        const updatedPlannedDay = getUpdatedPlannedDay();
-        updatedPlannedDay.metadata!.locked = true;
-        PlannedDayController.update(updatedPlannedDay);
-        setPlannedDay(updatedPlannedDay);
+    const updateTodayModelAsLocked = () => {
+        const updatedTodayModel = getUpdatedTodayModel();
+        updatedTodayModel.metadata!.locked = true;
+        TodayController.update(updatedTodayModel);
+        setTodayModel(updatedTodayModel);
     };
 
-    const updatePlannedDayAsUnlocked = () => {
-        const newPlannedDay: PlannedDay = {
-            id: plannedDay!.id,
-            metadata: plannedDay!.metadata,
-            plannedTasks: plannedDay!.plannedTasks
+    const updateTodayModelAsUnlocked = () => {
+        const newTodayModel: TodayModel = {
+            id: todayModel!.id,
+            metadata: todayModel!.metadata,
+            plannedTasks: todayModel!.plannedTasks
         };
-        newPlannedDay.metadata!.locked = false;
+        newTodayModel.metadata!.locked = false;
 
-        PlannedDayController.update(newPlannedDay);
-        setPlannedDay(newPlannedDay);
+        TodayController.update(newTodayModel);
+        setTodayModel(newTodayModel);
     };
 
     const toggleLock = () => {
@@ -125,13 +125,13 @@ export const Tomorrow = () => {
         setLocked(lockPlans);
 
         if (lockPlans) {
-            if (isNewPlannedDay()) {
-                createPlannedDay();
+            if (isNewTodayModel()) {
+                createTodayModel();
             } else {
-                updatePlannedDayAsLocked();
+                updateTodayModelAsLocked();
             }
         } else {
-            updatePlannedDayAsUnlocked();
+            updateTodayModelAsUnlocked();
         }
     };
 

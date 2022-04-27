@@ -42,14 +42,14 @@ export const ReleaseNotes = () => {
     
     return (
         <Screen>
-            <View style={styles.container}>
+            <View style={{}}>
                 <Text style={{ color: colors.text, fontSize: 22 }}>
                     Release Notes
                 </Text>
                 <View>
                     {releaseNotesView}
                 </View>
-                <TouchableOpacity style={styles.button} onPress={() => { navigation.navigate('LandingPage') }}>
+                <TouchableOpacity style={{}} onPress={() => { navigation.navigate('LandingPage') }}>
                     <Image source={require('../../assets/logo.png')} style={{ width: 40, height: 40 }} />
                     <Text style={{ color: colors.text, fontSize: 12 }}>
                         home
@@ -59,18 +59,3 @@ export const ReleaseNotes = () => {
         </Screen>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "space-evenly",
-        flexDirection: "column"
-    },
-    button: {
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-        cursor: "pointer"
-    }
-});

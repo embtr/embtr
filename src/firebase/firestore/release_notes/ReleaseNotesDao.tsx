@@ -1,6 +1,4 @@
-import { getAuth } from 'firebase/auth';
-import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, Timestamp } from 'firebase/firestore';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { Firestore, collection, getDocs } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class ReleaseNotesDao {
