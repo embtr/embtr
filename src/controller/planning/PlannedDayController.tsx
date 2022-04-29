@@ -43,7 +43,6 @@ export const getTomorrowKey = () => {
 
 class PlannedDayController {
     public static get(id: string, callback: Function) {
-        console.log("seeking: " + id);
         let plannedDay: PlannedDay = {
             id: id,
             metadata: undefined,

@@ -32,42 +32,6 @@ export const PlannedTask = ({ plannedTask, backgroundColor }: Props) => {
                         + durationToString(plannedTask.duration ? plannedTask.duration : plannedTask.routine.duration)}
                 </Text>
                 <View style={{ flex: 1 }} />
-
-                <View style={{ flexDirection: "row", paddingTop: 15 }}>
-                    <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                        attribute 1
-                    </Text>
-
-                    <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                        attribute 2
-                    </Text>
-
-                    <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                        attribute 3
-                    </Text>
-
-                    <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                        attribute 4
-                    </Text>
-                </View>
-
-                <View style={{ flexDirection: "row", paddingTop: 1 }}>
-                    <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                        value 1
-                    </Text>
-
-                    <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                        value 2
-                    </Text>
-
-                    <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                        value 3
-                    </Text>
-
-                    <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                        value 4
-                    </Text>
-                </View>
             </View>
         </View>
     );
