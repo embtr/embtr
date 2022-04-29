@@ -10,7 +10,6 @@ import TaskController, { TaskModel } from 'src/controller/planning/TaskControlle
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/tasks/Task';
 import { Screen } from 'src/components/common/Screen';
-import TodayController from 'src/controller/planning/TodayController';
 
 export const Today = () => {
     const { colors } = useTheme();

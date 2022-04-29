@@ -1,12 +1,12 @@
 import { getAuth } from 'firebase/auth';
 import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, Timestamp } from 'firebase/firestore';
-import { TodayModel } from 'src/controller/planning/TodayController';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
-class TodayDao {
-    public static update(todayModel: TodayModel) {
-        this.delete(todayModel.id!, () => {
-            this.create(todayModel);
+class PlannedDayDao {
+    public static update(plannedDay: PlannedDay) {
+        this.delete(plannedDay.id!, () => {
+            this.create(plannedDay);
         });
     }
 
@@ -18,7 +18,7 @@ class TodayDao {
             return;
         }
 
-        const result = await getDocs(collection(db, "today", userUid, id));
+        const result = await getDocs(collection(db, "planned_day", userUid, id));
         return result;
     }
 
@@ -30,15 +30,15 @@ class TodayDao {
             return;
         }
 
-        const result = await getDocs(collection(db, "today", userUid, id));
-        result.forEach(todayModel => {
-            deleteDoc(doc(db, "today", userUid, id, todayModel.id));
+        const result = await getDocs(collection(db, "planned_day", userUid, id));
+        result.forEach(plannedDay => {
+            deleteDoc(doc(db, "planned_day", userUid, id, plannedDay.id));
         });
 
         callback();
     }
 
-    public static create(todayModel: TodayModel) {
+    public static create(plannedDay: PlannedDay) {
         const db: Firestore = getFirebaseConnection(this.name, "create");
 
         const userUid = getAuth().currentUser?.uid;
@@ -46,12 +46,12 @@ class TodayDao {
             return;
         }
 
-        todayModel.plannedTasks.forEach(plannedTask => {
-            addDoc(collection(db, "today", userUid, todayModel.id!), plannedTask);
+        plannedDay.plannedTasks.forEach(plannedTask => {
+            addDoc(collection(db, "planned_day", userUid, plannedDay.id!), plannedTask);
         });
 
-        setDoc(doc(db, "today/", userUid, todayModel.id!, "metadata"), todayModel.metadata);
+        setDoc(doc(db, "planned_day/", userUid, plannedDay.id!, "metadata"), plannedDay.metadata);
     }
 }
 
-export default TodayDao;
+export default PlannedDayDao;
