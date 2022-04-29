@@ -12,11 +12,10 @@ interface Props {
     backgroundColor?: ColorValue
 }
 
-export const Plan = ({ task, backgroundColor }: Props) => {
+export const Task = ({ task, backgroundColor }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-
 
     return (
         <TouchableOpacity key={task.id} onPress={() => { navigation.navigate('TaskDetails', { id: task.id! }) }}>

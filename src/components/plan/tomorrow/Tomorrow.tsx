@@ -7,8 +7,8 @@ import TaskController, { getTomorrowDayOfWeek, TaskModel } from 'src/controller/
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
-import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTask } from 'src/controller/planning/PlannedDayController';
-import { Plan } from 'src/components/plan/Plan';
+import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { Task } from 'src/components/plan/Task';
 
 
 export const Tomorrow = () => {
@@ -50,7 +50,7 @@ export const Tomorrow = () => {
 
             if (locked) {
                 plannedDay?.plannedTasks.forEach(plannedTask => {
-                    taskViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><Plan task={plannedTask.routine} /></View>);
+                    taskViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><Task task={plannedTask.routine} /></View>);
                 });
             } else {
                 tasks.forEach(task => {
@@ -72,10 +72,10 @@ export const Tomorrow = () => {
      * move me to the controller!
     */
     const getUpdatedPlannedDay = (): PlannedDay => {
-        let plannedtasks: PlannedTask[] = [];
+        let plannedtasks: PlannedTaskModel[] = [];
         tasks.forEach(task => {
             if (checkedTasks.get(task.id!) !== false) {
-                const plannedTask: PlannedTask = {
+                const plannedTask: PlannedTaskModel = {
                     routine: task
                 }
 

@@ -5,10 +5,10 @@ import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
 export interface PlannedDay {
     id?: string,
     metadata?: PlannedDayMetadata,
-    plannedTasks: PlannedTask[]
+    plannedTasks: PlannedTaskModel[]
 }
 
-export interface PlannedTask {
+export interface PlannedTaskModel {
     id?: string,
     routine: TaskModel,
     startMinute?: number,
@@ -21,9 +21,9 @@ export interface PlannedDayMetadata {
     locked: boolean
 }
 
-export const getTomorrowKey = () => {
+export const getKey = (daysBack: number) => {
     const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setDate(tomorrow.getDate() + daysBack);
 
     const elements = tomorrow.toLocaleDateString("en-US").split("/");
     const month = elements[0].length == 1 ? "0" + elements[0] : elements[0];
@@ -33,8 +33,17 @@ export const getTomorrowKey = () => {
     return month + day + year;
 }
 
+export const getTodayKey = () => {
+    return getKey(0);
+}
+
+export const getTomorrowKey = () => {
+    return getKey(1);
+}
+
 class PlannedDayController {
     public static get(id: string, callback: Function) {
+        console.log("seeking: " + id);
         let plannedDay: PlannedDay = {
             id: id,
             metadata: undefined,
@@ -47,7 +56,7 @@ class PlannedDayController {
                 if (currentPlannedTask.id === "metadata") {
                     plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
                 } else {
-                    let plannedTask: PlannedTask = currentPlannedTask.data() as PlannedTask;
+                    let plannedTask: PlannedTaskModel = currentPlannedTask.data() as PlannedTaskModel;
                     plannedTask.id = currentPlannedTask.id;
                     plannedDay.plannedTasks.push(plannedTask);
                 }

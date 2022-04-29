@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, ColorValue } from "react-native";
 import { HorizontalLine } from "src/components/common/HorizontalLine";
-import { Plan } from "src/components/plan/Plan";
+import { Task } from "src/components/plan/Task";
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { TaskModel } from "src/controller/planning/TaskController";
 import { Ionicons } from '@expo/vector-icons';
@@ -19,7 +19,7 @@ export const PlanningTask = ({ task, isChecked, onCheckboxToggled }: Props) => {
 
     return (
         <View>
-            <Plan task={task} backgroundColor={backgroundColor} />
+            <Task task={task} backgroundColor={backgroundColor} />
 
             <HorizontalLine />
 
