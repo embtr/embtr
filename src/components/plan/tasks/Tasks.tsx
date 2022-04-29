@@ -9,7 +9,7 @@ import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { createDays, TaskModel, taskRunsOnSelectedDay } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { Task } from 'src/components/plan/tasks/Task';
+import { Plan } from 'src/components/plan/Plan';
 
 export const Tasks = () => {
     const { colors } = useTheme();
@@ -41,7 +41,7 @@ export const Tasks = () => {
     visibleTasks.forEach(task => {
         if (taskRunsOnSelectedDay(task, selectedDaysOfWeek)) {
             taskViews.push(
-                <Task key={task.id} task={task} />
+                <Plan key={task.id} task={task} />
             );
         }
     });
