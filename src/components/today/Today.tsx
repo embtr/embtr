@@ -8,6 +8,9 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { PlannedTask } from 'src/components/today/PlannedTask';
+import { CalendarView } from 'src/components/today/views/CalendarView';
+import { TodayHeader } from 'src/components/today/TodayHeader';
+import { Banner } from 'src/components/common/Banner';
 
 export const Today = () => {
     const { colors } = useTheme();
@@ -30,10 +33,12 @@ export const Today = () => {
 
     return (
         <Screen>
+            <Banner name={"Today"} />
+
+
             <View style={{ height: "100%" }}>
-                <ScrollView style={{ backgroundColor: colors.background_medium }}>
-                    {taskViews}
-                </ScrollView>
+                <TodayHeader />
+                <CalendarView />
             </View>
         </Screen>
     );
