@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { StyleSheet, View } from "react-native"
-import { useTheme } from 'src/components/theme/ThemeProvider';
+import { ColorValue, StyleSheet, View } from "react-native"
 
-export const HorizontalLine = () => {
-    const { colors } = useTheme();
+interface Props {
+    color? : ColorValue
+}
+
+export const HorizontalLine = ( { color } : Props ) => {
 
     return <View
         style={{
-            borderBottomColor: "#808080",
+            borderBottomColor: color ? color : "#808080",
             borderBottomWidth: StyleSheet.hairlineWidth,
         }}
     />
