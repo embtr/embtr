@@ -1,22 +1,23 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, LayoutRectangle } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     plannedTask: PlannedTaskModel,
+    parentLayout?: LayoutRectangle,
     zIndex: number
 }
 
-export const CalendarPlanView = ({ plannedTask, zIndex }: Props) => {
+export const CalendarPlanView = ({ plannedTask, parentLayout, zIndex }: Props) => {
     const { colors } = useTheme();
 
     return (
         <View style={{
             flexDirection: "row",
             height: plannedTask.duration ? plannedTask.duration : plannedTask.routine.duration,
-            width: "85%",
+            width: parentLayout ? parentLayout.width - 50 : "85%",
             borderRadius: 5,
             backgroundColor: colors.background_light,
             paddingTop: 5,
