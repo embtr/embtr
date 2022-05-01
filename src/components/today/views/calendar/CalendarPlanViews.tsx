@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { CalendarPlanView } from 'src/components/today/views/calendar/CalendarPlanView';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
@@ -14,20 +15,8 @@ export const CalendarPlanViews = ({ plannedToday }: Props) => {
     let planViews: JSX.Element[] = [];
     plannedToday?.plannedTasks.forEach(plannedTask => {
         planViews.push(
-            <View style={{
-                height: plannedTask.duration ? plannedTask.duration : plannedTask.routine.duration,
-                width: "100%",
-                borderRadius: 5,
-                backgroundColor: colors.background_light,
-                justifyContent: "center",
-                paddingLeft: 5,
-                marginTop: plannedTask.routine.startMinute,
-                borderColor: "red",
-                borderWidth: .2,
-                zIndex: zIndex,
-                position: "absolute"
-            }}>
-                <Text style={{ color: colors.text }}>{plannedTask.routine.name}</Text>
+            <View style={{ alignContent: "flex-end", alignItems: "flex-end" }} >
+                <CalendarPlanView plannedTask={plannedTask} zIndex={zIndex} />
             </View>
         );
         zIndex++;
