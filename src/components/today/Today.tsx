@@ -34,8 +34,8 @@ export const Today = () => {
         <Screen>
             <View style={{ flex: 1 }}>
                 <Banner name={"Today"} />
-                <TodayHeader />
-                <CalendarView />
+                <TodayHeader plannedToday={plannedToday} />
+                <CalendarView plannedToday={plannedToday} />
             </View>
         </Screen>
     );

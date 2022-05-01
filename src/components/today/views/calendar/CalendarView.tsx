@@ -1,34 +1,26 @@
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { ScrollView, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { Calendar } from 'src/components/today/views/calendar/Calendar';
+import { CalendarPlanViews } from 'src/components/today/views/calendar/CalendarPlanViews';
 import { TimeIndicator } from 'src/components/today/views/calendar/TimeIndicator';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
-export const CalendarView = () => {
+interface Props {
+    plannedToday?: PlannedDay
+}
+
+export const CalendarView = ({ plannedToday }: Props) => {
     const { colors } = useTheme();
 
     const scrollRef = React.useRef<ScrollView>(null);
 
-    let calendarView: JSX.Element[] = [];
-    let ampm = "am";
-    for (let i = 0; i < 2; i++) {
-        for (let i = 0; i < 12; i++) {
-            calendarView.push(
-                <View style={{ height: 60 }}>
-                    <View>
-                        <HorizontalLine />
-                        <Text style={{ color: colors.secondary_text, fontSize: 11 }}>{i == 0 ? 12 : i}:00 {ampm}</Text>
-                    </View>
-                </View>
-            );
-        }
-        ampm = "pm";
-    }
-
+    // onLayout={() => { scrollRef.current?.scrollTo(60 * (new Date().getHours() - 6)) }}
     return (
-        <ScrollView ref={scrollRef} onLayout={() => { scrollRef.current?.scrollTo(60 * (new Date().getHours() - 6)) }} style={{ flex: 1 }}>
+        <ScrollView ref={scrollRef} style={{ flex: 1 }}>
+            <Calendar />
+            <CalendarPlanViews plannedToday={plannedToday} />
             <TimeIndicator />
-            {calendarView}
         </ScrollView>
     );
 };
