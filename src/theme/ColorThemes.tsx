@@ -6,7 +6,7 @@ export const lightColors = {
 
 
   toggle_color: '#4d4d4d',
-  primary_border: '#ad1111',
+  primary_border: '#C811EC',
   secondary_border: '#4d4d4d',
   card_background: "white",
   text: '#121212',

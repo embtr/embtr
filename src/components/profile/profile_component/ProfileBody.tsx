@@ -5,7 +5,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PillarsTabRoute from 'src/components/profile/profile_component/profile_tabs/PillarsTabRoute';
 import { ActivityTabRoute } from 'src/components/profile/profile_component/profile_tabs/ActivityTabRoute';
-import { TasksTabRoute } from 'src/components/profile/profile_component/profile_tabs/TasksTabRoute';
+import { TodayTabRoute } from 'src/components/profile/profile_component/profile_tabs/TodayTabRoute';
 
 /*
  * Avoid rerenders
@@ -23,11 +23,11 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
             case 'activity':
                 return <ActivityTabRoute userProfileModel={userProfileModel} />
 
+            case 'today':
+                return <TodayTabRoute userProfileModel={userProfileModel} />
+
             case 'pillars':
                 return <PillarsTabRoute userProfileModel={userProfileModel} />
-
-            case 'tasks':
-                <TasksTabRoute userProfileModel={userProfileModel} />
         }
 
         return <View></View>
@@ -37,8 +37,8 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
 
     const [routes] = React.useState([
         { key: 'activity', title: 'Activity' },
+        { key: 'today', title: 'Today' },
         { key: 'pillars', title: 'Pillars' },
-        { key: 'tasks', title: 'tasks' },
     ]);
 
     return (
