@@ -11,6 +11,7 @@ export interface PlannedDay {
 export interface PlannedTaskModel {
     id?: string,
     routine: TaskModel,
+    complete?: boolean,
     startMinute?: number,
     duration?: number
 }
@@ -76,9 +77,14 @@ class PlannedDayController {
         callback(plannedDay);
     }
 
-    public static update(plannedDay: PlannedDay) {
+    public static replace(plannedDay: PlannedDay) {
         plannedDay.metadata!.modified = Timestamp.now();
-        PlannedDayDao.update(plannedDay);
+        PlannedDayDao.replace(plannedDay);
+    }
+
+    public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
+        plannedDay.metadata!.modified = Timestamp.now();
+        PlannedDayDao.updateTask(plannedDay, plannedTask);
     }
 
     private static createMetadata(): PlannedDayMetadata {

@@ -6,12 +6,18 @@ import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     plannedTask: PlannedTaskModel,
+    onUpdateTask: Function,
     parentLayout?: LayoutRectangle,
     zIndex: number
 }
 
-export const CalendarPlanView = ({ plannedTask, parentLayout, zIndex }: Props) => {
+export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zIndex }: Props) => {
     const { colors } = useTheme();
+
+    const onCheck = () => {
+        plannedTask.complete = plannedTask.complete ? !plannedTask.complete : true;
+        onUpdateTask(plannedTask);
+    };
 
     return (
         <View style={{
@@ -32,7 +38,7 @@ export const CalendarPlanView = ({ plannedTask, parentLayout, zIndex }: Props) =
             </View>
 
             <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 5 }}>
-                <Ionicons name={"checkmark"} size={20} color={colors.secondary_text} />
+                <Ionicons name={"checkmark"} size={20} color={plannedTask.complete === true ? "green" : colors.secondary_text} onPress={() => { onCheck() }} />
             </View>
         </View>
     );

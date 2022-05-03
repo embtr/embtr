@@ -21,7 +21,7 @@ export const TimeIndicator = () => {
     );
 
     return (
-        <View style={{ zIndex: 2, position: "absolute", height: hours * 60 + minutes, width: "100%", justifyContent: "flex-end" }}>
+        <View style={{ zIndex: 2, position: "absolute", marginTop: hours * 60 + minutes, width: "100%", justifyContent: "flex-end", backgroundColor:"red" }}>
             <HorizontalLine color={colors.primary_border} />
             <HorizontalLine color={colors.primary_border} />
         </View>

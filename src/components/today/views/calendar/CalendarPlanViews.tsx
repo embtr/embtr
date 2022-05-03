@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, LayoutRectangle } from 'react-native';
+import { LayoutRectangle, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CalendarPlanView } from 'src/components/today/views/calendar/CalendarPlanView';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     plannedToday?: PlannedDay
+    updateTask: Function
 }
 
-export const CalendarPlanViews = ({ plannedToday }: Props) => {
+export const CalendarPlanViews = ({ plannedToday, updateTask }: Props) => {
     const { colors } = useTheme();
 
     const [layout, setLayout] = React.useState<LayoutRectangle>();
@@ -18,7 +19,7 @@ export const CalendarPlanViews = ({ plannedToday }: Props) => {
     plannedToday?.plannedTasks.forEach(plannedTask => {
         planViews.push(
             <View style={{ alignContent: "flex-end", alignItems: "flex-end" }} >
-                <CalendarPlanView plannedTask={plannedTask} parentLayout={layout} zIndex={zIndex} />
+                <CalendarPlanView plannedTask={plannedTask} onUpdateTask={updateTask} parentLayout={layout} zIndex={zIndex} />
             </View>
         );
         zIndex++;

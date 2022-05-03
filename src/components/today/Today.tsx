@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { PlannedTask } from 'src/components/today/PlannedTask';
 import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
 import { TodayHeader } from 'src/components/today/TodayHeader';
@@ -20,8 +20,13 @@ export const Today = () => {
     useFocusEffect(
         React.useCallback(() => {
             PlannedDayController.get(getTodayKey(), setPlannedToday);
-        }, [])
+        }, [plannedToday])
     );
+
+    const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
+        PlannedDayController.updateTask(plannedToday!, updatedPlannedTask);
+        setPlannedToday(plannedToday);
+    };
 
     let taskViews: JSX.Element[] = [];
     plannedToday?.plannedTasks.forEach(plannedTask => {
@@ -35,7 +40,7 @@ export const Today = () => {
             <View style={{ flex: 1 }}>
                 <Banner name={"Today"} />
                 <TodayHeader plannedToday={plannedToday} />
-                <CalendarView plannedToday={plannedToday} />
+                <CalendarView plannedToday={plannedToday} updateTask={updateTask} />
             </View>
         </Screen>
     );

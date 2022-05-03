@@ -7,10 +7,11 @@ import { TimeIndicator } from 'src/components/today/views/calendar/TimeIndicator
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
-    plannedToday?: PlannedDay
+    plannedToday?: PlannedDay,
+    updateTask: Function
 }
 
-export const CalendarView = ({ plannedToday }: Props) => {
+export const CalendarView = ({ plannedToday, updateTask }: Props) => {
     const { colors } = useTheme();
 
     const scrollRef = React.useRef<ScrollView>(null);
@@ -19,7 +20,7 @@ export const CalendarView = ({ plannedToday }: Props) => {
     return (
         <ScrollView ref={scrollRef} style={{ flex: 1 }}>
             <Calendar />
-            <CalendarPlanViews plannedToday={plannedToday} />
+            <CalendarPlanViews plannedToday={plannedToday} updateTask={updateTask} />
             <TimeIndicator />
         </ScrollView>
     );

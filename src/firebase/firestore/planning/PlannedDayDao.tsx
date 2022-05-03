@@ -1,22 +1,34 @@
 import { getAuth } from 'firebase/auth';
 import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, Timestamp } from 'firebase/firestore';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class PlannedDayDao {
-    public static update(plannedDay: PlannedDay) {
+    public static replace(plannedDay: PlannedDay) {
         this.delete(plannedDay.id!, () => {
             this.create(plannedDay);
         });
     }
 
-    public static async get(id: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "get");
-
+    public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
         const userUid = getAuth().currentUser?.uid;
         if (!userUid) {
             return;
         }
+
+        const db: Firestore = getFirebaseConnection(this.name, "update");
+
+        const result = setDoc(doc(db, "planned_day", userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
+        return result;
+    }
+
+    public static async get(id: string) {
+        const userUid = getAuth().currentUser?.uid;
+        if (!userUid) {
+            return;
+        }
+
+        const db: Firestore = getFirebaseConnection(this.name, "get");
 
         const result = await getDocs(collection(db, "planned_day", userUid, id));
         return result;
