@@ -10,11 +10,12 @@ export const Calendar = () => {
     let ampm = "am";
     for (let i = 0; i < 2; i++) {
         for (let i = 0; i < 12; i++) {
+            const time = "" + (i == 0 ? 12 : i) + ":00" + ampm;
             calendarView.push(
-                <View style={{ height: 60 }}>
+                <View key={time} style={{ height: 60 }}>
                     <View>
                         <HorizontalLine />
-                        <Text style={{ color: colors.secondary_text, fontSize: 11 }}>{i == 0 ? 12 : i}:00 {ampm}</Text>
+                        <Text style={{ color: colors.secondary_text, fontSize: 11 }}>{time}</Text>
                     </View>
                 </View>
             );
