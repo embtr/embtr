@@ -18,7 +18,7 @@ export const CalendarPlanViews = ({ plannedToday, updateTask }: Props) => {
     let planViews: JSX.Element[] = [];
     plannedToday?.plannedTasks.forEach(plannedTask => {
         planViews.push(
-            <View style={{ alignContent: "flex-end", alignItems: "flex-end" }} >
+            <View key={plannedTask.id} style={{ alignContent: "flex-end", alignItems: "flex-end" }} >
                 <CalendarPlanView plannedTask={plannedTask} onUpdateTask={updateTask} parentLayout={layout} zIndex={zIndex} />
             </View>
         );
