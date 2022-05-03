@@ -179,7 +179,7 @@ export const Tomorrow = () => {
             </View>
 
             <View style={{ flex: 1.5, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                <EmbtrButton buttonText={locked ? 'Unlock Plans 🔓' : 'Lock Plans 🔒'} callback={() => { toggleLock() }} />
+                <EmbtrButton buttonText={locked ? 'Edit Plans 🔓' : 'Save Plans 🔒'} callback={() => { toggleLock() }} />
             </View>
         </View>
     );

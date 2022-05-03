@@ -28,7 +28,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zInd
             backgroundColor: colors.background_light,
             paddingTop: 5,
             marginTop: plannedTask.routine.startMinute,
-            borderColor: "red",
+            borderColor: plannedTask.complete ? "green" : "red",
             borderWidth: .2,
             zIndex: zIndex,
             position: "absolute",

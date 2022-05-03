@@ -35,7 +35,7 @@ export const PlanMain = () => {
     const [routes] = React.useState([
         { key: 'tomorrow', title: 'Tomorrow' },
         { key: 'tasks', title: 'Tasks' },
-        { key: 'pillars', title: 'Pillars' },
+        { key: 'goals', title: 'Goals' },
     ]);
 
     return (
