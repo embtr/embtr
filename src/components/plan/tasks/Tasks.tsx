@@ -41,7 +41,9 @@ export const Tasks = () => {
     visibleTasks.forEach(task => {
         if (taskRunsOnSelectedDay(task, selectedDaysOfWeek)) {
             taskViews.push(
-                <Task key={task.id} task={task} />
+                <View key={task.id} style={{ paddingBottom: 5 }} >
+                    <Task task={task} />
+                </View>
             );
         }
     });
