@@ -22,7 +22,7 @@ export const Task = ({ task, backgroundColor }: Props) => {
             <View style={{ backgroundColor: backgroundColor || colors.card_background }}>
                 <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
                     <View style={{ padding: 5 }}>
-                        <Text style={{ color: colors.text, textAlign: "center" }}>
+                        <Text style={{ color: colors.text, textAlign: "center", fontSize: 16, fontWeight: "bold" }}>
                             {task.name}
                         </Text>
                     </View>
@@ -31,45 +31,32 @@ export const Task = ({ task, backgroundColor }: Props) => {
                         <DaysOfWeek days={task.days} />
                     </View>
 
-                    <Text style={{ color: colors.text, textAlign: "center", paddingTop: 5 }}>
-                        {startMinuteToString(task.startMinute) + " for " + durationToString(task.duration)}
-                    </Text>
                     <View style={{ flex: 1 }} />
 
                     <View style={{ flexDirection: "row", paddingTop: 15 }}>
+                        <View style={{ flex: .5 }} />
                         <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                            attribute 1
+                            start time
                         </Text>
 
                         <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                            attribute 2
+                            duration
                         </Text>
 
-                        <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                            attribute 3
-                        </Text>
-
-                        <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                            attribute 4
-                        </Text>
+                        <View style={{ flex: .5 }} />
                     </View>
 
                     <View style={{ flexDirection: "row", paddingTop: 1 }}>
+                        <View style={{ flex: .5 }} />
+
                         <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                            value 1
+                            {startMinuteToString(task.startMinute)}
                         </Text>
 
                         <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                            value 2
+                            {durationToString(task.duration)}
                         </Text>
-
-                        <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                            value 3
-                        </Text>
-
-                        <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                            value 4
-                        </Text>
+                        <View style={{ flex: .5 }} />
                     </View>
                 </View>
             </View>

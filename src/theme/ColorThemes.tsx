@@ -13,6 +13,7 @@ export const lightColors = {
   secondary_text: 'gray',
   pillar_attribute: '#1e5e5e',
   error: '#D32F2F',
+  green_highlight: '#088F8F',
 };
 
 // Dark theme colors
@@ -30,4 +31,5 @@ export const darkColors = {
   secondary_text: '#a6a6a6',
   pillar_attribute: '#1e5e5e',
   error: '#EF9A9A',
+  green_highlight: '#00FF00',
 };

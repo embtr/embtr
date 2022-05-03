@@ -75,11 +75,19 @@ export const durationToString = (duration: number) => {
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
 
-    if (hours === 0) {
-        return minutes + " minutes"
+    let minutesString: string = minutes.toString();
+    if (minutesString.length == 1) {
+        minutesString = "0" + minutesString;
     }
 
-    return hours + " hours and " + minutes + " minutes";
+    let value = "";
+    if (hours > 0) {
+        value += hours + ":";
+    }
+    value += minutesString + ":";
+    value += "00";
+
+    return value;
 };
 
 class TaskController {
