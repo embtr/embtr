@@ -7,10 +7,11 @@ import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/
 
 interface Props {
     children: React.ReactElement | React.ReactElement[],
-    menuItems: MenuItemProps[]
+    menuItems: MenuItemProps[],
+    longPress?: boolean
 }
 
-export const EmbtrMenuWeb = ({ children, menuItems }: Props) => {
+export const EmbtrMenuWeb = ({ children, menuItems, longPress }: Props) => {
     const { colors } = useTheme();
 
     let actions: MenuAction[] = [];

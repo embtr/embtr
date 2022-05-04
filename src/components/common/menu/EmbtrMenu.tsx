@@ -7,14 +7,15 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 
 interface Props {
     children: React.ReactElement | React.ReactElement[],
-    menuItems: MenuItemProps[]
+    menuItems: MenuItemProps[],
+    longPress?: boolean
 }
 
-export const EmbtrMenu = ({ children, menuItems }: Props) => {
+export const EmbtrMenu = ({ children, menuItems, longPress }: Props) => {
     return (
         isDesktopBrowser() ?
-            <EmbtrMenuWeb children={children} menuItems={menuItems} />
+            <EmbtrMenuWeb children={children} menuItems={menuItems} longPress={longPress} />
             :
-            <EmbtrMenuMobile children={children} menuItems={menuItems} />
+            <EmbtrMenuMobile children={children} menuItems={menuItems} longPress={longPress} />
     )
 }
