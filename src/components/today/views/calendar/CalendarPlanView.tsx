@@ -60,7 +60,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zInd
                         </View>
 
                         <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 5 }}>
-                            <Ionicons name={plannedTask.complete === true ? "checkmark-done" : "checkmark"} size={20} color={plannedTask.complete === true ? "green" : colors.secondary_text} onPress={() => { onCheck() }} />
+                            <Ionicons name={plannedTask.complete === true ? "checkmark-done" : "checkmark"} size={20} color={plannedTask.complete === true ? "green" : colors.secondary_text} />
                         </View>
                     </View>
                 </TouchableOpacity>
