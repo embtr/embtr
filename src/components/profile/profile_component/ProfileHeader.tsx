@@ -81,7 +81,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
         <View>
             <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 12 }}>
-                    <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : "" }} /></View>
+                    { userProfileModel && <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} /></View>}
                     <View style={{ paddingLeft: 15, paddingTop: 15 }}>
                         <EditableTextBox text={newNameText !== undefined ? newNameText : userProfileModel?.name ? userProfileModel.name : ""} textSize={24} onChangeText={setNewNameText} editable={profileIsEditable} />
                     </View>
