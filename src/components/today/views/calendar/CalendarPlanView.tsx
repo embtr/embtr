@@ -38,13 +38,13 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zInd
     if (!plannedTask.complete) {
         menuItems.push(
             { text: 'Complete & Post', onPress: toggleComplete },
-            { text: 'Edit', onPress: () => {} },
+            { text: 'Edit', onPress: () => { } },
         );
     }
 
     return (
-        <View>
-            <View style={{ marginTop: plannedTask.routine.startMinute }} />
+        <View style={{ zIndex: zIndex, position: "absolute" }}>
+            <View style={{ height: plannedTask.routine.startMinute }} />
 
             <EmbtrMenu longPress={true} menuItems={menuItems} >
                 <TouchableOpacity onPress={() => { onPress() }} style={{
@@ -55,7 +55,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zInd
                     borderColor: plannedTask.complete ? "green" : "red",
                     borderWidth: .2,
                 }}>
-                    <View style={{ flexDirection: "row", zIndex: zIndex, position: "absolute" }}>
+                    <View style={{ flexDirection: "row", width: "100%" }}>
                         <View style={{ flex: 1, paddingLeft: 5 }}>
                             <Text style={{ color: colors.text }}>{plannedTask.routine.name}</Text>
                         </View>
