@@ -37,7 +37,8 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zInd
 
     if (!plannedTask.complete) {
         menuItems.push(
-            { text: 'Complete & Post', onPress: toggleComplete }
+            { text: 'Complete & Post', onPress: toggleComplete },
+            { text: 'Edit', onPress: () => {} },
         );
     }
 
