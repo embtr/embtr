@@ -139,7 +139,7 @@ export const Tomorrow = () => {
         <View style={{ flex: 1, flexDirection: "column" }}>
             <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.text, textAlign: "center", fontSize: 17 }}>
-                    Tomorrow is
+                    Plan your
                     <Text style={{ color: colors.primary_border }}> {tomorrowCapitalized}</Text>
                 </Text>
 

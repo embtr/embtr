@@ -22,7 +22,6 @@ export const PlanningTask = ({ task, isChecked, onCheckboxToggled }: Props) => {
             <Task task={task} backgroundColor={backgroundColor} />
 
             <HorizontalLine />
-
             <View style={{ backgroundColor: backgroundColor, flexDirection: "row" }} >
                 <View style={{ flex: 1 }} >
                     <View style={{ alignItems: "center", paddingTop: 5, paddingBottom: 5 }}>
@@ -35,13 +34,9 @@ export const PlanningTask = ({ task, isChecked, onCheckboxToggled }: Props) => {
                         <Ionicons name={"pencil"} size={20} color={colors.text} onPress={() => { }} />
                     </View>
                 </View>
-
-                <View style={{ flex: 1 }} >
-                    <View style={{ alignItems: "center", paddingTop: 5, paddingBottom: 5 }}>
-                        <Ionicons name={"trash"} size={20} color={colors.text} onPress={() => { }} />
-                    </View>
-                </View>
             </View>
+            <HorizontalLine />
+
         </View>
     );
 };
