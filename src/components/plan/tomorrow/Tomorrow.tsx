@@ -144,25 +144,19 @@ export const Tomorrow = () => {
                 </Text>
 
                 <View>
-                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 10, paddingTop: 2 }}>
+                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 10 }}>
                         Starts in <Countdown />
                     </Text>
                 </View>
 
                 <View>
-                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 11, paddingTop: 4 }}>
+                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 11 }}>
                         <Text style={{ color: locked ? "green" : "red" }} >{locked ? "locked 🔒" : "unlocked 🔓"} </Text>
                     </Text>
                 </View>
             </View>
 
             <View style={{ flex: 8 }}>
-                <Text style={{ color: colors.text, textAlign: "center", paddingTop: "1%" }}>
-                    Plan Your Day
-                </Text>
-                <Text style={{ color: colors.text, textAlign: "center", paddingBottom: "2%", fontSize: 12, paddingLeft: "5%", paddingRight: "5%" }}>
-                    {locked ? "You can unlock tomorrow's schedule if you need to make changes." : "Select the tasks that you intend on completing tomorrow. You can update the start time and duration. Lock in your plans once you feel confident about tomorrows schedule!"}
-                </Text>
                 {
                     taskViews.length > 0
                         ?
