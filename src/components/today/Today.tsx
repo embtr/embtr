@@ -20,12 +20,12 @@ export const Today = () => {
     useFocusEffect(
         React.useCallback(() => {
             PlannedDayController.get(getTodayKey(), setPlannedToday);
-        }, [plannedToday])
+        }, [])
     );
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
         PlannedDayController.updateTask(plannedToday!, updatedPlannedTask);
-        setPlannedToday(plannedToday);
+        PlannedDayController.get(getTodayKey(), setPlannedToday);
     };
 
     let taskViews: JSX.Element[] = [];
