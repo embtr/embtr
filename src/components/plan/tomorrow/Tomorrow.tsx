@@ -138,7 +138,7 @@ export const Tomorrow = () => {
     return (
         <View style={{ flex: 1, flexDirection: "column" }}>
             <View style={{ flex: 1 }}>
-                <Text style={{ color: colors.text, textAlign: "center", fontSize: 17, paddingTop: 10 }}>
+                <Text style={{ color: colors.text, textAlign: "center", fontSize: 17 }}>
                     Tomorrow is
                     <Text style={{ color: colors.primary_border }}> {tomorrowCapitalized}</Text>
                 </Text>
