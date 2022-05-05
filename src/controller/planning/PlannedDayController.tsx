@@ -1,3 +1,4 @@
+import { ca } from "date-fns/locale";
 import { Timestamp } from "firebase/firestore";
 import { TaskModel } from "src/controller/planning/TaskController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
@@ -82,9 +83,12 @@ class PlannedDayController {
         PlannedDayDao.replace(plannedDay);
     }
 
-    public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
+    public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
         plannedDay.metadata!.modified = Timestamp.now();
-        PlannedDayDao.updateTask(plannedDay, plannedTask);
+        const result = PlannedDayDao.updateTask(plannedDay, plannedTask);
+        result?.then(() => {
+            callback();
+        });
     }
 
     private static createMetadata(): PlannedDayMetadata {

@@ -24,8 +24,9 @@ export const Today = () => {
     );
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
-        PlannedDayController.updateTask(plannedToday!, updatedPlannedTask);
-        PlannedDayController.get(getTodayKey(), setPlannedToday);
+        PlannedDayController.updateTask(plannedToday!, updatedPlannedTask, () => {
+            PlannedDayController.get(getTodayKey(), setPlannedToday);            
+        });
     };
 
     let taskViews: JSX.Element[] = [];
