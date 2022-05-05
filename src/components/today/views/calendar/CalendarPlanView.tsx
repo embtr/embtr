@@ -10,11 +10,10 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 interface Props {
     plannedTask: PlannedTaskModel,
     onUpdateTask: Function,
-    parentLayout?: LayoutRectangle,
-    zIndex: number
+    parentLayout?: LayoutRectangle
 }
 
-export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zIndex }: Props) => {
+export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Props) => {
     const { colors } = useTheme();
 
     const onPress = () => {
@@ -43,9 +42,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout, zInd
     }
 
     return (
-        <View style={{ zIndex: zIndex, position: "absolute" }}>
-            <View style={{ height: plannedTask.routine.startMinute }} />
-
+        <View style={{ top: plannedTask.routine.startMinute, position: "absolute" }} >
             <EmbtrMenu longPress={true} menuItems={menuItems} >
                 <TouchableOpacity onPress={() => { onPress() }} style={{
                     height: plannedTask.duration ? plannedTask.duration : plannedTask.routine.duration,

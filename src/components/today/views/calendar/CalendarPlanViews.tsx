@@ -2,7 +2,7 @@ import React from 'react';
 import { LayoutRectangle, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CalendarPlanView } from 'src/components/today/views/calendar/CalendarPlanView';
-import PlannedDayController, { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     plannedToday?: PlannedDay
@@ -14,15 +14,13 @@ export const CalendarPlanViews = ({ plannedToday, updateTask }: Props) => {
 
     const [layout, setLayout] = React.useState<LayoutRectangle>();
 
-    let zIndex = 99;
     let planViews: JSX.Element[] = [];
     plannedToday?.plannedTasks.forEach(plannedTask => {
         planViews.push(
             <View key={plannedTask.id} style={{ alignContent: "flex-end", alignItems: "flex-end" }} >
-                <CalendarPlanView plannedTask={plannedTask} onUpdateTask={updateTask} parentLayout={layout} zIndex={zIndex} />
+                <CalendarPlanView plannedTask={plannedTask} onUpdateTask={updateTask} parentLayout={layout} />
             </View>
         );
-        zIndex++;
     });
 
     return (
