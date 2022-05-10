@@ -63,6 +63,7 @@ class PlannedDayController {
                 }
             });
         }).then(() => {
+            plannedDay.plannedTasks.sort((a, b) => ((a.startMinute ? a.startMinute : a.routine.startMinute) > (b.startMinute ? b.startMinute : b.routine.startMinute) ? 1 : -1));
             callback(plannedDay);
         });
     }
@@ -74,7 +75,7 @@ class PlannedDayController {
     public static create(plannedDay: PlannedDay, callback: Function) {
         plannedDay.metadata = this.createMetadata();
         PlannedDayDao.create(plannedDay);
-        
+
         callback(plannedDay);
     }
 
