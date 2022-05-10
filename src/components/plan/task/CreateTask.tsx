@@ -5,13 +5,38 @@ import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CreateDailyTask } from 'src/components/plan/task/CreateDailyTask';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
+import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { CreateOneTimeTask } from 'src/components/plan/task/CreateOneTimeTask';
+import PlannedDayController, { createPlannedTask, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+
+export const enum Target {
+    PLAN,
+    TODAY
+}
 
 export const CreateTask = () => {
     const { colors } = useTheme();
 
-    const [name, setName] = React.useState("");
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'CreateTask'>>();
+    const target: Target = route.params.target;
 
-    const [frequency, setFrequency] = React.useState("daily");
+    const [name, setName] = React.useState("");
+    const [frequency, setFrequency] = React.useState(target == Target.PLAN ? "daily" : "today");
+
+    const createTask = (task: TaskModel) => {
+        TaskController.createTask(task, () => { navigation.goBack() });
+    };
+
+    const createPlannedTaskCallback = (task: TaskModel) => {
+        PlannedDayController.get(getTodayKey(), (plannedDay: PlannedDay) => {
+            const plannedTask: PlannedTaskModel = createPlannedTask(task);
+            PlannedDayController.addTask(plannedDay, plannedTask, () => { navigation.goBack() });
+        });
+    };
 
     return (
         <Screen>
@@ -28,25 +53,30 @@ export const CreateTask = () => {
                     />
                 </View>
 
-                <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 1 }}>
-                    <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>I will run this task</Text>
-                    <View style={{ alignItems: "flex-start" }}>
-                        <Picker
-                            itemStyle={{ height: 120 }}
-                            style={{ width: 100, color: colors.text }}
+                {target === Target.PLAN &&
+                    <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 1 }}>
+                        <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>I will run this task</Text>
+                        <View style={{ alignItems: "flex-start" }}>
+                            <Picker
+                                itemStyle={{ height: 120 }}
+                                style={{ width: 150, color: colors.text }}
 
-                            selectedValue={frequency}
-                            onValueChange={(itemValue) => setFrequency(itemValue)}>
-                            <Picker.Item color={colors.text} label="Daily" value="daily" />
-                            <Picker.Item color={colors.text} label="Weekly" value="Weekly" />
-                            <Picker.Item color={colors.text} label="Monthly" value="monthly" />
-                            <Picker.Item color={colors.text} label="Yearly" value="yearly" />
-                        </Picker>
+                                selectedValue={frequency}
+                                onValueChange={(itemValue) => setFrequency(itemValue)}
+                            >
+                                <Picker.Item color={colors.text} label="Today" value="today" />
+                                <Picker.Item color={colors.text} label="Daily" value="daily" />
+                                <Picker.Item color={colors.text} label="Weekly" value="Weekly" />
+                                <Picker.Item color={colors.text} label="Monthly" value="monthly" />
+                                <Picker.Item color={colors.text} label="Yearly" value="yearly" />
+                            </Picker>
+                        </View>
                     </View>
-                </View>
+                }
 
                 <View style={{ flex: 5 }}>
-                    {frequency === "daily" && <CreateDailyTask name={name} />}
+                    {frequency === "today" && <CreateOneTimeTask name={name} onCreateTask={createPlannedTaskCallback} />}
+                    {frequency === "daily" && <CreateDailyTask name={name} onCreateTask={createTask} />}
                 </View>
             </View>
         </Screen>

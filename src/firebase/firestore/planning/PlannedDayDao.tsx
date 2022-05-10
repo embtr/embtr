@@ -10,15 +10,30 @@ class PlannedDayDao {
         });
     }
 
+    /*
+     * move us to plannedTaskController/Dao
+    */
     public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
         const userUid = getAuth().currentUser?.uid;
         if (!userUid) {
             return;
         }
 
-        const db: Firestore = getFirebaseConnection(this.name, "update");
+        const db: Firestore = getFirebaseConnection(this.name, "updateTask");
 
         const result = setDoc(doc(db, "planned_day", userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
+        console.log(result);
+        return result;
+    }
+
+    public static createTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
+        const userUid = getAuth().currentUser?.uid;
+        if (!userUid) {
+            return;
+        }
+
+        const db: Firestore = getFirebaseConnection(this.name, "createTask");
+        const result = addDoc(collection(db, "planned_day", userUid, plannedDay.id!), plannedTask);
         return result;
     }
 

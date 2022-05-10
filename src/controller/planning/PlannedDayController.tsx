@@ -23,6 +23,16 @@ export interface PlannedDayMetadata {
     locked: boolean
 }
 
+
+export const createPlannedTask = (task: TaskModel) => {
+    const plannedTask: PlannedTaskModel = {
+        routine: task
+    }
+
+    return plannedTask;
+}
+
+
 export const getKey = (daysBack: number) => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + daysBack);
@@ -88,6 +98,14 @@ class PlannedDayController {
         plannedDay.metadata!.modified = Timestamp.now();
         const result = PlannedDayDao.updateTask(plannedDay, plannedTask);
         result?.then(() => {
+            callback();
+        });
+    }
+
+    public static addTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
+        plannedDay.metadata!.modified = Timestamp.now();
+        const result = PlannedDayDao.createTask(plannedDay, plannedTask);
+            result?.then(() => {
             callback();
         });
     }

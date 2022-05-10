@@ -2,7 +2,6 @@ import React from 'react';
 import { Picker } from "@react-native-picker/picker";
 import { View, Text } from "react-native";
 import { EmbtrButton } from "src/components/common/button/EmbtrButton";
-import { SelectableDaysOfWeek } from "src/components/plan/task/SelectableDaysOfWeek";
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { createDays, createTaskModel } from 'src/controller/planning/TaskController';
 
@@ -11,7 +10,7 @@ interface Props {
     onCreateTask: Function
 }
 
-export const CreateDailyTask = ({ name, onCreateTask }: Props) => {
+export const CreateOneTimeTask = ({ name, onCreateTask }: Props) => {
     const { colors } = useTheme();
 
     const [hour, setHour] = React.useState(1);
@@ -48,22 +47,17 @@ export const CreateDailyTask = ({ name, onCreateTask }: Props) => {
         const startMinute = AMPMHour * 60 + minute;
         const duration = durationHours * 60 + durationMinutes;
         const task = createTaskModel(name, startMinute, duration, selectedDaysOfWeek);
-
+        
         onCreateTask(task);
     };
 
     return (
         <View style={{ flex: 1 }} >
+            <View style={{ flex: 2 }} />
 
-            <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
-                <View>
-                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 20 }}>on the following days</Text>
-                    <SelectableDaysOfWeek daysOfWeek={selectedDaysOfWeek} onDaysOfWeekUpdated={setSelectedDaysOfWeek} />
-                </View>
-            </View>
 
             <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
-                <Text style={{ color: colors.text, fontSize: 20, textAlign: "right", flex: 1 }}>with a start time of</Text>
+                <Text style={{ color: colors.text, fontSize: 20, textAlign: "right", flex: 1 }}>I will start this task at</Text>
                 <View style={{ flexDirection: "row", flex: 1 }} >
                     <View style={{ flex: 1 }}>
                         <Picker
@@ -126,7 +120,7 @@ export const CreateDailyTask = ({ name, onCreateTask }: Props) => {
                 </View>
             </View>
 
-            <View style={{ flex: 1 }} />
+            <View style={{ flex: 2 }} />
 
             <View style={{ alignItems: "center", justifyContent: "center", flex: 2 }}>
                 <EmbtrButton buttonText={'create'} callback={createTask} />

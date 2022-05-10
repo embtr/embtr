@@ -10,6 +10,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { createDays, TaskModel, taskRunsOnSelectedDay } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/Task';
+import { Target } from 'src/components/plan/task/CreateTask';
 
 export const Tasks = () => {
     const { colors } = useTheme();
@@ -57,7 +58,7 @@ export const Tasks = () => {
             </ScrollView>
 
             <View style={{ position: "absolute", right: 0, bottom: 0 }}>
-                <AddButton onPress={() => { navigation.navigate('CreateTask') }} />
+                <AddButton onPress={() => { navigation.navigate('CreateTask', { target: Target.PLAN }) }} />
             </View>
         </View>
     );

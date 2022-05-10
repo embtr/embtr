@@ -1,4 +1,5 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
+import { Target } from "src/components/plan/task/CreateTask";
 
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>
@@ -7,8 +8,12 @@ export type MainTabScreens = {
     TodayTab: undefined;
 }
 
+export type TodayTab = {
+    CreateTask: { target: Target };
+}
+
 export type PlanTabScreens = {
-    CreateTask: undefined;
+    CreateTask: { target: Target };
     TaskDetails: { id: string };
 };
 

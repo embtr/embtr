@@ -3,17 +3,19 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { PlanTabScreens, TodayTab } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import PlannedDayController, { getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { PlannedTask } from 'src/components/today/PlannedTask';
 import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
 import { TodayHeader } from 'src/components/today/TodayHeader';
 import { Banner } from 'src/components/common/Banner';
+import { AddButton } from 'src/components/common/button/AddButton';
+import { Target } from 'src/components/plan/task/CreateTask';
 
 export const Today = () => {
     const { colors } = useTheme();
-    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
+    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
 
@@ -25,7 +27,7 @@ export const Today = () => {
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
         PlannedDayController.updateTask(plannedToday!, updatedPlannedTask, () => {
-            PlannedDayController.get(getTodayKey(), setPlannedToday);            
+            PlannedDayController.get(getTodayKey(), setPlannedToday);
         });
     };
 
@@ -42,6 +44,10 @@ export const Today = () => {
                 <Banner name={"Today"} />
                 <TodayHeader plannedToday={plannedToday} />
                 <CalendarView plannedToday={plannedToday} updateTask={updateTask} />
+
+                <View style={{ position: "absolute", right: 0, bottom: 0 }}>
+                    <AddButton onPress={() => { navigation.navigate('CreateTask', { target: Target.TODAY }) }} />
+                </View>
             </View>
         </Screen>
     );

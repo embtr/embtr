@@ -7,8 +7,9 @@ import TaskController, { getTomorrowDayOfWeek, TaskModel } from 'src/controller/
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
-import PlannedDayController, { getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { createPlannedTask, getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Task } from 'src/components/plan/Task';
+import { PlannedTask } from 'src/components/today/PlannedTask';
 
 
 export const Tomorrow = () => {
@@ -75,10 +76,7 @@ export const Tomorrow = () => {
         let plannedtasks: PlannedTaskModel[] = [];
         tasks.forEach(task => {
             if (checkedTasks.get(task.id!) !== false) {
-                const plannedTask: PlannedTaskModel = {
-                    routine: task
-                }
-
+                const plannedTask: PlannedTaskModel = createPlannedTask(task);
                 plannedtasks.push(plannedTask);
             }
         });

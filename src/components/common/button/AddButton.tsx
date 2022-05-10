@@ -12,11 +12,11 @@ export const AddButton = ({ onPress } : Props ) => {
     const { colors } = useTheme();
 
     const shadow = {
-        shadowColor: colors.text,
-        shadowOffset: { width: -2, height: 2 },
-        shadowOpacity: .5,
-        shadowRadius: 2.5,
-        elevation: 10,
+        //shadowColor: colors.text,
+        //shadowOffset: { width: -2, height: 2 },
+        //shadowOpacity: .5,
+        //shadowRadius: 2.5,
+        //elevation: 10,
     }
 
 
