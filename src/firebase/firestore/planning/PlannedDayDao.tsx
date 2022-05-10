@@ -22,7 +22,6 @@ class PlannedDayDao {
         const db: Firestore = getFirebaseConnection(this.name, "updateTask");
 
         const result = setDoc(doc(db, "planned_day", userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
-        console.log(result);
         return result;
     }
 
