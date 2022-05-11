@@ -12,7 +12,7 @@ export interface PlannedDay {
 export interface PlannedTaskModel {
     id?: string,
     routine: TaskModel,
-    complete?: boolean,
+    status?: string,
     startMinute?: number,
     duration?: number
 }
@@ -23,6 +23,17 @@ export interface PlannedDayMetadata {
     locked: boolean
 }
 
+export const plannedTaskIsComplete = (plannedTask: PlannedTaskModel): boolean => {
+    return plannedTask.status === "COMPLETE";
+};
+
+export const plannedTaskIsFailed = (plannedTask: PlannedTaskModel): boolean => {
+    return plannedTask.status === "FAILED";
+};
+
+export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean => {
+    return !plannedTaskIsComplete(plannedTask) && !plannedTaskIsFailed(plannedTask);
+};
 
 export const createPlannedTask = (task: TaskModel) => {
     const plannedTask: PlannedTaskModel = {
