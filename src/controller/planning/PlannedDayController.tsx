@@ -68,7 +68,7 @@ class PlannedDayController {
     public static get(id: string, callback: Function) {
         let plannedDay: PlannedDay = {
             id: id,
-            metadata: undefined,
+            metadata: this.createMetadata(),
             plannedTasks: []
         }
 
