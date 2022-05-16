@@ -28,7 +28,11 @@ export const CreateTask = () => {
     const [frequency, setFrequency] = React.useState(target == Target.PLAN ? "daily" : "today");
 
     const createTask = (task: TaskModel) => {
+        if (task.days.sunday === true || task.days.monday === true || task.days.tuesday === true || task.days.wednesday === true || task.days.thursday === true || task.days.friday === true || task.days.saturday === true) {
         TaskController.createTask(task, () => { navigation.goBack() });
+        } else {
+            console.log('please select a day')
+        }
     };
 
     const createPlannedTaskCallback = (task: TaskModel) => {
