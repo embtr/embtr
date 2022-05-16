@@ -12,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CreateOneTimeTask } from 'src/components/plan/task/CreateOneTimeTask';
 import PlannedDayController, { createPlannedTask, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { MaterialIcons } from '@expo/vector-icons';
+import { FadeIn } from 'react-native-reanimated';
 
 export const enum Target {
     PLAN,
@@ -85,8 +86,8 @@ export const CreateTask = () => {
                     {frequency === "daily" && <CreateDailyTask name={name} onCreateTask={createTask} />}
                 </View>
 
-                <Modal visible={errorModal}>
-                    <View>
+                <Modal visible={errorModal} transparent={true} animationType='slide'>
+                    <View style={{backgroundColor: 'white', marginTop: '50%', marginRight: 20, marginLeft: 20, justifyContent: 'center', alignContent: 'center'}}>
                         <MaterialIcons
                             name='close'
                             size={24}
@@ -103,7 +104,7 @@ export const CreateTask = () => {
 
 const styles = StyleSheet.create({
     modalToggle: {
-        marginTop: 100,
+        marginTop: 50,
         borderWidth: 1,
         borderColor: '#f2f2f2',
         padding: 10,
@@ -112,7 +113,8 @@ const styles = StyleSheet.create({
         
     },
     modalText: {
-        marginTop: 20,
+        marginTop: 30,
+        marginBottom: 40,
         alignSelf: 'center'
     }
 })
