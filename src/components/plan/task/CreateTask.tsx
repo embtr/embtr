@@ -1,6 +1,6 @@
 import React from 'react';
 import { Picker } from '@react-native-picker/picker';
-import { View, Text, TextInput } from 'react-native';
+import { View, Text, TextInput, Modal, StyleSheet } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -11,6 +11,7 @@ import TaskController, { TaskModel } from 'src/controller/planning/TaskControlle
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CreateOneTimeTask } from 'src/components/plan/task/CreateOneTimeTask';
 import PlannedDayController, { createPlannedTask, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export const enum Target {
     PLAN,
@@ -26,12 +27,13 @@ export const CreateTask = () => {
 
     const [name, setName] = React.useState("");
     const [frequency, setFrequency] = React.useState(target == Target.PLAN ? "daily" : "today");
+    const [errorModal, setErrorModal] = React.useState(false);
 
     const createTask = (task: TaskModel) => {
         if (task.days.sunday === true || task.days.monday === true || task.days.tuesday === true || task.days.wednesday === true || task.days.thursday === true || task.days.friday === true || task.days.saturday === true) {
         TaskController.createTask(task, () => { navigation.goBack() });
         } else {
-            console.log('please select a day')
+            setErrorModal(true);
         }
     };
 
@@ -82,7 +84,35 @@ export const CreateTask = () => {
                     {frequency === "today" && <CreateOneTimeTask name={name} onCreateTask={createPlannedTaskCallback} />}
                     {frequency === "daily" && <CreateDailyTask name={name} onCreateTask={createTask} />}
                 </View>
+
+                <Modal visible={errorModal}>
+                    <View>
+                        <MaterialIcons
+                            name='close'
+                            size={24}
+                            style={styles.modalToggle}
+                            onPress={() => setErrorModal(false)}
+                        />
+                        <Text style={styles.modalText}>Please Select a Day</Text>
+                    </View>
+                </Modal>
             </View>
         </Screen>
     );
 };
+
+const styles = StyleSheet.create({
+    modalToggle: {
+        marginTop: 100,
+        borderWidth: 1,
+        borderColor: '#f2f2f2',
+        padding: 10,
+        borderRadius: 10,
+        alignSelf: 'center'
+        
+    },
+    modalText: {
+        marginTop: 20,
+        alignSelf: 'center'
+    }
+})
