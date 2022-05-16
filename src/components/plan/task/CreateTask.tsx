@@ -47,6 +47,7 @@ export const CreateTask = () => {
 
     return (
         <Screen>
+            <View style={{backgroundColor: errorModal === false ? 'transparent' : 'rgba(0,0,0,0.5)'}}>
             <Banner name={"Create Task"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
 
             <View style={{ flexDirection: "column", flex: 1 }}>
@@ -87,7 +88,7 @@ export const CreateTask = () => {
                 </View>
 
                 <Modal visible={errorModal} transparent={true} animationType='slide'>
-                    <View style={{backgroundColor: 'white', marginTop: '50%', marginRight: 20, marginLeft: 20, justifyContent: 'center', alignContent: 'center'}}>
+                    <View style={styles.modalView}>
                         <MaterialIcons
                             name='close'
                             size={24}
@@ -98,11 +99,21 @@ export const CreateTask = () => {
                     </View>
                 </Modal>
             </View>
+            </View>
         </Screen>
     );
 };
 
 const styles = StyleSheet.create({
+    modalView: {
+        backgroundColor: 'white',
+        marginTop: '50%',
+        marginRight: 20,
+        marginLeft: 20,
+        justifyContent: 'center',
+        alignContent: 'center',
+        borderRadius: 10
+    },
     modalToggle: {
         marginTop: 50,
         borderWidth: 1,
