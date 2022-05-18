@@ -5,7 +5,6 @@ import { EmbtrMenuOptionCustom } from 'src/components/common/menu/EmbtrMenuOptio
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getMenuOptions, setCloseMenu, setOpenMenu } from 'src/redux/user/GlobalState';
-import * as Haptics from 'expo-haptics';
 
 export const EmbtrMenuCustom = () => {
     const { colors } = useTheme();
@@ -31,11 +30,7 @@ export const EmbtrMenuCustom = () => {
     };
 
     const setMenuCallbacks = () => {
-        dispatch(setOpenMenu(() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            setVisible(true);
-        }));
-
+        dispatch(setOpenMenu(() => { setVisible(true) }));
         dispatch(setCloseMenu(() => { setVisible(false) }));
     };
 

@@ -4,10 +4,11 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { plannedTaskIsComplete, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { createEmbtrOptions as createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import * as Haptics from 'expo-haptics';
+
 
 interface Props {
     plannedTask: PlannedTaskModel,
@@ -53,8 +54,12 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
     return (
         <View style={{ top: plannedTask.routine.startMinute, position: "absolute" }} >
             <TouchableOpacity
-                onPress={onPress}
+                onPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    onPress();
+                }}
                 onLongPress={() => {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
                     updateMenuOptions()
                     openMenu()
                 }}
