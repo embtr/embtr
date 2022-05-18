@@ -46,23 +46,43 @@ export const GlobalState = createSlice({
 });
 
 export const getAccessLevel = (state: RootState): string => {
-    return state.globalState.accessLevel
+    if (!state?.globalState?.accessLevel) {
+        return INITIAL_STATE.accessLevel;
+    }
+
+    return state.globalState.accessLevel;
 };
 
 export const getUserProfileUrl = (state: RootState): string => {
-    return state.globalState.userProfileUrl
+    if (!state?.globalState?.userProfileUrl) {
+        return INITIAL_STATE.userProfileUrl;
+    }
+
+    return state.globalState.userProfileUrl;
 };
 
 export const getMenuOptions = (state: RootState): EmbtrMenuOptions => {
-    return state.globalState.menuOptions
+    if (!state?.globalState?.menuOptions) {
+        return INITIAL_STATE.menuOptions;
+    }
+
+    return state.globalState.menuOptions;
 }
 
 export const getOpenMenu = (state: RootState): Function => {
-    return state.globalState.openMenu
+    if (!state?.globalState?.openMenu) {
+        return INITIAL_STATE.openMenu;
+    }
+
+    return state.globalState.openMenu;
 }
 
 export const getCloseMenu = (state: RootState): Function => {
-    return state.globalState.closeMenu
+    if (!state?.globalState?.closeMenu) {
+        return INITIAL_STATE.closeMenu;
+    }
+
+    return state.globalState.closeMenu;
 }
 
 export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu } = GlobalState.actions;
