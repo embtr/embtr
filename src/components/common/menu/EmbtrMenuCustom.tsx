@@ -1,28 +1,41 @@
-
 import * as React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuOptionCustom } from 'src/components/common/menu/EmbtrMenuOptionCustom';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getMenuOptions, setCloseMenu, setOpenMenu } from 'src/redux/user/GlobalState';
 
-interface Props {
-    //title: string
-    menuOptions: EmbtrMenuOption[],
-    visible: boolean,
-    dismiss: Function
-}
-
-export const EmbtrMenuCustom = ({ menuOptions, visible, dismiss }: Props) => {
+export const EmbtrMenuCustom = () => {
     const { colors } = useTheme();
+
+    const [visible, setVisible] = React.useState(false);
+    const [menuOptions, setMenuOptions] = React.useState<EmbtrMenuOptions>();
 
     const title: string = "Actions";
 
     let menuOptionViews: JSX.Element[] = [];
-    menuOptions.forEach(menuOption => {
-        menuOptionViews.push(
-            <EmbtrMenuOptionCustom key={menuOption.name} details={menuOption} />
-        );
-    });
+    if (menuOptions && menuOptions.uniqueIdentifier && menuOptions.options && menuOptions.options.length > 0) {
+        menuOptions.options.forEach(menuOption => {
+            menuOptionViews.push(
+                <EmbtrMenuOptionCustom key={menuOption.name} details={menuOption} />
+            );
+        });
+    }
+
+    const dismiss = () => {
+        setVisible(false);
+    };
+
+    const dispatch = useAppDispatch();
+    dispatch(setOpenMenu(() => { setVisible(true) }));
+    dispatch(setCloseMenu(() => { setVisible(false) }));
+
+    const currentMenuOptions = useAppSelector(getMenuOptions);
+
+    if (!menuOptions?.uniqueIdentifier || currentMenuOptions.uniqueIdentifier !== menuOptions.uniqueIdentifier) {
+        setMenuOptions(currentMenuOptions);
+    }
 
     return (
         visible ?

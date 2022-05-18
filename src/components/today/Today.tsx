@@ -13,15 +13,12 @@ import { Banner } from 'src/components/common/Banner';
 import { AddButton } from 'src/components/common/button/AddButton';
 import { Target } from 'src/components/plan/task/CreateTask';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 
 export const Today = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
-    const [visible, setVisible] = React.useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -42,16 +39,11 @@ export const Today = () => {
         );
     });
 
-    const menuItems: EmbtrMenuOption[] = [
-        { name: "a", onPress: () => { setVisible(false) } },
-        { name: "b", onPress: () => { setVisible(false) } },
-    ];
-
     return (
         <Screen>
             <View style={{ flex: 1 }}>
                 <Banner name={"Today"} />
-                <EmbtrMenuCustom menuOptions={menuItems} visible={visible} dismiss={() => { setVisible(false) }} />
+                <EmbtrMenuCustom />
 
                 <TodayHeader plannedToday={plannedToday} />
                 <CalendarView plannedToday={plannedToday} updateTask={updateTask} />
@@ -59,10 +51,6 @@ export const Today = () => {
                 <View style={{ position: "absolute", right: 0, bottom: 0 }}>
                     <AddButton onPress={() => { navigation.navigate('CreateTask', { target: Target.TODAY }) }} />
                 </View>
-
-                <TouchableOpacity onPress={() => { setVisible(true) }} >
-                    <View style={{ backgroundColor: "green", width: 100, height: 100 }} />
-                </TouchableOpacity>
 
             </View>
         </Screen>

@@ -8,6 +8,10 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { MenuItemProps } from 'react-native-hold-menu/lib/typescript/components/menu/types';
 import { EmbtrMenu } from 'src/components/common/menu/EmbtrMenu';
+import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getMenuOptions } from 'src/redux/user/GlobalState';
 
 interface Props {
     name: string,
@@ -22,7 +26,7 @@ interface Props {
     innerLeftIcon?: any,
     innerLeftCallback?: Function
 
-    menuItems?: MenuItemProps[]
+    menuItems?: EmbtrMenuOption[]
 }
 
 export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, innerLeftCallback, menuItems }: Props) => {
@@ -46,6 +50,8 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
 
     return (
         <View>
+            {menuItems && <EmbtrMenuCustom />}
+
             <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
                 <View style={{ flexDirection: "row", flex: 1, paddingLeft: 10, paddingTop: 5 }}>
                     {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
@@ -60,22 +66,12 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
                 <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
                     {rightIcon
                         ?
-                        menuItems ?
-                            <EmbtrMenu menuItems={menuItems} >
-                                <View style={{ alignItems: "flex-end" }}>
-                                    {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                                        <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
-                                    </View> : <></>}
-                                    <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
-                                </View>
-                            </EmbtrMenu>
-                            :
-                            <View style={{ alignItems: "flex-end" }}>
-                                {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                                    <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
-                                </View> : <></>}
-                                <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
-                            </View>
+                        <View style={{ alignItems: "flex-end" }}>
+                            {rightIconNotificationCount ? <View style={{ backgroundColor: colors.primary_border, zIndex: 1, position: "absolute", borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, width: 15, height: 15, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
+                                <Text style={{ color: "black", fontSize: 11 }}>{rightIconNotificationCount}</Text>
+                            </View> : <></>}
+                            <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
+                        </View>
                         :
                         <View />
                     }

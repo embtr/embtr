@@ -9,6 +9,7 @@ import { getAuth } from 'firebase/auth';
 import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
@@ -27,10 +28,10 @@ export const TaskDetails = () => {
         }, [])
     );
 
-    const menuItems = [
-        { text: 'Actions', isTitle: true },
+    const menuItems: EmbtrMenuOption[] = [
         {
-            text: 'Archive', onPress: () => {
+            name: 'Archive',
+            onPress: () => {
                 if (isDesktopBrowser()) {
                     if (confirm("archive task '" + task?.name + "'")) {
                         if (task) {
@@ -51,8 +52,6 @@ export const TaskDetails = () => {
                 }
             }
         }
-        //{ text: 'Action 2', withSeparator: true, onPress: () => { } },
-        //{ text: 'Action 3', isDestructive: true, onPress: () => { } },
     ];
 
     return (
