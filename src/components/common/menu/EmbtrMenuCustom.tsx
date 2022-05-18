@@ -12,6 +12,8 @@ export const EmbtrMenuCustom = () => {
     const [visible, setVisible] = React.useState(false);
     const [menuOptions, setMenuOptions] = React.useState<EmbtrMenuOptions>();
 
+    const dispatch = useAppDispatch();
+
     const title: string = "Actions";
 
     let menuOptionViews: JSX.Element[] = [];
@@ -27,9 +29,14 @@ export const EmbtrMenuCustom = () => {
         setVisible(false);
     };
 
-    const dispatch = useAppDispatch();
-    dispatch(setOpenMenu(() => { setVisible(true) }));
-    dispatch(setCloseMenu(() => { setVisible(false) }));
+    const setMenuCallbacks = () => {
+        dispatch(setOpenMenu(() => { setVisible(true) }));
+        dispatch(setCloseMenu(() => { setVisible(false) }));
+    };
+
+    React.useEffect(() => {
+        setMenuCallbacks();
+    }, []);
 
     const currentMenuOptions = useAppSelector(getMenuOptions);
 

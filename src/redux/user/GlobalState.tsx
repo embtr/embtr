@@ -34,7 +34,6 @@ export const GlobalState = createSlice({
             state.userProfileUrl = action.payload
         },
         setMenuOptions(state, action) {
-            console.log(action.payload)
             state.menuOptions = action.payload
         },
         setOpenMenu(state, action) {
