@@ -33,8 +33,12 @@ export const EmbtrMenuCustom = () => {
 
     const currentMenuOptions = useAppSelector(getMenuOptions);
 
-    if (!menuOptions?.uniqueIdentifier || currentMenuOptions.uniqueIdentifier !== menuOptions.uniqueIdentifier) {
+    if (!menuOptions && currentMenuOptions) {
         setMenuOptions(currentMenuOptions);
+    } else if (menuOptions && currentMenuOptions) {
+        if (currentMenuOptions.uniqueIdentifier !== menuOptions.uniqueIdentifier) {
+            setMenuOptions(currentMenuOptions);
+        }
     }
 
     return (
