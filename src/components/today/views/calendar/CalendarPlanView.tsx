@@ -19,10 +19,6 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
     const { colors } = useTheme();
 
     const onPress = () => {
-        if (isDesktopBrowser()) {
-            return;
-        }
-
         toggleComplete();
         closeMenu();
     };
