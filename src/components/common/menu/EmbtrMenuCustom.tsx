@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuOptionCustom } from 'src/components/common/menu/EmbtrMenuOptionCustom';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -49,7 +49,7 @@ export const EmbtrMenuCustom = () => {
     }
 
     return (
-        visible ?
+        <Modal visible={visible} transparent={true} >
             <View style={{ position: "absolute", zIndex: 1, height: "100%", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
                 <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
                 <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
@@ -64,7 +64,6 @@ export const EmbtrMenuCustom = () => {
                 </View>
                 <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
             </View>
-            :
-            <View />
+        </Modal>
     )
 }
