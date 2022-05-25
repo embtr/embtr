@@ -9,7 +9,8 @@ import { getAuth } from 'firebase/auth';
 import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import { createEmbtrOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
@@ -56,7 +57,8 @@ export const TaskDetails = () => {
 
     return (
         <Screen>
-            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuItems={menuItems} />
+            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuOptions={createEmbtrOptions(menuItems)} />
+            <EmbtrMenuCustom />
 
             <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
