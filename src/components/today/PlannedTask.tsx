@@ -18,7 +18,7 @@ export const PlannedTask = ({ plannedTask, backgroundColor }: Props) => {
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     return (
-        <View style={{ backgroundColor: backgroundColor || colors.card_background }}>
+        <View style={{ backgroundColor: backgroundColor || colors.card_background_active }}>
             <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
                 <View style={{ padding: 5 }}>
                     <Text style={{ color: colors.text, textAlign: "center" }}>

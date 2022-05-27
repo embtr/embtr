@@ -26,7 +26,7 @@ export const Task = ({ task, backgroundColor }: Props) => {
 
     return (
         <TouchableOpacity key={task.id} onPress={() => { navigation.navigate('TaskDetails', { id: task.id! }) }}>
-            <View style={[{ height: 80, backgroundColor: backgroundColor || colors.card_background, borderRadius: 7.5, justifyContent: "center"  }, shadow]}>
+            <View style={[{ height: 80, backgroundColor: backgroundColor || colors.card_background_active, borderRadius: 7.5, justifyContent: "center"  }, shadow]}>
                 <View style={{ height: "auto", paddingTop: 5 }}>
                     <View style={{ paddingLeft: 10 }}>
                         <Text style={{ color: colors.text, fontSize: 16 }}>

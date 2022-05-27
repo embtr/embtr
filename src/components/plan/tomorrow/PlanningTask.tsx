@@ -1,10 +1,9 @@
 import React from "react";
 import { View, Text, ColorValue } from "react-native";
-import { HorizontalLine } from "src/components/common/HorizontalLine";
 import { Task } from "src/components/plan/Task";
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { TaskModel } from "src/controller/planning/TaskController";
-import { Ionicons } from '@expo/vector-icons';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Props {
     task: TaskModel,
@@ -15,28 +14,13 @@ interface Props {
 export const PlanningTask = ({ task, isChecked, onCheckboxToggled }: Props) => {
     const { colors } = useTheme();
 
-    const backgroundColor: ColorValue = isChecked ? colors.card_background : "#302B2A";
+    const backgroundColor: ColorValue = isChecked ? colors.card_background_active : colors.card_background_inactive;
 
     return (
         <View>
-            <Task task={task} backgroundColor={backgroundColor} />
-
-            <HorizontalLine />
-            <View style={{ backgroundColor: backgroundColor, flexDirection: "row" }} >
-                <View style={{ flex: 1 }} >
-                    <View style={{ alignItems: "center", paddingTop: 5, paddingBottom: 5 }}>
-                        <Ionicons name={"checkbox"} size={20} color={isChecked ? "green" : colors.text} onPress={() => { onCheckboxToggled(task.id, !isChecked); }} />
-                    </View>
-                </View>
-
-                <View style={{ flex: 1 }} >
-                    <View style={{ alignItems: "center", paddingTop: 5, paddingBottom: 5 }}>
-                        <Ionicons name={"pencil"} size={20} color={colors.text} onPress={() => { }} />
-                    </View>
-                </View>
-            </View>
-            <HorizontalLine />
-
+            <TouchableOpacity onPress={() => { onCheckboxToggled(task.id, !isChecked) }} >
+                <Task task={task} backgroundColor={backgroundColor} />
+            </TouchableOpacity>
         </View>
     );
 };

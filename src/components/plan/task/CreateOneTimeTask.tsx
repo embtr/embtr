@@ -48,74 +48,7 @@ export const CreateOneTimeTask = ({ name, onCreateTask }: Props) => {
 
     return (
         <View style={{ flex: 1 }} >
-            <View style={{ flex: 2 }} />
-
-
-            <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
-                <Text style={{ color: colors.text, fontSize: 20, textAlign: "right", flex: 1 }}>I will start this task at</Text>
-                <View style={{ flexDirection: "row", flex: 1 }} >
-                    <View style={{ flex: 1 }}>
-                        <Picker
-                            itemStyle={{ height: 120 }}
-                            style={{ width: 70, color: colors.text }}
-                            selectedValue={hour}
-                            onValueChange={setHour}>
-                            {hourPickerItems}
-                        </Picker>
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <Picker
-                            itemStyle={{ height: 120 }}
-                            style={{ width: 70, color: colors.text }}
-                            selectedValue={minute}
-                            onValueChange={setMinute}>
-                            {minutePickerItems}
-                        </Picker>
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <Picker
-                            itemStyle={{ height: 120 }}
-                            style={{ width: 75, color: colors.text }}
-                            selectedValue={AMPM}
-                            onValueChange={setAMPM}>
-                            <Picker.Item color={colors.text} label="AM" value="AM" />
-                            <Picker.Item color={colors.text} label="PM" value="PM" />
-                        </Picker>
-                    </View>
-
-                    <View style={{ flex: 1 }} />
-                </View>
-            </View>
-
-            <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }} >
-                    <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>for</Text>
-                    <View style={{ width: 60 }}>
-                        <Picker
-                            itemStyle={{ height: 120 }}
-                            style={{ width: 60, color: colors.text }}
-                            selectedValue={durationHours}
-                            onValueChange={setDurationHours}>
-                            {durationHoursPickerItems}
-                        </Picker>
-                    </View>
-                    <Text style={{ color: colors.text, fontSize: 20 }}>{durationHours === 1 ? "hour and" : "hours and"}</Text>
-                    <View style={{ width: 60 }}>
-                        <Picker
-                            itemStyle={{ height: 120 }}
-                            style={{ width: 60, color: colors.text }}
-                            selectedValue={durationMinutes}
-                            onValueChange={setDurationMinutes}>
-                            {durationMinutesPickerItems}
-                        </Picker>
-                    </View>
-                    <Text style={{ color: colors.text, fontSize: 20 }}>minutes</Text>
-                </View>
-            </View>
-
-            <View style={{ flex: 2 }} />
+            <View style={{ flex: 6 }} />
 
             <View style={{ alignItems: "center", justifyContent: "center", flex: 2 }}>
                 <EmbtrButton buttonText={'create'} callback={createTask} />

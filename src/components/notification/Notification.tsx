@@ -28,7 +28,7 @@ export const Notification = ({ notification }: Props) => {
 
     return (
         <TouchableOpacity onPress={() => { navigation.navigate(notification.target_page as keyof TimelineTabScreens, { id: notification.target_uid }) }} >
-            <View style={{ backgroundColor: colors.card_background }}>
+            <View style={{ backgroundColor: colors.card_background_active }}>
                 <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
                     <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10 }}>
                         <View style={{ marginLeft: 5, marginRight: 10 }}>

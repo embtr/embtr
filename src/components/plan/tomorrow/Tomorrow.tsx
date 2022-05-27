@@ -156,7 +156,7 @@ export const Tomorrow = () => {
                 {
                     taskViews.length > 0
                         ?
-                        <ScrollView style={{ backgroundColor: colors.background_medium, paddingTop: 5, height: "97%" }}>
+                        <ScrollView style={{ backgroundColor: colors.scroll_background, paddingTop: 5, height: "97%" }}>
                             {taskViews}
                         </ScrollView>
                         :

@@ -23,7 +23,7 @@ export const AddButton = ({ onPress } : Props ) => {
     return (
             <TouchableOpacity style={{width: 70, height: 70}} onPress={ () => { onPress() }}>
                 <View style={[shadow, { margin: 10, paddingLeft: 2, paddingTop: 1, backgroundColor: colors.text, width: 50, height: 50, borderRadius: 50, alignContent: "center", alignItems: "center", justifyContent: "center" }]}>
-                    <Ionicons name={"add"} size={30} color={colors.card_background} />
+                    <Ionicons name={"add"} size={30} color={colors.card_background_active} />
                 </View>
             </TouchableOpacity>
     );
