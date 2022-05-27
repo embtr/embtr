@@ -34,7 +34,7 @@ export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean 
     return !plannedTaskIsComplete(plannedTask) && !plannedTaskIsFailed(plannedTask);
 };
 
-export const createPlannedTask = (task: TaskModel, startMinute?: number, duration?: number ) => {
+export const createPlannedTask = (task: TaskModel, startMinute: number, duration: number ) => {
     const plannedTask: PlannedTaskModel = {
         routine: task,
         startMinute: startMinute,

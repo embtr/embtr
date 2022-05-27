@@ -1,6 +1,5 @@
 import React from 'react';
-import { Picker } from '@react-native-picker/picker';
-import { View, Text, TextInput } from 'react-native';
+import { View, TextInput } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -10,7 +9,7 @@ import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackPara
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CreateOneTimeTask } from 'src/components/plan/task/CreateOneTimeTask';
-import PlannedDayController, { createPlannedTask, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 
 export const enum Target {
     PLAN,

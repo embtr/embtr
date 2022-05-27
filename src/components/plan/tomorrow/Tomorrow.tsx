@@ -74,7 +74,7 @@ export const Tomorrow = () => {
         let plannedtasks: PlannedTaskModel[] = [];
         tasks.forEach(task => {
             if (checkedTasks.get(task.id!) !== false) {
-                const plannedTask: PlannedTaskModel = createPlannedTask(task);
+                const plannedTask: PlannedTaskModel = createPlannedTask(task, 0, 60);
                 plannedtasks.push(plannedTask);
             }
         });
