@@ -3,7 +3,7 @@ import { Picker } from "@react-native-picker/picker";
 import { View, Text } from "react-native";
 import { EmbtrButton } from "src/components/common/button/EmbtrButton";
 import { useTheme } from "src/components/theme/ThemeProvider";
-import { createDays, createTaskModel } from 'src/controller/planning/TaskController';
+import { createTaskModel } from 'src/controller/planning/TaskController';
 
 interface Props {
     name: string,
@@ -19,8 +19,6 @@ export const CreateOneTimeTask = ({ name, onCreateTask }: Props) => {
 
     const [durationHours, setDurationHours] = React.useState(0);
     const [durationMinutes, setDurationMinutes] = React.useState(0);
-
-    const [selectedDaysOfWeek, setSelectedDaysOfWeek] = React.useState(createDays(false, false, false, false, false, false, false));
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -43,11 +41,8 @@ export const CreateOneTimeTask = ({ name, onCreateTask }: Props) => {
     }
 
     const createTask = () => {
-        const AMPMHour = AMPM == "AM" ? hour : 12 + hour;
-        const startMinute = AMPMHour * 60 + minute;
-        const duration = durationHours * 60 + durationMinutes;
-        const task = createTaskModel(name, startMinute, duration, selectedDaysOfWeek);
-        
+        const task = createTaskModel(name);
+
         onCreateTask(task);
     };
 

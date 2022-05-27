@@ -53,27 +53,6 @@ export const CreateTask = () => {
                     />
                 </View>
 
-                {target === Target.PLAN &&
-                    <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 1 }}>
-                        <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>I will run this task</Text>
-                        <View style={{ alignItems: "flex-start" }}>
-                            <Picker
-                                itemStyle={{ height: 120 }}
-                                style={{ width: 150, color: colors.text }}
-
-                                selectedValue={frequency}
-                                onValueChange={(itemValue) => setFrequency(itemValue)}
-                            >
-                                <Picker.Item color={colors.text} label="Today" value="today" />
-                                <Picker.Item color={colors.text} label="Daily" value="daily" />
-                                <Picker.Item color={colors.text} label="Weekly" value="Weekly" />
-                                <Picker.Item color={colors.text} label="Monthly" value="monthly" />
-                                <Picker.Item color={colors.text} label="Yearly" value="yearly" />
-                            </Picker>
-                        </View>
-                    </View>
-                }
-
                 <View style={{ flex: 5 }}>
                     {frequency === "today" && <CreateOneTimeTask name={name} onCreateTask={createPlannedTaskCallback} />}
                     {frequency === "daily" && <CreateDailyTask name={name} onCreateTask={createTask} />}

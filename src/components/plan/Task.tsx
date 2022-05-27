@@ -1,10 +1,9 @@
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
 import { View, Text, ColorValue, TouchableOpacity } from 'react-native';
-import { DaysOfWeek } from 'src/components/plan/DaysOfWeek';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { durationToString, TaskModel, startMinuteToString } from 'src/controller/planning/TaskController';
+import { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
@@ -27,37 +26,8 @@ export const Task = ({ task, backgroundColor }: Props) => {
                         </Text>
                     </View>
 
-                    <View style={{ paddingTop: 5 }}>
-                        <DaysOfWeek days={task.days} />
-                    </View>
-
                     <View style={{ flex: 1 }} />
 
-                    <View style={{ flexDirection: "row", paddingTop: 15 }}>
-                        <View style={{ flex: .5 }} />
-                        <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                            start time
-                        </Text>
-
-                        <Text style={{ flex: 1, fontSize: 12, color: colors.secondary_text, textAlign: "center" }}>
-                            duration
-                        </Text>
-
-                        <View style={{ flex: .5 }} />
-                    </View>
-
-                    <View style={{ flexDirection: "row", paddingTop: 1 }}>
-                        <View style={{ flex: .5 }} />
-
-                        <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                            {startMinuteToString(task.startMinute)}
-                        </Text>
-
-                        <Text style={{ flex: 1, color: colors.secondary_text, textAlign: "center" }}>
-                            {durationToString(task.duration)}
-                        </Text>
-                        <View style={{ flex: .5 }} />
-                    </View>
                 </View>
             </View>
         </TouchableOpacity>

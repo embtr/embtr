@@ -1,42 +1,11 @@
 import { Timestamp } from "firebase/firestore";
 import TaskDao from "src/firebase/firestore/planning/TaskDao";
 
-export interface DaysModel {
-    sunday: boolean,
-    monday: boolean,
-    tuesday: boolean,
-    wednesday: boolean,
-    thursday: boolean,
-    friday: boolean,
-    saturday: boolean
-}
-
 export interface TaskModel {
     id?: string,
     added: Timestamp,
     name: string,
-    startMinute: number,
-    duration: number,
-    days: DaysModel,
     active?: boolean
-}
-
-export const createDays = (sunday: boolean, monday: boolean, tuesday: boolean, wednesday: boolean, thursday: boolean, friday: boolean, saturday: boolean) => {
-    const days: DaysModel = {
-        sunday: sunday,
-        monday: monday,
-        tuesday: tuesday,
-        wednesday: wednesday,
-        thursday: thursday,
-        friday: friday,
-        saturday: saturday
-    };
-
-    return days;
-}
-
-export const taskRunsOnSelectedDay = (task: TaskModel, selectedDaysOfWeek: DaysModel): boolean => {
-    return (task.days.monday && selectedDaysOfWeek.monday) || (task.days.tuesday && selectedDaysOfWeek.tuesday) || (task.days.wednesday && selectedDaysOfWeek.wednesday) || (task.days.thursday && selectedDaysOfWeek.thursday) || (task.days.friday && selectedDaysOfWeek.friday) || (task.days.saturday && selectedDaysOfWeek.saturday) || (task.days.sunday && selectedDaysOfWeek.sunday);
 }
 
 export const getTomorrowDayOfWeek = () => {
@@ -48,13 +17,10 @@ export const getTomorrowDayOfWeek = () => {
     return tomorrow;
 };
 
-export const createTaskModel = (name: string, startMinute: number, duration: number, days: DaysModel) => {
+export const createTaskModel = (name: string) => {
     const task: TaskModel = {
         added: Timestamp.now(),
-        name: name,
-        startMinute: startMinute,
-        duration: duration,
-        days: days
+        name: name
     }
 
     return task;
@@ -101,7 +67,7 @@ class TaskController {
     public static archiveTask(task: TaskModel, callback: Function) {
         const result = TaskDao.archiveTask(task);
         result.then(document => {
-        callback();
+            callback();
         });
     }
 
@@ -135,22 +101,6 @@ class TaskController {
             callback(tasks);
         }).catch(() => {
             callback([]);
-        });
-    }
-
-    static getTasksForDay(uid: string, day: string, callback: Function) {
-        let tasksForDay: TaskModel[] = [];
-
-        this.getTasks(uid, (tasks: TaskModel[]) => {
-            tasks.forEach(task => {
-                Object.entries(task.days).forEach(dayModel => {
-                    if (dayModel[0] === day && dayModel[1]) {
-                        tasksForDay.push(task);
-                    }
-                });
-            });
-
-            callback(tasksForDay);
         });
     }
 }

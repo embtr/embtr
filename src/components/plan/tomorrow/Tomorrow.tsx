@@ -9,8 +9,6 @@ import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, { createPlannedTask, getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Task } from 'src/components/plan/Task';
-import { PlannedTask } from 'src/components/today/PlannedTask';
-
 
 export const Tomorrow = () => {
     const { colors } = useTheme();
@@ -27,7 +25,7 @@ export const Tomorrow = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            TaskController.getTasksForDay(getAuth().currentUser!.uid, tomorrow, setTasks);
+            TaskController.getTasks(getAuth().currentUser!.uid, setTasks);
         }, [])
     );
 

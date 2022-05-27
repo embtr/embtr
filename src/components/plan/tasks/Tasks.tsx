@@ -5,19 +5,18 @@ import { getAuth } from 'firebase/auth';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { AddButton } from 'src/components/common/button/AddButton';
-import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TaskController, { createDays, TaskModel, taskRunsOnSelectedDay } from 'src/controller/planning/TaskController';
+import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/Task';
 import { Target } from 'src/components/plan/task/CreateTask';
+import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
 
 export const Tasks = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
-    const [selectedDaysOfWeek, setSelectedDaysOfWeek] = React.useState(createDays(true, true, true, true, true, true, true));
 
     useFocusEffect(
         React.useCallback(() => {
@@ -25,33 +24,19 @@ export const Tasks = () => {
         }, [])
     );
 
-    const getVisibleTasks = (): TaskModel[] => {
-        let visibleTasks: TaskModel[] = [];
-        tasks.forEach(task => {
-            if (taskRunsOnSelectedDay(task, selectedDaysOfWeek)) {
-                visibleTasks.push(task);
-            }
-        });
-
-        return visibleTasks;
-    };
-
-    const visibleTasks = getVisibleTasks();
-
     let taskViews: JSX.Element[] = [];
-    visibleTasks.forEach(task => {
-        if (taskRunsOnSelectedDay(task, selectedDaysOfWeek)) {
-            taskViews.push(
-                <View key={task.id} style={{ paddingBottom: 5 }} >
-                    <Task task={task} />
-                </View>
-            );
-        }
+    tasks.forEach(task => {
+        taskViews.push(
+            <View key={task.id} style={{ paddingBottom: 5 }} >
+                <Task task={task} />
+            </View>
+        );
     });
 
     return (
         <View style={{ height: "100%" }}>
-            <TasksSummaryHeader selectedDaysOfWeek={selectedDaysOfWeek} setSelectedDaysOfWeek={setSelectedDaysOfWeek} tasks={visibleTasks} />
+
+            <TasksSummaryHeader tasks={tasks} />
 
             <ScrollView style={{ backgroundColor: colors.background_medium }}>
                 {taskViews}
