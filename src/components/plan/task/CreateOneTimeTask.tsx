@@ -4,6 +4,7 @@ import { View, Text } from "react-native";
 import { EmbtrButton } from "src/components/common/button/EmbtrButton";
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { createTaskModel } from 'src/controller/planning/TaskController';
+import { PlannedTaskModel, createPlannedTask } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     name: string,
@@ -41,14 +42,86 @@ export const CreateOneTimeTask = ({ name, onCreateTask }: Props) => {
     }
 
     const createTask = () => {
-        const task = createTaskModel(name);
+        const AMPMHour = AMPM == "AM" ? hour : 12 + hour;
+        const startMinute = AMPMHour * 60 + minute;
+        const duration = durationHours * 60 + durationMinutes;
 
-        onCreateTask(task);
+        const task = createTaskModel(name);
+        const plannedTask = createPlannedTask(task, startMinute, duration);
+
+        onCreateTask(plannedTask);
     };
 
     return (
         <View style={{ flex: 1 }} >
-            <View style={{ flex: 6 }} />
+            <View style={{ flex: 2 }} />
+
+
+            <View style={{ flexDirection: "row", justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
+                <Text style={{ color: colors.text, fontSize: 20, textAlign: "right", flex: 1 }}>I will start this task at</Text>
+                <View style={{ flexDirection: "row", flex: 1 }} >
+                    <View style={{ flex: 1 }}>
+                        <Picker
+                            itemStyle={{ height: 120 }}
+                            style={{ width: 70, color: colors.text }}
+                            selectedValue={hour}
+                            onValueChange={setHour}>
+                            {hourPickerItems}
+                        </Picker>
+                    </View>
+
+                    <View style={{ flex: 1 }}>
+                        <Picker
+                            itemStyle={{ height: 120 }}
+                            style={{ width: 70, color: colors.text }}
+                            selectedValue={minute}
+                            onValueChange={setMinute}>
+                            {minutePickerItems}
+                        </Picker>
+                    </View>
+
+                    <View style={{ flex: 1 }}>
+                        <Picker
+                            itemStyle={{ height: 120 }}
+                            style={{ width: 75, color: colors.text }}
+                            selectedValue={AMPM}
+                            onValueChange={setAMPM}>
+                            <Picker.Item color={colors.text} label="AM" value="AM" />
+                            <Picker.Item color={colors.text} label="PM" value="PM" />
+                        </Picker>
+                    </View>
+
+                    <View style={{ flex: 1 }} />
+                </View>
+            </View>
+
+            <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center", flex: 2 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }} >
+                    <Text style={{ color: colors.text, fontSize: 20, textAlign: "right" }}>for</Text>
+                    <View style={{ width: 60 }}>
+                        <Picker
+                            itemStyle={{ height: 120 }}
+                            style={{ width: 60, color: colors.text }}
+                            selectedValue={durationHours}
+                            onValueChange={setDurationHours}>
+                            {durationHoursPickerItems}
+                        </Picker>
+                    </View>
+                    <Text style={{ color: colors.text, fontSize: 20 }}>{durationHours === 1 ? "hour and" : "hours and"}</Text>
+                    <View style={{ width: 60 }}>
+                        <Picker
+                            itemStyle={{ height: 120 }}
+                            style={{ width: 60, color: colors.text }}
+                            selectedValue={durationMinutes}
+                            onValueChange={setDurationMinutes}>
+                            {durationMinutesPickerItems}
+                        </Picker>
+                    </View>
+                    <Text style={{ color: colors.text, fontSize: 20 }}>minutes</Text>
+                </View>
+            </View>
+
+            <View style={{ flex: 2 }} />
 
             <View style={{ alignItems: "center", justifyContent: "center", flex: 2 }}>
                 <EmbtrButton buttonText={'create'} callback={createTask} />

@@ -1,4 +1,3 @@
-import { ca } from "date-fns/locale";
 import { Timestamp } from "firebase/firestore";
 import { TaskModel } from "src/controller/planning/TaskController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
@@ -35,9 +34,11 @@ export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean 
     return !plannedTaskIsComplete(plannedTask) && !plannedTaskIsFailed(plannedTask);
 };
 
-export const createPlannedTask = (task: TaskModel) => {
+export const createPlannedTask = (task: TaskModel, startMinute?: number, duration?: number ) => {
     const plannedTask: PlannedTaskModel = {
-        routine: task
+        routine: task,
+        startMinute: startMinute,
+        duration: duration
     }
 
     return plannedTask;
@@ -84,7 +85,7 @@ class PlannedDayController {
                 }
             });
         }).then(() => {
-            plannedDay.plannedTasks.sort((a, b) => ((a.startMinute ? a.startMinute : a.routine.startMinute) > (b.startMinute ? b.startMinute : b.routine.startMinute) ? 1 : -1));
+            plannedDay.plannedTasks.sort((a, b) => ((a.startMinute ? a.startMinute : a.routine.added) > (b.startMinute ? b.startMinute : b.routine.added) ? 1 : -1));
             callback(plannedDay);
         });
     }

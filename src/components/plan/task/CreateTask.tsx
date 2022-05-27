@@ -31,9 +31,8 @@ export const CreateTask = () => {
         TaskController.createTask(task, () => { navigation.goBack() });
     };
 
-    const createPlannedTaskCallback = (task: TaskModel) => {
+    const createPlannedTaskCallback = (plannedTask: PlannedTaskModel) => {
         PlannedDayController.get(getTodayKey(), (plannedDay: PlannedDay) => {
-            const plannedTask: PlannedTaskModel = createPlannedTask(task);
             PlannedDayController.addTask(plannedDay, plannedTask, () => { navigation.goBack() });
         });
     };

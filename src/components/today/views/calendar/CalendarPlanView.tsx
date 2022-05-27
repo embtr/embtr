@@ -52,7 +52,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
     const closeMenu = useAppSelector(getCloseMenu);
 
     return (
-        <View style={{ top: plannedTask.routine.startMinute, position: "absolute" }} >
+        <View style={{ top: plannedTask.startMinute, position: "absolute" }} >
             <TouchableOpacity
                 onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -64,7 +64,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                     openMenu()
                 }}
                 style={{
-                    height: plannedTask.duration ? plannedTask.duration : plannedTask.routine.duration,
+                    height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
                     width: parentLayout ? parentLayout.width - 50 : "85%",
                     borderRadius: 5,
                     backgroundColor: colors.background_light,
