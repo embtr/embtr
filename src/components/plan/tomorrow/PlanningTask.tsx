@@ -1,9 +1,8 @@
 import React from "react";
-import { View, Text, ColorValue } from "react-native";
+import { View, ColorValue } from "react-native";
 import { Task } from "src/components/plan/Task";
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { TaskModel } from "src/controller/planning/TaskController";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface Props {
     task: TaskModel,
@@ -18,9 +17,7 @@ export const PlanningTask = ({ task, isChecked, onCheckboxToggled }: Props) => {
 
     return (
         <View>
-            <TouchableOpacity onPress={() => { onCheckboxToggled(task.id, !isChecked) }} >
-                <Task task={task} backgroundColor={backgroundColor} />
-            </TouchableOpacity>
+            <Task task={task} backgroundColor={backgroundColor} onPress={() => { onCheckboxToggled(task.id, !isChecked) }} />
         </View>
     );
 };

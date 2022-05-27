@@ -27,9 +27,9 @@ export const PlannedTask = ({ plannedTask, backgroundColor }: Props) => {
                 </View>
 
                 <Text style={{ color: colors.text, textAlign: "center", paddingTop: 5 }}>
-                    {startMinuteToString(plannedTask.startMinute ? plannedTask.startMinute : plannedTask.routine.startMinute)
+                    {startMinuteToString(plannedTask.startMinute ? plannedTask.startMinute : 0)
                         + " for "
-                        + durationToString(plannedTask.duration ? plannedTask.duration : plannedTask.routine.duration)}
+                        + durationToString(plannedTask.duration ? plannedTask.duration : 0)}
                 </Text>
                 <View style={{ flex: 1 }} />
             </View>

@@ -8,6 +8,7 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
     task: TaskModel,
+    onPress?: Function,
     backgroundColor?: ColorValue
 }
 
@@ -15,18 +16,22 @@ const shadow = {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.8,
-    shadowRadius: .5,  
+    shadowRadius: .5,
     elevation: 5
 }
 
-export const Task = ({ task, backgroundColor }: Props) => {
+export const Task = ({ task, onPress, backgroundColor }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
+    const navigateToDetails = () => {
+        navigation.navigate('TaskDetails', { id: task.id! })
+    };
+
     return (
-        <TouchableOpacity key={task.id} onPress={() => { navigation.navigate('TaskDetails', { id: task.id! }) }}>
-            <View style={[{ height: 80, backgroundColor: backgroundColor || colors.card_background_active, borderRadius: 7.5, justifyContent: "center"  }, shadow]}>
+        <TouchableOpacity key={task.id} onPress={() => { onPress ? onPress() : navigateToDetails() }}>
+            <View style={[{ height: 80, backgroundColor: backgroundColor || colors.card_background_active, borderRadius: 7.5, justifyContent: "center" }, shadow]}>
                 <View style={{ height: "auto", paddingTop: 5 }}>
                     <View style={{ paddingLeft: 10 }}>
                         <Text style={{ color: colors.text, fontSize: 16 }}>
