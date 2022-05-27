@@ -13,7 +13,7 @@ export const TasksSummaryHeader = ({ tasks }: Props) => {
 
     return (
         <View>
-            <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
+            <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5, backgroundColor: colors.background_heavy }}>
                 <View style={{ padding: 5 }}>
                     <View style={{ flexDirection: "row", padding: 5 }}>
                         <Text style={{ flex: 1, color: colors.text, textAlign: "center" }}>

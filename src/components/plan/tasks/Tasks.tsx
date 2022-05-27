@@ -11,6 +11,7 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/Task';
 import { Target } from 'src/components/plan/task/CreateTask';
 import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
+import { HorizontalLine } from 'src/components/common/HorizontalLine';
 
 export const Tasks = () => {
     const { colors } = useTheme();
@@ -36,9 +37,10 @@ export const Tasks = () => {
     return (
         <View style={{ height: "100%" }}>
 
+            <HorizontalLine />
             <TasksSummaryHeader tasks={tasks} />
 
-            <ScrollView style={{ backgroundColor: colors.background_medium }}>
+            <ScrollView style={{ backgroundColor: colors.scroll_background, paddingTop: 2 }}>
                 {taskViews}
             </ScrollView>
 

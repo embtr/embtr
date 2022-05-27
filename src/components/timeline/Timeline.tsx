@@ -23,16 +23,23 @@ export const Timeline = () => {
         width: '100%',
         marginBottom: 4,
         marginTop: 4,
+        borderRadius: 7.5
+    }
+
+    const cardShadow = {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5
     }
 
     const challengeShadow = {
         shadowColor: 'orange',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 1,
-        shadowRadius: 6.5,
-        marginBottom: 5,
-        marginTop: 5,
-        elevation: 1,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: .8,
+        shadowRadius: 2,
+        elevation: 5,
     }
 
     const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
@@ -72,7 +79,7 @@ export const Timeline = () => {
     const createStoryView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
         if (profile) {
-            return <View key={timelineEntry.id} style={[card]}>
+            return <View key={timelineEntry.id} style={[card, cardShadow]}>
                 <UserTextCard userProfileModel={profile} story={timelineEntry} />
             </View>;
         }
@@ -126,7 +133,7 @@ export const Timeline = () => {
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount}
             />
-            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background_medium }}>
+            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.scroll_background }}>
                 <View style={{ flex: 1 }}>
                     {timelineViews}
                 </View>

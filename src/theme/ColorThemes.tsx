@@ -4,6 +4,8 @@ export const lightColors = {
   background_medium: '#EDEDED',
   background_light: '#d4d4d4',
 
+  scroll_background: '#EDEDED',
+
 
   toggle_color: '#4d4d4d',
   primary_border: '#C811EC',
@@ -22,11 +24,13 @@ export const darkColors = {
   background_medium: '#121212',
   background_light: '#303030',
 
+  scroll_background: '#000000',
+
 
   toggle_color: '#4d4d4d',
   primary_border: '#C811EC',
   secondary_border: '#3BC0FF',
-  card_background: "black",
+  card_background: "#121212",
   text: '#FFFFFF',
   secondary_text: '#a6a6a6',
   pillar_attribute: '#1e5e5e',

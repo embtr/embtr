@@ -11,6 +11,14 @@ interface Props {
     backgroundColor?: ColorValue
 }
 
+const shadow = {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.8,
+    shadowRadius: .5,  
+    elevation: 5
+}
+
 export const Task = ({ task, backgroundColor }: Props) => {
     const { colors } = useTheme();
 
@@ -18,10 +26,10 @@ export const Task = ({ task, backgroundColor }: Props) => {
 
     return (
         <TouchableOpacity key={task.id} onPress={() => { navigation.navigate('TaskDetails', { id: task.id! }) }}>
-            <View style={{ backgroundColor: backgroundColor || colors.card_background }}>
-                <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
-                    <View style={{ padding: 5 }}>
-                        <Text style={{ color: colors.text, textAlign: "center", fontSize: 16, fontWeight: "bold" }}>
+            <View style={[{ height: 80, backgroundColor: backgroundColor || colors.card_background, borderRadius: 7.5, justifyContent: "center"  }, shadow]}>
+                <View style={{ height: "auto", paddingTop: 5 }}>
+                    <View style={{ paddingLeft: 10 }}>
+                        <Text style={{ color: colors.text, fontSize: 16 }}>
                             {task.name}
                         </Text>
                     </View>
