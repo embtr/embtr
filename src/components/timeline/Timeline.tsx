@@ -62,7 +62,9 @@ export const Timeline = () => {
     React.useEffect(() => {
         let uids: string[] = [];
         timelineEntries.forEach(timelineEntry => {
-            uids.push(timelineEntry.uid);
+            if (!uids.includes(timelineEntry.uid)) {
+                uids.push(timelineEntry.uid);
+            }
         });
 
         ProfileController.getProfiles(uids, (profiles: UserProfileModel[]) => {
