@@ -52,6 +52,11 @@ export const PlannableTask = ({ task, locked, onPress, backgroundColor }: Props)
         durationMinutesPickerItems.push(<Picker.Item key={"durationminute_" + i} color={colors.text} label={"" + i} value={i} />);
     }
 
+    let amPmPickerItems: JSX.Element[] = [
+        <Picker.Item color={colors.text} label="AM" value="AM" />,
+        <Picker.Item color={colors.text} label="PM" value="PM" />
+    ];
+
 
     const navigateToDetails = () => {
         navigation.navigate('TaskDetails', { id: task.id! })
@@ -91,7 +96,7 @@ export const PlannableTask = ({ task, locked, onPress, backgroundColor }: Props)
                                         style={{ width: 75, color: colors.text }}
                                         selectedValue={hour}
                                         onValueChange={setHour}>
-                                        {hourPickerItems}
+                                        {locked ? <Picker.Item key={"hour_" + hour} color={colors.text} label={"" + hour} value={hour} /> : hourPickerItems}
                                     </Picker>
                                 </View>
                             </View>
@@ -103,7 +108,7 @@ export const PlannableTask = ({ task, locked, onPress, backgroundColor }: Props)
                                         style={{ width: 75, color: colors.text }}
                                         selectedValue={minute}
                                         onValueChange={setMinute}>
-                                        {minutePickerItems}
+                                        {locked ? <Picker.Item key={"minute" + minute} color={colors.text} label={"" + minute} value={minute} /> : minutePickerItems}
                                     </Picker>
                                 </View>
                             </View>
@@ -115,8 +120,7 @@ export const PlannableTask = ({ task, locked, onPress, backgroundColor }: Props)
                                         style={{ width: 75, color: colors.text }}
                                         selectedValue={AMPM}
                                         onValueChange={setAMPM}>
-                                        <Picker.Item color={colors.text} label="AM" value="AM" />
-                                        <Picker.Item color={colors.text} label="PM" value="PM" />
+                                        {locked ? <Picker.Item key={"ampm_" + AMPM} color={colors.text} label={"" + AMPM} value={AMPM} /> : amPmPickerItems}
                                     </Picker>
                                 </View>
                             </View>
@@ -139,7 +143,7 @@ export const PlannableTask = ({ task, locked, onPress, backgroundColor }: Props)
                             style={{ width: 75, color: colors.text }}
                             selectedValue={durationMinutes}
                             onValueChange={setDurationMinutes}>
-                            {durationMinutesPickerItems}
+                            {locked ? <Picker.Item key={"duration_" + durationMinutes} color={colors.text} label={"" + durationMinutes} value={durationMinutes} /> : durationMinutesPickerItems}
                         </Picker>
                     </View>
 
