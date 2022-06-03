@@ -47,13 +47,30 @@ export const Tomorrow = () => {
         React.useCallback(() => {
             let taskViews: JSX.Element[] = [];
 
-            if (locked) {
-                plannedDay?.plannedTasks.forEach(plannedTask => {
-                    taskViews.push(<View key={plannedTask.routine.id} style={{ paddingBottom: 5 }}><Task task={plannedTask.routine} /></View>);
-                });
-            } else {
+            plannedDay?.plannedTasks.forEach(plannedTask => {
+                taskViews.push(
+                    <View key={plannedTask.routine.id + "_locked"} style={{ paddingBottom: 5 }}>
+                        <PlanningTask task={plannedTask.routine} locked={locked} isChecked={checkedTasks.get(plannedTask.routine.id!) !== false} onCheckboxToggled={onChecked} />
+                    </View>);
+            });
+
+            if (!locked) {
                 tasks.forEach(task => {
-                    taskViews.push(<View key={task.id} style={{ paddingBottom: 5 }}><PlanningTask task={task} isChecked={checkedTasks.get(task.id!) !== false} onCheckboxToggled={onChecked} /></View>);
+                    let display = true;
+                    plannedDay?.plannedTasks.forEach(plannedTask => {
+                        if (plannedTask.routine.id === task.id) {
+                            display = false;
+                            return;
+                        }
+                    });
+
+                    if (display) {
+                        taskViews.push(
+                            <View key={task.id} style={{ paddingBottom: 5 }}>
+                                <PlanningTask task={task} locked={locked} isChecked={checkedTasks.get(task.id!) !== false} onCheckboxToggled={onChecked} />
+                            </View>
+                        );
+                    }
                 });
             }
 
