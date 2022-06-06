@@ -98,6 +98,7 @@ class TaskController {
                 tasks.push(task);
             });
         }).then(() => {
+            tasks.sort((a, b) => (a.name > b.name) ? 1 : -1).reverse();
             callback(tasks);
         }).catch(() => {
             callback([]);

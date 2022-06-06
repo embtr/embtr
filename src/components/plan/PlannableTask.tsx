@@ -49,7 +49,7 @@ export const PlannableTask = ({ task, locked, onPress, onUpdate, backgroundColor
     }
 
     let durationMinutesPickerItems: JSX.Element[] = [];
-    for (let i = 0; i < 180; i += 5) {
+    for (let i = 15; i <= 180; i += 15) {
         durationMinutesPickerItems.push(<Picker.Item key={"durationminute_" + i} color={colors.text} label={"" + i} value={i} />);
     }
 
