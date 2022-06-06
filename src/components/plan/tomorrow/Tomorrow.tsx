@@ -8,7 +8,12 @@ import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, { createPlannedTask, getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
-import { Task } from 'src/components/plan/Task';
+
+interface UpdatedPlannedTask {
+    checked: boolean,
+    startTime: number,
+    duration: number
+}
 
 export const Tomorrow = () => {
     const { colors } = useTheme();
@@ -18,27 +23,49 @@ export const Tomorrow = () => {
 
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
     const [locked, setLocked] = React.useState<boolean>(false);
-    const [checkedTasks, setCheckedTasks] = React.useState(new Map<string, boolean>());
+    const [updatedPlannedTasks, setUpdatedPlannedTasks] = React.useState(new Map<string, UpdatedPlannedTask>());
 
     const tomorrow = getTomorrowDayOfWeek();
     const tomorrowCapitalized = tomorrow.charAt(0).toUpperCase() + tomorrow.slice(1);
 
     useFocusEffect(
         React.useCallback(() => {
-            TaskController.getTasks(getAuth().currentUser!.uid, setTasks);
+            TaskController.getTasks(getAuth().currentUser!.uid, (allTasks: TaskModel[]) => {
+                setTasks(allTasks);
+                PlannedDayController.get(getTomorrowKey(), (plannedDay: PlannedDay) => {
+                    setPlannedDay(plannedDay);
+
+                    let updatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map<string, UpdatedPlannedTask>();
+                    tasks.forEach(task => {
+                        const updatedPlannedTask: UpdatedPlannedTask = {
+                            checked: false,
+                            startTime: 0,
+                            duration: 0
+                        };
+                        updatedPlannedTasks.set(task.id!, updatedPlannedTask);
+                    });
+
+                    plannedDay.plannedTasks.forEach(plannedTask => {
+                        const updatedPlannedTask: UpdatedPlannedTask = {
+                            checked: true,
+                            startTime: plannedTask.startMinute!,
+                            duration: plannedTask.duration!
+                        };
+                        updatedPlannedTasks.set(plannedTask.routine.id!, updatedPlannedTask);
+                    });
+
+                    setUpdatedPlannedTasks(updatedPlannedTasks);
+                });
+            });
         }, [])
     );
 
     useFocusEffect(
         React.useCallback(() => {
-            PlannedDayController.get(getTomorrowKey(), setPlannedDay);
-        }, [])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            if (plannedDay?.metadata) {
-                setLocked(plannedDay?.metadata?.locked);
+            if (plannedDay?.metadata?.locked) {
+                setLocked(plannedDay.metadata.locked);
+            } else {
+                setLocked(false);
             }
         }, [plannedDay])
     );
@@ -50,7 +77,7 @@ export const Tomorrow = () => {
             plannedDay?.plannedTasks.forEach(plannedTask => {
                 taskViews.push(
                     <View key={plannedTask.routine.id + "_locked"} style={{ paddingBottom: 5 }}>
-                        <PlanningTask task={plannedTask.routine} locked={locked} isChecked={checkedTasks.get(plannedTask.routine.id!) !== false} onCheckboxToggled={onChecked} />
+                        <PlanningTask task={plannedTask.routine} locked={locked} isChecked={updatedPlannedTasks.get(plannedTask.routine.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                     </View>);
             });
 
@@ -67,7 +94,7 @@ export const Tomorrow = () => {
                     if (display) {
                         taskViews.push(
                             <View key={task.id} style={{ paddingBottom: 5 }}>
-                                <PlanningTask task={task} locked={locked} isChecked={checkedTasks.get(task.id!) !== false} onCheckboxToggled={onChecked} />
+                                <PlanningTask task={task} locked={locked} isChecked={updatedPlannedTasks.get(task.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                             </View>
                         );
                     }
@@ -75,14 +102,38 @@ export const Tomorrow = () => {
             }
 
             setTaskViews(taskViews);
-        }, [locked, tasks, plannedDay, checkedTasks])
+        }, [locked, tasks, plannedDay, updatedPlannedTasks])
     );
 
     const onChecked = (taskId: string, checked: boolean) => {
-        let newCheckedTasks: Map<string, boolean> = new Map(checkedTasks);
-        newCheckedTasks.set(taskId, checked);
-        setCheckedTasks(newCheckedTasks);
+        let newUpdatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map(updatedPlannedTasks);
+        let newUpdatedPlannedTask = newUpdatedPlannedTasks.get(taskId);
+
+        if (newUpdatedPlannedTask) {
+            newUpdatedPlannedTask.checked = checked;
+        } else {
+            newUpdatedPlannedTask = {
+                checked: checked,
+                startTime: 5,
+                duration: 4
+            }
+        }
+
+        newUpdatedPlannedTasks.set(taskId, newUpdatedPlannedTask);
+        setUpdatedPlannedTasks(newUpdatedPlannedTasks);
     };
+
+    const onPlannedTaskUpdate = (taskId: string, hour: number, minute: number, ampm: string, duration: number) => {
+        let newUpdatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map(updatedPlannedTasks);
+        let newUpdatedPlannedTask = newUpdatedPlannedTasks.get(taskId);
+
+        if (newUpdatedPlannedTask) {
+            newUpdatedPlannedTask.startTime = hour * 12 + minute + (ampm === "am" ? 0 : 720);
+            newUpdatedPlannedTask.duration = duration;
+            newUpdatedPlannedTasks.set(taskId, newUpdatedPlannedTask);
+            setUpdatedPlannedTasks(newUpdatedPlannedTasks);
+        }
+    }
 
     /*
      * move me to the controller!
@@ -90,9 +141,13 @@ export const Tomorrow = () => {
     const getUpdatedPlannedDay = (): PlannedDay => {
         let plannedtasks: PlannedTaskModel[] = [];
         tasks.forEach(task => {
-            if (checkedTasks.get(task.id!) !== false) {
-                const plannedTask: PlannedTaskModel = createPlannedTask(task, 0, 60);
-                plannedtasks.push(plannedTask);
+            const updatedPlannedTask = updatedPlannedTasks.get(task.id!);
+            if (updatedPlannedTask) {
+                const taskIsEnabled = updatedPlannedTask?.checked !== false;
+                if (taskIsEnabled) {
+                    const plannedTask: PlannedTaskModel = createPlannedTask(task, updatedPlannedTask.startTime, updatedPlannedTask.duration);
+                    plannedtasks.push(plannedTask);
+                }
             }
         });
 
