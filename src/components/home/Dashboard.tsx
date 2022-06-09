@@ -10,6 +10,7 @@ import { CommonActions } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { TodayTab } from 'src/components/today/TodayTab';
 import { PlanTab } from 'src/components/plan/PlanTab';
+import { TabElement } from 'src/components/home/tabmenu/TabElement';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,39 +30,21 @@ export const Dashboard = () => {
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
             <Tab.Navigator
                 screenOptions={({ route }) => ({
-                    tabBarStyle: { backgroundColor: colors.background_heavy },
+                    tabBarStyle: { backgroundColor: colors.tab_bar_menu },
                     tabBarIcon: ({ focused, size }) => {
                         if (route.name === TABS.TIMELINE) {
                             let icon: any = focused ? 'ios-home' : 'ios-home-outline';
-                            let color = focused ? colors.primary_border : colors.text;
-                            return (
-                                <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <Ionicons name={icon} size={size} color={color} />
-                                    <Text style={{ color: color }}>feed</Text>
-                                </View>
-                            )
+                            return  <TabElement icon={icon} size={size} focused={focused} />
                         }
 
                         else if (route.name === TABS.TODAY) {
                             let icon: any = focused ? 'sunny' : 'sunny-outline';
-                            let color = focused ? colors.primary_border : colors.text;
-                            return (
-                                <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <Ionicons name={icon} size={size} color={color} />
-                                    <Text style={{ color: color }}>today</Text>
-                                </View>
-                            )
+                            return  <TabElement icon={icon} size={size} focused={focused} />
                         }
 
                         else if (route.name === TABS.PLAN) {
                             let icon: any = focused ? 'calendar' : 'calendar-outline';
-                            let color = focused ? colors.primary_border : colors.text;
-                            return (
-                                <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <Ionicons name={icon} size={size} color={color} />
-                                    <Text style={{ color: color }}>plan</Text>
-                                </View>
-                            )
+                            return  <TabElement icon={icon} size={size} focused={focused} />
                         }
 
                         else if (route.name === TABS.USER_PROFILE) {
@@ -79,9 +62,7 @@ export const Dashboard = () => {
                     },
                     tabBarHideOnKeyboard: false,
                     tabBarShowLabel: false,
-                    headerShown: false,
-                    tabBarActiveBackgroundColor: colors.background_medium,
-                    tabBarInactiveBackgroundColor: colors.background_heavy,
+                    headerShown: false
                 })}
             >
                 <Tab.Screen

@@ -17,6 +17,20 @@ export const lightColors = {
   pillar_attribute: '#1e5e5e',
   error: '#D32F2F',
   green_highlight: '#088F8F',
+
+
+
+
+
+
+
+
+
+
+  //conversion colors
+  tab_bar_menu: "#EEEEEE",
+  tab_selected: "#E95A6A",
+  tab_unselected: "#8C909E"
 };
 
 // Dark theme colors
@@ -38,4 +52,18 @@ export const darkColors = {
   pillar_attribute: '#1e5e5e',
   error: '#EF9A9A',
   green_highlight: '#00FF00',
+
+
+
+
+
+
+
+
+
+
+  //conversion colors
+  tab_bar_menu: "#121212",
+  tab_selected: "#E95A6A",
+  tab_unselected: "#616161"
 };
