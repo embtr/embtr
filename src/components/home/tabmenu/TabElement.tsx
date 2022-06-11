@@ -15,7 +15,6 @@ export const TabElement = ({ icon, size, focused }: Props) => {
     return (
         <View style={{ alignItems: "center", justifyContent: "center", backgroundColor: colors.tab_bar_menu, marginTop: 10 }}>
             <Ionicons name={icon} size={size} color={focused ? colors.tab_selected : colors.tab_unselected} />
-
         </View>
     );
 };

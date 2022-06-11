@@ -6,14 +6,13 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
 import { CommonActions } from '@react-navigation/native';
-import { getAuth } from 'firebase/auth';
 import { TodayTab } from 'src/components/today/TodayTab';
 import { PlanTab } from 'src/components/plan/PlanTab';
 import { TabBar } from 'src/components/home/tabmenu/TabBar';
 
 const Tab = createBottomTabNavigator();
 
-const TABS = {
+export const TABS = {
     USER_PROFILE: "CurrentUserTab",
     TIMELINE: "TimelineTab",
     TODAY: "TodayTab",
@@ -49,8 +48,6 @@ const style = StyleSheet.create({
 
 export const Dashboard = () => {
     const { colors } = useTheme();
-
-    const userProfileUrl = getAuth().currentUser?.photoURL;
 
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
