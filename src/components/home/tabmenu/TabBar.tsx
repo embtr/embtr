@@ -7,7 +7,7 @@ import Animated from "react-native-reanimated";
 import { TABS } from "src/components/home/Dashboard";
 import { UserTabElement } from "src/components/home/tabmenu/UserTabElement";
 
-export const TabBar = ({ state, descriptors, navigation, }: BottomTabBarProps) => {
+export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
 
     const style = StyleSheet.create({
@@ -20,8 +20,6 @@ export const TabBar = ({ state, descriptors, navigation, }: BottomTabBarProps) =
             shadowOpacity: 0.1,
             shadowRadius: 4.0,
             backgroundColor: colors.tab_bar_menu,
-            borderTopRightRadius: 20,
-            borderTopLeftRadius: 20,
             elevation: 10,
             bottom: 0,
         },
@@ -122,7 +120,6 @@ export const TabBar = ({ state, descriptors, navigation, }: BottomTabBarProps) =
                     },
                 ]}
             />
-
         </View>
     );
 };

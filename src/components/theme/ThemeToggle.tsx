@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Switch } from 'react-native-switch';
+import { EmbtrToggle } from 'src/components/common/toggle/EmbtrToggle';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { darkColors, lightColors } from 'src/theme/ColorThemes';
 
 
 export const ThemeToggle = () => {
@@ -11,7 +10,11 @@ export const ThemeToggle = () => {
         isDark ? setScheme('light') : setScheme('dark');
     }
 
+    const onToggle = (active: boolean) => {
+        active ? setScheme('dark') : setScheme('light')
+    }
+
     return (
-        <Switch circleActiveColor={darkColors.toggle_color} circleInActiveColor={lightColors.toggle_color} backgroundActive={darkColors.toggle_color} backgroundInactive={lightColors.toggle_color} activeText='🌜' inActiveText='☀️' value={isDark} onValueChange={toggleScheme} />
+        <EmbtrToggle text={"Dark Mode"} onToggle={onToggle} />
     );
 }

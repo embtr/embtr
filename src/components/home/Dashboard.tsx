@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
@@ -19,42 +18,12 @@ export const TABS = {
     PLAN: "PlanTab"
 }
 
-const style = StyleSheet.create({
-    tabContainer: {
-        height: 60,
-        shadowOffset: {
-            width: 0,
-            height: -1,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 4.0,
-        backgroundColor: "white",
-        borderTopRightRadius: 20,
-        borderTopLeftRadius: 20,
-        elevation: 10,
-        position: "absolute",
-        bottom: 0,
-    },
-    slider: {
-        height: 5,
-        position: "absolute",
-        top: 0,
-        left: 10,
-        backgroundColor: "blue",
-        borderRadius: 10,
-        width: 50
-    },
-});
-
 export const Dashboard = () => {
-    const { colors } = useTheme();
-
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
             <Tab.Navigator
                 tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
                 screenOptions={() => ({
-                    tabBarStyle: { backgroundColor: colors.tab_bar_menu },
                     tabBarHideOnKeyboard: false,
                     tabBarShowLabel: false,
                     headerShown: false

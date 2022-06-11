@@ -20,7 +20,7 @@ export const Screen = (props: { children: any; }) => {
                 * so if we wanna change its value we can go directly to the pallet
                 * this will make super easy to change and maintain mid or end project
                 */
-                backgroundColor: colors.background_heavy,
+                backgroundColor: colors.background,
             }}>
                 {children}
             </View>

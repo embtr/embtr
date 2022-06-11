@@ -6,6 +6,8 @@ import { ThemeToggle } from 'src/components/theme/ThemeToggle';
 import { getAuth } from 'firebase/auth';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setAccessLevel } from 'src/redux/user/GlobalState';
+import { EmbtrToggle } from 'src/components/common/toggle/EmbtrToggle';
+import { EmbtrButton2 } from 'src/components/common/button/EmbtrButton2';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
@@ -14,13 +16,12 @@ export const UserSettings = () => {
         <Screen>
             <Banner name='Settings' leftIcon={"arrow-back"} leftRoute="BACK" />
 
-            <View style={{ flex: 1, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 1, flexDirection: 'column', alignItems: "center" }}>
+                <View style={{ paddingTop: 10 }}>
                     <ThemeToggle />
-                    <Text style={{ color: 'grey' }}>     Light Mode/Dark Mode</Text>  
                 </View>
-                <View>
-                    <Button title='logout' onPress={() => { getAuth().signOut(); dispatch(setAccessLevel("invalid")); }}></Button>
+                <View style={{ paddingTop: 10, alignItems: "center" }}>
+                    <EmbtrButton2 text={"Sign Out"} icon={"caret-forward-circle-outline"} onPress={() => { getAuth().signOut(); dispatch(setAccessLevel("invalid")); }} />
                 </View>
             </View>
         </Screen>
