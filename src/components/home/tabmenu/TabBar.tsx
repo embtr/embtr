@@ -30,12 +30,10 @@ export const TabBar = ({ state, descriptors, navigation, }: BottomTabBarProps) =
             borderTopRightRadius: 20,
             borderTopLeftRadius: 20,
             elevation: 10,
-            position: "absolute",
             bottom: 0,
         },
         slider: {
             height: 5,
-            position: "absolute",
             top: 0,
             left: 10,
             backgroundColor: "blue",
@@ -64,12 +62,6 @@ export const TabBar = ({ state, descriptors, navigation, }: BottomTabBarProps) =
                 navigation.navigate(route.name);
             }
         }
-        const onLongPress = () => {
-            navigation.emit({
-                type: "tabLongPress",
-                target: route.key,
-            });
-        };
 
         let element: JSX.Element = <View />;
         if (route.name === TABS.TIMELINE) {
@@ -98,7 +90,6 @@ export const TabBar = ({ state, descriptors, navigation, }: BottomTabBarProps) =
                 accessibilityLabel={options.tabBarAccessibilityLabel}
                 testID={options.tabBarTestID}
                 onPress={onPress}
-                onLongPress={onLongPress}
                 style={{ flex: 1 }}
                 key={index}
             >
@@ -110,9 +101,9 @@ export const TabBar = ({ state, descriptors, navigation, }: BottomTabBarProps) =
     return (
         <View style={[style.tabContainer, { width: totalWidth }]}>
             <View style={{ flexDirection: "row" }}>
-                <View style={style.slider} />
                 {elements}
             </View>
+            <View style={style.slider} />
         </View>
     );
 };

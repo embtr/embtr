@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Text, View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Ionicons } from '@expo/vector-icons';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
@@ -10,7 +9,6 @@ import { CommonActions } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { TodayTab } from 'src/components/today/TodayTab';
 import { PlanTab } from 'src/components/plan/PlanTab';
-import { TabElement } from 'src/components/home/tabmenu/TabElement';
 import { TabBar } from 'src/components/home/tabmenu/TabBar';
 
 const Tab = createBottomTabNavigator();
@@ -58,7 +56,7 @@ export const Dashboard = () => {
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
             <Tab.Navigator
                 tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
-                screenOptions={({ route }) => ({
+                screenOptions={() => ({
                     tabBarStyle: { backgroundColor: colors.tab_bar_menu },
                     tabBarHideOnKeyboard: false,
                     tabBarShowLabel: false,
