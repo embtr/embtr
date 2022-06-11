@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Text, View, Image } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text, View, Image, StyleSheet } from 'react-native';
+import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
@@ -11,6 +11,7 @@ import { getAuth } from 'firebase/auth';
 import { TodayTab } from 'src/components/today/TodayTab';
 import { PlanTab } from 'src/components/plan/PlanTab';
 import { TabElement } from 'src/components/home/tabmenu/TabElement';
+import { TabBar } from 'src/components/home/tabmenu/TabBar';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,33 @@ const TABS = {
     PLAN: "PlanTab"
 }
 
+const style = StyleSheet.create({
+    tabContainer: {
+        height: 60,
+        shadowOffset: {
+            width: 0,
+            height: -1,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4.0,
+        backgroundColor: "white",
+        borderTopRightRadius: 20,
+        borderTopLeftRadius: 20,
+        elevation: 10,
+        position: "absolute",
+        bottom: 0,
+    },
+    slider: {
+        height: 5,
+        position: "absolute",
+        top: 0,
+        left: 10,
+        backgroundColor: "blue",
+        borderRadius: 10,
+        width: 50
+    },
+});
+
 export const Dashboard = () => {
     const { colors } = useTheme();
 
@@ -29,37 +57,9 @@ export const Dashboard = () => {
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
             <Tab.Navigator
+                tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
                 screenOptions={({ route }) => ({
                     tabBarStyle: { backgroundColor: colors.tab_bar_menu },
-                    tabBarIcon: ({ focused, size }) => {
-                        if (route.name === TABS.TIMELINE) {
-                            let icon: any = focused ? 'ios-home' : 'ios-home-outline';
-                            return  <TabElement icon={icon} size={size} focused={focused} />
-                        }
-
-                        else if (route.name === TABS.TODAY) {
-                            let icon: any = focused ? 'sunny' : 'sunny-outline';
-                            return  <TabElement icon={icon} size={size} focused={focused} />
-                        }
-
-                        else if (route.name === TABS.PLAN) {
-                            let icon: any = focused ? 'calendar' : 'calendar-outline';
-                            return  <TabElement icon={icon} size={size} focused={focused} />
-                        }
-
-                        else if (route.name === TABS.USER_PROFILE) {
-                            let textColor = focused ? colors.primary_border : colors.text;
-                            let backgroundColor = focused ? colors.primary_border : undefined;
-                            return (
-                                <View style={{ alignItems: "center", justifyContent: "center" }}>
-                                    <View style={{ width: size + 2, height: size + 2, borderRadius: 50, backgroundColor: backgroundColor, alignItems: "center", justifyContent: "center" }}>
-                                        <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileUrl! }} />
-                                    </View>
-                                    <Text style={{ color: textColor }}>you</Text>
-                                </View>
-                            )
-                        }
-                    },
                     tabBarHideOnKeyboard: false,
                     tabBarShowLabel: false,
                     headerShown: false
