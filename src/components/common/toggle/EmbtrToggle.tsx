@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image, ImageURISource, Switch } from 'react-native';
+import { Text, View, Switch } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 

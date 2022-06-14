@@ -5,10 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "src/navigation/RootStackParamList";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
+import { useFonts, Poppins_700Bold } from '@expo-google-fonts/poppins';
 
 interface Props {
     name: string,
@@ -59,6 +59,14 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
         }
     };
 
+    let [fontsLoaded] = useFonts({
+        Poppins_700Bold,
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     return (
         <View>
             <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
@@ -69,7 +77,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
 
 
                 <View style={{ flex: 2, justifyContent: "center" }}>
-                    <Text style={[textStyle, { textAlign: "center", fontWeight: "bold" }]}>{name}</Text>
+                    <Text style={[textStyle, { textAlign: "center", fontFamily: "Poppins_700Bold" }]}>{name}</Text>
                 </View>
 
                 <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
@@ -87,8 +95,6 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
                     }
                 </View>
             </View>
-
-            <HorizontalLine />
         </View>
     )
 }
