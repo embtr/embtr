@@ -36,7 +36,7 @@ export const EmbtrToggle = ({ text, onToggle, initialValue }: Props) => {
 
             <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end", paddingRight: 30 }}>
                 <Switch
-                    style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+                    style={{ transform: [{ scaleX: .65 }, { scaleY: .65 }] }}
                     trackColor={{ false: colors.toggle_background_unselected, true: colors.toggle_background_selected }}
                     thumbColor={colors.toggle}
                     ios_backgroundColor={colors.toggle_background_unselected}

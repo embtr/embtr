@@ -8,7 +8,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
-import { useFonts, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 
 interface Props {
     name: string,
@@ -60,7 +60,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
     };
 
     let [fontsLoaded] = useFonts({
-        Poppins_700Bold,
+        Poppins_600SemiBold,
     });
 
     if (!fontsLoaded) {
@@ -77,7 +77,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
 
 
                 <View style={{ flex: 2, justifyContent: "center" }}>
-                    <Text style={[textStyle, { textAlign: "center", fontFamily: "Poppins_700Bold" }]}>{name}</Text>
+                    <Text style={[textStyle, { textAlign: "center", fontFamily: "Poppins_600SemiBold", fontSize: 21, fontWeight: "bold" }]}>{name}</Text>
                 </View>
 
                 <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
