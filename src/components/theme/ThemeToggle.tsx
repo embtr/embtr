@@ -15,6 +15,6 @@ export const ThemeToggle = () => {
     }
 
     return (
-        <EmbtrToggle text={"Dark Mode"} onToggle={onToggle} />
+        <EmbtrToggle text={"Dark Mode"} onToggle={onToggle} initialValue={isDark} />
     );
 }

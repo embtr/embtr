@@ -6,13 +6,14 @@ import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 
 interface Props {
     text: string,
-    onToggle: Function
+    onToggle: Function,
+    initialValue: boolean
 }
 
-export const EmbtrToggle = ({ text, onToggle }: Props) => {
+export const EmbtrToggle = ({ text, onToggle, initialValue }: Props) => {
     const { colors } = useTheme();
 
-    const [isEnabled, setIsEnabled] = React.useState(false);
+    const [isEnabled, setIsEnabled] = React.useState(initialValue);
     const toggleSwitch = (active: boolean) => {
         setIsEnabled(active)
         onToggle(!isEnabled);
