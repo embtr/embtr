@@ -32,17 +32,19 @@ export const UserSearchResult = ({ userProfileModel, onFollowUser, onUnfollowUse
     }
 
     return (
-        <TouchableOpacity onPress={() => { navigation.navigate('UserProfile', { id: userProfileModel.uid! }) }}>
-            <View style={{ backgroundColor: colors.button_background, alignItems: "center", height: 75, borderRadius: 15, width: "90%", flexDirection: "row", paddingLeft: 10 }}>
-                <View style={{ flex: 2, flexDirection: "row", alignItems: "center" }}>
-                    <NavigatableUserImage userProfileModel={userProfileModel} size={35} />
-                    <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 15, color: colors.user_search_name, paddingLeft: 10 }}>{userProfileModel?.name}</Text>
-                </View>
+        <View style={{ width: "100%", alignItems: "center" }}>
+            <TouchableOpacity style={{ width: "90%" }} onPress={() => { navigation.navigate('UserProfile', { id: userProfileModel.uid! }) }}>
+                <View style={{ backgroundColor: colors.button_background, alignItems: "center", height: 75, borderRadius: 15, width: "100%", flexDirection: "row", paddingLeft: 10 }}>
+                    <View style={{ flex: 2, flexDirection: "row", alignItems: "center" }}>
+                        <NavigatableUserImage userProfileModel={userProfileModel} size={35} />
+                        <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 15, color: colors.user_search_name, paddingLeft: 10 }}>{userProfileModel?.name}</Text>
+                    </View>
 
-                <View style={{ flex: 1, alignContent: "center" , alignItems: "center"}}>
-                    <FollowUserButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
+                    <View style={{ flex: 1, alignContent: "center", alignItems: "center" }}>
+                        <FollowUserButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
+                    </View>
                 </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </View>
     );
 }
