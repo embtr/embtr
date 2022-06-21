@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image, ImageURISource, Switch } from 'react-native';
+import { TouchableOpacity, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,12 +14,6 @@ interface Props {
 
 export const EmbtrButton2 = ({ text, icon, onPress }: Props) => {
     const { colors } = useTheme();
-
-    const [isEnabled, setIsEnabled] = React.useState(false);
-    const toggleSwitch = (active: boolean) => {
-        setIsEnabled(active)
-        onPress(!isEnabled);
-    };
 
     let [fontsLoaded] = useFonts({
         Poppins_500Medium,
