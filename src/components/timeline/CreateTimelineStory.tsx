@@ -60,12 +60,12 @@ export const CreateTimelineStory = () => {
                     <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
 
                         <View style={{ paddingTop: 5 }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 17, padding: 10, paddingLeft: 15 }}>Something on your mind?</Text>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.secondary_text, fontFamily: "Poppins_400Regular", fontSize: 12, paddingLeft: 15, paddingRight: 15 }}>The journey to being better than you were yesterday is filled with many highs and lows. Someone out there needs to read what you're thinking.</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 17, paddingTop: 10, paddingLeft: 15 }}>Something on your mind?</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.secondary_text, fontFamily: "Poppins_400Regular", paddingTop: 10, fontSize: 12, paddingLeft: 15, paddingRight: 15 }}>The journey to being better than you were yesterday is filled with many highs and lows. Someone out there needs to read what you're thinking.</Text>
                         </View>
 
                         <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10 }}>Title</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10 }}>Title</Text>
                             <TextInput
                                 style={{ padding: 15, color: colors.text, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
                                 placeholder={"Enter Your Story Title"}
