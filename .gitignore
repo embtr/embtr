@@ -13,3 +13,4 @@ web-build/
 # macOS
 .DS_Store
 *.cache
+node_modules/react-native-reanimated/src/reanimated1/core/AnimatedValue.js
