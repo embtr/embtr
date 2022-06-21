@@ -11,6 +11,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { UserSearchUtility } from 'src/util/user/UserSearchUtility';
 import { getAuth } from 'firebase/auth';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { USER_SEARCH_WIDTH } from 'src/util/constants';
 
 
 export const UserSearch = () => {
@@ -77,7 +78,7 @@ export const UserSearch = () => {
             <ScrollView>
                 <View style={{ alignItems: "center" }}>
 
-                    <View style={{ backgroundColor: colors.button_background, height: 75, borderRadius: 15, width: "90%", flexDirection: "row", alignItems: "center" }}>
+                    <View style={{ backgroundColor: colors.button_background, height: 75, borderRadius: 15, width: USER_SEARCH_WIDTH, flexDirection: "row", alignItems: "center" }}>
                         <View style={{ alignContent: "flex-end", alignItems: "flex-end", justifyContent: "flex-end", position: "absolute", zIndex: -1, width: "100%", paddingRight: 15 }} >
                             <Ionicons name={'search'} size={28} color={colors.search_preview} />
                         </View>

@@ -3,6 +3,7 @@ import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image, ImageURISour
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { Ionicons } from '@expo/vector-icons';
+import { SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
 
 
 interface Props {
@@ -29,7 +30,7 @@ export const EmbtrButton2 = ({ text, icon, onPress }: Props) => {
     }
 
     return (
-        <View style={{ backgroundColor: colors.button_background, width: "90%", height: 75, borderRadius: 15, flexDirection: "row" }}>
+        <View style={{ backgroundColor: colors.button_background, width: SETTINGS_MENU_ITEM_WIDTH, height: 75, borderRadius: 15, flexDirection: "row" }}>
 
             <View style={{ flex: 1 }} >
                 <TouchableOpacity style={{ flex: 1, flexDirection: "row" }} onPress={() => { onPress() }}>
