@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { ScrollView, TextInput, View } from 'react-native';
+import { ScrollView, TextInput, View, ViewStyle } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserSearchResults } from 'src/components/profile/search/UserSearchResults';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
 import FollowerController from 'src/controller/follower/FollowerController';
 import { useFocusEffect } from '@react-navigation/native';
 import { UserSearchUtility } from 'src/util/user/UserSearchUtility';
 import { getAuth } from 'firebase/auth';
+import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
+
 
 export const UserSearch = () => {
     const { colors } = useTheme();
@@ -59,28 +60,39 @@ export const UserSearch = () => {
         }, [])
     );
 
+    let [fontsLoaded] = useFonts({
+        Poppins_400Regular,
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     return (
         <Screen>
-            <Banner name='User Search' leftIcon={"arrow-back"} leftRoute="Timeline" />
+            <View style={{ paddingBottom: 20 }}>
+                <Banner name='User Search' leftIcon={"arrow-back"} leftRoute="Timeline" />
+            </View>
 
             <ScrollView>
                 <View style={{ alignItems: "center" }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", width: "60%" }} >
-                        <View style={{ position: "absolute", zIndex: 1, paddingTop: 30, paddingLeft: 18 }} >
-                            <Ionicons name={'search'} size={22} color={colors.text} />
+
+                    <View style={{ backgroundColor: colors.button_background, height: 75, borderRadius: 15, width: "90%", flexDirection: "row", alignItems: "center" }}>
+                        <View style={{ alignContent: "flex-end", alignItems: "flex-end", justifyContent: "flex-end", position: "absolute", zIndex: -1, width: "100%", paddingRight: 15 }} >
+                            <Ionicons name={'search'} size={28} color={colors.search_preview} />
                         </View>
+
                         <TextInput
-                            style={{ marginTop: 30, paddingLeft: 60, height: 40, width: "100%", borderColor: colors.text, borderWidth: 1, borderRadius: 50, color: colors.text, fontSize: 20 }}
+                            style={{ width: "100%", height: "100%", color: colors.user_search_name, fontSize: 18, fontFamily: "Poppins_400Regular", paddingLeft: 15 }}
                             onChangeText={onSearchChange}
                             value={searchText}
-                            placeholderTextColor={colors.secondary_text}
-                            placeholder={"enter search"}
+                            placeholderTextColor={colors.search_preview}
+                            placeholder={"Search"}
                             autoCapitalize='none'
                         />
                     </View>
 
-                    <View style={{ paddingTop: 20, width: "100%" }}>
-                        <HorizontalLine />
+                    <View style={{ paddingTop: 10, width: "100%" }}>
                         {searchResults?.results
                             ? <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={searchResults.results!} />
                             : <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />}

@@ -21,12 +21,12 @@ export const FollowUserButton = ({ userProfileModel, onFollowUser, onUnfollowUse
     return (
         <View>
             {following
-                ? <EmbtrButton buttonText='following' size='small' callback={() => {
+                ? <EmbtrButton buttonText='Following' callback={() => {
                     FollowerController.unfollowUser(currentUserId!, userProfileModel.uid!, () => {
                         onUnfollowUser(userProfileModel.uid);
                     })
                 }} />
-                : <EmbtrButton buttonText='follow' size='small' callback={() => {
+                : <EmbtrButton buttonText='Follow' callback={() => {
                     FollowerController.followUser(currentUserId!, userProfileModel.uid!, () => {
                         onFollowUser(userProfileModel.uid);
                     })

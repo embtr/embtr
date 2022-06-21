@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, TextStyle, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FollowUserButton } from 'src/components/profile/FollowUserButton';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
+import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
@@ -21,27 +21,28 @@ interface Props {
 export const UserSearchResult = ({ userProfileModel, onFollowUser, onUnfollowUser, following }: Props) => {
     const { colors } = useTheme();
 
-    const textStyle = {
-        fontSize: 18,
-        color: colors.text,
-    } as TextStyle;
-
     const navigation = useNavigation<userProfileScreenProp>();
 
-    return (
-        <View style={{ width: isDesktopBrowser() ? "60%" : "100%" }}>
-            <TouchableOpacity onPress={() => { navigation.navigate('UserProfile', { id: userProfileModel.uid! }) }}>
-                <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10 }}>
-                    <View style={{ marginLeft: 10, marginRight: 10 }}><NavigatableUserImage userProfileModel={userProfileModel} size={35} /></View>
-                    <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10, flex: 1 }}>
-                        <View style={{ flex: 7 }}><Text style={textStyle}>{userProfileModel?.name}</Text></View>
+    let [fontsLoaded] = useFonts({
+        Poppins_500Medium,
+    });
 
-                        <View style={{ flex: 5 }}>
-                            <FollowUserButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
-                        </View>
-                    </View>
+    if (!fontsLoaded) {
+        return <View />
+    }
+
+    return (
+        <TouchableOpacity onPress={() => { navigation.navigate('UserProfile', { id: userProfileModel.uid! }) }}>
+            <View style={{ backgroundColor: colors.button_background, alignItems: "center", height: 75, borderRadius: 15, width: "90%", flexDirection: "row", paddingLeft: 10 }}>
+                <View style={{ flex: 2, flexDirection: "row", alignItems: "center" }}>
+                    <NavigatableUserImage userProfileModel={userProfileModel} size={35} />
+                    <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 15, color: colors.user_search_name, paddingLeft: 10 }}>{userProfileModel?.name}</Text>
                 </View>
-            </TouchableOpacity>
-        </View>
+
+                <View style={{ flex: 1, alignContent: "center" , alignItems: "center"}}>
+                    <FollowUserButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
+                </View>
+            </View>
+        </TouchableOpacity>
     );
 }

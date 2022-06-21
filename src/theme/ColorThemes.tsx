@@ -29,14 +29,17 @@ export const lightColors = {
 
   //conversion colors
   tab_bar_menu: "#EEEEEE",
-  tab_selected: "#F14C6B",
+  tab_selected: "#FF5E7C",
   tab_unselected: "#8C909E",
-  background: "#F6F6F6",
+  background: "#F2F2F2",
   button_background: "#FFFFFF",
   button_text: "#000000",
+  push_button_background:"#FF5E7C",
   toggle: "#FFFFFF",
   toggle_background_selected: "#FF5E7C",
   toggle_background_unselected: "#3e3e3e",
+  search_preview: "#A4A3A3",
+  user_search_name: "#292929",
 };
 
 // Dark theme colors
@@ -70,12 +73,15 @@ export const darkColors = {
 
   //conversion colors
   tab_bar_menu: "#121212",
-  tab_selected: "#F04F6B",
+  tab_selected: "#F14E6B",
   tab_unselected: "#8C909E",
   background: "#232323",
-  button_background: "#000000",
+  button_background: "#121212",
   button_text: "#FFFFFF",
+  push_button_background:"#F14E6B",
   toggle: "#FFFFFF",
-  toggle_background_selected: "#FF5E7C",
+  toggle_background_selected: "#F14E6B",
   toggle_background_unselected: "#3e3e3e",
+  search_preview: "#A4A3A3",
+  user_search_name: "#FFFFFF",
 };

@@ -2,33 +2,31 @@ import * as React from 'react';
 import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image, ImageURISource } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-
+import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 
 interface Props {
     image?: ImageURISource,
     icon?: any,
-    borderColor?: string,
     buttonText: string,
-    callback: Function,
-    size?: string
+    callback: Function
 }
 
-export const EmbtrButton = ({ image, icon, borderColor, buttonText, callback, size }: Props) => {
+export const EmbtrButton = ({ image, icon, buttonText, callback }: Props) => {
     const { colors } = useTheme();
 
     const containerStyle = {
-        padding: size === "small" ? 6 : 12,
-        width: size === "small" ? 120 : 170,
-        borderRadius: 4,
-        borderWidth: 2,
-        borderColor: borderColor === "secondary" ? colors.secondary_border : colors.primary_border,
-        alignContent: "center",
+        backgroundColor: colors.push_button_background,
+        height: 45,
+        width: 100,
+        borderRadius: 10,
         alignItems: "center",
+        justifyContent: "center",
     } as ViewStyle;
 
     const textStyle = {
-        fontSize: 18,
-        color: colors.text,
+        fontSize: 14,
+        color: "white",
+        fontFamily: "Poppins_600SemiBold"
     } as TextStyle;
 
     const logoViewStyle = {
@@ -36,6 +34,14 @@ export const EmbtrButton = ({ image, icon, borderColor, buttonText, callback, si
         alignItems: "center",
         paddingRight: 10
     } as ViewStyle;
+
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
 
     return (
         image ? (
