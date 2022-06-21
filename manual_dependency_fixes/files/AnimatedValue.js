@@ -9,7 +9,9 @@ import { val } from '../val';
 // Animated value wrapped with extra methods for omit cycle of dependencies
 export default class AnimatedValue extends InternalAnimatedValue {
   setValue(value) {
-    this.__detachAnimation(this._animation);
+    if (Platform.OS !== 'web'){
+      this.__detachAnimation(this._animation);
+    }
     if (
       Platform.OS === 'web' ||
       Platform.OS === 'windows' ||

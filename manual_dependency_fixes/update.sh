@@ -1,0 +1,1 @@
+cp files/AnimatedValue.js ../node_modules/react-native-reanimated/lib/reanimated1/core/AnimatedValue.js
