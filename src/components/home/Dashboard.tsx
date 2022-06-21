@@ -24,7 +24,7 @@ export const Dashboard = () => {
             <Tab.Navigator
                 tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
                 screenOptions={() => ({
-                    tabBarHideOnKeyboard: false,
+                    tabBarHideOnKeyboard: true,
                     tabBarShowLabel: false,
                     headerShown: false
                 })}

@@ -17,7 +17,7 @@ export const EmbtrButton = ({ image, icon, buttonText, callback }: Props) => {
     const containerStyle = {
         backgroundColor: colors.push_button_background,
         height: 45,
-        width: 100,
+        width: "100%",
         borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",

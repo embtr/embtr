@@ -16,7 +16,7 @@ export const EmbtrButton2 = ({ text, icon, onPress }: Props) => {
     const { colors } = useTheme();
 
     let [fontsLoaded] = useFonts({
-        Poppins_500Medium,
+        Poppins_500Medium
     });
 
     if (!fontsLoaded) {

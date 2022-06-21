@@ -33,6 +33,7 @@
       },
       "userInterfaceStyle": "automatic",
       "package": "com.brentryczak.embtr",
+      "softwareKeyboardLayoutMode": "pan",
       "versionCode": 440000130
     },
     "web": {

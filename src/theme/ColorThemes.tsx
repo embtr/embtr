@@ -31,7 +31,7 @@ export const lightColors = {
   tab_bar_menu: "#EEEEEE",
   tab_selected: "#FF5E7C",
   tab_unselected: "#8C909E",
-  background: "#F2F2F2",
+  background: "#F4F4F4",
   button_background: "#FFFFFF",
   button_text: "#000000",
   push_button_background:"#FF5E7C",
@@ -40,6 +40,8 @@ export const lightColors = {
   toggle_background_unselected: "#3e3e3e",
   search_preview: "#A4A3A3",
   user_search_name: "#292929",
+  text_input_background: "#EEEEEE",
+  text_input_border: "#DEDEDE",
 };
 
 // Dark theme colors
@@ -84,4 +86,6 @@ export const darkColors = {
   toggle_background_unselected: "#3e3e3e",
   search_preview: "#A4A3A3",
   user_search_name: "#FFFFFF",
+  text_input_background: "#121212",
+  text_input_border: "#000000",
 };

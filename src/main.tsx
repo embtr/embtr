@@ -10,6 +10,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { Screen } from 'src/components/common/Screen';
 import { useAppSelector } from 'src/redux/Hooks';
 import SafeAreaView from 'react-native-safe-area-view';
+import { LogBox } from 'react-native';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -77,6 +78,8 @@ const linking: LinkingOptions<RootStackParamList> = {
 export const Main = () => {
     const accessLevel = useAppSelector(getAccessLevel);
     const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | null>(null);
+
+    LogBox.ignoreAllLogs();
 
     //TODO - only do this on very first login
     React.useEffect(() => {

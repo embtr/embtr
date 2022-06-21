@@ -42,7 +42,9 @@ export const UserSearchResult = ({ userProfileModel, onFollowUser, onUnfollowUse
                     </View>
 
                     <View style={{ flex: 1, alignContent: "center", alignItems: "flex-end", paddingRight: 15 }}>
-                        <FollowUserButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
+                        <View style={{ width: 100 }}>
+                            <FollowUserButton userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={following} />
+                        </View>
                     </View>
                 </View>
             </TouchableOpacity>
