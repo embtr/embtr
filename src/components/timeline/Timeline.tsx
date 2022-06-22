@@ -28,8 +28,8 @@ export const Timeline = () => {
     const cardShadow = {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
+        shadowOpacity: 0.3,
+        shadowRadius: 1,
         elevation: 5
     }
 
@@ -37,7 +37,7 @@ export const Timeline = () => {
         shadowColor: 'orange',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: .8,
-        shadowRadius: 2,
+        shadowRadius: 4,
         elevation: 5,
     }
 

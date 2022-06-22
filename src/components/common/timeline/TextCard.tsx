@@ -6,8 +6,8 @@ import { Timestamp } from 'firebase/firestore';
 import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface Props {
     staticImage?: ImageSourcePropType,
@@ -34,13 +34,16 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
     const { colors } = useTheme();
 
     const headerTextStyle = {
-        fontSize: 20,
-        color: colors.text,
+        fontSize: 14,
+        fontFamily: "Poppins_500Medium",
+        color: colors.timeline_card_body,
+        paddingLeft: TIMELINE_CARD_PADDING,
     } as TextStyle;
 
     const bodyTextStyle = {
-        fontSize: 14,
-        color: colors.text,
+        fontSize: 13,
+        fontFamily: "Poppins_400Regular",
+        color: colors.timeline_card_body,
     } as TextStyle;
 
     const [acceptedPressed, setAcceptedPressed] = React.useState(isAccepted);
@@ -74,7 +77,8 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
 
     let [fontsLoaded] = useFonts({
         Poppins_600SemiBold,
-        Poppins_400Regular
+        Poppins_400Regular,
+        Poppins_500Medium
     });
 
     if (!fontsLoaded) {
@@ -83,8 +87,12 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
 
     return (
         <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 15 }}>
+
+            {/**********/}
+            {/* HEADER */}
+            {/**********/}
             <View style={{ width: "100%", flexDirection: "row" }}>
-                <View style={{ flex: 1, flexDirection: "row", paddingTop: 12, paddingLeft: 12 }}>
+                <View style={{ flex: 1, flexDirection: "row", paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
                     <View>
                         {staticImage && <Image style={{ width: 45, height: 45 }} source={staticImage} />}
                         {userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}
@@ -107,19 +115,24 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                 </View>
             </View>
 
-            <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10 }}>
-            </View>
-
-            <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
+            {/**********/}
+            {/*  BODY  */}
+            {/**********/}
+            <View style={{ paddingTop: 10 }}>
                 <View>
-                    <Text style={[headerTextStyle, { paddingTop: 5, textAlign: "center" }]}>{title}</Text>
+                    <Text style={headerTextStyle}>{title}</Text>
                 </View>
 
-                <View style={{ marginTop: 15, marginBottom: 5 }}>
+                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, marginTop: 10, marginBottom: 5 }}>
                     <Text style={[bodyTextStyle, { textAlign: "left" }]}>{bodyWithNewLines}</Text>
                     <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{/*"view more..."*/}</Text>
                 </View>
             </View>
+
+
+
+
+
 
             <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
                 {participants !== undefined && <View style={{ marginRight: 5, justifyContent: "flex-end" }}>

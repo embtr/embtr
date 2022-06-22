@@ -43,8 +43,8 @@ export const lightColors = {
   text_input_background: "#EEEEEE",
   text_input_border: "#DEDEDE",
   timeline_card_header: "#444B66",
-  timeline_card_body: "#444B66",
-  timeline_card_background: "#FFFFFF",
+  timeline_card_body: "#292929",
+  timeline_card_background: "#FFFFFF"
 };
 
 // Dark theme colors
