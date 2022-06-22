@@ -19,11 +19,10 @@ export const Timeline = () => {
     const { colors } = useTheme();
 
     const card = {
-        backgroundColor: colors.card_background_active,
         width: '100%',
-        marginBottom: 4,
-        marginTop: 4,
-        borderRadius: 7.5
+        paddingTop: 10,
+        paddingLeft: 10,
+        paddingRight: 10
     }
 
     const cardShadow = {
