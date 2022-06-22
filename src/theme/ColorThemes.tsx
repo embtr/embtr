@@ -34,7 +34,7 @@ export const lightColors = {
   background: "#F4F4F4",
   button_background: "#FFFFFF",
   button_text: "#000000",
-  push_button_background:"#FF5E7C",
+  push_button_background: "#FF5E7C",
   toggle: "#FFFFFF",
   toggle_background_selected: "#FF5E7C",
   toggle_background_unselected: "#3e3e3e",
@@ -42,6 +42,9 @@ export const lightColors = {
   user_search_name: "#292929",
   text_input_background: "#EEEEEE",
   text_input_border: "#DEDEDE",
+  timeline_card_header: "#444B66",
+  timeline_card_body: "#444B66",
+  timeline_card_background: "#FFFFFF",
 };
 
 // Dark theme colors
@@ -80,7 +83,7 @@ export const darkColors = {
   background: "#232323",
   button_background: "#121212",
   button_text: "#FFFFFF",
-  push_button_background:"#F14E6B",
+  push_button_background: "#F14E6B",
   toggle: "#FFFFFF",
   toggle_background_selected: "#F14E6B",
   toggle_background_unselected: "#3e3e3e",
@@ -88,4 +91,7 @@ export const darkColors = {
   user_search_name: "#FFFFFF",
   text_input_background: "#121212",
   text_input_border: "#000000",
+  timeline_card_header: "#FFFFFF",
+  timeline_card_body: "#FFFFFF",
+  timeline_card_background: "#121212",
 };

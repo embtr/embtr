@@ -6,6 +6,8 @@ import { Timestamp } from 'firebase/firestore';
 import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { HorizontalLine } from 'src/components/common/HorizontalLine';
 
 interface Props {
     staticImage?: ImageSourcePropType,
@@ -70,23 +72,42 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
 
     let bodyWithNewLines = body;
 
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+        Poppins_400Regular
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     return (
-        <View>
-            <View style={{ height: "auto", marginLeft: 10, marginRight: 10, alignItems: "center" }}>
+        <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 15 }}>
+            <View style={{ width: "100%", flexDirection: "row" }}>
+                <View style={{ flex: 1, flexDirection: "row", paddingTop: 12, paddingLeft: 12 }}>
+                    <View>
+                        {staticImage && <Image style={{ width: 45, height: 45 }} source={staticImage} />}
+                        {userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}
+                    </View>
 
-                <View style={{ width: "100%", flexDirection: "row", flex: 1 }}>
-                    <Text style={{ color: "orange", flex: 1, textAlign: "left" }}>{participants !== undefined ? "CHALLENGE" : ""}</Text>
-                    <Text style={[bodyTextStyle, { flex: 1, textAlign: "right", color: "gray", fontSize: 12 }]}>{time}</Text>
+                    <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
+                        <View style={{ flex: 1, flexDirection: "row" }}>
+                            <View style={{ flex: 1, justifyContent: "flex-end" }}>
+                                <Text style={{ fontFamily: "Poppins_600SemiBold", color: colors.timeline_card_header }}>{name}</Text>
+                            </View>
+                            <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end", paddingRight: 12 }}>
+                                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 12, opacity: .75, color: colors.timeline_card_header }}>{time}</Text>
+                            </View>
+                        </View>
+
+                        <View style={{ flex: 1, justifyContent: "flex-start" }}>
+                            <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>Glen Burnie, MD</Text>
+                        </View>
+                    </View>
                 </View>
+            </View>
 
-                <View style={{ position: "absolute", zIndex: 1, width: "100%", paddingTop: 12 }}>
-                    <Text style={{ color: "green", textAlign: "left", fontSize: 12 }}>{participants !== undefined ? "accepted" : ""}</Text>
-                </View>
-
-                {staticImage && <View><Image style={{ width: 45, height: 45 }} source={staticImage} /></View>}
-                {userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}
-
-                <View><Text style={[bodyTextStyle, { padding: 5 }]}>{name}</Text></View>
+            <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10 }}>
             </View>
 
             <View style={{ height: "auto", paddingLeft: "1%", paddingRight: "1%", }}>
