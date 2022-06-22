@@ -34,14 +34,14 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
     const { colors } = useTheme();
 
     const headerTextStyle = {
-        fontSize: 14,
+        fontSize: 16,
         fontFamily: "Poppins_500Medium",
         color: colors.timeline_card_body,
         paddingLeft: TIMELINE_CARD_PADDING,
     } as TextStyle;
 
     const bodyTextStyle = {
-        fontSize: 13,
+        fontSize: 12,
         fontFamily: "Poppins_400Regular",
         color: colors.timeline_card_body,
     } as TextStyle;
