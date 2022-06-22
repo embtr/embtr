@@ -7,7 +7,7 @@ import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface Props {
     staticImage?: ImageSourcePropType,
@@ -103,7 +103,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                             <View style={{ flex: 1, justifyContent: "flex-end" }}>
                                 <Text style={{ fontFamily: "Poppins_600SemiBold", color: colors.timeline_card_header }}>{name}</Text>
                             </View>
-                            <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end", paddingRight: 12 }}>
+                            <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end", paddingRight: TIMELINE_CARD_PADDING }}>
                                 <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 12, opacity: .75, color: colors.timeline_card_header }}>{time}</Text>
                             </View>
                         </View>
@@ -123,40 +123,40 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                     <Text style={headerTextStyle}>{title}</Text>
                 </View>
 
-                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, marginTop: 10, marginBottom: 5 }}>
+                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
                     <Text style={[bodyTextStyle, { textAlign: "left" }]}>{bodyWithNewLines}</Text>
-                    <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{/*"view more..."*/}</Text>
+                    {/* <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{"view more..."}</Text> */}
                 </View>
             </View>
 
+            {/**********/}
+            {/* FOOTER */}
+            {/**********/}
+            <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}>
+                <View style={{ flexDirection: "row", }}>
+                    <View style={{ flexDirection: "row", flex: 1 }}>
+                        <View style={{ borderColor: colors.text }}>
+                            <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={TIMELINE_CARD_ICON_SIZE} color={heartPressed ? "red" : colors.timeline_card_footer} onPress={isLiked ? undefined : onHeartPressed} />
+                        </View>
 
+                        <View style={{ justifyContent: "center", paddingLeft: 4 }}>
+                            <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: "Poppins_500Medium" }}>{likes}</Text>
+                        </View>
 
+                        <View style={{ borderColor: colors.text, paddingLeft: 20 }}>
+                            <Ionicons name={'chatbox-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} onPress={onCommentPressed} />
+                        </View>
 
+                        <View style={{ justifyContent: "center", paddingLeft: 4 }}>
+                            <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: "Poppins_500Medium" }}>{comments}</Text>
+                        </View>
+                    </View>
 
-
-            <View style={{ paddingRight: 15, height: "auto", marginTop: 5, marginBottom: 5, flexDirection: "row", justifyContent: "flex-end" }}>
-                {participants !== undefined && <View style={{ marginRight: 5, justifyContent: "flex-end" }}>
-                    <Text style={{ color: "grey", fontSize: 12 }}>{participants} {participants === 1 ? "participant" : "participants"}</Text>
-                </View>}
-
-                <View style={{ marginRight: 5, justifyContent: "flex-end" }}>
-                    <Text style={{ color: "grey", fontSize: 12 }}>{likes} {likes === 1 ? "like" : "likes"}</Text>
-                </View>
-
-                <View style={{ marginRight: 10, justifyContent: "flex-end" }}>
-                    <Text style={{ color: "grey", fontSize: 12 }}>{comments} {comments === 1 ? "comment" : "comments"}</Text>
-                </View>
-
-                {participants !== undefined && <View style={{ borderColor: colors.text, marginRight: 5 }}>
-                    <Ionicons name={acceptedPressed ? 'checkmark-circle-outline' : 'checkmark-circle-outline'} size={22} color={acceptedPressed ? "green" : colors.text} onPress={isAccepted ? undefined : onAcceptedPressed} />
-                </View>}
-
-                <View style={{ borderColor: colors.text, marginRight: 2.5 }}>
-                    <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={22} color={heartPressed ? "red" : colors.text} onPress={isLiked ? undefined : onHeartPressed} />
-                </View>
-
-                <View style={{ borderColor: colors.text, marginLeft: 5 }}>
-                    <Ionicons name={'chatbox-outline'} size={22} color={colors.text} onPress={onCommentPressed} />
+                    <View style={{flex: 1}}>
+                        <View style={{borderColor: colors.text, alignItems: "flex-end", paddingRight: TIMELINE_CARD_PADDING}}>
+                            <Ionicons name={'share-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} onPress={() => {alert("I don't work yet :(")}} />
+                        </View>
+                    </View>
                 </View>
             </View>
 
