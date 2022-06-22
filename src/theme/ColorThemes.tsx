@@ -40,13 +40,16 @@ export const lightColors = {
   toggle_background_unselected: "#3e3e3e",
   search_preview: "#A4A3A3",
   user_search_name: "#292929",
+
   text_input_background: "#EEEEEE",
   text_input_border: "#DEDEDE",
 
   timeline_card_header: "#444B66",
   timeline_card_body: "#292929",
   timeline_card_footer: "#444B66",
-  timeline_card_background: "#FFFFFF"
+  timeline_card_background: "#FFFFFF",
+
+  notification_dot: "#FF5E7C",
 };
 
 // Dark theme colors
@@ -91,10 +94,14 @@ export const darkColors = {
   toggle_background_unselected: "#3e3e3e",
   search_preview: "#A4A3A3",
   user_search_name: "#FFFFFF",
+
   text_input_background: "#121212",
   text_input_border: "#000000",
+
   timeline_card_header: "#FFFFFF",
   timeline_card_body: "#FFFFFF",
   timeline_card_footer: "#FFFFFF",
   timeline_card_background: "#121212",
+
+  notification_dot: "#F14C6B",
 };
