@@ -50,6 +50,9 @@ export const lightColors = {
   timeline_card_background: "#FFFFFF",
 
   notification_dot: "#FF5E7C",
+
+  today_calendar_line: "#959595",
+  today_calendar_time_indicator: "#FF5E7C",
 };
 
 // Dark theme colors
@@ -104,4 +107,7 @@ export const darkColors = {
   timeline_card_background: "#121212",
 
   notification_dot: "#F14C6B",
+
+  today_calendar_line: "#959595",
+  today_calendar_time_indicator: "#F14E6B",
 };

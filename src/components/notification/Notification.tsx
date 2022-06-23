@@ -9,6 +9,10 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
+import { formatDistance } from 'date-fns';
+import { not } from 'react-native-reanimated';
 
 interface Props {
     notification: NotificationModel
@@ -26,21 +30,44 @@ export const Notification = ({ notification }: Props) => {
         }, [])
     );
 
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+        Poppins_400Regular,
+        Poppins_500Medium
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
+    const time = formatDistance(notification.added.toDate(), new Date(), { addSuffix: true });
+
     return (
         <TouchableOpacity onPress={() => { navigation.navigate(notification.target_page as keyof TimelineTabScreens, { id: notification.target_uid }) }} >
-            <View style={{ backgroundColor: colors.card_background_active }}>
-                <View style={{ height: "auto", paddingTop: 5, paddingBottom: 5 }}>
-                    <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10 }}>
-                        <View style={{ marginLeft: 5, marginRight: 10 }}>
-                            {!notification.read && <View style={{ padding: 2, borderWidth: 1, borderRadius: 50, borderColor: colors.primary_border, backgroundColor: colors.primary_border }} />}
+            <View style={{ width: "100%", alignContent: "center", alignItems: "center" }}>
+                <View style={{ backgroundColor: colors.card_background_active, width: "95%", borderRadius: 15 }}>
+                    <View style={{ flex: 1, flexDirection: "row", paddingTop: TIMELINE_CARD_PADDING, paddingBottom: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
+                        <View>
+                            {notifier && <View style={{ marginRight: 10 }}><NavigatableUserImage userProfileModel={notifier} size={35} /></View>}
                         </View>
 
-                        {notifier && <View style={{ marginRight: 10 }}><NavigatableUserImage userProfileModel={notifier} size={35} /></View>}
+                        <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
+                            <View style={{ flex: 1, flexDirection: "row" }}>
+                                <View style={{ flex: 1, justifyContent: "flex-end" }}>
+                                    <Text style={{ fontFamily: "Poppins_600SemiBold", color: colors.timeline_card_header }}>{notifier?.name}</Text>
+                                </View>
+                                <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end", paddingRight: TIMELINE_CARD_PADDING }}>
+                                    <View style={{ padding: 2, borderWidth: 1, borderRadius: 50, borderColor: notification.read ? colors.timeline_card_background : colors.notification_dot, backgroundColor: notification.read ? colors.timeline_card_background : colors.notification_dot }} />
+                                </View>
+                            </View>
 
-                        <View style={{ flexDirection: "row", alignItems: "center", paddingTop: 10, paddingBottom: 10, flex: 1 }}>
-                            <Text style={{ color: colors.text, paddingTop: 15, paddingBottom: 15 }}>
-                                {notifier?.name} {notification.summary}
-                            </Text>
+                            <View style={{ flex: 1, justifyContent: "flex-start", paddingLeft: 1 }}>
+                                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>{notification.summary}</Text>
+                            </View>
+
+                            <View style={{paddingTop: 10}}>
+                                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>{time}</Text>
+                            </View>
                         </View>
                     </View>
                 </View>

@@ -15,18 +15,19 @@ interface Props {
     leftRoute?: string,
     leftIcon?: any,
 
+    innerLeftIcon?: any,
+    leftOnClick?: Function,
+    innerLeftOnClick?: Function,
+
     rightRoute?: string,
     rightIcon?: any,
     rightOnClick?: Function,
     rightIconNotificationCount?: number,
 
-    innerLeftIcon?: any,
-    innerLeftCallback?: Function
-
     menuOptions?: EmbtrMenuOptions
 }
 
-export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, innerLeftCallback, menuOptions }: Props) => {
+export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, leftOnClick, innerLeftOnClick: innerLeftCallback, menuOptions }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -71,7 +72,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
         <View>
             <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
                 <View style={{ flexDirection: "row", flex: 1, paddingLeft: 10, paddingTop: 5 }}>
-                    {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
+                    {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => {leftOnClick ? leftOnClick() : leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
                     {innerLeftIcon ? <Ionicons style={{ paddingLeft: 10 }} name={innerLeftIcon} size={32} color={colors.text} onPress={() => { if (innerLeftCallback) innerLeftCallback() }} /> : <View />}
                 </View>
 
