@@ -24,7 +24,7 @@ export const CalendarPlanViews = ({ plannedToday, updateTask }: Props) => {
     });
 
     return (
-        <View onLayout={(event) => { setLayout(event.nativeEvent.layout) }} style={{ zIndex: 1, position: "absolute", height: "100%", width: "100%", paddingRight: 30 }}>
+        <View onLayout={(event) => { setLayout(event.nativeEvent.layout) }} style={{ zIndex: 2, position: "absolute", height: "100%", width: "100%", paddingRight: 30 }}>
             {planViews}
         </View>
     );

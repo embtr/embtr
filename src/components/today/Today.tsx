@@ -43,10 +43,11 @@ export const Today = () => {
             <View style={{ flex: 1 }}>
                 <Banner name={"Today"} leftIcon={"add"} leftOnClick={() => { navigation.navigate('CreateTask', { target: Target.TODAY }) }} />
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
-                <TodayPicker />
+                <TodayPicker day={14} />
                 </View>
                 <CalendarView plannedToday={plannedToday} updateTask={updateTask} />
             </View>
+
         </Screen>
     );
 };

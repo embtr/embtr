@@ -20,7 +20,7 @@ export const TimeIndicator = () => {
 
     const height = hours * 60 + minutes;
     return (
-        <View style={{ flexDirection: "row", zIndex: 2, position: "absolute", width: "100%" }}>
+        <View style={{ flexDirection: "row", zIndex: 1, position: "absolute", width: "100%" }}>
             <TimeIndicatorLine height={height} />
             <TimeIndicatorDot height={height} />
         </View>
