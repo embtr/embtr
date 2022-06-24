@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { View } from 'react-native';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
-import PlannedDayController, { getDayKey, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDayFromDayKey, getDayKey, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { PlannedTask } from 'src/components/today/PlannedTask';
 import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
 import { Banner } from 'src/components/common/Banner';
@@ -56,7 +56,7 @@ export const Today = () => {
             <View style={{ flex: 1 }}>
                 <Banner name={"Today"} leftIcon={"add"} leftOnClick={() => { navigation.navigate('CreateTask', { dayKey: plannedToday?.id! }) }} />
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
-                    <TodayPicker day={14} onDayChanged={onDayChanged} />
+                    <TodayPicker day={getDayFromDayKey(getTodayKey())} onDayChanged={onDayChanged} />
                 </View>
                 <CalendarView plannedToday={plannedToday} updateTask={updateTask} />
             </View>

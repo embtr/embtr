@@ -58,9 +58,7 @@ export const getKey = (daysBack: number) => {
 }
 
 export const getDayKey = (day: number) => {
-    const todayKey = getTodayKey();
-    const todayDay = parseInt(todayKey.substring(2,4));
-
+    const todayDay = getDayFromDayKey(getTodayKey());
     return getKey(day - todayDay);
 }
 
@@ -72,11 +70,8 @@ export const getTomorrowKey = () => {
     return getKey(1);
 }
 
-export const dayKeyIsInFuture = (dayKey: string) => {
-    const day = parseInt(dayKey.substring(2,4));
-    const todayDay = parseInt(getTodayKey().substring(2,4));
-
-    return day - todayDay > 0;
+export const getDayFromDayKey = (dayKey: string) => {
+    return parseInt(dayKey.substring(2,4));
 }
 
 class PlannedDayController {
