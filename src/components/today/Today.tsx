@@ -10,20 +10,30 @@ import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
 import { Banner } from 'src/components/common/Banner';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { TodayPicker } from 'src/components/today/TodayPicker';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getSelectedDayKey, setSelectedDayKey } from 'src/redux/user/GlobalState';
 
 export const Today = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
 
+    const dispatch = useAppDispatch();
+    let dayKey = useAppSelector(getSelectedDayKey);
+    if (!dayKey) {
+        dayKey = getTodayKey();
+    }
+
     useFocusEffect(
         React.useCallback(() => {
-            PlannedDayController.get(getTodayKey(), setPlannedToday);
-        }, [])
+            PlannedDayController.get(dayKey, setPlannedToday);
+        }, [dayKey])
     );
 
     const onDayChanged = (day: number) => {
-        PlannedDayController.get(getDayKey(day), setPlannedToday);
+        const newDayKey = getDayKey(day);
+        dispatch(setSelectedDayKey(newDayKey));
+        PlannedDayController.get(newDayKey, setPlannedToday);
     };
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {

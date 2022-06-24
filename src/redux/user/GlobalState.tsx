@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "src/redux/store";
-import { EmbtrMenuOption, EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
+import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 
 
 const INITIAL_STATE: GlobalState = {
@@ -9,7 +9,8 @@ const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: "invalid", options: [] },
     test: "tester",
     openMenu: () => { },
-    closeMenu: () => { }
+    closeMenu: () => { },
+    selectedDayKey: "invalid"
 };
 
 export interface GlobalState {
@@ -18,7 +19,8 @@ export interface GlobalState {
     menuOptions: EmbtrMenuOptions,
     openMenu: Function,
     closeMenu: Function,
-    test: string
+    test: string,
+    selectedDayKey: string,
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -41,6 +43,9 @@ export const GlobalState = createSlice({
         },
         setCloseMenu(state, action) {
             state.closeMenu = action.payload
+        },
+        setSelectedDayKey(state, action) {
+            state.selectedDayKey = action.payload
         }
     }
 });
@@ -85,5 +90,13 @@ export const getCloseMenu = (state: RootState): Function => {
     return state.globalState.closeMenu;
 }
 
-export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu } = GlobalState.actions;
+export const getSelectedDayKey = (state: RootState): string => {
+    if (!state?.globalState?.selectedDayKey) {
+        return INITIAL_STATE.selectedDayKey;
+    }
+
+    return state.globalState.selectedDayKey;
+}
+
+export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey } = GlobalState.actions;
 export default GlobalState.reducer;

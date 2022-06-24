@@ -27,7 +27,6 @@ export const CreateTask = () => {
     const createPlannedTaskCallback = (plannedTask: PlannedTaskModel) => {
         if (dayKey) {
             PlannedDayController.get(dayKey, (plannedDay: PlannedDay) => {
-                //alert(plannedDay.id);
                 PlannedDayController.addTask(plannedDay, plannedTask, () => { navigation.goBack() });
             });
         }
