@@ -53,6 +53,8 @@ export const lightColors = {
 
   today_calendar_line: "#959595",
   today_calendar_time_indicator: "#FF5E7C",
+  today_calendar_picker_selected: "#FF5E7C",
+  today_calendar_picker_unselected: "#322F2F",
 };
 
 // Dark theme colors
@@ -110,4 +112,6 @@ export const darkColors = {
 
   today_calendar_line: "#959595",
   today_calendar_time_indicator: "#F14E6B",
+  today_calendar_picker_selected: "#F14C6B",
+  today_calendar_picker_unselected: "#FFFFFF",
 };

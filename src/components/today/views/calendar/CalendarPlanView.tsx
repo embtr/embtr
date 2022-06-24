@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { createEmbtrOptions as createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import * as Haptics from 'expo-haptics';
+import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 
 interface Props {
@@ -18,6 +19,14 @@ interface Props {
 
 export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Props) => {
     const { colors } = useTheme();
+
+    const cardShadow = {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        elevation: 5
+    }
 
     const onPress = () => {
         toggleComplete();
@@ -51,6 +60,15 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
 
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+        Poppins_400Regular,
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     return (
         <View style={{ top: plannedTask.startMinute, position: "absolute" }} >
             <TouchableOpacity
@@ -63,18 +81,19 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                     updateMenuOptions()
                     openMenu()
                 }}
-                style={{
+                style={[cardShadow, {
                     height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
-                    width: parentLayout ? parentLayout.width - 50 : "85%",
-                    borderRadius: 5,
-                    backgroundColor: colors.background_light,
-                    borderColor: plannedTaskIsComplete(plannedTask) ? "green" : colors.primary_border,
-                    borderWidth: .2,
-                }}>
-                <View style={{ flexDirection: "row", width: "100%" }}>
-                    <View style={{ flex: 1, paddingLeft: 5 }}>
-                        <Text style={{ color: colors.text }}>{plannedTask.routine.name}</Text>
+                    width: 225,
+                    borderRadius: 15,
+                    backgroundColor: colors.timeline_card_background
+                }]}>
+                <View style={{ flexDirection: "row", width: "100%", paddingTop: 10, paddingLeft: 10 }}>
+
+                    <View style={{ flex: 5 }}>
+                        <Text style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>{plannedTask.routine.name}</Text>
+                        <Text style={{ color: colors.text, fontFamily: "Poppins_400Regular", fontSize: 9 }}>here's an epic description</Text>
                     </View>
+
 
                     <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 5 }}>
                         <Ionicons name={plannedTaskIsComplete(plannedTask) ? "checkmark-done" : "checkmark"} size={20} color={plannedTaskIsComplete(plannedTask) ? "green" : colors.secondary_text} />

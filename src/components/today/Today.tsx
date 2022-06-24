@@ -10,6 +10,7 @@ import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
 import { Banner } from 'src/components/common/Banner';
 import { Target } from 'src/components/plan/task/CreateTask';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
+import { TodayPicker } from 'src/components/today/TodayPicker';
 
 export const Today = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
@@ -37,12 +38,14 @@ export const Today = () => {
 
     return (
         <Screen>
+            <EmbtrMenuCustom />
+
             <View style={{ flex: 1 }}>
                 <Banner name={"Today"} leftIcon={"add"} leftOnClick={() => { navigation.navigate('CreateTask', { target: Target.TODAY }) }} />
-                <EmbtrMenuCustom />
-
+                <View style={{ paddingTop: 20, paddingBottom: 25 }}>
+                <TodayPicker />
+                </View>
                 <CalendarView plannedToday={plannedToday} updateTask={updateTask} />
-
             </View>
         </Screen>
     );
