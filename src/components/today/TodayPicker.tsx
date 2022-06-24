@@ -6,10 +6,11 @@ import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
-    day: number
+    day: number,
+    onDayChanged: Function
 }
 
-export const TodayPicker = ({ day }: Props) => {
+export const TodayPicker = ({ day, onDayChanged }: Props) => {
     const { colors } = useTheme();
 
     const itemWidth = (Dimensions.get('window').width / 7);
@@ -17,6 +18,11 @@ export const TodayPicker = ({ day }: Props) => {
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const Items = Array.from(Array(31).keys());
     const [selected, setSelected] = React.useState<number>(day);
+
+    const onSelectionChange = (day: number) => {
+        setSelected(day);
+        onDayChanged(day);
+    }
 
     const renderItem = (item: any, index: any) => (
         <View style={{ width: itemWidth, alignItems: "center" }}>
@@ -41,7 +47,7 @@ export const TodayPicker = ({ day }: Props) => {
 
     return (
         <View>
-            <HorizontalPicker defaultIndex={day} snapTimeout={1000} data={Items} renderItem={renderItem} itemWidth={itemWidth} onChange={setSelected} />
+            <HorizontalPicker defaultIndex={day} snapTimeout={1000} data={Items} renderItem={renderItem} itemWidth={itemWidth} onChange={onSelectionChange} />
         </View>
     );
 };

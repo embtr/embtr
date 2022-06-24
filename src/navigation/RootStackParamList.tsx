@@ -1,5 +1,4 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
-import { Target } from "src/components/plan/task/CreateTask";
 
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>
@@ -9,11 +8,11 @@ export type MainTabScreens = {
 }
 
 export type TodayTab = {
-    CreateTask: { target: Target };
+    CreateTask: { dayKey?: string };
 }
 
 export type PlanTabScreens = {
-    CreateTask: { target: Target };
+    CreateTask: { dayKey?: string };
     TaskDetails: { id: string };
 };
 

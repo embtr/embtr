@@ -9,31 +9,28 @@ import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackPara
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { CreateOneTimeTask } from 'src/components/plan/task/CreateOneTimeTask';
-import PlannedDayController, { getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
-
-export const enum Target {
-    PLAN,
-    TODAY
-}
+import PlannedDayController, { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 
 export const CreateTask = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<PlanTabScreens, 'CreateTask'>>();
-    const target: Target = route.params.target;
+    const dayKey = route.params.dayKey;
 
     const [name, setName] = React.useState("");
-    const [frequency, setFrequency] = React.useState(target == Target.PLAN ? "daily" : "today");
 
     const createTask = (task: TaskModel) => {
         TaskController.createTask(task, () => { navigation.goBack() });
     };
 
     const createPlannedTaskCallback = (plannedTask: PlannedTaskModel) => {
-        PlannedDayController.get(getTodayKey(), (plannedDay: PlannedDay) => {
-            PlannedDayController.addTask(plannedDay, plannedTask, () => { navigation.goBack() });
-        });
+        if (dayKey) {
+            PlannedDayController.get(dayKey, (plannedDay: PlannedDay) => {
+                //alert(plannedDay.id);
+                PlannedDayController.addTask(plannedDay, plannedTask, () => { navigation.goBack() });
+            });
+        }
     };
 
     return (
@@ -52,8 +49,8 @@ export const CreateTask = () => {
                 </View>
 
                 <View style={{ flex: 5 }}>
-                    {frequency === "today" && <CreateOneTimeTask name={name} onCreateTask={createPlannedTaskCallback} />}
-                    {frequency === "daily" && <CreateDailyTask name={name} onCreateTask={createTask} />}
+                    {dayKey && <CreateOneTimeTask name={name} onCreateTask={createPlannedTaskCallback} />}
+                    {!dayKey && <CreateDailyTask name={name} onCreateTask={createTask} />}
                 </View>
             </View>
         </Screen>

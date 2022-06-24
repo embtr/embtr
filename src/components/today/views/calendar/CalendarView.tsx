@@ -3,8 +3,7 @@ import { ScrollView } from 'react-native';
 import { Calendar } from 'src/components/today/views/calendar/Calendar';
 import { CalendarPlanViews } from 'src/components/today/views/calendar/CalendarPlanViews';
 import { TimeIndicator } from 'src/components/today/views/calendar/time_indicator/TimeIndicator';
-import { TimeIndicatorDot } from 'src/components/today/views/calendar/time_indicator/TimeIndicatorDot';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     plannedToday?: PlannedDay,
@@ -19,7 +18,7 @@ export const CalendarView = ({ plannedToday, updateTask }: Props) => {
         <ScrollView ref={scrollRef} style={{ flex: 1 }}>
             <Calendar />
             <CalendarPlanViews plannedToday={plannedToday} updateTask={updateTask} />
-            <TimeIndicator />
+            { plannedToday?.id === getTodayKey() && <TimeIndicator />}
         </ScrollView>
     );
 };
