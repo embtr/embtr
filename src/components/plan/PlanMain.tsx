@@ -6,6 +6,9 @@ import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
 import { Banner } from 'src/components/common/Banner';
 import { Tasks } from 'src/components/plan/tasks/Tasks';
 import { Tomorrow } from 'src/components/plan/tomorrow/Tomorrow';
+import { Goals } from 'src/components/plan/goals/Goals';
+import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+
 
 /*
  * Avoid rerenders
@@ -23,8 +26,8 @@ export const PlanMain = () => {
             case 'tasks':
                 return <Tasks />
 
-            case 'pillars':
-                return <View><Text style={{ color: colors.text }}>pillars tab</Text></View>
+            case 'goals':
+                return <Goals />
         }
 
         return <View></View>
@@ -38,6 +41,14 @@ export const PlanMain = () => {
         { key: 'goals', title: 'Goals' },
     ]);
 
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     return (
         <Screen>
             <View style={{ height: "100%" }}>
@@ -48,16 +59,18 @@ export const PlanMain = () => {
                     renderScene={renderScene}
                     onIndexChange={setIndex}
 
-                    renderTabBar={props => <TabBar {...props}
-                        indicatorStyle={{ backgroundColor: colors.primary_border }}
+                    renderTabBar={props => <TabBar 
+                        {...props}
+                        indicatorStyle={{ height: 4, borderRadius: 15, backgroundColor: colors.planning_horizontal_indicator }}
+                        indicatorContainerStyle={{shadowColor: colors.background}}
                         renderLabel={({ focused, route }) => {
                             return (
-                                <Text style={{ color: colors.text }}>
+                                <Text style={{ color: colors.planning_focused_text, fontFamily: "Poppins_600SemiBold", opacity: focused ? 1.0 : .35 }}>
                                     {route.title}
                                 </Text>
                             );
                         }}
-                        style={{ backgroundColor: colors.background_medium }} />
+                        style={{ backgroundColor: colors.background }} />
                     }
                 />
             </View>

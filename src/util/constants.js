@@ -8,3 +8,10 @@ export const TIMELINE_CARD_ICON_COUNT_SIZE = 12;
 
 //TODAY
 export const CALENDAR_TIME_INDICATOR_DOT_SIZE = 20;
+
+export const CARD_SHADOW = {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+}
