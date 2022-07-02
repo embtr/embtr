@@ -18,8 +18,12 @@ export const TodayPicker = ({ day, onDayChanged }: Props) => {
     const itemWidth = (Dimensions.get('window').width / 7);
 
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const Items = Array.from(Array(31).keys());
-    const [selected, setSelected] = React.useState<number>(day);
+
+    const currentDate = new Date(); 
+    let dateElements = Array.from(Array( new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() + 1).keys());
+    dateElements.shift();
+
+    const [selected, setSelected] = React.useState<number>(day - 1);
 
     const onSelectionChange = (day: number) => {
         setSelected(day);
@@ -29,11 +33,11 @@ export const TodayPicker = ({ day, onDayChanged }: Props) => {
     const renderItem = (item: any, index: any) => (
         <View style={{ width: itemWidth, alignItems: "center" }}>
             <View style={{ alignItems: "center" }}>
-                <Ionicons name={"sunny"} size={10} color={getDayKey(index) === getTodayKey() ? selected === index ? colors.today_calendar_picker_selected : colors.today_calendar_picker_unselected : colors.background} />
+                <Ionicons name={"sunny"} size={10} color={getDayKey(index + 1) === getTodayKey() ? selected === index ? colors.today_calendar_picker_selected : colors.today_calendar_picker_unselected : colors.background} />
             </View>
 
             <Text style={{ textAlign: "center", fontSize: 16, fontFamily: "Poppins_400Regular", color: selected === index ? colors.today_calendar_picker_selected : colors.today_calendar_picker_unselected }}>
-                {days[index % 7]}
+                {days[new Date(currentDate.getFullYear(), currentDate.getMonth(), index % 7).getDay() ]}
             </Text>
             <Text style={{ textAlign: "center", fontSize: 18, fontFamily: "Poppins_600SemiBold", color: selected === index ? colors.today_calendar_picker_selected : colors.today_calendar_picker_unselected }}>
                 {item}
@@ -53,7 +57,7 @@ export const TodayPicker = ({ day, onDayChanged }: Props) => {
 
     return (
         <View>
-            <HorizontalPicker animatedScrollToDefaultIndex={false} defaultIndex={day} snapTimeout={1000} data={Items} renderItem={renderItem} itemWidth={itemWidth} onChange={onSelectionChange} />
+            <HorizontalPicker animatedScrollToDefaultIndex={false} defaultIndex={day} snapTimeout={1000} data={dateElements} renderItem={renderItem} itemWidth={itemWidth} onChange={onSelectionChange} />
         </View>
     );
 };
