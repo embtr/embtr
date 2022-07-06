@@ -59,10 +59,9 @@ export const PlanMain = () => {
                     renderScene={renderScene}
                     onIndexChange={setIndex}
 
-                    renderTabBar={props => <TabBar 
+                    renderTabBar={props => <TabBar
                         {...props}
                         indicatorStyle={{ height: 4, borderRadius: 15, backgroundColor: colors.planning_horizontal_indicator }}
-                        indicatorContainerStyle={{shadowColor: colors.background}}
                         renderLabel={({ focused, route }) => {
                             return (
                                 <Text style={{ color: colors.planning_focused_text, fontFamily: "Poppins_600SemiBold", opacity: focused ? 1.0 : .35 }}>
@@ -70,7 +69,11 @@ export const PlanMain = () => {
                                 </Text>
                             );
                         }}
-                        style={{ backgroundColor: colors.background }} />
+                        style={{
+                            backgroundColor: colors.background,
+                            shadowOffset: { height: 0, width: 0 }, shadowColor: 'transparent', shadowOpacity: 0, elevation: 0
+                        }}
+                    />
                     }
                 />
             </View>
