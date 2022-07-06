@@ -14,6 +14,7 @@ import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';
 import { getAuth } from 'firebase/auth';
+import { CARD_SHADOW } from 'src/util/constants';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -23,14 +24,6 @@ export const Timeline = () => {
         paddingTop: 10,
         paddingLeft: 10,
         paddingRight: 10
-    }
-
-    const cardShadow = {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.3,
-        shadowRadius: 1,
-        elevation: 5
     }
 
     const challengeShadow = {
@@ -80,7 +73,7 @@ export const Timeline = () => {
     const createStoryView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
         if (profile) {
-            return <View key={timelineEntry.id} style={[card, cardShadow]}>
+            return <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
                 <UserTextCard userProfileModel={profile} story={timelineEntry} />
             </View>;
         }

@@ -8,7 +8,7 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { FollowUserButton } from 'src/components/profile/FollowUserButton';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
-import { USER_SEARCH_WIDTH } from 'src/util/constants';
+import { CARD_SHADOW, USER_SEARCH_WIDTH } from 'src/util/constants';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
@@ -35,7 +35,7 @@ export const UserSearchResult = ({ userProfileModel, onFollowUser, onUnfollowUse
     return (
         <View style={{ width: "100%", alignItems: "center" }}>
             <TouchableOpacity style={{ width: USER_SEARCH_WIDTH }} onPress={() => { navigation.navigate('UserProfile', { id: userProfileModel.uid! }) }}>
-                <View style={{ backgroundColor: colors.button_background, alignItems: "center", height: 75, borderRadius: 15, width: "100%", flexDirection: "row", paddingLeft: 20 }}>
+                <View style={[{ backgroundColor: colors.button_background, alignItems: "center", height: 75, borderRadius: 15, width: "100%", flexDirection: "row", paddingLeft: 20 }, CARD_SHADOW]}>
                     <View style={{ flex: 2, flexDirection: "row", alignItems: "center" }}>
                         <NavigatableUserImage userProfileModel={userProfileModel} size={35} />
                         <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 15, color: colors.user_search_name, paddingLeft: 10 }}>{userProfileModel?.name}</Text>

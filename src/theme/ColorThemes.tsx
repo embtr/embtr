@@ -55,6 +55,14 @@ export const lightColors = {
   today_calendar_time_indicator: "#FF5E7C",
   today_calendar_picker_selected: "#FF5E7C",
   today_calendar_picker_unselected: "#322F2F",
+
+  planning_horizontal_indicator: "#FF5E7C",
+  planning_focused_text: "#1E1E1E",
+
+
+  goal_primary_font: "#292929",
+  goal_secondary_font: "#1B1F31",
+  goal_progress_bar: "#DFDFDF"
 };
 
 // Dark theme colors
@@ -114,4 +122,12 @@ export const darkColors = {
   today_calendar_time_indicator: "#F14E6B",
   today_calendar_picker_selected: "#F14C6B",
   today_calendar_picker_unselected: "#FFFFFF",
+
+  planning_horizontal_indicator: "#F14C6B",
+  planning_focused_text: "#FFFFFF",
+
+  goal_primary_font: "#FFFFFF",
+  goal_secondary_font: "#EEEEEE",
+  goal_progress_bar: "#DFDFDF"
+
 };
