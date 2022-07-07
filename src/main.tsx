@@ -62,7 +62,8 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                  stringify: {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
                                 //                                  },
-                            }
+                            },
+                            CreateGoal: "createGoal"
                         }
                     }
                 }

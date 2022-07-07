@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableWithoutFeedbackComponent } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
@@ -52,7 +52,7 @@ export const PlanMain = () => {
     return (
         <Screen>
             <View style={{ height: "100%" }}>
-                <Banner name={"Planning"} />
+                <Banner name={"Planning"} leftIcon={"add"} leftRoute={"CreateGoal"} />
 
                 <TabView
                     navigationState={{ index, routes }}
