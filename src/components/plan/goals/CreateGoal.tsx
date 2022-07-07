@@ -10,6 +10,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
+import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
+import { Timestamp } from 'firebase/firestore';
 
 export const CreateGoal = () => {
     const { colors } = useTheme();
@@ -32,6 +34,17 @@ export const CreateGoal = () => {
         if (date) {
             setDeadline(date);
         }
+    };
+
+    const createGoal = () => {
+        const newGoal : GoalModel = {
+            name: goal,
+            description: details,
+            added: Timestamp.now(),
+            deadline: Timestamp.fromDate(deadline)
+        };
+
+        GoalController.createGoal(newGoal, () => {});
     };
 
     return (
@@ -83,7 +96,7 @@ export const CreateGoal = () => {
 
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, paddingBottom: 15 }}>
                             <View style={{ width: "95%" }}>
-                                <EmbtrButton buttonText={'Create'} callback={() => { }} />
+                                <EmbtrButton buttonText={'Create'} callback={createGoal} />
                             </View>
                         </View>
                     </KeyboardAvoidingView>
