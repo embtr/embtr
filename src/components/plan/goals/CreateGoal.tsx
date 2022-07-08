@@ -44,7 +44,9 @@ export const CreateGoal = () => {
             deadline: Timestamp.fromDate(deadline)
         };
 
-        GoalController.createGoal(newGoal, () => {});
+        GoalController.createGoal(newGoal, () => {
+            navigation.goBack();
+        });
     };
 
     return (
@@ -69,6 +71,7 @@ export const CreateGoal = () => {
                                 onChangeText={setGoal}
                                 onChange={() => { setTitleError(false) }}
                                 value={goal}
+                                autoCorrect={true}
                             />
                         </View>
 
@@ -83,6 +86,7 @@ export const CreateGoal = () => {
                                 onChangeText={setDetails}
                                 onChange={() => { setStoryError(false) }}
                                 value={details}
+                                autoCorrect={true}
                             />
                         </View>
 

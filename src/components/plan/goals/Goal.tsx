@@ -9,8 +9,14 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW } from 'src/util/constants';
+import { GoalModel } from 'src/controller/planning/GoalController';
+import { formatDistance } from 'date-fns';
 
-export const Goal = () => {
+interface Props {
+    goal: GoalModel
+}
+
+export const Goal = ({goal} : Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
@@ -23,17 +29,19 @@ export const Goal = () => {
         return <View />
     }
 
+    const time = formatDistance(goal.deadline.toDate(), new Date(), { addSuffix: true });
+
     return (
         <View style={{ width: "95%" }}>
             <TouchableOpacity >
                 <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, paddingTop: 10 }, CARD_SHADOW]}>
                     <View style={{ paddingLeft: 10 }}>
                         <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>
-                            Mow The Lawn
+                            {goal.name}
                         </Text>
 
                         <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_400Regular", opacity: .75, fontSize: 10, paddingTop: 3 }}>
-                            here is a super helpful and impactful description
+                            {goal.description}
                         </Text>
                     </View>
 
@@ -43,14 +51,14 @@ export const Goal = () => {
 
                     <View style={{ paddingLeft: 10 }}>
                         <View style={{ width: "100%", alignContent: "center", paddingTop: 5 }}>
-                            <ProgressBar progress={25} />
+                            <ProgressBar progress={1} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
                         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
                             <Ionicons name={'time-outline'} size={16} color={colors.goal_secondary_font} />
-                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>23 Days Out</Text>
+                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{time}</Text>
                         </View>
 
                         <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>

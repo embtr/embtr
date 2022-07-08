@@ -16,6 +16,25 @@ class GoalController {
             callback();
         });
     }
+
+    static getGoals(uid: string, callback: Function) {
+        const result = GoalDao.getGoals(uid);
+
+        let goals: GoalModel[] = [];
+        result.then(documents => {
+            documents.docs.forEach(document => {
+                let goal: GoalModel = document.data() as GoalModel;
+
+                goal.id = document.id;
+                goals.push(goal);
+            });
+        }).then(() => {
+            goals.sort((a, b) => (a.deadline > b.deadline) ? 1 : -1).reverse();
+            callback(goals);
+        }).catch(() => {
+            callback([]);
+        });
+    }
 }
 
 export default GoalController;
