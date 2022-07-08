@@ -63,7 +63,11 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
                                 //                                  },
                             },
-                            CreateGoal: "createGoal"
+                            CreateGoal: "createGoal",
+                            GoalDetails: {
+                                path: "goals/:id",
+                                parse: { id: (id) => id }
+                            },
                         }
                     }
                 }

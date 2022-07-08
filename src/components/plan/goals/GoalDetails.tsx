@@ -11,8 +11,9 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { createEmbtrOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
+import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 
-export const TaskDetails = () => {
+export const GoalDetails = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -20,12 +21,12 @@ export const TaskDetails = () => {
     const leftFlex = 3;
     const rightFlex = 8;
 
-    const route = useRoute<RouteProp<PlanTabScreens, 'TaskDetails'>>();
-    const [task, setTask] = React.useState<TaskModel | undefined>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'GoalDetails'>>();
+    const [goal, setGoal] = React.useState<GoalModel | undefined>();
 
     useFocusEffect(
         React.useCallback(() => {
-            TaskController.getTask(getAuth().currentUser!.uid, route.params.id, setTask);
+            GoalController.getGoal(getAuth().currentUser!.uid, route.params.id, setGoal);
         }, [])
     );
 
@@ -33,24 +34,6 @@ export const TaskDetails = () => {
         {
             name: 'Archive',
             onPress: () => {
-                if (isDesktopBrowser()) {
-                    if (confirm("archive task '" + task?.name + "'")) {
-                        if (task) {
-                            TaskController.archiveTask(task, () => { navigation.goBack() });
-                        }
-                    }
-                } else {
-                    Alert.alert("Archive Task?", "Archive task '" + route.name + "'?", [
-                        { text: 'Cancel', onPress: () => { }, style: 'cancel', },
-                        {
-                            text: 'Archive', onPress: () => {
-                                if (task) {
-                                    TaskController.archiveTask(task, () => { navigation.goBack() });
-                                }
-                            }
-                        },
-                    ]);
-                }
             }
         }
     ];
@@ -65,7 +48,7 @@ export const TaskDetails = () => {
                     <View style={{ flex: 1 }} />
                     <View style={{ flex: 10, alignItems: "center" }}>
                         <Text style={{ color: colors.text, fontSize: 20 }}>
-                            {task?.name}
+                            {goal?.name}
                         </Text>
                     </View>
                 </View>
@@ -77,7 +60,7 @@ export const TaskDetails = () => {
                             created:
                         </Text>
                         <Text style={{ color: colors.text, flex: rightFlex, paddingLeft: 10 }}>
-                            {task?.added.toDate().toString()}
+                            {goal?.added.toDate().toString()}
                         </Text>
                     </View>
 
@@ -103,15 +86,11 @@ export const TaskDetails = () => {
                         <Text style={{ color: colors.text, flex: leftFlex, textAlign: "right" }}>
                             start time:
                         </Text>
-                        <Text style={{ color: colors.text, flex: rightFlex, paddingLeft: 10 }}>
-                        </Text>
                     </View>
 
                     <View style={{ flexDirection: "row" }}>
                         <Text style={{ color: colors.text, flex: leftFlex, textAlign: "right" }}>
                             duration:
-                        </Text>
-                        <Text style={{ color: colors.text, flex: rightFlex, paddingLeft: 10 }}>
                         </Text>
                     </View>
                 </View>

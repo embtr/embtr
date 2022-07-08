@@ -16,10 +16,14 @@ interface Props {
     goal: GoalModel
 }
 
-export const Goal = ({goal} : Props) => {
+export const Goal = ({ goal }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
+
+    const navigateToDetails = () => {
+        navigation.navigate('GoalDetails', { id: goal.id! })
+    };
 
     let [fontsLoaded] = useFonts({
         Poppins_600SemiBold, Poppins_400Regular
@@ -33,7 +37,7 @@ export const Goal = ({goal} : Props) => {
 
     return (
         <View style={{ width: "95%" }}>
-            <TouchableOpacity >
+            <TouchableOpacity onPress={navigateToDetails} >
                 <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, paddingTop: 10 }, CARD_SHADOW]}>
                     <View style={{ paddingLeft: 10 }}>
                         <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>

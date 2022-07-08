@@ -35,6 +35,17 @@ class GoalController {
             callback([]);
         });
     }
+
+    static getGoal(userId: string, id: string, callback: Function) {
+        const result = GoalDao.getGoal(userId, id);
+        result.then(document => {
+            let goal: GoalModel = document.data() as GoalModel;
+            goal.id = document.id;
+            callback(goal);
+        }).catch(() => {
+            callback(undefined);
+        });
+    }
 }
 
 export default GoalController;
