@@ -27,7 +27,7 @@ export const TodayPicker = ({ day, onDayChanged }: Props) => {
 
     const onSelectionChange = (day: number) => {
         setSelected(day);
-        onDayChanged(day);
+        onDayChanged(day + 1);
     }
 
     const renderItem = (item: any, index: any) => (

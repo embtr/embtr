@@ -4,13 +4,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { getAuth } from 'firebase/auth';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { AddButton } from 'src/components/common/button/AddButton';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/Task';
-import { TasksSummaryHeader } from 'src/components/plan/tasks/TasksSummaryHeader';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
 
 export const Tasks = () => {
     const { colors } = useTheme();
@@ -27,7 +24,7 @@ export const Tasks = () => {
     let taskViews: JSX.Element[] = [];
     tasks.forEach(task => {
         taskViews.push(
-            <View key={task.id} style={{ paddingBottom: 5 }} >
+            <View key={task.id} style={{ paddingBottom: 5, width: "100%", alignItems: "center" }} >
                 <Task task={task} />
             </View>
         );
@@ -35,17 +32,9 @@ export const Tasks = () => {
 
     return (
         <View style={{ height: "100%" }}>
-
-            <HorizontalLine />
-            <TasksSummaryHeader tasks={tasks} />
-
-            <ScrollView style={{ backgroundColor: colors.scroll_background, paddingTop: 2 }}>
+            <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>
                 {taskViews}
             </ScrollView>
-
-            <View style={{ position: "absolute", right: 0, bottom: 0 }}>
-                <AddButton onPress={() => { navigation.navigate('CreateTask', { dayKey: undefined }) }} />
-            </View>
         </View>
     );
 };

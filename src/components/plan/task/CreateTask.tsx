@@ -34,7 +34,7 @@ export const CreateTask = () => {
 
     return (
         <Screen>
-            <Banner name={"Create Task"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+            <Banner name={"Add Task"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
 
             <View style={{ flexDirection: "column", flex: 1 }}>
                 <View style={{ flex: 1, justifyContent: "center" }}>

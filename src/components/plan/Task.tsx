@@ -5,19 +5,14 @@ import { View, Text, ColorValue, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { CARD_SHADOW } from 'src/util/constants';
 
 interface Props {
     task: TaskModel,
     onPress?: Function,
     backgroundColor?: ColorValue
-}
-
-const shadow = {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: .5,
-    elevation: 5
 }
 
 export const Task = ({ task, onPress, backgroundColor }: Props) => {
@@ -30,17 +25,37 @@ export const Task = ({ task, onPress, backgroundColor }: Props) => {
     };
 
     return (
-        <TouchableOpacity key={task.id} onPress={() => { onPress ? onPress() : navigateToDetails() }}>
-            <View style={[{ height: 80, backgroundColor: backgroundColor || colors.card_background_active, borderRadius: 7.5, justifyContent: "center" }, shadow]}>
-                <View style={{ height: "auto", paddingTop: 5 }}>
+        <View style={{ width: "97%" }}>
+            <TouchableOpacity onPress={navigateToDetails} >
+                <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, paddingTop: 10 }, CARD_SHADOW]}>
                     <View style={{ paddingLeft: 10 }}>
-                        <Text style={{ color: colors.text, fontSize: 16 }}>
+                        <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>
                             {task.name}
+                        </Text>
+
+                        <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_400Regular", opacity: .75, fontSize: 10, paddingTop: 3 }}>
+                            I am an epic task description
                         </Text>
                     </View>
 
+                    <View style={{ paddingTop: 8, marginLeft: 10, marginRight: 10 }}>
+                        <HorizontalLine />
+                    </View>
+
+                    <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+
+                        <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10 }}>
+                            <Ionicons name={'stats-chart-outline'} size={16} color={colors.goal_secondary_font} />
+                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>Goal: Run Full Marathon</Text>
+                        </View>
+
+                        <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>
+                            <MaterialCommunityIcons name="pillar" size={14} color={colors.goal_secondary_font} />
+                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>Fitness</Text>
+                        </View>
+                    </View>
                 </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
+        </View>
     );
 };

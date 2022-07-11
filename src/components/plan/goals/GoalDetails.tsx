@@ -80,7 +80,7 @@ export const GoalDetails = () => {
                             <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} />
                         </View>
 
-                        <View style={{ paddingTop: 20 }}>
+                        <View style={{ paddingTop: 20, width: "100%" }}>
                             <View>
                                 <GoalTask />
                             </View>

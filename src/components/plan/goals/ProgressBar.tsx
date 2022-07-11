@@ -18,7 +18,9 @@ export const ProgressBar = ({ progress }: Props) => {
         return <View />
     }
 
-    const percentProgess = "" + progress + "%";
+    const percentRemaining = progress === Number.POSITIVE_INFINITY ? 100 : progress;
+
+    const percentProgess = "" + percentRemaining + "%";
 
     return (
         <View style={{ width: "100%", flexDirection: "row", alignItems: "center" }} >

@@ -24,8 +24,8 @@ export const GoalTask = () => {
             </View>
 
             <View style={{ paddingLeft: 10 }}>
-                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 12 }}>Task name</Text>
-                <Text style={{ opacity: .75, fontFamily: "Poppins_400Regular", fontSize: 10, paddingLeft: 1 }}>May 20, 2022</Text>
+                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 12, color: colors.goal_primary_font }}>Task name</Text>
+                <Text style={{ opacity: .75, fontFamily: "Poppins_400Regular", fontSize: 10, paddingLeft: 1, color: colors.goal_secondary_font }}>May 20, 2022</Text>
             </View>
         </View>
     );

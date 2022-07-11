@@ -10,7 +10,8 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW } from 'src/util/constants';
 import { GoalModel } from 'src/controller/planning/GoalController';
-import { formatDistance } from 'date-fns';
+import { differenceInDays, formatDistance } from 'date-fns';
+import { Timestamp } from 'firebase/firestore';
 
 interface Props {
     goal: GoalModel
@@ -33,10 +34,19 @@ export const Goal = ({ goal }: Props) => {
         return <View />
     }
 
-    const time = formatDistance(goal.deadline.toDate(), new Date(), { addSuffix: true });
+    const totalDays = differenceInDays(goal.deadline.toDate(), goal.added.toDate());
+    const daysRemaining = differenceInDays(goal.deadline.toDate(), new Date());
+    const daysPassed = totalDays - daysRemaining;
+    const daysRemainingPercent = Math.floor((daysPassed / totalDays) * 100);
+    const daysRemainingString = daysRemaining > 0
+        ? "ends in " + daysRemaining + " days"
+        : "ended " + Math.abs(daysRemaining) + " days ago";
+
+        console.log(totalDays + " " + daysPassed + " " + daysRemaining)
+
 
     return (
-        <View style={{ width: "95%" }}>
+        <View style={{ width: "97%" }}>
             <TouchableOpacity onPress={navigateToDetails} >
                 <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, paddingTop: 10 }, CARD_SHADOW]}>
                     <View style={{ paddingLeft: 10 }}>
@@ -55,14 +65,14 @@ export const Goal = ({ goal }: Props) => {
 
                     <View style={{ paddingLeft: 10 }}>
                         <View style={{ width: "100%", alignContent: "center", paddingTop: 5 }}>
-                            <ProgressBar progress={1} />
+                            <ProgressBar progress={daysRemainingPercent} />
                         </View>
                     </View>
 
                     <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
                         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
                             <Ionicons name={'time-outline'} size={16} color={colors.goal_secondary_font} />
-                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{time}</Text>
+                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{daysRemainingString}</Text>
                         </View>
 
                         <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>

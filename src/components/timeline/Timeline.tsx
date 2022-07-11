@@ -22,8 +22,8 @@ export const Timeline = () => {
     const card = {
         width: '100%',
         paddingTop: 10,
-        paddingLeft: 10,
-        paddingRight: 10
+        paddingLeft: 5,
+        paddingRight: 5
     }
 
     const challengeShadow = {
