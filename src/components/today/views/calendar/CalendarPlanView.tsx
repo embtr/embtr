@@ -87,13 +87,12 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                     borderRadius: 15,
                     backgroundColor: colors.timeline_card_background
                 }]}>
+                    
                 <View style={{ flexDirection: "row", width: "100%", paddingTop: 10, paddingLeft: 10 }}>
-
                     <View style={{ flex: 5 }}>
-                        <Text style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>{plannedTask.routine.name}</Text>
+                        <Text style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 13 }}>{plannedTask.routine.name}</Text>
                         <Text style={{ color: colors.text, fontFamily: "Poppins_400Regular", fontSize: 9 }}>here's an epic description</Text>
                     </View>
-
 
                     <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 5 }}>
                         <Ionicons name={plannedTaskIsComplete(plannedTask) ? "checkmark-done" : "checkmark"} size={20} color={plannedTaskIsComplete(plannedTask) ? "green" : colors.secondary_text} />

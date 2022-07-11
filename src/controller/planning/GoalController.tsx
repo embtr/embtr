@@ -9,6 +9,13 @@ export interface GoalModel {
     deadline: Timestamp
 }
 
+export const FAKE_GOAL: GoalModel = {
+    added: Timestamp.now(),
+    name: '',
+    description: '',
+    deadline: Timestamp.now()
+}
+
 class GoalController {
     public static createGoal(goal: GoalModel, callback: Function) {
         const result = GoalDao.createGoal(goal);
