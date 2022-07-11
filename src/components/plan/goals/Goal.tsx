@@ -42,9 +42,6 @@ export const Goal = ({ goal }: Props) => {
         ? "ends in " + daysRemaining + " days"
         : "ended " + Math.abs(daysRemaining) + " days ago";
 
-        console.log(totalDays + " " + daysPassed + " " + daysRemaining)
-
-
     return (
         <View style={{ width: "97%" }}>
             <TouchableOpacity onPress={navigateToDetails} >
