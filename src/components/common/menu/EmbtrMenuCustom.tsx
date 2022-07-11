@@ -49,7 +49,7 @@ export const EmbtrMenuCustom = () => {
     }
 
     return (
-        <Modal visible={visible} transparent={true} >
+        <Modal visible={visible} transparent={true} animationType={"fade"} >
             <View style={{ position: "absolute", zIndex: 1, height: "100%", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
                 <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
                 <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
