@@ -12,7 +12,6 @@ import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/Go
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
-import { GoalTaskCompleteIcon } from 'src/components/plan/goals/GoalTaskCompleteIcon';
 import { GoalTask } from 'src/components/plan/goals/GoalTask';
 
 export const GoalDetails = () => {
@@ -37,7 +36,7 @@ export const GoalDetails = () => {
 
     return (
         <Screen>
-            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuOptions={createEmbtrOptions(menuItems)} />
+            <Banner name={"Goal Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuOptions={createEmbtrOptions(menuItems)} />
             <EmbtrMenuCustom />
 
             <View style={{ flex: 1 }}>
