@@ -6,9 +6,11 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Picker } from '@react-native-picker/picker';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
-    task: TaskModel,
+    plannedTask?: PlannedTaskModel,
+    task?: TaskModel,
     locked: boolean,
     onPress?: Function,
     onUpdate?: Function,
@@ -23,15 +25,15 @@ const shadow = {
     elevation: 5
 }
 
-export const PlannableTask = ({ task, locked, onPress, onUpdate, backgroundColor }: Props) => {
+export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, backgroundColor }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
-    const [hour, setHour] = React.useState(1);
-    const [minute, setMinute] = React.useState(0);
-    const [AMPM, setAMPM] = React.useState("AM");
-    const [durationMinutes, setDurationMinutes] = React.useState(0);
+    const [hour, setHour] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute / 60) : 1);
+    const [minute, setMinute] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute % 60) : 0);
+    const [AMPM, setAMPM] = React.useState( plannedTask?.startMinute && plannedTask.startMinute - 720 >= 0 ? "PM" : "AM");
+    const [durationMinutes, setDurationMinutes] = React.useState(plannedTask?.duration ? plannedTask.duration / 5 : 0);
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -60,53 +62,57 @@ export const PlannableTask = ({ task, locked, onPress, onUpdate, backgroundColor
 
 
     const navigateToDetails = () => {
-        navigation.navigate('TaskDetails', { id: task.id! })
+        if (plannedTask) {
+            navigation.navigate('TaskDetails', { id: plannedTask.routine.id! })
+        } else if (task) {
+            navigation.navigate('TaskDetails', { id: task?.id! })
+        }
     };
 
     const updateHour = (hour: number) => {
         setHour(hour);
         if (onUpdate) {
-            onUpdate(task.id, hour, minute, AMPM, durationMinutes);
+            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, AMPM, durationMinutes);
         }
     };
 
     const updateMinute = (minute: number) => {
         setMinute(minute);
         if (onUpdate) {
-            onUpdate(task.id, hour, minute, AMPM, durationMinutes);
+            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, AMPM, durationMinutes);
         }
     };
 
     const updateAMPM = (amPm: string) => {
         setAMPM(amPm);
         if (onUpdate) {
-            onUpdate(task.id, hour, minute, AMPM, durationMinutes);
+            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, amPm, durationMinutes);
         }
     };
 
-    const updateDuration = (duratiomn: number) => {
-        setDurationMinutes(duratiomn);
+    const updateDuration = (duration: number) => {
+        setDurationMinutes(duration);
         if (onUpdate) {
-            onUpdate(task.id, hour, minute, AMPM, durationMinutes);
+            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, AMPM, duration);
         }
     };
 
     return (
-        <View key={task.id} >
+        <View key={task?.id ? task.id : plannedTask?.id} >
             <View style={[{ height: 90, backgroundColor: backgroundColor || colors.card_background_active, borderRadius: 7.5, justifyContent: "center" }, shadow]}>
                 <View style={{ flexDirection: "row", height: "auto", alignItems: "center", paddingTop: 5 }}>
 
                     {locked ?
                         <View style={{ paddingLeft: 10, flex: 3, height: "100%", justifyContent: "center" }}>
                             <Text style={{ color: colors.text, fontSize: 16 }}>
-                                {task.name}
+                                {plannedTask ? plannedTask.routine.name : task!.name}
                             </Text>
                         </View>
                         :
                         <TouchableOpacity style={{ paddingLeft: 10, flex: 3, height: "100%", justifyContent: "center" }} onPress={() => { onPress ? onPress() : navigateToDetails() }}>
                             <View>
                                 <Text style={{ color: colors.text, fontSize: 16 }}>
-                                    {task.name}
+                                    {plannedTask ? plannedTask.routine.name : task!.name}
                                 </Text>
                             </View>
                         </TouchableOpacity>

@@ -7,7 +7,7 @@ import TaskController, { getTomorrowDayOfWeek, TaskModel } from 'src/controller/
 import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
-import PlannedDayController, { createPlannedTask, getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { createPlannedTask, createPlannedTaskByPlannedTask, getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 
 interface UpdatedPlannedTask {
     checked: boolean,
@@ -51,7 +51,12 @@ export const Tomorrow = () => {
                             startTime: plannedTask.startMinute!,
                             duration: plannedTask.duration!
                         };
-                        updatedPlannedTasks.set(plannedTask.routine.id!, updatedPlannedTask);
+
+                        if (plannedTask.routine.id) {
+                            updatedPlannedTasks.set(plannedTask.routine.id!, updatedPlannedTask);
+                        } else {
+                            updatedPlannedTasks.set(plannedTask.id!, updatedPlannedTask);
+                        }
                     });
 
                     setUpdatedPlannedTasks(updatedPlannedTasks);
@@ -74,14 +79,16 @@ export const Tomorrow = () => {
         React.useCallback(() => {
             let taskViews: JSX.Element[] = [];
 
+            // get all current planned tasks
             plannedDay?.plannedTasks.forEach(plannedTask => {
                 taskViews.push(
                     <View key={plannedTask.routine.id + "_locked"} style={{ paddingBottom: 5 }}>
-                        <PlanningTask task={plannedTask.routine} locked={locked} isChecked={updatedPlannedTasks.get(plannedTask.routine.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
+                        <PlanningTask plannedTask={plannedTask} locked={locked} isChecked={updatedPlannedTasks.get(plannedTask.routine.id ? plannedTask.routine.id : plannedTask.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                     </View>);
             });
 
             if (!locked) {
+                // get the rest of the tasks
                 tasks.forEach(task => {
                     let display = true;
                     plannedDay?.plannedTasks.forEach(plannedTask => {
@@ -128,7 +135,7 @@ export const Tomorrow = () => {
         let newUpdatedPlannedTask = newUpdatedPlannedTasks.get(taskId);
 
         if (newUpdatedPlannedTask) {
-            newUpdatedPlannedTask.startTime = hour * 12 + minute + (ampm === "am" ? 0 : 720);
+            newUpdatedPlannedTask.startTime = hour * 60 + minute + (ampm === "am" ? 0 : 720);
             newUpdatedPlannedTask.duration = duration;
             newUpdatedPlannedTasks.set(taskId, newUpdatedPlannedTask);
             setUpdatedPlannedTasks(newUpdatedPlannedTasks);
@@ -140,6 +147,22 @@ export const Tomorrow = () => {
     */
     const getUpdatedPlannedDay = (): PlannedDay => {
         let plannedtasks: PlannedTaskModel[] = [];
+
+        plannedDay?.plannedTasks.forEach(plannedTask => {
+            if (plannedTask.routine.id) {
+                return;
+            }
+
+            const updatedPlannedTask = updatedPlannedTasks.get(plannedTask.id!);
+            if (updatedPlannedTask) {
+                const taskIsEnabled = updatedPlannedTask?.checked !== false;
+                if (taskIsEnabled) {
+                    const newPlannedTask: PlannedTaskModel = createPlannedTaskByPlannedTask(plannedTask, updatedPlannedTask.startTime, updatedPlannedTask.duration);
+                    plannedtasks.push(newPlannedTask);
+                }
+            }
+        });
+        
         tasks.forEach(task => {
             const updatedPlannedTask = updatedPlannedTasks.get(task.id!);
             if (updatedPlannedTask) {

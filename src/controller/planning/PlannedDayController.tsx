@@ -34,7 +34,17 @@ export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean 
     return !plannedTaskIsComplete(plannedTask) && !plannedTaskIsFailed(plannedTask);
 };
 
-export const createPlannedTask = (task: TaskModel, startMinute: number, duration: number ) => {
+export const createPlannedTaskByPlannedTask = (plannedTask: PlannedTaskModel, startMinute: number, duration: number) => {
+    const newPlannedTask: PlannedTaskModel = {
+        ...plannedTask
+    }
+    newPlannedTask.startMinute = startMinute;
+    newPlannedTask.duration = duration;
+
+    return newPlannedTask;
+}
+
+export const createPlannedTask = (task: TaskModel, startMinute: number, duration: number) => {
     const plannedTask: PlannedTaskModel = {
         routine: task,
         startMinute: startMinute,
@@ -71,7 +81,7 @@ export const getTomorrowKey = () => {
 }
 
 export const getDayFromDayKey = (dayKey: string) => {
-    return parseInt(dayKey.substring(2,4));
+    return parseInt(dayKey.substring(2, 4));
 }
 
 class PlannedDayController {
@@ -126,7 +136,7 @@ class PlannedDayController {
     public static addTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
         plannedDay.metadata!.modified = Timestamp.now();
         const result = PlannedDayDao.createTask(plannedDay, plannedTask);
-            result?.then(() => {
+        result?.then(() => {
             callback();
         });
     }
