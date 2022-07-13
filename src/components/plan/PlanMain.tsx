@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedbackComponent } from 'react-native';
+import { View, Text } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
@@ -8,6 +8,10 @@ import { Tasks } from 'src/components/plan/tasks/Tasks';
 import { Tomorrow } from 'src/components/plan/tomorrow/Tomorrow';
 import { Goals } from 'src/components/plan/goals/Goals';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PlanTabScreens, TodayTab } from 'src/navigation/RootStackParamList';
+import { getTomorrowKey } from 'src/controller/planning/PlannedDayController';
 
 
 /*
@@ -17,6 +21,8 @@ import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 
 export const PlanMain = () => {
     const { colors } = useTheme();
+
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string; }; }) => {
         switch (props.route.key) {
@@ -49,10 +55,22 @@ export const PlanMain = () => {
         return <View />
     }
 
+    const navigateToTomorrowCreateTask = () => {
+        navigation.navigate('CreateTask', { dayKey: getTomorrowKey() })
+    }
+
+    const navigateToTasksCreateTask = () => {
+        navigation.navigate('CreateTask', { dayKey: undefined })
+    }
+
+    const navigateToCreateGoals = () => {
+        navigation.navigate('CreateGoal')
+    }
+
     return (
         <Screen>
             <View style={{ height: "100%" }}>
-                <Banner name={"Planning"} leftIcon={"add"} leftRoute={"CreateGoal"} />
+                <Banner name={"Planning"} leftIcon={"add"} leftRoute={"CreateTask"} leftOnClick={index === 0 ? navigateToTomorrowCreateTask : index === 1 ? navigateToTasksCreateTask : navigateToCreateGoals} />
 
                 <TabView
                     navigationState={{ index, routes }}
