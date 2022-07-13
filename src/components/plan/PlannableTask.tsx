@@ -32,7 +32,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, ba
 
     const [hour, setHour] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute / 60) : 1);
     const [minute, setMinute] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute % 60) : 0);
-    const [AMPM, setAMPM] = React.useState( plannedTask?.startMinute && plannedTask.startMinute - 720 >= 0 ? "PM" : "AM");
+    const [AMPM, setAMPM] = React.useState(plannedTask?.startMinute && plannedTask.startMinute - 720 >= 0 ? "PM" : "AM");
     const [durationMinutes, setDurationMinutes] = React.useState(plannedTask?.duration ? plannedTask.duration / 5 : 0);
 
     let hourPickerItems: JSX.Element[] = [];
@@ -119,16 +119,16 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, ba
                     }
 
 
-                    <View style={{ flex: 3.5, flexDirection: "column", alignContent: "center", alignItems: "center" }}>
+                    <View style={{ flexDirection: "column", alignContent: "center", alignItems: "center" }}>
                         <View>
                             <Text style={{ color: colors.secondary_text, fontSize: 10 }}>Start Time</Text>
                         </View>
                         <View style={{ flexDirection: "row", alignContent: "center", alignItems: "center" }}>
-                            <View style={{ flex: 1, alignContent: "center", alignItems: "center" }}>
+                            <View style={{ alignContent: "center", alignItems: "center" }}>
                                 <View>
                                     <Picker
                                         itemStyle={{ height: 80 }}
-                                        style={{ width: 75, color: colors.text }}
+                                        style={{ width: 85, color: colors.text }}
                                         selectedValue={hour}
                                         onValueChange={updateHour}>
                                         {locked ? <Picker.Item key={"hour_" + hour} color={colors.text} label={"" + hour} value={hour} /> : hourPickerItems}
@@ -136,11 +136,11 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, ba
                                 </View>
                             </View>
 
-                            <View style={{ flex: 1, alignContent: "center", alignItems: "center" }}>
+                            <View style={{ alignContent: "center", alignItems: "center" }}>
                                 <View>
                                     <Picker
                                         itemStyle={{ height: 80 }}
-                                        style={{ width: 75, color: colors.text }}
+                                        style={{ width: 85, color: colors.text }}
                                         selectedValue={minute}
                                         onValueChange={updateMinute}>
                                         {locked ? <Picker.Item key={"minute" + minute} color={colors.text} label={"" + minute} value={minute} /> : minutePickerItems}
@@ -148,11 +148,11 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, ba
                                 </View>
                             </View>
 
-                            <View style={{ flex: 1, alignContent: "center", alignItems: "center" }}>
+                            <View style={{ alignContent: "center", alignItems: "center" }}>
                                 <View>
                                     <Picker
                                         itemStyle={{ height: 80 }}
-                                        style={{ width: 75, color: colors.text }}
+                                        style={{ width: 95, color: colors.text }}
                                         selectedValue={AMPM}
                                         onValueChange={updateAMPM}>
                                         {locked ? <Picker.Item key={"ampm_" + AMPM} color={colors.text} label={"" + AMPM} value={AMPM} /> : amPmPickerItems}
@@ -169,13 +169,13 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, ba
                     }
 
 
-                    <View style={{ flex: 1, flexDirection: "column", alignContent: "center", alignItems: "center" }}>
+                    <View style={{ flexDirection: "column", alignContent: "center", alignItems: "center" }}>
                         <View>
                             <Text style={{ color: colors.secondary_text, fontSize: 10 }}>Minutes</Text>
                         </View>
                         <Picker
                             itemStyle={{ height: 80 }}
-                            style={{ width: 75, color: colors.text }}
+                            style={{ width: 95, color: colors.text }}
                             selectedValue={durationMinutes}
                             onValueChange={updateDuration}>
                             {locked ? <Picker.Item key={"duration_" + durationMinutes} color={colors.text} label={"" + durationMinutes} value={durationMinutes} /> : durationMinutesPickerItems}

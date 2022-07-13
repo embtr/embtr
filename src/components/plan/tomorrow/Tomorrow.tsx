@@ -135,7 +135,7 @@ export const Tomorrow = () => {
         let newUpdatedPlannedTask = newUpdatedPlannedTasks.get(taskId);
 
         if (newUpdatedPlannedTask) {
-            newUpdatedPlannedTask.startTime = hour * 60 + minute + (ampm === "am" ? 0 : 720);
+            newUpdatedPlannedTask.startTime = hour * 60 + minute + (ampm === "AM" ? 0 : 720);
             newUpdatedPlannedTask.duration = duration;
             newUpdatedPlannedTasks.set(taskId, newUpdatedPlannedTask);
             setUpdatedPlannedTasks(newUpdatedPlannedTasks);
