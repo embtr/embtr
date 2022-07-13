@@ -20,10 +20,14 @@ export const CreateDailyTask = () => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+    const [name, setName] = React.useState("");
+    const [details, setDetails] = React.useState("");
+
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
-    const [open, setOpen] = React.useState(false);
-    const [value, setValue] = React.useState('');
-    const [items, setItems] = React.useState([{ label: '', value: '' }]);
+    
+    const [menuOpen, setMenuOption] = React.useState(false);
+    const [selectedGoal, setSelectedGoal] = React.useState('');
+    const [goalOptions, setGoalOptions] = React.useState([{ label: '', value: '' }]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -37,13 +41,10 @@ export const CreateDailyTask = () => {
             goals.forEach(goal => {
                 initialItems.push({ label: goal.name, value: goal.id });
             });
-            console.log(initialItems);
-            setItems(initialItems);
+
+            setGoalOptions(initialItems);
         }, [goals])
     );
-
-    const [name, setName] = React.useState("");
-    const [details, setDetails] = React.useState("");
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -66,7 +67,7 @@ export const CreateDailyTask = () => {
     }
 
     const createTask = () => {
-        const task = createTaskModel(name, details, value);
+        const task = createTaskModel(name, details, selectedGoal);
         TaskController.createTask(task, () => { navigation.goBack() });
     };
 
@@ -118,12 +119,12 @@ export const CreateDailyTask = () => {
                             <DropDownPicker
                                 dropDownContainerStyle={{ borderWidth: 0 }}
                                 style={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
-                                open={open}
-                                value={value}
-                                items={items}
-                                setOpen={setOpen}
-                                setValue={setValue}
-                                setItems={setItems}
+                                open={menuOpen}
+                                value={selectedGoal}
+                                items={goalOptions}
+                                setOpen={setMenuOption}
+                                setValue={setSelectedGoal}
+                                setItems={setGoalOptions}
 
                                 multiple={false}
                                 mode="BADGE"
