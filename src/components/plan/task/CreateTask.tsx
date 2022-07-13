@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, Text, TextInput, Keyboard } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -36,20 +36,20 @@ export const CreateTask = () => {
         <Screen>
             <Banner name={"Add Task"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
 
-            <View style={{ flexDirection: "column", flex: 1 }}>
-                <View style={{ flex: 1, justifyContent: "center" }}>
-                    <TextInput
-                        style={{ textAlign: "center", marginLeft: "10%", marginRight: "10%", paddingLeft: 10, height: 40, borderColor: colors.background_medium, backgroundColor: colors.background_medium, borderWidth: 1, borderRadius: 10, color: colors.text, fontSize: 20 }}
-                        onChangeText={setName}
-                        value={name}
-                        placeholderTextColor={colors.secondary_text}
-                        placeholder={"Task Name"}
-                    />
-                </View>
+            <View style={{ paddingTop: 10, alignItems: "center" }}>
+                <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Task</Text>
+                <TextInput
+                    style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.text, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
+                    placeholder={"Enter your task"}
+                    placeholderTextColor={colors.secondary_text}
+                    onChangeText={setName}
+                    //onChange={() => { setTitleError(false) }}
+                    value={name}
+                    autoCorrect={true}
+                />
 
                 <View style={{ flex: 5 }}>
                     {dayKey && <CreateOneTimeTask name={name} onCreateTask={createPlannedTaskCallback} />}
-                    {!dayKey && <CreateDailyTask name={name} onCreateTask={createTask} />}
                 </View>
             </View>
         </Screen>

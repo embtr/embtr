@@ -53,7 +53,7 @@ export const CreateGoal = () => {
         <Screen>
             <Banner name={"Create Goal"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
 
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
+            <ScrollView scrollEnabled={false} contentContainerStyle={{ flexGrow: 1 }} >
                 <View style={{ height: "100%", width: "100%" }}>
                     <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
 
@@ -62,6 +62,7 @@ export const CreateGoal = () => {
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.secondary_text, fontFamily: "Poppins_400Regular", paddingTop: 10, fontSize: 12, paddingLeft: 15, paddingRight: 15 }}>Your goal should be some objective achievable by a certain date with clear pass/ fail criteria. Make it happen!.</Text>
                         </View>
 
+                        {/* Goal/ Title */}
                         <View style={{ paddingTop: 10, alignItems: "center" }}>
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Goal</Text>
                             <TextInput
@@ -75,6 +76,7 @@ export const CreateGoal = () => {
                             />
                         </View>
 
+                        {/* Description */}
                         <View style={{ paddingTop: 10, alignItems: "center" }}>
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Details</Text>
                             <TextInput

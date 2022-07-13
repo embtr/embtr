@@ -60,7 +60,7 @@ export const PlanMain = () => {
     }
 
     const navigateToTasksCreateTask = () => {
-        navigation.navigate('CreateTask', { dayKey: undefined })
+        navigation.navigate('CreateDailyTask')
     }
 
     const navigateToCreateGoals = () => {

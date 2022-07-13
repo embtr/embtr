@@ -5,6 +5,7 @@ export interface TaskModel {
     id?: string,
     added: Timestamp,
     name: string,
+    description?: string,
     active?: boolean
 }
 
@@ -17,7 +18,8 @@ export const getTomorrowDayOfWeek = () => {
     return tomorrow;
 };
 
-export const createTaskModel = (name: string) => {
+export const createTaskModel = (name: string, description: string, goalId: string) => {
+    alert (name + " " + description + " " + goalId)
     const task: TaskModel = {
         added: Timestamp.now(),
         name: name

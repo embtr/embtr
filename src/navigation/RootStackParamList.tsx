@@ -13,6 +13,7 @@ export type TodayTab = {
 
 export type PlanTabScreens = {
     CreateTask: { dayKey?: string };
+    CreateDailyTask: undefined;
     CreateGoal: undefined;
     GoalDetails: { id: string };
     TaskDetails: { id: string };
