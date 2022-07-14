@@ -5,7 +5,8 @@ export interface TaskModel {
     id?: string,
     added: Timestamp,
     name: string,
-    description?: string,
+    description: string,
+    goalId: string,
     active?: boolean
 }
 
@@ -22,7 +23,9 @@ export const createTaskModel = (name: string, description: string, goalId: strin
     alert (name + " " + description + " " + goalId)
     const task: TaskModel = {
         added: Timestamp.now(),
-        name: name
+        name: name,
+        description: description,
+        goalId: goalId
     }
 
     return task;
