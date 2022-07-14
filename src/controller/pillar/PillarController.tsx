@@ -26,6 +26,7 @@ class PillarController {
                 let active = true;
                 
                 let pillar: PillarModel = {name: name, added: added, active: active};
+                pillar.id = document.id;
                 pillars.push(pillar);
             });
         }).then(() => {

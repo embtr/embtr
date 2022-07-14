@@ -3,7 +3,7 @@ import { View, Text, TextInput, Keyboard, ScrollView, KeyboardAvoidingView } fro
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
@@ -13,6 +13,10 @@ import { Timestamp } from 'firebase/firestore';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
+import DropDownPicker from 'react-native-dropdown-picker';
+import { PillarModel } from 'src/model/PillarModel';
+import PillarController from 'src/controller/pillar/PillarController';
+import { getAuth } from 'firebase/auth';
 
 export const CreateGoal = () => {
     const { colors } = useTheme();
@@ -26,10 +30,37 @@ export const CreateGoal = () => {
     const [deadline, setDeadline] = React.useState<Date>(Timestamp.now().toDate());
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
 
+    const [pillars, setPillars] = React.useState<PillarModel[]>([]);
+
+    const [menuOpen, setMenuOption] = React.useState(false);
+    const [selectedPillar, setSelectedPillar] = React.useState('');
+    const [pillarOptions, setPillarOptions] = React.useState([{ label: '', value: '' }]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const uid = getAuth().currentUser?.uid;
+            if (uid) {
+                PillarController.getPillars(uid, setPillars);
+            }
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            let initialItems: any = [];
+            pillars.forEach(pillar => {
+                initialItems.push({ label: pillar.name, value: pillar.id });
+            });
+
+            setPillarOptions(initialItems);
+        }, [pillars])
+    );
+
     const createGoal = () => {
         const newGoal: GoalModel = {
             name: goal,
             description: details,
+            pillarId: selectedPillar,
             added: Timestamp.now(),
             deadline: Timestamp.fromDate(deadline)
         };
@@ -54,7 +85,7 @@ export const CreateGoal = () => {
             <DateTimePickerModal
                 isVisible={calendarVisible}
                 mode="date"
-                onConfirm={(date) => {setDeadline(date); hideCalendar()}}
+                onConfirm={(date) => { setDeadline(date); hideCalendar() }}
                 onCancel={hideCalendar}
             />
 
@@ -82,7 +113,7 @@ export const CreateGoal = () => {
                         </View>
 
                         {/* Description */}
-                        <View style={{ paddingTop: 10, alignItems: "center" }}>
+                        <View style={{ paddingTop: 15, alignItems: "center" }}>
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Details</Text>
                             <TextInput
                                 textAlignVertical='top'
@@ -97,7 +128,27 @@ export const CreateGoal = () => {
                             />
                         </View>
 
-                        <View style={{ paddingTop: 10, alignItems: "center" }}>
+                        <View style={{ paddingTop: 15, alignItems: "center" }}>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Pillar</Text>
+                            <View style={{ width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1 }}>
+                                <DropDownPicker
+                                    dropDownContainerStyle={{ borderWidth: 0 }}
+                                    style={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
+                                    open={menuOpen}
+                                    value={selectedPillar}
+                                    items={pillarOptions}
+                                    setOpen={setMenuOption}
+                                    setValue={setSelectedPillar}
+                                    setItems={setPillarOptions}
+
+                                    multiple={false}
+                                    mode="BADGE"
+                                    badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
+                                />
+                            </View>
+                        </View>
+
+                        <View style={{ zIndex: -1, paddingTop: 15, alignItems: "center" }}>
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Deadline</Text>
 
                             <View style={{ height: 50, width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1, backgroundColor: colors.text_input_background, justifyContent: "center", paddingLeft: 15, flexDirection: "row" }}>

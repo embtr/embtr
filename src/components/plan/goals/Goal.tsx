@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Text, ColorValue, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
@@ -10,14 +10,15 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW } from 'src/util/constants';
 import { GoalModel } from 'src/controller/planning/GoalController';
-import { differenceInDays, formatDistance } from 'date-fns';
-import { Timestamp } from 'firebase/firestore';
+import { differenceInDays } from 'date-fns';
+import { PillarModel } from 'src/model/PillarModel';
 
 interface Props {
-    goal: GoalModel
+    goal: GoalModel,
+    pillars: PillarModel[]
 }
 
-export const Goal = ({ goal }: Props) => {
+export const Goal = ({ goal, pillars }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
@@ -33,6 +34,14 @@ export const Goal = ({ goal }: Props) => {
     if (!fontsLoaded) {
         return <View />
     }
+
+    let pillarName = "unknown 😅";
+    pillars.forEach(pillar => {
+        if (pillar.id === goal.pillarId) {
+            pillarName = pillar.name;
+            return;
+        }
+    });
 
     const totalDays = differenceInDays(goal.deadline.toDate(), goal.added.toDate());
     const daysRemaining = differenceInDays(goal.deadline.toDate(), new Date());
@@ -74,7 +83,7 @@ export const Goal = ({ goal }: Props) => {
 
                         <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>
                             <MaterialCommunityIcons name="pillar" size={14} color={colors.goal_secondary_font} />
-                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>Fitness</Text>
+                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{pillarName}</Text>
                         </View>
                     </View>
                 </View>

@@ -4,12 +4,15 @@ import React from 'react';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Goal } from 'src/components/plan/goals/Goal';
+import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
+import { PillarModel } from 'src/model/PillarModel';
 
 export const Goals = () => {
 
 
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
+    const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -17,11 +20,20 @@ export const Goals = () => {
         }, [])
     );
 
+    useFocusEffect(
+        React.useCallback(() => {
+            const uid = getAuth().currentUser?.uid;
+            if (uid) {
+                PillarController.getPillars(uid, setPillars);
+            }
+        }, [])
+    );
+
     let goalViews: JSX.Element[] = [];
     goals.forEach(goal => {
         goalViews.push(
             <View key={goal.id} style={{ paddingBottom: 7.5, width: "100%", alignItems: "center" }}>
-                <Goal goal={goal} />
+                <Goal goal={goal} pillars={pillars} />
             </View>
         );
     });

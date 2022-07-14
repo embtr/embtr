@@ -6,7 +6,8 @@ export interface GoalModel {
     added: Timestamp,
     name: string,
     description: string,
-    deadline: Timestamp
+    pillarId?: string
+    deadline: Timestamp,
 }
 
 export const FAKE_GOAL: GoalModel = {
