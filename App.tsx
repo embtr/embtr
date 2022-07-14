@@ -1,5 +1,4 @@
 import React from 'react';
-import { AppearanceProvider } from 'react-native-appearance';
 import { ThemeProvider } from './src/components/theme/ThemeProvider';
 import { Main } from './src/main';
 import { Provider } from 'react-redux';
@@ -14,13 +13,11 @@ export default function App() {
             <SafeAreaProvider>
                 <Provider store={Store}>
                     <PersistGate loading={null} persistor={persistor}>
-                            <AppearanceProvider>
-                                <ThemeProvider>
-                                <HoldMenuProvider>
-                                    <Main />
-                                    </HoldMenuProvider>
-                                </ThemeProvider>
-                            </AppearanceProvider>
+                        <ThemeProvider>
+                            <HoldMenuProvider>
+                                <Main />
+                            </HoldMenuProvider>
+                        </ThemeProvider>
                     </PersistGate>
                 </Provider>
             </SafeAreaProvider>
