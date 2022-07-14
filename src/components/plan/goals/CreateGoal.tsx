@@ -5,13 +5,14 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
-import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { Timestamp } from 'firebase/firestore';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Ionicons } from '@expo/vector-icons';
+import { format } from 'date-fns';
 
 export const CreateGoal = () => {
     const { colors } = useTheme();
@@ -22,22 +23,11 @@ export const CreateGoal = () => {
     const [details, setDetails] = React.useState<string>("");
     const [titleError, setTitleError] = React.useState(false);
     const [storyError, setStoryError] = React.useState(false);
-    const [deadline, setDeadline] = React.useState<Date>(new Date());
-
-    const { setScheme, isDark } = useTheme();
-
-    const createTask = (task: TaskModel) => {
-        TaskController.createTask(task, () => { navigation.goBack() });
-    };
-
-    const onDeadlineChange = (event: any, date: Date | undefined) => {
-        if (date) {
-            setDeadline(date);
-        }
-    };
+    const [deadline, setDeadline] = React.useState<Date>(Timestamp.now().toDate());
+    const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
 
     const createGoal = () => {
-        const newGoal : GoalModel = {
+        const newGoal: GoalModel = {
             name: goal,
             description: details,
             added: Timestamp.now(),
@@ -49,24 +39,39 @@ export const CreateGoal = () => {
         });
     };
 
+    const showCalendar = () => {
+        setCalendarVisible(true);
+    };
+
+    const hideCalendar = () => {
+        setCalendarVisible(false);
+    };
+
     return (
         <Screen>
             <Banner name={"Create Goal"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+
+            <DateTimePickerModal
+                isVisible={calendarVisible}
+                mode="date"
+                onConfirm={(date) => {setDeadline(date); hideCalendar()}}
+                onCancel={hideCalendar}
+            />
 
             <ScrollView scrollEnabled={false} contentContainerStyle={{ flexGrow: 1 }} >
                 <View style={{ height: "100%", width: "100%" }}>
                     <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
 
                         <View style={{ paddingTop: 5 }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 17, paddingTop: 10, paddingLeft: 15 }}>Bring it on!</Text>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.secondary_text, fontFamily: "Poppins_400Regular", paddingTop: 10, fontSize: 12, paddingLeft: 15, paddingRight: 15 }}>Your goal should be some objective achievable by a certain date with clear pass/ fail criteria. Make it happen!.</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 17, paddingTop: 10, paddingLeft: 15 }}>Bring it on!</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", paddingTop: 10, fontSize: 12, paddingLeft: 15, paddingRight: 15 }}>Your goal should be some objective achievable by a certain date with clear pass/ fail criteria. Make it happen!.</Text>
                         </View>
 
                         {/* Goal/ Title */}
                         <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Goal</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Goal</Text>
                             <TextInput
-                                style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.text, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
+                                style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
                                 placeholder={"Enter your goal"}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setGoal}
@@ -78,7 +83,7 @@ export const CreateGoal = () => {
 
                         {/* Description */}
                         <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Details</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Details</Text>
                             <TextInput
                                 textAlignVertical='top'
                                 style={{ width: "95%", fontFamily: "Poppins_400Regular", height: 200, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, color: colors.text, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}
@@ -93,10 +98,16 @@ export const CreateGoal = () => {
                         </View>
 
                         <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Deadline</Text>
+                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Deadline</Text>
 
-                            <View style={{ height: 150, width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1, backgroundColor: colors.text_input_background }}>
-                                <RNDateTimePicker onChange={onDeadlineChange} value={deadline} display={"spinner"} themeVariant={isDark ? "dark" : "light"} style={{ height: 150 }} />
+                            <View style={{ height: 50, width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1, backgroundColor: colors.text_input_background, justifyContent: "center", paddingLeft: 15, flexDirection: "row" }}>
+                                <View style={{ flex: 1, justifyContent: "center" }}>
+                                    <Text onPress={showCalendar} style={{ fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 16 }} >{format(deadline, 'MMMM dd, yyyy')}</Text>
+                                </View>
+
+                                <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 15, justifyContent: "center" }}>
+                                    <Ionicons name="calendar-outline" size={24} color={colors.goal_primary_font} onPress={showCalendar} />
+                                </View>
                             </View>
                         </View>
 
