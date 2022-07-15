@@ -82,7 +82,7 @@ export const Tomorrow = () => {
             // get all current planned tasks
             plannedDay?.plannedTasks.forEach(plannedTask => {
                 taskViews.push(
-                    <View key={plannedTask.routine.id + "_locked"} style={{ paddingBottom: 5 }}>
+                    <View key={plannedTask.routine.id + "_locked"} style={{ paddingBottom: 5, alignItems: "center" }}>
                         <PlanningTask plannedTask={plannedTask} locked={locked} isChecked={updatedPlannedTasks.get(plannedTask.routine.id ? plannedTask.routine.id : plannedTask.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                     </View>);
             });
@@ -100,7 +100,7 @@ export const Tomorrow = () => {
 
                     if (display) {
                         taskViews.push(
-                            <View key={task.id} style={{ paddingBottom: 5 }}>
+                            <View key={task.id} style={{ paddingBottom: 5, alignItems: "center" }}>
                                 <PlanningTask task={task} locked={locked} isChecked={updatedPlannedTasks.get(task.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                             </View>
                         );
@@ -113,6 +113,7 @@ export const Tomorrow = () => {
     );
 
     const onChecked = (taskId: string, checked: boolean) => {
+        console.log(taskId + " -> " + checked)
         let newUpdatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map(updatedPlannedTasks);
         let newUpdatedPlannedTask = newUpdatedPlannedTasks.get(taskId);
 
@@ -162,7 +163,7 @@ export const Tomorrow = () => {
                 }
             }
         });
-        
+
         tasks.forEach(task => {
             const updatedPlannedTask = updatedPlannedTasks.get(task.id!);
             if (updatedPlannedTask) {
@@ -251,8 +252,10 @@ export const Tomorrow = () => {
                 {
                     taskViews.length > 0
                         ?
-                        <ScrollView style={{ backgroundColor: colors.scroll_background, paddingTop: 5, height: "97%" }}>
-                            {taskViews}
+                        <ScrollView style={{ backgroundColor: colors.background, paddingTop: 5, height: "97%", width: "100%" }}>
+                            <View style={{ alignItems: "center" }}>
+                                {taskViews}
+                            </View>
                         </ScrollView>
                         :
                         <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>

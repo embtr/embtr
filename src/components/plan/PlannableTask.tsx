@@ -5,8 +5,10 @@ import { View, Text, ColorValue, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { Picker } from '@react-native-picker/picker';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { CARD_SHADOW } from 'src/util/constants';
+import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 interface Props {
     plannedTask?: PlannedTaskModel,
@@ -14,18 +16,10 @@ interface Props {
     locked: boolean,
     onPress?: Function,
     onUpdate?: Function,
-    backgroundColor?: ColorValue
+    isEnabled: boolean
 }
 
-const shadow = {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: .5,
-    elevation: 5
-}
-
-export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, backgroundColor }: Props) => {
+export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, isEnabled }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
@@ -35,32 +29,6 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, ba
     const [AMPM, setAMPM] = React.useState(plannedTask?.startMinute && plannedTask.startMinute - 720 >= 0 ? "PM" : "AM");
     const [durationMinutes, setDurationMinutes] = React.useState(plannedTask?.duration ? plannedTask.duration / 5 : 0);
 
-    let hourPickerItems: JSX.Element[] = [];
-    for (let i = 1; i <= 12; i++) {
-        hourPickerItems.push(<Picker.Item key={"hour_" + i} color={colors.text} label={"" + i} value={i} />);
-    }
-
-    let minutePickerItems: JSX.Element[] = [];
-    for (let i = 0; i < 60; i += 5) {
-        minutePickerItems.push(<Picker.Item key={"minute_" + i} color={colors.text} label={(i < 10 ? "0" : "") + i} value={i} />);
-    }
-
-    let durationHoursPickerItems: JSX.Element[] = [];
-    for (let i = 0; i <= 23; i++) {
-        durationHoursPickerItems.push(<Picker.Item key={"durationhour_" + i} color={colors.text} label={"" + i} value={i} />);
-    }
-
-    let durationMinutesPickerItems: JSX.Element[] = [];
-    for (let i = 15; i <= 180; i += 15) {
-        durationMinutesPickerItems.push(<Picker.Item key={"durationminute_" + i} color={colors.text} label={"" + i} value={i} />);
-    }
-
-    let amPmPickerItems: JSX.Element[] = [
-        <Picker.Item key={"am"} color={colors.text} label="AM" value="AM" />,
-        <Picker.Item key={"pm"} color={colors.text} label="PM" value="PM" />
-    ];
-
-
     const navigateToDetails = () => {
         if (plannedTask) {
             navigation.navigate('TaskDetails', { id: plannedTask.routine.id! })
@@ -69,126 +37,40 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, ba
         }
     };
 
-    const updateHour = (hour: number) => {
-        setHour(hour);
-        if (onUpdate) {
-            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, AMPM, durationMinutes);
-        }
-    };
-
-    const updateMinute = (minute: number) => {
-        setMinute(minute);
-        if (onUpdate) {
-            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, AMPM, durationMinutes);
-        }
-    };
-
-    const updateAMPM = (amPm: string) => {
-        setAMPM(amPm);
-        if (onUpdate) {
-            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, amPm, durationMinutes);
-        }
-    };
-
-    const updateDuration = (duration: number) => {
-        setDurationMinutes(duration);
-        if (onUpdate) {
-            onUpdate(task?.id ? task.id : plannedTask?.routine.id ? plannedTask?.routine.id : plannedTask?.id, hour, minute, AMPM, duration);
-        }
-    };
-
     return (
-        <View key={task?.id ? task.id : plannedTask?.id} >
-            <View style={[{ height: 90, backgroundColor: backgroundColor || colors.card_background_active, borderRadius: 7.5, justifyContent: "center" }, shadow]}>
-                <View style={{ flexDirection: "row", height: "auto", alignItems: "center", paddingTop: 5 }}>
+        <View style={{ width: "97%" }}>
+            <TouchableOpacity onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
+                <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, flexDirection: "row", overflow: "hidden" }, CARD_SHADOW]}>
+                    <View style={{ width: "2%", height: "100%", backgroundColor: isEnabled ? "green" : colors.button_background }} />
 
-                    {locked ?
-                        <View style={{ paddingLeft: 10, flex: 3, height: "100%", justifyContent: "center" }}>
-                            <Text style={{ color: colors.text, fontSize: 16 }}>
-                                {plannedTask ? plannedTask.routine.name : task!.name}
+                    <View style={{ width: "98%" }}>
+                        <View style={{ paddingLeft: 10 }}>
+                            <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>
+                                {task?.name}
                             </Text>
+
+                            <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_400Regular", opacity: .75, fontSize: 10, paddingTop: 3 }}>{task?.description}</Text>
                         </View>
-                        :
-                        <TouchableOpacity style={{ paddingLeft: 10, flex: 3, height: "100%", justifyContent: "center" }} onPress={() => { onPress ? onPress() : navigateToDetails() }}>
-                            <View>
-                                <Text style={{ color: colors.text, fontSize: 16 }}>
-                                    {plannedTask ? plannedTask.routine.name : task!.name}
-                                </Text>
-                            </View>
-                        </TouchableOpacity>
-                    }
 
-
-                    <View style={{ flexDirection: "column", alignContent: "center", alignItems: "center" }}>
-                        <View>
-                            <Text style={{ color: colors.secondary_text, fontSize: 10 }}>Start Time</Text>
+                        <View style={{ paddingTop: 8, marginLeft: 10, marginRight: 10 }}>
+                            <HorizontalLine />
                         </View>
-                        <View style={{ flexDirection: "row", alignContent: "center", alignItems: "center" }}>
-                            <View style={{ alignContent: "center", alignItems: "center" }}>
-                                <View>
-                                    <Picker
-                                        itemStyle={{ height: 80 }}
-                                        style={{ width: 85, color: colors.text }}
-                                        selectedValue={hour}
-                                        onValueChange={updateHour}>
-                                        {locked ? <Picker.Item key={"hour_" + hour} color={colors.text} label={"" + hour} value={hour} /> : hourPickerItems}
-                                    </Picker>
-                                </View>
+
+                        <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+
+                            <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
+                                <Ionicons name={'stats-chart-outline'} size={14} color={colors.goal_secondary_font} />
+                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>Goal Name</Text>
                             </View>
 
-                            <View style={{ alignContent: "center", alignItems: "center" }}>
-                                <View>
-                                    <Picker
-                                        itemStyle={{ height: 80 }}
-                                        style={{ width: 85, color: colors.text }}
-                                        selectedValue={minute}
-                                        onValueChange={updateMinute}>
-                                        {locked ? <Picker.Item key={"minute" + minute} color={colors.text} label={"" + minute} value={minute} /> : minutePickerItems}
-                                    </Picker>
-                                </View>
-                            </View>
-
-                            <View style={{ alignContent: "center", alignItems: "center" }}>
-                                <View>
-                                    <Picker
-                                        itemStyle={{ height: 80 }}
-                                        style={{ width: 95, color: colors.text }}
-                                        selectedValue={AMPM}
-                                        onValueChange={updateAMPM}>
-                                        {locked ? <Picker.Item key={"ampm_" + AMPM} color={colors.text} label={"" + AMPM} value={AMPM} /> : amPmPickerItems}
-                                    </Picker>
-                                </View>
+                            <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>
+                                <MaterialCommunityIcons name="pillar" size={14} color={colors.goal_secondary_font} />
+                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>Pillar Name</Text>
                             </View>
                         </View>
                     </View>
-
-                    {locked ?
-                        <View style={{ flex: .5, height: "100%" }} />
-                        :
-                        <TouchableOpacity style={{ flex: .5, height: "100%" }} onPress={() => { onPress ? onPress() : navigateToDetails() }} />
-                    }
-
-
-                    <View style={{ flexDirection: "column", alignContent: "center", alignItems: "center" }}>
-                        <View>
-                            <Text style={{ color: colors.secondary_text, fontSize: 10 }}>Minutes</Text>
-                        </View>
-                        <Picker
-                            itemStyle={{ height: 80 }}
-                            style={{ width: 95, color: colors.text }}
-                            selectedValue={durationMinutes}
-                            onValueChange={updateDuration}>
-                            {locked ? <Picker.Item key={"duration_" + durationMinutes} color={colors.text} label={"" + durationMinutes} value={durationMinutes} /> : durationMinutesPickerItems}
-                        </Picker>
-                    </View>
-
-                    {locked ?
-                        <View style={{ flex: .5, height: "100%" }} />
-                        :
-                        <TouchableOpacity style={{ flex: .5, height: "100%" }} onPress={() => { onPress ? onPress() : navigateToDetails() }} />
-                    }
                 </View>
-            </View>
+            </TouchableOpacity>
         </View>
     );
 };
