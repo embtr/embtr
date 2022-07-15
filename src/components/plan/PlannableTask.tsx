@@ -39,7 +39,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
 
     return (
         <View style={{ width: "97%" }}>
-            <TouchableOpacity onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
+            <TouchableOpacity disabled={locked} onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
                 <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, flexDirection: "row", overflow: "hidden" }, CARD_SHADOW]}>
                     <View style={{ width: "2%", height: "100%", backgroundColor: isEnabled ? "green" : colors.button_background }} />
 
@@ -49,7 +49,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
                                 {plannedTask?.routine?.name ? plannedTask.routine.name : task?.name ? task.name : ""}
                             </Text>
 
-                            <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_400Regular", opacity: .75, fontSize: 10, paddingTop: 3 }}>{task?.description}</Text>
+                            <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_400Regular", opacity: .75, fontSize: 10, paddingTop: 3 }}>{plannedTask?.routine?.description ? plannedTask?.routine?.description : task?.description}</Text>
                         </View>
 
                         <View style={{ paddingTop: 8, marginLeft: 10, marginRight: 10 }}>

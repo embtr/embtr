@@ -99,9 +99,10 @@ export const Tomorrow = () => {
                     });
 
                     if (display) {
+                        const isChecked = updatedPlannedTasks.get(task.id!)?.checked
                         taskViews.push(
                             <View key={task.id} style={{ paddingBottom: 5, alignItems: "center" }}>
-                                <PlanningTask task={task} locked={locked} isChecked={updatedPlannedTasks.get(task.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
+                                <PlanningTask task={task} locked={locked} isChecked={isChecked === true} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                             </View>
                         );
                     }
