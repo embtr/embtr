@@ -117,8 +117,9 @@ export const CreateDailyTask = () => {
                         <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Goal</Text>
                         <View style={{ width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1 }}>
                             <DropDownPicker
-                                dropDownContainerStyle={{ borderWidth: 0 }}
+                                dropDownContainerStyle={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
                                 style={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
+                                textStyle={{fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 15}}
                                 open={menuOpen}
                                 value={selectedGoal}
                                 items={goalOptions}
