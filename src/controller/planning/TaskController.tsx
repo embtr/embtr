@@ -20,7 +20,6 @@ export const getTomorrowDayOfWeek = () => {
 };
 
 export const createTaskModel = (name: string, description: string, goalId: string) => {
-    alert (name + " " + description + " " + goalId)
     const task: TaskModel = {
         added: Timestamp.now(),
         name: name,

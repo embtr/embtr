@@ -134,6 +134,7 @@ export const CreateGoal = () => {
                                 <DropDownPicker
                                     dropDownContainerStyle={{ borderWidth: 0 }}
                                     style={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
+                                    textStyle={{fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 15}}
                                     open={menuOpen}
                                     value={selectedPillar}
                                     items={pillarOptions}
@@ -162,7 +163,7 @@ export const CreateGoal = () => {
                             </View>
                         </View>
 
-                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, paddingBottom: 15 }}>
+                        <View style={{ zIndex: -1, flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, paddingBottom: 15 }}>
                             <View style={{ width: "95%" }}>
                                 <EmbtrButton buttonText={'Create'} callback={createGoal} />
                             </View>
