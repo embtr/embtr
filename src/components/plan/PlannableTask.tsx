@@ -46,7 +46,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
                     <View style={{ width: "98%" }}>
                         <View style={{ paddingLeft: 10 }}>
                             <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>
-                                {task?.name}
+                                {plannedTask?.routine?.name ? plannedTask.routine.name : task?.name ? task.name : ""}
                             </Text>
 
                             <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_400Regular", opacity: .75, fontSize: 10, paddingTop: 3 }}>{task?.description}</Text>
