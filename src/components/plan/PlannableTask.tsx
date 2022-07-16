@@ -39,7 +39,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
 
     return (
         <View style={{ width: "97%" }}>
-            <TouchableOpacity disabled={locked} onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
+            <TouchableOpacity disabled={locked} onLongPress={() => {alert("update me")}} onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
                 <View style={[{ backgroundColor: isEnabled ? colors.button_background : colors.tomorrow_unselected, borderRadius: 15, flexDirection: "row", overflow: "hidden" }, CARD_SHADOW]}>
                     <View style={{ width: "2%", height: "100%", backgroundColor: isEnabled ? colors.tomorrow_selected_indicator : colors.tomorrow_unselected }} />
 
@@ -59,13 +59,13 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
                         <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
 
                             <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
-                                <Ionicons name={'stats-chart-outline'} size={14} color={colors.goal_secondary_font} />
-                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>Goal Name</Text>
+                                <Ionicons name={'time-outline'} size={14} color={colors.goal_secondary_font} />
+                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>1:45 PM</Text>
                             </View>
 
                             <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>
-                                <MaterialCommunityIcons name="pillar" size={14} color={colors.goal_secondary_font} />
-                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>Pillar Name</Text>
+                            <Ionicons name={'timer-outline'} size={14} color={colors.goal_secondary_font} />
+                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>1 hour</Text>
                             </View>
                         </View>
                     </View>

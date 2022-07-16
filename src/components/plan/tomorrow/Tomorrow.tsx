@@ -8,6 +8,7 @@ import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, { createPlannedTask, createPlannedTaskByPlannedTask, getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { useFonts, Poppins_500Medium, Poppins_400Regular } from '@expo-google-fonts/poppins';
 
 interface UpdatedPlannedTask {
     checked: boolean,
@@ -231,23 +232,25 @@ export const Tomorrow = () => {
         }
     };
 
+    let [fontsLoaded] = useFonts({
+        Poppins_500Medium, Poppins_400Regular
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     return (
         <View style={{ flex: 1, flexDirection: "column" }}>
-            <View style={{ flex: 1 }}>
-                <Text style={{ color: colors.text, textAlign: "center", fontSize: 17 }}>
+            <View style={{ flex: 1, paddingLeft: 8 }}>
+                <Text style={{ color: colors.text, fontFamily: "Poppins_500Medium", fontSize: 14, paddingTop: 25 }}>
                     Plan your
-                    <Text style={{ color: colors.primary_border }}> {tomorrowCapitalized}</Text>
+                    <Text style={{ color: colors.tomorrow_selected_indicator }}> {tomorrowCapitalized}</Text>
                 </Text>
 
                 <View>
-                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 10 }}>
+                    <Text style={{ color: colors.text, fontSize: 10, fontFamily: "Poppins_400Regular" }}>
                         Starts in <Countdown />
-                    </Text>
-                </View>
-
-                <View>
-                    <Text style={{ color: colors.text, textAlign: "center", fontSize: 11 }}>
-                        <Text style={{ color: locked ? "green" : "red" }} >{locked ? "locked 🔒" : "unlocked 🔓"} </Text>
                     </Text>
                 </View>
             </View>
@@ -271,7 +274,9 @@ export const Tomorrow = () => {
             </View>
 
             <View style={{ flex: 1.5, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
-                <EmbtrButton buttonText={locked ? 'Edit Plans 🔓' : 'Save Plans 🔒'} callback={() => { toggleLock() }} />
+                <View style={{ width: "80%" }}>
+                    <EmbtrButton buttonText={locked ? 'Edit Plans 🔓' : 'Save Plans 🔒'} callback={() => { toggleLock() }} />
+                </View>
             </View>
         </View>
     );
