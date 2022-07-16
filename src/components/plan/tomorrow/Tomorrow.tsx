@@ -150,7 +150,7 @@ export const Tomorrow = () => {
                             return;
                         }
                     });
-                    
+
                     let display = true;
                     plannedDay?.plannedTasks.forEach(plannedTask => {
                         if (plannedTask.routine.id === task.id) {
@@ -183,8 +183,8 @@ export const Tomorrow = () => {
         } else {
             newUpdatedPlannedTask = {
                 checked: checked,
-                startTime: 5,
-                duration: 4
+                startTime: 8 * 60,
+                duration: 30
             }
         }
 
@@ -215,11 +215,14 @@ export const Tomorrow = () => {
                 return;
             }
 
+            console.log(plannedTask)
+
             const updatedPlannedTask = updatedPlannedTasks.get(plannedTask.id!);
             if (updatedPlannedTask) {
                 const taskIsEnabled = updatedPlannedTask?.checked !== false;
                 if (taskIsEnabled) {
                     const newPlannedTask: PlannedTaskModel = createPlannedTaskByPlannedTask(plannedTask, updatedPlannedTask.startTime, updatedPlannedTask.duration);
+                    console.log(newPlannedTask)
                     plannedtasks.push(newPlannedTask);
                 }
             }
@@ -331,7 +334,7 @@ export const Tomorrow = () => {
 
             <View style={{ flex: 1.5, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
                 <View style={{ width: "80%" }}>
-                    <EmbtrButton buttonText={locked ? 'Select Tasks' : 'Confirm Tasks'} callback={() => { toggleLock() }} />
+                    <EmbtrButton buttonText={locked ? 'Change Tasks' : 'Confirm Tasks'} callback={() => { toggleLock() }} />
                 </View>
             </View>
         </View>

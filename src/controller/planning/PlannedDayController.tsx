@@ -22,6 +22,29 @@ export interface PlannedDayMetadata {
     locked: boolean
 }
 
+export const getStartTimePretty = (plannedTask: PlannedTaskModel) => {
+    const startTime = plannedTask.startMinute;
+    if (startTime === undefined) {
+        return "0:00 AM"
+    }
+
+    let hours = Math.floor(startTime / 60);
+    if (hours == 0) {
+        hours = 1;
+    }
+
+    let minutes = "" + startTime % 60;
+    if (minutes.length == 1) {
+        minutes = "0" + minutes;
+    }
+
+    const AmPm = startTime >= (12 * 60) ? "PM" : "AM";
+
+    return hours + ":" + minutes + " " + AmPm;
+
+
+}
+
 export const plannedTaskIsComplete = (plannedTask: PlannedTaskModel): boolean => {
     return plannedTask.status === "COMPLETE";
 };
