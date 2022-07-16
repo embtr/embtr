@@ -6,3 +6,9 @@ export interface PillarModel {
     active: boolean,
     added: Timestamp
 }
+
+export const FAKE_PILLAR: PillarModel = {
+    added: Timestamp.now(),
+    name: '',
+    active: false
+}

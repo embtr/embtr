@@ -8,7 +8,9 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { CARD_SHADOW } from 'src/util/constants';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { PillarModel } from 'src/model/PillarModel';
+import { GoalModel } from 'src/controller/planning/GoalController';
 
 interface Props {
     plannedTask?: PlannedTaskModel,
@@ -16,10 +18,12 @@ interface Props {
     locked: boolean,
     onPress?: Function,
     onUpdate?: Function,
-    isEnabled: boolean
+    isEnabled: boolean,
+    goal: GoalModel,
+    pillar: PillarModel
 }
 
-export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, isEnabled }: Props) => {
+export const PlannableTask = ({ plannedTask, task, locked, onPress, isEnabled, goal, pillar }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
@@ -39,7 +43,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
 
     return (
         <View style={{ width: "97%" }}>
-            <TouchableOpacity disabled={locked} onLongPress={() => {alert("update me")}} onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
+            <TouchableOpacity disabled={locked} onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
                 <View style={[{ backgroundColor: isEnabled ? colors.button_background : colors.tomorrow_unselected, borderRadius: 15, flexDirection: "row", overflow: "hidden" }, CARD_SHADOW]}>
                     <View style={{ width: "2%", height: "100%", backgroundColor: isEnabled ? colors.tomorrow_selected_indicator : colors.tomorrow_unselected }} />
 
@@ -56,18 +60,31 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
                             <HorizontalLine />
                         </View>
 
-                        <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+                        {locked ?
+                            <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+                                <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
+                                    <Ionicons name={'time-outline'} size={14} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{plannedTask?.startMinute} PM</Text>
+                                </View>
 
-                            <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
-                                <Ionicons name={'time-outline'} size={14} color={colors.goal_secondary_font} />
-                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>1:45 PM</Text>
+                                <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>
+                                    <Ionicons name={'timer-outline'} size={14} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{plannedTask?.duration} minutes</Text>
+                                </View>
                             </View>
+                            :
+                            <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
+                                <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
+                                    <Ionicons name={'stats-chart-outline'} size={14} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{goal.name}</Text>
+                                </View>
 
-                            <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>
-                            <Ionicons name={'timer-outline'} size={14} color={colors.goal_secondary_font} />
-                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>1 hour</Text>
+                                <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>
+                                    <MaterialCommunityIcons name="pillar" size={14} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{pillar.name}</Text>
+                                </View>
                             </View>
-                        </View>
+                        }
                     </View>
                 </View>
             </TouchableOpacity>

@@ -28,7 +28,7 @@ export const Task = ({ task, pillars }: Props) => {
 
     const [goal, setGoal] = React.useState<GoalModel | undefined>(undefined);
 
-    let pillarName = "unknown ???";
+    let pillarName = "unknown 😅"
     pillars.forEach(pillar => {
         if (goal?.pillarId === pillar.id) {
             pillarName = pillar.name;
@@ -61,7 +61,6 @@ export const Task = ({ task, pillars }: Props) => {
                     </View>
 
                     <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
-
                         <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
                             <Ionicons name={'stats-chart-outline'} size={14} color={colors.goal_secondary_font} />
                             <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{goal?.name}</Text>

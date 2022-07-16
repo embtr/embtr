@@ -9,8 +9,6 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import { PillarModel } from 'src/model/PillarModel';
 
 export const Goals = () => {
-
-
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 

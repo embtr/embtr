@@ -9,6 +9,9 @@ import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, { createPlannedTask, createPlannedTaskByPlannedTask, getTomorrowKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { useFonts, Poppins_500Medium, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import PillarController from 'src/controller/pillar/PillarController';
+import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
+import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 
 interface UpdatedPlannedTask {
     checked: boolean,
@@ -29,6 +32,24 @@ export const Tomorrow = () => {
     const tomorrow = getTomorrowDayOfWeek();
     const tomorrowCapitalized = tomorrow.charAt(0).toUpperCase() + tomorrow.slice(1);
 
+    const [goals, setGoals] = React.useState<GoalModel[]>([]);
+    const [pillars, setPillars] = React.useState<PillarModel[]>([]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const uid = getAuth().currentUser?.uid;
+            if (uid) {
+                PillarController.getPillars(uid, setPillars);
+            }
+        }, [])
+    );
+    
     useFocusEffect(
         React.useCallback(() => {
             TaskController.getTasks(getAuth().currentUser!.uid, (allTasks: TaskModel[]) => {
@@ -86,15 +107,50 @@ export const Tomorrow = () => {
 
             // get all current planned tasks
             plannedDay?.plannedTasks.forEach(plannedTask => {
+
+                let taskGoal: GoalModel = FAKE_GOAL;
+                let taskPillar: PillarModel = FAKE_PILLAR;
+
+                goals.forEach(goal => {
+                    if (goal.id === plannedTask.routine.goalId) {
+                        taskGoal = goal;
+                        return;
+                    }
+                });
+    
+                pillars.forEach(pillar => {
+                    if (pillar.id === taskGoal.pillarId) {
+                        taskPillar = pillar;
+                        return;
+                    }
+                });
+
                 taskViews.push(
                     <View key={plannedTask.routine.id + "_locked"} style={{ paddingBottom: 5, alignItems: "center" }}>
-                        <PlanningTask plannedTask={plannedTask} locked={locked === true} isChecked={updatedPlannedTasks.get(plannedTask.routine.id ? plannedTask.routine.id : plannedTask.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
+                        <PlanningTask plannedTask={plannedTask} locked={locked === true} isChecked={updatedPlannedTasks.get(plannedTask.routine.id ? plannedTask.routine.id : plannedTask.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} goal={taskGoal} pillar={taskPillar} />
                     </View>);
             });
 
             if (locked === false) {
                 // get the rest of the tasks
                 tasks.forEach(task => {
+                    let taskGoal: GoalModel = FAKE_GOAL;
+                    let taskPillar: PillarModel = FAKE_PILLAR;
+    
+                    goals.forEach(goal => {
+                        if (goal.id === task.goalId) {
+                            taskGoal = goal;
+                            return;
+                        }
+                    });
+        
+                    pillars.forEach(pillar => {
+                        if (pillar.id === taskGoal.pillarId) {
+                            taskPillar = pillar;
+                            return;
+                        }
+                    });
+                    
                     let display = true;
                     plannedDay?.plannedTasks.forEach(plannedTask => {
                         if (plannedTask.routine.id === task.id) {
@@ -107,7 +163,7 @@ export const Tomorrow = () => {
                         const isChecked = updatedPlannedTasks.get(task.id!)?.checked
                         taskViews.push(
                             <View key={task.id} style={{ paddingBottom: 5, alignItems: "center" }}>
-                                <PlanningTask task={task} locked={false} isChecked={isChecked === true} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
+                                <PlanningTask task={task} locked={false} isChecked={isChecked === true} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} goal={taskGoal} pillar={taskPillar} />
                             </View>
                         );
                     }
@@ -275,7 +331,7 @@ export const Tomorrow = () => {
 
             <View style={{ flex: 1.5, alignContent: "center", justifyContent: "center", alignItems: "center" }}>
                 <View style={{ width: "80%" }}>
-                    <EmbtrButton buttonText={locked ? 'Edit Plans 🔓' : 'Save Plans 🔒'} callback={() => { toggleLock() }} />
+                    <EmbtrButton buttonText={locked ? 'Select Tasks' : 'Confirm Tasks'} callback={() => { toggleLock() }} />
                 </View>
             </View>
         </View>
