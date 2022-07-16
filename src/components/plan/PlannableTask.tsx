@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Text, ColorValue, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
@@ -40,8 +40,8 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
     return (
         <View style={{ width: "97%" }}>
             <TouchableOpacity disabled={locked} onPress={() => { if (onPress) { onPress(task?.id, !isEnabled) } }} >
-                <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, flexDirection: "row", overflow: "hidden" }, CARD_SHADOW]}>
-                    <View style={{ width: "2%", height: "100%", backgroundColor: isEnabled ? "green" : colors.button_background }} />
+                <View style={[{ backgroundColor: isEnabled ? colors.button_background : colors.tomorrow_unselected, borderRadius: 15, flexDirection: "row", overflow: "hidden" }, CARD_SHADOW]}>
+                    <View style={{ width: "2%", height: "100%", backgroundColor: isEnabled ? colors.tomorrow_selected_indicator : colors.tomorrow_unselected }} />
 
                     <View style={{ width: "98%" }}>
                         <View style={{ paddingLeft: 10 }}>

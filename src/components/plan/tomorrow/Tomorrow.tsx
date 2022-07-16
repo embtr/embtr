@@ -22,7 +22,7 @@ export const Tomorrow = () => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
 
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
-    const [locked, setLocked] = React.useState<boolean>(false);
+    const [locked, setLocked] = React.useState<Boolean | undefined>(undefined);
     const [updatedPlannedTasks, setUpdatedPlannedTasks] = React.useState(new Map<string, UpdatedPlannedTask>());
 
     const tomorrow = getTomorrowDayOfWeek();
@@ -67,7 +67,11 @@ export const Tomorrow = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            if (plannedDay?.metadata?.locked) {
+            if (!plannedDay) {
+                return;
+            }
+
+            if (plannedDay.metadata?.locked) {
                 setLocked(plannedDay.metadata.locked);
             } else {
                 setLocked(false);
@@ -83,11 +87,11 @@ export const Tomorrow = () => {
             plannedDay?.plannedTasks.forEach(plannedTask => {
                 taskViews.push(
                     <View key={plannedTask.routine.id + "_locked"} style={{ paddingBottom: 5, alignItems: "center" }}>
-                        <PlanningTask plannedTask={plannedTask} locked={locked} isChecked={updatedPlannedTasks.get(plannedTask.routine.id ? plannedTask.routine.id : plannedTask.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
+                        <PlanningTask plannedTask={plannedTask} locked={locked === true} isChecked={updatedPlannedTasks.get(plannedTask.routine.id ? plannedTask.routine.id : plannedTask.id!)?.checked !== false} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                     </View>);
             });
 
-            if (!locked) {
+            if (locked === false) {
                 // get the rest of the tasks
                 tasks.forEach(task => {
                     let display = true;
@@ -102,7 +106,7 @@ export const Tomorrow = () => {
                         const isChecked = updatedPlannedTasks.get(task.id!)?.checked
                         taskViews.push(
                             <View key={task.id} style={{ paddingBottom: 5, alignItems: "center" }}>
-                                <PlanningTask task={task} locked={locked} isChecked={isChecked === true} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
+                                <PlanningTask task={task} locked={false} isChecked={isChecked === true} onCheckboxToggled={onChecked} onUpdate={onPlannedTaskUpdate} />
                             </View>
                         );
                     }
@@ -114,7 +118,6 @@ export const Tomorrow = () => {
     );
 
     const onChecked = (taskId: string, checked: boolean) => {
-        console.log(taskId + " -> " + checked)
         let newUpdatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map(updatedPlannedTasks);
         let newUpdatedPlannedTask = newUpdatedPlannedTasks.get(taskId);
 

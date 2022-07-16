@@ -62,7 +62,11 @@ export const lightColors = {
 
   goal_primary_font: "#292929",
   goal_secondary_font: "#1B1F31",
-  goal_progress_bar: "#DFDFDF"
+  goal_progress_bar: "#DFDFDF",
+
+  tomorrow_selected_indicator: "#FF5E7C",
+  tomorrow_unselected: "#8C909E",
+
 };
 
 // Dark theme colors
@@ -128,6 +132,8 @@ export const darkColors = {
 
   goal_primary_font: "#FFFFFF",
   goal_secondary_font: "#EEEEEE",
-  goal_progress_bar: "#DFDFDF"
+  goal_progress_bar: "#DFDFDF",
 
+  tomorrow_selected_indicator: "#F14E6B",
+  tomorrow_unselected: "#8C909E",
 };
