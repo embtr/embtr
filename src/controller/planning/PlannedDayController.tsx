@@ -33,6 +33,10 @@ export const getStartTimePretty = (plannedTask: PlannedTaskModel) => {
         hours = 1;
     }
 
+    if (hours > 12) {
+        hours = hours - 12;
+    }
+
     let minutes = "" + startTime % 60;
     if (minutes.length == 1) {
         minutes = "0" + minutes;

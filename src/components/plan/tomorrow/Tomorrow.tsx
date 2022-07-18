@@ -105,6 +105,12 @@ export const Tomorrow = () => {
         React.useCallback(() => {
             let taskViews: JSX.Element[] = [];
 
+            let plannedTasks = plannedDay?.plannedTasks;
+            
+            if (plannedTasks) {
+                plannedTasks.sort((a, b) => (a.startMinute! > b.startMinute!) ? 1 : -1);                
+            }
+
             // get all current planned tasks
             plannedDay?.plannedTasks.forEach(plannedTask => {
 
@@ -192,15 +198,16 @@ export const Tomorrow = () => {
         setUpdatedPlannedTasks(newUpdatedPlannedTasks);
     };
 
-    const onPlannedTaskUpdate = (taskId: string, hour: number, minute: number, ampm: string, duration: number) => {
+    const onPlannedTaskUpdate = (taskId: string, startTime: number, duration: number) => {
         let newUpdatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map(updatedPlannedTasks);
         let newUpdatedPlannedTask = newUpdatedPlannedTasks.get(taskId);
 
         if (newUpdatedPlannedTask) {
-            newUpdatedPlannedTask.startTime = hour * 60 + minute + (ampm === "AM" ? 0 : 720);
+            newUpdatedPlannedTask.startTime = startTime;
             newUpdatedPlannedTask.duration = duration;
             newUpdatedPlannedTasks.set(taskId, newUpdatedPlannedTask);
             setUpdatedPlannedTasks(newUpdatedPlannedTasks);
+            updatePlannedDayAsLocked()
         }
     }
 
@@ -214,8 +221,6 @@ export const Tomorrow = () => {
             if (plannedTask.routine.id) {
                 return;
             }
-
-            console.log(plannedTask)
 
             const updatedPlannedTask = updatedPlannedTasks.get(plannedTask.id!);
             if (updatedPlannedTask) {
