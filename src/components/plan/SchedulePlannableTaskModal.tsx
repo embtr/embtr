@@ -1,10 +1,11 @@
 import { Picker } from '@react-native-picker/picker';
-import { pt } from 'date-fns/locale';
 import * as React from 'react';
 import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
+
 
 interface Props {
     plannedTask: PlannedTaskModel,
@@ -26,7 +27,7 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
     }
 
     let minutePickerItems: JSX.Element[] = [];
-    for (let i = 0; i <= 59; i+= 15) {
+    for (let i = 0; i <= 59; i += 15) {
         let val = "" + i;
         if (i < 10) {
             val = "0" + i;
@@ -43,20 +44,30 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
         durationPickerItems.push(<Picker.Item key={"duration_" + i} color={colors.text} label={"" + i} value={i} />);
     }
 
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+        Poppins_400Regular,
+        Poppins_500Medium
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     return (
         <View>
             <Modal visible={visible} transparent={true} >
-                <View style={{ position: "absolute", zIndex: 1, height: "100%", width: "100%", alignItems: "center", justifyContent: "flex-end", backgroundColor: "rgba(000,000,000,.2)" }}>
+                <View style={{ position: "absolute", zIndex: 1, height: "100%", width: "100%", alignItems: "center", justifyContent: "flex-end", backgroundColor: "rgba(000,000,000,.6)" }}>
                     <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
                     <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                         <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
                         <View>
-                            <View style={{ width: 300, backgroundColor: "#FFFFFF", borderRadius: 12, justifyContent: "space-around" }}>
-                                <Text style={{ color: colors.text, fontSize: 16, paddingTop: 10, paddingLeft: 10 }}>
+                            <View style={{ width: 300, backgroundColor: colors.modal_background, borderRadius: 12, justifyContent: "space-around" }}>
+                                <Text style={{ color: colors.text, fontSize: 16, paddingTop: 10, paddingLeft: 10, fontFamily: "Poppins_500Medium" }}>
                                     {plannedTask.routine.name}
                                 </Text>
 
-                                <Text style={{ color: colors.text, fontSize: 10, paddingTop: 5, paddingLeft: 10, opacity: .75 }}>
+                                <Text style={{ color: colors.text, fontSize: 10, paddingTop: 5, paddingLeft: 10, opacity: .75, fontFamily: "Poppins_400Regular" }}>
                                     {plannedTask.routine.description}
                                 </Text>
 
@@ -67,7 +78,7 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                 </View>
 
                                 <View style={{ alignItems: "center" }}>
-                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10 }}>
+                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: "Poppins_400Regular" }}>
                                         Start Time
                                     </Text>
                                     <View style={{ flexDirection: "row" }}>
@@ -93,7 +104,7 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                 </View>
 
                                 <View style={{ alignItems: "center" }}>
-                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10 }}>
+                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: "Poppins_400Regular" }}>
                                         Duration (minutes)
                                     </Text>
                                     <View style={{ flexDirection: "row" }}>
@@ -108,12 +119,15 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
 
                                 <HorizontalLine />
 
-                                <Button title='Confirm' onPress={() => { confirm((hour * 60) + (amPm === "pm" ? 720 : 0) + minute, duration) }} />
+
+                                <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
+                                    <Button title='Confirm' onPress={() => { confirm((hour * 60) + (amPm === "pm" ? 720 : 0) + minute, duration) }} />
+                                </View>
                             </View>
 
-                            <View style={{ height: 20 }} />
+                            <View style={{ height: 5 }} />
 
-                            <View style={{ backgroundColor: "#FFFFFF", borderRadius: 12 }}>
+                            <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
                                 <Button title='Cancel' onPress={() => { dismiss() }} />
                             </View>
 

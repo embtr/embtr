@@ -67,6 +67,8 @@ export const lightColors = {
   tomorrow_selected_indicator: "#FF5E7C",
   tomorrow_unselected: "#8C909E",
 
+  modal_background: "#FFFFFF"
+
 };
 
 // Dark theme colors
@@ -136,4 +138,6 @@ export const darkColors = {
 
   tomorrow_selected_indicator: "#F14E6B",
   tomorrow_unselected: "#8C909E",
+
+  modal_background: "#242527"
 };
