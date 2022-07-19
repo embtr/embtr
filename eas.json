@@ -5,17 +5,16 @@
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal",
-      "ios": {
-        "cache": {
-          "key": "181121"
-          }
-      }
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "cache": {
+        "key": "resetme"
+      }
+    }
   },
   "submit": {
     "production": {}
