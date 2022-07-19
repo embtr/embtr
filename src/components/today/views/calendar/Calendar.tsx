@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 
 
 export const Calendar = () => {
@@ -26,7 +27,7 @@ export const Calendar = () => {
             calendarView.push(
                 <View key={time} style={{ height: 60 }}>
                     <View style={{ flexDirection: "row" }}>
-                        <View style={{width: 80, alignContent: "flex-end", alignItems: "center"}}>
+                        <View style={{width: 80, alignContent: "flex-end", alignItems: "center", justifyContent: "center", height: CALENDAR_TIME_HEIGHT}}>
                             <Text style={{ color: colors.secondary_text, fontSize: 12, fontFamily: "Poppins_400Regular"}}>{time}</Text>
                         </View>
 

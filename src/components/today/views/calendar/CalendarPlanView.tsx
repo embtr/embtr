@@ -9,6 +9,7 @@ import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/Global
 import { createEmbtrOptions as createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import * as Haptics from 'expo-haptics';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 
 
 interface Props {
@@ -70,7 +71,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
     }
 
     return (
-        <View style={{ top: plannedTask.startMinute, position: "absolute" }} >
+        <View style={{ top: (plannedTask.startMinute! + (CALENDAR_TIME_HEIGHT / 2)), position: "absolute" }} >
             <TouchableOpacity
                 onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
