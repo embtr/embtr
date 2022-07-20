@@ -42,6 +42,7 @@ export const lightColors = {
   user_search_name: "#292929",
 
   text_input_background: "#EEEEEE",
+  text_input_background_secondary: "#F3F3F3",
   text_input_border: "#DEDEDE",
 
   timeline_card_header: "#444B66",
@@ -115,6 +116,7 @@ export const darkColors = {
   user_search_name: "#FFFFFF",
 
   text_input_background: "#121212",
+  text_input_background_secondary: "#212121",
   text_input_border: "#000000",
 
   timeline_card_header: "#FFFFFF",

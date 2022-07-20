@@ -83,13 +83,14 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                     openMenu()
                 }}
                 style={[cardShadow, {
+                    minHeight: 45,
                     height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
                     width: 225,
-                    borderRadius: 15,
+                    borderRadius: 6,
                     backgroundColor: colors.timeline_card_background
                 }]}>
                     
-                <View style={{ flexDirection: "row", width: "100%", paddingTop: 10, paddingLeft: 10 }}>
+                <View style={{ flexDirection: "row", width: "100%", paddingTop: 5, paddingLeft: 5 }}>
                     <View style={{ flex: 5 }}>
                         <Text style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 13 }}>{plannedTask.routine.name}</Text>
                         <Text style={{ color: colors.text, fontFamily: "Poppins_400Regular", fontSize: 9 }}>{plannedTask.routine.description}</Text>

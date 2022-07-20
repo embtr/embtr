@@ -16,9 +16,12 @@ interface Props {
 
 export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
-    const [hour, setHour] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute / 60) : 1);
+
+    const startHour = plannedTask?.startMinute ? Math.floor(plannedTask.startMinute / 60) : 1;
+
+    const [hour, setHour] = React.useState(startHour > 12 ? startHour - 12 : startHour);
     const [minute, setMinute] = React.useState(plannedTask?.startMinute ?  Math.floor(plannedTask.startMinute % 60) : 1)
-    const [amPm, setAmPm] = React.useState(plannedTask?.startMinute && plannedTask.startMinute > (60 * 12) ? "PM" : "AM");
+    const [amPm, setAmPm] = React.useState(startHour >= 12 ? "PM" : "AM");
     const [duration, setDuration] = React.useState(plannedTask?.duration ? plannedTask.duration : 0);
 
     let hourPickerItems: JSX.Element[] = [];

@@ -132,9 +132,10 @@ export const CreateGoal = () => {
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Pillar</Text>
                             <View style={{ width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1 }}>
                                 <DropDownPicker
-                                    dropDownContainerStyle={{ borderWidth: 0 }}
+                                    dropDownContainerStyle={{ borderWidth: 1, borderColor: colors.text_input_border }}
                                     style={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
                                     textStyle={{fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 15}}
+                                    listItemContainerStyle={{borderColor: colors.text_input_border, borderTopWidth: .5, backgroundColor: colors.text_input_background_secondary}}
                                     open={menuOpen}
                                     value={selectedPillar}
                                     items={pillarOptions}
