@@ -13,10 +13,10 @@ import { Timestamp } from 'firebase/firestore';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { getAuth } from 'firebase/auth';
+import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 
 export const CreateGoal = () => {
     const { colors } = useTheme();
@@ -49,7 +49,7 @@ export const CreateGoal = () => {
         React.useCallback(() => {
             let initialItems: any = [];
             pillars.forEach(pillar => {
-                initialItems.push({ label: pillar.name, value: pillar.id });
+                initialItems.push({ label: pillar.name, value: pillar.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
             });
 
             setPillarOptions(initialItems);
@@ -89,7 +89,7 @@ export const CreateGoal = () => {
                 onCancel={hideCalendar}
             />
 
-            <ScrollView scrollEnabled={false} contentContainerStyle={{ flexGrow: 1 }} >
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
                 <View style={{ height: "100%", width: "100%" }}>
                     <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
 
@@ -130,24 +130,7 @@ export const CreateGoal = () => {
 
                         <View style={{ paddingTop: 15, alignItems: "center" }}>
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Pillar</Text>
-                            <View style={{ width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1 }}>
-                                <DropDownPicker
-                                    dropDownContainerStyle={{ borderWidth: 1, borderColor: colors.text_input_border }}
-                                    style={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
-                                    textStyle={{fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 15}}
-                                    listItemContainerStyle={{borderColor: colors.text_input_border, borderTopWidth: .5, backgroundColor: colors.text_input_background_secondary}}
-                                    open={menuOpen}
-                                    value={selectedPillar}
-                                    items={pillarOptions}
-                                    setOpen={setMenuOption}
-                                    setValue={setSelectedPillar}
-                                    setItems={setPillarOptions}
-
-                                    multiple={false}
-                                    mode="BADGE"
-                                    badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
-                                />
-                            </View>
+                            <EmbtrDropDownSelect items={pillarOptions} onItemSelected={setSelectedPillar} />
                         </View>
 
                         <View style={{ zIndex: -1, paddingTop: 15, alignItems: "center" }}>

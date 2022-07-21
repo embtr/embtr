@@ -10,9 +10,9 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Banner } from 'src/components/common/Banner';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Screen } from 'src/components/common/Screen';
-import DropDownPicker from 'react-native-dropdown-picker';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { getAuth } from 'firebase/auth';
+import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 
 
 export const CreateDailyTask = () => {
@@ -25,7 +25,6 @@ export const CreateDailyTask = () => {
 
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     
-    const [menuOpen, setMenuOption] = React.useState(false);
     const [selectedGoal, setSelectedGoal] = React.useState('');
     const [goalOptions, setGoalOptions] = React.useState([{ label: '', value: '' }]);
 
@@ -39,7 +38,7 @@ export const CreateDailyTask = () => {
         React.useCallback(() => {
             let initialItems: any = [];
             goals.forEach(goal => {
-                initialItems.push({ label: goal.name, value: goal.id });
+                initialItems.push({ label: goal.name, value: goal.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
             });
 
             setGoalOptions(initialItems);
@@ -74,7 +73,7 @@ export const CreateDailyTask = () => {
     return (
         <Screen>
             <Banner name={"Create Task"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
-            <ScrollView scrollEnabled={false} contentContainerStyle={{ flexGrow: 1 }} >
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
 
                 <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
 
@@ -115,26 +114,10 @@ export const CreateDailyTask = () => {
 
                     <View style={{ paddingTop: 10, alignItems: "center" }}>
                         <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Goal</Text>
-                        <View style={{ width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1 }}>
-                            <DropDownPicker
-                                dropDownContainerStyle={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
-                                style={{ borderWidth: 0, backgroundColor: colors.text_input_background }}
-                                textStyle={{fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 15}}
-                                open={menuOpen}
-                                value={selectedGoal}
-                                items={goalOptions}
-                                setOpen={setMenuOption}
-                                setValue={setSelectedGoal}
-                                setItems={setGoalOptions}
-
-                                multiple={false}
-                                mode="BADGE"
-                                badgeDotColors={["#e76f51", "#00b4d8", "#e9c46a", "#e76f51", "#8ac926", "#00b4d8", "#e9c46a"]}
-                            />
-                        </View>
+                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={setSelectedGoal} />
                     </View>
 
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, zIndex: -1, paddingBottom: 15 }}>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, zIndex: -1, paddingBottom: 15, paddingTop: 10 }}>
                         <EmbtrButton buttonText={'create'} callback={createTask} />
                     </View>
 

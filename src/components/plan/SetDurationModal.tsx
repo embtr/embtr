@@ -8,21 +8,15 @@ import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } 
 
 
 interface Props {
-    plannedTask: PlannedTaskModel,
     visible: boolean,
     confirm: Function,
     dismiss: Function
 }
 
-export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dismiss }: Props) => {
+export const SetDurationModal = ({ visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
-    const startHour = plannedTask?.startMinute ? Math.floor(plannedTask.startMinute / 60) : 1;
-
-    const [hour, setHour] = React.useState(startHour > 12 ? startHour - 12 : startHour);
-    const [minute, setMinute] = React.useState(plannedTask?.startMinute ?  Math.floor(plannedTask.startMinute % 60) : 1)
-    const [amPm, setAmPm] = React.useState(startHour >= 12 ? "PM" : "AM");
-    const [duration, setDuration] = React.useState(plannedTask?.duration ? plannedTask.duration : 0);
+    const [duration, setDuration] = React.useState(30);
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -60,59 +54,16 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
     return (
         <View>
             <Modal visible={visible} transparent={true} animationType={"fade"} >
-                <View style={{ position: "absolute", zIndex: 1, height: "100%", width: "100%", alignItems: "center", justifyContent: "flex-end", backgroundColor: "rgba(000,000,000,.6)" }}>
+                <View style={{ position: "absolute", zIndex: 1, height: "100%", width: "100%", backgroundColor: "rgba(000,000,000,.6)" }}>
                     <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
                     <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                         <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
                         <View>
                             <View style={{ width: 300, backgroundColor: colors.modal_background, borderRadius: 12, justifyContent: "space-around" }}>
-                                <Text style={{ color: colors.text, fontSize: 16, paddingTop: 10, paddingLeft: 10, fontFamily: "Poppins_500Medium" }}>
-                                    {plannedTask.routine.name}
-                                </Text>
-
-                                <Text style={{ color: colors.text, fontSize: 10, paddingTop: 5, paddingLeft: 10, opacity: .75, fontFamily: "Poppins_400Regular" }}>
-                                    {plannedTask.routine.description}
-                                </Text>
-
-                                <View style={{ width: "100%", alignItems: "center", paddingTop: 10 }}>
-                                    <View style={{ width: "90%" }}>
-                                        <HorizontalLine />
-                                    </View>
-                                </View>
-
                                 <View style={{ alignItems: "center" }}>
-                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: "Poppins_400Regular" }}>
-                                        Start Time
-                                    </Text>
                                     <View style={{ flexDirection: "row" }}>
                                         <Picker
-                                            style={{ width: 85, color: colors.text }}
-                                            selectedValue={hour}
-                                            onValueChange={setHour}>
-                                            {hourPickerItems}
-                                        </Picker>
-                                        <Picker
-                                            style={{ width: 85, color: colors.text }}
-                                            selectedValue={minute}
-                                            onValueChange={setMinute}>
-                                            {minutePickerItems}
-                                        </Picker>
-                                        <Picker
-                                            style={{ width: 95, color: colors.text, borderRadius: 0 }}
-                                            selectedValue={amPm}
-                                            onValueChange={setAmPm}>
-                                            {amPmPickerItems}
-                                        </Picker>
-                                    </View>
-                                </View>
-
-                                <View style={{ alignItems: "center" }}>
-                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: "Poppins_400Regular" }}>
-                                        Duration (minutes)
-                                    </Text>
-                                    <View style={{ flexDirection: "row" }}>
-                                        <Picker
-                                            style={{ width: 85, color: colors.text }}
+                                            style={{ width: 100, color: colors.text }}
                                             selectedValue={duration}
                                             onValueChange={setDuration}>
                                             {durationPickerItems}
@@ -122,9 +73,8 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
 
                                 <HorizontalLine />
 
-
                                 <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
-                                    <Button title='Confirm' onPress={() => { confirm((hour * 60) + (amPm === "pm" ? 720 : 0) + minute, duration) }} />
+                                    <Button title='Confirm' onPress={() => { confirm(duration) }} />
                                 </View>
                             </View>
 

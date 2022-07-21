@@ -17,7 +17,12 @@ export const Today = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
-    const [dayKey, setDayKey] = React.useState(getTodayKey());
+
+    const dispatch = useAppDispatch();
+    let dayKey = useAppSelector(getSelectedDayKey);
+    if (!dayKey) {
+        dayKey = getTodayKey();
+    }
 
     useFocusEffect(
         React.useCallback(() => {
@@ -27,8 +32,7 @@ export const Today = () => {
 
     const onDayChanged = (day: number) => {
         const newDayKey = getDayKey(day);
-        setDayKey(newDayKey);
-        //dispatch(setSelectedDayKey(newDayKey));
+        dispatch(setSelectedDayKey(newDayKey));
         PlannedDayController.get(newDayKey, setPlannedToday);
     };
 

@@ -56,7 +56,7 @@ export const PlanMain = () => {
     }
 
     const navigateToTomorrowCreateTask = () => {
-        navigation.navigate('CreateTask', { dayKey: getTomorrowKey() })
+        navigation.navigate('CreateOneTimeTask', { dayKey: getTomorrowKey() })
     }
 
     const navigateToTasksCreateTask = () => {
