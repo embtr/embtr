@@ -54,7 +54,7 @@ export const Today = () => {
             <EmbtrMenuCustom />
 
             <View style={{ flex: 1 }}>
-                <Banner name={"Today"} leftIcon={"add"} leftOnClick={() => { navigation.navigate('CreateTask', { dayKey: plannedToday?.id! }) }} />
+                <Banner name={"Today"} leftIcon={"add"} leftOnClick={() => { navigation.navigate('CreateOneTimeTask', { dayKey: plannedToday?.id! }) }} />
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
                     <TodayPicker day={getDayFromDayKey(getTodayKey())} onDayChanged={onDayChanged} />
                 </View>

@@ -8,7 +8,7 @@ export type MainTabScreens = {
 }
 
 export type TodayTab = {
-    CreateTask: { dayKey?: string };
+    CreateOneTimeTask: { dayKey: string };
 }
 
 export type PlanTabScreens = {
