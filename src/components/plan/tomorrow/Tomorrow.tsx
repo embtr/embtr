@@ -227,7 +227,6 @@ export const Tomorrow = () => {
                 const taskIsEnabled = updatedPlannedTask?.checked !== false;
                 if (taskIsEnabled) {
                     const newPlannedTask: PlannedTaskModel = createPlannedTaskByPlannedTask(plannedTask, updatedPlannedTask.startTime, updatedPlannedTask.duration);
-                    console.log(newPlannedTask)
                     plannedtasks.push(newPlannedTask);
                 }
             }

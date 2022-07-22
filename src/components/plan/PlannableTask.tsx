@@ -28,7 +28,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
 
     const onConfirm = (startTime: number, duration: number) => {
         if (onUpdate && plannedTask) {
-            onUpdate(plannedTask.routine.id, startTime, duration);
+            onUpdate(plannedTask.routine.id ? plannedTask.routine.id : plannedTask.id, startTime, duration);
         }
 
         setVisible(false);

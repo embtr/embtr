@@ -112,6 +112,35 @@ export const getDayFromDayKey = (dayKey: string) => {
 }
 
 class PlannedDayController {
+    public static getOrCreate(id: string, callback: Function) {
+        let plannedDay: PlannedDay = {
+            id: id,
+            metadata: this.createMetadata(),
+            plannedTasks: []
+        }
+
+        const response = PlannedDayDao.get(id);
+        response.then(collection => {
+            if (collection?.empty) {
+                this.create(plannedDay, callback);
+            } else {
+                collection?.forEach(currentPlannedTask => {
+                    if (currentPlannedTask.id === "metadata") {
+                        plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
+                    } else {
+                        let plannedTask: PlannedTaskModel = currentPlannedTask.data() as PlannedTaskModel;
+                        plannedTask.id = currentPlannedTask.id;
+                        plannedDay.plannedTasks.push(plannedTask);
+                    }
+                });
+            }
+
+        }).then(() => {
+            plannedDay.plannedTasks.sort((a, b) => ((a.startMinute ? a.startMinute : a.routine.added) > (b.startMinute ? b.startMinute : b.routine.added) ? 1 : -1));
+            callback(plannedDay);
+        });
+    }
+
     public static get(id: string, callback: Function) {
         let plannedDay: PlannedDay = {
             id: id,

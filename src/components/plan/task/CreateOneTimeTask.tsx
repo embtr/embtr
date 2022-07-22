@@ -4,9 +4,8 @@ import { View, Text, Keyboard, TextInput, KeyboardAvoidingView, ScrollView } fro
 import { EmbtrButton } from "src/components/common/button/EmbtrButton";
 import { useTheme } from "src/components/theme/ThemeProvider";
 import { createTaskModel } from 'src/controller/planning/TaskController';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Banner } from 'src/components/common/Banner';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Screen } from 'src/components/common/Screen';
@@ -17,29 +16,33 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
-import { createPlannedTask } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { createPlannedTask, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 
 export const CreateOneTimeTask = () => {
     const { colors } = useTheme();
 
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
     const [name, setName] = React.useState("");
     const [details, setDetails] = React.useState("");
-
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
-
     const [selectedGoal, setSelectedGoal] = React.useState('');
     const [goalOptions, setGoalOptions] = React.useState([{ label: '', value: '' }]);
-
-    const [deadline, setDeadline] = React.useState<Date>(Timestamp.now().toDate());
+    const [startTime, setStartTime] = React.useState<Date>(Timestamp.now().toDate());
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
-
     const [durationModalVisible, setDurationModalVisible] = React.useState(false);
-
     const [duration, setDuration] = React.useState(30);
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'CreateOneTimeTask'>>();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            PlannedDayController.getOrCreate(route.params.dayKey, setPlannedDay);
+        }, [])
+    );
 
     useFocusEffect(
         React.useCallback(() => {
@@ -80,8 +83,10 @@ export const CreateOneTimeTask = () => {
 
     const createTask = () => {
         const task = createTaskModel(name, details, selectedGoal);
-        createPlannedTask(task, 234, duration);
-        //PlannedDayController.addTask
+        const plannedTask = createPlannedTask(task, (startTime.getHours() * 60) + startTime.getMinutes(), duration);
+        PlannedDayController.addTask(plannedDay!, plannedTask, () => {
+            navigation.goBack();
+        });
     };
 
     const showCalendar = () => {
@@ -97,9 +102,9 @@ export const CreateOneTimeTask = () => {
             <DateTimePickerModal
                 isVisible={calendarVisible}
                 mode="time"
-                onConfirm={(date) => { setDeadline(date); hideCalendar() }}
+                onConfirm={(date) => { setStartTime(date); hideCalendar() }}
                 onCancel={hideCalendar}
-                date={deadline}
+                date={startTime}
             />
 
             <SetDurationModal visible={durationModalVisible} confirm={(duration: number) => { setDuration(duration); setDurationModalVisible(false); }} dismiss={() => { setDurationModalVisible(false) }} />
@@ -154,7 +159,7 @@ export const CreateOneTimeTask = () => {
 
                         <View style={{ height: 50, width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1, backgroundColor: colors.text_input_background, justifyContent: "center", paddingLeft: 15, flexDirection: "row" }}>
                             <View style={{ flex: 1, justifyContent: "center" }}>
-                                <Text onPress={showCalendar} style={{ fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 16 }} >{format(deadline, 'h:mm a')}</Text>
+                                <Text onPress={showCalendar} style={{ fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 16 }} >{format(startTime, 'h:mm a')}</Text>
                             </View>
 
                             <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 15, justifyContent: "center" }}>
