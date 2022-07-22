@@ -38,7 +38,9 @@ export const Today = () => {
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
         PlannedDayController.updateTask(plannedToday!, updatedPlannedTask, () => {
-            PlannedDayController.get(getTodayKey(), setPlannedToday);
+            if (plannedToday?.id) {
+                PlannedDayController.get(plannedToday?.id, setPlannedToday);
+            }
         });
     };
 
