@@ -1,19 +1,24 @@
 import * as React from 'react';
 import { Keyboard, Text, TextInput, View } from 'react-native';
+import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
+import { EmbtrButton2 } from 'src/components/common/button/EmbtrButton2';
 import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox';
+import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
-    submitComment: Function
+    submitComment: Function,
+    userProfile: UserProfileModel
 }
 
-export const CommentsTextInput = ({ submitComment }: Props) => {
+export const CommentsTextInput = ({ submitComment, userProfile }: Props) => {
     const { colors } = useTheme();
 
     const [commentText, setCommentText] = React.useState("");
     const [taggedUsers, setTaggedUsers] = React.useState<UserProfileModel[]>([]);
+    const [focused, setFocused] = React.useState<boolean>(false);
 
     const submitCommentPressed = () => {
         if (commentText === "") {
@@ -45,19 +50,29 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
     }
 
     return (
-        <View>
-            <UserTagBox input={commentText} userTagged={applyUsernameTag} />
+        <View style={{ width: "100%", alignItems: "center" }}>
+            <View style={{ backgroundColor: colors.text_input_background, borderRadius: focused ? 0 : 15, marginBottom: 6, paddingTop: 8, paddingBottom: 8, width: focused ? "100%" : "98%" }}>
+                <UserTagBox input={commentText} userTagged={applyUsernameTag} />
 
-            <View style={{ flexDirection: "row", width: "100%", alignItems: "center", justifyContent: "flex-end" }}>
-                <TextInput
-                    style={{ padding: 15, color: colors.text, backgroundColor: colors.background_medium, width: "100%", paddingRight: 65 }}
-                    placeholder={"add a comment..."}
-                    onChangeText={text => setCommentText(text)}
-                    value={commentText}
-                    onSubmitEditing={() => { submitCommentPressed() }}
-                />
-                <View style={{ zIndex: 1, position: "absolute", paddingRight: 20 }}>
-                    <Text onPress={() => { submitCommentPressed() }} style={{ fontSize: 16, color: colors.primary_border }}>send</Text>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
+
+                    <View style={{ paddingLeft: 10 }}>
+                        {userProfile && <NavigatableUserImage userProfileModel={userProfile} size={30} denyNavigation={true} />}
+                    </View>
+                    <TextInput
+                        style={{ paddingLeft: 10, color: colors.text, flex: 1 }}
+                        placeholder={"add a comment..."}
+                        placeholderTextColor={colors.secondary_text}
+                        onChangeText={text => setCommentText(text)}
+                        value={commentText}
+                        onSubmitEditing={() => { submitCommentPressed() }}
+                        onFocus={() => setFocused(true)}
+                        onBlur={() => setFocused(false)}
+                    />
+
+                    <View style={{ width: 90, paddingRight: 15 }}>
+                        <EmbtrButton buttonText={'send'} callback={() => { submitCommentPressed() }} height={40} />
+                    </View>
                 </View>
             </View>
         </View>

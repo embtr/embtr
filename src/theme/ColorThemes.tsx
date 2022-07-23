@@ -141,5 +141,5 @@ export const darkColors = {
   tomorrow_selected_indicator: "#F14E6B",
   tomorrow_unselected: "#8C909E",
 
-  modal_background: "#242527"
+  modal_background: "#242527",
 };

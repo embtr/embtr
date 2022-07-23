@@ -6,6 +6,10 @@ export const TIMELINE_CARD_PADDING = 12;
 export const TIMELINE_CARD_ICON_SIZE = 25;
 export const TIMELINE_CARD_ICON_COUNT_SIZE = 12;
 
+// COMMENTS
+export const COMMENT_ICON_SIZE = 20;
+
+
 //TODAY
 export const CALENDAR_TIME_INDICATOR_DOT_SIZE = 20;
 export const CALENDAR_TIME_HEIGHT = 15;

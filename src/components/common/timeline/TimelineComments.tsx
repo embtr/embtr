@@ -6,8 +6,11 @@ import { Comments } from 'src/components/common/comments/Comments';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
+import { View } from 'react-native';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const TimelineComments = () => {
+    const { colors } = useTheme();
     const route = useRoute<RouteProp<TimelineTabScreens, 'ChallengeComments'>>();
 
     const [storyModel, setStoryModel] = React.useState<StoryModel | undefined>(undefined);
@@ -28,11 +31,21 @@ export const TimelineComments = () => {
         }
     };
 
-    return (
-        <Comments
-            title={storyModel?.data.title ? storyModel?.data.title : ""}
-            comments={storyModel?.public.comments ? storyModel?.public.comments : []}
-            submitComment={submitComment}
-        />
-    )
+    if (storyModel) {
+        return (
+            <View style={{width: "100%", height: "100%", backgroundColor: colors.background}}>
+                <Comments
+                    type={'Post'}
+                    post={storyModel.data.story}
+                    authorUid={storyModel.uid ? storyModel.uid : ""}
+                    title={storyModel?.data.title ? storyModel?.data.title : ""}
+                    comments={storyModel?.public.comments ? storyModel?.public.comments : []}
+                    submitComment={submitComment}
+                />
+            </View>
+        );
+    }
+
+    return <View />;
+
 }

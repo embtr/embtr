@@ -8,15 +8,16 @@ interface Props {
     image?: ImageURISource,
     icon?: any,
     buttonText: string,
-    callback: Function
+    callback: Function,
+    height?: number
 }
 
-export const EmbtrButton = ({ image, icon, buttonText, callback }: Props) => {
+export const EmbtrButton = ({ image, icon, buttonText, height, callback }: Props) => {
     const { colors } = useTheme();
 
     const containerStyle = {
         backgroundColor: colors.push_button_background,
-        height: 45,
+        height: height ? height : 45,
         width: "100%",
         borderRadius: 10,
         alignItems: "center",
