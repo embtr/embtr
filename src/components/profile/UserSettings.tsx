@@ -19,8 +19,13 @@ export const UserSettings = () => {
                 <View style={{ paddingTop: 10 }}>
                     <ThemeToggle />
                 </View>
+                
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
-                    <EmbtrButton2 text={"Sign Out"} icon={"caret-forward-circle-outline"} onPress={() => { getAuth().signOut(); dispatch(setAccessLevel("invalid")); }} />
+                    <EmbtrButton2 text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { alert("Tell Brent to get this working!") }} />
+                </View>
+
+                <View style={{ paddingTop: 10, alignItems: "center" }}>
+                    <EmbtrButton2 text={"Sign Out"} icon={"exit-outline"} onPress={() => { getAuth().signOut(); dispatch(setAccessLevel("invalid")); }} />
                 </View>
             </View>
         </Screen>
