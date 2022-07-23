@@ -8,13 +8,15 @@ export interface GoalModel {
     description: string,
     pillarId?: string
     deadline: Timestamp,
+    status: string
 }
 
 export const FAKE_GOAL: GoalModel = {
     added: Timestamp.now(),
     name: '',
     description: '',
-    deadline: Timestamp.now()
+    deadline: Timestamp.now(),
+    status: "ACTIVE"
 }
 
 class GoalController {
@@ -32,6 +34,10 @@ class GoalController {
         result.then(documents => {
             documents.docs.forEach(document => {
                 let goal: GoalModel = document.data() as GoalModel;
+
+                if (goal.status === "ARCHIVED") {
+                    return;
+                }
 
                 goal.id = document.id;
                 goals.push(goal);
@@ -52,6 +58,13 @@ class GoalController {
             callback(goal);
         }).catch(() => {
             callback(undefined);
+        });
+    }
+
+    public static archiveGoal(userId: string, goal: GoalModel, callback: Function) {
+        const result = GoalDao.archiveGoal(userId, goal);
+        result.then((updatedGoal) => {
+            callback(updatedGoal);
         });
     }
 }

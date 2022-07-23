@@ -3,7 +3,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { createEmbtrOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
@@ -13,11 +13,14 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { GoalTask } from 'src/components/plan/goals/GoalTask';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
 
     const route = useRoute<RouteProp<PlanTabScreens, 'GoalDetails'>>();
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
+
     const [goal, setGoal] = React.useState<GoalModel>(FAKE_GOAL);
 
     useFocusEffect(
@@ -29,6 +32,19 @@ export const GoalDetails = () => {
     const menuItems: EmbtrMenuOption[] = [
         {
             name: 'Archive',
+            onPress: () => {
+                GoalController.archiveGoal(getAuth().currentUser!.uid, goal, (updatedGoal: GoalModel) => {
+                    navigation.goBack();
+                });
+            }
+        },
+        {
+            name: 'Complete',
+            onPress: () => {
+            }
+        },
+        {
+            name: 'Fail',
             onPress: () => {
             }
         }

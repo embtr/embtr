@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, addDoc, query, getDocs, getDoc, doc } from 'firebase/firestore';
+import { Firestore, collection, addDoc, query, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { GoalModel } from 'src/controller/planning/GoalController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
@@ -28,6 +28,15 @@ class GoalDao {
     public static async getGoal(userId: string, id: string) {
         const db: Firestore = getFirebaseConnection(this.name, "getGoal");
         const result = await getDoc(doc(db, "goals", userId, "goals", id));
+        return result;
+    }
+
+    public static async archiveGoal(userId: string, goal: GoalModel) {
+        const db: Firestore = getFirebaseConnection(this.name, "archiveGoal");
+
+        goal.status = "ARCHIVED";
+        const result = setDoc(doc(db, "goals", userId, "goals", goal.id!), goal, { merge: true });
+        
         return result;
     }
 }
