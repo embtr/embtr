@@ -12,7 +12,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { formatDistance } from 'date-fns';
-import { not } from 'react-native-reanimated';
 
 interface Props {
     notification: NotificationModel
@@ -57,7 +56,7 @@ export const Notification = ({ notification }: Props) => {
                                     <Text style={{ fontFamily: "Poppins_600SemiBold", color: colors.timeline_card_header }}>{notifier?.name}</Text>
                                 </View>
                                 <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end", paddingRight: TIMELINE_CARD_PADDING }}>
-                                    <View style={{ padding: 2, borderWidth: 1, borderRadius: 50, borderColor: notification.read ? colors.timeline_card_background : colors.notification_dot, backgroundColor: notification.read ? colors.timeline_card_background : colors.notification_dot }} />
+                                    <View style={{ padding: 2, borderWidth: 1, borderRadius: 50, borderColor: notification.read ? colors.card_background_active : colors.notification_dot, backgroundColor: notification.read ? colors.card_background_active : colors.notification_dot }} />
                                 </View>
                             </View>
 
