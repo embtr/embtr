@@ -71,6 +71,7 @@ class StoryController {
             } else {
                 let story : StoryModel = doc.data() as StoryModel;
                 story.id = doc.id;
+                story.public.comments = story.public.comments.sort((a, b) => (a.timestamp! < b.timestamp!) ? 1 : -1);
                 callback(story);
             }
         });

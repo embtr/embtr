@@ -38,7 +38,7 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
     const scrollRef = React.useRef<ScrollView>(null);
 
     const onCommentCountChanged = () => {
-        scrollRef.current?.scrollToEnd();
+        scrollRef.current?.scrollTo(0,0, false);
     }
 
     return (
