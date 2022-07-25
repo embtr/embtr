@@ -68,7 +68,14 @@ export const lightColors = {
   tomorrow_selected_indicator: "#FF5E7C",
   tomorrow_unselected: "#8C909E",
 
-  modal_background: "#FFFFFF"
+  modal_background: "#FFFFFF",
+
+  profile_name_text: "#333333",
+  profile_bio_text: "#3E3E3E",
+  profile_following_background: "#FFFFFF",
+  profile_following_border: "#EFEFEF",
+  profile_following_text: "#212121"
+
 
 };
 
@@ -142,4 +149,11 @@ export const darkColors = {
   tomorrow_unselected: "#8C909E",
 
   modal_background: "#242527",
+
+  profile_name_text: "#FFFFFF",
+  profile_bio_text: "#7F7F7F",
+  profile_following_background: "#000000",
+  profile_following_border: "#000000",
+  profile_following_text: "#CFCFCF"
+
 };

@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Text, TextStyle, View, Image, StyleSheet } from 'react-native';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
-import { EditUserProfileButton } from 'src/components/profile/EditUserProfileButton';
-import { FollowUserButton } from 'src/components/profile/FollowUserButton';
+import { Text, TextStyle, View, Image } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
-import { EditableTextBox } from 'src/components/common/textbox/EditableTextBox';
 import ProfileController from 'src/controller/profile/ProfileController';
+import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+
 
 interface Props {
     userProfileModel?: UserProfileModel,
@@ -69,6 +66,14 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
         }
     }
 
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     const onToggleProfileEdit = () => {
         if (profileIsEditable) {
             saveProfile();
@@ -77,51 +82,36 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
         setProfileIsEditable(!profileIsEditable);
     }
 
+    const banner = require('assets/banner.png')
+
     return (
         <View>
-            <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 12 }}>
-                    { userProfileModel && <View style={{ paddingLeft: 25, paddingTop: 15 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} /></View>}
-                    <View style={{ paddingLeft: 15, paddingTop: 15 }}>
-                        <EditableTextBox text={newNameText !== undefined ? newNameText : userProfileModel?.name ? userProfileModel.name : ""} textSize={24} onChangeText={setNewNameText} editable={profileIsEditable} />
-                    </View>
+            <View style={{ width: "100%", height: 180, backgroundColor: colors.background }}>
+                <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 1, alignItems: "center", paddingTop: 10 }}>
+                    <Image source={banner} style={{ width: "95%", height: 135, borderRadius: 15 }} />
                 </View>
 
-                <View style={{ flex: 12, flexDirection: "column" }}>
-                    <View style={{ flex: 1, flexDirection: "row" }}>
+                <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
+                    {userProfileModel && <View style={{ paddingBottom: 10 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} /></View>}
+                </View>
+            </View>
 
-                        <View style={{ flex: 5, flexDirection: "column" }}>
-                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 30 }]}>{followerCount}</Text></View>
-                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 5 }]}>followers</Text></View>
-                        </View>
+            <View style={{ alignItems: "center", backgroundColor: colors.background }}>
+                <Text style={{ fontSize: 18, fontFamily: "Poppins_600SemiBold", color: colors.profile_name_text }}>{userProfileModel?.name}</Text>
+                <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text }}>{userProfileModel?.bio}</Text>
+            </View>
 
-                        <View style={{ flex: 5, flexDirection: "column" }}>
-                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 30 }]}>{followingCount}</Text></View>
-                            <View><Text style={[textStyle, { textAlign: "center", paddingTop: 5 }]}>following</Text></View>
-                        </View>
-                        <View style={{ flex: 2 }} />
-
+            <View style={{ paddingBottom: 20 }}>
+                <View style={{ flexDirection: "row", justifyContent: "center", paddingTop: 10, backgroundColor: colors.background }}>
+                    <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 15, paddingBottom: 15, backgroundColor: colors.profile_following_background, borderRadius: 10, marginRight: 20, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
+                        <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: colors.profile_following_text }}>{followingCount} Following</Text>
                     </View>
 
-                    <View style={{ flex: 1, flexDirection: "row" }}>
-
-                        <View style={{ flex: 10, flexDirection: "column", alignItems: "center" }}>
-                            <View style={{ flex: 1 }} />
-                            <View style={{ flex: 10 }}>
-                                {shouldDisplayFollowButton && <FollowUserButton userProfileModel={userProfileModel!} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} following={isFollowingUser} />}
-                                {shouldDisplayEditProfileButton && <EditUserProfileButton showEdit={profileIsEditable} onPress={onToggleProfileEdit} />}
-                            </View>
-                        </View>
-                        <View style={{ flex: 2 }} />
-
+                    <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 15, paddingBottom: 15, backgroundColor: colors.profile_following_background, borderRadius: 10, marginLeft: 20, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
+                        <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: colors.profile_following_text }}>{followerCount} Followers</Text>
                     </View>
                 </View>
-
             </View>
-            <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 15, paddingBottom: 15 }}>
-                <EditableTextBox text={newBioText !== undefined ? newBioText : userProfileModel?.bio ? userProfileModel.bio : ""} textSize={14} onChangeText={setNewBioText} editable={profileIsEditable} />
-            </View>
-            <HorizontalLine />
         </View>
     )
 }
