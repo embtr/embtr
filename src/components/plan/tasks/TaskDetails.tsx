@@ -3,7 +3,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text, Alert } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TaskController, { durationToString, TaskModel, startMinuteToString } from 'src/controller/planning/TaskController';
+import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
@@ -14,15 +14,11 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { GoalTask } from 'src/components/plan/goals/GoalTask';
-import { ScrollView } from 'react-native-gesture-handler';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
-    const leftFlex = 3;
-    const rightFlex = 8;
 
     const route = useRoute<RouteProp<PlanTabScreens, 'TaskDetails'>>();
     const [task, setTask] = React.useState<TaskModel | undefined>();

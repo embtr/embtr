@@ -29,8 +29,15 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
         elevation: 5
     }
 
-    const onPress = () => {
+    const toggleCompletion = () => {
         toggleComplete();
+        closeMenu();
+    };
+
+    const deletePlan = () => {
+        plannedTask.status = "DELETED";
+
+        onUpdateTask(plannedTask);
         closeMenu();
     };
 
@@ -49,12 +56,14 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
     const updateMenuOptions = () => {
         let menuOptions: EmbtrMenuOption[] = [];
         if (plannedTaskIsComplete(plannedTask)) {
-            menuOptions.push({ name: "Incomplete", onPress: onPress });
+            menuOptions.push({ name: "Incomplete", onPress: toggleCompletion });
         }
 
         if (plannedTaskIsIncomplete(plannedTask)) {
-            menuOptions.push({ name: "Complete", onPress: onPress });
+            menuOptions.push({ name: "Complete", onPress: toggleCompletion });
         }
+
+        menuOptions.push({name: "Delete", onPress: deletePlan});
         dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
     };
 
@@ -75,7 +84,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
             <TouchableOpacity
                 onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                    onPress();
+                    toggleCompletion();
                 }}
                 onLongPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);

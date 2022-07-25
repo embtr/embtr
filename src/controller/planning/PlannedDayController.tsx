@@ -155,6 +155,10 @@ class PlannedDayController {
                     plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
                 } else {
                     let plannedTask: PlannedTaskModel = currentPlannedTask.data() as PlannedTaskModel;
+                    if (plannedTask.status === "DELETED") {
+                        return;
+                    }
+                    
                     plannedTask.id = currentPlannedTask.id;
                     plannedDay.plannedTasks.push(plannedTask);
                 }
