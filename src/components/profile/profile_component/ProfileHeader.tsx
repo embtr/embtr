@@ -6,6 +6,8 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
+import { UserProfileProBadge } from 'src/components/profile/profile_component/badge/UserProfileProBadge';
 
 
 interface Props {
@@ -92,22 +94,39 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                 </View>
 
                 <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
-                    {userProfileModel && <View style={{ paddingBottom: 10 }}><Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} /></View>}
+                    {
+                        userProfileModel &&
+                        <View style={{ alignItems: "flex-end", justifyContent: "flex-end" }}>
+                            <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} />
+                            <View style={{ position: "absolute", zIndex: 1, paddingBottom: 3, paddingRight: 3 }}>
+                                <ProfileLevel level={1} />
+                            </View>
+                        </View>
+                    }
                 </View>
             </View>
 
             <View style={{ alignItems: "center", backgroundColor: colors.background }}>
-                <Text style={{ fontSize: 18, fontFamily: "Poppins_600SemiBold", color: colors.profile_name_text }}>{userProfileModel?.name}</Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text style={{ fontSize: 18, fontFamily: "Poppins_600SemiBold", color: colors.profile_name_text }}>
+                        {userProfileModel?.name}
+                    </Text>
+                    <View style={{ paddingLeft: 10 }}>
+                        <UserProfileProBadge />
+                    </View>
+
+                </View>
+
                 <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text }}>{userProfileModel?.bio}</Text>
             </View>
 
             <View style={{ paddingBottom: 20 }}>
                 <View style={{ flexDirection: "row", justifyContent: "center", paddingTop: 10, backgroundColor: colors.background }}>
-                    <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 15, paddingBottom: 15, backgroundColor: colors.profile_following_background, borderRadius: 10, marginRight: 20, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
+                    <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: colors.profile_following_background, borderRadius: 10, marginRight: 15, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
                         <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: colors.profile_following_text }}>{followingCount} Following</Text>
                     </View>
 
-                    <View style={{ paddingLeft: 20, paddingRight: 20, paddingTop: 15, paddingBottom: 15, backgroundColor: colors.profile_following_background, borderRadius: 10, marginLeft: 20, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
+                    <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: colors.profile_following_background, borderRadius: 10, marginLeft: 15, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
                         <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: colors.profile_following_text }}>{followerCount} Followers</Text>
                     </View>
                 </View>
