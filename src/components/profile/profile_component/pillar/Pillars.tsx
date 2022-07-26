@@ -47,7 +47,7 @@ export const Pillars = ({ userProfileModel }: Props) => {
     }
 
     return (
-        <ScrollView style={{backgroundColor: colors.background_medium}}>
+        <ScrollView>
             {pillarViews}
         </ScrollView>
     );

@@ -41,6 +41,8 @@ export const lightColors = {
   search_preview: "#A4A3A3",
   user_search_name: "#292929",
 
+  scroll_tab_background: "rgba(000,000,000,.15)",
+
   text_input_background: "#EEEEEE",
   text_input_background_secondary: "#F3F3F3",
   text_input_border: "#DEDEDE",
@@ -74,7 +76,13 @@ export const lightColors = {
   profile_bio_text: "#3E3E3E",
   profile_following_background: "#FFFFFF",
   profile_following_border: "#EFEFEF",
-  profile_following_text: "#212121"
+  profile_following_text: "#212121",
+
+  profile_pillar_title: "#292929",
+  profile_pillar_attribute_name: "#1B1F31",
+  profile_pillar_attribute_value: "#1B1F31",
+  profile_pillar_attribute_icon: "rgba(000,000,000,.7)",
+  profile_pillar_separator: "#000000",
 
 
 };
@@ -122,6 +130,8 @@ export const darkColors = {
   search_preview: "#A4A3A3",
   user_search_name: "#FFFFFF",
 
+  scroll_tab_background: "rgba(255,255,255,.15)",
+
   text_input_background: "#121212",
   text_input_background_secondary: "#212121",
   text_input_border: "#000000",
@@ -154,6 +164,13 @@ export const darkColors = {
   profile_bio_text: "#7F7F7F",
   profile_following_background: "#000000",
   profile_following_border: "#000000",
-  profile_following_text: "#CFCFCF"
+  profile_following_text: "#CFCFCF",
+
+  profile_pillar_title: "#FFFFFF",
+  profile_pillar_attribute_name: "#EEEEEE",
+  profile_pillar_attribute_value: "#FFFFFF",
+  profile_pillar_attribute_icon: "rgba(255,255,255,.7)",
+  profile_pillar_separator: "#DFDFDF"
+
 
 };

@@ -25,6 +25,10 @@ export const UserSettings = () => {
                 </View>
 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
+                    <EmbtrButton2 text={"Edit Pillars"} icon={"pillar"} onPress={() => { alert("Tell Brent to get this working!") }} />
+                </View>
+
+                <View style={{ paddingTop: 10, alignItems: "center" }}>
                     <EmbtrButton2 text={"Sign Out"} icon={"exit-outline"} onPress={() => { getAuth().signOut(); dispatch(setAccessLevel("invalid")); }} />
                 </View>
             </View>
