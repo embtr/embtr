@@ -14,7 +14,7 @@ export const UserProfileProBadge = () => {
 
     return (
             <View style={{ width: 38, height: 20, backgroundColor: "#F14C6B", borderRadius: 6, alignItems: "center", justifyContent: "center" }}>
-                <Text style={{fontSize: 10.5, fontFamily: "Poppins_600SemiBold", color: "white"}}>Pro</Text>
+                <Text style={{fontSize: 10.5, fontFamily: "Poppins_600SemiBold", color: "white"}}>PRO</Text>
         </View>
     );
 };

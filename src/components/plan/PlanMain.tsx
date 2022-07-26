@@ -77,21 +77,23 @@ export const PlanMain = () => {
                     renderScene={renderScene}
                     onIndexChange={setIndex}
 
-                    renderTabBar={props => <TabBar
-                        {...props}
-                        indicatorStyle={{ height: 4, borderRadius: 15, backgroundColor: colors.planning_horizontal_indicator }}
-                        renderLabel={({ focused, route }) => {
-                            return (
-                                <Text style={{ color: colors.planning_focused_text, fontFamily: "Poppins_600SemiBold", opacity: focused ? 1.0 : .35 }}>
-                                    {route.title}
-                                </Text>
-                            );
-                        }}
-                        style={{
-                            backgroundColor: colors.background,
-                            shadowOffset: { height: 0, width: 0 }, shadowColor: 'transparent', shadowOpacity: 0, elevation: 0
-                        }}
-                    />
+                    renderTabBar={props =>
+                        <TabBar
+                            {...props}
+                            indicatorStyle={{ height: 4, borderRadius: 0, backgroundColor: colors.planning_horizontal_indicator }}
+                            renderLabel={({ focused, route }) => {
+                                return (
+                                    <Text style={{ color: colors.planning_focused_text, fontFamily: "Poppins_600SemiBold", opacity: focused ? 1.0 : .35 }}>
+                                        {route.title}
+                                    </Text>
+                                );
+                            }}
+                            style={{
+                                backgroundColor: colors.background,
+                                shadowOffset: { height: 0, width: 0 }, shadowColor: 'transparent', shadowOpacity: 0, elevation: 0
+                            }}
+                            indicatorContainerStyle={{ backgroundColor: "rgba(255,255,255,.15)", height: 4, marginTop: 43 }}
+                        />
                     }
                 />
             </View>

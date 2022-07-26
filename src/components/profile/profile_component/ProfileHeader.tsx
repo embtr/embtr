@@ -122,12 +122,11 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
             <View style={{ paddingBottom: 20 }}>
                 <View style={{ flexDirection: "row", justifyContent: "center", paddingTop: 10, backgroundColor: colors.background }}>
-                    <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: colors.profile_following_background, borderRadius: 10, marginRight: 15, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
-                        <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: colors.profile_following_text }}>{followingCount} Following</Text>
-                    </View>
-
-                    <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: colors.profile_following_background, borderRadius: 10, marginLeft: 15, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
+                <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: colors.profile_following_background, borderRadius: 10, marginRight: 15, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
                         <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: colors.profile_following_text }}>{followerCount} Followers</Text>
+                    </View>
+                    <View style={{ paddingLeft: 15, paddingRight: 15, paddingTop: 10, paddingBottom: 10, backgroundColor: colors.profile_following_background, borderRadius: 10, marginLeft: 15, alignItems: "center", justifyContent: "center", borderWidth: 1.5, borderColor: colors.profile_following_border }}>
+                        <Text style={{ fontSize: 14, fontFamily: "Poppins_500Medium", color: colors.profile_following_text }}>{followingCount} Following</Text>
                     </View>
                 </View>
             </View>
