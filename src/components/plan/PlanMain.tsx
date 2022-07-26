@@ -90,6 +90,7 @@ export const PlanMain = () => {
                             }}
                             style={{
                                 backgroundColor: colors.background,
+                                width: "94%", marginLeft: "3%",
                                 shadowOffset: { height: 0, width: 0 }, shadowColor: 'transparent', shadowOpacity: 0, elevation: 0
                             }}
                             indicatorContainerStyle={{ backgroundColor: "rgba(255,255,255,.15)", height: 4, marginTop: 43 }}
