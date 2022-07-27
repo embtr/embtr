@@ -56,6 +56,21 @@ class TimelineController {
             callback(timelinePosts);
         });
     }
+
+    public static getTimelinePostsForUser(uid: string, callback: Function) {
+        const result = TimelineDao.getTimelinePostsForUser(uid);
+
+        let timelinePosts: TimelinePostModel[] = [];
+        result.then(response => {
+            response.docs.forEach(doc => {
+                let story: StoryModel = doc.data() as StoryModel;
+                story.id = doc.id;
+                timelinePosts.push(story);
+            });
+        }).then(() => {
+            callback(timelinePosts);
+        });
+    }
 }
 
 export default TimelineController;
