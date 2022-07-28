@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
@@ -38,6 +38,7 @@ export const Timeline = () => {
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
+    const [refreshing, setRefreshing] = React.useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -69,6 +70,14 @@ export const Timeline = () => {
         });
 
     }, [timelineEntries]);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        TimelineController.getTimelinePosts((refreshedTimelinePosts: TimelinePostModel[]) => {
+            setTimelineEntries(refreshedTimelinePosts);
+            setRefreshing(false);
+        });
+    }, []);
 
     const createStoryView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
@@ -127,7 +136,11 @@ export const Timeline = () => {
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount}
             />
-            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ backgroundColor: colors.background }}>
+            <ScrollView
+                keyboardShouldPersistTaps={'handled'}
+                style={{ backgroundColor: colors.background }}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
                 <View style={{ flex: 1 }}>
                     {timelineViews}
                 </View>
