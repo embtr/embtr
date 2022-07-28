@@ -18,22 +18,36 @@ interface Props {
 export const ProfileBody = ({ userProfileModel }: Props) => {
     const { colors } = useTheme();
 
+    const [index, setIndex] = React.useState(0);
+    const [activityHeight, setActivityHeight] = React.useState(60);
+
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string; }; }) => {
         switch (props.route.key) {
             case 'activity':
-                return <ActivityTabRoute userProfileModel={userProfileModel} />
+                return (
+                    <View style={ index !== 0 && { display: "none" }}>
+                        <ActivityTabRoute userProfileModel={userProfileModel} />
+                    </View>
+                );
 
             case 'today':
-                return <TodayTabRoute userProfileModel={userProfileModel} />
+                return (
+                    <View style={ index !== 1 && { display: "none" }}>
+                        <TodayTabRoute userProfileModel={userProfileModel} />
+                    </View>
+                );
 
             case 'pillars':
-                return <PillarsTabRoute userProfileModel={userProfileModel} />
+                return (
+                    <View style={ index !== 2 && { display: "none" }}>
+                        <PillarsTabRoute userProfileModel={userProfileModel} />
+                    </View>
+                );
         }
 
         return <View></View>
     };
 
-    const [index, setIndex] = React.useState(0);
 
     const [routes] = React.useState([
         { key: 'activity', title: 'Activity' },
@@ -42,32 +56,30 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
     ]);
 
     return (
-        <View style={{ height: "100%" }}>
-            <TabView
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                onIndexChange={setIndex}
+        <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
 
-                renderTabBar={props =>
-                    <TabBar
-                        {...props}
-                        indicatorStyle={{ height: 4, borderRadius: 0, backgroundColor: colors.planning_horizontal_indicator }}
-                        renderLabel={({ focused, route }) => {
-                            return (
-                                <Text style={{ color: colors.planning_focused_text, fontFamily: "Poppins_600SemiBold", opacity: focused ? 1.0 : .35 }}>
-                                    {route.title}
-                                </Text>
-                            );
-                        }}
-                        style={{
-                            backgroundColor: colors.background,
-                            width: "95%", marginLeft: "2.5%",
-                            shadowOffset: { height: 0, width: 0 }, shadowColor: 'transparent', shadowOpacity: 0, elevation: 0
-                        }}
-                        indicatorContainerStyle={{ backgroundColor: colors.scroll_tab_background, height: 4, marginTop: 43 }}
-                    />
-                }
-            />
-        </View>
+            renderTabBar={props =>
+                <TabBar
+                    {...props}
+                    indicatorStyle={{ height: 4, borderRadius: 0, backgroundColor: colors.planning_horizontal_indicator }}
+                    renderLabel={({ focused, route }) => {
+                        return (
+                            <Text style={{ color: colors.planning_focused_text, fontFamily: "Poppins_600SemiBold", opacity: focused ? 1.0 : .35 }}>
+                                {route.title}
+                            </Text>
+                        );
+                    }}
+                    style={{
+                        backgroundColor: colors.background,
+                        width: "95%", marginLeft: "2.5%",
+                        shadowOffset: { height: 0, width: 0 }, shadowColor: 'transparent', shadowOpacity: 0, elevation: 0
+                    }}
+                    indicatorContainerStyle={{ backgroundColor: colors.scroll_tab_background, height: 4, marginTop: 43 }}
+                />
+            }
+        />
     )
 }

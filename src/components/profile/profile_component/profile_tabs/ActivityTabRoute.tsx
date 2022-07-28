@@ -25,12 +25,10 @@ export const ActivityTabRoute = ({ userProfileModel }: Props) => {
     const [activityViews, setActivityViews] = React.useState<JSX.Element[]>([]);
 
         React.useEffect(() => {
-            console.log("in here")
             TimelineController.getTimelinePostsForUser(userProfileModel.uid!, setPosts);
         }, []);
 
     React.useEffect(() => {
-        console.log("in here 2")
         let views: JSX.Element[] = [];
         posts.forEach(timelineEntry => {
             const view: JSX.Element = createStoryView(timelineEntry);
@@ -45,8 +43,6 @@ export const ActivityTabRoute = ({ userProfileModel }: Props) => {
             <UserTextCard userProfileModel={userProfileModel} story={timelineEntry} />
         </View>;
     };
-
-    console.log("render act")
 
     return (
         <View>

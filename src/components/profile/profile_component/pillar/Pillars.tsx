@@ -47,8 +47,8 @@ export const Pillars = ({ userProfileModel }: Props) => {
     }
 
     return (
-        <ScrollView>
+        <View>
             {pillarViews}
-        </ScrollView>
+        </View>
     );
 };
