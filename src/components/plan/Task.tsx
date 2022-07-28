@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Text, ColorValue, TouchableOpacity } from 'react-native';
+import { View, Text, ColorValue, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
@@ -23,7 +23,7 @@ export const Task = ({ task, pillars }: Props) => {
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const navigateToDetails = () => {
-        navigation.navigate('TaskDetails', { id: task.id! })
+        navigation.navigate('TaskDetails', { id: task.id! });
     };
 
     const [goal, setGoal] = React.useState<GoalModel | undefined>(undefined);
@@ -46,7 +46,7 @@ export const Task = ({ task, pillars }: Props) => {
 
     return (
         <View style={{ width: "97%" }}>
-            <TouchableOpacity onPress={navigateToDetails} >
+            <TouchableWithoutFeedback onPress={navigateToDetails} >
                 <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, paddingTop: 10 }, CARD_SHADOW]}>
                     <View style={{ paddingLeft: 10 }}>
                         <Text style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 14 }}>
@@ -72,7 +72,7 @@ export const Task = ({ task, pillars }: Props) => {
                         </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
         </View>
     );
 };

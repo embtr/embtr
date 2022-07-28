@@ -76,6 +76,7 @@ export const PlanMain = () => {
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
                     onIndexChange={setIndex}
+                    swipeEnabled={index !== 1}
 
                     renderTabBar={props =>
                         <TabBar
