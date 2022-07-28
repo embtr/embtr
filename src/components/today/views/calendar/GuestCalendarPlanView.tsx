@@ -13,12 +13,10 @@ import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 
 
 interface Props {
-    plannedTask: PlannedTaskModel,
-    onUpdateTask: Function,
-    parentLayout?: LayoutRectangle
+    plannedTask: PlannedTaskModel
 }
 
-export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Props) => {
+export const GuestCalendarPlanView = ({ plannedTask }: Props) => {
     const { colors } = useTheme();
 
     const cardShadow = {
@@ -29,47 +27,6 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
         elevation: 5
     }
 
-    const toggleCompletion = () => {
-        toggleComplete();
-        closeMenu();
-    };
-
-    const deletePlan = () => {
-        plannedTask.status = "DELETED";
-
-        onUpdateTask(plannedTask);
-        closeMenu();
-    };
-
-    const dispatch = useAppDispatch();
-
-    const toggleComplete = () => {
-        if (plannedTaskIsComplete(plannedTask)) {
-            plannedTask.status = "INCOMPLETE";
-        } else {
-            plannedTask.status = "COMPLETE";
-        }
-
-        onUpdateTask(plannedTask);
-    };
-
-    const updateMenuOptions = () => {
-        let menuOptions: EmbtrMenuOption[] = [];
-        if (plannedTaskIsComplete(plannedTask)) {
-            menuOptions.push({ name: "Incomplete", onPress: toggleCompletion });
-        }
-
-        if (plannedTaskIsIncomplete(plannedTask)) {
-            menuOptions.push({ name: "Complete", onPress: toggleCompletion });
-        }
-
-        menuOptions.push({name: "Delete", onPress: deletePlan});
-        dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
-    };
-
-    const openMenu = useAppSelector(getOpenMenu);
-    const closeMenu = useAppSelector(getCloseMenu);
-
     let [fontsLoaded] = useFonts({
         Poppins_600SemiBold,
         Poppins_400Regular,
@@ -79,34 +36,16 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
         return <View />
     }
 
-    const onShortPress = () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        toggleCompletion();
-    };
-
-    const onLongPress = () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        updateMenuOptions()
-        openMenu()
-    };
-
     return (
         <View style={{ top: (plannedTask.startMinute! + (CALENDAR_TIME_HEIGHT / 2)), position: "absolute" }} >
-            <TouchableOpacity
-                onPress={() => {
-                    onShortPress();
-                }}
-                onLongPress={() => {
-                    onLongPress();
-                }}
-                style={[cardShadow, {
-                    minHeight: 45,
-                    height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
-                    width: 225,
-                    borderRadius: 6,
-                    backgroundColor: colors.timeline_card_background
-                }]}>
-                    
+            <View style={[cardShadow, {
+                minHeight: 45,
+                height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
+                width: 225,
+                borderRadius: 6,
+                backgroundColor: colors.timeline_card_background
+            }]}>
+
                 <View style={{ flexDirection: "row", width: "100%", paddingTop: 5, paddingLeft: 5 }}>
                     <View style={{ flex: 5 }}>
                         <Text style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 13 }}>{plannedTask.routine.name}</Text>
@@ -117,7 +56,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                         <Ionicons name={plannedTaskIsComplete(plannedTask) ? "checkmark-done" : "checkmark"} size={20} color={plannedTaskIsComplete(plannedTask) ? "green" : colors.secondary_text} />
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
         </View>
     );
 };

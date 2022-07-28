@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { useFocusEffect } from '@react-navigation/native';
+import { UserType } from 'src/controller/profile/ProfileController';
 
 interface Props {
     userProfileModel: UserProfileModel
 }
 
 export const TodayTabRoute = ({ userProfileModel }: Props) => {
-    const { colors } = useTheme();
 
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
     useFocusEffect(
@@ -25,7 +24,7 @@ export const TodayTabRoute = ({ userProfileModel }: Props) => {
 
     return (
         <View>
-            <CalendarView plannedToday={plannedToday} updateTask={() => {}} />
+            <CalendarView plannedToday={plannedToday} userType={UserType.GUEST} />
         </View>
     )
 };

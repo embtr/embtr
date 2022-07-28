@@ -1,21 +1,30 @@
 import React from 'react';
 import { LayoutRectangle, View } from 'react-native';
 import { CalendarPlanView } from 'src/components/today/views/calendar/CalendarPlanView';
+import { GuestCalendarPlanView } from 'src/components/today/views/calendar/GuestCalendarPlanView';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { UserType } from 'src/controller/profile/ProfileController';
 
 interface Props {
     plannedToday?: PlannedDay
-    updateTask: Function
+    updateTask?: Function,
+    userType: UserType
 }
 
-export const CalendarPlanViews = ({ plannedToday, updateTask }: Props) => {
+export const CalendarPlanViews = ({ plannedToday, updateTask, userType }: Props) => {
     const [layout, setLayout] = React.useState<LayoutRectangle>();
 
     let planViews: JSX.Element[] = [];
     plannedToday?.plannedTasks.forEach(plannedTask => {
         planViews.push(
             <View key={plannedTask.id} style={{ alignContent: "flex-end", alignItems: "flex-end" }} >
-                <CalendarPlanView plannedTask={plannedTask} onUpdateTask={updateTask} parentLayout={layout} />
+                {
+                    userType === UserType.USER && updateTask ?
+                        <CalendarPlanView plannedTask={plannedTask} onUpdateTask={updateTask} parentLayout={layout} />
+                        :
+                        <GuestCalendarPlanView plannedTask={plannedTask} />
+                }
+
             </View>
         );
     });

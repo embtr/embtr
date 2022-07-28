@@ -13,6 +13,8 @@ import { TodayPicker } from 'src/components/today/TodayPicker';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getSelectedDayKey, setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { getAuth } from 'firebase/auth';
+import { UserProfile } from 'src/components/profile/UserProfile';
+import { UserType } from 'src/controller/profile/ProfileController';
 
 export const Today = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
@@ -61,7 +63,7 @@ export const Today = () => {
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
                     <TodayPicker day={getDayFromDayKey(getTodayKey())} onDayChanged={onDayChanged} />
                 </View>
-                <CalendarView plannedToday={plannedToday} updateTask={updateTask} />
+                <CalendarView plannedToday={plannedToday} updateTask={updateTask} userType={UserType.USER} />
             </View>
 
         </Screen>

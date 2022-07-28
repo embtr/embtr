@@ -2,6 +2,11 @@ import { User } from "firebase/auth";
 import ProfileDao, { UserProfileModel } from "src/firebase/firestore/profile/ProfileDao";
 import { registerAuthStateListener } from "src/session/CurrentUserProvider";
 
+export const enum UserType {
+    USER,
+    GUEST
+}
+
 class ProfileController {
     public static getProfile(uid: string, callback: Function) {
         const result = ProfileDao.getProfile(uid);
