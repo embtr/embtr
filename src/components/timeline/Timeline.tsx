@@ -71,11 +71,15 @@ export const Timeline = () => {
 
     }, [timelineEntries]);
 
+    const wait = (timeout: number | undefined) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    };
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         TimelineController.getTimelinePosts((refreshedTimelinePosts: TimelinePostModel[]) => {
             setTimelineEntries(refreshedTimelinePosts);
-            setRefreshing(false);
+            wait(500).then(() => setRefreshing(false));
         });
     }, []);
 
