@@ -64,7 +64,7 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
                             width: "95%", marginLeft: "2.5%",
                             shadowOffset: { height: 0, width: 0 }, shadowColor: 'transparent', shadowOpacity: 0, elevation: 0
                         }}
-                        indicatorContainerStyle={{ backgroundColor: "rgba(255,255,255,.15)", height: 4, marginTop: 43 }}
+                        indicatorContainerStyle={{ backgroundColor: colors.scroll_tab_background, height: 4, marginTop: 43 }}
                     />
                 }
             />
