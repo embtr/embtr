@@ -36,15 +36,10 @@ class PlannedDayDao {
         return result;
     }
 
-    public static async get(id: string) {
-        const userUid = getAuth().currentUser?.uid;
-        if (!userUid) {
-            return;
-        }
-
+    public static async get(uid: string, id: string) {
         const db: Firestore = getFirebaseConnection(this.name, "get");
 
-        const result = await getDocs(collection(db, "planned_day", userUid, id));
+        const result = await getDocs(collection(db, "planned_day", uid, id));
         return result;
     }
 

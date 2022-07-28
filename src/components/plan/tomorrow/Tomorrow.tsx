@@ -54,7 +54,7 @@ export const Tomorrow = () => {
         React.useCallback(() => {
             TaskController.getTasks(getAuth().currentUser!.uid, (allTasks: TaskModel[]) => {
                 setTasks(allTasks);
-                PlannedDayController.get(getTomorrowKey(), (plannedDay: PlannedDay) => {
+                PlannedDayController.get(getAuth().currentUser?.uid!, getTomorrowKey(), (plannedDay: PlannedDay) => {
                     setPlannedDay(plannedDay);
 
                     let updatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map<string, UpdatedPlannedTask>();

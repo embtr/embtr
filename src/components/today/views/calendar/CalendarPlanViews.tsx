@@ -1,6 +1,5 @@
 import React from 'react';
 import { LayoutRectangle, View } from 'react-native';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CalendarPlanView } from 'src/components/today/views/calendar/CalendarPlanView';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
@@ -10,8 +9,6 @@ interface Props {
 }
 
 export const CalendarPlanViews = ({ plannedToday, updateTask }: Props) => {
-    const { colors } = useTheme();
-
     const [layout, setLayout] = React.useState<LayoutRectangle>();
 
     let planViews: JSX.Element[] = [];

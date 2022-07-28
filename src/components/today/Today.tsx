@@ -12,6 +12,7 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { TodayPicker } from 'src/components/today/TodayPicker';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getSelectedDayKey, setSelectedDayKey } from 'src/redux/user/GlobalState';
+import { getAuth } from 'firebase/auth';
 
 export const Today = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
@@ -26,20 +27,20 @@ export const Today = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            PlannedDayController.get(dayKey, setPlannedToday);
+            PlannedDayController.get(getAuth().currentUser?.uid!, dayKey, setPlannedToday);
         }, [dayKey])
     );
 
     const onDayChanged = (day: number) => {
         const newDayKey = getDayKey(day);
         dispatch(setSelectedDayKey(newDayKey));
-        PlannedDayController.get(newDayKey, setPlannedToday);
+        PlannedDayController.get(getAuth().currentUser?.uid!, newDayKey, setPlannedToday);
     };
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
         PlannedDayController.updateTask(plannedToday!, updatedPlannedTask, () => {
             if (plannedToday?.id) {
-                PlannedDayController.get(plannedToday?.id, setPlannedToday);
+                PlannedDayController.get(getAuth().currentUser?.uid!, plannedToday?.id, setPlannedToday);
             }
         });
     };

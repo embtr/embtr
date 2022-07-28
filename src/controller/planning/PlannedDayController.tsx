@@ -1,3 +1,4 @@
+import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { TaskModel } from "src/controller/planning/TaskController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
@@ -119,7 +120,7 @@ class PlannedDayController {
             plannedTasks: []
         }
 
-        const response = PlannedDayDao.get(id);
+        const response = PlannedDayDao.get(getAuth().currentUser?.uid!, id);
         response.then(collection => {
             if (collection?.empty) {
                 this.create(plannedDay, callback);
@@ -141,14 +142,14 @@ class PlannedDayController {
         });
     }
 
-    public static get(id: string, callback: Function) {
+    public static get(uid: string, id: string, callback: Function) {
         let plannedDay: PlannedDay = {
             id: id,
             metadata: this.createMetadata(),
             plannedTasks: []
         }
 
-        const response = PlannedDayDao.get(id);
+        const response = PlannedDayDao.get(uid, id);
         response.then(collection => {
             collection?.forEach(currentPlannedTask => {
                 if (currentPlannedTask.id === "metadata") {
