@@ -3,6 +3,7 @@ import * as Device from 'expo-device';
 import UserController from 'src/controller/user/UserController';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { User } from 'firebase/auth';
+import EmbtrCloudApiController from 'src/controller/embtr_cloud/EmbtrCloudApiController';
 
 class PostNotificationController {
     public static registerUpdatePostNotificationTokenListener() {
@@ -11,6 +12,11 @@ class PostNotificationController {
                 this.registerForPushNotificationsAsync();
             }
         });
+    }
+
+    public static sendPostNotificationApiRequest(notificationId: string) {
+        console.log("sending notification with id: " + notificationId);
+        EmbtrCloudApiController.sendPostNotificationApiRequest(notificationId);
     }
 
     private static registerForPushNotificationsAsync = async () => {

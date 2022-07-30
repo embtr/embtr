@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import PostNotificationController from "src/controller/notification/PostNotificationController";
 import NotificationDao from "src/firebase/firestore/notification/NotificationDao";
 import { UserProfileModel } from "src/firebase/firestore/profile/ProfileDao";
 
@@ -73,7 +74,10 @@ class NotificationController {
             target_page: targetPage
         };
 
-        NotificationDao.addNotification(notificationModel);
+        const result = NotificationDao.addNotification(notificationModel);
+        result.then(addedNotification => {
+            PostNotificationController.sendPostNotificationApiRequest(addedNotification.id);
+        });
     }
 
     public static clearNotifications(notifications: NotificationModel[]) {

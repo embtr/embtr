@@ -15,7 +15,8 @@ class NotificationDao {
     public static async addNotification(notification: NotificationModel) {
         const db: Firestore = getFirebaseConnection(this.name, "addNotification");
 
-        await addDoc(collection(db, "notifications"), notification);
+        const result = await addDoc(collection(db, "notifications"), notification);
+        return result;
     }
 
     public static clearNotification(notification: NotificationModel) {
