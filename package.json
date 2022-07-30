@@ -1,6 +1,6 @@
 {
   "name": "embtr",
-  "version": "0.0.146",
+  "version": "0.0.147",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -55,7 +55,9 @@
     "react-navigation": "^4.4.4",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.2",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "expo-notifications": "~0.15.4",
+    "expo-device": "~4.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

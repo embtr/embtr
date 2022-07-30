@@ -20,7 +20,7 @@ export const ProfileLevel = ({ level }: Props) => {
         <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Image source={require('assets/profile_level_background.png')} style={{ width: 23, height: 23 }} />
             <View style={{ position: "absolute", zIndex: 2 }}>
-                <Text style={{fontSize: 9, fontFamily: "Poppins_600SemiBold", color: "white"}}>12</Text>
+                <Text style={{fontSize: 9, fontFamily: "Poppins_600SemiBold", color: "white"}}>{level}</Text>
             </View>
         </View>
     );
