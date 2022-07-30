@@ -4,8 +4,9 @@ import UserController from 'src/controller/user/UserController';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { User } from 'firebase/auth';
 import EmbtrCloudApiController from 'src/controller/embtr_cloud/EmbtrCloudApiController';
+import { Platform } from 'react-native';
 
-class PostNotificationController {
+class PushNotificationController {
     public static registerUpdatePostNotificationTokenListener() {
         registerAuthStateListener((user: User) => {
             if (user) {
@@ -39,15 +40,15 @@ class PostNotificationController {
             alert('Must use physical device for Push Notifications');
         }
 
-        // if (Platform.OS === 'android') {
-        //     Notifications.setNotificationChannelAsync('default', {
-        //         name: 'default',
-        //         importance: Notifications.AndroidImportance.MAX,
-        //         vibrationPattern: [0, 250, 250, 250],
-        //         lightColor: '#FF231F7C',
-        //     });
-        // }
+        if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: '#FF231F7C',
+            });
+        }
     };
 }
 
-export default PostNotificationController;
+export default PushNotificationController;

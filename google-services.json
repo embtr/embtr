@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "376803163073",
+    "project_id": "embtr-app",
+    "storage_bucket": "embtr-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:376803163073:android:f612d55e9160d4e121cd40",
+        "android_client_info": {
+          "package_name": "com.brentryczak.embtr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "376803163073-qle8k2tk1phjd3mmatmdknvafnivgcba.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_DRZF1cipXCMgdoGrVHXVMVMgbEPcBm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "376803163073-nivsntdkkej9ltf8lm7o46u1m2o63hcg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "376803163073-8pb7iligkf6p5ea4roucb23fe8v857r8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.brentryczak.embtr"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

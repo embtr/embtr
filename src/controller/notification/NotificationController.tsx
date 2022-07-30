@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import PostNotificationController from "src/controller/notification/PostNotificationController";
+import PushNotificationController from "src/controller/notification/PushNotificationController";
 import NotificationDao from "src/firebase/firestore/notification/NotificationDao";
 import { UserProfileModel } from "src/firebase/firestore/profile/ProfileDao";
 
@@ -76,7 +76,7 @@ class NotificationController {
 
         const result = NotificationDao.addNotification(notificationModel);
         result.then(addedNotification => {
-            PostNotificationController.sendPostNotificationApiRequest(addedNotification.id);
+            PushNotificationController.sendPostNotificationApiRequest(addedNotification.id);
         });
     }
 

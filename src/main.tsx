@@ -11,7 +11,7 @@ import { Screen } from 'src/components/common/Screen';
 import { useAppSelector } from 'src/redux/Hooks';
 import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox } from 'react-native';
-import PostNotificationController from 'src/controller/notification/PostNotificationController';
+import PushNotificationController from 'src/controller/notification/PushNotificationController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -90,7 +90,7 @@ export const Main = () => {
     //TODO - only do this on very first login
     React.useEffect(() => {
         ProfileController.registerInitialProfileUpdateListener();
-        PostNotificationController.registerUpdatePostNotificationTokenListener();
+        PushNotificationController.registerUpdatePostNotificationTokenListener();
     }, []);
 
     React.useEffect(() => {
