@@ -1,7 +1,12 @@
-import { User } from "firebase/auth";
-import ProfileDao from "src/firebase/firestore/profile/ProfileDao";
+import { Timestamp } from "firebase/firestore";
 import CurrentUserDao from "src/firebase/firestore/user/CurrentUserDao";
-import { registerAuthStateListener } from "src/session/CurrentUserProvider";
+
+export interface UserModel {
+    access_level: string,
+    email: string,
+    post_notification_token?: string,
+    timestamp: Timestamp
+}
 
 class UserController {
     public static getAccessLevel(uid: string, email: string, callback: Function) {
@@ -16,6 +21,12 @@ class UserController {
                 });
             }
         });
+    }
+
+    public static updatePostNotificationToken(token: string, callback: Function) {
+        const result = CurrentUserDao.updateField("post_notification_token", token);
+        result.then(() => { callback(
+        ) });
     }
 }
 

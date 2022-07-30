@@ -1,4 +1,5 @@
-import { Firestore, doc, setDoc, getDoc, Timestamp} from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { Firestore, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class CurrentUserDao {
@@ -22,6 +23,19 @@ class CurrentUserDao {
                     });
                 }
             });
+
+        return result;
+    }
+
+    public static async updateField(key: string, value: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "updateField");
+
+        const uid = getAuth().currentUser?.uid;
+        if (!uid) {
+            return;
+        }
+
+        const result = setDoc(doc(db, "users/", uid), { [key]: value }, { merge: true });
 
         return result;
     }
