@@ -48,6 +48,7 @@ class NotificationController {
                 notifications.push(notification);
             });
         }).then(() => {
+            notifications.sort((a, b) => (a.added > b.added) ? 1 : -1).reverse();
             callback(notifications);
         }).catch(() => {
             callback(notifications);
