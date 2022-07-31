@@ -23,10 +23,15 @@ class UserController {
         });
     }
 
-    public static updatePostNotificationToken(token: string, callback: Function) {
-        const result = CurrentUserDao.updateField("post_notification_token", token);
-        result.then(() => { callback(
-        ) });
+    public static async getCurrentUser() {
+        const userData = await CurrentUserDao.getCurrentUser();
+        const currentUser: UserModel = userData.data() as UserModel;
+
+        return currentUser;
+    }
+
+    public static async updatePostNotificationToken(token: string | null) {
+        await CurrentUserDao.updateField("post_notification_token", token);
     }
 }
 

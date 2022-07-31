@@ -7,16 +7,14 @@ import { CARD_SHADOW, SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
 interface Props {
     text: string,
     onToggle: Function,
-    initialValue: boolean
+    value: boolean
 }
 
-export const EmbtrToggle = ({ text, onToggle, initialValue }: Props) => {
+export const EmbtrToggle = ({ text, onToggle, value }: Props) => {
     const { colors } = useTheme();
 
-    const [isEnabled, setIsEnabled] = React.useState(initialValue);
     const toggleSwitch = (active: boolean) => {
-        setIsEnabled(active)
-        onToggle(!isEnabled);
+        onToggle(!value);
     };
 
     let [fontsLoaded] = useFonts({
@@ -41,7 +39,7 @@ export const EmbtrToggle = ({ text, onToggle, initialValue }: Props) => {
                     thumbColor={colors.toggle}
                     ios_backgroundColor={colors.toggle_background_unselected}
                     onValueChange={toggleSwitch}
-                    value={isEnabled}
+                    value={value}
                 />
             </View>
 

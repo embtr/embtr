@@ -27,7 +27,14 @@ class CurrentUserDao {
         return result;
     }
 
-    public static async updateField(key: string, value: string) {
+    public static async getCurrentUser() {
+        const db: Firestore = getFirebaseConnection(this.name, "getCurrentUser");
+        const result = await getDoc(doc(db, "users/", getAuth().currentUser?.uid!));
+
+        return result;
+    }
+
+    public static async updateField(key: string, value: string | null) {
         const db: Firestore = getFirebaseConnection(this.name, "updateField");
 
         const uid = getAuth().currentUser?.uid;

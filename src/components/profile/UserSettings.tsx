@@ -7,6 +7,7 @@ import { getAuth } from 'firebase/auth';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setAccessLevel } from 'src/redux/user/GlobalState';
 import { EmbtrButton2 } from 'src/components/common/button/EmbtrButton2';
+import { NotificationsToggle } from 'src/components/settings/NotificationsToggle';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
@@ -19,7 +20,11 @@ export const UserSettings = () => {
                 <View style={{ paddingTop: 10 }}>
                     <ThemeToggle />
                 </View>
-                
+
+                <View style={{ paddingTop: 10 }}>
+                    <NotificationsToggle />
+                </View>
+
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
                     <EmbtrButton2 text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { alert("Tell Brent to get this working!") }} />
                 </View>
