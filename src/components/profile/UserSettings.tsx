@@ -6,8 +6,10 @@ import { ThemeToggle } from 'src/components/theme/ThemeToggle';
 import { getAuth } from 'firebase/auth';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setAccessLevel } from 'src/redux/user/GlobalState';
-import { EmbtrButton2 } from 'src/components/common/button/EmbtrButton2';
 import { NotificationsToggle } from 'src/components/settings/NotificationsToggle';
+import { SettingsButtonElement } from 'src/components/settings/SettingsButtonElement';
+import { SettingsTextElement } from 'src/components/settings/SettingsTextElement';
+import { SettingsVersion } from 'src/components/settings/SettingsVersion';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
@@ -26,15 +28,19 @@ export const UserSettings = () => {
                 </View>
 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
-                    <EmbtrButton2 text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { alert("Tell Brent to get this working!") }} />
+                    <SettingsButtonElement text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { alert("Tell Brent to get this working!") }} />
                 </View>
 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
-                    <EmbtrButton2 text={"Edit Pillars"} icon={"pillar"} onPress={() => { alert("Tell Brent to get this working!") }} />
+                    <SettingsButtonElement text={"Edit Pillars"} icon={"pillar"} onPress={() => { alert("Tell Brent to get this working!") }} />
                 </View>
 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
-                    <EmbtrButton2 text={"Sign Out"} icon={"exit-outline"} onPress={() => { getAuth().signOut(); dispatch(setAccessLevel("invalid")); }} />
+                    <SettingsButtonElement text={"Sign Out"} icon={"exit-outline"} onPress={() => { getAuth().signOut(); dispatch(setAccessLevel("invalid")); }} />
+                </View>
+
+                <View style={{ paddingTop: 10, alignItems: "center" }}>
+                    <SettingsVersion />
                 </View>
             </View>
         </Screen>
