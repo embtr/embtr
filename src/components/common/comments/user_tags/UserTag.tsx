@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import { UserImage } from 'src/components/profile/UserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';

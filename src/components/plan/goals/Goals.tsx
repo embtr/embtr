@@ -1,8 +1,7 @@
 import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
-import { View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView, View } from 'react-native';
 import { Goal } from 'src/components/plan/goals/Goal';
 import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';

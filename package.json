@@ -39,7 +39,6 @@
     "react-native": "0.68.2",
     "react-native-date-picker": "^4.2.3",
     "react-native-dropdown-picker": "^5.4.2",
-    "react-native-gesture-handler": "~2.2.1",
     "react-native-hold-menu": "^0.1.2",
     "react-native-keyboard-accessory": "^0.1.16",
     "react-native-menu-view": "^1.2.2",

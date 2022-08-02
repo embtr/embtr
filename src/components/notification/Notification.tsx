@@ -8,7 +8,7 @@ import { NotificationModel } from 'src/controller/notification/NotificationContr
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { formatDistance } from 'date-fns';

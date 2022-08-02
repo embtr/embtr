@@ -1,4 +1,3 @@
-import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react';
 import { AppState } from 'react-native';
 import { View } from 'react-native';

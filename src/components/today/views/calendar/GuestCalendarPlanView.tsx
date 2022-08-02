@@ -1,13 +1,8 @@
-import React, { useEffect } from 'react';
-import { View, Text, LayoutRectangle } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { plannedTaskIsComplete, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { plannedTaskIsComplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
-import { createEmbtrOptions as createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
-import * as Haptics from 'expo-haptics';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 
