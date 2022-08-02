@@ -1,15 +1,21 @@
-import { useFocusEffect } from '@react-navigation/native';
-import { getAuth } from 'firebase/auth';
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
+import { ScrollView, View, Text } from 'react-native';
 import { Goal } from 'src/components/plan/goals/Goal';
 import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { PillarModel } from 'src/model/PillarModel';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const Goals = () => {
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
+
+    const { colors } = useTheme();
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -38,9 +44,18 @@ export const Goals = () => {
     return (
         <View style={{ height: "100%", width: "100%" }}>
 
-            <ScrollView style={{ paddingTop: 7 }}>
-                {goalViews}
-            </ScrollView>
+            {goalViews.length > 0
+                ?
+                <ScrollView style={{ paddingTop: 7 }}>
+                    {goalViews}
+                </ScrollView>
+                :
+                <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
+                    <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
+                        You have no goals. Goals are important! <Text onPress={() => { navigation.navigate("CreateGoal") }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a goal</Text>
+                    </Text>
+                </View>
+            }
         </View>
     );
 };

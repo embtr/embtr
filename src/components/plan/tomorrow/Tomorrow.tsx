@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -12,6 +12,8 @@ import { useFonts, Poppins_500Medium, Poppins_400Regular } from '@expo-google-fo
 import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
 import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface UpdatedPlannedTask {
     checked: boolean,
@@ -21,6 +23,7 @@ interface UpdatedPlannedTask {
 
 export const Tomorrow = () => {
     const { colors } = useTheme();
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
@@ -49,7 +52,7 @@ export const Tomorrow = () => {
             }
         }, [])
     );
-    
+
     useFocusEffect(
         React.useCallback(() => {
             TaskController.getTasks(getAuth().currentUser!.uid, (allTasks: TaskModel[]) => {
@@ -106,9 +109,9 @@ export const Tomorrow = () => {
             let taskViews: JSX.Element[] = [];
 
             let plannedTasks = plannedDay?.plannedTasks;
-            
+
             if (plannedTasks) {
-                plannedTasks.sort((a, b) => (a.startMinute! > b.startMinute!) ? 1 : -1);                
+                plannedTasks.sort((a, b) => (a.startMinute! > b.startMinute!) ? 1 : -1);
             }
 
             // get all current planned tasks
@@ -123,7 +126,7 @@ export const Tomorrow = () => {
                         return;
                     }
                 });
-    
+
                 pillars.forEach(pillar => {
                     if (pillar.id === taskGoal.pillarId) {
                         taskPillar = pillar;
@@ -142,14 +145,14 @@ export const Tomorrow = () => {
                 tasks.forEach(task => {
                     let taskGoal: GoalModel = FAKE_GOAL;
                     let taskPillar: PillarModel = FAKE_PILLAR;
-    
+
                     goals.forEach(goal => {
                         if (goal.id === task.goalId) {
                             taskGoal = goal;
                             return;
                         }
                     });
-        
+
                     pillars.forEach(pillar => {
                         if (pillar.id === taskGoal.pillarId) {
                             taskPillar = pillar;
@@ -330,8 +333,12 @@ export const Tomorrow = () => {
                         :
                         <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
                             <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
-                                You have no tasks scheduled to run on a {tomorrowCapitalized}. Head on over to the Tasks tab to configure some.
+                                You have no tasks or habits scheduled. Let's change that!
                             </Text>
+                            <View style={{ flexDirection: "row", paddingTop: 4 }}>
+                                <View style={{ paddingRight: 5 }}><Text onPress={() => {navigation.navigate("CreateOneTimeTask", {dayKey: getTomorrowKey()})}} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a task</Text></View>
+                                <View style={{ paddingLeft: 5 }}><Text onPress={() => {toggleLock()}} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > select a habit</Text></View>
+                            </View>
                         </View>
                 }
             </View>
