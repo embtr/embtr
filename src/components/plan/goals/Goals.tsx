@@ -51,7 +51,7 @@ export const Goals = () => {
                 </ScrollView>
                 :
                 <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
+                    <Text style={{ color: colors.secondary_text}} >
                         You have no goals. Goals are important! <Text onPress={() => { navigation.navigate("CreateGoal") }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a goal</Text>
                     </Text>
                 </View>

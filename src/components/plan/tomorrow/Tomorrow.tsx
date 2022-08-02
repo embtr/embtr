@@ -332,12 +332,12 @@ export const Tomorrow = () => {
                         </ScrollView>
                         :
                         <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
-                            <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
+                            <Text style={{ color: colors.secondary_text }} >
                                 You have no tasks or habits scheduled. Let's change that!
                             </Text>
                             <View style={{ flexDirection: "row", paddingTop: 4 }}>
-                                <View style={{ paddingRight: 5 }}><Text onPress={() => {navigation.navigate("CreateOneTimeTask", {dayKey: getTomorrowKey()})}} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a task</Text></View>
-                                <View style={{ paddingLeft: 5 }}><Text onPress={() => {toggleLock()}} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > select a habit</Text></View>
+                                <View style={{ paddingRight: 5 }}><Text onPress={() => { navigation.navigate("CreateOneTimeTask", { dayKey: getTomorrowKey() }) }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a task</Text></View>
+                                <View style={{ paddingLeft: 5 }}><Text onPress={() => { toggleLock() }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > select a habit</Text></View>
                             </View>
                         </View>
                 }

@@ -8,7 +8,6 @@ import { useAppDispatch } from 'src/redux/Hooks';
 import { setAccessLevel } from 'src/redux/user/GlobalState';
 import { NotificationsToggle } from 'src/components/settings/NotificationsToggle';
 import { SettingsButtonElement } from 'src/components/settings/SettingsButtonElement';
-import { SettingsTextElement } from 'src/components/settings/SettingsTextElement';
 import { SettingsVersion } from 'src/components/settings/SettingsVersion';
 
 export const UserSettings = () => {
