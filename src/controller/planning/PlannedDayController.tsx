@@ -87,10 +87,9 @@ export const getKey = (daysBack: number) => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + daysBack);
 
-    const elements = tomorrow.toLocaleDateString("en-US").split("/");
-    const month = elements[0].length == 1 ? "0" + elements[0] : elements[0];
-    const day = elements[1].length == 1 ? "0" + elements[1] : elements[1];
-    const year = elements[2];
+    let month = ("0" + tomorrow.getMonth()).slice(-2);
+    let day = ("0" + tomorrow.getDay()).slice(-2);
+    let year = tomorrow.getFullYear();
 
     return month + day + year;
 }
