@@ -1,6 +1,5 @@
 import React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import DropDownPicker from 'react-native-dropdown-picker';
 
