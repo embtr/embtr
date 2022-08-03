@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, ScrollView } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
+import { ScrollView } from 'react-native-gesture-handler';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';

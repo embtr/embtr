@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Text, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -12,6 +12,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
     type: string,
