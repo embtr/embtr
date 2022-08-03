@@ -1,9 +1,8 @@
 import { Picker } from '@react-native-picker/picker';
 import * as React from 'react';
-import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 
 

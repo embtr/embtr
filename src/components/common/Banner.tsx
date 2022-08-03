@@ -19,6 +19,9 @@ interface Props {
     leftOnClick?: Function,
     innerLeftOnClick?: Function,
 
+    innerRightIcon?: any,
+    innerRightOnClick?: Function,
+
     rightRoute?: string,
     rightIcon?: any,
     rightOnClick?: Function,
@@ -27,7 +30,7 @@ interface Props {
     menuOptions?: EmbtrMenuOptions
 }
 
-export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, leftOnClick, innerLeftOnClick: innerLeftCallback, menuOptions }: Props) => {
+export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, leftOnClick, innerLeftOnClick: innerLeftCallback, menuOptions, innerRightIcon, innerRightOnClick }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -72,7 +75,7 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
         <View>
             <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
                 <View style={{ flexDirection: "row", flex: 1, paddingLeft: 10, paddingTop: 5 }}>
-                    {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => {leftOnClick ? leftOnClick() : leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
+                    {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftOnClick ? leftOnClick() : leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
                     {innerLeftIcon ? <Ionicons style={{ paddingLeft: 10 }} name={innerLeftIcon} size={32} color={colors.text} onPress={() => { if (innerLeftCallback) innerLeftCallback() }} /> : <View />}
                 </View>
 
@@ -82,11 +85,14 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
                 </View>
 
                 <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
+                    {innerRightIcon &&
+                        <Ionicons style={{ paddingRight: 10 }} name={innerRightIcon} size={32} color={colors.text} onPress={() => { if (innerRightOnClick) innerRightOnClick() }} />
+                    }
                     {rightIcon &&
                         <View style={{ alignItems: "flex-end" }}>
                             {
                                 rightIconNotificationCount ?
-                                    <View style={{paddingRight: 1, paddingTop: 0, zIndex: 1, position: "absolute"}}>
+                                    <View style={{ paddingRight: 1, paddingTop: 0, zIndex: 1, position: "absolute" }}>
                                         <View style={{ backgroundColor: colors.notification_dot, borderRadius: 50, width: 9, height: 9 }} />
                                     </View>
                                     : <></>

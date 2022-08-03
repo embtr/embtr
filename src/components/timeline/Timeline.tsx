@@ -15,6 +15,7 @@ import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeCont
 import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';
 import { getAuth } from 'firebase/auth';
 import { CARD_SHADOW } from 'src/util/constants';
+import { FeedbackModal } from 'src/components/feedback/FeedbackModal';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -39,6 +40,7 @@ export const Timeline = () => {
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [feedbackModalVisible, setFeedbackModalVisible] = React.useState<boolean>(false);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -128,8 +130,19 @@ export const Timeline = () => {
 
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
+    const openFeedbackModal = () => {
+        setFeedbackModalVisible(true);
+    };
+
+
+    const dismissFeedbackModal = () => {
+        setFeedbackModalVisible(false);
+    };
+
     return (
         <Screen>
+            <FeedbackModal visible={feedbackModalVisible} confirm={dismissFeedbackModal} dismiss={dismissFeedbackModal} />
+
             <Banner
                 name="Timeline"
                 leftIcon={'people-outline'}
@@ -138,6 +151,8 @@ export const Timeline = () => {
                 innerLeftOnClick={() => { navigation.navigate('CreateTimelineStory') }}
                 rightIcon={'notifications-outline'}
                 rightRoute={'Notifications'}
+                innerRightIcon={'happy-outline'}
+                innerRightOnClick={openFeedbackModal}
                 rightIconNotificationCount={unreadNotificationCount}
             />
             <ScrollView
