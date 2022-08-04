@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, LayoutRectangle } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { plannedTaskIsComplete, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { getTodayKey, plannedTaskIsComplete, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
@@ -10,6 +10,9 @@ import { createEmbtrOptions as createEmbtrMenuOptions, EmbtrMenuOption } from 's
 import * as Haptics from 'expo-haptics';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TodayTab } from 'src/navigation/RootStackParamList';
 
 
 interface Props {
@@ -20,6 +23,8 @@ interface Props {
 
 export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Props) => {
     const { colors } = useTheme();
+
+    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const cardShadow = {
         shadowColor: '#000',
@@ -53,6 +58,13 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
         onUpdateTask(plannedTask);
     };
 
+    const navigateToEditTask = () => {
+        closeMenu();
+        if (plannedTask.id) {
+            navigation.navigate("EditOneTimeTask", { dayKey: getTodayKey(), plannedTaskId: plannedTask.id })
+        }
+    };
+
     const updateMenuOptions = () => {
         let menuOptions: EmbtrMenuOption[] = [];
         if (plannedTaskIsComplete(plannedTask)) {
@@ -61,9 +73,10 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
 
         if (plannedTaskIsIncomplete(plannedTask)) {
             menuOptions.push({ name: "Complete", onPress: toggleCompletion });
+            menuOptions.push({ name: "Edit", onPress: navigateToEditTask });
         }
 
-        menuOptions.push({name: "Delete", onPress: deletePlan});
+        menuOptions.push({ name: "Delete", onPress: deletePlan });
         dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
     };
 
@@ -106,7 +119,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                     borderRadius: 6,
                     backgroundColor: colors.timeline_card_background
                 }]}>
-                    
+
                 <View style={{ flexDirection: "row", width: "100%", paddingTop: 5, paddingLeft: 5 }}>
                     <View style={{ flex: 5 }}>
                         <Text style={{ color: colors.text, fontFamily: "Poppins_600SemiBold", fontSize: 13 }}>{plannedTask.routine.name}</Text>

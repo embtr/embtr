@@ -26,8 +26,8 @@ export const EditProfile = () => {
     const [location, setLocation] = React.useState("");
     const [bio, setBio] = React.useState("");
 
-    const placeholderOptions: string[] = ["I love pringles", "Smarter than your average", "Do people read these?", "Top 10 Horseshoe player on my street.", "Work Hard, Train Harder."];
-    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length)]);
+    const placeholderOptions: string[] = ["I love pringles <3", "Smarter than your average", "Do people read these?", "Top 10 Horseshoe player on my street.", "Work Hard, Train Harder."];
+    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]);
 
     function getRandomInt(min: number, max: number) {
         min = Math.ceil(min);
@@ -40,7 +40,7 @@ export const EditProfile = () => {
             setTimeout(() => {
                 let x = -1;
                 while (x === -1) {
-                    let newIndex = getRandomInt(0, placeholderOptions.length);
+                    let newIndex = getRandomInt(0, placeholderOptions.length - 1);
                     if (placeholderOptions[newIndex] !== bioPlaceholder) {
                         x = newIndex;
                     }

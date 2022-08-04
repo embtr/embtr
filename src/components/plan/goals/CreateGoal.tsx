@@ -62,7 +62,8 @@ export const CreateGoal = () => {
             description: details,
             pillarId: selectedPillar,
             added: Timestamp.now(),
-            deadline: Timestamp.fromDate(deadline)
+            deadline: Timestamp.fromDate(deadline),
+            status: "ACTIVE"
         };
 
         GoalController.createGoal(newGoal, () => {
@@ -130,7 +131,7 @@ export const CreateGoal = () => {
 
                         <View style={{ paddingTop: 15, alignItems: "center" }}>
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Pillar</Text>
-                            <EmbtrDropDownSelect items={pillarOptions} onItemSelected={setSelectedPillar} />
+                            <EmbtrDropDownSelect items={pillarOptions} onItemSelected={setSelectedPillar} name={"Pillar"} />
                         </View>
 
                         <View style={{ zIndex: -1, paddingTop: 15, alignItems: "center" }}>

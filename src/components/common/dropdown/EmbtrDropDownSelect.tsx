@@ -5,10 +5,11 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 interface Props {
     items: any,
-    onItemSelected: Function
+    onItemSelected: Function,
+    name: string
 }
 
-export const EmbtrDropDownSelect = ({ items, onItemSelected }: Props) => {
+export const EmbtrDropDownSelect = ({ items, onItemSelected, name }: Props) => {
     const { colors } = useTheme();
     const [menuOpen, setMenuOption] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState('');
@@ -33,7 +34,7 @@ export const EmbtrDropDownSelect = ({ items, onItemSelected }: Props) => {
                 listItemContainerStyle={{ borderTopWidth: 1, borderColor: colors.text_input_border, height: 50 }}
                 listChildContainerStyle={{height: 60}}
                 open={menuOpen}
-                placeholder={hasGoals ? "Select A Goal" : "No Goals Found"}
+                placeholder={hasGoals ? "Select A " + name : "No "+ name +"s Found"}
                 value={selectedValue}
                 items={items}
                 setOpen={hasGoals ? setMenuOption : () => { }}

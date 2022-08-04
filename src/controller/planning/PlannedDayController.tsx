@@ -185,6 +185,16 @@ class PlannedDayController {
         PlannedDayDao.replace(plannedDay);
     }
 
+    public static getTask(uid: string, dayKey: string, plannedTaskId: string, callback: Function) {
+        this.get(uid, dayKey, (plannedDay: PlannedDay) => {
+            plannedDay.plannedTasks.forEach(plannedTask => {
+                if (plannedTask.id === plannedTaskId) {
+                    callback(plannedTask);
+                }
+            });
+        });
+    }
+
     public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
         plannedDay.metadata!.modified = Timestamp.now();
         const result = PlannedDayDao.updateTask(plannedDay, plannedTask);

@@ -27,6 +27,7 @@ export const Dashboard = () => {
                     tabBarHideOnKeyboard: true,
                     tabBarShowLabel: false,
                     headerShown: false
+//                    , lazy:false - this will load all tabs rather than one at a time
                 })}
             >
                 <Tab.Screen
