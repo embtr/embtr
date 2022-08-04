@@ -19,9 +19,11 @@ export const CurrentUserProfile = () => {
     const [followingCount, setFollowingCount] = React.useState<number>(0);
 
     const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
-    React.useEffect(() => {
-        getCurrentUserUid(setCurrentUserId);
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getCurrentUserUid(setCurrentUserId);
+        }, [])
+    );
 
     useFocusEffect(
         React.useCallback(() => {
@@ -37,13 +39,15 @@ export const CurrentUserProfile = () => {
         }, [userProfileModel])
     );
 
-    React.useEffect(() => {
-        if (currentUserId) {
-            ProfileController.getProfile(currentUserId, (profile: UserProfileModel) => {
-                setUserProfileModel(profile);
-            });
-        }
-    }, [currentUserId]);
+    useFocusEffect(
+        React.useCallback(() => {
+            if (currentUserId) {
+                ProfileController.getProfile(currentUserId, (profile: UserProfileModel) => {
+                    setUserProfileModel(profile);
+                });
+            }
+        }, [currentUserId])
+    );
 
     return (
         <Screen>

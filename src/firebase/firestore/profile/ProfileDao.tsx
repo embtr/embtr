@@ -5,9 +5,22 @@ export interface UserProfileModel {
     uid?: string,
     name?: string,
     nameLower?: string,
+    username?: string,
     email?: string,
     photoUrl?: string,
-    bio?: string
+    bio?: string,
+    location?: string
+}
+
+export const USER_PROFILE_SKELECTON: UserProfileModel = {
+    uid: "",
+    name: "",
+    nameLower: "",
+    username: "",
+    email: "",
+    photoUrl: "",
+    bio: "",
+    location: ""
 }
 
 class ProfileDao {
@@ -33,14 +46,7 @@ class ProfileDao {
            return;
        }
 
-       setDoc(doc(db, "profiles/", userProfile.uid), {
-           "uid": userProfile.uid,
-           "bio": userProfile.bio ? userProfile.bio : "",
-           "name": userProfile.name,
-           "nameLower": userProfile.nameLower,
-           "email": userProfile.email,
-           "photoUrl": userProfile.photoUrl
-       }, {merge: true});
+       setDoc(doc(db, "profiles/", userProfile.uid), userProfile, {merge: true});
    }
 
 }

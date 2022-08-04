@@ -57,6 +57,7 @@ class ProfileController {
     }
 
     public static updateProfile(userProfile: UserProfileModel) {
+        userProfile.nameLower = userProfile?.name?.toLowerCase()
         ProfileDao.updateProfile(userProfile);
     }
 }

@@ -117,7 +117,8 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
                 </View>
 
-                <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text }}>{userProfileModel?.bio}</Text>
+                <Text style={{ fontSize: 10, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text }}>{userProfileModel?.location}</Text>
+                <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text, paddingTop: 3}}>{userProfileModel?.bio}</Text>
             </View>
 
             <View style={{ paddingBottom: 20 }}>

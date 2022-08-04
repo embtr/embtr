@@ -65,7 +65,7 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
                                 </View>
 
                                 <View style={{ flex: 1, justifyContent: "flex-start" }}>
-                                    <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>Glen Burnie, MD</Text>
+                                    <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>{author?.location}</Text>
                                 </View>
 
                                 <View>

@@ -22,9 +22,11 @@ export const UserProfile = () => {
     const [followingCount, setFollowingCount] = React.useState<number>(0);
 
     const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
-    React.useEffect(() => {
-        getCurrentUserUid(setCurrentUserId);
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            getCurrentUserUid(setCurrentUserId);
+        }, [])
+    );
 
     const onFollowUser = (uid: string) => {
         setIsFollowingUser(true);

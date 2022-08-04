@@ -111,7 +111,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                             </View>
 
                             <View style={{ flex: 1, justifyContent: "flex-start" }}>
-                                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>Glen Burnie, MD</Text>
+                                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>{userProfileModel?.location}</Text>
                             </View>
                         </View>
                     </View>
