@@ -26,8 +26,8 @@ export const EditProfile = () => {
     const [location, setLocation] = React.useState("");
     const [bio, setBio] = React.useState("");
 
-    const placeholderOptions: string[] = ["I love pringles", "Smarter than your average", "Do people read these?"];
-    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[0]);
+    const placeholderOptions: string[] = ["I love pringles", "Smarter than your average", "Do people read these?", "Top 10 Horseshoe player on my street.", "Work Hard, Train Harder."];
+    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length)]);
 
     function getRandomInt(min: number, max: number) {
         min = Math.ceil(min);
@@ -35,20 +35,18 @@ export const EditProfile = () => {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    const [date, setDate] = React.useState(new Date());
     useFocusEffect(
         React.useCallback(() => {
             setTimeout(() => {
                 let x = -1;
                 while (x === -1) {
-                    let newIndex =getRandomInt(0, 2);
+                    let newIndex = getRandomInt(0, placeholderOptions.length);
                     if (placeholderOptions[newIndex] !== bioPlaceholder) {
                         x = newIndex;
                     }
                 }
                 setBioPlaceholder(placeholderOptions[x]);
-                setDate(new Date());
-            }, 5000);
+            }, 6000);
         }, [bioPlaceholder])
     );
 
@@ -89,7 +87,7 @@ export const EditProfile = () => {
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Username</Text>
                             <TextInput
                                 style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
-                                placeholder={"username"}
+                                placeholder={"Username"}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setUsername}
                                 value={username}
@@ -102,7 +100,7 @@ export const EditProfile = () => {
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Display Name</Text>
                             <TextInput
                                 style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
-                                placeholder={"indecicive?"}
+                                placeholder={"Display Name"}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setDisplayName}
                                 value={displayName}
@@ -115,7 +113,7 @@ export const EditProfile = () => {
                             <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Location</Text>
                             <TextInput
                                 style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
-                                placeholder={"indecicive?"}
+                                placeholder={"where in the world?"}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setLocation}
                                 value={location}
