@@ -76,7 +76,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
             menuOptions.push({ name: "Edit", onPress: navigateToEditTask });
         }
 
-        menuOptions.push({ name: "Delete", onPress: deletePlan });
+        menuOptions.push({ name: "Delete", onPress: deletePlan, destructive: true });
         dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
     };
 
@@ -113,7 +113,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                     onLongPress();
                 }}
                 style={[cardShadow, {
-                    minHeight: 45,
+                    minHeight: 50,
                     height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
                     width: 225,
                     borderRadius: 6,

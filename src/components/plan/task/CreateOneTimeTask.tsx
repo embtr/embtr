@@ -151,7 +151,7 @@ export const CreateOneTimeTask = () => {
 
                     <View style={{ paddingTop: 10, alignItems: "center" }}>
                         <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Goal</Text>
-                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={setSelectedGoal} />
+                        <EmbtrDropDownSelect name={'Goal'} items={goalOptions} onItemSelected={setSelectedGoal} />
                     </View>
 
                     <View style={{ paddingTop: 10, alignItems: "center" }}>

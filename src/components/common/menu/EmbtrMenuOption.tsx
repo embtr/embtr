@@ -13,5 +13,6 @@ export interface EmbtrMenuOptions {
 
 export interface EmbtrMenuOption {
     name: string,
-    onPress: Function
+    onPress: Function,
+    destructive?: boolean
 }
