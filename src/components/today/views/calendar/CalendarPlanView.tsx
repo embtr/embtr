@@ -94,7 +94,8 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
 
     const onShortPress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        toggleCompletion();
+        updateMenuOptions();
+        openMenu();
     };
 
     const onLongPress = () => {
