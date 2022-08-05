@@ -78,8 +78,9 @@ export const Tasks = () => {
             :
             <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
                 <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
-                    You have no habits. Let's change that! <Text onPress={() => {navigation.navigate("CreateDailyTask")}} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a habit</Text>
+                    You have no habits. Let's change that!
                 </Text>
+                <Text onPress={() => { navigation.navigate("CreateDailyTask") }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a habit</Text>
             </View>
     )
 };

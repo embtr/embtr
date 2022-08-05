@@ -10,6 +10,7 @@ import { NotificationsToggle } from 'src/components/settings/NotificationsToggle
 import { SettingsButtonElement } from 'src/components/settings/SettingsButtonElement';
 import { SettingsVersion } from 'src/components/settings/SettingsVersion';
 import { EditProfileSettingsButton } from 'src/components/settings/EditProfileSettingsButton';
+import { SettingsFeedback } from 'src/components/settings/SettingsFeedback';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
@@ -34,6 +35,10 @@ export const UserSettings = () => {
 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
                     <SettingsButtonElement text={"Edit Pillars"} icon={"pillar"} onPress={() => { alert("Tell Brent to get this working!") }} />
+                </View>
+
+                <View style={{ paddingTop: 10, alignItems: "center" }}>
+                    <SettingsFeedback />
                 </View>
 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
