@@ -54,7 +54,7 @@ export const Goals = () => {
                     :
                     <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
                         <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
-                            You have no goals. Let's change that!
+                            You have no goals... Let's change that!
                         </Text>
                         <Text onPress={() => { navigation.navigate("CreateGoal") }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a goal</Text>
                     </View>

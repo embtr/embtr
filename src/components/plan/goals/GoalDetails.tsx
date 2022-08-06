@@ -6,7 +6,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { createEmbtrOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
@@ -52,7 +52,7 @@ export const GoalDetails = () => {
 
     return (
         <Screen>
-            <Banner name={"Goal Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuOptions={createEmbtrOptions(menuItems)} />
+            <Banner name={"Goal Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuOptions={createEmbtrMenuOptions(menuItems)} />
             <EmbtrMenuCustom />
 
             <View style={{ flex: 1 }}>

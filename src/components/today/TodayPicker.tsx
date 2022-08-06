@@ -57,7 +57,7 @@ export const TodayPicker = ({ day, onDayChanged }: Props) => {
 
     return (
         <View>
-            <HorizontalPicker animatedScrollToDefaultIndex={false} defaultIndex={day} snapTimeout={1000} data={dateElements} renderItem={renderItem} itemWidth={itemWidth} onChange={onSelectionChange} />
+            <HorizontalPicker animatedScrollToDefaultIndex={true} defaultIndex={day - 1} snapTimeout={1000} data={dateElements} renderItem={renderItem} itemWidth={itemWidth} onChange={onSelectionChange} />
         </View>
     );
 };

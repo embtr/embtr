@@ -9,7 +9,7 @@ import { getAuth } from 'firebase/auth';
 import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { createEmbtrOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
@@ -57,7 +57,7 @@ export const TaskDetails = () => {
 
     return (
         <Screen>
-            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuOptions={createEmbtrOptions(menuItems)} />
+            <Banner name={"Task Details"} leftIcon={"arrow-back"} leftRoute={"BACK"} rightIcon={"ellipsis-horizontal"} menuOptions={createEmbtrMenuOptions(menuItems)} />
             <EmbtrMenuCustom />
 
             <View style={{ flex: 1 }}>

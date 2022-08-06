@@ -29,7 +29,7 @@ export const PlanMain = () => {
             case 'tomorrow':
                 return <Tomorrow />
 
-            case 'tasks':
+            case 'habits':
                 return <Tasks />
 
             case 'goals':
@@ -43,7 +43,7 @@ export const PlanMain = () => {
 
     const [routes] = React.useState([
         { key: 'tomorrow', title: 'Tomorrow' },
-        { key: 'tasks', title: 'Tasks' },
+        { key: 'habits', title: 'Habits' },
         { key: 'goals', title: 'Goals' },
     ]);
 

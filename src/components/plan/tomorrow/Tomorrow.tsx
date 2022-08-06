@@ -337,7 +337,13 @@ export const Tomorrow = () => {
                             </Text>
                             <View style={{ flexDirection: "row", paddingTop: 4 }}>
                                 <View style={{ paddingRight: 5 }}><Text onPress={() => { navigation.navigate("CreateOneTimeTask", { dayKey: getTomorrowKey() }) }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a task</Text></View>
-                                <View style={{ paddingLeft: 5 }}><Text onPress={() => { toggleLock() }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > select a habit</Text></View>
+                                {
+                                    goals.length > 0
+                                        ?
+                                        <View style={{ paddingLeft: 5 }}><Text onPress={() => { toggleLock() }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > select a habit</Text></View>
+                                        :
+                                        <View style={{ paddingLeft: 5 }}><Text onPress={() => { navigation.navigate("CreateDailyTask") }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a habit</Text></View>
+                                }
                             </View>
                         </View>
                 }

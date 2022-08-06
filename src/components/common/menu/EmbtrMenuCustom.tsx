@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuOptionCustom } from 'src/components/common/menu/EmbtrMenuOptionCustom';
@@ -22,8 +22,8 @@ export const EmbtrMenuCustom = () => {
     if (menuOptions && menuOptions.uniqueIdentifier && menuOptions.options && menuOptions.options.length > 0) {
         menuOptions.options.forEach((menuOption, index) => {
             menuOptionViews.push(
-                <View style={{ backgroundColor: isAndroidDevice() ? undefined : colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
-                    {index !== 0 && <HorizontalLine />}
+                <View key={index} style={{ backgroundColor: isAndroidDevice() ? undefined : colors.modal_background, borderRadius: 10, paddingTop: 2.5, paddingBottom: 2.5 }}>
+                    {index !== -1 && <HorizontalLine />}
                     <Button color={menuOption.destructive === true ? "red" : undefined} title={menuOption.name} onPress={() => { menuOption.onPress() }} />
                 </View>
             );
@@ -59,7 +59,10 @@ export const EmbtrMenuCustom = () => {
                 <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
                 <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                     <TouchableOpacity style={{ flex: 1, width: "100%" }} onPress={() => { dismiss() }} />
-                    <View style={{ width: 300, backgroundColor: isAndroidDevice() ? undefined : colors.modal_background, borderRadius: 12, justifyContent: "space-around" }}>
+                    <View style={{ width: 300, backgroundColor: isAndroidDevice() ? undefined : colors.modal_background, borderRadius: 10, justifyContent: "space-around" }}>
+                        <Text style={{ color: colors.text, fontSize: 16, paddingTop: 15, paddingBottom: 15, textAlign: "center" }}>
+                            {title}
+                        </Text>
                         {menuOptionViews}
                     </View>
 

@@ -83,28 +83,28 @@ export const createPlannedTask = (task: TaskModel, startMinute: number, duration
 }
 
 
-export const getKey = (daysBack: number) => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + daysBack);
+export const getKey = (dayOfMonth: number) => {
+    const date = new Date();
+    date.setDate(dayOfMonth);
 
-    let month = ("0" + tomorrow.getMonth()).slice(-2);
-    let day = ("0" + tomorrow.getDay()).slice(-2);
-    let year = tomorrow.getFullYear();
-
+    let month = ("0" + (date.getMonth() + 1)).slice(-2);
+    let day = ("0" + dayOfMonth).slice(-2);
+    let year = date.getFullYear();
+    
     return month + day + year;
 }
 
 export const getDayKey = (day: number) => {
-    const todayDay = getDayFromDayKey(getTodayKey());
-    return getKey(day - todayDay);
+    return getKey(day);
 }
 
 export const getTodayKey = () => {
-    return getKey(0);
+    return getKey(new Date().getDay());
 }
 
 export const getTomorrowKey = () => {
-    return getKey(1);
+    console.log("IN!")
+    return getKey(new Date().getDay() + 1);
 }
 
 export const getDayFromDayKey = (dayKey: string) => {
