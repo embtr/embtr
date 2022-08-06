@@ -2,7 +2,7 @@ import React from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { getAuth } from 'firebase/auth';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
@@ -38,6 +38,21 @@ export const Tasks = () => {
             </View>
         );
     });
+
+    //saving for later
+    const deleteTask = (task: TaskModel) => {
+        Alert.alert("Archive Task?", "Archive task '" + task.name + "'?", [
+            { text: 'Cancel', onPress: () => { }, style: 'cancel', },
+            {
+                text: 'Archive', onPress: () => {
+                    if (task) {
+                        TaskController.archiveTask(task, () => { TaskController.getTasks(getAuth().currentUser!.uid, setTasks); });
+                    }
+                }
+            },
+        ]);
+    }
+
 
     return (
         <View style={{ height: "100%" }}>
