@@ -103,7 +103,6 @@ export const getTodayKey = () => {
 }
 
 export const getTomorrowKey = () => {
-    console.log("IN!")
     return getKey(new Date().getDay() + 1);
 }
 

@@ -33,7 +33,7 @@ export const AddHabitModal = ({ visible, confirm, dismiss }: Props) => {
 
     let hourPickerItems: JSX.Element[] = [];
     habits.forEach(habit => {
-        hourPickerItems.push(<Picker.Item key={habit.id} color={colors.text} label={habit.description} value={habit.id!} />);
+        hourPickerItems.push(<Picker.Item key={habit.id} color={colors.text} label={habit.name} value={habit.id!} />);
     });
 
     let [fontsLoaded] = useFonts({
