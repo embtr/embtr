@@ -29,7 +29,7 @@ export const PlanMain = () => {
             case 'tomorrow':
                 return <Tomorrow />
 
-            case 'habits':
+            case 'tasks':
                 return <Tasks />
 
             case 'goals':
@@ -43,7 +43,7 @@ export const PlanMain = () => {
 
     const [routes] = React.useState([
         { key: 'tomorrow', title: 'Tomorrow' },
-        { key: 'habits', title: 'Habits' },
+        { key: 'tasks', title: 'Tasks' },
         { key: 'goals', title: 'Goals' },
     ]);
 
@@ -76,7 +76,6 @@ export const PlanMain = () => {
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
                     onIndexChange={setIndex}
-                    swipeEnabled={index !== 1}
 
                     renderTabBar={props =>
                         <TabBar
