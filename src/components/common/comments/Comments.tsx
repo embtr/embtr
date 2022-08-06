@@ -13,6 +13,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { ScrollView } from 'react-native-gesture-handler';
+import { getAuth } from 'firebase/auth';
 
 interface Props {
     type: string,
@@ -20,14 +21,14 @@ interface Props {
     title: string,
     post: string,
     comments: Comment[],
-    submitComment: Function, 
-    
+    submitComment: Function
 }
 
 export const Comments = ({ type, authorUid, post, title, comments, submitComment }: Props) => {
     const { colors } = useTheme();
 
     const [author, setAuthor] = React.useState<UserProfileModel>();
+    const [currentUserProfile, setCurrentUserProfile] = React.useState<UserProfileModel>();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -35,10 +36,20 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
         }, [])
     );
 
+    useFocusEffect(
+        React.useCallback(() => {
+            const uid = getAuth().currentUser?.uid;
+
+            if (uid) {
+                ProfileController.getProfile(uid, setCurrentUserProfile);
+            }
+        }, [])
+    );
+
     const scrollRef = React.useRef<ScrollView>(null);
 
     const onCommentCountChanged = () => {
-        scrollRef.current?.scrollTo(0,0, false);
+        scrollRef.current?.scrollTo(0, 0, false);
     }
 
     return (
@@ -83,7 +94,7 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
 
                 </ScrollView>
 
-                {author && <CommentsTextInput userProfile={author} submitComment={submitComment} />}
+                {currentUserProfile && author && <CommentsTextInput currentUserProfile={currentUserProfile} authorUserProfile={author} submitComment={submitComment} />}
 
             </KeyboardAvoidingView>
         </Screen>

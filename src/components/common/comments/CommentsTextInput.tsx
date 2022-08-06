@@ -10,10 +10,11 @@ import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
     submitComment: Function,
-    userProfile: UserProfileModel
+    currentUserProfile: UserProfileModel,
+    authorUserProfile: UserProfileModel
 }
 
-export const CommentsTextInput = ({ submitComment, userProfile }: Props) => {
+export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUserProfile }: Props) => {
     const { colors } = useTheme();
 
     const [commentText, setCommentText] = React.useState("");
@@ -57,7 +58,7 @@ export const CommentsTextInput = ({ submitComment, userProfile }: Props) => {
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
 
                     <View style={{ paddingLeft: 10 }}>
-                        {userProfile && <NavigatableUserImage userProfileModel={userProfile} size={30} denyNavigation={true} />}
+                        {currentUserProfile && <NavigatableUserImage userProfileModel={currentUserProfile} size={30} denyNavigation={true} />}
                     </View>
                     <TextInput
                         style={{ paddingLeft: 10, color: colors.text, flex: 1 }}
