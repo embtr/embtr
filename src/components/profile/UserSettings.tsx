@@ -7,9 +7,19 @@ import { getAuth } from 'firebase/auth';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setAccessLevel } from 'src/redux/user/GlobalState';
 import { EmbtrButton2 } from 'src/components/common/button/EmbtrButton2';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
+import { EditUserProfile } from './EditUserProfile';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
+
+    const navigation = useNavigation<StackNavigationProp<ProfileTabScreens>>();
+
+    const navigateToEditUserProfile = () => {
+        navigation.navigate('EditUserProfile');
+    }
 
     return (
         <Screen>
@@ -21,7 +31,7 @@ export const UserSettings = () => {
                 </View>
                 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
-                    <EmbtrButton2 text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { alert("Tell Brent to get this working!") }} />
+                    <EmbtrButton2 text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { navigateToEditUserProfile() }} />
                 </View>
 
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
