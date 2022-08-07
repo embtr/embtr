@@ -99,11 +99,11 @@ export const getDayKey = (day: number) => {
 }
 
 export const getTodayKey = () => {
-    return getKey(new Date().getDay());
+    return getKey(new Date().getDate());
 }
 
 export const getTomorrowKey = () => {
-    return getKey(new Date().getDay() + 1);
+    return getKey(new Date().getDate() + 1);
 }
 
 export const getDayFromDayKey = (dayKey: string) => {
