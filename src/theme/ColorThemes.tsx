@@ -139,7 +139,7 @@ export const darkColors = {
   timeline_card_header: "#FFFFFF",
   timeline_card_body: "#FFFFFF",
   timeline_card_footer: "#FFFFFF",
-  timeline_card_background: "#121212",
+  timeline_card_background: "#000000",
 
   notification_dot: "#F14C6B",
 

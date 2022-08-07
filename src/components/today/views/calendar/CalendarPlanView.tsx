@@ -18,17 +18,19 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 interface Props {
     plannedTask: PlannedTaskModel,
     onUpdateTask: Function,
-    parentLayout?: LayoutRectangle
+    parentLayout?: LayoutRectangle,
+    rowIndex: number,
+    totalInRow: number
 }
 
-export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Props) => {
+export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInRow, parentLayout }: Props) => {
     const { colors } = useTheme();
-
+    const { setScheme, isDark } = useTheme();
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const cardShadow = {
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 5 },
+        shadowOffset: { width: 2.5, height: 5 },
         shadowOpacity: 0.3,
         shadowRadius: 4,
         elevation: 5
@@ -104,8 +106,14 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
         openMenu()
     };
 
+    let width = 0;
+    if (parentLayout?.width) {
+        width = ((parentLayout.width) / totalInRow) - (80 / totalInRow) - 4;
+    }
+    let paddingRight = (width * rowIndex) + 80 + (rowIndex * 4);
+
     return (
-        <View style={{ top: (plannedTask.startMinute! + (CALENDAR_TIME_HEIGHT / 2)), position: "absolute" }} >
+        <View style={{ marginLeft: paddingRight, top: (plannedTask.startMinute! + (CALENDAR_TIME_HEIGHT / 2)), position: "absolute" }} >
             <TouchableOpacity
                 onPress={() => {
                     onShortPress();
@@ -113,10 +121,10 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, parentLayout }: Pr
                 onLongPress={() => {
                     onLongPress();
                 }}
-                style={[cardShadow, {
+                style={[ isDark ? {} : cardShadow, {
                     minHeight: 50,
                     height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
-                    width: 225,
+                    width: totalInRow === 1 ? 225 : width,
                     borderRadius: 6,
                     backgroundColor: colors.timeline_card_background
                 }]}>
