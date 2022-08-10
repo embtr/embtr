@@ -1,6 +1,8 @@
 import { User } from "firebase/auth";
+import { uploadProfilePhoto } from "src/firebase/cloud_storage/profiles/ProfileCsp";
 import ProfileDao, { UserProfileModel } from "src/firebase/firestore/profile/ProfileDao";
 import { registerAuthStateListener } from "src/session/CurrentUserProvider";
+import { pickImage } from "src/util/ImagePickerUtil";
 
 export const enum UserType {
     USER,
@@ -59,6 +61,11 @@ class ProfileController {
     public static updateProfile(userProfile: UserProfileModel) {
         userProfile.nameLower = userProfile?.name?.toLowerCase()
         ProfileDao.updateProfile(userProfile);
+    }
+
+    public static async uploadProfilePhoto() {
+        const result = await pickImage();
+        uploadProfilePhoto(result);
     }
 }
 

@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, TextInput, Keyboard, KeyboardAvoidingView, Image } from 'react-native';
+import { View, Text, TextInput, Keyboard, KeyboardAvoidingView, Image, ActivityIndicator, StyleSheet } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { ProfileTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
+import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { UserProfileModel, USER_PROFILE_SKELECTON } from 'src/firebase/firestore/profile/ProfileDao';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getAuth } from 'firebase/auth';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -25,6 +25,8 @@ export const EditProfile = () => {
     const [displayName, setDisplayName] = React.useState("");
     const [location, setLocation] = React.useState("");
     const [bio, setBio] = React.useState("");
+
+    const [imageUploading, setImageUploading] = React.useState(false);
 
     const placeholderOptions: string[] = ["I love pringles <3", "Smarter than your average", "Do people read these?", "Top 10 Horseshoe player on my street.", "Work Hard, Train Harder."];
     const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]);
@@ -67,9 +69,39 @@ export const EditProfile = () => {
         }, [])
     );
 
+    const uploadProfilePhoto = async () => {
+        setImageUploading(true);
+        const url = await ProfileController.uploadProfilePhoto();
+        if (url) {
+            setPhotoUrl(url);
+            setImageUploading(false);
+        }
+    };
+
+    let _maybeRenderUploadingOverlay = () => {
+        if (imageUploading) {
+            return (
+                <View
+                    style={[
+                        StyleSheet.absoluteFill,
+                        {
+                            backgroundColor: "rgba(0,0,0,0.4)",
+                            alignItems: "center",
+                            justifyContent: "center",
+                        },
+                    ]}
+                >
+                    <ActivityIndicator color="#fff" animating size="large" />
+                </View>
+            );
+        }
+    };
+
     return (
         <Screen>
             <Banner name={"Edit Profile"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+
+            {_maybeRenderUploadingOverlay()}
 
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
                 <View style={{ height: "100%", width: "100%" }}>
@@ -78,7 +110,7 @@ export const EditProfile = () => {
                         <View style={{ paddingTop: 15, width: "100%", alignItems: "center" }}>
                             <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: photoUrl }} />
                             <View style={{ paddingTop: 3 }}>
-                                <Text style={{ fontSize: 12 }} onPress={() => { alert("coming soon!") }}>Change Photo</Text>
+                                <Text style={{ fontSize: 12 }} onPress={uploadProfilePhoto}>Change Photo</Text>
                             </View>
                         </View>
 
@@ -144,6 +176,7 @@ export const EditProfile = () => {
                                         userProfile.name = displayName;
                                         userProfile.location = location;
                                         userProfile.bio = bio;
+                                        userProfile.photoUrl = photoUrl;
                                         ProfileController.updateProfile(userProfile);
                                     }
                                     navigation.navigate("Profile");

@@ -10,7 +10,6 @@ export default function FullWidthImage({ sourceUrl, ratio }: Props) {
     const [width, setWidth] = useState(0);
     const [height, setHeight] = useState(0);
 
-    const source = require(sourceUrl);
 
     return (
         <View style={{ width: "100%", height: "100%", alignItems: "center" }}
