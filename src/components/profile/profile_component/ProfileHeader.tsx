@@ -8,6 +8,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
 import { UserProfileProBadge } from 'src/components/profile/profile_component/badge/UserProfileProBadge';
+import FullWidthImage from 'src/components/common/image/FullWidthImage';
 
 
 interface Props {
@@ -89,8 +90,8 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
     return (
         <View>
             <View style={{ width: "100%", height: 180, backgroundColor: colors.background }}>
-                <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 1, alignItems: "center", paddingTop: 10 }}>
-                    <Image source={banner} style={{ width: "95%", height: 135, borderRadius: 15 }} />
+                <View style={{ width: "100%", height: "100%", alignItems: "center", paddingTop: 10 }}>
+                    {banner && <FullWidthImage sourceUrl={banner} />}
                 </View>
 
                 <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
@@ -118,7 +119,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                 </View>
 
                 <Text style={{ fontSize: 10, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text }}>{userProfileModel?.location}</Text>
-                <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text, paddingTop: 3}}>{userProfileModel?.bio}</Text>
+                <Text style={{ fontSize: 12, fontFamily: "Poppins_500Medium", color: colors.profile_bio_text, paddingTop: 3 }}>{userProfileModel?.bio}</Text>
             </View>
 
             <View style={{ paddingBottom: 20 }}>

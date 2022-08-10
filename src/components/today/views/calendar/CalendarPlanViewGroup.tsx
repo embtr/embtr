@@ -22,16 +22,7 @@ export const GeneratePlanViewGroups = (tasks: PlannedTaskModel[]): CalendarPlanV
             newGroup.addTask(task);
             calendarPlanViewGroups.push(newGroup);
         }
-
-        calendarPlanViewGroups.forEach(group => {
-            console.log(group.toString());
-        });
     }
-
-    console.log("final:")
-    calendarPlanViewGroups.forEach(group => {
-        console.log(group.toString());
-    });
 
     return calendarPlanViewGroups;
 }
@@ -72,29 +63,21 @@ export class CalendarPlanViewGroup {
         const startMinute = task.startMinute;
         const endMinute = task.startMinute + task.duration;
 
-        console.log("comparing: (" + task.routine.name + ") " + startMinute + " => " + endMinute + " to " + this.start + " => " + this.end)
-
         if (startMinute <= this.start && endMinute >= this.end) {
-            console.log("a");
             return true;
         }
 
         if (startMinute <= this.start && endMinute >= this.start && endMinute <= this.end) {
-            console.log("b");
             return true;
         }
 
         if (endMinute >= this.end && startMinute <= this.end && startMinute >= this.start) {
-            console.log("c");
             return true;
         }
 
         if (startMinute >= this.start && startMinute <= this.end && endMinute >= this.start && endMinute <= this.end) {
-            console.log("d");
             return true;
         }
-
-        console.log("no match")
 
         return false;
     }
