@@ -13,6 +13,8 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { getAuth } from 'firebase/auth';
 import { ScrollView } from 'react-native-gesture-handler';
 import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
+import { Ionicons } from '@expo/vector-icons';
+import { BannerInfoModal } from 'src/components/profile/profile_component/BannerInfoModal';
 
 export const EditProfile = () => {
     const { colors } = useTheme();
@@ -29,6 +31,7 @@ export const EditProfile = () => {
     const [bio, setBio] = React.useState("");
 
     const [imageUploading, setImageUploading] = React.useState(false);
+    const [showBannerInfoModal, setShowBannerInfoModal] = React.useState(false);
 
     const placeholderOptions: string[] = ["I love pringles <3", "Smarter than your average", "Do people read these?", "Top 10 Horseshoe player on my street.", "Work Hard, Train Harder."];
     const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]);
@@ -38,6 +41,14 @@ export const EditProfile = () => {
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
+
+    const displayBannerInfoModal = () => {
+        setShowBannerInfoModal(true);
+    };
+
+    const hideBannerInfoModal = () => {
+        setShowBannerInfoModal(false);
+    };
 
     useFocusEffect(
         React.useCallback(() => {
@@ -115,19 +126,25 @@ export const EditProfile = () => {
             <Banner name={"Edit Profile"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
 
             {_maybeRenderUploadingOverlay()}
+            <BannerInfoModal visible={showBannerInfoModal} dismiss={hideBannerInfoModal} />
 
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
                 <View style={{ height: "100%", width: "100%" }}>
                     <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
 
                         <TouchableWithoutFeedback onPress={uploadProfileBanner}>
-                            <View style={{ width: "100%", height: 180 }}>
+
+                            <View style={{ width: "100%", height: 180, alignItems: "flex-end", justifyContent: "flex-end" }}>
+                                <View style={{ zIndex: 3, position: "absolute", alignItems: "flex-end", justifyContent: "flex-end", paddingBottom: 40, paddingRight: 20 }}>
+                                    <View style={{ borderRadius: 50, backgroundColor: colors.text, height: 21, width: 21, alignItems: "center", justifyContent: "center" }}>
+                                        <Ionicons name={'information-circle-outline'} size={22} color={colors.background} onPress={displayBannerInfoModal} />
+                                    </View>
+                                </View>
                                 <View style={{ width: "100%", height: "100%", alignItems: "center", paddingTop: 10 }}>
                                     <ProfileBannerImage sourceUrl={bannerUrl} />
                                 </View>
 
                                 <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
-
                                     <TouchableOpacity onPress={uploadProfilePhoto}>
                                         <View style={{ alignItems: "flex-end", justifyContent: "flex-end" }}>
                                             <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: photoUrl }} />
