@@ -1,6 +1,6 @@
 import * as ImagePicker from "expo-image-picker";
 import { getAuth } from "firebase/auth";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, updateMetadata, uploadBytes } from "firebase/storage";
 
 
 export const uploadProfilePhoto = async (pickerResult: ImagePicker.ImagePickerResult): Promise<string | undefined> => {
@@ -46,8 +46,11 @@ const uploadImageAsync = async (uri: string, filename: string): Promise<string> 
         xhr.send(null);
     });
 
-    const fileRef = ref(getStorage(), "profiles/" + getAuth().currentUser?.uid + "/" + filename + ".png");
+    let fileRef = ref(getStorage(), "profiles/" + getAuth().currentUser?.uid + "/" + filename + ".png");
     await uploadBytes(fileRef, blob);
+    const res = await updateMetadata(fileRef, {
+        cacheControl: 'public,max-age=300',
+    });
 
     // We're done with the blob, close and release it
     blob.close();

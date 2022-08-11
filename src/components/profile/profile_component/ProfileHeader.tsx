@@ -12,7 +12,7 @@ import ProfileBannerImage from 'src/components/profile/profile_component/Profile
 
 
 interface Props {
-    userProfileModel?: UserProfileModel,
+    userProfileModel: UserProfileModel,
     onFollowUser: Function,
     onUnfollowUser: Function,
     followerCount: number,
@@ -93,15 +93,13 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                 </View>
 
                 <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
-                    {
-                        userProfileModel &&
-                        <View style={{ alignItems: "flex-end", justifyContent: "flex-end" }}>
-                            <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} />
-                            <View style={{ position: "absolute", zIndex: 1, paddingBottom: 3, paddingRight: 3 }}>
-                                <ProfileLevel level={1} />
-                            </View>
+
+                    <View style={{ alignItems: "flex-end", justifyContent: "flex-end" }}>
+                        <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} />
+                        <View style={{ position: "absolute", zIndex: 1, paddingBottom: 3, paddingRight: 3 }}>
+                            <ProfileLevel level={1} />
                         </View>
-                    }
+                    </View>
                 </View>
             </View>
 

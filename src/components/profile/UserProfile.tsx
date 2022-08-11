@@ -72,7 +72,7 @@ export const UserProfile = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                        <ProfileHeader userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} followerCount={followerCount} followingCount={followingCount} isFollowingUser={isFollowingUser} />
+                        {userProfileModel && <ProfileHeader userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} followerCount={followerCount} followingCount={followingCount} isFollowingUser={isFollowingUser} />}
                         {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                     </View>
                 </View>
