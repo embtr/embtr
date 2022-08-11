@@ -6,7 +6,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 export const uploadProfilePhoto = async (pickerResult: ImagePicker.ImagePickerResult): Promise<string | undefined> => {
     try {
         if (!pickerResult.cancelled) {
-            const uploadUrl = await uploadImageAsync(pickerResult.uri);
+            const uploadUrl = await uploadImageAsync(pickerResult.uri, "profile");
             return uploadUrl;
         }
     } catch (e) {
@@ -16,7 +16,20 @@ export const uploadProfilePhoto = async (pickerResult: ImagePicker.ImagePickerRe
     return undefined;
 };
 
-const uploadImageAsync = async (uri: string): Promise<string> => {
+export const uploadProfileBanner = async (pickerResult: ImagePicker.ImagePickerResult): Promise<string | undefined> => {
+    try {
+        if (!pickerResult.cancelled) {
+            const uploadUrl = await uploadImageAsync(pickerResult.uri, "banner");
+            return uploadUrl;
+        }
+    } catch (e) {
+        console.log(e);
+        alert("Upload failed, sorry :(");
+    }
+    return undefined;
+};
+
+const uploadImageAsync = async (uri: string, filename: string): Promise<string> => {
     // Why are we using XMLHttpRequest? See:
     // https://github.com/expo/expo/issues/2402#issuecomment-443726662
     const blob: any = await new Promise((resolve, reject) => {
@@ -33,7 +46,7 @@ const uploadImageAsync = async (uri: string): Promise<string> => {
         xhr.send(null);
     });
 
-    const fileRef = ref(getStorage(), "profiles/" + getAuth().currentUser?.uid + "/test.png");
+    const fileRef = ref(getStorage(), "profiles/" + getAuth().currentUser?.uid + "/" + filename + ".png");
     await uploadBytes(fileRef, blob);
 
     // We're done with the blob, close and release it

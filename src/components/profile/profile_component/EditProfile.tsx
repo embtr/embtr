@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Keyboard, KeyboardAvoidingView, Image, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Keyboard, KeyboardAvoidingView, Image, ActivityIndicator, StyleSheet, Button, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -12,6 +12,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getAuth } from 'firebase/auth';
 import { ScrollView } from 'react-native-gesture-handler';
+import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 
 export const EditProfile = () => {
     const { colors } = useTheme();
@@ -21,6 +22,7 @@ export const EditProfile = () => {
     const [userProfile, setUserProfile] = React.useState<UserProfileModel | undefined>();
 
     const [photoUrl, setPhotoUrl] = React.useState("");
+    const [bannerUrl, setBannerUrl] = React.useState("");
     const [username, setUsername] = React.useState("");
     const [displayName, setDisplayName] = React.useState("");
     const [location, setLocation] = React.useState("");
@@ -60,6 +62,7 @@ export const EditProfile = () => {
                     setUserProfile(userProfile);
 
                     if (userProfile?.photoUrl) setPhotoUrl(userProfile.photoUrl);
+                    if (userProfile?.bannerUrl) setBannerUrl(userProfile.bannerUrl);
                     if (userProfile?.username) setUsername(userProfile.username);
                     if (userProfile?.name) setDisplayName(userProfile.name);
                     if (userProfile?.location) setLocation(userProfile.location);
@@ -74,8 +77,17 @@ export const EditProfile = () => {
         const url = await ProfileController.uploadProfilePhoto();
         if (url) {
             setPhotoUrl(url);
-            setImageUploading(false);
         }
+        setImageUploading(false);
+    };
+
+    const uploadProfileBanner = async () => {
+        setImageUploading(true);
+        const url = await ProfileController.uploadProfileBanner();
+        if (url) {
+            setBannerUrl(url);
+        }
+        setImageUploading(false);
     };
 
     let _maybeRenderUploadingOverlay = () => {
@@ -85,6 +97,7 @@ export const EditProfile = () => {
                     style={[
                         StyleSheet.absoluteFill,
                         {
+                            zIndex: 3,
                             backgroundColor: "rgba(0,0,0,0.4)",
                             alignItems: "center",
                             justifyContent: "center",
@@ -107,12 +120,22 @@ export const EditProfile = () => {
                 <View style={{ height: "100%", width: "100%" }}>
                     <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
 
-                        <View style={{ paddingTop: 15, width: "100%", alignItems: "center" }}>
-                            <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: photoUrl }} />
-                            <View style={{ paddingTop: 3 }}>
-                                <Text style={{ fontSize: 12 }} onPress={uploadProfilePhoto}>Change Photo</Text>
+                        <TouchableWithoutFeedback onPress={uploadProfileBanner}>
+                            <View style={{ width: "100%", height: 180 }}>
+                                <View style={{ width: "100%", height: "100%", alignItems: "center", paddingTop: 10 }}>
+                                    <ProfileBannerImage sourceUrl={bannerUrl} />
+                                </View>
+
+                                <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
+
+                                    <TouchableOpacity onPress={uploadProfilePhoto}>
+                                        <View style={{ alignItems: "flex-end", justifyContent: "flex-end" }}>
+                                            <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: photoUrl }} />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
+                        </TouchableWithoutFeedback>
 
                         {/* Username */}
                         <View style={{ paddingTop: 10, alignItems: "center" }}>
@@ -176,7 +199,12 @@ export const EditProfile = () => {
                                         userProfile.name = displayName;
                                         userProfile.location = location;
                                         userProfile.bio = bio;
-                                        userProfile.photoUrl = photoUrl;
+                                        if (photoUrl) {
+                                            userProfile.photoUrl = photoUrl;
+                                        }
+                                        if (bannerUrl) {
+                                            userProfile.bannerUrl = bannerUrl;
+                                        }
                                         ProfileController.updateProfile(userProfile);
                                     }
                                     navigation.navigate("Profile");
@@ -186,6 +214,6 @@ export const EditProfile = () => {
                     </KeyboardAvoidingView>
                 </View>
             </ScrollView>
-        </Screen>
+        </Screen >
     );
 };

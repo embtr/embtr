@@ -8,7 +8,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
 import { UserProfileProBadge } from 'src/components/profile/profile_component/badge/UserProfileProBadge';
-import FullWidthImage from 'src/components/common/image/FullWidthImage';
+import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 
 
 interface Props {
@@ -85,13 +85,11 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
         setProfileIsEditable(!profileIsEditable);
     }
 
-    const banner = require('assets/banner.png')
-
     return (
         <View>
             <View style={{ width: "100%", height: 180, backgroundColor: colors.background }}>
                 <View style={{ width: "100%", height: "100%", alignItems: "center", paddingTop: 10 }}>
-                    {banner && <FullWidthImage sourceUrl={banner} />}
+                    <ProfileBannerImage sourceUrl={userProfileModel?.bannerUrl} />
                 </View>
 
                 <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>

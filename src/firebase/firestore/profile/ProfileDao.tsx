@@ -8,6 +8,7 @@ export interface UserProfileModel {
     username?: string,
     email?: string,
     photoUrl?: string,
+    bannerUrl?: string,
     bio?: string,
     location?: string
 }
@@ -19,6 +20,7 @@ export const USER_PROFILE_SKELECTON: UserProfileModel = {
     username: "",
     email: "",
     photoUrl: "",
+    bannerUrl: "",
     bio: "",
     location: ""
 }

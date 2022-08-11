@@ -1,5 +1,5 @@
 import { User } from "firebase/auth";
-import { uploadProfilePhoto } from "src/firebase/cloud_storage/profiles/ProfileCsp";
+import { uploadProfileBanner, uploadProfilePhoto } from "src/firebase/cloud_storage/profiles/ProfileCsp";
 import ProfileDao, { UserProfileModel } from "src/firebase/firestore/profile/ProfileDao";
 import { registerAuthStateListener } from "src/session/CurrentUserProvider";
 import { pickImage } from "src/util/ImagePickerUtil";
@@ -63,9 +63,18 @@ class ProfileController {
         ProfileDao.updateProfile(userProfile);
     }
 
-    public static async uploadProfilePhoto() {
+    public static async uploadProfilePhoto(): Promise<string | undefined> {
         const result = await pickImage();
-        uploadProfilePhoto(result);
+        const url = await uploadProfilePhoto(result);
+
+        return url;
+    }
+
+    public static async uploadProfileBanner(): Promise<string | undefined> {
+        const result = await pickImage();
+        const url = await uploadProfileBanner(result);
+
+        return url;
     }
 }
 

@@ -32,7 +32,6 @@ export const UserSettings = () => {
                     <EditProfileSettingsButton />
                 </View>
 
-
                 <View style={{ paddingTop: 10, alignItems: "center" }}>
                     <SettingsButtonElement text={"Edit Pillars"} icon={"pillar"} onPress={() => { alert("Tell Brent to get this working!") }} />
                 </View>
