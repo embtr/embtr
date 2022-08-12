@@ -68,6 +68,7 @@ class TimelineController {
                 timelinePosts.push(story);
             });
         }).then(() => {
+            timelinePosts.sort((a, b) => (b.added > a.added) ? 1 : -1);
             callback(timelinePosts);
         });
     }
