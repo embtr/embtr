@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, LayoutRectangle } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getTodayKey, plannedTaskIsComplete, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { getTodayKey, plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
@@ -41,6 +41,11 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
         closeMenu();
     };
 
+    const toggleFailure = () => {
+        toggleFailed();
+        closeMenu();
+    };
+
     const deletePlan = () => {
         plannedTask.status = "DELETED";
 
@@ -60,6 +65,16 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
         onUpdateTask(plannedTask);
     };
 
+    const toggleFailed = () => {
+        if (plannedTaskIsFailed(plannedTask)) {
+            plannedTask.status = "INCOMPLETE";
+        } else {
+            plannedTask.status = "FAILED";
+        }
+
+        onUpdateTask(plannedTask);
+    };
+
     const navigateToEditTask = () => {
         closeMenu();
         if (plannedTask.id) {
@@ -73,8 +88,13 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
             menuOptions.push({ name: "Incomplete", onPress: toggleCompletion });
         }
 
+        if (plannedTaskIsFailed(plannedTask)) {
+            menuOptions.push({ name: "Incomplete", onPress: toggleFailure });
+        }
+
         if (plannedTaskIsIncomplete(plannedTask)) {
             menuOptions.push({ name: "Complete", onPress: toggleCompletion });
+            menuOptions.push({ name: "Failed", onPress: toggleFailure });
             menuOptions.push({ name: "Edit", onPress: navigateToEditTask });
         }
 
@@ -121,7 +141,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
                 onLongPress={() => {
                     onLongPress();
                 }}
-                style={[ isDark ? {} : cardShadow, {
+                style={[isDark ? {} : cardShadow, {
                     minHeight: 50,
                     height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
                     width: totalInRow === 1 ? 225 : width,
@@ -136,7 +156,13 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
                     </View>
 
                     <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 5 }}>
-                        <Ionicons name={plannedTaskIsComplete(plannedTask) ? "checkmark-done" : "checkmark"} size={20} color={plannedTaskIsComplete(plannedTask) ? "green" : colors.secondary_text} />
+                        {
+                            plannedTaskIsFailed(plannedTask)
+                                ?
+                                <View style={{ paddingRight: 3, paddingTop: 3 }}><Text style={{ color: "red" }}>X</Text></View>
+                                :
+                                <Ionicons name={plannedTaskIsComplete(plannedTask) ? "checkmark-done" : "checkmark"} size={20} color={plannedTaskIsComplete(plannedTask) ? "green" : colors.secondary_text} />
+                        }
                     </View>
                 </View>
             </TouchableOpacity>
