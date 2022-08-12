@@ -1,21 +1,27 @@
-import { Picker } from '@react-native-picker/picker';
 import * as React from 'react';
+import { Picker } from '@react-native-picker/picker';
 import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { getAuth } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TodayTab } from 'src/navigation/RootStackParamList';
 
 
 interface Props {
     visible: boolean,
+    dayKey: string,
     confirm: Function,
     dismiss: Function
 }
 
-export const AddHabitModal = ({ visible, confirm, dismiss }: Props) => {
+export const AddHabitModal = ({ visible, dayKey, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
+
+    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const [habits, setHabits] = React.useState<TaskModel[]>([]);
     const [selectedHabit, setSelectedHabit] = React.useState<TaskModel | undefined>(undefined);
@@ -65,7 +71,7 @@ export const AddHabitModal = ({ visible, confirm, dismiss }: Props) => {
                         <View>
                             <View style={{ width: 300, backgroundColor: colors.modal_background, borderRadius: 12, justifyContent: "space-around" }}>
                                 <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 12.5, paddingBottom: 12.5, alignItems: "center", justifyContent: "center" }}>
-                                    <Text style={{ fontSize: 16, fontFamily: "Poppins_500Medium" }}>Select A Habit</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: "Poppins_500Medium", color: colors.text }}>Select A Habit</Text>
                                 </View>
                                 <HorizontalLine />
                                 <View style={{ alignItems: "center" }}>
@@ -89,7 +95,7 @@ export const AddHabitModal = ({ visible, confirm, dismiss }: Props) => {
                             <View style={{ height: 5 }} />
 
                             <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
-                                <Button title='Cancel' onPress={() => { dismiss() }} />
+                                <Button title='Create Task' onPress={() => { dismiss(); navigation.navigate('CreateOneTimeTask', { dayKey: dayKey }) }} />
                             </View>
 
                         </View>
