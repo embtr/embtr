@@ -103,7 +103,7 @@ export const LandingPage = () => {
                         </Text>
                     </View>
 
-                    {registrationStatus !== "invalid" && <View style={[betaRequestStatusViewStyle, { flex: 1 }]}>
+                    {registrationStatus !== "invalid" && <View style={[betaRequestStatusViewStyle, { flex: 1, justifyContent: "center" }]}>
                         <LandingBetaStatus registrationStatus={registrationStatus} />
                     </View>}
 
