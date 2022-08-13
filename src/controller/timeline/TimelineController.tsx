@@ -30,7 +30,7 @@ export interface TimelinePostModel {
 }
 
 class TimelineController {
-    public static getTimelinePosts(callback: Function) {
+    public static   getTimelinePosts(callback: Function) {
         const result = TimelineDao.getTimelinePosts();
 
         let timelinePosts: TimelinePostModel[] = [];
@@ -43,6 +43,12 @@ class TimelineController {
                         let story: StoryModel = doc.data() as StoryModel;
                         story.id = doc.id;
                         timelinePosts.push(story);
+                        break;
+                    
+                    case "TASK_RESULT":
+                        let taskResult: StoryModel = doc.data() as StoryModel;
+                        taskResult.id = doc.id;
+                        timelinePosts.push(taskResult);
                         break;
 
                     case "CHALLENGE":

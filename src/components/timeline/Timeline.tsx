@@ -39,7 +39,6 @@ export const Timeline = () => {
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
-    const [feedbackModalVisible, setFeedbackModalVisible] = React.useState<boolean>(false);
 
     useFocusEffect(
         React.useCallback(() => {

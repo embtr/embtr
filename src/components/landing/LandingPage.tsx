@@ -12,21 +12,16 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getAccessLevel, setAccessLevel } from 'src/redux/user/GlobalState';
 import MailController from 'src/controller/mail/MailController';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
-
-const REGISTRATION_STATUS_SIZE = 2;
+import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 
 export const LandingPage = () => {
     const { colors } = useTheme();
 
-    const headerTextStyle = {
-        fontSize: 30,
-        color: colors.text,
-    } as TextStyle;
-
     const textStyle = {
-        fontSize: 18,
+        fontSize: 14,
         color: colors.text,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: "Poppins_400Regular"
     } as TextStyle;
 
     const betaRequestStatusViewStyle = {
@@ -68,6 +63,16 @@ export const LandingPage = () => {
         return accessLevel === "beta_approved" && registrationStatus === "invalid";
     }
 
+    let [fontsLoaded] = useFonts({
+        Poppins_600SemiBold,
+        Poppins_400Regular,
+        Poppins_500Medium
+    });
+
+    if (!fontsLoaded) {
+        return <View />
+    }
+
     if (shouldDisplayLoadingPage()) {
         return <LoadingPage />
     }
@@ -77,32 +82,38 @@ export const LandingPage = () => {
             <View style={{ width: "100%", flex: 10000, justifyContent: "center", alignItems: "flex-start" }}>
                 <View style={{ width: "100%", height: 600, justifyContent: "center", alignContent: "center", alignItems: "center" }}>
 
-                    <View style={{ alignItems: "center", flex: 1 }}>
-                        <Text style={headerTextStyle}>embtr.</Text>
+                    <View style={{ alignItems: "center", flex: 1, justifyContent: "center" }}>
+                        <View>
+                            <Image source={require('assets/logo_text.png')} style={{ width: 150, height: 50 }} />
+                        </View>
                     </View>
 
-                    <View style={{ alignItems: "center", flex: 3 }}>
-                        <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
+                    <View style={{ alignItems: "center", flex: 2, justifyContent: "center" }}>
+                        <View>
+                            <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
+                        </View>
                     </View>
 
-                    <View style={[textViewStyle, { flex: 1 }]}>
+                    <View style={[textViewStyle, { flex: 1, justifyContent: "center" }]}>
                         <Text style={textStyle}>
-                            embtr is a network of people achieving their wildest dreams. together.
+                            A network of people achieving their wildest dreams.
+                        </Text>
+                        <Text style={textStyle}>
+                            together.
                         </Text>
                     </View>
 
-                    {registrationStatus !== "invalid" && <View style={[betaRequestStatusViewStyle, { flex: REGISTRATION_STATUS_SIZE }]}>
+                    {registrationStatus !== "invalid" && <View style={[betaRequestStatusViewStyle, { flex: 1 }]}>
                         <LandingBetaStatus registrationStatus={registrationStatus} />
                     </View>}
 
                     {registrationStatus === "invalid" &&
-                        <View style={{ flexDirection: "row", flex: REGISTRATION_STATUS_SIZE }}>
-                            <View style={{ flex: 1, alignItems: "center" }}>
+                        <View style={{ flex: 1, justifyContent: "center" }}>
+                            <View style={{ width: 150 }}>
                                 <FirebaseAuthenticate buttonText="Beta Access" callback={onAuthenticated} />
                             </View>
                         </View>
                     }
-
                 </View>
             </View>
 

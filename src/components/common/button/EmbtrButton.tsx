@@ -48,10 +48,10 @@ export const EmbtrButton = ({ image, icon, buttonText, height, callback }: Props
         image ? (
             <TouchableOpacity style={containerStyle} onPress={() => { callback(); }}>
                 <View style={{ flexDirection: "row" }}>
-                    <View style={[logoViewStyle, { flex: 1 }]}>
+                    <View style={logoViewStyle}>
                         <Image source={image} style={{ width: 18, height: 18 }} />
                     </View>
-                    <Text style={[textStyle, { flex: 9 }]}>{buttonText}</Text>
+                    <Text style={textStyle}>{buttonText}</Text>
                 </View>
             </TouchableOpacity>
 
