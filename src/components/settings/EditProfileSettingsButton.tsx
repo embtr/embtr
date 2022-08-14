@@ -7,5 +7,5 @@ import { useNavigation } from '@react-navigation/native';
 export const EditProfileSettingsButton = () => {
     const navigation = useNavigation<StackNavigationProp<ProfileTabScreens>>();
 
-    return <SettingsButtonElement text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { navigation.navigate("EditProfile") }} />
+    return <SettingsButtonElement text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { navigation.navigate("EditUserProfile") }} />
 };

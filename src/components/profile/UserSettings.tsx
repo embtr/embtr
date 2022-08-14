@@ -35,10 +35,6 @@ export const UserSettings = () => {
                     <ThemeToggle />
                 </View>
 
-                <View style={{ paddingTop: 10, alignItems: "center" }}>
-                    <EmbtrButton2 text={"Edit Profile"} icon={"ios-pencil-sharp"} onPress={() => { navigateToEditUserProfile() }} />
-                </View>
-
                 <View style={{ paddingTop: 10 }}>
                     <NotificationsToggle />
 
