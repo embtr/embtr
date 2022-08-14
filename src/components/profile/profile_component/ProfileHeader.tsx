@@ -50,7 +50,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
     const saveProfile = () => {
         let executeUpdate = false;
-
+        
         if (userProfileModel) {
             if (newBioText !== undefined) {
                 userProfileModel.bio = newBioText;

@@ -24,7 +24,8 @@ const linking: LinkingOptions<RootStackParamList> = {
                         screens: {
                             Profile: "profile",
                             UserSettings: "settings",
-                            PillarsConfiguration: "configure"
+                            PillarsConfiguration: "configure",
+                            EditUserProfile: "editUserProfile"
                         }
                     },
                     TimelineTab: {
