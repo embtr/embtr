@@ -36,7 +36,6 @@ export type ProfileTabScreens = {
     UserSettings: undefined;
     PillarsConfiguration: undefined;
     EditUserProfile: undefined;
-    EditProfile: undefined;
 };
 
 export type RootStackParamList = {
