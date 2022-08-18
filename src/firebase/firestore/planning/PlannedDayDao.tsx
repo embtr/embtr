@@ -13,7 +13,7 @@ class PlannedDayDao {
     /*
      * move us to plannedTaskController/Dao
     */
-    public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
+    public static async updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
         const userUid = getAuth().currentUser?.uid;
         if (!userUid) {
             return;
@@ -21,8 +21,8 @@ class PlannedDayDao {
 
         const db: Firestore = getFirebaseConnection(this.name, "updateTask");
 
-        const result = setDoc(doc(db, "planned_day", userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
-        return result;
+        await setDoc(doc(db, "planned_day", userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
+        return setDoc(doc(db, "planned_day", userUid, plannedDay.id!, "metadata"), plannedDay.metadata, { merge: true });
     }
 
     public static createTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {

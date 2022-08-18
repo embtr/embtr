@@ -93,8 +93,8 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
         }
 
         if (plannedTaskIsIncomplete(plannedTask)) {
-            menuOptions.push({ name: "Complete", onPress: toggleCompletion });
-            menuOptions.push({ name: "Failed", onPress: toggleFailure });
+            menuOptions.push({ name: "Mark as Complete", onPress: toggleCompletion });
+            menuOptions.push({ name: "Mark as Failed", onPress: toggleFailure });
             menuOptions.push({ name: "Edit", onPress: navigateToEditTask });
         }
 

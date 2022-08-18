@@ -12,7 +12,6 @@ import { SettingsVersion } from 'src/components/settings/SettingsVersion';
 import { EditProfileSettingsButton } from 'src/components/settings/EditProfileSettingsButton';
 import { SettingsFeedback } from 'src/components/settings/SettingsFeedback';
 import { useNavigation } from '@react-navigation/native';
-import { EmbtrButton2 } from 'src/components/common/button/EmbtrButton2';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { EditUserProfile } from './EditUserProfile';
