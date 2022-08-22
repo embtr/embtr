@@ -10,7 +10,6 @@ export const uploadProfilePhoto = async (pickerResult: ImagePicker.ImagePickerRe
             return uploadUrl;
         }
     } catch (e) {
-        console.log(e);
         alert("Upload failed, sorry :(");
     }
     return undefined;
@@ -23,7 +22,6 @@ export const uploadProfileBanner = async (pickerResult: ImagePicker.ImagePickerR
             return uploadUrl;
         }
     } catch (e) {
-        console.log(e);
         alert("Upload failed, sorry :(");
     }
     return undefined;
@@ -38,7 +36,6 @@ const uploadImageAsync = async (uri: string, filename: string): Promise<string> 
             resolve(xhr.response);
         };
         xhr.onerror = function (e) {
-            console.log(e);
             reject(new TypeError("Network request failed"));
         };
         xhr.responseType = "blob";

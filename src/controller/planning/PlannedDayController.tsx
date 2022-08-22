@@ -1,5 +1,6 @@
 import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
+import { Tasks } from "src/components/plan/tasks/Tasks";
 import { TaskModel } from "src/controller/planning/TaskController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
 
@@ -20,6 +21,7 @@ export interface PlannedTaskModel {
 export interface PlannedDayMetadata {
     added: Timestamp,
     modified: Timestamp,
+    status: string,
     locked: boolean
 }
 
@@ -90,7 +92,7 @@ export const getKey = (dayOfMonth: number) => {
     let month = ("0" + (date.getMonth() + 1)).slice(-2);
     let day = ("0" + dayOfMonth).slice(-2);
     let year = date.getFullYear();
-    
+
     return month + day + year;
 }
 
@@ -157,7 +159,7 @@ class PlannedDayController {
                     if (plannedTask.status === "DELETED") {
                         return;
                     }
-                    
+
                     plannedTask.id = currentPlannedTask.id;
                     plannedDay.plannedTasks.push(plannedTask);
                 }
@@ -196,6 +198,11 @@ class PlannedDayController {
 
     public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
         plannedDay.metadata!.modified = Timestamp.now();
+        if (!plannedDay.metadata) {
+            plannedDay.metadata = this.createMetadata();
+        }
+
+        plannedDay.metadata!.status = this.getPlannedDayStatus(plannedDay, plannedTask);
         const result = PlannedDayDao.updateTask(plannedDay, plannedTask);
         result?.then(() => {
             callback();
@@ -213,11 +220,33 @@ class PlannedDayController {
     private static createMetadata(): PlannedDayMetadata {
         const metadata: PlannedDayMetadata = {
             added: Timestamp.now(),
+            status: "INCOMPLETE",
             modified: Timestamp.now(),
             locked: true
         };
 
         return metadata;
+    }
+
+    private static getPlannedDayStatus = (plannedDay: PlannedDay, plannedTask: PlannedTaskModel): string => {
+        let status = "COMPLETE";
+        plannedDay.plannedTasks.forEach((currentPlannedTask) => {
+            let taskStatus = currentPlannedTask.status;
+            if (plannedTask.id === currentPlannedTask.id) {
+                taskStatus = plannedTask.status;
+            }
+            
+            if (taskStatus !== "COMPLETE") {
+                if (taskStatus === "FAILED") {
+                    status = "FAILED";
+                    return;
+                }
+
+                status = "INCOMPLETE";
+            }
+        });
+
+        return status;
     }
 }
 
