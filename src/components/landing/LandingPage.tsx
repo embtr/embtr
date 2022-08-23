@@ -79,11 +79,49 @@ export const LandingPage = () => {
 
     return (
         <Screen>
-            <View style={{ alignItems: "center", width: "100%", height: "100%", backgroundColor: "white", justifyContent: "center" }}>
-                <View style={{width: 300, height: 300, backgroundColor: colors.background, alignItems: "center", justifyContent: "center", borderRadius: 50}}>
-                    <Image source={require('assets/logo.png')} style={{ width: 250, height: 250 }} />
+            <View style={{ width: "100%", flex: 10000, justifyContent: "center", alignItems: "flex-start" }}>
+                <View style={{ width: "100%", height: 600, justifyContent: "center", alignContent: "center", alignItems: "center" }}>
+
+                    <View style={{ alignItems: "center", flex: 1, justifyContent: "center" }}>
+                        <View>
+                            <Image source={require('assets/logo_text.png')} style={{ width: 150, height: 50 }} />
+                        </View>
+                    </View>
+
+                    <View style={{ alignItems: "center", flex: 2, justifyContent: "center" }}>
+                        <View>
+                            <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
+                        </View>
+                    </View>
+
+                    <View style={[textViewStyle, { flex: 1, justifyContent: "center" }]}>
+                        <Text style={textStyle}>
+                            A network of people achieving their wildest dreams.
+                        </Text>
+                        <Text style={textStyle}>
+                            together.
+                        </Text>
+                    </View>
+
+                    {registrationStatus !== "invalid" && <View style={[betaRequestStatusViewStyle, { flex: 1, justifyContent: "center" }]}>
+                        <LandingBetaStatus registrationStatus={registrationStatus} />
+                    </View>}
+
+                    {registrationStatus === "invalid" &&
+                        <View style={{ flex: 1, justifyContent: "center" }}>
+                            <View style={{ width: 150 }}>
+                                <FirebaseAuthenticate buttonText="Beta Access" callback={onAuthenticated} />
+                            </View>
+                        </View>
+                    }
                 </View>
             </View>
+
+            {isDesktopBrowser() &&
+                <View style={{ justifyContent: "flex-end", flex: 1, width: "100%" }}>
+                    <LandingFooter />
+                </View>
+            }
         </Screen>
     );
 };
