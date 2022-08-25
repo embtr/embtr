@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
-import { Tasks } from "src/components/plan/tasks/Tasks";
 import { TaskModel } from "src/controller/planning/TaskController";
+import DailyResultController, { DailyResultModel } from "src/controller/timeline/daily_result/DailyResultController";
 import PlannedDayDao from "src/firebase/firestore/planning/PlannedDayDao";
 
 export interface PlannedDay {
@@ -196,17 +196,19 @@ class PlannedDayController {
         });
     }
 
-    public static updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
+    public static async updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
         plannedDay.metadata!.modified = Timestamp.now();
         if (!plannedDay.metadata) {
             plannedDay.metadata = this.createMetadata();
         }
 
+        const previousStatus = plannedDay.metadata?.status;
         plannedDay.metadata!.status = this.getPlannedDayStatus(plannedDay, plannedTask);
-        const result = PlannedDayDao.updateTask(plannedDay, plannedTask);
-        result?.then(() => {
-            callback();
-        });
+        const newStatus = plannedDay.metadata?.status;
+
+        await PlannedDayDao.updateTask(plannedDay, plannedTask);
+        this.handleStatusChange(plannedDay, previousStatus, newStatus);
+        callback();
     }
 
     public static addTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
@@ -215,6 +217,15 @@ class PlannedDayController {
         result?.then(() => {
             callback();
         });
+    }
+
+    private static async handleStatusChange(plannedDay: PlannedDay, previousStatus: string, newStatus: string)
+    {
+        if (previousStatus === "INCOMPLETE" && newStatus == "COMPLETE")
+        {
+            const dailyResult: DailyResultModel = DailyResultController.createDailyResultModel(plannedDay, newStatus);
+            const created = await DailyResultController.createDailyResult(dailyResult);
+        }
     }
 
     private static createMetadata(): PlannedDayMetadata {

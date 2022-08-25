@@ -15,7 +15,7 @@ export interface Like {
 }
 
 export interface TimelinePostModel {
-    id: string,
+    id?: string,
     added: Timestamp,
     type: string,
     uid: string,
@@ -23,14 +23,11 @@ export interface TimelinePostModel {
         comments: Comment[],
         likes: Like[]
     },
-    data: {
-        title: string,
-        story: string
-    }
+    data: {}
 }
 
 class TimelineController {
-    public static   getTimelinePosts(callback: Function) {
+    public static getTimelinePosts(callback: Function) {
         const result = TimelineDao.getTimelinePosts();
 
         let timelinePosts: TimelinePostModel[] = [];

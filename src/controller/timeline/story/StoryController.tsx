@@ -5,7 +5,10 @@ import { TimelinePostModel } from "src/controller/timeline/TimelineController";
 import StoryDao from "src/firebase/firestore/story/StoryDao";
 
 export interface StoryModel extends TimelinePostModel {
-    
+    data: {
+        title: string,
+        story: string
+    }
 }
 
 export const storyWasLikedBy = (storyModel: StoryModel, uid: string) : boolean => {
