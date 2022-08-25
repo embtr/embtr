@@ -219,12 +219,10 @@ class PlannedDayController {
         });
     }
 
-    private static async handleStatusChange(plannedDay: PlannedDay, previousStatus: string, newStatus: string)
-    {
-        if (previousStatus === "INCOMPLETE" && newStatus == "COMPLETE")
-        {
+    private static async handleStatusChange(plannedDay: PlannedDay, previousStatus: string, newStatus: string) {
+        if (previousStatus === "INCOMPLETE" && newStatus == "COMPLETE") {
             const dailyResult: DailyResultModel = DailyResultController.createDailyResultModel(plannedDay, newStatus);
-            const created = await DailyResultController.createDailyResult(dailyResult);
+            const created = await DailyResultController.create(dailyResult);
         }
     }
 
@@ -246,7 +244,7 @@ class PlannedDayController {
             if (plannedTask.id === currentPlannedTask.id) {
                 taskStatus = plannedTask.status;
             }
-            
+
             if (taskStatus !== "COMPLETE") {
                 if (taskStatus === "FAILED") {
                     status = "FAILED";

@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import { ChallengeModel1 } from "src/controller/timeline/challenge/ChallengeController";
+import DailyResultController from "src/controller/timeline/daily_result/DailyResultController";
 import { StoryModel } from "src/controller/timeline/story/StoryController";
 import TimelineDao from "src/firebase/firestore/timeline/TimelineDao";
 
@@ -41,7 +42,7 @@ class TimelineController {
                         story.id = doc.id;
                         timelinePosts.push(story);
                         break;
-                    
+
                     case "TASK_RESULT":
                         let taskResult: StoryModel = doc.data() as StoryModel;
                         taskResult.id = doc.id;
@@ -55,6 +56,11 @@ class TimelineController {
                         break;
                 }
             });
+        }).then(async () => {
+            const dailyResults = await DailyResultController.getAll();
+            timelinePosts = timelinePosts.concat(dailyResults);
+        }).then(() => {
+            timelinePosts = timelinePosts.sort((a, b) => (a.added > b.added) ? 1 : -1).reverse();
         }).then(() => {
             callback(timelinePosts);
         });

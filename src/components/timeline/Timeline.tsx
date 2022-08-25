@@ -15,6 +15,9 @@ import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeCont
 import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';
 import { getAuth } from 'firebase/auth';
 import { CARD_SHADOW } from 'src/util/constants';
+import { StoryModel } from 'src/controller/timeline/story/StoryController';
+import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -28,6 +31,22 @@ export const Timeline = () => {
 
     const challengeShadow = {
         shadowColor: 'orange',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: .8,
+        shadowRadius: 4,
+        elevation: 5,
+    }
+
+    const successShadow = {
+        shadowColor: 'green',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: .8,
+        shadowRadius: 4,
+        elevation: 5,
+    }
+
+    const failureShadow = {
+        shadowColor: 'red',
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: .8,
         shadowRadius: 4,
@@ -87,7 +106,7 @@ export const Timeline = () => {
         const profile = timelineProfiles.get(timelineEntry.uid);
         if (profile) {
             return <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                <UserTextCard userProfileModel={profile} story={timelineEntry} />
+                <UserTextCard userProfileModel={profile} story={timelineEntry as StoryModel} />
             </View>;
         }
 
@@ -100,7 +119,21 @@ export const Timeline = () => {
         </View>
     };
 
+    const createDailyResultView = (timelineEntry: TimelinePostModel) => {
+        const profile = timelineProfiles.get(timelineEntry.uid);
+        const completed = (timelineEntry as DailyResultModel).data.status === "COMPLETE";
+
+        if (profile) {
+            return <View key={timelineEntry.id} style={[card, completed ? successShadow : failureShadow]}>
+                <DailyResultCard dailyResult={timelineEntry as DailyResultModel} userProfileModel={profile} />
+            </View>
+        }
+
+        return <View />;
+    };
+
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
+        console.log(timelineEntry.type);
         switch (timelineEntry.type) {
             case "STORY":
                 return createStoryView(timelineEntry);
@@ -108,9 +141,11 @@ export const Timeline = () => {
             case "CHALLENGE":
                 return createChallengeView(timelineEntry);
 
+            case "DAILY_RESULT":
+                return createDailyResultView(timelineEntry);
+
             default:
                 return <View />
-
         }
     };
 

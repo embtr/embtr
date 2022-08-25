@@ -11,9 +11,9 @@ export interface StoryModel extends TimelinePostModel {
     }
 }
 
-export const storyWasLikedBy = (storyModel: StoryModel, uid: string) : boolean => {
+export const timelineEntryWasLikedBy = (timelinePost: TimelinePostModel, uid: string): boolean => {
     let isLiked = false;
-    storyModel.public.likes.forEach(like => {
+    timelinePost.public.likes.forEach(like => {
         if (like.uid === uid) {
             isLiked = true;
             return;
@@ -46,7 +46,7 @@ class StoryController {
         if (!uid) {
             return;
         }
-        
+
         const storyModel = createStory(uid, title, story);
         StoryDao.addStory(storyModel, callback);
     }
@@ -72,7 +72,7 @@ class StoryController {
             if (!doc || !doc.exists()) {
                 callback(undefined);
             } else {
-                let story : StoryModel = doc.data() as StoryModel;
+                let story: StoryModel = doc.data() as StoryModel;
                 story.id = doc.id;
                 story.public.comments = story.public.comments.sort((a, b) => (a.timestamp! > b.timestamp!) ? 1 : -1);
                 callback(story);
@@ -81,6 +81,10 @@ class StoryController {
     }
 
     public static likeStory(story: StoryModel, userUid: string) {
+        if (!story.id) {
+            return;
+        }
+
         StoryDao.likeStory(story.id, userUid);
         NotificationController.addNotification(userUid, story.uid, NotificationType.TIMELINE_LIKE, story.id);
     }

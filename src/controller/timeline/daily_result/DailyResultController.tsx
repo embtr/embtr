@@ -34,11 +34,24 @@ class DailyResultController {
         return dailyResult;
     }
 
-    public static async createDailyResult(dailyResult: DailyResultModel) {
+    public static async create(dailyResult: DailyResultModel) {
         const result = await DailyResultDao.create(dailyResult);
         dailyResult.id = result?.id;
 
         return dailyResult;
+    }
+
+    public static async getAll() {
+        const result = await DailyResultDao.getAll();
+
+        let dailyResults: DailyResultModel[] = [];
+        result.forEach(doc => {
+            let dailyResult = doc.data() as DailyResultModel;
+            dailyResult.id = doc.id;
+            dailyResults.push(dailyResult);
+        });
+
+        return dailyResults;
     }
 };
 
