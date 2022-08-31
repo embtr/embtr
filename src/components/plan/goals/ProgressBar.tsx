@@ -4,10 +4,11 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 
 interface Props {
-    progress: number
+    progress: number,
+    success?: boolean
 }
 
-export const ProgressBar = ({ progress }: Props) => {
+export const ProgressBar = ({ progress, success }: Props) => {
     const { colors } = useTheme();
 
     let [fontsLoaded] = useFonts({
@@ -25,12 +26,12 @@ export const ProgressBar = ({ progress }: Props) => {
     return (
         <View style={{ width: "100%", flexDirection: "row", alignItems: "center" }} >
             <View style={{ height: 6, flex: 5, backgroundColor: colors.goal_progress_bar, borderRadius: 10 }}>
-                <View style={{ height: 6, width: percentProgess, backgroundColor: "green", borderRadius: 10 }}>
+                <View style={{ height: 6, width: percentProgess, backgroundColor: success === false ? "red" : "green", borderRadius: 10 }}>
                 </View>
             </View>
 
             <View style={{ flex: 1, height: 12 }} >
-                <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 11, textAlign: "center", color: "green" }}> {percentProgess} </Text>
+                <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 11, textAlign: "center", color: success === false ? "red" : "green" }}> {percentProgess} </Text>
             </View>
         </View>
 

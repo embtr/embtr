@@ -12,6 +12,8 @@ import { TIMELINE_CARD_PADDING, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_ICON_COUN
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { formatDistance } from 'date-fns';
+import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
+import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'TimelineComments'>;
 
@@ -25,6 +27,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const { colors } = useTheme();
 
     const [likes, setLikes] = React.useState(dailyResult.public.likes.length);
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
     const onLike = () => {
         //StoryController.likeStory(dailyResult, getAuth().currentUser!.uid);
@@ -34,8 +37,17 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const onCommented = () => {
         navigation.navigate('TimelineComments', { id: dailyResult?.id ? dailyResult.id : "" })
     };
-
     const isLiked = timelineEntryWasLikedBy(dailyResult, getAuth().currentUser!.uid);
+
+    
+    React.useEffect(() => {
+        const uid = getAuth().currentUser?.uid;
+        if (uid) {
+            if (dailyResult.data.plannedDayId) {
+                PlannedDayController.get(uid, dailyResult.data.plannedDayId, setPlannedDay); 
+            }
+        }
+    }, []);
 
     const headerTextStyle = {
         fontSize: 16,
@@ -50,8 +62,16 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         color: colors.timeline_card_body,
     } as TextStyle;
 
-    const time = formatDistance(dailyResult.added.toDate(), new Date(), { addSuffix: true });
+    let completedCount = 0;
+    plannedDay?.plannedTasks.forEach(plannedTask => {
+        if (plannedTask.status === "COMPLETE") {
+            completedCount += 1; 
+        }
+    });
 
+    const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
+
+    const time = formatDistance(dailyResult.added.toDate(), new Date(), { addSuffix: true });
     let summary = "Day " + dailyResult.data.day + " " + (dailyResult.data.status === "FAILED" ? "Failed!" : "Completed!")
 
     return (
@@ -89,6 +109,12 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                 {/*  BODY  */}
                 {/**********/}
                 <View style={{ paddingTop: 10 }}>
+                    <View style={{ width: "100%", alignItems: "center", justifyContent: "center" }}>
+                        <View style={{ width: "90%", alignItems: "center", justifyContent: "center" }}>
+                            <ProgressBar progress={progress} success={dailyResult.data.status !== "FAILED"} />
+                        </View>
+                    </View>
+
                     <View>
                         <Text style={headerTextStyle}>{summary}</Text>
                     </View>
