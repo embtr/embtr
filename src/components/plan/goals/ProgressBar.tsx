@@ -19,7 +19,7 @@ export const ProgressBar = ({ progress, success }: Props) => {
         return <View />
     }
 
-    const percentRemaining = progress === Number.POSITIVE_INFINITY ? 100 : progress;
+    const percentRemaining = progress === Number.POSITIVE_INFINITY ? 100 : Math.round(progress);
 
     const percentProgess = "" + percentRemaining + "%";
 
