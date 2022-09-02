@@ -25,13 +25,13 @@ export const ProgressBar = ({ progress, success }: Props) => {
 
     return (
         <View style={{ width: "100%", flexDirection: "row", alignItems: "center" }} >
-            <View style={{ height: 6, flex: 5, backgroundColor: colors.goal_progress_bar, borderRadius: 10 }}>
-                <View style={{ height: 6, width: percentProgess, backgroundColor: success === false ? "red" : "green", borderRadius: 10 }}>
+            <View style={{ flex: 5, backgroundColor: colors.progress_bar_color, borderRadius: 10 }}>
+                <View style={{ height: 6, width: percentProgess, backgroundColor: success === false ? "red" : colors.progress_bar_complete, borderRadius: 10 }}>
                 </View>
             </View>
 
-            <View style={{ flex: 1, height: 12 }} >
-                <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 11, textAlign: "center", color: success === false ? "red" : "green" }}> {percentProgess} </Text>
+            <View style={{ flex: 1 }} >
+                <Text style={{ fontFamily: "Poppins_500Medium", fontSize: 11, textAlign: "center", color: success === false ? "red" : colors.progress_bar_complete}}> {percentProgess} </Text>
             </View>
         </View>
 
