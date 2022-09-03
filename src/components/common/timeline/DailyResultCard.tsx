@@ -127,14 +127,15 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                         <Text style={headerTextStyle}>
                             Monday{' '}
                             <Text style={{ color: plannedDay?.metadata?.status === 'FAILED' ? colors.progress_bar_failed : colors.progress_bar_complete }}>
-                                {plannedDay?.metadata?.status === "FAILED" ? "Failed!" : "Compete!"}
+                                {plannedDay?.metadata?.status === 'FAILED' ? 'Failed!' : 'Compete!'}
                             </Text>
                         </Text>
                     </View>
 
-                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
-                        <Text style={[bodyTextStyle, { textAlign: 'left' }]}>hello there</Text>
-                        {plannedTaskViews}
+                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
+                        {/*<Text style={[bodyTextStyle, { textAlign: 'left' }]}>man, I tried really hard on this one! I will get it next time.</Text>
+                        <View style={{ paddingTop: 15 }}>{plannedTaskViews}</View>*/}
+                        <View>{plannedTaskViews}</View>
                         {/* <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{"view more..."}</Text> */}
                     </View>
                 </View>
