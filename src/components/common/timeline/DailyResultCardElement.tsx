@@ -14,9 +14,9 @@ export const DailyResultCardElement = ({ plannedTask }: Props) => {
 
     let color = 'gray';
     if (plannedTask.status === 'COMPLETE') {
-        color = 'green';
+        color = colors.progress_bar_complete;
     } else if (plannedTask.status === 'FAILED') {
-        color = 'red';
+        color = colors.progress_bar_failed;
     }
 
     let [fontsLoaded] = useFonts({

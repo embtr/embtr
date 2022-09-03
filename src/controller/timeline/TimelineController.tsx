@@ -58,7 +58,7 @@ class TimelineController {
                 }
             });
         }).then(async () => {
-            const dailyResults = await DailyResultController.getAll();
+            const dailyResults = await DailyResultController.getAllFinished();
             timelinePosts = timelinePosts.concat(dailyResults);
         }).then(() => {
             timelinePosts = timelinePosts.sort((a, b) => (a.added > b.added) ? 1 : -1).reverse();

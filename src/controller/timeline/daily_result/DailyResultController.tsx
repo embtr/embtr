@@ -76,12 +76,16 @@ class DailyResultController {
         return dailyResult;
     }
 
-    public static async getAll() {
+    public static async getAllFinished() {
         const result = await DailyResultDao.getAll();
 
         let dailyResults: DailyResultModel[] = [];
         result.forEach((doc) => {
             let dailyResult = doc.data() as DailyResultModel;
+            if (!["FAILED", "COMPLETE"].includes(dailyResult.data.status)) {
+               return; 
+            };
+
             dailyResult.id = doc.id;
             dailyResults.push(dailyResult);
         });

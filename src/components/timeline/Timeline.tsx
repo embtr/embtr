@@ -38,7 +38,7 @@ export const Timeline = () => {
     }
 
     const successShadow = {
-        shadowColor: 'green',
+        shadowColor: colors.progress_bar_complete,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: .8,
         shadowRadius: 4,
@@ -46,7 +46,7 @@ export const Timeline = () => {
     }
 
     const failureShadow = {
-        shadowColor: 'red',
+        shadowColor: colors.progress_bar_failed,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: .8,
         shadowRadius: 4,
