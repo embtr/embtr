@@ -41,11 +41,8 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const isLiked = timelineEntryWasLikedBy(dailyResult, getAuth().currentUser!.uid);
 
     React.useEffect(() => {
-        const uid = getAuth().currentUser?.uid;
-        if (uid) {
-            if (dailyResult.data.plannedDayId) {
-                PlannedDayController.get(uid, dailyResult.data.plannedDayId, setPlannedDay);
-            }
+        if (dailyResult.data.plannedDayId) {
+            PlannedDayController.get(dailyResult.uid, dailyResult.data.plannedDayId, setPlannedDay);
         }
     }, []);
 
