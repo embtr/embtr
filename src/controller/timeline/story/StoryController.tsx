@@ -27,6 +27,7 @@ export const createStory = (uid: string, title: string, story: string): StoryMod
     return {
         id: "",
         added: Timestamp.now(),
+        modified: Timestamp.now(),
         type: "STORY",
         uid: uid,
         public: {

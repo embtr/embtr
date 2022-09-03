@@ -18,6 +18,7 @@ export interface Like {
 export interface TimelinePostModel {
     id?: string,
     added: Timestamp,
+    modified: Timestamp,
     type: string,
     uid: string,
     public: {

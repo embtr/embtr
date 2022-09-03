@@ -133,7 +133,6 @@ export const Timeline = () => {
     };
 
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
-        console.log(timelineEntry.type);
         switch (timelineEntry.type) {
             case "STORY":
                 return createStoryView(timelineEntry);

@@ -44,6 +44,7 @@ export const createChallenge = (uid: string, title: string, story: string): Chal
     return {
         id: "",
         added: Timestamp.now(),
+        modified: Timestamp.now(),
         type: "CHALLENGE",
         uid: uid,
         public: {

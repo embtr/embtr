@@ -21,7 +21,7 @@ export const DailyResultCardElement = ({ plannedTask }: Props) => {
 
     let [fontsLoaded] = useFonts({
         Poppins_400Regular,
-        Poppins_600SemiBold
+        Poppins_600SemiBold,
     });
 
     if (!fontsLoaded) {
@@ -33,8 +33,8 @@ export const DailyResultCardElement = ({ plannedTask }: Props) => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View
                     style={{
-                        width: 30,
-                        height: 30,
+                        width: 28,
+                        height: 28,
                         borderColor: color,
                         borderWidth: 2,
                         borderRadius: 9,
@@ -57,7 +57,7 @@ export const DailyResultCardElement = ({ plannedTask }: Props) => {
 
                 <View style={{ paddingLeft: 5 }}>
                     <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}> {plannedTask.routine.name} </Text>
-                    <Text style={{ color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 9 }}> 5 hours aho </Text>
+                    <Text style={{ color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 9 }}>5 hours ago</Text>
                 </View>
             </View>
         </View>

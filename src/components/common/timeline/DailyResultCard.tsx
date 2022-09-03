@@ -72,12 +72,11 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
 
     const time = formatDistance(dailyResult.added.toDate(), new Date(), { addSuffix: true });
-    let summary = 'Day ' + dailyResult.data.day + ' ' + (dailyResult.data.status === 'FAILED' ? 'Failed!' : 'Completed!');
 
     let plannedTaskViews: JSX.Element[] = [];
     plannedDay?.plannedTasks.forEach((plannedTask) => {
         plannedTaskViews.push(
-            <View style={{paddingBottom: 5 }}>
+            <View style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
             </View>
         );
@@ -118,19 +117,24 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                 {/*  BODY  */}
                 {/**********/}
                 <View style={{ paddingTop: 10 }}>
-                    <View>
-                        <Text style={headerTextStyle}>{summary}</Text>
-                    </View>
-
-                    <View style={{ paddingTop: 5, width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                         <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
                             <ProgressBar progress={progress} success={dailyResult.data.status !== 'FAILED'} />
                         </View>
                     </View>
 
+                    <View style={{ paddingTop: 5 }}>
+                        <Text style={headerTextStyle}>
+                            Monday{' '}
+                            <Text style={{ color: plannedDay?.metadata?.status === 'FAILED' ? colors.progress_bar_failed : colors.progress_bar_complete }}>
+                                {plannedDay?.metadata?.status === "FAILED" ? "Failed!" : "Compete!"}
+                            </Text>
+                        </Text>
+                    </View>
+
                     <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
-                        {plannedTaskViews}
                         <Text style={[bodyTextStyle, { textAlign: 'left' }]}>hello there</Text>
+                        {plannedTaskViews}
                         {/* <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{"view more..."}</Text> */}
                     </View>
                 </View>
