@@ -26,32 +26,32 @@ export const Timeline = () => {
         width: '100%',
         paddingTop: 10,
         paddingLeft: 5,
-        paddingRight: 5
-    }
+        paddingRight: 5,
+    };
 
     const challengeShadow = {
         shadowColor: 'orange',
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: .8,
+        shadowOpacity: 0.8,
         shadowRadius: 4,
         elevation: 5,
-    }
+    };
 
     const successShadow = {
         shadowColor: colors.progress_bar_complete,
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: .8,
+        shadowOpacity: 0.8,
         shadowRadius: 4,
         elevation: 5,
-    }
+    };
 
     const failureShadow = {
         shadowColor: colors.progress_bar_failed,
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: .8,
+        shadowOpacity: 0.8,
         shadowRadius: 4,
         elevation: 5,
-    }
+    };
 
     const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
@@ -73,7 +73,7 @@ export const Timeline = () => {
 
     React.useEffect(() => {
         let uids: string[] = [];
-        timelineEntries.forEach(timelineEntry => {
+        timelineEntries.forEach((timelineEntry) => {
             if (!uids.includes(timelineEntry.uid)) {
                 uids.push(timelineEntry.uid);
             }
@@ -81,17 +81,16 @@ export const Timeline = () => {
 
         ProfileController.getProfiles(uids, (profiles: UserProfileModel[]) => {
             let profileMap = new Map<string, UserProfileModel>();
-            profiles.forEach(profile => {
+            profiles.forEach((profile) => {
                 profileMap.set(profile.uid!, profile);
             });
 
             setTimelineProfiles(profileMap);
         });
-
     }, [timelineEntries]);
 
     const wait = (timeout: number | undefined) => {
-        return new Promise(resolve => setTimeout(resolve, timeout));
+        return new Promise((resolve) => setTimeout(resolve, timeout));
     };
 
     const onRefresh = React.useCallback(() => {
@@ -105,28 +104,34 @@ export const Timeline = () => {
     const createStoryView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
         if (profile) {
-            return <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                <UserTextCard userProfileModel={profile} story={timelineEntry as StoryModel} />
-            </View>;
+            return (
+                <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
+                    <UserTextCard userProfileModel={profile} story={timelineEntry as StoryModel} />
+                </View>
+            );
         }
 
         return <View />;
     };
 
     const createChallengeView = (timelineEntry: TimelinePostModel) => {
-        return <View key={timelineEntry.id} style={[card, challengeShadow]}>
-            <EmbtrTextCard challengeModel={timelineEntry as ChallengeModel1} />
-        </View>
+        return (
+            <View key={timelineEntry.id} style={[card, challengeShadow]}>
+                <EmbtrTextCard challengeModel={timelineEntry as ChallengeModel1} />
+            </View>
+        );
     };
 
     const createDailyResultView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
-        const completed = (timelineEntry as DailyResultModel).data.status === "COMPLETE";
+        const completed = (timelineEntry as DailyResultModel).data.status === 'COMPLETE';
 
         if (profile) {
-            return <View key={timelineEntry.id} style={[card, completed ? successShadow : failureShadow]}>
-                <DailyResultCard dailyResult={timelineEntry as DailyResultModel} userProfileModel={profile} />
-            </View>
+            return (
+                <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
+                    <DailyResultCard dailyResult={timelineEntry as DailyResultModel} userProfileModel={profile} />
+                </View>
+            );
         }
 
         return <View />;
@@ -134,23 +139,23 @@ export const Timeline = () => {
 
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
         switch (timelineEntry.type) {
-            case "STORY":
+            case 'STORY':
                 return createStoryView(timelineEntry);
 
-            case "CHALLENGE":
+            case 'CHALLENGE':
                 return createChallengeView(timelineEntry);
 
-            case "DAILY_RESULT":
+            case 'DAILY_RESULT':
                 return createDailyResultView(timelineEntry);
 
             default:
-                return <View />
+                return <View />;
         }
     };
 
     React.useEffect(() => {
         let views: JSX.Element[] = [];
-        timelineEntries.forEach(timelineEntry => {
+        timelineEntries.forEach((timelineEntry) => {
             const view: JSX.Element = createTimelineView(timelineEntry);
             views.push(view);
         });
@@ -169,7 +174,9 @@ export const Timeline = () => {
                 leftIcon={'people-outline'}
                 leftRoute={'UserSearch'}
                 innerLeftIcon={'add-outline'}
-                innerLeftOnClick={() => { navigation.navigate('CreateTimelineStory') }}
+                innerLeftOnClick={() => {
+                    navigation.navigate('CreateTimelineStory');
+                }}
                 rightIcon={'notifications-outline'}
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount}
@@ -180,10 +187,8 @@ export const Timeline = () => {
                 style={{ backgroundColor: colors.background }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
-                <View style={{ flex: 1 }}>
-                    {timelineViews}
-                </View>
+                <View style={{ flex: 1 }}>{timelineViews}</View>
             </ScrollView>
         </Screen>
     );
-}
+};

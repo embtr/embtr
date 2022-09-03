@@ -4,6 +4,7 @@ import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { startMinuteToString } from 'src/controller/planning/TaskController';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -57,7 +58,9 @@ export const DailyResultCardElement = ({ plannedTask }: Props) => {
 
                 <View style={{ paddingLeft: 5 }}>
                     <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}> {plannedTask.routine.name} </Text>
-                    <Text style={{ color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 9 }}>5 hours ago</Text>
+                    <Text style={{ color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 9 }}>
+                        {plannedTask.startMinute ? startMinuteToString(plannedTask.startMinute) : ''}
+                    </Text>
                 </View>
             </View>
         </View>
