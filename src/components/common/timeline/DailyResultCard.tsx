@@ -13,8 +13,9 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { formatDistance } from 'date-fns';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
-import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { formatDayOfWeekFromDayKey, getDateFromDayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultCardElement } from './DailyResultCardElement';
+import { getDayOfWeek } from 'src/controller/planning/TaskController';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'TimelineComments'>;
 
@@ -69,8 +70,10 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
 
     const time = formatDistance(dailyResult.added.toDate(), new Date(), { addSuffix: true });
+    const dayOfWeek = getDayOfWeek(getDateFromDayKey(plannedDay?.id ? plannedDay?.id : ''));
 
     let plannedTaskViews: JSX.Element[] = [];
+
     plannedDay?.plannedTasks.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View style={{ paddingBottom: 5 }}>
@@ -122,7 +125,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
 
                     <View style={{ paddingTop: 5 }}>
                         <Text style={headerTextStyle}>
-                            Monday{' '}
+                            {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
                             <Text style={{ color: plannedDay?.metadata?.status === 'FAILED' ? colors.progress_bar_failed : colors.progress_bar_complete }}>
                                 {plannedDay?.metadata?.status === 'FAILED' ? 'Failed!' : 'Compete!'}
                             </Text>

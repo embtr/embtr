@@ -11,13 +11,19 @@ export interface TaskModel {
 }
 
 export const getTomorrowDayOfWeek = () => {
+    const dayOfWeek = getDayOfWeek(new Date());
+    return dayOfWeek;
+};
+
+export const getDayOfWeek = (date: Date) => {
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const dayNumber = new Date().getDay();
+
+    const dayNumber = date.getDay();
     const tomorrowNumber = dayNumber < 6 ? dayNumber + 1 : 0;
     const tomorrow = days[tomorrowNumber];
 
     return tomorrow;
-};
+}
 
 export const createTaskModel = (name: string, description: string, goalId: string) => {
     const task: TaskModel = {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TaskModel } from 'src/controller/planning/TaskController';
-import { getStartTimePretty, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { startMinuteToString, TaskModel } from 'src/controller/planning/TaskController';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { CARD_SHADOW } from 'src/util/constants';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -64,7 +64,7 @@ export const PlannableTask = ({ plannedTask, task, locked, onPress, onUpdate, is
                                 <View style={{ flexDirection: "row", paddingTop: 10, paddingBottom: 10 }}>
                                     <View style={{ flex: 1, flexDirection: "row", paddingLeft: 10, alignItems: "center" }}>
                                         <Ionicons name={'time-outline'} size={14} color={colors.goal_secondary_font} />
-                                        <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{getStartTimePretty(plannedTask!)}</Text>
+                                        <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", fontSize: 12 }}>{startMinuteToString(plannedTask?.startMinute!)}</Text>
                                     </View>
 
                                     <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end", alignItems: "center", paddingRight: 30 }}>

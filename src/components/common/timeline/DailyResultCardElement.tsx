@@ -57,10 +57,9 @@ export const DailyResultCardElement = ({ plannedTask }: Props) => {
                 </View>
 
                 <View style={{ paddingLeft: 5 }}>
-                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}> {plannedTask.routine.name} </Text>
+                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{plannedTask.routine.name}</Text>
                     <Text style={{ color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 9 }}>
-                        {plannedTask.startMinute ? startMinuteToString(plannedTask.startMinute) : ''}
-                    </Text>
+                        {plannedTask.startMinute ? startMinuteToString(plannedTask.startMinute) : ''} • 2h 30m                    </Text>
                 </View>
             </View>
         </View>

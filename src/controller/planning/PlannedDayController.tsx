@@ -25,31 +25,6 @@ export interface PlannedDayMetadata {
     locked: boolean;
 }
 
-export const getStartTimePretty = (plannedTask: PlannedTaskModel) => {
-    const startTime = plannedTask.startMinute;
-    if (startTime === undefined) {
-        return '0:00 AM';
-    }
-
-    let hours = Math.floor(startTime / 60);
-    if (hours == 0) {
-        hours = 1;
-    }
-
-    if (hours > 12) {
-        hours = hours - 12;
-    }
-
-    let minutes = '' + (startTime % 60);
-    if (minutes.length == 1) {
-        minutes = '0' + minutes;
-    }
-
-    const AmPm = startTime >= 12 * 60 ? 'PM' : 'AM';
-
-    return hours + ':' + minutes + ' ' + AmPm;
-};
-
 export const plannedTaskIsComplete = (plannedTask: PlannedTaskModel): boolean => {
     return plannedTask.status === 'COMPLETE';
 };
@@ -107,6 +82,11 @@ export const getTomorrowKey = () => {
 
 export const getDayFromDayKey = (dayKey: string) => {
     return parseInt(dayKey.substring(2, 4));
+};
+
+export const getDateFromDayKey = (dayKey: string) => {
+    const date: Date = new Date(parseInt(dayKey.substring(2, 4)), parseInt(dayKey.substring(0, 2)) - 1, parseInt(dayKey.substring(4)));
+    return date;
 };
 
 class PlannedDayController {
