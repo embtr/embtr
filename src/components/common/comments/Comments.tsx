@@ -16,12 +16,12 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
 
 interface Props {
-    type: string,
-    authorUid: string,
-    title: string,
-    post: string,
-    comments: Comment[],
-    submitComment: Function
+    type: string;
+    authorUid: string;
+    title: string;
+    post: string;
+    comments: Comment[];
+    submitComment: Function;
 }
 
 export const Comments = ({ type, authorUid, post, title, comments, submitComment }: Props) => {
@@ -50,53 +50,59 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
 
     const onCommentCountChanged = () => {
         scrollRef.current?.scrollTo(0, 0, false);
-    }
+    };
 
     return (
         <Screen>
             <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 40 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-
-                <Banner name={type} leftIcon={"arrow-back"} leftRoute="BACK" />
+                <Banner name={type} leftIcon={'arrow-back'} leftRoute="BACK" />
 
                 <ScrollView onContentSizeChange={onCommentCountChanged} ref={scrollRef} style={{ flex: 1 }}>
-                    <View style={{ width: "100%", flexDirection: "row" }}>
-                        <View style={{ flex: 1, flexDirection: "row", paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
-                            <View>
-                                {author && <NavigatableUserImage userProfileModel={author} size={45} />}
-                            </View>
+                    <View style={{ width: '100%', flexDirection: 'row' }}>
+                        <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
+                            <View>{author && <NavigatableUserImage userProfileModel={author} size={45} />}</View>
 
                             <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
-                                <View style={{ flex: 1, flexDirection: "row" }}>
-                                    <View style={{ flex: 1, justifyContent: "flex-end" }}>
-                                        <Text style={{ fontFamily: "Poppins_600SemiBold", color: colors.timeline_card_header }}>{author?.name}</Text>
+                                <View style={{ flex: 1, flexDirection: 'row' }}>
+                                    <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+                                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{author?.name}</Text>
                                     </View>
-                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "flex-end", paddingRight: TIMELINE_CARD_PADDING }}>
-                                        <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 12, opacity: .75, color: colors.timeline_card_header }}>12:00AM</Text>
+                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
+                                        <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
+                                            12:00AM
+                                        </Text>
                                     </View>
                                 </View>
 
-                                <View style={{ flex: 1, justifyContent: "flex-start" }}>
-                                    <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 10, color: colors.timeline_card_header }}>{author?.location}</Text>
+                                <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+                                    <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>
+                                        {author?.location}
+                                    </Text>
                                 </View>
 
-                                <View>
-                                    <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 12, color: colors.timeline_card_header }}>{post}</Text>
+                                <View style={{paddingTop: 10}}>
+                                    <View>
+                                        <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 16, color: colors.timeline_card_body}}>{title}</Text>
+                                    </View>
+                                    <View style={{paddingTop: 10}}>
+                                        <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, color: colors.timeline_card_header }}>{post}</Text>
+                                    </View>
                                 </View>
                             </View>
                         </View>
                     </View>
 
-                    <View style={{ width: "100%", paddingLeft: "3.5%", paddingRight: "3.5%", paddingTop: 10, paddingBottom: 10 }}>
-                        <View style={{ height: 1, width: "100%", backgroundColor: colors.today_calendar_line, opacity: .25 }} />
+                    <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%', paddingTop: 10, paddingBottom: 10 }}>
+                        <View style={{ height: 1, width: '100%', backgroundColor: colors.today_calendar_line, opacity: 0.25 }} />
                     </View>
 
                     <CommentsScrollView comments={comments} />
-
                 </ScrollView>
 
-                {currentUserProfile && author && <CommentsTextInput currentUserProfile={currentUserProfile} authorUserProfile={author} submitComment={submitComment} />}
-
+                {currentUserProfile && author && (
+                    <CommentsTextInput currentUserProfile={currentUserProfile} authorUserProfile={author} submitComment={submitComment} />
+                )}
             </KeyboardAvoidingView>
         </Screen>
-    )
-}
+    );
+};
