@@ -5,7 +5,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getAuth } from 'firebase/auth';
-import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { TouchableWithoutFeedback, View, Text, TextStyle } from 'react-native';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TIMELINE_CARD_PADDING, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_ICON_COUNT_SIZE } from 'src/util/constants';
@@ -30,16 +30,17 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
 
     const [likes, setLikes] = React.useState(dailyResult.public.likes.length);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+    const [isLiked, setIsLiked] = React.useState<boolean>(timelineEntryWasLikedBy(dailyResult, getAuth().currentUser!.uid));
 
     const onLike = () => {
-        //StoryController.likeStory(dailyResult, getAuth().currentUser!.uid);
+        DailyResultController.like(dailyResult, getAuth().currentUser!.uid);
         setLikes(likes + 1);
+        setIsLiked(true);
     };
 
     const onCommented = () => {
         navigation.navigate('TimelineComments', { id: dailyResult?.id ? dailyResult.id : '' });
     };
-    const isLiked = timelineEntryWasLikedBy(dailyResult, getAuth().currentUser!.uid);
 
     React.useEffect(() => {
         if (dailyResult.data.plannedDayId) {
@@ -147,7 +148,12 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ flexDirection: 'row', flex: 1 }}>
                             <View style={{ borderColor: colors.text }}>
-                                <Ionicons name={'heart-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} onPress={undefined} />
+                                <Ionicons
+                                    name={isLiked ? 'heart' : 'heart-outline'}
+                                    size={TIMELINE_CARD_ICON_SIZE}
+                                    color={isLiked ? 'red' : colors.timeline_card_footer}
+                                    onPress={isLiked ? undefined : onLike}
+                                />
                             </View>
 
                             <View style={{ justifyContent: 'center', paddingLeft: 4 }}>

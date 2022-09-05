@@ -1,7 +1,8 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, addDoc, collection, setDoc, doc, getDocs, getDoc, query, where, Timestamp } from 'firebase/firestore';
+import { Firestore, addDoc, collection, setDoc, doc, getDocs, getDoc, query, where, Timestamp, arrayUnion } from 'firebase/firestore';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import { Like } from 'src/controller/timeline/TimelineController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 const COLLECTION_NAME = 'daily_results';
@@ -42,6 +43,21 @@ class DailyResultDao {
         const result = await setDoc(doc(db, COLLECTION_NAME, dailyResult.id!), dailyResult, { merge: true });
  
         return result;
+    }
+    
+    public static like(dailyResult: DailyResultModel, likerUid: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "like");
+
+        const like: Like = {
+            uid: likerUid,
+            added: Timestamp.now()
+        };
+
+        setDoc(doc(db, "daily_results/" + dailyResult.id), {
+            public: {
+                likes: arrayUnion(like)
+            }
+        }, { merge: true })
     }
 }
 

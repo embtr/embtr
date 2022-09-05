@@ -1,5 +1,6 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
+import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import PlannedDayController, { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
@@ -82,15 +83,29 @@ class DailyResultController {
         let dailyResults: DailyResultModel[] = [];
         result.forEach((doc) => {
             let dailyResult = doc.data() as DailyResultModel;
-            if (!["FAILED", "COMPLETE"].includes(dailyResult.data.status)) {
-               return; 
-            };
+            if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
+                return;
+            }
 
             dailyResult.id = doc.id;
             dailyResults.push(dailyResult);
         });
 
         return dailyResults;
+    }
+
+    public static like(dailyResult: DailyResultModel, likerUid: string) {
+        if (!dailyResult.id) {
+            return;
+        }
+
+        DailyResultDao.like(dailyResult, likerUid);
+        NotificationController.addNotification(
+            likerUid,
+            dailyResult.uid,
+            dailyResult.data.status === 'COMPLETE' ? NotificationType.COMPLETED_DAILY_RESULT_LIKE : NotificationType.FAILED_DAILY_RESULT_LIKE,
+            dailyResult.id
+        );
     }
 }
 

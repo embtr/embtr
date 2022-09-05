@@ -18,6 +18,8 @@ export enum NotificationType {
     TIMELINE_COMMENT,
     CHALLENGE_COMMENT,
     TIMELINE_LIKE,
+    COMPLETED_DAILY_RESULT_LIKE,
+    FAILED_DAILY_RESULT_LIKE,
 }
 
 export const getUnreadNotificationCount = (notifications: NotificationModel[]): number => {
@@ -61,7 +63,7 @@ class NotificationController {
         });
     }
 
-    public static addNotification(fromUid: string, toUid: string, notificationType: NotificationType, targetUid: string) {
+    public static addNotification(fromUid: string, toUid: string, notificationType: NotificationType, targetId: string) {
         const summary: string = this.getSummary(notificationType);
         const targetPage: string = this.getTargetPage(notificationType);
 
@@ -71,7 +73,7 @@ class NotificationController {
             summary: summary,
             notifier_uid: fromUid,
             uid: toUid,
-            target_uid: targetUid,
+            target_uid: targetId,
             target_page: targetPage
         };
 
@@ -90,7 +92,11 @@ class NotificationController {
     private static getSummary(notificationType: NotificationType): string {
         switch (notificationType) {
             case NotificationType.TIMELINE_LIKE:
-                return "liked your post"
+                return "liked your post";
+            case NotificationType.COMPLETED_DAILY_RESULT_LIKE:
+                return "liked your completed day";
+            case NotificationType.FAILED_DAILY_RESULT_LIKE:
+                return "sent you encouragement";
             default:
                 return "tagged you in a comment";
         }
