@@ -39,6 +39,7 @@ export const TimelineComments = () => {
                     post={storyModel.data.story}
                     authorUid={storyModel.uid ? storyModel.uid : ""}
                     title={storyModel?.data.title ? storyModel?.data.title : ""}
+                    added={storyModel.added.toDate()}
                     comments={storyModel?.public.comments ? storyModel?.public.comments : []}
                     submitComment={submitComment}
                 />

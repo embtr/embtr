@@ -14,17 +14,19 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
+import { daysToWeeks, differenceInDays, format, formatDistance } from 'date-fns';
 
 interface Props {
     type: string;
     authorUid: string;
     title: string;
     post: string;
+    added: Date;
     comments: Comment[];
     submitComment: Function;
 }
 
-export const Comments = ({ type, authorUid, post, title, comments, submitComment }: Props) => {
+export const Comments = ({ type, authorUid, post, title, added, comments, submitComment }: Props) => {
     const { colors } = useTheme();
 
     const [author, setAuthor] = React.useState<UserProfileModel>();
@@ -52,6 +54,8 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
         scrollRef.current?.scrollTo(0, 0, false);
     };
 
+    const daysRemaining = formatDistance(added, new Date(), { addSuffix: true });
+
     return (
         <Screen>
             <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 40 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
@@ -69,7 +73,7 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
                                     </View>
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
                                         <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
-                                            12:00AM
+                                            {daysRemaining}
                                         </Text>
                                     </View>
                                 </View>
@@ -80,11 +84,11 @@ export const Comments = ({ type, authorUid, post, title, comments, submitComment
                                     </Text>
                                 </View>
 
-                                <View style={{paddingTop: 10}}>
+                                <View style={{ paddingTop: 10 }}>
                                     <View>
-                                        <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 16, color: colors.timeline_card_body}}>{title}</Text>
+                                        <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 16, color: colors.timeline_card_body }}>{title}</Text>
                                     </View>
-                                    <View style={{paddingTop: 10}}>
+                                    <View style={{ paddingTop: 10 }}>
                                         <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, color: colors.timeline_card_header }}>{post}</Text>
                                     </View>
                                 </View>
