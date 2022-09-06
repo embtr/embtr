@@ -33,12 +33,11 @@ export const DailyResultDetails = () => {
         }
 
         DailyResultController.addComment(dailyResult.id, user.uid, text, () => {
-            NotificationController.addNotifications(
-                getAuth().currentUser!.uid,
-                taggedUsers,
-                NotificationType.DAILY_RESULT_COMMENT,
-                route.params.id
-            );
+            // send notification to post owner
+            NotificationController.addNotification(user.uid, dailyResult.uid, NotificationType.DAILY_RESULT_COMMENT, dailyResult!.id!);
+
+            // send notification to tagged users
+            NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.DAILY_RESULT_TAG, route.params.id);
             DailyResultController.get(route.params.id, setDailyResult);
         });
     };

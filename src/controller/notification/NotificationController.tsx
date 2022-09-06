@@ -18,6 +18,7 @@ export enum NotificationType {
     TIMELINE_COMMENT,
     CHALLENGE_COMMENT,
     TIMELINE_LIKE,
+    DAILY_RESULT_TAG,
     DAILY_RESULT_COMMENT,
     COMPLETED_DAILY_RESULT_LIKE,
     FAILED_DAILY_RESULT_LIKE,
@@ -101,6 +102,9 @@ class NotificationController {
                 return 'liked your completed day';
             case NotificationType.FAILED_DAILY_RESULT_LIKE:
                 return 'sent you encouragement';
+            case NotificationType.DAILY_RESULT_COMMENT:
+                return 'commented on your daily results';
+
             default:
                 return 'tagged you in a comment';
         }
@@ -113,6 +117,7 @@ class NotificationController {
             case NotificationType.TIMELINE_COMMENT:
             case NotificationType.TIMELINE_LIKE:
                 return 'TimelineComments';
+            case NotificationType.DAILY_RESULT_TAG:
             case NotificationType.DAILY_RESULT_COMMENT:
             case NotificationType.FAILED_DAILY_RESULT_LIKE:
             case NotificationType.COMPLETED_DAILY_RESULT_LIKE:
