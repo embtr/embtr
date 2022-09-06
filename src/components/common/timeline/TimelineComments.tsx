@@ -26,7 +26,8 @@ export const TimelineComments = () => {
         const user = getAuth().currentUser;
         if (storyModel?.id && user?.uid) {
             StoryController.addComment(storyModel.id, user.uid, text, () => {
-                NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.TIMELINE_COMMENT, route.params.id);
+                NotificationController.addNotification(user.uid, storyModel.uid, NotificationType.TIMELINE_COMMENT, route.params.id); 
+                NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.TIMELINE_TAG, route.params.id);
                 StoryController.getStory(route.params.id, setStoryModel);
             });
         }

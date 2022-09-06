@@ -16,8 +16,9 @@ export interface NotificationModel {
 
 export enum NotificationType {
     TIMELINE_COMMENT,
-    CHALLENGE_COMMENT,
+    TIMELINE_TAG,
     TIMELINE_LIKE,
+    CHALLENGE_COMMENT,
     DAILY_RESULT_TAG,
     DAILY_RESULT_COMMENT,
     COMPLETED_DAILY_RESULT_LIKE,
@@ -96,6 +97,8 @@ class NotificationController {
 
     private static getSummary(notificationType: NotificationType): string {
         switch (notificationType) {
+            case NotificationType.TIMELINE_COMMENT:
+                return 'commented on your post';
             case NotificationType.TIMELINE_LIKE:
                 return 'liked your post';
             case NotificationType.COMPLETED_DAILY_RESULT_LIKE:
@@ -115,6 +118,7 @@ class NotificationController {
             case NotificationType.CHALLENGE_COMMENT:
                 return 'ChallengeComments';
             case NotificationType.TIMELINE_COMMENT:
+            case NotificationType.TIMELINE_TAG:
             case NotificationType.TIMELINE_LIKE:
                 return 'TimelineComments';
             case NotificationType.DAILY_RESULT_TAG:
