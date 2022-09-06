@@ -20,9 +20,16 @@ class DailyResultDao {
         const result = await addDoc(collection(db, COLLECTION_NAME), dailyResult);
         return result;
     }
+    
+    public static async get(id: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "get");
+        const result = await getDoc(doc(db, COLLECTION_NAME, id));
 
-    public static async get(uid: string, dayKey: string) {
-        const db: Firestore = getFirebaseConnection(this.name, 'get');
+        return result;
+    }
+    
+    public static async getByDayKey(uid: string, dayKey: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getByDayKey');
         const q = query(collection(db, COLLECTION_NAME), where('uid', '==', uid), where('data.plannedDayId', '==', dayKey));
         const querySnapshot = await getDocs(q);
 

@@ -14,19 +14,18 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
-import { daysToWeeks, differenceInDays, format, formatDistance } from 'date-fns';
+import { formatDistance } from 'date-fns';
 
 interface Props {
     type: string;
     authorUid: string;
-    title: string;
-    post: string;
+    children: any;
     added: Date;
     comments: Comment[];
     submitComment: Function;
 }
 
-export const Comments = ({ type, authorUid, post, title, added, comments, submitComment }: Props) => {
+export const Comments = ({ type, authorUid, children, added, comments, submitComment }: Props) => {
     const { colors } = useTheme();
 
     const [author, setAuthor] = React.useState<UserProfileModel>();
@@ -83,18 +82,12 @@ export const Comments = ({ type, authorUid, post, title, added, comments, submit
                                         {author?.location}
                                     </Text>
                                 </View>
-
-                                <View style={{ paddingTop: 10 }}>
-                                    <View>
-                                        <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 16, color: colors.timeline_card_body }}>{title}</Text>
-                                    </View>
-                                    <View style={{ paddingTop: 10 }}>
-                                        <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, color: colors.timeline_card_header }}>{post}</Text>
-                                    </View>
-                                </View>
                             </View>
                         </View>
                     </View>
+
+                    {/*this is the body of the post*/}
+                    {children}
 
                     <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%', paddingTop: 10, paddingBottom: 10 }}>
                         <View style={{ height: 1, width: '100%', backgroundColor: colors.today_calendar_line, opacity: 0.25 }} />

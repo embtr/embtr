@@ -6,16 +6,15 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getAuth } from 'firebase/auth';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { TouchableWithoutFeedback, View, Text, TextStyle } from 'react-native';
+import { TouchableWithoutFeedback, View, Text } from 'react-native';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TIMELINE_CARD_PADDING, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_ICON_COUNT_SIZE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { formatDistance } from 'date-fns';
-import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
-import PlannedDayController, { formatDayOfWeekFromDayKey, getDateFromDayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultCardElement } from './DailyResultCardElement';
-import { getDayOfWeek } from 'src/controller/planning/TaskController';
+import { DailyResultBody } from './DailyResultBody';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'TimelineComments'>;
 
@@ -38,40 +37,13 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         setIsLiked(true);
     };
 
-    const onCommented = () => {
-        navigation.navigate('TimelineComments', { id: dailyResult?.id ? dailyResult.id : '' });
-    };
-
     React.useEffect(() => {
         if (dailyResult.data.plannedDayId) {
             PlannedDayController.get(dailyResult.uid, dailyResult.data.plannedDayId, setPlannedDay);
         }
     }, []);
 
-    const headerTextStyle = {
-        fontSize: 16,
-        fontFamily: 'Poppins_500Medium',
-        color: colors.timeline_card_body,
-        paddingLeft: TIMELINE_CARD_PADDING,
-    } as TextStyle;
-
-    const bodyTextStyle = {
-        fontSize: 12,
-        fontFamily: 'Poppins_400Regular',
-        color: colors.timeline_card_body,
-    } as TextStyle;
-
-    let completedCount = 0;
-    plannedDay?.plannedTasks.forEach((plannedTask) => {
-        if (plannedTask.status === 'COMPLETE') {
-            completedCount += 1;
-        }
-    });
-
-    const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
-
     const time = formatDistance(dailyResult.added.toDate(), new Date(), { addSuffix: true });
-    const dayOfWeek = getDayOfWeek(getDateFromDayKey(plannedDay?.id ? plannedDay?.id : ''));
 
     let plannedTaskViews: JSX.Element[] = [];
 
@@ -83,8 +55,12 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         );
     });
 
+    const navigateToDetails = () => {
+        navigation.navigate('DailyResultDetails', { id: dailyResult.id ? dailyResult.id : '' });
+    };
+
     return (
-        <TouchableWithoutFeedback>
+        <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 15 }}>
                 {/**********/}
                 {/* HEADER */}
@@ -117,29 +93,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                <View style={{ paddingTop: 10 }}>
-                    <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                        <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                            <ProgressBar progress={progress} success={dailyResult.data.status !== 'FAILED'} />
-                        </View>
-                    </View>
-
-                    <View style={{ paddingTop: 5 }}>
-                        <Text style={headerTextStyle}>
-                            {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
-                            <Text style={{ color: plannedDay?.metadata?.status === 'FAILED' ? colors.progress_bar_failed : colors.progress_bar_complete }}>
-                                {plannedDay?.metadata?.status === 'FAILED' ? 'Failed!' : 'Compete!'}
-                            </Text>
-                        </Text>
-                    </View>
-
-                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                        {/*<Text style={[bodyTextStyle, { textAlign: 'left' }]}>man, I tried really hard on this one! I will get it next time.</Text>
-                        <View style={{ paddingTop: 15 }}>{plannedTaskViews}</View>*/}
-                        <View>{plannedTaskViews}</View>
-                        {/* <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{"view more..."}</Text> */}
-                    </View>
-                </View>
+                {plannedDay && <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} />}
 
                 {/**********/}
                 {/* FOOTER */}

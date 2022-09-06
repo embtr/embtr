@@ -8,6 +8,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 
 export const TimelineComments = () => {
     const { colors } = useTheme();
@@ -33,20 +34,19 @@ export const TimelineComments = () => {
 
     if (storyModel) {
         return (
-            <View style={{width: "100%", height: "100%", backgroundColor: colors.background}}>
+            <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
                 <Comments
                     type={'Post'}
-                    post={storyModel.data.story}
-                    authorUid={storyModel.uid ? storyModel.uid : ""}
-                    title={storyModel?.data.title ? storyModel?.data.title : ""}
+                    authorUid={storyModel.uid ? storyModel.uid : ''}
                     added={storyModel.added.toDate()}
                     comments={storyModel?.public.comments ? storyModel?.public.comments : []}
                     submitComment={submitComment}
-                />
+                >
+                    <UserPostBody title={storyModel?.data.title ? storyModel?.data.title : ''} post={storyModel.data.story} />
+                </Comments>
             </View>
         );
     }
 
     return <View />;
-
-}
+};

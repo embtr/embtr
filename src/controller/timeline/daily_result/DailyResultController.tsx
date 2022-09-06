@@ -18,7 +18,7 @@ class DailyResultController {
         const uid = getAuth().currentUser!.uid;
 
         if (plannedDay.id) {
-            const existing = await DailyResultController.get(uid, plannedDay.id);
+            const existing = await DailyResultController.getByDayKey(uid, plannedDay.id);
 
             if (existing) {
                 return existing;
@@ -64,8 +64,17 @@ class DailyResultController {
         return dailyResult;
     }
 
-    public static async get(uid: string, dayKey: string) {
-        const result = await DailyResultDao.get(uid, dayKey);
+    public static async get(id: string, callback: Function) {
+        const result = await DailyResultDao.get(id);
+
+        let dailyResult: DailyResultModel = result.data() as DailyResultModel; 
+        dailyResult.id = id;
+        
+        callback(dailyResult);
+    }
+
+    private static async getByDayKey(uid: string, dayKey: string) {
+        const result = await DailyResultDao.getByDayKey(uid, dayKey);
 
         let dailyResult: DailyResultModel | undefined = undefined;
         result.forEach((doc) => {
