@@ -28,6 +28,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const { colors } = useTheme();
 
     const [likes, setLikes] = React.useState(dailyResult.public.likes.length);
+    const [commentCount, setCommentCount] = React.useState(dailyResult.public.comments.length);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [isLiked, setIsLiked] = React.useState<boolean>(timelineEntryWasLikedBy(dailyResult, getAuth().currentUser!.uid));
 
@@ -122,7 +123,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
 
                             <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
                                 <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
-                                    {}
+                                    {commentCount}
                                 </Text>
                             </View>
                         </View>

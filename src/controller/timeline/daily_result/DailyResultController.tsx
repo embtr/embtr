@@ -116,6 +116,12 @@ class DailyResultController {
             dailyResult.id
         );
     }
+
+    public static addComment(id: string, uid: string, commentText: string, callback: Function) {
+        DailyResultDao.addComment(id, uid, commentText).then(() => {
+            callback();
+        });
+    }
 }
 
 export default DailyResultController;

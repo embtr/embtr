@@ -66,6 +66,20 @@ class DailyResultDao {
             }
         }, { merge: true })
     }
+
+    public static addComment(id: string, uid: string, comment: string) {
+        const db: Firestore = getFirebaseConnection(this.name, "addComment");
+
+        return setDoc(doc(db, COLLECTION_NAME + "/" + id), {
+            public: {
+                comments: arrayUnion({
+                    uid: uid,
+                    comment: comment,
+                    timestamp: Timestamp.now()
+                })
+            }
+        }, { merge: true });
+    }
 }
 
 export default DailyResultDao;
