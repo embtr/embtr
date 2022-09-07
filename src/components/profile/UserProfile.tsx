@@ -11,6 +11,7 @@ import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
+import { getAuth } from 'firebase/auth';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -31,11 +32,13 @@ export const UserProfile = () => {
     const onFollowUser = (uid: string) => {
         setIsFollowingUser(true);
         setFollowerCount(followerCount + 1);
+        FollowerController.followUser(getAuth().currentUser!.uid, uid, () => {});
     };
 
     const onUnfollowUser = (uid: string) => {
         setIsFollowingUser(false);
         setFollowerCount(followerCount - 1);
+        FollowerController.unfollowUser(getAuth().currentUser!.uid, uid, () => {});
     };
 
     useFocusEffect(
@@ -50,7 +53,6 @@ export const UserProfile = () => {
             });
 
             getCurrentUserUid(setCurrentUserId);
-
         }, [userProfileModel])
     );
 
@@ -67,16 +69,25 @@ export const UserProfile = () => {
 
     return (
         <Screen>
-            <Banner name='User Profile' leftIcon={"arrow-back"} leftRoute="BACK" />
+            <Banner name="User Profile" leftIcon={'arrow-back'} leftRoute="BACK" />
 
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{ alignItems: "center" }}>
-                    <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                        {userProfileModel && <ProfileHeader userProfileModel={userProfileModel} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} followerCount={followerCount} followingCount={followingCount} isFollowingUser={isFollowingUser} />}
+                <View style={{ alignItems: 'center' }}>
+                    <View style={{ width: isDesktopBrowser() ? '45%' : '100%' }}>
+                        {userProfileModel && (
+                            <ProfileHeader
+                                userProfileModel={userProfileModel}
+                                onFollowUser={onFollowUser}
+                                onUnfollowUser={onUnfollowUser}
+                                followerCount={followerCount}
+                                followingCount={followingCount}
+                                isFollowingUser={isFollowingUser}
+                            />
+                        )}
                         {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                     </View>
                 </View>
             </ScrollView>
         </Screen>
     );
-}
+};

@@ -12,7 +12,7 @@ export default function ProfileBannerImage({ sourceUrl, ratio }: Props) {
     const [height, setHeight] = useState(0);
 
     return (
-        <View style={{ width: "100%", height: "100%", alignItems: "center" }}
+        <View style={{ width: "100%", alignItems: "center" }}
             onLayout={(e) => {
                 const screenWidth = e.nativeEvent.layout.width;
                 const imageWidth = screenWidth * .95;
