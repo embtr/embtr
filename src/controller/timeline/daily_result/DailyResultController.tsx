@@ -7,7 +7,6 @@ import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
 export interface DailyResultModel extends TimelinePostModel {
     data: {
-        day: string;
         status: string;
         plannedDayId: string;
     };
@@ -35,7 +34,6 @@ class DailyResultController {
 
         const dailyResult: DailyResultModel = {
             data: {
-                day: plannedDay.id!,
                 status: status,
                 plannedDayId: plannedDay.id!,
             },
