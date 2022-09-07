@@ -7,8 +7,8 @@ import ChallengeController, { ChallengeModel1 } from 'src/controller/timeline/ch
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 
-export const ChallengeComments = () => {
-    const route = useRoute<RouteProp<TimelineTabScreens, 'ChallengeComments'>>();
+export const ChallengeDetails = () => {
+    const route = useRoute<RouteProp<TimelineTabScreens, 'ChallengeDetails'>>();
 
     const [challengeModel, setChallengeModel] = React.useState<ChallengeModel1 | undefined>(undefined);
 

@@ -6,7 +6,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import ChallengeController, { ChallengeModel1, challengeWasAcceptedBy, challengeWasLikedBy } from 'src/controller/timeline/challenge/ChallengeController';
 
-type commentsNavigationProp = StackNavigationProp<TimelineTabScreens, 'ChallengeComments'>;
+type commentsNavigationProp = StackNavigationProp<TimelineTabScreens, 'ChallengeDetails'>;
 
 interface Props {
     challengeModel: ChallengeModel1
@@ -33,7 +33,7 @@ export const EmbtrTextCard = ({ challengeModel }: Props) => {
     }
 
     const onCommented = () => {
-        navigation.navigate('ChallengeComments', { id: challengeModel?.id ? challengeModel.id : "" })
+        navigation.navigate('ChallengeDetails', { id: challengeModel?.id ? challengeModel.id : "" })
     };
 
     return (

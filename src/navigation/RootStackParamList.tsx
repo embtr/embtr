@@ -25,8 +25,8 @@ export type TimelineTabScreens = {
     UserSearch: undefined;
     Timeline: undefined;
     CreateTimelineStory: undefined;
-    TimelineComments: { id: string };
-    ChallengeComments: { id: string };
+    UserPostDetails: { id: string };
+    ChallengeDetails: { id: string };
     DailyResultDetails: { id: string };
     UserProfile: { id: string };
     Notifications: undefined;

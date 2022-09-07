@@ -8,6 +8,7 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import * as Haptics from 'expo-haptics';
 
 interface Props {
     staticImage?: ImageSourcePropType,
@@ -63,6 +64,8 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
             return;
         }
 
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        
         setHeartPressed(true);
         onLike();
     };

@@ -16,7 +16,7 @@ import PlannedDayController, { PlannedDay } from 'src/controller/planning/Planne
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 
-type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'TimelineComments'>;
+type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
 interface Props {
     userProfileModel: UserProfileModel;

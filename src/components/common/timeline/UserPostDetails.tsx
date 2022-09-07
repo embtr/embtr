@@ -10,9 +10,9 @@ import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 
-export const TimelineComments = () => {
+export const UserPostDetails = () => {
     const { colors } = useTheme();
-    const route = useRoute<RouteProp<TimelineTabScreens, 'ChallengeComments'>>();
+    const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
 
     const [storyModel, setStoryModel] = React.useState<StoryModel | undefined>(undefined);
 

@@ -33,7 +33,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                             UserSearch: "search",
                             Timeline: "timeline",
                             UserProfile: "user",
-                            TimelineComments: {
+                            UserPostDetails: {
                                 path: "timeline/:id/comments",
                                 parse: {
                                     id: (id) => id,
@@ -42,7 +42,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
                                 //                                  },
                             },
-                            ChallengeComments: {
+                            ChallengeDetails: {
                                 path: "challenge/:id/comments",
                                 parse: {
                                     id: (id) => id,

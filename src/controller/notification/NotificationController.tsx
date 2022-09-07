@@ -116,11 +116,11 @@ class NotificationController {
     private static getTargetPage(notificationType: NotificationType): string {
         switch (notificationType) {
             case NotificationType.CHALLENGE_COMMENT:
-                return 'ChallengeComments';
+                return 'ChallengeDetails';
             case NotificationType.TIMELINE_COMMENT:
             case NotificationType.TIMELINE_TAG:
             case NotificationType.TIMELINE_LIKE:
-                return 'TimelineComments';
+                return 'UserPostDetails';
             case NotificationType.DAILY_RESULT_TAG:
             case NotificationType.DAILY_RESULT_COMMENT:
             case NotificationType.FAILED_DAILY_RESULT_LIKE:

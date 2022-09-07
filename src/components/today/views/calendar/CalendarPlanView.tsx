@@ -122,8 +122,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
 
     const onLongPress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        updateMenuOptions()
-        openMenu()
+        toggleComplete();
     };
 
     let width = 0;
