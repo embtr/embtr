@@ -42,6 +42,15 @@ class DailyResultDao {
         const result = await getDocs(collection(db, COLLECTION_NAME));
         return result;
     }
+    
+    public static async getAllForUser(uid: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getAllForUser');
+
+        const q = query(collection(db, COLLECTION_NAME), where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot;
+    }
 
     public static async update(dailyResult: DailyResultModel) {
         const db: Firestore = getFirebaseConnection(this.name, 'update');

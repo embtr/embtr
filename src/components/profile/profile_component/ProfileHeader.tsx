@@ -1,9 +1,6 @@
-import * as React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { Text, View, Image } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
 import { UserProfileProBadge } from 'src/components/profile/profile_component/badge/UserProfileProBadge';

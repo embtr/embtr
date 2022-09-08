@@ -116,6 +116,26 @@ class DailyResultController {
         return dailyResults;
     }
 
+    public static async getAllFinishedForUser(uid: string) {
+        const result = await DailyResultDao.getAllForUser(uid);
+
+        let dailyResults: DailyResultModel[] = [];
+        result.forEach((doc) => {
+            let dailyResult = doc.data() as DailyResultModel;
+            if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
+                const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
+                if (daysOld <= 0) {
+                    return;
+                }
+            }
+
+            dailyResult.id = doc.id;
+            dailyResults.push(dailyResult);
+        });
+
+        return dailyResults;
+    }
+
     public static like(dailyResult: DailyResultModel, likerUid: string) {
         if (!dailyResult.id) {
             return;
