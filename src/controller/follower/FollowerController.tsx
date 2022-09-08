@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import FollowerDao from "src/firebase/firestore/follower/FollowerDao";
+import NotificationController, { NotificationType } from "../notification/NotificationController";
 
 export interface FollowCounts {
     follower_count: number;
@@ -75,6 +76,7 @@ class FollowerController {
 
     public static followUser(uid: string, uidToFollow: string, callback: Function) {
         FollowerDao.followUser(uid, uidToFollow);
+        NotificationController.addNotification(uid, uidToFollow, NotificationType.NEW_FOLLOWER, uid);
         callback();
     }
 

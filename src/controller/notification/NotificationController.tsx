@@ -23,6 +23,7 @@ export enum NotificationType {
     DAILY_RESULT_COMMENT,
     COMPLETED_DAILY_RESULT_LIKE,
     FAILED_DAILY_RESULT_LIKE,
+    NEW_FOLLOWER,
 }
 
 export const getUnreadNotificationCount = (notifications: NotificationModel[]): number => {
@@ -107,6 +108,8 @@ class NotificationController {
                 return 'sent you encouragement';
             case NotificationType.DAILY_RESULT_COMMENT:
                 return 'commented on your daily results';
+            case NotificationType.NEW_FOLLOWER:
+                return 'now follows you';
 
             default:
                 return 'tagged you in a comment';
@@ -126,6 +129,8 @@ class NotificationController {
             case NotificationType.FAILED_DAILY_RESULT_LIKE:
             case NotificationType.COMPLETED_DAILY_RESULT_LIKE:
                 return 'DailyResultDetails';
+            case NotificationType.NEW_FOLLOWER:
+                return 'UserProfile';
             default:
                 return '';
         }
