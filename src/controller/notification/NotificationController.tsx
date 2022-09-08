@@ -109,7 +109,7 @@ class NotificationController {
             case NotificationType.DAILY_RESULT_COMMENT:
                 return 'commented on your daily results';
             case NotificationType.NEW_FOLLOWER:
-                return 'now follows you';
+                return 'now follows you!';
 
             default:
                 return 'tagged you in a comment';

@@ -1,7 +1,14 @@
 import { View, Text, TextStyle } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDateFromDayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import {
+    getDateFromDayKey,
+    PlannedDay,
+    plannedDayIsComplete,
+    plannedDayIsFailed,
+    plannedDayIsIncomplete,
+    plannedTaskIsComplete,
+} from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
@@ -44,19 +51,19 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
     });
 
     return (
-        <View> 
+        <View>
             <View style={{ paddingTop: 10 }}>
                 <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                     <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                        <ProgressBar progress={progress} success={dailyResult.data.status !== 'FAILED'} />
+                        <ProgressBar progress={progress} success={plannedDayIsComplete(plannedDay)} />
                     </View>
                 </View>
 
                 <View style={{ paddingTop: 5 }}>
                     <Text style={headerTextStyle}>
                         {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
-                        <Text style={{ color: plannedDay?.metadata?.status === 'FAILED' ? colors.progress_bar_failed : colors.progress_bar_complete }}>
-                            {plannedDay?.metadata?.status === 'FAILED' ? 'Failed!' : 'Compete!'}
+                        <Text style={{ color: plannedDayIsComplete(plannedDay) ? colors.progress_bar_complete : colors.progress_bar_failed }}>
+                            {plannedDayIsComplete(plannedDay) ? 'Complete!' : 'Failed!'}
                         </Text>
                     </Text>
                 </View>

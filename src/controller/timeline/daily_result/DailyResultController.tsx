@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import PlannedDayController, { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDayKeyDaysOld, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
@@ -13,6 +13,18 @@ export interface DailyResultModel extends TimelinePostModel {
 }
 
 class DailyResultController {
+    dailyResultIsComplete(dailyResult: DailyResultModel) {
+        dailyResult.data.status === 'COMPLETED';
+    }
+
+    dailyResultIsFailed(dailyResult: DailyResultModel) {
+        dailyResult.data.status === 'FAILED';
+    }
+
+    dailyResultIsIncomplete(dailyResult: DailyResultModel) {
+        dailyResult.data.status !== 'FAILED' && dailyResult.data.status !== 'COMPLETED';
+    }
+
     public static async getOrCreate(plannedDay: PlannedDay, status: string) {
         const uid = getAuth().currentUser!.uid;
 
@@ -65,9 +77,9 @@ class DailyResultController {
     public static async get(id: string, callback: Function) {
         const result = await DailyResultDao.get(id);
 
-        let dailyResult: DailyResultModel = result.data() as DailyResultModel; 
+        let dailyResult: DailyResultModel = result.data() as DailyResultModel;
         dailyResult.id = id;
-        
+
         callback(dailyResult);
     }
 
@@ -91,7 +103,10 @@ class DailyResultController {
         result.forEach((doc) => {
             let dailyResult = doc.data() as DailyResultModel;
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
-                return;
+                const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
+                if (daysOld <= 0) {
+                    return;
+                }
             }
 
             dailyResult.id = doc.id;

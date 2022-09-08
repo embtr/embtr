@@ -25,6 +25,18 @@ export interface PlannedDayMetadata {
     locked: boolean;
 }
 
+export const plannedDayIsComplete = (plannedDay: PlannedDay): boolean => {
+    return plannedDay.metadata?.status === 'COMPLETE';
+};
+
+export const plannedDayIsFailed = (plannedDay: PlannedDay): boolean => {
+    return plannedDay.metadata?.status === 'FAILED';
+};
+
+export const plannedDayIsIncomplete = (plannedDay: PlannedDay): boolean => {
+    return !plannedDayIsComplete(plannedDay) && !plannedDayIsFailed(plannedDay);
+};
+
 export const plannedTaskIsComplete = (plannedTask: PlannedTaskModel): boolean => {
     return plannedTask.status === 'COMPLETE';
 };
@@ -88,10 +100,18 @@ export const getDateFromDayKey = (dayKey: string) => {
     const day = dayKey.substring(2, 4);
     const month = dayKey.substring(0, 2);
     const year = dayKey.substring(4);
-    const dateStr = year + "-" + month + "-" + day;
-    
+    const dateStr = year + '-' + month + '-' + day;
+
     let date = new Date(dateStr);
     return date;
+};
+
+export const getDayKeyDaysOld = (dayKey: string) => {
+    const then: any = getDateFromDayKey(dayKey);
+    const now: any = new Date();
+    const dateDiff = now - then;
+
+    return Math.round(dateDiff / (1000 * 60 * 60 * 24));
 };
 
 class PlannedDayController {
@@ -214,7 +234,7 @@ class PlannedDayController {
             if (!dailyResult || dailyResult?.data.status === newStatus) {
                 return;
             }
-            
+
             dailyResult.data.status = newStatus;
             dailyResult.modified = Timestamp.now();
             DailyResultController.update(dailyResult);
