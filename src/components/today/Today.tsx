@@ -33,14 +33,6 @@ export const Today = () => {
         PlannedDayController.get(getAuth().currentUser?.uid!, newDayKey, setPlannedToday);
     };
 
-    const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
-        PlannedDayController.updateTask(plannedToday!, updatedPlannedTask, () => {
-            if (plannedToday?.id) {
-                PlannedDayController.get(getAuth().currentUser?.uid!, plannedToday?.id, setPlannedToday);
-            }
-        });
-    };
-
     let taskViews: JSX.Element[] = [];
     plannedToday?.plannedTasks.forEach(plannedTask => {
         taskViews.push(
@@ -70,7 +62,7 @@ export const Today = () => {
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
                     <TodayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
-                <CalendarView plannedToday={plannedToday} updateTask={updateTask} userType={UserType.USER} />
+                <CalendarView plannedToday={plannedToday} onPlanTodayUpdated={setPlannedToday}  userType={UserType.USER} />
             </View>
         </Screen>
     );

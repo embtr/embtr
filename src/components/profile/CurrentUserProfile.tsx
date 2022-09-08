@@ -10,6 +10,7 @@ import { ProfileHeader } from 'src/components/profile/profile_component/ProfileH
 import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
 import { useFocusEffect } from '@react-navigation/native';
 import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
+import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 
 
 export const CurrentUserProfile = () => {
@@ -52,7 +53,7 @@ export const CurrentUserProfile = () => {
     return (
         <Screen>
             <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
-
+            <EmbtrMenuCustom />
             <ScrollView>
                 <View style={{ alignItems: "center" }}>
                     <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>

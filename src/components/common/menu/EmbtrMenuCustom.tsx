@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import * as React from 'react';
 import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
@@ -38,10 +39,11 @@ export const EmbtrMenuCustom = () => {
         dispatch(setOpenMenu(() => { setVisible(true) }));
         dispatch(setCloseMenu(() => { setVisible(false) }));
     };
-
-    React.useEffect(() => {
+    useFocusEffect(
+        React.useCallback(() => {
         setMenuCallbacks();
-    }, []);
+        }, [])
+    );
 
     const currentMenuOptions = useAppSelector(getMenuOptions);
 

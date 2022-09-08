@@ -77,9 +77,13 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                                         borderColor: colors.profile_following_border,
                                         borderWidth: 1,
                                         marginLeft: 10,
+                                        height: 20,
+                                        width: 80,
+                                        alignItems: "center"
+                                        
                                     }}
                                 >
-                                    <Text style={{ color: colors.profile_following_text }}>{isFollowingUser ? ' Following ' : ' Follow '}</Text>
+                                    <Text style={{ color: colors.profile_following_text, fontFamily: 'Poppins_500Medium' }}>{isFollowingUser ? ' Following ' : ' Follow '}</Text>
                                 </View>
                             </TouchableOpacity>
                         )}

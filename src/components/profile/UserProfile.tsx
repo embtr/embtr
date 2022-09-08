@@ -12,6 +12,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
 import { getAuth } from 'firebase/auth';
+import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -70,6 +71,8 @@ export const UserProfile = () => {
     return (
         <Screen>
             <Banner name="User Profile" leftIcon={'arrow-back'} leftRoute="BACK" />
+
+            <EmbtrMenuCustom />
 
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ alignItems: 'center' }}>

@@ -5,14 +5,15 @@ import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { useFocusEffect } from '@react-navigation/native';
 import { UserType } from 'src/controller/profile/ProfileController';
+import { getAuth } from 'firebase/auth';
 
 interface Props {
-    userProfileModel: UserProfileModel
+    userProfileModel: UserProfileModel;
 }
 
 export const TodayTabRoute = ({ userProfileModel }: Props) => {
-
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
+
     useFocusEffect(
         React.useCallback(() => {
             if (userProfileModel?.uid) {
@@ -21,10 +22,10 @@ export const TodayTabRoute = ({ userProfileModel }: Props) => {
         }, [])
     );
 
-
+    const userType: UserType = userProfileModel.uid === getAuth().currentUser!.uid ? UserType.USER : UserType.GUEST;
     return (
         <View>
-            <CalendarView plannedToday={plannedToday} userType={UserType.GUEST} />
+            <CalendarView plannedToday={plannedToday} onPlanTodayUpdated={setPlannedToday} userType={userType} />
         </View>
-    )
+    );
 };
