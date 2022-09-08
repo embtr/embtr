@@ -20,7 +20,7 @@ export const DailyResultDetails = () => {
         React.useCallback(() => {
             DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
                 setDailyResult(dailyResult);
-                PlannedDayController.get(getAuth().currentUser!.uid, dailyResult.data.plannedDayId, setPlannedDay);
+                PlannedDayController.get(dailyResult.uid, dailyResult.data.plannedDayId, setPlannedDay);
             });
         }, [])
     );
