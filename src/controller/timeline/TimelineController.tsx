@@ -64,7 +64,9 @@ class TimelineController {
                 timelinePosts = timelinePosts.concat(dailyResults);
             })
             .then(() => {
-                timelinePosts = timelinePosts.sort((a, b) => (a.added > b.added ? 1 : -1)).reverse();
+                timelinePosts = timelinePosts
+                    .sort((a, b) => ((a.type === 'DAILY_RESULT' ? a.modified : a.added) > (b.type === 'DAILY_RESULT' ? b.modified : b.added) ? 1 : -1))
+                    .reverse();
             })
             .then(() => {
                 callback(timelinePosts);
@@ -88,7 +90,9 @@ class TimelineController {
                 timelinePosts = timelinePosts.concat(dailyResults);
             })
             .then(() => {
-                timelinePosts.sort((a, b) => (b.added > a.added ? 1 : -1));
+                timelinePosts = timelinePosts
+                    .sort((a, b) => ((a.type === 'DAILY_RESULT' ? a.modified : a.added) > (b.type === 'DAILY_RESULT' ? b.modified : b.added) ? 1 : -1))
+                    .reverse();
                 callback(timelinePosts);
             });
     }

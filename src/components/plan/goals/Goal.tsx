@@ -46,7 +46,7 @@ export const Goal = ({ goal, pillars }: Props) => {
     const totalDays = differenceInDays(goal.deadline.toDate(), goal.added.toDate());
     const daysRemaining = differenceInDays(goal.deadline.toDate(), new Date());
     const daysPassed = totalDays - daysRemaining;
-    const daysRemainingPercent = Math.floor((daysPassed / totalDays) * 100);
+    const daysRemainingPercent = Math.min(100, Math.floor((daysPassed / totalDays) * 100));
     const daysRemainingString = daysRemaining > 0
         ? "ends in " + daysRemaining + " days"
         : "ended " + Math.abs(daysRemaining) + " days ago";

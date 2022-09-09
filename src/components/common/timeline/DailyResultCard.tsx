@@ -44,7 +44,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         }
     }, []);
 
-    const time = formatDistance(dailyResult.added.toDate(), new Date(), { addSuffix: true });
+    const time = formatDistance(dailyResult.modified.toDate(), new Date(), { addSuffix: true });
 
     let plannedTaskViews: JSX.Element[] = [];
 

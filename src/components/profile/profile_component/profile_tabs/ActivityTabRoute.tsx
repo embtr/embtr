@@ -54,8 +54,6 @@ export const ActivityTabRoute = ({ userProfileModel }: Props) => {
     };
 
     const createDailyResultView = (timelineEntry: TimelinePostModel) => {
-        const completed = (timelineEntry as DailyResultModel).data.status === 'COMPLETE';
-
         return (
             <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
                 <DailyResultCard dailyResult={timelineEntry as DailyResultModel} userProfileModel={userProfileModel} />

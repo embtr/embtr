@@ -44,7 +44,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                     <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
                         <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} />
                         <View style={{ position: 'absolute', zIndex: 1, paddingBottom: 3, paddingRight: 3 }}>
-                            <ProfileLevel level={1} />
+                            <ProfileLevel userProfileModel={userProfileModel} />
                         </View>
                     </View>
                 </View>
@@ -76,11 +76,12 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                                         marginLeft: 10,
                                         height: 20,
                                         width: 80,
-                                        alignItems: "center"
-                                        
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    <Text style={{ color: colors.profile_following_text, fontFamily: 'Poppins_500Medium' }}>{isFollowingUser ? ' Following ' : ' Follow '}</Text>
+                                    <Text style={{ color: colors.profile_following_text, fontFamily: 'Poppins_500Medium' }}>
+                                        {isFollowingUser ? ' Following ' : ' Follow '}
+                                    </Text>
                                 </View>
                             </TouchableOpacity>
                         )}

@@ -71,7 +71,7 @@ export const AddHabitModal = ({ visible, dayKey, confirm, dismiss }: Props) => {
                         <View>
                             <View style={{ width: 300, backgroundColor: colors.modal_background, borderRadius: 12, justifyContent: "space-around" }}>
                                 <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 12.5, paddingBottom: 12.5, alignItems: "center", justifyContent: "center" }}>
-                                    <Text style={{ fontSize: 16, fontFamily: "Poppins_500Medium", color: colors.text }}>Select A Habit</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: "Poppins_500Medium", color: colors.text }}>Select A Task</Text>
                                 </View>
                                 <HorizontalLine />
                                 <View style={{ alignItems: "center" }}>

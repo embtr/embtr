@@ -15,6 +15,7 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
 import { formatDistance } from 'date-fns';
+import { HorizontalLine } from '../HorizontalLine';
 
 interface Props {
     type: string;
@@ -60,6 +61,7 @@ export const Comments = ({ type, authorUid, children, added, comments, submitCom
             <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 40 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                 <Banner name={type} leftIcon={'arrow-back'} leftRoute="BACK" />
 
+        <HorizontalLine />
                 <ScrollView onContentSizeChange={onCommentCountChanged} ref={scrollRef} style={{ flex: 1 }}>
                     <View style={{ width: '100%', flexDirection: 'row' }}>
                         <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
