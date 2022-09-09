@@ -6,9 +6,10 @@ import LevelController, { LevelModel } from 'src/controller/level/LevelControlle
 
 interface Props {
     userProfileModel: UserProfileModel;
+    useSmall?: boolean
 }
 
-export const ProfileLevel = ({ userProfileModel }: Props) => {
+export const ProfileLevel = ({ userProfileModel, useSmall }: Props) => {
     const [level, setLevel] = React.useState<LevelModel>();
 
     React.useEffect(() => {
@@ -32,11 +33,14 @@ export const ProfileLevel = ({ userProfileModel }: Props) => {
         return <View />;
     }
 
+    const levelSize = useSmall === true ? 12 : 23;
+    const fonstSize = useSmall ? 8 : 10;
+
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-            <Image source={require('assets/profile_level_background.png')} style={{ width: 23, height: 23 }} />
+            <Image source={require('assets/profile_level_background.png')} style={{ width: levelSize, height: levelSize }} />
             <View style={{ position: 'absolute', zIndex: 2 }}>
-                <Text style={{ fontSize: 9, fontFamily: 'Poppins_600SemiBold', color: 'white' }}>{LevelController.calculateLevel(level)}</Text>
+                <Text style={{ fontSize: fonstSize, fontFamily: 'Poppins_600SemiBold', color: 'white' }}>{LevelController.calculateLevel(level)}</Text>
             </View>
         </View>
     );
