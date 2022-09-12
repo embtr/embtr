@@ -90,7 +90,7 @@ class LevelController {
         let levelCompressed = this.createOrUpdateLevelCompressed(level, plannedDay);
         level.levelCompressed = levelCompressed;
 
-        const dbLevel: LevelDbModel = this.levelToDbLevel(level); 
+        const dbLevel: LevelDbModel = this.levelToDbLevel(level);
         LevelDao.update(getAuth().currentUser!.uid, dbLevel);
     }
 
@@ -141,11 +141,10 @@ class LevelController {
         return level;
     }
 
-
     private static levelToDbLevel(level: LevelModel): LevelDbModel {
         let dbLevel: LevelDbModel = {
             id: level.id,
-            levelMap: Object.fromEntries(level.levelMap), 
+            levelMap: Object.fromEntries(level.levelMap),
             levelCompressed: level.levelCompressed,
             added: level.added,
             modified: level.modified,
