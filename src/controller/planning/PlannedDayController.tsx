@@ -1,8 +1,10 @@
+import { previousDay } from 'date-fns';
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
+import LevelController from '../level/LevelController';
 
 export interface PlannedDay {
     id?: string;
@@ -216,7 +218,12 @@ class PlannedDayController {
         const newStatus = plannedDay.metadata?.status;
 
         await PlannedDayDao.updateTask(plannedDay, plannedTask);
-        this.handleStatusChange(plannedDay, previousStatus, newStatus);
+
+        if (previousStatus !== newStatus) {
+            await this.handleStatusChange(plannedDay, previousStatus, newStatus);
+            await LevelController.handlePlannedDayStatusChange(plannedDay);
+        }
+
         callback();
     }
 
@@ -229,7 +236,7 @@ class PlannedDayController {
     }
 
     private static async handleStatusChange(plannedDay: PlannedDay, previousStatus: string, newStatus: string) {
-        if (previousStatus !== newStatus && plannedDay.id) {
+        if (plannedDay.id) {
             let dailyResult = await DailyResultController.getOrCreate(plannedDay, newStatus);
             if (!dailyResult || dailyResult?.data.status === newStatus) {
                 return;

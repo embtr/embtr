@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import TimelineController, { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';

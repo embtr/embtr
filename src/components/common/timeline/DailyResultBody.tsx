@@ -44,7 +44,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
 
     plannedDay?.plannedTasks.forEach((plannedTask) => {
         plannedTaskViews.push(
-            <View style={{ paddingBottom: 5 }}>
+            <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
             </View>
         );

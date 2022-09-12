@@ -6,7 +6,7 @@ import LevelController, { LevelModel } from 'src/controller/level/LevelControlle
 
 interface Props {
     userProfileModel: UserProfileModel;
-    useSmall?: boolean
+    useSmall?: boolean;
 }
 
 export const ProfileLevel = ({ userProfileModel, useSmall }: Props) => {

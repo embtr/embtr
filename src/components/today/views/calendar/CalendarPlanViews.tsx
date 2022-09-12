@@ -28,9 +28,9 @@ export const CalendarPlanViews = ({ plannedToday, updateTask, userType }: Props)
 
             planViews.push(
                 userType === UserType.USER && updateTask ? (
-                    <CalendarPlanView plannedTask={task} onUpdateTask={updateTask} rowIndex={i} totalInRow={tasks.length} parentLayout={layout} />
+                    <CalendarPlanView key={task.id} plannedTask={task} onUpdateTask={updateTask} rowIndex={i} totalInRow={tasks.length} parentLayout={layout} />
                 ) : (
-                    <GuestCalendarPlanView plannedTask={task} rowIndex={i} totalInRow={tasks.length} parentLayout={layout} />
+                    <GuestCalendarPlanView key={task.id} plannedTask={task} rowIndex={i} totalInRow={tasks.length} parentLayout={layout} />
                 )
             );
         }
