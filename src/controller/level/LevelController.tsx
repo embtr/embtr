@@ -75,7 +75,7 @@ class LevelController {
 
         let calculatedLevel = 0;
         level.levelMap.forEach((value, key) => {
-            calculatedLevel += value ? 1 : -1;
+            calculatedLevel += value.completed ? 1 : -1;
         });
 
         return calculatedLevel;
