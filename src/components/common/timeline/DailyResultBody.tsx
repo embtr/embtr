@@ -1,17 +1,11 @@
-import { View, Text, TextStyle } from 'react-native';
+import { View, Text, TextStyle, Image } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    getDateFromDayKey,
-    PlannedDay,
-    plannedDayIsComplete,
-    plannedDayIsFailed,
-    plannedDayIsIncomplete,
-    plannedTaskIsComplete,
-} from 'src/controller/planning/PlannedDayController';
+import { getDateFromDayKey, PlannedDay, plannedDayIsComplete } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 
 interface Props {
@@ -50,6 +44,17 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
         );
     });
 
+    let images: ImageCarouselImage[] = [
+        {
+            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fhorizontal.jpeg?alt=media&token=1cb00109-cb1d-4a11-855f-99c93688e9a5',
+            format: 'HORIZONTAL',
+        },
+        {
+            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fvertical.jpeg?alt=media&token=a3aefa6f-34f5-45c7-864e-cd2621feca82',
+            format: 'VERTICAL',
+        },
+    ];
+
     return (
         <View>
             <View style={{ paddingTop: 10 }}>
@@ -69,9 +74,9 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
                 </View>
 
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                    {/*<Text style={[bodyTextStyle, { textAlign: 'left' }]}>man, I tried really hard on this one! I will get it next time.</Text>
-                        <View style={{ paddingTop: 15 }}>{plannedTaskViews}</View>*/}
-                    <View>{plannedTaskViews}</View>
+                    <Text style={[{ textAlign: 'left', paddingTop: 5 }]}>man, I tried really hard on this one! I will get it next time.</Text>
+                    <CarouselCards images={images} />
+                    <View style={{ paddingTop: 15 }}>{plannedTaskViews}</View>
                     {/* <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{"view more..."}</Text> */}
                 </View>
             </View>
