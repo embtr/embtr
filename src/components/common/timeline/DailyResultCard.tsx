@@ -6,7 +6,7 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getAuth } from 'firebase/auth';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { TouchableWithoutFeedback, View, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TIMELINE_CARD_PADDING, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_ICON_COUNT_SIZE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -15,6 +15,7 @@ import { formatDistance } from 'date-fns';
 import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
