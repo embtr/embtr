@@ -40,7 +40,7 @@ export const ProfileLevel = ({ userProfileModel, useSmall }: Props) => {
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Image source={require('assets/profile_level_background.png')} style={{ width: levelSize, height: levelSize }} />
             <View style={{ position: 'absolute', zIndex: 2 }}>
-                <Text style={{ fontSize: fonstSize, fontFamily: 'Poppins_600SemiBold', color: 'white' }}>{LevelController.calculateLevel(level)}</Text>
+                <Text style={{ fontSize: fonstSize, fontFamily: 'Poppins_600SemiBold', color: 'white' }}>{userProfileModel.level}</Text>
             </View>
         </View>
     );

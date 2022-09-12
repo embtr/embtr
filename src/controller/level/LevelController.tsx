@@ -1,7 +1,9 @@
 import { getAuth } from 'firebase/auth';
-import { Timestamp } from 'firebase/firestore';
+import { addDoc, Timestamp } from 'firebase/firestore';
 import LevelDao from 'src/firebase/firestore/level/LevelDao';
+import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { PlannedDay, plannedDayIsComplete } from '../planning/PlannedDayController';
+import ProfileController from '../profile/ProfileController';
 
 export interface LevelModel {
     id?: string;
@@ -91,7 +93,13 @@ class LevelController {
         level.levelCompressed = levelCompressed;
 
         const dbLevel: LevelDbModel = this.levelToDbLevel(level);
-        LevelDao.update(getAuth().currentUser!.uid, dbLevel);
+        await LevelDao.update(getAuth().currentUser!.uid, dbLevel);
+
+        const newLevel = this.calculateLevel(level);
+        ProfileController.getProfile(getAuth().currentUser!.uid, (userProfile: UserProfileModel) => {
+            userProfile.level = newLevel;
+            ProfileController.updateProfile(userProfile);
+        });
     }
 
     private static createOrUpdateLevelElement(level: LevelModel, plannedDay: PlannedDay) {

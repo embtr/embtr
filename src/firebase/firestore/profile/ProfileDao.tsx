@@ -11,6 +11,7 @@ export interface UserProfileModel {
     bannerUrl?: string,
     bio?: string,
     location?: string
+    level?: number
 }
 
 export const USER_PROFILE_SKELECTON: UserProfileModel = {
@@ -22,7 +23,8 @@ export const USER_PROFILE_SKELECTON: UserProfileModel = {
     photoUrl: "",
     bannerUrl: "",
     bio: "",
-    location: ""
+    location: "",
+    level: 0
 }
 
 class ProfileDao {
@@ -41,14 +43,14 @@ class ProfileDao {
         return querySnapshot;
     }
 
-    public static updateProfile(userProfile: UserProfileModel) {
+    public static async updateProfile(userProfile: UserProfileModel) {
        const db: Firestore = getFirebaseConnection(this.name, "updateProfile");
 
        if (!userProfile.uid) {
            return;
        }
 
-       setDoc(doc(db, "profiles/", userProfile.uid), userProfile, {merge: true});
+       await setDoc(doc(db, "profiles/", userProfile.uid), userProfile, {merge: true});
    }
 
 }
