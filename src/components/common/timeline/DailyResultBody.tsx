@@ -75,9 +75,13 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
 
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
                     <Text style={[{ textAlign: 'left', paddingTop: 5 }]}>man, I tried really hard on this one! I will get it next time.</Text>
-                    <CarouselCards images={images} />
+
+                    <View style={{ paddingTop: 15 }}>
+                        <CarouselCards images={images} />
+                    </View>
+                    
                     <View style={{ paddingTop: 15 }}>{plannedTaskViews}</View>
-                    {/* <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{"view more..."}</Text> */}
+
                 </View>
             </View>
         </View>

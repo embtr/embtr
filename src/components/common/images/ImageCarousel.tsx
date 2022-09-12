@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import { CarouselCardItem } from './ImageCarouselItem';
+import { CarouselCardItem, CAROUSEL_IMAGE_HEIGHT } from './ImageCarouselItem';
 
 export interface ImageCarouselImage {
     url: string;
@@ -17,11 +17,13 @@ export const CarouselCards = ({ images }: Props) => {
     return (
         <View style={{ alignItems: 'center' }}>
             <Carousel
+                layout='stack'
+                layoutCardOffset={20}
                 ref={isCarousel}
                 data={images}
                 renderItem={CarouselCardItem}
                 sliderWidth={Dimensions.get('window').width}
-                itemWidth={Dimensions.get('window').width * 0.90}
+                itemWidth={CAROUSEL_IMAGE_HEIGHT}
             />
         </View>
     );

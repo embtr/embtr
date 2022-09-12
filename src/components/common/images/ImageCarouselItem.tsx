@@ -5,15 +5,17 @@ interface Props {
     index: number;
 }
 
+export const CAROUSEL_IMAGE_HEIGHT = Dimensions.get('window').width * 0.6;
+
 export const CarouselCardItem = ({ item, index }: Props) => {
     return (
-            <Image
-                source={{ uri: item.url }}
-                style={{
-                    borderRadius: 15,
-                    width: Dimensions.get('window').width * 0.9,
-                    height: Dimensions.get('window').width * 0.9,
-                }}
-            />
+        <Image
+            source={{ uri: item.url }}
+            style={{
+                borderRadius: 15,
+                width: CAROUSEL_IMAGE_HEIGHT,
+                height: CAROUSEL_IMAGE_HEIGHT,
+            }}
+        />
     );
 };
