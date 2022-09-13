@@ -6,7 +6,7 @@ import { PostDetails } from 'src/components/common/comments/PostDetails';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -25,6 +25,8 @@ export const UserPostDetails = () => {
         }, [])
     );
 
+    const userIsPostOwner = storyModel?.uid === getAuth().currentUser?.uid;
+
     const submitComment = (text: string, taggedUsers: UserProfileModel[]) => {
         const user = getAuth().currentUser;
         if (storyModel?.id && user?.uid) {
@@ -36,8 +38,28 @@ export const UserPostDetails = () => {
         }
     };
 
-    if (storyModel) {
+    const navigateToEdit = () => {
+        if (userIsPostOwner && storyModel?.id) {
+            navigation.navigate('EditUserPostDetails', { id: storyModel.id });
+        }
+    };
 
+    const deletePost = () => {
+        if (userIsPostOwner && storyModel) {
+            Alert.alert('Delete Post', 'Are you sure you want to delete this post? This cannot be undone.', [
+                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+                {
+                    text: 'I am sure. Delete it.',
+                    onPress: async () => {
+                        await StoryController.delete(storyModel);
+                        navigation.navigate('Timeline');
+                    },
+                },
+            ]);
+        }
+    };
+
+    if (storyModel) {
         return (
             <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
                 <PostDetails
@@ -46,11 +68,8 @@ export const UserPostDetails = () => {
                     added={storyModel.added.toDate()}
                     comments={storyModel?.public.comments ? storyModel?.public.comments : []}
                     submitComment={submitComment}
-                    onEdit={() => {
-                        console.log("heading to edit!");
-                        navigation.navigate('EditUserPostDetails', { id: storyModel.id! });
-                    }}
-                    onDelete={() => {}}
+                    onEdit={navigateToEdit}
+                    onDelete={deletePost}
                 >
                     <UserPostBody title={storyModel?.data.title ? storyModel?.data.title : ''} post={storyModel.data.story} />
                 </PostDetails>

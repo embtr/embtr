@@ -26,6 +26,7 @@ export interface TimelinePostModel {
         likes: Like[];
     };
     data: {};
+    active: boolean;
 }
 
 class TimelineController {

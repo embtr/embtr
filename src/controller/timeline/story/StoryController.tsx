@@ -30,6 +30,7 @@ export const copyStory = (story: StoryModel): StoryModel => {
         modified: story.modified,
         type: story.type,
         uid: story.uid,
+        active: story.active,
         public: {
             comments: story.public.comments,
             likes: story.public.likes,
@@ -50,6 +51,7 @@ export const createStory = (uid: string, title: string, story: string): StoryMod
         modified: Timestamp.now(),
         type: 'STORY',
         uid: uid,
+        active: true,
         public: {
             comments: [],
             likes: [],
@@ -101,6 +103,11 @@ class StoryController {
                 callback(story);
             }
         });
+    }
+
+    public static async delete(story: StoryModel) {
+        story.active = false;
+        await this.update(story);
     }
 
     public static async update(story: StoryModel) {
