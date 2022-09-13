@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import StoryController, { copyStory, StoryModel } from 'src/controller/timeline/story/StoryController';
+import StoryController, { copyStory, createStory, StoryModel } from 'src/controller/timeline/story/StoryController';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
@@ -29,10 +29,8 @@ export const EditUserPostDetails = () => {
         }, [])
     );
 
-    if (userPost) {
+    console.log(createStory);
     console.log(copyStory);
-        let test = copyStory(userPost);
-    }
     const saveUserPost = async () => {
         if (!userPost) {
             return;
