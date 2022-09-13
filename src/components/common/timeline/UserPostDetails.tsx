@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
-import { Comments } from 'src/components/common/comments/Comments';
+import { PostDetails } from 'src/components/common/comments/PostDetails';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
@@ -36,7 +36,7 @@ export const UserPostDetails = () => {
     if (storyModel) {
         return (
             <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
-                <Comments
+                <PostDetails
                     type={'Post'}
                     authorUid={storyModel.uid ? storyModel.uid : ''}
                     added={storyModel.added.toDate()}
@@ -44,7 +44,7 @@ export const UserPostDetails = () => {
                     submitComment={submitComment}
                 >
                     <UserPostBody title={storyModel?.data.title ? storyModel?.data.title : ''} post={storyModel.data.story} />
-                </Comments>
+                </PostDetails>
             </View>
         );
     }

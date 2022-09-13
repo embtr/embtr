@@ -26,7 +26,7 @@ interface Props {
     submitComment: Function;
 }
 
-export const Comments = ({ type, authorUid, children, added, comments, submitComment }: Props) => {
+export const PostDetails = ({ type, authorUid, children, added, comments, submitComment }: Props) => {
     const { colors } = useTheme();
 
     const [author, setAuthor] = React.useState<UserProfileModel>();

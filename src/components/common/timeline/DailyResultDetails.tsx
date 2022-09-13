@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { Comments } from 'src/components/common/comments/Comments';
+import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { View } from 'react-native';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
@@ -48,7 +48,7 @@ export const DailyResultDetails = () => {
 
     return (
         <View style={{ width: '100%', height: '100%' }}>
-            <Comments
+            <PostDetails
                 type={'Daily Result'}
                 authorUid={dailyResult.uid}
                 added={dailyResult.added.toDate()}
@@ -58,7 +58,7 @@ export const DailyResultDetails = () => {
                 <View style={{ paddingLeft: 10 }}>
                     <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} />
                 </View>
-            </Comments>
+            </PostDetails>
         </View>
     );
 };

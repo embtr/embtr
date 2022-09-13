@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
-import { Comments } from 'src/components/common/comments/Comments';
+import { PostDetails } from 'src/components/common/comments/PostDetails';
 import ChallengeController, { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
@@ -29,7 +29,7 @@ export const ChallengeDetails = () => {
     };
 
     return (
-        <Comments
+        <PostDetails
             title={challengeModel?.data.title ? challengeModel.data.title : ""}
             comments={challengeModel?.public.comments ? challengeModel?.public.comments : []}
             submitComment={submitComment}
