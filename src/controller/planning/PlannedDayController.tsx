@@ -1,8 +1,7 @@
-import { previousDay } from 'date-fns';
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
-import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
 import LevelController from '../level/LevelController';
 

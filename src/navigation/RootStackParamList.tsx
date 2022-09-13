@@ -1,16 +1,16 @@
-import { NavigatorScreenParams } from "@react-navigation/native";
+import { NavigatorScreenParams } from '@react-navigation/native';
 
 export type MainTabScreens = {
-    TimelineTab: NavigatorScreenParams<TimelineTabScreens>
-    CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>
+    TimelineTab: NavigatorScreenParams<TimelineTabScreens>;
+    CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>;
     PlanTab: NavigatorScreenParams<PlanTabScreens>;
     TodayTab: undefined;
-}
+};
 
 export type TodayTab = {
     CreateOneTimeTask: { dayKey: string };
-    EditOneTimeTask: {dayKey: string, plannedTaskId: string}
-}
+    EditOneTimeTask: { dayKey: string; plannedTaskId: string };
+};
 
 export type PlanTabScreens = {
     CreateOneTimeTask: { dayKey: string };
@@ -18,13 +18,13 @@ export type PlanTabScreens = {
     CreateGoal: undefined;
     GoalDetails: { id: string };
     TaskDetails: { id: string };
-
 };
 
 export type TimelineTabScreens = {
     UserSearch: undefined;
     Timeline: undefined;
-    CreateTimelineStory: undefined;
+    CreateUserPost: undefined;
+    EditUserPostDetails: { id: string };
     UserPostDetails: { id: string };
     ChallengeDetails: { id: string };
     DailyResultDetails: { id: string };
@@ -41,7 +41,7 @@ export type ProfileTabScreens = {
 
 export type RootStackParamList = {
     LandingPage: undefined;
-    Dashboard: NavigatorScreenParams<MainTabScreens>
+    Dashboard: NavigatorScreenParams<MainTabScreens>;
     About: undefined;
     ReleaseNotes: undefined;
     Contact: undefined;
