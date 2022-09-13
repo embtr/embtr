@@ -175,7 +175,7 @@ export const Timeline = () => {
                 leftRoute={'UserSearch'}
                 innerLeftIcon={'add-outline'}
                 innerLeftOnClick={() => {
-                    navigation.navigate('CreateTimelineStory');
+                    navigation.navigate('CreateUserPost');
                 }}
                 rightIcon={'notifications-outline'}
                 rightRoute={'Notifications'}

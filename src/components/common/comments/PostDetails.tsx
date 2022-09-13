@@ -16,6 +16,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
 import { formatDistance } from 'date-fns';
 import { HorizontalLine } from '../HorizontalLine';
+import { createEmbtrMenuOptions, EmbtrMenuOption } from '../menu/EmbtrMenuOption';
+import { EmbtrMenuCustom } from '../menu/EmbtrMenuCustom';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 
 interface Props {
     type: string;
@@ -24,10 +28,14 @@ interface Props {
     added: Date;
     comments: Comment[];
     submitComment: Function;
+    onEdit?: Function;
+    onDelete?: Function;
 }
 
-export const PostDetails = ({ type, authorUid, children, added, comments, submitComment }: Props) => {
+export const PostDetails = ({ type, authorUid, children, added, comments, submitComment, onEdit, onDelete }: Props) => {
     const { colors } = useTheme();
+
+    const closeMenu = useAppSelector(getCloseMenu);
 
     const [author, setAuthor] = React.useState<UserProfileModel>();
     const [currentUserProfile, setCurrentUserProfile] = React.useState<UserProfileModel>();
@@ -56,12 +64,46 @@ export const PostDetails = ({ type, authorUid, children, added, comments, submit
 
     const daysRemaining = formatDistance(added, new Date(), { addSuffix: true });
 
+    const menuItems: EmbtrMenuOption[] = [
+        {
+            name: 'Edit',
+            onPress: () => {
+                if (onEdit) {
+                    onEdit();
+                    closeMenu();
+                }
+            },
+        },
+        {
+            name: 'Delete',
+            onPress: () => {
+                if (onDelete) {
+                    onDelete();
+                    closeMenu();
+                }
+            },
+            destructive: true,
+        },
+    ];
+
+    const userIsAuthor = currentUserProfile?.uid === author?.uid;
+
     return (
         <Screen>
             <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 40 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-                <Banner name={type} leftIcon={'arrow-back'} leftRoute="BACK" />
-
-        <HorizontalLine />
+                {userIsAuthor ? (
+                    <Banner
+                        name={type}
+                        leftIcon={'arrow-back'}
+                        leftRoute="BACK"
+                        rightIcon={'ellipsis-horizontal'}
+                        menuOptions={createEmbtrMenuOptions(menuItems)}
+                    />
+                ) : (
+                    <Banner name={type} leftIcon={'arrow-back'} leftRoute="BACK" />
+                )}
+                {userIsAuthor && <EmbtrMenuCustom />}
+                <HorizontalLine />
                 <ScrollView onContentSizeChange={onCommentCountChanged} ref={scrollRef} style={{ flex: 1 }}>
                     <View style={{ width: '100%', flexDirection: 'row' }}>
                         <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>

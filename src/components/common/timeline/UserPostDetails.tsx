@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
@@ -9,10 +9,13 @@ import NotificationController, { NotificationType } from 'src/controller/notific
 import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
+
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
+    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const [storyModel, setStoryModel] = React.useState<StoryModel | undefined>(undefined);
 
@@ -26,7 +29,7 @@ export const UserPostDetails = () => {
         const user = getAuth().currentUser;
         if (storyModel?.id && user?.uid) {
             StoryController.addComment(storyModel.id, user.uid, text, () => {
-                NotificationController.addNotification(user.uid, storyModel.uid, NotificationType.TIMELINE_COMMENT, route.params.id); 
+                NotificationController.addNotification(user.uid, storyModel.uid, NotificationType.TIMELINE_COMMENT, route.params.id);
                 NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.TIMELINE_TAG, route.params.id);
                 StoryController.getStory(route.params.id, setStoryModel);
             });
@@ -34,6 +37,7 @@ export const UserPostDetails = () => {
     };
 
     if (storyModel) {
+
         return (
             <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
                 <PostDetails
@@ -42,6 +46,11 @@ export const UserPostDetails = () => {
                     added={storyModel.added.toDate()}
                     comments={storyModel?.public.comments ? storyModel?.public.comments : []}
                     submitComment={submitComment}
+                    onEdit={() => {
+                        console.log("heading to edit!");
+                        navigation.navigate('EditUserPostDetails', { id: storyModel.id! });
+                    }}
+                    onDelete={() => {}}
                 >
                     <UserPostBody title={storyModel?.data.title ? storyModel?.data.title : ''} post={storyModel.data.story} />
                 </PostDetails>

@@ -3,7 +3,6 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { EmbtrMenuOptionCustom } from 'src/components/common/menu/EmbtrMenuOptionCustom';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getMenuOptions, setCloseMenu, setOpenMenu } from 'src/redux/user/GlobalState';

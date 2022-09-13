@@ -19,6 +19,12 @@ class StoryDao {
         callback();
     };
 
+    public static async update(story: StoryModel) {
+        const db: Firestore = getFirebaseConnection(this.name, "update");
+
+       await setDoc(doc(db, "timeline", story.id!), story, {merge: true});
+    }
+
     public static async getStories() {
         const db: Firestore = getFirebaseConnection(this.name, "getStories");
 
