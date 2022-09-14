@@ -6,6 +6,7 @@ import { CarouselCardItem, CAROUSEL_IMAGE_HEIGHT } from './ImageCarouselItem';
 export interface ImageCarouselImage {
     url: string;
     format: string;
+    type: string;
 }
 
 interface Props {
@@ -17,13 +18,14 @@ export const CarouselCards = ({ images }: Props) => {
     return (
         <View style={{ alignItems: 'center' }}>
             <Carousel
-                layout='stack'
-                layoutCardOffset={20}
+                firstItem={images.length > 0 ? 1 : 0}
+                layout='default'
                 ref={isCarousel}
                 data={images}
+                inactiveSlideScale={1}
                 renderItem={CarouselCardItem}
                 sliderWidth={Dimensions.get('window').width}
-                itemWidth={CAROUSEL_IMAGE_HEIGHT}
+                itemWidth={CAROUSEL_IMAGE_HEIGHT + 5}
             />
         </View>
     );

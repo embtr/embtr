@@ -5,6 +5,7 @@ import { isIosApp } from 'src/util/DeviceUtil';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
+import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 
 interface Props {
     title: string;
@@ -14,7 +15,7 @@ interface Props {
     onSubmit: Function;
 }
 
-export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmit}: Props) => {
+export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmit }: Props) => {
     const { colors } = useTheme();
 
     const [titleError, setTitleError] = React.useState(false);
@@ -37,10 +38,39 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmi
         return <View />;
     }
 
+    let images: ImageCarouselImage[] = [
+        {
+            url: '',
+            format: '',
+            type: 'add_image',
+        },
+        {
+            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fhorizontal.jpeg?alt=media&token=1cb00109-cb1d-4a11-855f-99c93688e9a5',
+            format: 'HORIZONTAL',
+            type: 'image',
+        },
+        {
+            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fvertical.jpeg?alt=media&token=a3aefa6f-34f5-45c7-864e-cd2621feca82',
+            format: 'VERTICAL',
+            type: 'image',
+        },
+        {
+            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fhorizontal.jpeg?alt=media&token=1cb00109-cb1d-4a11-855f-99c93688e9a5',
+            format: 'HORIZONTAL',
+            type: 'image',
+        },
+        {
+            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fvertical.jpeg?alt=media&token=a3aefa6f-34f5-45c7-864e-cd2621feca82',
+            format: 'VERTICAL',
+            type: 'image',
+        },
+    ];
+
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
             <View style={{ height: '100%', width: '100%' }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
+                    {/* TOP SUMMARY */}
                     <View style={{ paddingTop: 5 }}>
                         <Text
                             onPress={() => {
@@ -68,6 +98,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmi
                         </Text>
                     </View>
 
+                    {/* TITLE */}
                     <View style={{ paddingTop: 10, alignItems: 'center' }}>
                         <Text
                             onPress={() => {
@@ -90,13 +121,14 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmi
                             placeholder={'Enter Your Story Title'}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={setT}
-                            onChange={() => { 
+                            onChange={() => {
                                 setTitleError(false);
                             }}
                             value={title}
                         />
                     </View>
 
+                    {/* STORY */}
                     <View style={{ paddingTop: 10, alignItems: 'center' }}>
                         <Text
                             onPress={() => {
@@ -131,9 +163,29 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmi
                         />
                     </View>
 
-                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, paddingBottom: 15 }}>
+                    {/* PHOTOS */}
+                    <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                        <Text
+                            onPress={() => {
+                                Keyboard.dismiss();
+                            }}
+                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                        >
+                            Photos
+                        </Text>
+                        <View>
+                            <CarouselCards images={images} />
+                        </View>
+                    </View>
+
+                    <View style={{ paddingTop: 10, alignItems: 'center' }}>
                         <View style={{ width: '95%' }}>
-                            <EmbtrButton buttonText={'Submit'} callback={() => {onSubmit()}} />
+                            <EmbtrButton
+                                buttonText={'Submit'}
+                                callback={() => {
+                                    onSubmit();
+                                }}
+                            />
                         </View>
                     </View>
                 </KeyboardAvoidingView>
