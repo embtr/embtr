@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -9,8 +8,6 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { CreateEditUserPostBase } from './CreateEditUserPostBase';
 
 export const CreateUserPost = () => {
-    const { colors } = useTheme();
-
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const [title, setTitle] = React.useState<string>('');
@@ -41,7 +38,7 @@ export const CreateUserPost = () => {
     return (
         <Screen>
             <Banner name="Share A Story" leftIcon={'arrow-back'} leftRoute="BACK" />
-            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} />
+            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={submitStory} />
         </Screen>
     );
 };
