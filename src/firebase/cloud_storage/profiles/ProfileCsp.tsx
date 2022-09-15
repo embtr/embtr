@@ -1,6 +1,6 @@
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth } from 'firebase/auth';
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
 
 export const uploadProfilePhoto = async (pickerResult: ImagePicker.ImagePickerResult): Promise<string | undefined> => {
     try {
@@ -26,14 +26,14 @@ export const uploadProfileBanner = async (pickerResult: ImagePicker.ImagePickerR
     return undefined;
 };
 
-export const uploadImages = async (bucket: string, pickerResults: ImagePicker.ImagePickerResult[]): Promise<Promise<string>[] | undefined> => {
-    let uploadUrls: Promise<string>[] = [];
+export const uploadImages = async (bucket: string, pickerResults: ImagePicker.ImagePickerResult[]): Promise<string[] | undefined> => {
+    let uploadUrls: string[] = [];
     try {
         for (const pickerResult of pickerResults) {
             if (!pickerResult.cancelled) {
                 const path = bucket + '/' + getAuth().currentUser?.uid + '/';
                 const filename = hashString(pickerResult.uri) + '.png';
-                const uploadUrl = uploadImageAsync(pickerResult.uri, path, filename);
+                const uploadUrl = await uploadImageAsync(pickerResult.uri, path, filename);
                 uploadUrls.push(uploadUrl);
             }
         }
@@ -56,7 +56,7 @@ const uploadImageAsync = async (uri: string, path: string, filename: string): Pr
         cacheControl: 'public,max-age=604800',
     };
 
-    const res = await uploadBytes(fileRef, blob, metadata);
+    const res = await uploadBytesResumable(fileRef, blob, metadata);
 
     // We're done with the blob, close and release it
     blob.close();

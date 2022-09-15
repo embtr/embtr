@@ -7,6 +7,7 @@ import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import StoryController from 'src/controller/timeline/story/StoryController';
+import { color } from 'react-native-reanimated';
 
 interface Props {
     title: string;
@@ -44,10 +45,11 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
     const uploadImage = async () => {
         setImagesUploading(true);
         const imgs = await StoryController.uploadImages();
-        for (let img of imgs) {
-            const uploadedImgUrl = await img;
-            onImageUploaded(uploadedImgUrl);
-        }
+        console.log(imgs);
+        //        for (let img of imgs) {
+        //            const uploadedImgUrl = await img;
+        //            onImageUploaded(uploadedImgUrl);
+        //        }
         setImagesUploading(false);
     };
 
@@ -75,6 +77,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
                     ]}
                 >
                     <ActivityIndicator color="#fff" animating size="large" />
+                <Text style={{color: colors.text, paddingTop: 10}}>tester</Text>
                 </View>
             );
         }
