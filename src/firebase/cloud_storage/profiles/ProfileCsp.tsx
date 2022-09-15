@@ -1,6 +1,7 @@
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
+import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 
 export const uploadProfilePhoto = async (pickerResult: ImagePicker.ImagePickerResult): Promise<string | undefined> => {
     try {
@@ -26,10 +27,24 @@ export const uploadProfileBanner = async (pickerResult: ImagePicker.ImagePickerR
     return undefined;
 };
 
-export const uploadImages = async (bucket: string, pickerResults: ImagePicker.ImagePickerResult[]): Promise<string[] | undefined> => {
+export const uploadImages = async (
+    bucket: string,
+    pickerResults: ImagePicker.ImagePickerResult[],
+    imageUploadProgess?: Function
+): Promise<string[] | undefined> => {
     let uploadUrls: string[] = [];
     try {
+        let count = 0;
         for (const pickerResult of pickerResults) {
+            count++;
+            if (imageUploadProgess) {
+                const uploadProgressReport: ImageUploadProgressReport = {
+                    completed: count,
+                    total: pickerResults.length,
+                };
+                imageUploadProgess(uploadProgressReport);
+            }
+
             if (!pickerResult.cancelled) {
                 const path = bucket + '/' + getAuth().currentUser?.uid + '/';
                 const filename = hashString(pickerResult.uri) + '.png';

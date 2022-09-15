@@ -135,8 +135,8 @@ class StoryController {
         });
     }
 
-    public static async uploadImages(): Promise<string[]> {
-        const imgUrls: string[] = await ImageController.uploadImages('user_posts');
+    public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
+        const imgUrls: string[] = await ImageController.uploadImages('user_posts', imageUploadProgess);
         return imgUrls;
     }
 

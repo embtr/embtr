@@ -8,6 +8,7 @@ import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { color } from 'react-native-reanimated';
+import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 
 interface Props {
     title: string;
@@ -22,6 +23,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
+    const [imageUploadProgess, setImageUploadProgress] = React.useState('');
     const [titleError, setTitleError] = React.useState(false);
     const [storyError, setStoryError] = React.useState(false);
 
@@ -42,9 +44,15 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
         return <View />;
     }
 
+    const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
+        setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
+    };
+
     const uploadImage = async () => {
         setImagesUploading(true);
-        const imgs = await StoryController.uploadImages();
+        setImageUploadProgress('preparing photo upload');
+        const imgs = await StoryController.uploadImages(onImageUploadProgressReport);
+        setImageUploadProgress('');
         console.log(imgs);
         //        for (let img of imgs) {
         //            const uploadedImgUrl = await img;
@@ -77,7 +85,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
                     ]}
                 >
                     <ActivityIndicator color="#fff" animating size="large" />
-                <Text style={{color: colors.text, paddingTop: 10}}>tester</Text>
+                    <Text style={{ color: colors.text, paddingTop: 10 }}>{imageUploadProgess}</Text>
                 </View>
             );
         }
