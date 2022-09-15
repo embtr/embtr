@@ -14,6 +14,7 @@ export const CreateUserPost = () => {
     const [body, setBody] = React.useState<string>('');
     const [titleError, setTitleError] = React.useState(false);
     const [storyError, setStoryError] = React.useState(false);
+    const [imageUrls, setImageUrls] = React.useState<string[]>([]);
 
     const submitStory = () => {
         let readyToSubmit = true;
@@ -29,16 +30,22 @@ export const CreateUserPost = () => {
         }
 
         if (readyToSubmit) {
-            StoryController.addStory(title, body, () => {
+            StoryController.addStory(title, body, imageUrls, () => {
                 navigation.navigate('Timeline');
             });
         }
     };
 
+    const onImageUploaded = (url: string) => {
+        let copiedUrls = [...imageUrls];
+        copiedUrls.push(url);
+        setImageUrls(copiedUrls);
+    };
+
     return (
         <Screen>
             <Banner name="Share A Story" leftIcon={'arrow-back'} leftRoute="BACK" />
-            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={submitStory} />
+            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={submitStory} onImageUploaded={onImageUploaded} />
         </Screen>
     );
 };

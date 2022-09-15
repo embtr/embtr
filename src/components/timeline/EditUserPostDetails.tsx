@@ -16,6 +16,7 @@ export const EditUserPostDetails = () => {
 
     const [title, setTitle] = React.useState<string>('');
     const [body, setBody] = React.useState<string>('');
+    const [imageUrls, setImageUrls] = React.useState<string[]>([]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -41,10 +42,16 @@ export const EditUserPostDetails = () => {
         navigation.navigate('Timeline');
     };
 
+    const onImageUploaded = (url: string) => {
+        let copiedUrls = [...imageUrls];
+        copiedUrls.push(url);
+        setImageUrls(copiedUrls);
+    };
+
     return (
         <Screen>
             <Banner name="Edit Post" leftIcon={'arrow-back'} leftRoute="BACK" />
-            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={saveUserPost} />
+            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={saveUserPost} onImageUploaded={onImageUploaded} />
         </Screen>
     );
 };

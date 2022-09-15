@@ -1,23 +1,26 @@
 import * as React from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, ActivityIndicator } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
+import StoryController from 'src/controller/timeline/story/StoryController';
 
 interface Props {
     title: string;
     setTitle: Function;
     body: string;
     setBody: Function;
+    onImageUploaded: Function;
     onSubmit: Function;
 }
 
-export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmit }: Props) => {
+export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImageUploaded, onSubmit }: Props) => {
     const { colors } = useTheme();
 
+    const [imagesUploading, setImagesUploading] = React.useState(false);
     const [titleError, setTitleError] = React.useState(false);
     const [storyError, setStoryError] = React.useState(false);
 
@@ -38,36 +41,48 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onSubmi
         return <View />;
     }
 
+    const uploadImage = async () => {
+        setImagesUploading(true);
+        const imgs = await StoryController.uploadImages();
+        for (let img of imgs) {
+            const uploadedImgUrl = await img;
+            onImageUploaded(uploadedImgUrl);
+        }
+        setImagesUploading(false);
+    };
+
     let images: ImageCarouselImage[] = [
         {
             url: '',
             format: '',
             type: 'add_image',
-        },
-        {
-            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fhorizontal.jpeg?alt=media&token=1cb00109-cb1d-4a11-855f-99c93688e9a5',
-            format: 'HORIZONTAL',
-            type: 'image',
-        },
-        {
-            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fvertical.jpeg?alt=media&token=a3aefa6f-34f5-45c7-864e-cd2621feca82',
-            format: 'VERTICAL',
-            type: 'image',
-        },
-        {
-            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fhorizontal.jpeg?alt=media&token=1cb00109-cb1d-4a11-855f-99c93688e9a5',
-            format: 'HORIZONTAL',
-            type: 'image',
-        },
-        {
-            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fvertical.jpeg?alt=media&token=a3aefa6f-34f5-45c7-864e-cd2621feca82',
-            format: 'VERTICAL',
-            type: 'image',
+            uploadImage: uploadImage,
         },
     ];
 
+    let _maybeRenderUploadingOverlay = () => {
+        if (imagesUploading) {
+            return (
+                <View
+                    style={[
+                        StyleSheet.absoluteFill,
+                        {
+                            zIndex: 3,
+                            backgroundColor: 'rgba(0,0,0,0.4)',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        },
+                    ]}
+                >
+                    <ActivityIndicator color="#fff" animating size="large" />
+                </View>
+            );
+        }
+    };
+
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
+            {_maybeRenderUploadingOverlay()}
             <View style={{ height: '100%', width: '100%' }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     {/* TOP SUMMARY */}

@@ -45,16 +45,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
     });
 
     let images: ImageCarouselImage[] = [
-        {
-            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fhorizontal.jpeg?alt=media&token=1cb00109-cb1d-4a11-855f-99c93688e9a5',
-            format: 'HORIZONTAL',
-        },
-        {
-            url: 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/timeline%2Fvertical.jpeg?alt=media&token=a3aefa6f-34f5-45c7-864e-cd2621feca82',
-            format: 'VERTICAL',
-        },
-    ];
-
+]
     return (
         <View>
             <View style={{ paddingTop: 10 }}>

@@ -1,13 +1,17 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
+import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { uploadProfileBanner } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import StoryDao from 'src/firebase/firestore/story/StoryDao';
+import { pickImage } from 'src/util/ImagePickerUtil';
 
 export interface StoryModel extends TimelinePostModel {
     data: {
         title: string;
         story: string;
+        images: string[]
     };
 }
 
@@ -38,13 +42,14 @@ export const copyStory = (story: StoryModel): StoryModel => {
         data: {
             title: story.data.title,
             story: story.data.story,
+            images: [...story.data.images]
         },
     };
 
     return newStory;
 };
 
-export const createStory = (uid: string, title: string, story: string): StoryModel => {
+export const createStory = (uid: string, title: string, story: string, images: string[]): StoryModel => {
     return {
         id: '',
         added: Timestamp.now(),
@@ -59,18 +64,19 @@ export const createStory = (uid: string, title: string, story: string): StoryMod
         data: {
             title: title,
             story: story,
+            images: images 
         },
     };
 };
 
 class StoryController {
-    public static addStory(title: string, story: string, callback: Function) {
+    public static addStory(title: string, story: string, images: string[], callback: Function) {
         const uid = getAuth().currentUser?.uid;
         if (!uid) {
             return;
         }
 
-        const storyModel = createStory(uid, title, story);
+        const storyModel = createStory(uid, title, story, images);
         StoryDao.addStory(storyModel, callback);
     }
 
@@ -127,6 +133,18 @@ class StoryController {
         StoryDao.addComment(id, uid, commentText).then(() => {
             callback();
         });
+    }
+
+    public static async uploadImages(): Promise<Promise<string>[]> {
+        const imgUrls: Promise<string>[] = await ImageController.uploadImages('user_posts');
+        return imgUrls;
+    }
+
+    public static async addImagesToStory(): Promise<string | undefined> {
+        const result = await pickImage();
+        const url = await uploadProfileBanner(result);
+
+        return url;
     }
 }
 
