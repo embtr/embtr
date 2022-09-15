@@ -1,10 +1,8 @@
-import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import TimelineDao from 'src/firebase/firestore/timeline/TimelineDao';
-import ImageController from '../image/ImageController';
 
 export interface Comment {
     uid: string;

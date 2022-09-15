@@ -7,7 +7,6 @@ import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import StoryController from 'src/controller/timeline/story/StoryController';
-import { color } from 'react-native-reanimated';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 
 interface Props {
@@ -15,11 +14,11 @@ interface Props {
     setTitle: Function;
     body: string;
     setBody: Function;
-    onImageUploaded: Function;
+    onImagesUploaded: Function;
     onSubmit: Function;
 }
 
-export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImageUploaded, onSubmit }: Props) => {
+export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImagesUploaded, onSubmit }: Props) => {
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
@@ -51,13 +50,9 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
     const uploadImage = async () => {
         setImagesUploading(true);
         setImageUploadProgress('preparing photo upload');
-        const imgs = await StoryController.uploadImages(onImageUploadProgressReport);
+        const imageUrls = await StoryController.uploadImages(onImageUploadProgressReport);
+        onImagesUploaded(imageUrls);
         setImageUploadProgress('');
-        console.log(imgs);
-        //        for (let img of imgs) {
-        //            const uploadedImgUrl = await img;
-        //            onImageUploaded(uploadedImgUrl);
-        //        }
         setImagesUploading(false);
     };
 

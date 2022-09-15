@@ -1,32 +1,28 @@
 import * as ImagePicker from 'expo-image-picker';
 import { getAuth } from 'firebase/auth';
-import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 
 export const uploadImages = async (
-    bucket: string,
     pickerResults: ImagePicker.ImagePickerResult[],
-    imageUploadProgess?: Function
+    bucket: string,
+    reportImageUploadProgress?: Function
 ): Promise<string[] | undefined> => {
     let uploadUrls: string[] = [];
     try {
         let count = 0;
         for (const pickerResult of pickerResults) {
             count++;
-            if (imageUploadProgess) {
+            if (reportImageUploadProgress) {
                 const uploadProgressReport: ImageUploadProgressReport = {
                     completed: count,
                     total: pickerResults.length,
                 };
-                imageUploadProgess(uploadProgressReport);
+                reportImageUploadProgress(uploadProgressReport);
             }
 
-            if (!pickerResult.cancelled) {
-                const path = bucket + '/' + getAuth().currentUser?.uid + '/';
-                const filename = hashString(pickerResult.uri) + '.png';
-                const uploadUrl = await uploadImage(pickerResult.uri, path, filename);
-                uploadUrls.push(uploadUrl);
-            }
+            const uploadUrl = await uploadImage(pickerResult, bucket);
+            uploadUrls.push(uploadUrl);
         }
     } catch (e) {
         console.log(e);
@@ -36,10 +32,17 @@ export const uploadImages = async (
     return uploadUrls;
 };
 
-export const uploadImage = async (uri: string, path: string, filename: string): Promise<string> => {
+export const uploadImage = async (pickerResult: ImagePicker.ImagePickerResult, bucket: string): Promise<string> => {
+    if (!pickerResult || pickerResult.cancelled) {
+        return '';
+    }
+
+    const filename = hashString(pickerResult.uri) + '.png';
+    const path = bucket + '/' + getAuth().currentUser?.uid + '/';
+
     // Why are we using XMLHttpRequest? See:
     // https://github.com/expo/expo/issues/2402#issuecomment-443726662
-    const blob: any = await createBlob(uri);
+    const blob: any = await createBlob(pickerResult.uri);
     const fullPath = path + (path.endsWith('/') ? '' : '/') + filename;
     let fileRef = ref(getStorage(), fullPath);
 

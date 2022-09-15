@@ -3,6 +3,7 @@ import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import ProfileDao, { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { pickImage } from 'src/util/ImagePickerUtil';
+import ImageController from '../image/ImageController';
 
 export const enum UserType {
     USER,
@@ -68,7 +69,7 @@ class ProfileController {
     public static async uploadProfilePhoto(): Promise<string | undefined> {
         const result = await pickImage();
         if (result && !result.cancelled) {
-            const uploadUrl = await uploadImage(result.uri, 'profiles/' + getAuth().currentUser?.uid, 'profile');
+            const uploadUrl = await uploadImage(result, 'profiles/');
             return uploadUrl;
         }
 
@@ -78,7 +79,7 @@ class ProfileController {
     public static async uploadProfileBanner(): Promise<string | undefined> {
         const result = await pickImage();
         if (result && !result.cancelled) {
-            const uploadUrl = await uploadImage(result.uri, 'profiles/' + getAuth().currentUser?.uid, 'banner');
+            const uploadUrl = await uploadImage(result, 'profiles/'); 
             return uploadUrl;
         }
 

@@ -3,9 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
-import { uploadProfileBanner } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import StoryDao from 'src/firebase/firestore/story/StoryDao';
-import { pickImage } from 'src/util/ImagePickerUtil';
 
 export interface StoryModel extends TimelinePostModel {
     data: {
@@ -136,15 +134,8 @@ class StoryController {
     }
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
-        const imgUrls: string[] = await ImageController.uploadImages('user_posts', imageUploadProgess);
+        const imgUrls: string[] = await ImageController.pickAndUploadImages('user_posts', imageUploadProgess);
         return imgUrls;
-    }
-
-    public static async addImagesToStory(): Promise<string | undefined> {
-        const result = await pickImage();
-        const url = await uploadProfileBanner(result);
-
-        return url;
     }
 }
 

@@ -36,16 +36,16 @@ export const CreateUserPost = () => {
         }
     };
 
-    const onImageUploaded = (url: string) => {
+    const onImagesUploaded = (uploadedImageUrls: string[]) => {
         let copiedUrls = [...imageUrls];
-        copiedUrls.push(url);
+        copiedUrls = copiedUrls.concat(uploadedImageUrls);
         setImageUrls(copiedUrls);
     };
 
     return (
         <Screen>
             <Banner name="Share A Story" leftIcon={'arrow-back'} leftRoute="BACK" />
-            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={submitStory} onImageUploaded={onImageUploaded} />
+            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={submitStory} onImagesUploaded={onImagesUploaded} />
         </Screen>
     );
 };
