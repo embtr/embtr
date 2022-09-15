@@ -1,5 +1,5 @@
-import { User } from 'firebase/auth';
-import { uploadProfileBanner, uploadProfilePhoto } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
+import { getAuth, User } from 'firebase/auth';
+import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import ProfileDao, { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { pickImage } from 'src/util/ImagePickerUtil';
@@ -67,16 +67,22 @@ class ProfileController {
 
     public static async uploadProfilePhoto(): Promise<string | undefined> {
         const result = await pickImage();
-        const url = await uploadProfilePhoto(result);
+        if (result && !result.cancelled) {
+            const uploadUrl = await uploadImage(result.uri, 'profiles/' + getAuth().currentUser?.uid, 'profile');
+            return uploadUrl;
+        }
 
-        return url;
+        return undefined;
     }
 
     public static async uploadProfileBanner(): Promise<string | undefined> {
         const result = await pickImage();
-        const url = await uploadProfileBanner(result);
+        if (result && !result.cancelled) {
+            const uploadUrl = await uploadImage(result.uri, 'profiles/' + getAuth().currentUser?.uid, 'banner');
+            return uploadUrl;
+        }
 
-        return url;
+        return undefined;
     }
 }
 

@@ -3,30 +3,6 @@ import { getAuth } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes, uploadBytesResumable } from 'firebase/storage';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 
-export const uploadProfilePhoto = async (pickerResult: ImagePicker.ImagePickerResult): Promise<string | undefined> => {
-    try {
-        if (!pickerResult.cancelled) {
-            const uploadUrl = await uploadImageAsync(pickerResult.uri, 'profiles/' + getAuth().currentUser?.uid, 'profile');
-            return uploadUrl;
-        }
-    } catch (e) {
-        alert('Upload failed, sorry :(');
-    }
-    return undefined;
-};
-
-export const uploadProfileBanner = async (pickerResult: ImagePicker.ImagePickerResult): Promise<string | undefined> => {
-    try {
-        if (!pickerResult.cancelled) {
-            const uploadUrl = await uploadImageAsync(pickerResult.uri, 'profiles/' + getAuth().currentUser?.uid, 'banner');
-            return uploadUrl;
-        }
-    } catch (e) {
-        alert('Upload failed, sorry :(');
-    }
-    return undefined;
-};
-
 export const uploadImages = async (
     bucket: string,
     pickerResults: ImagePicker.ImagePickerResult[],
@@ -48,7 +24,7 @@ export const uploadImages = async (
             if (!pickerResult.cancelled) {
                 const path = bucket + '/' + getAuth().currentUser?.uid + '/';
                 const filename = hashString(pickerResult.uri) + '.png';
-                const uploadUrl = await uploadImageAsync(pickerResult.uri, path, filename);
+                const uploadUrl = await uploadImage(pickerResult.uri, path, filename);
                 uploadUrls.push(uploadUrl);
             }
         }
@@ -60,7 +36,7 @@ export const uploadImages = async (
     return uploadUrls;
 };
 
-const uploadImageAsync = async (uri: string, path: string, filename: string): Promise<string> => {
+export const uploadImage = async (uri: string, path: string, filename: string): Promise<string> => {
     // Why are we using XMLHttpRequest? See:
     // https://github.com/expo/expo/issues/2402#issuecomment-443726662
     const blob: any = await createBlob(uri);
