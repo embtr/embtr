@@ -43,6 +43,7 @@ export const EmbtrTextCard = ({ challengeModel }: Props) => {
             added={challengeModel.added}
             title={challengeModel.data.title}
             body={challengeModel.data.story}
+            images={[]}
             likes={likes}
             comments={comments}
             participants={participants}

@@ -37,6 +37,7 @@ export const UserTextCard = ({ userProfileModel, story }: Props) => {
         isLiked={isLiked}
         title={story.data.title}
         body={story.data.story}
+        images={story.data.images ? story.data.images : []}
         likes={likes}
         comments={story.public.comments.length}
         onLike={onLike}

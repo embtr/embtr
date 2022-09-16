@@ -17,7 +17,7 @@ export const CarouselCards = ({ images }: Props) => {
     const isCarousel = React.useRef(null);
 
     return (
-        <View style={{ alignItems: 'center', height: Dimensions.get('window').width - 100 }}>
+        <View style={{ overflow: 'hidden', alignItems: 'center', height: Dimensions.get('window').width - 100 }}>
             <Carousel
                 firstItem={images.length > 0 ? 1 : 0}
                 layout="default"

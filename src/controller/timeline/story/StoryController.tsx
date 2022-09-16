@@ -103,6 +103,9 @@ class StoryController {
             } else {
                 let story: StoryModel = doc.data() as StoryModel;
                 story.id = doc.id;
+                if (!story.data.images) {
+                    story.data.images = [];
+                }
                 story.public.comments = story.public.comments.sort((a, b) => (a.timestamp! > b.timestamp! ? 1 : -1));
                 callback(story);
             }

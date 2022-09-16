@@ -71,7 +71,7 @@ export const UserPostDetails = () => {
                     onEdit={navigateToEdit}
                     onDelete={deletePost}
                 >
-                    <UserPostBody title={storyModel?.data.title ? storyModel?.data.title : ''} post={storyModel.data.story} />
+                    <UserPostBody title={storyModel?.data.title ? storyModel?.data.title : ''} post={storyModel.data.story} images={storyModel.data.images} />
                 </PostDetails>
             </View>
         );
