@@ -17,9 +17,9 @@ export const CarouselCards = ({ images }: Props) => {
     const isCarousel = React.useRef(null);
 
     return (
-        <View style={{ overflow: 'hidden', alignItems: 'center', height: Dimensions.get('window').width - 100 }}>
+        <View style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT + 5 }}>
             <Carousel
-                firstItem={images.length > 0 ? 1 : 0}
+                firstItem={images.length > 0 && images[0]?.type === 'add_image' ? 1 : 0}
                 layout="default"
                 ref={isCarousel}
                 data={images}

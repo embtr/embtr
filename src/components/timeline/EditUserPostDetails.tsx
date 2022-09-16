@@ -39,6 +39,7 @@ export const EditUserPostDetails = () => {
         let clonedUserPost = copyStory(userPost);
         clonedUserPost.data.title = title;
         clonedUserPost.data.story = body;
+        clonedUserPost.data.images = imageUrls;
         await StoryController.update(clonedUserPost);
         navigation.navigate('Timeline');
     };

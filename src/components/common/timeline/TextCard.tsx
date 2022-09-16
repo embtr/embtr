@@ -168,7 +168,7 @@ export const TextCard = ({
                 {/* PHOTOS */}
                 {/**********/}
                 {carouselImages.length > 0 && (
-                    <View style={{ paddingTop: 10 }}>
+                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
                         <CarouselCards images={carouselImages} />
                     </View>
                 )}
