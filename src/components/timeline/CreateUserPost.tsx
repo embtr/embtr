@@ -45,7 +45,7 @@ export const CreateUserPost = () => {
     return (
         <Screen>
             <Banner name="Share A Story" leftIcon={'arrow-back'} leftRoute="BACK" />
-            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={submitStory} onImagesUploaded={onImagesUploaded} />
+            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} images={imageUrls} onSubmit={submitStory} onImagesUploaded={onImagesUploaded} />
         </Screen>
     );
 };

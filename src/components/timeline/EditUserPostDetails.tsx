@@ -25,6 +25,7 @@ export const EditUserPostDetails = () => {
                     setUserPost(foundStory);
                     setTitle(foundStory.data.title);
                     setBody(foundStory.data.story);
+                    setImageUrls(foundStory.data.images);
                 }
             });
         }, [])
@@ -42,16 +43,24 @@ export const EditUserPostDetails = () => {
         navigation.navigate('Timeline');
     };
 
-    const onImageUploaded = (url: string) => {
+    const onImagesUploaded = (uploadedImageUrls: string[]) => {
         let copiedUrls = [...imageUrls];
-        copiedUrls.push(url);
+        copiedUrls = copiedUrls.concat(uploadedImageUrls);
         setImageUrls(copiedUrls);
     };
 
     return (
         <Screen>
             <Banner name="Edit Post" leftIcon={'arrow-back'} leftRoute="BACK" />
-            <CreateEditUserPostBase title={title} setTitle={setTitle} body={body} setBody={setBody} onSubmit={saveUserPost} onImageUploaded={onImageUploaded} />
+            <CreateEditUserPostBase
+                title={title}
+                setTitle={setTitle}
+                body={body}
+                setBody={setBody}
+                onSubmit={saveUserPost}
+                images={imageUrls}
+                onImagesUploaded={onImagesUploaded}
+            />
         </Screen>
     );
 };

@@ -14,11 +14,12 @@ interface Props {
     setTitle: Function;
     body: string;
     setBody: Function;
+    images: string[];
     onImagesUploaded: Function;
     onSubmit: Function;
 }
 
-export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImagesUploaded, onSubmit }: Props) => {
+export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images, onImagesUploaded, onSubmit }: Props) => {
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
@@ -56,7 +57,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
         setImagesUploading(false);
     };
 
-    let images: ImageCarouselImage[] = [
+    let carouselImages: ImageCarouselImage[] = [
         {
             url: '',
             format: '',
@@ -64,6 +65,14 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
             uploadImage: uploadImage,
         },
     ];
+
+    images.forEach(image => {
+        carouselImages.push({
+            url: image,
+            format: "png",
+            type: "image"
+        });
+    });
 
     let _maybeRenderUploadingOverlay = () => {
         if (imagesUploading) {
@@ -195,7 +204,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, onImage
                             Photos
                         </Text>
                         <View>
-                            <CarouselCards images={images} />
+                            <CarouselCards images={carouselImages} />
                         </View>
                     </View>
 
