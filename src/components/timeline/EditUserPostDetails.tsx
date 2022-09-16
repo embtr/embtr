@@ -50,6 +50,16 @@ export const EditUserPostDetails = () => {
         setImageUrls(copiedUrls);
     };
 
+    const onDeleteImage = (deletedImageUrl: string) => {
+        let updatedImageUrls: string[] = [];
+        imageUrls.forEach((imageUrl) => {
+            if (imageUrl !== deletedImageUrl) {
+                updatedImageUrls.push(imageUrl);
+            }
+        });
+        setImageUrls(updatedImageUrls);
+    };
+
     return (
         <Screen>
             <Banner name="Edit Post" leftIcon={'arrow-back'} leftRoute="BACK" />
@@ -61,6 +71,7 @@ export const EditUserPostDetails = () => {
                 onSubmit={saveUserPost}
                 images={imageUrls}
                 onImagesUploaded={onImagesUploaded}
+                onDeleteImage={onDeleteImage}
             />
         </Screen>
     );

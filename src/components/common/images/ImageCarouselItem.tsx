@@ -40,13 +40,40 @@ export const CarouselCardItem = ({ item, index }: Props) => {
     }
 
     return (
-        <Image
-            source={{ uri: item.url }}
-            style={{
-                borderRadius: 5,
-                width: CAROUSEL_IMAGE_HEIGHT,
-                height: CAROUSEL_IMAGE_HEIGHT,
-            }}
-        />
+        <View>
+            {item.onDelete && (
+                <View
+                    style={{
+                        position: 'absolute',
+                        zIndex: 1,
+                        height: CAROUSEL_IMAGE_HEIGHT / 8,
+                        width: CAROUSEL_IMAGE_HEIGHT / 8,
+                        backgroundColor: 'rgba(0,0,0,0.65)',
+                        marginTop: 5,
+                        left: CAROUSEL_IMAGE_HEIGHT - CAROUSEL_IMAGE_HEIGHT / 8 - 5,
+                        borderRadius: 5,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Ionicons
+                        name={'trash-outline'}
+                        size={20}
+                        color={'white'}
+                        onPress={() => {
+                            item.onDelete!(item.url);
+                        }}
+                    />
+                </View>
+            )}
+            <Image
+                source={{ uri: item.url }}
+                style={{
+                    borderRadius: 5,
+                    width: CAROUSEL_IMAGE_HEIGHT,
+                    height: CAROUSEL_IMAGE_HEIGHT,
+                }}
+            />
+        </View>
     );
 };

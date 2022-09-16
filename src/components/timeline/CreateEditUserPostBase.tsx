@@ -16,10 +16,11 @@ interface Props {
     setBody: Function;
     images: string[];
     onImagesUploaded: Function;
+    onDeleteImage?: Function;
     onSubmit: Function;
 }
 
-export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images, onImagesUploaded, onSubmit }: Props) => {
+export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images, onImagesUploaded, onDeleteImage, onSubmit }: Props) => {
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
@@ -66,11 +67,12 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
         },
     ];
 
-    images.forEach(image => {
+    images.forEach((image) => {
         carouselImages.push({
             url: image,
-            format: "png",
-            type: "image"
+            format: 'png',
+            type: 'image',
+            onDelete: onDeleteImage,
         });
     });
 

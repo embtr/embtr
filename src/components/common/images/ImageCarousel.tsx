@@ -8,6 +8,7 @@ export interface ImageCarouselImage {
     format: string;
     type?: string;
     uploadImage?: Function;
+    onDelete?: Function;
 }
 
 interface Props {
