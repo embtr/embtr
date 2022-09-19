@@ -16,6 +16,7 @@ import { Banner } from '../Banner';
 import { EmbtrButton } from '../button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
+import { Screen } from 'src/components/common/Screen';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -154,7 +155,7 @@ export const EditDailyResultDetails = () => {
     };
 
     return (
-        <View>
+        <Screen>
             {_maybeRenderUploadingOverlay()}
             <Banner name="Edit Daily Result" leftIcon="arrow-back" leftRoute="BACK" />
             <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
@@ -257,6 +258,6 @@ export const EditDailyResultDetails = () => {
                     </View>
                 </View>
             </KeyboardAvoidingView>
-        </View>
+        </Screen>
     );
 };
