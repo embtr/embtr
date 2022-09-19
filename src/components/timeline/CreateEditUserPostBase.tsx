@@ -8,6 +8,7 @@ import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
+import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
 
 interface Props {
     title: string;
@@ -76,30 +77,10 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
         });
     });
 
-    let _maybeRenderUploadingOverlay = () => {
-        if (imagesUploading) {
-            return (
-                <View
-                    style={[
-                        StyleSheet.absoluteFill,
-                        {
-                            zIndex: 3,
-                            backgroundColor: 'rgba(0,0,0,0.4)',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        },
-                    ]}
-                >
-                    <ActivityIndicator color="#fff" animating size="large" />
-                    <Text style={{ color: colors.text, paddingTop: 10 }}>{imageUploadProgess}</Text>
-                </View>
-            );
-        }
-    };
-
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
-            {_maybeRenderUploadingOverlay()}
+            <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
+
             <View style={{ height: '100%', width: '100%' }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     {/* TOP SUMMARY */}

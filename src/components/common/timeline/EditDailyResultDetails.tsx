@@ -17,6 +17,7 @@ import { EmbtrButton } from '../button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
+import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -125,27 +126,6 @@ export const EditDailyResultDetails = () => {
         return <View />;
     }
 
-    let _maybeRenderUploadingOverlay = () => {
-        if (imagesUploading) {
-            return (
-                <View
-                    style={[
-                        StyleSheet.absoluteFill,
-                        {
-                            zIndex: 3,
-                            backgroundColor: 'rgba(0,0,0,0.4)',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        },
-                    ]}
-                >
-                    <ActivityIndicator color="#fff" animating size="large" />
-                    <Text style={{ color: colors.text, paddingTop: 10 }}>{imageUploadProgess}</Text>
-                </View>
-            );
-        }
-    };
-
     const onSubmit = () => {
         let clonedDailyResult = DailyResultController.clone(dailyResult);
         clonedDailyResult.data.description = updatedDescription;
@@ -156,7 +136,8 @@ export const EditDailyResultDetails = () => {
 
     return (
         <Screen>
-            {_maybeRenderUploadingOverlay()}
+            <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
+
             <Banner name="Edit Daily Result" leftIcon="arrow-back" leftRoute="BACK" />
             <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                 <View style={{ paddingTop: 10 }}>
