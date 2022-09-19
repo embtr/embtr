@@ -15,7 +15,7 @@ import { formatDistance } from 'date-fns';
 import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -103,14 +103,14 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}>
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ flexDirection: 'row', flex: 1 }}>
-                            <View style={{ borderColor: colors.text }}>
+                            <TouchableOpacity style={{ borderColor: colors.text }} onPress={isLiked ? undefined : onLike}>
                                 <Ionicons
                                     name={isLiked ? 'heart' : 'heart-outline'}
                                     size={TIMELINE_CARD_ICON_SIZE}
                                     color={isLiked ? 'red' : colors.timeline_card_footer}
                                     onPress={isLiked ? undefined : onLike}
                                 />
-                            </View>
+                            </TouchableOpacity>
 
                             <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
                                 <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
@@ -130,16 +130,14 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                         </View>
 
                         <View style={{ flex: 1 }}>
-                            <View style={{ borderColor: colors.text, alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
-                                <Ionicons
-                                    name={'share-outline'}
-                                    size={TIMELINE_CARD_ICON_SIZE}
-                                    color={colors.timeline_card_footer}
-                                    onPress={() => {
-                                        alert("I don't work yet :(");
-                                    }}
-                                />
-                            </View>
+                            <TouchableOpacity
+                                style={{ borderColor: colors.text, alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}
+                                onPress={() => {
+                                    alert("I don't work yet :(");
+                                }}
+                            >
+                                <Ionicons name={'share-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} />
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
