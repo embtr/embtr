@@ -28,9 +28,12 @@ export const UserPostBody = ({ title, post, images }: Props) => {
             <View style={{ paddingTop: 10, paddingLeft: 15 }}>
                 <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, color: colors.timeline_card_header }}>{post}</Text>
             </View>
-            <View style={{ marginLeft: 10, marginRight: 10, overflow: 'hidden', paddingTop: 10, alignItems: 'center' }}>
-                <CarouselCards images={carouselImages} />
-            </View>
+
+            {carouselImages.length > 0 && (
+                <View style={{ marginLeft: 10, marginRight: 10, overflow: 'hidden', paddingTop: 10, alignItems: 'center' }}>
+                    <CarouselCards images={carouselImages} />
+                </View>
+            )}
         </View>
     );
 };

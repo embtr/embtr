@@ -25,6 +25,7 @@ export type TimelineTabScreens = {
     Timeline: undefined;
     CreateUserPost: undefined;
     EditUserPostDetails: { id: string };
+    EditDailyResultDetails: { id: string };
     UserPostDetails: { id: string };
     ChallengeDetails: { id: string };
     DailyResultDetails: { id: string };

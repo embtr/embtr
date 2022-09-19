@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { View } from 'react-native';
@@ -9,9 +9,11 @@ import { getAuth } from 'firebase/auth';
 import { DailyResultBody } from './DailyResultBody';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
+    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const [dailyResult, setDailyResult] = React.useState<DailyResultModel | undefined>(undefined);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
@@ -46,6 +48,14 @@ export const DailyResultDetails = () => {
         return <View></View>;
     }
 
+    const onEdit = () => {
+        if (!dailyResult.id) {
+            return;
+        }
+
+        navigation.navigate('EditDailyResultDetails', { id: dailyResult.id });
+    };
+
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <PostDetails
@@ -54,6 +64,8 @@ export const DailyResultDetails = () => {
                 added={dailyResult.added.toDate()}
                 comments={dailyResult?.public.comments}
                 submitComment={submitComment}
+                onEdit={onEdit}
+                onDelete={() => {}}
             >
                 <View style={{ paddingLeft: 10 }}>
                     <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} />

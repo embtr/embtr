@@ -1,7 +1,8 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
+import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import PlannedDayController, { getDayKeyDaysOld, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { getDayKeyDaysOld, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
@@ -9,20 +10,33 @@ export interface DailyResultModel extends TimelinePostModel {
     data: {
         status: string;
         plannedDayId: string;
+        description?: string;
+        imageUrls?: string[];
     };
 }
 
 class DailyResultController {
-    dailyResultIsComplete(dailyResult: DailyResultModel) {
-        dailyResult.data.status === 'COMPLETED';
-    }
+    public static clone(dailyResult: DailyResultModel): DailyResultModel {
+        let clone: DailyResultModel = {
+            data: {
+                plannedDayId: dailyResult.data.plannedDayId,
+                description: dailyResult.data.description,
+                status: dailyResult.data.status,
+                imageUrls: dailyResult.data.imageUrls,
+            },
+            added: dailyResult.added,
+            modified: dailyResult.modified,
+            active: dailyResult.active,
+            id: dailyResult.id,
+            uid: dailyResult.uid,
+            type: dailyResult.type,
+            public: {
+                comments: dailyResult.public.comments,
+                likes: dailyResult.public.likes,
+            },
+        };
 
-    dailyResultIsFailed(dailyResult: DailyResultModel) {
-        dailyResult.data.status === 'FAILED';
-    }
-
-    dailyResultIsIncomplete(dailyResult: DailyResultModel) {
-        dailyResult.data.status !== 'FAILED' && dailyResult.data.status !== 'COMPLETED';
+        return clone;
     }
 
     public static async getOrCreate(plannedDay: PlannedDay, status: string) {
@@ -57,6 +71,7 @@ class DailyResultController {
                 comments: [],
                 likes: [],
             },
+            active: true,
         };
 
         return dailyResult;
@@ -154,6 +169,11 @@ class DailyResultController {
         DailyResultDao.addComment(id, uid, commentText).then(() => {
             callback();
         });
+    }
+
+    public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
+        const imgUrls: string[] = await ImageController.pickAndUploadImages('daily_results', imageUploadProgess);
+        return imgUrls;
     }
 }
 
