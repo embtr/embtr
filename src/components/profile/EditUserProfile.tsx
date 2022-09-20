@@ -15,6 +15,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 import { Ionicons } from '@expo/vector-icons';
 import { BannerInfoModal } from 'src/components/profile/profile_component/BannerInfoModal';
+import { CachedImage } from '../common/images/CachedImage';
 
 export const EditUserProfile = () => {
     const { colors } = useTheme();
@@ -147,7 +148,7 @@ export const EditUserProfile = () => {
                                 <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
                                     <TouchableOpacity onPress={uploadProfilePhoto}>
                                         <View style={{ alignItems: "flex-end", justifyContent: "flex-end" }}>
-                                            <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: photoUrl }} />
+                                            <CachedImage style={{ width: 100, height: 100, borderRadius: 50 }} uri={photoUrl} /> 
                                         </View>
                                     </TouchableOpacity>
                                 </View>

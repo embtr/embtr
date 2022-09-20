@@ -7,6 +7,7 @@ import { UserProfileProBadge } from 'src/components/profile/profile_component/ba
 import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
+import { CachedImage } from 'src/components/common/images/CachedImage';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -42,7 +43,7 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
 
                 <View style={{ width: '100%', height: '100%', position: 'absolute', zIndex: 2, alignItems: 'center', justifyContent: 'flex-end' }}>
                     <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                        <Image style={{ width: 100, height: 100, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} />
+                        {userProfileModel.photoUrl && <CachedImage style={{ width: 100, height: 100, borderRadius: 50 }} uri={userProfileModel.photoUrl} />}
                         <View style={{ position: 'absolute', zIndex: 1, paddingBottom: 3, paddingRight: 3 }}>
                             <ProfileLevel userProfileModel={userProfileModel} />
                         </View>

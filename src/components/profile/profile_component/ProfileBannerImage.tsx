@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Image, View } from 'react-native';
 import DEFAULT from 'assets/banner.png';
+import { CachedImage } from 'src/components/common/images/CachedImage';
 
 interface Props {
     sourceUrl?: string;
@@ -24,7 +25,7 @@ export default function ProfileBannerImage({ sourceUrl, ratio }: Props) {
             }}
         >
             {sourceUrl ? (
-                <Image source={{ uri: sourceUrl }} style={{ width: width, height: height, maxHeight: 135, borderRadius: 15 }} />
+                <CachedImage style={{ width: width, height: height, maxHeight: 135, borderRadius: 15 }} uri={sourceUrl} />
             ) : (
                 <Image source={DEFAULT} style={{ width: width, height: height, maxHeight: 135, borderRadius: 15 }} />
             )}
