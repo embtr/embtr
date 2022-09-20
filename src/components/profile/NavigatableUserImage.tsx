@@ -5,6 +5,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { ProfileLevel } from './profile_component/ProfileLevel';
+import { CachedImage } from '../common/images/CachedImage';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
@@ -20,15 +21,17 @@ export const NavigatableUserImage = ({ userProfileModel, size, denyNavigation }:
         navigation.navigate('UserProfile', { id: userProfileModel?.uid ? userProfileModel.uid : '' });
     };
 
-    return denyNavigation ? (
+    return !userProfileModel.photoUrl ? (
+        <View />
+    ) : denyNavigation ? (
         <View>
-            <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
+            <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} />
         </View>
     ) : (
         <View>
             <TouchableOpacity onPress={toUserProfile}>
                 <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                    <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileModel ? userProfileModel.photoUrl : undefined }} />
+                    <CachedImage uri={userProfileModel.photoUrl} style={{ width: size, height: size, borderRadius: 50 }} />
                     <View style={{ position: 'absolute', zIndex: 1, paddingBottom: 1, paddingRight: 1 }}>
                         <ProfileLevel userProfileModel={userProfileModel} useSmall={true} />
                     </View>
