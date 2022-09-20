@@ -59,7 +59,7 @@ export const PostDetails = ({ type, authorUid, children, added, comments, submit
     const scrollRef = React.useRef<ScrollView>(null);
 
     const onCommentCountChanged = () => {
-        scrollRef.current?.scrollTo(0, 0, false);
+        scrollRef.current?.scrollTo({ x: 0, y: 0, animated: false });
     };
 
     const daysRemaining = formatDistance(added, new Date(), { addSuffix: true });

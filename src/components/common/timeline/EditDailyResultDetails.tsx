@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -139,106 +139,108 @@ export const EditDailyResultDetails = () => {
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
 
             <Banner name="Edit Daily Result" leftIcon="arrow-back" leftRoute="BACK" />
-            <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-                <View style={{ paddingTop: 10 }}>
-                    {/* PROGRESS BAR */}
-                    <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
-                        >
-                            Progress
-                        </Text>
-                        <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                            <ProgressBar progress={progress} success={plannedDayIsComplete(plannedDay)} />
-                        </View>
-                    </View>
-
-                    {/* COMPLETED/ FAILED */}
-                    <View style={{ paddingTop: 5 }}>
-                        <Text style={headerTextStyle}>
-                            {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
-                            <Text style={{ color: plannedDayIsComplete(plannedDay) ? colors.progress_bar_complete : colors.progress_bar_failed }}>
-                                {plannedDayIsComplete(plannedDay) ? 'Complete!' : 'Failed!'}
-                            </Text>
-                        </Text>
-                    </View>
-
-                    {/* STORY */}
-                    <View style={{ paddingTop: 20, alignItems: 'center' }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
-                        >
-                            Description
-                        </Text>
-                        <TextInput
-                            textAlignVertical="top"
-                            style={{
-                                width: '95%',
-                                height: 200,
-                                borderRadius: 12,
-                                backgroundColor: colors.text_input_background,
-                                borderColor: colors.text_input_border,
-                                borderWidth: 1,
-                                color: colors.text,
-                                paddingTop: 10,
-                                paddingLeft: 10,
-                                paddingRight: 10,
-                            }}
-                            multiline={true}
-                            placeholder={'How did the day go?'}
-                            placeholderTextColor={colors.secondary_text}
-                            onChangeText={setUpdatedDescription}
-                            value={updatedDescription}
-                        />
-                    </View>
-
-                    {/* PHOTOS */}
-                    <View style={{ paddingTop: 20, alignItems: 'center' }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
-                        >
-                            Photos
-                        </Text>
-                        <View>
-                            <CarouselCards images={carouselImages} />
-                        </View>
-                    </View>
-
-                    {/* TASKS */}
-                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 20 }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
-                        >
-                            Tasks
-                        </Text>
-                        <View>{plannedTaskViews}</View>
-                    </View>
-
-                    {/* SUBMIT */}
-                    <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                        <View style={{ width: '95%' }}>
-                            <EmbtrButton
-                                buttonText={'Submit'}
-                                callback={() => {
-                                    onSubmit();
+            <ScrollView>
+                <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
+                    <View style={{ paddingTop: 10 }}>
+                        {/* PROGRESS BAR */}
+                        <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
                                 }}
+                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                            >
+                                Progress
+                            </Text>
+                            <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
+                                <ProgressBar progress={progress} success={plannedDayIsComplete(plannedDay)} />
+                            </View>
+                        </View>
+
+                        {/* COMPLETED/ FAILED */}
+                        <View style={{ paddingTop: 5 }}>
+                            <Text style={headerTextStyle}>
+                                {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
+                                <Text style={{ color: plannedDayIsComplete(plannedDay) ? colors.progress_bar_complete : colors.progress_bar_failed }}>
+                                    {plannedDayIsComplete(plannedDay) ? 'Complete!' : 'Failed!'}
+                                </Text>
+                            </Text>
+                        </View>
+
+                        {/* STORY */}
+                        <View style={{ paddingTop: 20, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                            >
+                                Description
+                            </Text>
+                            <TextInput
+                                textAlignVertical="top"
+                                style={{
+                                    width: '95%',
+                                    height: 200,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    color: colors.text,
+                                    paddingTop: 10,
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                }}
+                                multiline={true}
+                                placeholder={'How did the day go?'}
+                                placeholderTextColor={colors.secondary_text}
+                                onChangeText={setUpdatedDescription}
+                                value={updatedDescription}
                             />
                         </View>
+
+                        {/* PHOTOS */}
+                        <View style={{ paddingTop: 20, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                            >
+                                Photos
+                            </Text>
+                            <View>
+                                <CarouselCards images={carouselImages} />
+                            </View>
+                        </View>
+
+                        {/* TASKS */}
+                        <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 20 }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                            >
+                                Tasks
+                            </Text>
+                            <View>{plannedTaskViews}</View>
+                        </View>
+
+                        {/* SUBMIT */}
+                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                            <View style={{ width: '95%' }}>
+                                <EmbtrButton
+                                    buttonText={'Submit'}
+                                    callback={() => {
+                                        onSubmit();
+                                    }}
+                                />
+                            </View>
+                        </View>
                     </View>
-                </View>
-            </KeyboardAvoidingView>
+                </KeyboardAvoidingView>
+            </ScrollView>
         </Screen>
     );
 };
