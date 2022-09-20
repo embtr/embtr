@@ -2,6 +2,7 @@ import { Dimensions, Image, View, Text } from 'react-native';
 import { ImageCarouselImage } from './ImageCarousel';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { CachedImage } from './CachedImage';
 
 interface Props {
     item: ImageCarouselImage;
@@ -66,8 +67,8 @@ export const CarouselCardItem = ({ item, index }: Props) => {
                     />
                 </View>
             )}
-            <Image
-                source={{ uri: item.url }}
+            <CachedImage
+                uri={item.url}
                 style={{
                     borderRadius: 5,
                     width: CAROUSEL_IMAGE_HEIGHT,
