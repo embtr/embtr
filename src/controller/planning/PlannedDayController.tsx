@@ -212,16 +212,13 @@ class PlannedDayController {
             plannedDay.metadata = this.createMetadata();
         }
 
-        const previousStatus = plannedDay.metadata?.status;
         plannedDay.metadata!.status = this.getPlannedDayStatus(plannedDay, plannedTask);
         const newStatus = plannedDay.metadata?.status;
 
         await PlannedDayDao.updateTask(plannedDay, plannedTask);
 
-        if (previousStatus !== newStatus) {
-            await this.handleStatusChange(plannedDay, previousStatus, newStatus);
-            await LevelController.handlePlannedDayStatusChange(plannedDay);
-        }
+        await this.handleStatusChange(plannedDay, newStatus);
+        await LevelController.handlePlannedDayStatusChange(plannedDay);
 
         callback();
     }
@@ -234,17 +231,20 @@ class PlannedDayController {
         });
     }
 
-    private static async handleStatusChange(plannedDay: PlannedDay, previousStatus: string, newStatus: string) {
-        if (plannedDay.id) {
-            let dailyResult = await DailyResultController.getOrCreate(plannedDay, newStatus);
-            if (!dailyResult || dailyResult?.data.status === newStatus) {
-                return;
-            }
-
-            dailyResult.data.status = newStatus;
-            dailyResult.modified = Timestamp.now();
-            DailyResultController.update(dailyResult);
+    private static async handleStatusChange(plannedDay: PlannedDay, newStatus: string) {
+        if (!plannedDay.id) {
+            return;
         }
+
+        let dailyResult = await DailyResultController.getOrCreate(plannedDay, newStatus);
+        if (!dailyResult || (dailyResult?.data.status === newStatus && dailyResult.active)) {
+            return;
+        }
+
+        dailyResult.data.status = newStatus;
+        dailyResult.modified = Timestamp.now();
+        dailyResult.active = true;
+        DailyResultController.update(dailyResult);
     }
 
     private static createMetadata(): PlannedDayMetadata {

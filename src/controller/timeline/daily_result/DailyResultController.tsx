@@ -89,6 +89,11 @@ class DailyResultController {
         return dailyResult;
     }
 
+    public static async delete(dailyResult: DailyResultModel) {
+        dailyResult.active = false;
+        this.update(dailyResult);
+    }
+
     public static async get(id: string, callback: Function) {
         const result = await DailyResultDao.get(id);
 

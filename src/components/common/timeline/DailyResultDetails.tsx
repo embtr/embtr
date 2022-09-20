@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { getAuth } from 'firebase/auth';
@@ -56,6 +56,19 @@ export const DailyResultDetails = () => {
         navigation.navigate('EditDailyResultDetails', { id: dailyResult.id });
     };
 
+    const onDelete = () => {
+        Alert.alert('Delete Daily Result', 'Are you sure you want to delete this Daily Result? Any future modifications to this day will restore it..', [
+            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+            {
+                text: 'I am sure. Delete it.',
+                onPress: async () => {
+                    DailyResultController.delete(dailyResult);
+                    navigation.goBack();
+                },
+            },
+        ]);
+    };
+
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <PostDetails
@@ -65,7 +78,7 @@ export const DailyResultDetails = () => {
                 comments={dailyResult?.public.comments}
                 submitComment={submitComment}
                 onEdit={onEdit}
-                onDelete={() => {}}
+                onDelete={onDelete}
             >
                 <View style={{ paddingLeft: 10 }}>
                     <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} />
