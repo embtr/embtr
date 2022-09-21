@@ -40,7 +40,7 @@ export const Notification = ({ notification, userProfile }: Props) => {
             }}
         >
             <View style={{ width: '100%', alignContent: 'center', alignItems: 'center' }}>
-                <View style={{ backgroundColor: colors.card_background_active, width: '95%', borderRadius: 15 }}>
+                <View style={{ backgroundColor: colors.timeline_card_background, width: '95%', borderRadius: 15 }}>
                     <View
                         style={{
                             flex: 1,
@@ -65,8 +65,8 @@ export const Notification = ({ notification, userProfile }: Props) => {
                                             padding: 2,
                                             borderWidth: 1,
                                             borderRadius: 50,
-                                            borderColor: notification.read ? colors.card_background_active : colors.notification_dot,
-                                            backgroundColor: notification.read ? colors.card_background_active : colors.notification_dot,
+                                            borderColor: notification.read ? colors.timeline_card_background : colors.notification_dot,
+                                            backgroundColor: notification.read ? colors.timeline_card_background : colors.notification_dot,
                                         }}
                                     />
                                 </View>

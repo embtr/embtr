@@ -1,5 +1,5 @@
-import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Image, StyleProp, ImageStyle } from 'react-native';
 import { CacheManager } from 'react-native-expo-image-cache';
 
@@ -25,7 +25,7 @@ export const CachedImage = ({ uri, style }: Props) => {
     );
 
     if (!localUrl) {
-        return <View />;
+        return <View style={style} />;
     }
 
     return <Image source={{ uri: localUrl }} style={style} />;
