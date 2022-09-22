@@ -95,23 +95,15 @@ export const EditDailyResultDetails = () => {
         setImagesUploading(false);
     };
 
-    const wait = (timeout: number | undefined) => {
-        return new Promise((resolve) => setTimeout(resolve, timeout));
-    };
-
     const onDeleteImage = (deletedImageUrl: string) => {
-        const allImages = [...updatedImageUrls];
-        setUpdatedImageUrls([]);
         let imageUrls: string[] = [];
-        allImages.forEach((imageUrl) => {
+        updatedImageUrls.forEach((imageUrl) => {
             if (imageUrl !== deletedImageUrl) {
                 imageUrls.push(imageUrl);
             }
         });
 
-        wait(0).then(() => {
-            setUpdatedImageUrls(imageUrls);
-        });
+        setUpdatedImageUrls(imageUrls);
     };
 
     let carouselImages: ImageCarouselImage[] = [

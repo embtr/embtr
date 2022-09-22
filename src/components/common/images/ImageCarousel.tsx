@@ -14,8 +14,21 @@ export interface ImageCarouselImage {
 interface Props {
     images: ImageCarouselImage[];
 }
+
 export const CarouselCards = ({ images }: Props) => {
     const isCarousel = React.useRef(null);
+    const [loadedImages, setLoadedImages] = React.useState<ImageCarouselImage[]>([]);
+
+    const wait = (timeout: number | undefined) => {
+        return new Promise((resolve) => setTimeout(resolve, timeout));
+    };
+
+    React.useEffect(() => {
+        setLoadedImages([]);
+        wait(100).then(() => {
+            setLoadedImages(images);
+        });
+    }, [images]);
 
     return (
         <View style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT + 5 }}>
@@ -23,7 +36,7 @@ export const CarouselCards = ({ images }: Props) => {
                 firstItem={images.length > 0 && images[0]?.type === 'add_image' ? 1 : 0}
                 layout="default"
                 ref={isCarousel}
-                data={images}
+                data={loadedImages}
                 inactiveSlideScale={1}
                 renderItem={CarouselCardItem}
                 sliderWidth={Dimensions.get('window').width}

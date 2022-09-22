@@ -41,7 +41,7 @@ export const EditUserPostDetails = () => {
         clonedUserPost.data.story = body;
         clonedUserPost.data.images = imageUrls;
         await StoryController.update(clonedUserPost);
-        navigation.navigate('Timeline');
+        navigation.goBack();
     };
 
     const onImagesUploaded = (uploadedImageUrls: string[]) => {

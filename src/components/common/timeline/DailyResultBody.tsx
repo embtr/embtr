@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, TextStyle } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -16,8 +15,6 @@ interface Props {
 
 export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
     const { colors } = useTheme();
-
-    const [images, setImages] = React.useState<string[]>([]);
 
     const headerTextStyle = {
         fontSize: 16,
@@ -39,19 +36,6 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
 
     let plannedTaskViews: JSX.Element[] = [];
 
-    const wait = (timeout: number | undefined) => {
-        return new Promise((resolve) => setTimeout(resolve, timeout));
-    };
-
-    React.useEffect(() => {
-        setImages([]);
-        wait(0).then(() => {
-            if (dailyResult.data.imageUrls) {
-                setImages([...dailyResult.data.imageUrls]);
-            }
-        });
-    }, [dailyResult.data.imageUrls]);
-
     plannedDay?.plannedTasks.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
@@ -62,7 +46,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
 
     let carouselImages: ImageCarouselImage[] = [];
 
-    images.forEach((image) => {
+    dailyResult.data.imageUrls?.forEach((image) => {
         carouselImages.push({
             url: image,
             format: 'png',

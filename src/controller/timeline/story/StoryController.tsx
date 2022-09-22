@@ -118,6 +118,7 @@ class StoryController {
     }
 
     public static async update(story: StoryModel) {
+    story.modified = Timestamp.now();
         await StoryDao.update(story);
     }
 
