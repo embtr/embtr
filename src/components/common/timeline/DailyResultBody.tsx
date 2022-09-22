@@ -1,3 +1,4 @@
+import React from 'react';
 import { View, Text, TextStyle } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -15,6 +16,8 @@ interface Props {
 
 export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
     const { colors } = useTheme();
+
+    const [images, setImages] = React.useState<string[]>([]);
 
     const headerTextStyle = {
         fontSize: 16,
@@ -36,6 +39,19 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
 
     let plannedTaskViews: JSX.Element[] = [];
 
+    const wait = (timeout: number | undefined) => {
+        return new Promise((resolve) => setTimeout(resolve, timeout));
+    };
+
+    React.useEffect(() => {
+        setImages([]);
+        wait(0).then(() => {
+            if (dailyResult.data.imageUrls) {
+                setImages([...dailyResult.data.imageUrls]);
+            }
+        });
+    }, [dailyResult.data.imageUrls]);
+
     plannedDay?.plannedTasks.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
@@ -46,7 +62,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
 
     let carouselImages: ImageCarouselImage[] = [];
 
-    dailyResult.data.imageUrls?.forEach((image) => {
+    images.forEach((image) => {
         carouselImages.push({
             url: image,
             format: 'png',
@@ -72,9 +88,11 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
                 </View>
 
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                    <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>{dailyResult.data.description ? dailyResult.data.description : ''}</Text>
+                    <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>
+                        {dailyResult.data.description ? dailyResult.data.description : ''}
+                    </Text>
 
-                    {carouselImages.length > 0 && (
+                    {dailyResult.data.imageUrls && dailyResult.data.imageUrls.length > 0 && (
                         <View style={{ paddingTop: 15 }}>
                             <CarouselCards images={carouselImages} />
                         </View>
