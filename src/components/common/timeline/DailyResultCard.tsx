@@ -43,7 +43,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         if (dailyResult.data.plannedDayId) {
             PlannedDayController.get(dailyResult.uid, dailyResult.data.plannedDayId, setPlannedDay);
         }
-    }, []);
+    }, [dailyResult]);
 
     const time = formatDistance(dailyResult.modified.toDate(), new Date(), { addSuffix: true });
 
@@ -60,7 +60,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const navigateToDetails = () => {
         navigation.navigate('DailyResultDetails', { id: dailyResult.id ? dailyResult.id : '' });
     };
-
+    
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 15 }}>

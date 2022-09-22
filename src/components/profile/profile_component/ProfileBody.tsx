@@ -19,7 +19,6 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
     const { colors } = useTheme();
 
     const [index, setIndex] = React.useState(0);
-    const [activityHeight, setActivityHeight] = React.useState(60);
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string; }; }) => {
         switch (props.route.key) {

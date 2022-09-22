@@ -3,7 +3,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { Screen } from 'src/components/common/Screen';
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
@@ -12,12 +12,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 
-
 export const CurrentUserProfile = () => {
-
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
     const [followerCount, setFollowerCount] = React.useState<number>(0);
     const [followingCount, setFollowingCount] = React.useState<number>(0);
+    const [refreshing, setRefreshing] = React.useState(false);
 
     const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
     useFocusEffect(
@@ -36,7 +35,6 @@ export const CurrentUserProfile = () => {
                 setFollowerCount(followCounts.follower_count);
                 setFollowingCount(followCounts.following_count);
             });
-
         }, [userProfileModel])
     );
 
@@ -50,19 +48,36 @@ export const CurrentUserProfile = () => {
         }, [currentUserId])
     );
 
+    const wait = (timeout: number | undefined) => {
+        return new Promise((resolve) => setTimeout(resolve, timeout));
+    };
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        wait(500).then(() => setRefreshing(false));
+    }, []);
+
     return (
         <Screen>
-            <Banner name='You' rightIcon={"cog-outline"} rightRoute="UserSettings" />
+            <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
             <EmbtrMenuCustom />
-            <ScrollView>
-                <View style={{ alignItems: "center" }}>
-                    <View style={{ width: isDesktopBrowser() ? "45%" : "100%" }}>
-                        {userProfileModel && <ProfileHeader userProfileModel={userProfileModel} onFollowUser={() => { }} onUnfollowUser={() => { }} followerCount={followerCount} followingCount={followingCount} isFollowingUser={false} />}
+            <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                <View style={{ alignItems: 'center' }}>
+                    <View style={{ width: isDesktopBrowser() ? '45%' : '100%' }}>
+                        {userProfileModel && (
+                            <ProfileHeader
+                                userProfileModel={userProfileModel}
+                                onFollowUser={() => {}}
+                                onUnfollowUser={() => {}}
+                                followerCount={followerCount}
+                                followingCount={followingCount}
+                                isFollowingUser={false}
+                            />
+                        )}
                         {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                     </View>
                 </View>
             </ScrollView>
         </Screen>
-    )
-
-}
+    );
+};

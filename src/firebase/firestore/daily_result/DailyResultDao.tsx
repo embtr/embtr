@@ -1,6 +1,5 @@
 import { getAuth } from 'firebase/auth';
 import { Firestore, addDoc, collection, setDoc, doc, getDocs, getDoc, query, where, Timestamp, arrayUnion } from 'firebase/firestore';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { Like } from 'src/controller/timeline/TimelineController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
@@ -47,7 +46,7 @@ class DailyResultDao {
     public static async getAllForUser(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getAllForUser');
 
-        const q = query(collection(db, COLLECTION_NAME), where("uid", "==", uid));
+        const q = query(collection(db, COLLECTION_NAME), where("uid", "==", uid), where("active", "!=", false));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;

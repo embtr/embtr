@@ -37,39 +37,19 @@ export const Timeline = () => {
         elevation: 5,
     };
 
-    const successShadow = {
-        shadowColor: colors.progress_bar_complete,
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 5,
-    };
-
-    const failureShadow = {
-        shadowColor: colors.progress_bar_failed,
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.8,
-        shadowRadius: 4,
-        elevation: 5,
-    };
-
     const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            TimelineController.getTimelinePosts(setTimelineEntries);
-        }, [])
-    );
+    React.useEffect(() => {
+        TimelineController.getTimelinePosts(setTimelineEntries);
+    }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
-        }, [])
-    );
+    React.useEffect(() => {
+        NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
+    }, []);
 
     React.useEffect(() => {
         let uids: string[] = [];
@@ -95,10 +75,9 @@ export const Timeline = () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        TimelineController.getTimelinePosts((refreshedTimelinePosts: TimelinePostModel[]) => {
-            setTimelineEntries(refreshedTimelinePosts);
-            wait(500).then(() => setRefreshing(false));
-        });
+        TimelineController.getTimelinePosts(setTimelineEntries);
+        NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
+        wait(500).then(() => setRefreshing(false));
     }, []);
 
     const createStoryView = (timelineEntry: TimelinePostModel) => {
@@ -124,7 +103,6 @@ export const Timeline = () => {
 
     const createDailyResultView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
-        const completed = (timelineEntry as DailyResultModel).data.status === 'COMPLETE';
 
         if (profile) {
             return (

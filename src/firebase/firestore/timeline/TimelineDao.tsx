@@ -14,7 +14,7 @@ class TimelineDao {
     public static async getTimelinePostsForUser(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, "getTimelinePostsForUser");
 
-        const q = query(collection(db, "timeline"), where("uid", "==", uid));
+        const q = query(collection(db, "timeline"), where("uid", "==", uid), where("active", "!=", false));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;

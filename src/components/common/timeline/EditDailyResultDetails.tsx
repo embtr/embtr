@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -95,14 +95,23 @@ export const EditDailyResultDetails = () => {
         setImagesUploading(false);
     };
 
+    const wait = (timeout: number | undefined) => {
+        return new Promise((resolve) => setTimeout(resolve, timeout));
+    };
+
     const onDeleteImage = (deletedImageUrl: string) => {
+        const allImages = [...updatedImageUrls];
+        setUpdatedImageUrls([]);
         let imageUrls: string[] = [];
-        updatedImageUrls.forEach((imageUrl) => {
+        allImages.forEach((imageUrl) => {
             if (imageUrl !== deletedImageUrl) {
                 imageUrls.push(imageUrl);
             }
         });
-        setUpdatedImageUrls(imageUrls);
+
+        wait(0).then(() => {
+            setUpdatedImageUrls(imageUrls);
+        });
     };
 
     let carouselImages: ImageCarouselImage[] = [

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -11,6 +10,7 @@ import { TouchableOpacity } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { formatDistance } from 'date-fns';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     notification: NotificationModel;
@@ -60,14 +60,10 @@ export const Notification = ({ notification, userProfile }: Props) => {
                                     <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{userProfile?.name}</Text>
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
-                                    <View
-                                        style={{
-                                            padding: 2,
-                                            borderWidth: 1,
-                                            borderRadius: 50,
-                                            borderColor: notification.read ? colors.timeline_card_background : colors.notification_dot,
-                                            backgroundColor: notification.read ? colors.timeline_card_background : colors.notification_dot,
-                                        }}
+                                    <Ionicons
+                                        name={'mail-outline'}
+                                        size={16}
+                                        color={notification.read ? colors.timeline_card_background : colors.notification_dot}
                                     />
                                 </View>
                             </View>
