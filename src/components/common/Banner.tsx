@@ -1,36 +1,54 @@
 import * as React from 'react';
-import { View, Text, TextStyle } from "react-native"
-import { useTheme } from "src/components/theme/ThemeProvider";
+import { View, Text, TextStyle } from 'react-native';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "src/navigation/RootStackParamList";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 
 interface Props {
-    name: string,
-    leftRoute?: string,
-    leftIcon?: any,
+    name: string;
+    leftRoute?: string;
+    leftIcon?: any;
+    leftText?: string;
+    rightText?: string;
 
-    innerLeftIcon?: any,
-    leftOnClick?: Function,
-    innerLeftOnClick?: Function,
+    innerLeftIcon?: any;
+    leftOnClick?: Function;
+    innerLeftOnClick?: Function;
 
-    innerRightIcon?: any,
-    innerRightOnClick?: Function,
+    innerRightIcon?: any;
+    innerRightOnClick?: Function;
 
-    rightRoute?: string,
-    rightIcon?: any,
-    rightOnClick?: Function,
-    rightIconNotificationCount?: number,
+    rightRoute?: string;
+    rightIcon?: any;
+    rightOnClick?: Function;
+    rightIconNotificationCount?: number;
 
-    menuOptions?: EmbtrMenuOptions
+    menuOptions?: EmbtrMenuOptions;
 }
 
-export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, rightIcon, rightIconNotificationCount, innerLeftIcon, leftOnClick, innerLeftOnClick: innerLeftCallback, menuOptions, innerRightIcon, innerRightOnClick }: Props) => {
+export const Banner = ({
+    name,
+    leftRoute,
+    leftIcon,
+    rightRoute,
+    leftText,
+    rightText,
+    rightOnClick,
+    rightIcon,
+    rightIconNotificationCount,
+    innerLeftIcon,
+    leftOnClick,
+    innerLeftOnClick: innerLeftCallback,
+    menuOptions,
+    innerRightIcon,
+    innerRightOnClick,
+}: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -68,41 +86,96 @@ export const Banner = ({ name, leftRoute, leftIcon, rightRoute, rightOnClick, ri
     });
 
     if (!fontsLoaded) {
-        return <View />
+        return <View />;
     }
+
+    const leftOnPress = () => {
+        leftOnClick ? leftOnClick() : leftRoute === 'BACK' ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList);
+    };
 
     return (
         <View>
-            <View style={{ flexDirection: "row", justifyContent: "flex-end", height: 45 }}>
-                <View style={{ flexDirection: "row", flex: 1, paddingLeft: 10, paddingTop: 5 }}>
-                    {leftIcon ? <Ionicons name={leftIcon} size={32} color={colors.text} onPress={() => { leftOnClick ? leftOnClick() : leftRoute === "BACK" ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList) }} /> : <View />}
-                    {innerLeftIcon ? <Ionicons style={{ paddingLeft: 10 }} name={innerLeftIcon} size={32} color={colors.text} onPress={() => { if (innerLeftCallback) innerLeftCallback() }} /> : <View />}
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', height: 45 }}>
+                <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 10, paddingTop: 5 }}>
+                    {/* LEFT ICON */}
+                    {leftIcon ? (
+                        <Ionicons name={leftIcon} size={32} color={colors.text} onPress={leftOnPress} />
+                    ) : leftText ? (
+                        <View style={{ paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center' }}>
+                            <Text onPress={leftOnPress} style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: '#5ba2dc', fontSize: 16 }}>
+                                {leftText}
+                            </Text>
+                        </View>
+                    ) : (
+                        <View />
+                    )}
+
+                    {/* INNER LEFT ICON */}
+                    {innerLeftIcon ? (
+                        <Ionicons
+                            style={{ paddingLeft: 10 }}
+                            name={innerLeftIcon}
+                            size={32}
+                            color={colors.text}
+                            onPress={() => {
+                                if (innerLeftCallback) innerLeftCallback();
+                            }}
+                        />
+                    ) : (
+                        <View />
+                    )}
                 </View>
 
-
-                <View style={{ flex: 2, justifyContent: "center" }}>
-                    <Text style={[textStyle, { textAlign: "center", fontFamily: "Poppins_600SemiBold", fontSize: 21, fontWeight: "bold" }]}>{name}</Text>
+                <View style={{ flex: 2, justifyContent: 'center' }}>
+                    <Text style={[textStyle, { textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 21, fontWeight: 'bold' }]}>{name}</Text>
                 </View>
 
-                <View style={{ flexDirection: "row", flex: 1, paddingRight: 10, justifyContent: "flex-end", paddingTop: 5 }}>
-                    {innerRightIcon &&
-                        <Ionicons style={{ paddingRight: 10 }} name={innerRightIcon} size={32} color={colors.text} onPress={() => { if (innerRightOnClick) innerRightOnClick() }} />
-                    }
-                    {rightIcon &&
-                        <View style={{ alignItems: "flex-end" }}>
-                            {
-                                rightIconNotificationCount ?
-                                    <View style={{ paddingRight: 1, paddingTop: 0, zIndex: 1, position: "absolute" }}>
-                                        <View style={{ backgroundColor: colors.notification_dot, borderRadius: 50, width: 9, height: 9 }} />
-                                    </View>
-                                    : <></>
-                            }
+                <View style={{ flexDirection: 'row', flex: 1, paddingRight: 10, justifyContent: 'flex-end', paddingTop: 5 }}>
+                    {/* INNER RIGHT ICON */}
+                    {innerRightIcon && (
+                        <Ionicons
+                            style={{ paddingRight: 10 }}
+                            name={innerRightIcon}
+                            size={32}
+                            color={colors.text}
+                            onPress={() => {
+                                if (innerRightOnClick) innerRightOnClick();
+                            }}
+                        />
+                    )}
+
+                    {/* RIGHT ICON */}
+                    {rightIcon && (
+                        <View style={{ alignItems: 'flex-end' }}>
+                            {rightIconNotificationCount ? (
+                                <View style={{ paddingRight: 1, paddingTop: 0, zIndex: 1, position: 'absolute' }}>
+                                    <View style={{ backgroundColor: colors.notification_dot, borderRadius: 50, width: 9, height: 9 }} />
+                                </View>
+                            ) : (
+                                <></>
+                            )}
 
                             <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
                         </View>
-                    }
+                    )}
+
+                    {/* RIGHT ICON */}
+                    {rightText && (
+                        <View style={{ alignItems: 'flex-end', flex: 1 }}>
+                            <View style={{ paddingLeft: 10, paddingRight: 10, alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+                                <Text
+                                    onPress={() => {
+                                        rightOnClick ? rightOnClick() : undefined;
+                                    }}
+                                    style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: '#5ba2dc', fontSize: 16 }}
+                                >
+                                    {rightText}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
                 </View>
             </View>
         </View>
-    )
-}
+    );
+};

@@ -18,7 +18,7 @@ interface Props {
     images: string[];
     onImagesUploaded: Function;
     onDeleteImage?: Function;
-    onSubmit: Function;
+    onSubmit?: Function;
 }
 
 export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images, onImagesUploaded, onDeleteImage, onSubmit }: Props) => {
@@ -191,16 +191,18 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                         </View>
                     </View>
 
-                    <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                        <View style={{ width: '95%' }}>
-                            <EmbtrButton
-                                buttonText={'Submit'}
-                                callback={() => {
-                                    onSubmit();
-                                }}
-                            />
+                    {onSubmit && (
+                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                            <View style={{ width: '95%' }}>
+                                <EmbtrButton
+                                    buttonText={'Submit'}
+                                    callback={() => {
+                                        onSubmit();
+                                    }}
+                                />
+                            </View>
                         </View>
-                    </View>
+                    )}
                 </KeyboardAvoidingView>
             </View>
         </ScrollView>

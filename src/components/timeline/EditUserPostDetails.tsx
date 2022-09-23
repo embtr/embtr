@@ -62,13 +62,12 @@ export const EditUserPostDetails = () => {
 
     return (
         <Screen>
-            <Banner name="Edit Post" leftIcon={'arrow-back'} leftRoute="BACK" />
+            <Banner name="Edit Post" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={saveUserPost} />
             <CreateEditUserPostBase
                 title={title}
                 setTitle={setTitle}
                 body={body}
                 setBody={setBody}
-                onSubmit={saveUserPost}
                 images={imageUrls}
                 onImagesUploaded={onImagesUploaded}
                 onDeleteImage={onDeleteImage}
