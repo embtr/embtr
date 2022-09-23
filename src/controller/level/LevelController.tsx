@@ -2,7 +2,7 @@ import { getAuth } from 'firebase/auth';
 import { addDoc, Timestamp } from 'firebase/firestore';
 import LevelDao from 'src/firebase/firestore/level/LevelDao';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { PlannedDay, plannedDayIsComplete } from '../planning/PlannedDayController';
+import { getDayKeyDaysOld, PlannedDay, plannedDayIsComplete } from '../planning/PlannedDayController';
 import ProfileController from '../profile/ProfileController';
 
 export interface LevelModel {
@@ -77,6 +77,11 @@ class LevelController {
 
         let calculatedLevel = 0;
         level.levelMap.forEach((value, key) => {
+            const daysOld = getDayKeyDaysOld(key);
+            if (daysOld < 1) {
+                return;
+            }
+
             calculatedLevel += value.completed ? 1 : -1;
         });
 
