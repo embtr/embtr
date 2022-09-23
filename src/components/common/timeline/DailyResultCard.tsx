@@ -60,7 +60,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const navigateToDetails = () => {
         navigation.navigate('DailyResultDetails', { id: dailyResult.id ? dailyResult.id : '' });
     };
-    
+
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 15 }}>
@@ -95,7 +95,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                {plannedDay && <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} />}
+                {plannedDay && <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} navigateToDetails={navigateToDetails} />}
 
                 {/**********/}
                 {/* FOOTER */}
