@@ -89,7 +89,7 @@ export const TextCard = ({
         onLike();
     };
 
-    const onCommentPressed = () => {
+    const navigateToDetails = () => {
         onCommented();
     };
 
@@ -113,11 +113,12 @@ export const TextCard = ({
             url: image,
             format: 'png',
             type: 'image',
+            onPress: navigateToDetails
         });
     });
 
     return (
-        <TouchableWithoutFeedback onPress={onCommentPressed}>
+        <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 15 }}>
                 {/**********/}
                 {/* HEADER */}
