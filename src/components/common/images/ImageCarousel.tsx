@@ -8,6 +8,7 @@ export interface ImageCarouselImage {
     format: string;
     type?: string;
     uploadImage?: Function;
+    onPress?: Function;
     onDelete?: Function;
 }
 

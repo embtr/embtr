@@ -1,12 +1,17 @@
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text, TextStyle } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDateFromDayKey, PlannedDay, plannedDayIsComplete } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
+
+type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
 interface Props {
     dailyResult: DailyResultModel;
@@ -22,6 +27,8 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
         color: colors.timeline_card_body,
         paddingLeft: TIMELINE_CARD_PADDING,
     } as TextStyle;
+
+    const navigation = useNavigation<timelineCommentsScreenProp>();
 
     let completedCount = 0;
     plannedDay?.plannedTasks.forEach((plannedTask) => {
@@ -44,6 +51,10 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
         );
     });
 
+    const navigateToDetails = () => {
+        navigation.navigate('DailyResultDetails', { id: dailyResult.id ? dailyResult.id : '' });
+    };
+
     let carouselImages: ImageCarouselImage[] = [];
 
     dailyResult.data.imageUrls?.forEach((image) => {
@@ -51,6 +62,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay }: Props) => {
             url: image,
             format: 'png',
             type: 'image',
+            onPress: navigateToDetails,
         });
     });
     return (

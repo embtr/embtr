@@ -17,6 +17,7 @@ export interface PlannedTaskModel {
     status?: string;
     startMinute?: number;
     duration?: number;
+    dayKey?: string;
 }
 
 export interface PlannedDayMetadata {
@@ -135,6 +136,7 @@ class PlannedDayController {
                         } else {
                             let plannedTask: PlannedTaskModel = currentPlannedTask.data() as PlannedTaskModel;
                             plannedTask.id = currentPlannedTask.id;
+                            plannedTask.dayKey = id;
                             plannedDay.plannedTasks.push(plannedTask);
                         }
                     });
@@ -168,6 +170,7 @@ class PlannedDayController {
                         }
 
                         plannedTask.id = currentPlannedTask.id;
+                        plannedTask.dayKey = id;
                         plannedDay.plannedTasks.push(plannedTask);
                     }
                 });

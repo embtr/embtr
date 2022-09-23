@@ -12,32 +12,33 @@ import { TabBar } from 'src/components/home/tabmenu/TabBar';
 const Tab = createBottomTabNavigator();
 
 export const TABS = {
-    USER_PROFILE: "CurrentUserTab",
-    TIMELINE: "TimelineTab",
-    TODAY: "TodayTab",
-    PLAN: "PlanTab"
-}
+    USER_PROFILE: 'CurrentUserTab',
+    TIMELINE: 'TimelineTab',
+    TODAY: 'TodayTab',
+    PLAN: 'PlanTab',
+};
 
 export const Dashboard = () => {
     return (
-        <View style={{ flex: 1, overflow: isDesktopBrowser() ? "hidden" : undefined }}>
+        <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>
             <Tab.Navigator
+                sceneContainerStyle={{ backgroundColor: 'green' }}
                 tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
                 screenOptions={() => ({
                     tabBarHideOnKeyboard: true,
                     tabBarShowLabel: false,
-                    headerShown: false
-//                    , lazy:false - this will load all tabs rather than one at a time
+                    headerShown: false,
+                    //                    , lazy:false - this will load all tabs rather than one at a time
                 })}
             >
                 <Tab.Screen
                     name={TABS.TIMELINE}
                     listeners={({ navigation, route }) => ({
-                        tabPress: e => {
+                        tabPress: (e) => {
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Timeline") {
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Timeline') {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Timeline' }], }));
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Timeline' }] }));
                             }
                         },
                     })}
@@ -47,11 +48,11 @@ export const Dashboard = () => {
                 <Tab.Screen
                     name={TABS.TODAY}
                     listeners={({ navigation, route }) => ({
-                        tabPress: e => {
+                        tabPress: (e) => {
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Today") {
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Today') {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Today' }], }));
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] }));
                             }
                         },
                     })}
@@ -61,11 +62,11 @@ export const Dashboard = () => {
                 <Tab.Screen
                     name={TABS.PLAN}
                     listeners={({ navigation, route }) => ({
-                        tabPress: e => {
+                        tabPress: (e) => {
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "PlanMain") {
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'PlanMain') {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'PlanMain' }], }));
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'PlanMain' }] }));
                             }
                         },
                     })}
@@ -75,11 +76,11 @@ export const Dashboard = () => {
                 <Tab.Screen
                     name={TABS.USER_PROFILE}
                     listeners={({ navigation, route }) => ({
-                        tabPress: e => {
+                        tabPress: (e) => {
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== "Profile") {
+                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Profile') {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }], }));
+                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }] }));
                             }
                         },
                     })}
@@ -88,4 +89,4 @@ export const Dashboard = () => {
             </Tab.Navigator>
         </View>
     );
-}
+};

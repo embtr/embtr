@@ -10,6 +10,7 @@ import { DailyResultBody } from './DailyResultBody';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Screen } from '../Screen';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
@@ -45,7 +46,7 @@ export const DailyResultDetails = () => {
     };
 
     if (dailyResult === undefined || plannedDay === undefined) {
-        return <View></View>;
+        return <Screen><View></View></Screen>;
     }
 
     const onEdit = () => {

@@ -88,8 +88,8 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
 
     const navigateToEditTask = () => {
         closeMenu();
-        if (plannedTask.id) {
-            navigation.navigate('EditOneTimeTask', { dayKey: getTodayKey(), plannedTaskId: plannedTask.id });
+        if (plannedTask.dayKey && plannedTask.id) {
+            navigation.navigate('EditOneTimeTask', { dayKey: plannedTask.dayKey, plannedTaskId: plannedTask.id });
         }
     };
 
