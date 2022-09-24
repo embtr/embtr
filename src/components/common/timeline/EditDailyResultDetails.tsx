@@ -227,18 +227,6 @@ export const EditDailyResultDetails = () => {
                             </Text>
                             <View>{plannedTaskViews}</View>
                         </View>
-
-                        {/* SUBMIT */}
-                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                            <View style={{ width: '95%' }}>
-                                <EmbtrButton
-                                    buttonText={'Submit'}
-                                    callback={() => {
-                                        onSubmit();
-                                    }}
-                                />
-                            </View>
-                        </View>
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>

@@ -109,7 +109,7 @@ export const CreateOneTimeTask = () => {
 
             <SetDurationModal visible={durationModalVisible} confirm={(duration: number) => { setDuration(duration); setDurationModalVisible(false); }} dismiss={() => { setDurationModalVisible(false) }} />
 
-            <Banner name={"Create Task"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+            <Banner name="Create Task" leftText={'Cancel'} leftRoute="BACK" rightText={'Create'} rightOnClick={createTask} />
             <ScrollView scrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }} >
 
                 <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
@@ -181,11 +181,6 @@ export const CreateOneTimeTask = () => {
                             </View>
                         </View>
                     </View>
-
-                    <View style={{ alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, zIndex: -1, paddingTop: 10, paddingBottom: 15 }}>
-                        <EmbtrButton buttonText={'create'} callback={createTask} />
-                    </View>
-
                 </KeyboardAvoidingView>
             </ScrollView>
 

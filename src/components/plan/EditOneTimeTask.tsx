@@ -165,7 +165,7 @@ export const EditOneTimeTask = () => {
                 }}
             />
 
-            <Banner name={'Edit Task'} leftIcon={'arrow-back'} leftRoute={'BACK'} />
+            <Banner name="Edit Task" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={saveTask} />
             <ScrollView scrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <View style={{ paddingTop: 5 }}>
@@ -351,20 +351,6 @@ export const EditOneTimeTask = () => {
                                 />
                             </View>
                         </View>
-                    </View>
-
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                            alignSelf: 'stretch',
-                            margin: 5,
-                            zIndex: -1,
-                            paddingTop: 10,
-                            paddingBottom: 15,
-                        }}
-                    >
-                        <EmbtrButton buttonText={'Save'} callback={saveTask} />
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>
