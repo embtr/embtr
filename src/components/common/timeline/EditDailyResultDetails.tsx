@@ -139,7 +139,7 @@ export const EditDailyResultDetails = () => {
         <Screen>
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
 
-            <Banner name="Edit Daily Result" leftIcon="arrow-back" leftRoute="BACK" />
+            <Banner name="Edit Daily Result" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={onSubmit} />
             <ScrollView>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <View style={{ paddingTop: 10 }}>
