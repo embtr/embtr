@@ -56,6 +56,9 @@ export const Banner = ({
         color: colors.text,
     } as TextStyle;
 
+    const iconSize = 30;
+    const bannerSize = 20;
+
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const dispatch = useAppDispatch();
@@ -95,11 +98,11 @@ export const Banner = ({
 
     return (
         <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', height: 45 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', height: 40 }}>
                 <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 10, paddingTop: 5 }}>
                     {/* LEFT ICON */}
                     {leftIcon ? (
-                        <Ionicons name={leftIcon} size={32} color={colors.text} onPress={leftOnPress} />
+                        <Ionicons name={leftIcon} size={iconSize} color={colors.text} onPress={leftOnPress} />
                     ) : leftText ? (
                         <View style={{ paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center' }}>
                             <Text onPress={leftOnPress} style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: '#5ba2dc', fontSize: 16 }}>
@@ -115,7 +118,7 @@ export const Banner = ({
                         <Ionicons
                             style={{ paddingLeft: 10 }}
                             name={innerLeftIcon}
-                            size={32}
+                            size={iconSize}
                             color={colors.text}
                             onPress={() => {
                                 if (innerLeftCallback) innerLeftCallback();
@@ -127,7 +130,7 @@ export const Banner = ({
                 </View>
 
                 <View style={{ flex: 2, justifyContent: 'center' }}>
-                    <Text style={[textStyle, { textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: 21, fontWeight: 'bold' }]}>{name}</Text>
+                    <Text style={[textStyle, { textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: bannerSize }]}>{name}</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row', flex: 1, paddingRight: 10, justifyContent: 'flex-end', paddingTop: 5 }}>
@@ -136,7 +139,7 @@ export const Banner = ({
                         <Ionicons
                             style={{ paddingRight: 10 }}
                             name={innerRightIcon}
-                            size={32}
+                            size={iconSize}
                             color={colors.text}
                             onPress={() => {
                                 if (innerRightOnClick) innerRightOnClick();
@@ -155,7 +158,7 @@ export const Banner = ({
                                 <></>
                             )}
 
-                            <Ionicons name={rightIcon} size={32} color={colors.text} onPress={handleRightClick} />
+                            <Ionicons name={rightIcon} size={iconSize} color={colors.text} onPress={handleRightClick} />
                         </View>
                     )}
 
