@@ -1,5 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 import TaskDao from "src/firebase/firestore/planning/TaskDao";
+import { getDateFromDayKey } from "./PlannedDayController";
 
 export interface TaskModel {
     id?: string,
@@ -10,8 +11,9 @@ export interface TaskModel {
     active?: boolean
 }
 
-export const getTomorrowDayOfWeek = () => {
-    const dayOfWeek = getDayOfWeek(new Date());
+export const getDayOfWeekFromDayKey = (dayKey: string) => {
+    const date = getDateFromDayKey(dayKey);
+    const dayOfWeek = getDayOfWeek(date);
     return dayOfWeek;
 };
 
