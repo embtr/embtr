@@ -18,7 +18,7 @@ export type PlanTabScreens = {
     CreateGoal: undefined;
     GoalDetails: { id: string };
     TaskDetails: { id: string };
-    Tomorrow: { id: string };
+    PlanDay : { id: string };
 };
 
 export type TimelineTabScreens = {

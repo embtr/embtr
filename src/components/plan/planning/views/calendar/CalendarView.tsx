@@ -1,9 +1,9 @@
 import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { Calendar } from 'src/components/today/views/calendar/Calendar';
-import { CalendarPlanViews } from 'src/components/today/views/calendar/CalendarPlanViews';
-import { TimeIndicator } from 'src/components/today/views/calendar/time_indicator/TimeIndicator';
+import { Calendar } from 'src/components/plan/planning/views/calendar/Calendar';
+import { CalendarPlanViews } from 'src/components/plan/planning/views/calendar/CalendarPlanViews';
+import { TimeIndicator } from 'src/components/plan/planning/views/calendar/time_indicator/TimeIndicator';
 import PlannedDayController, { getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { UserType } from 'src/controller/profile/ProfileController';
 

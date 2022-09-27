@@ -10,7 +10,7 @@ import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { Today } from 'src/components/today/Today';
+import { Planning } from 'src/components/plan/planning/Planning';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -32,7 +32,7 @@ export const PlanMain = () => {
         switch (props.route.key) {
             case 'planning':
                 return (
-                    <Today
+                    <Planning
                         showSelectTaskModal={showAddTaskModal}
                         dismissSelectTaskModal={() => {
                             setShowAddTaskModal(false);
@@ -76,7 +76,7 @@ export const PlanMain = () => {
             name: 'Plan Day',
             onPress: () => {
                 closeMenu();
-                navigation.navigate('Tomorrow', { id: selectedDayKey });
+                navigation.navigate('PlanDay', { id: selectedDayKey });
             },
         },
     ];
@@ -97,7 +97,7 @@ export const PlanMain = () => {
                     leftIcon={'add'}
                     leftRoute={'CreateTask'}
                     leftOnClick={index === 0 ? navigateToTomorrowCreateTask : index === 1 ? navigateToTasksCreateTask : navigateToCreateGoals}
-                    rightIcon={'ellipsis-horizontal'}
+                    rightIcon={index === 0 ? 'ellipsis-horizontal' : undefined}
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
 

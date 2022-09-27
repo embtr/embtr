@@ -11,8 +11,8 @@ import PlannedDayController, {
     PlannedTaskModel,
 } from 'src/controller/planning/PlannedDayController';
 import { PlannedTask } from 'src/components/today/PlannedTask';
-import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
-import { TodayPicker } from 'src/components/today/TodayPicker';
+import { CalendarView } from 'src/components/plan/planning/views/calendar/CalendarView';
+import { DayPicker } from 'src/components/plan/planning/DayPicker';
 import { getAuth } from 'firebase/auth';
 import { UserType } from 'src/controller/profile/ProfileController';
 import { AddHabitModal } from 'src/components/today/AddHabitModal';
@@ -25,7 +25,7 @@ interface Props {
     onDayChange: Function;
 }
 
-export const Today = ({ showSelectTaskModal, dismissSelectTaskModal, onDayChange }: Props) => {
+export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayChange }: Props) => {
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
@@ -68,7 +68,7 @@ export const Today = ({ showSelectTaskModal, dismissSelectTaskModal, onDayChange
 
             <View style={{ flex: 1 }}>
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
-                    <TodayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
+                    <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
                 <CalendarView plannedToday={plannedToday} onPlanTodayUpdated={setPlannedToday} userType={UserType.USER} />
             </View>

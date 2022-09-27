@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { CalendarView } from 'src/components/today/views/calendar/CalendarView';
+import { CalendarView } from 'src/components/plan/planning/views/calendar/CalendarView';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { useFocusEffect } from '@react-navigation/native';
 import { UserType } from 'src/controller/profile/ProfileController';

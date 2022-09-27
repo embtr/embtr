@@ -1,8 +1,8 @@
 import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View } from 'react-native';
-import { TimeIndicatorDot } from 'src/components/today/views/calendar/time_indicator/TimeIndicatorDot';
-import { TimeIndicatorLine } from 'src/components/today/views/calendar/time_indicator/TimeIndicatorLine';
+import { TimeIndicatorDot } from 'src/components/plan/planning/views/calendar/time_indicator/TimeIndicatorDot';
+import { TimeIndicatorLine } from 'src/components/plan/planning/views/calendar/time_indicator/TimeIndicatorLine';
 import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 
 export const TimeIndicator = () => {

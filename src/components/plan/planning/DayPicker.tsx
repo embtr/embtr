@@ -12,7 +12,7 @@ interface Props {
     onDayChanged: Function
 }
 
-export const TodayPicker = ({ day, onDayChanged }: Props) => {
+export const DayPicker = ({ day, onDayChanged }: Props) => {
     const { colors } = useTheme();
 
     const itemWidth = (Dimensions.get('window').width / 7);

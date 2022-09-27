@@ -1,8 +1,8 @@
 import React from 'react';
 import { LayoutRectangle, View } from 'react-native';
-import { CalendarPlanView } from 'src/components/today/views/calendar/CalendarPlanView';
-import { CalendarPlanViewGroup, GeneratePlanViewGroups } from 'src/components/today/views/calendar/CalendarPlanViewGroup';
-import { GuestCalendarPlanView } from 'src/components/today/views/calendar/GuestCalendarPlanView';
+import { CalendarPlanView } from 'src/components/plan/planning/views/calendar/CalendarPlanView';
+import { CalendarPlanViewGroup, GeneratePlanViewGroups } from 'src/components/plan/planning/views/calendar/CalendarPlanViewGroup';
+import { GuestCalendarPlanView } from 'src/components/plan/planning/views/calendar/GuestCalendarPlanView';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { UserType } from 'src/controller/profile/ProfileController';
 

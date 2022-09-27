@@ -4,13 +4,12 @@ import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { getDayOfWeekFromDayKey, TaskModel } from 'src/controller/planning/TaskController';
-import { PlanningTask } from 'src/components/plan/tomorrow/PlanningTask';
+import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, {
     createPlannedTask,
     createPlannedTaskByPlannedTask,
-    getTomorrowKey,
     PlannedDay,
     PlannedTaskModel,
 } from 'src/controller/planning/PlannedDayController';
@@ -29,10 +28,10 @@ interface UpdatedPlannedTask {
     duration: number;
 }
 
-export const Tomorrow = () => {
+export const PlanDay = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-    const route = useRoute<RouteProp<PlanTabScreens, 'Tomorrow'>>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'PlanDay'>>();
 
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
