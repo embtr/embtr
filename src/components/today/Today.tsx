@@ -47,6 +47,7 @@ export const Today = () => {
             <View style={{ height: '100%', width: '100%' }}>
                 <Banner name="Today" />
                 <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                    <View style={{ height: 7 }} />
                     {/* QUOTE OF THE DAY WIDGET */}
                     <QuoteOfTheDayWidget />
 

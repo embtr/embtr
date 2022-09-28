@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
 import { useTheme } from '../theme/ThemeProvider';
@@ -86,14 +86,17 @@ export const TodaysPhotosWidget = ({ dailyResult, plannedDay }: Props) => {
         <View style={{ paddingLeft: 5, paddingRight: 5, paddingTop: 5 }}>
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
             <View
-                style={{
-                    borderRadius: 15,
-                    backgroundColor: colors.timeline_card_background,
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                }}
+                style={[
+                    {
+                        borderRadius: 15,
+                        backgroundColor: colors.timeline_card_background,
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                    },
+                    CARD_SHADOW,
+                ]}
             >
                 <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Photos</Text>
                 <View style={{ paddingTop: 10 }}>
