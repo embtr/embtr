@@ -66,14 +66,13 @@ export const CarouselCardItem = ({ item, index }: Props) => {
                             justifyContent: 'center',
                         }}
                     >
-                        <Ionicons
-                            name={'trash-outline'}
-                            size={20}
-                            color={'white'}
+                        <TouchableWithoutFeedback
                             onPress={() => {
                                 item.onDelete!(item.url);
                             }}
-                        />
+                        >
+                            <Ionicons name={'trash-outline'} size={20} color={'white'} />
+                        </TouchableWithoutFeedback>
                     </View>
                 )}
                 <CachedImage

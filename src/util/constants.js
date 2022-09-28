@@ -20,3 +20,8 @@ export const CARD_SHADOW = {
     shadowOpacity: 0.1,
     shadowRadius: 5,
 }
+
+//FONTS
+export const POPPINS_REGULAR = "Poppins_40Regular";
+export const POPPINS_MEDIUM = "Poppins_500Medium";
+export const POPPINS_SEMI_BOLD = "Poppins_600SemiBold";
