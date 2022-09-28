@@ -1,47 +1,24 @@
-import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
 import { useTheme } from '../theme/ThemeProvider';
 
-export const TodaysPhotosWidget = () => {
+interface Props {
+    dailyResult: DailyResultModel;
+    plannedDay: PlannedDay;
+}
+
+export const TodaysPhotosWidget = ({ dailyResult, plannedDay }: Props) => {
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
-    const [updatedImageUrls, setUpdatedImageUrls] = React.useState<string[]>([]);
-
-    const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
-
-    const todayKey = getTodayKey();
-
-    React.useEffect(() => {
-        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
-    }, []);
-
-    React.useEffect(() => {
-        const fetchPlannedDay = async () => {
-            if (plannedDay) {
-                const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
-
-                if (foundDailyResult) {
-                    if (foundDailyResult.data.imageUrls) {
-                        setUpdatedImageUrls(foundDailyResult.data.imageUrls);
-                    }
-
-                    setDailyResult(foundDailyResult);
-                }
-            }
-        };
-
-        fetchPlannedDay();
-    }, [plannedDay]);
+    const [updatedImageUrls, setUpdatedImageUrls] = React.useState<string[]>(dailyResult?.data?.imageUrls ? dailyResult.data.imageUrls : []);
 
     React.useEffect(() => {
         savePhotos();

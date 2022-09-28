@@ -1,35 +1,18 @@
-import { getAuth } from 'firebase/auth';
-import React from 'react';
 import { Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
-import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { DailyResultBody } from '../common/timeline/DailyResultBody';
 import { useTheme } from '../theme/ThemeProvider';
 
-export const TodaysTasksWidget = () => {
+interface Props {
+    dailyResult: DailyResultModel;
+    plannedDay: PlannedDay;
+}
+
+export const TodaysTasksWidget = ({ dailyResult, plannedDay }: Props) => {
     const { colors } = useTheme();
-
-    const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
-
-    const todayKey = getTodayKey();
-
-    React.useEffect(() => {
-        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
-    }, []);
-
-    React.useEffect(() => {
-        const fetchPlannedDay = async () => {
-            if (plannedDay) {
-                const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
-                setDailyResult(foundDailyResult);
-            }
-        };
-
-        fetchPlannedDay();
-    }, [plannedDay]);
 
     return (
         <TouchableWithoutFeedback>
