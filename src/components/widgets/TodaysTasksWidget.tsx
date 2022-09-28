@@ -3,19 +3,33 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import { POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { DailyResultBody } from '../common/timeline/DailyResultBody';
 import { useTheme } from '../theme/ThemeProvider';
 
 export const TodaysTasksWidget = () => {
     const { colors } = useTheme();
 
-    const [today, setToday] = React.useState<PlannedDay>();
+    const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
     const todayKey = getTodayKey();
 
     React.useEffect(() => {
-        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setToday);
+        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
     }, []);
+
+    React.useEffect(() => {
+        const fetchPlannedDay = async () => {
+            if (plannedDay) {
+                const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
+                setDailyResult(foundDailyResult);
+            }
+        };
+
+        fetchPlannedDay();
+    }, [plannedDay]);
 
     return (
         <TouchableWithoutFeedback>
@@ -31,7 +45,10 @@ export const TodaysTasksWidget = () => {
                     }}
                 >
                     <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Today's Tasks</Text>
-                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 5 }}></Text>
+
+                    <View style={{ paddingLeft: 10 }}>
+                        {plannedDay && dailyResult && <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} />}
+                    </View>
                 </View>
             </View>
         </TouchableWithoutFeedback>
