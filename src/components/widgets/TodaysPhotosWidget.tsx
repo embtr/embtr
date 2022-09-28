@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
@@ -12,16 +12,51 @@ import { useTheme } from '../theme/ThemeProvider';
 export const TodaysPhotosWidget = () => {
     const { colors } = useTheme();
 
-    const [today, setToday] = React.useState<PlannedDay>();
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
     const [updatedImageUrls, setUpdatedImageUrls] = React.useState<string[]>([]);
 
+    const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+
     const todayKey = getTodayKey();
 
     React.useEffect(() => {
-        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setToday);
+        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
     }, []);
+
+    React.useEffect(() => {
+        const fetchPlannedDay = async () => {
+            if (plannedDay) {
+                const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
+
+                if (foundDailyResult) {
+                    if (foundDailyResult.data.imageUrls) {
+                        setUpdatedImageUrls(foundDailyResult.data.imageUrls);
+                    }
+
+                    setDailyResult(foundDailyResult);
+                }
+            }
+        };
+
+        fetchPlannedDay();
+    }, [plannedDay]);
+
+    React.useEffect(() => {
+        savePhotos();
+    }, [updatedImageUrls]);
+
+    const savePhotos = () => {
+        if (dailyResult) {
+            let clonedDailyResult = DailyResultController.clone(dailyResult);
+            clonedDailyResult.data.imageUrls = updatedImageUrls;
+            if (!clonedDailyResult.data.description) {
+                clonedDailyResult.data.description = '';
+            }
+            DailyResultController.update(clonedDailyResult);
+        }
+    };
 
     const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
         setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
