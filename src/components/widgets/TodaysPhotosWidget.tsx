@@ -12,27 +12,24 @@ import { WidgetBase } from './WidgetBase';
 interface Props {
     dailyResult: DailyResultModel;
     plannedDay: PlannedDay;
+    onImagesChanged: Function
 }
 
-export const TodaysPhotosWidget = ({ dailyResult, plannedDay }: Props) => {
+export const TodaysPhotosWidget = ({ dailyResult, plannedDay, onImagesChanged }: Props) => {
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
-    const [updatedImageUrls, setUpdatedImageUrls] = React.useState<string[]>(dailyResult?.data?.imageUrls ? dailyResult.data.imageUrls : []);
 
-    React.useEffect(() => {
-        savePhotos();
-    }, [updatedImageUrls]);
-
-    const savePhotos = () => {
+    const savePhotos = async (photoUrls: string[]) => {
         if (dailyResult) {
             let clonedDailyResult = DailyResultController.clone(dailyResult);
-            clonedDailyResult.data.imageUrls = updatedImageUrls;
+            clonedDailyResult.data.imageUrls = photoUrls;
             if (!clonedDailyResult.data.description) {
                 clonedDailyResult.data.description = '';
             }
-            DailyResultController.update(clonedDailyResult);
+            await DailyResultController.update(clonedDailyResult);
+            onImagesChanged();
         }
     };
 
@@ -40,35 +37,34 @@ export const TodaysPhotosWidget = ({ dailyResult, plannedDay }: Props) => {
         setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
     };
 
-    const updateImages = (images: string[]) => {
-        let clonedList = [...updatedImageUrls];
-        clonedList = clonedList.concat(images);
-        setUpdatedImageUrls(clonedList);
-    };
-
-    const uploadImage = async () => {
+    const onUploadImage = async () => {
         setImagesUploading(true);
         setImageUploadProgress('preparing photo upload');
-        const imageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
-        updateImages(imageUrls);
+       
+        const newImageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
+        let updatedImageUrls = [...dailyResult.data.imageUrls ? dailyResult.data.imageUrls : []];
+        updatedImageUrls = updatedImageUrls.concat(newImageUrls); 
+       
+        savePhotos(updatedImageUrls);
+
         setImageUploadProgress('');
         setImagesUploading(false);
     };
 
     const onDeleteImage = (deletedImageUrl: string) => {
         let imageUrls: string[] = [];
-        updatedImageUrls.forEach((imageUrl) => {
+        dailyResult.data.imageUrls?.forEach((imageUrl) => {
             if (imageUrl !== deletedImageUrl) {
                 imageUrls.push(imageUrl);
             }
         });
 
-        setUpdatedImageUrls(imageUrls);
+        savePhotos(imageUrls);
     };
 
     let carouselImages: ImageCarouselImage[] = [];
 
-    updatedImageUrls.forEach((image) => {
+    dailyResult.data.imageUrls?.forEach((image) => {
         carouselImages.push({
             url: image,
             format: 'png',
@@ -81,7 +77,7 @@ export const TodaysPhotosWidget = ({ dailyResult, plannedDay }: Props) => {
         url: '',
         format: '',
         type: 'add_image',
-        uploadImage: uploadImage,
+        uploadImage: onUploadImage,
     });
 
     return (

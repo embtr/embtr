@@ -17,7 +17,7 @@ export const Today = () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        fetchPlannedDay();
+        fetchDailyResult();
         wait(500).then(() => setRefreshing(false));
     }, []);
 
@@ -32,10 +32,10 @@ export const Today = () => {
     }, []);
 
     React.useEffect(() => {
-        fetchPlannedDay();
+        fetchDailyResult();
     }, [plannedDay]);
 
-    const fetchPlannedDay = async () => {
+    const fetchDailyResult = async () => {
         if (plannedDay) {
             const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
             setDailyResult(foundDailyResult);
@@ -79,7 +79,7 @@ export const Today = () => {
                     )}
 
                     {/* TODAY'S PHOTOS WIDGET */}
-                    {plannedDay && dailyResult && <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} />}
+                    {plannedDay && dailyResult && <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />}
                 </ScrollView>
             </View>
         </Screen>

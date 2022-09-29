@@ -31,7 +31,9 @@ export const CarouselCards = ({ images }: Props) => {
 
     React.useEffect(() => {
         let newImages = [...images];
-        newImages[newImages.length-1].isDarkTheme = isDark;
+        if (newImages.length > 0) {
+            newImages[newImages.length - 1].isDarkTheme = isDark;
+        }
         setLoadedImages([]);
         wait(0).then(() => {
             setLoadedImages(newImages);

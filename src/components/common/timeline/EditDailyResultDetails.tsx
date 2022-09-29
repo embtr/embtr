@@ -13,7 +13,6 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Banner } from '../Banner';
-import { EmbtrButton } from '../button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
@@ -34,6 +33,8 @@ export const EditDailyResultDetails = () => {
     const [updatedImageUrls, setUpdatedImageUrls] = React.useState<string[]>([]);
     const [updatedDescription, setUpdatedDescription] = React.useState<string>('');
 
+    const [carouselImages, setCarouselImages] = React.useState<ImageCarouselImage[]>([]);
+
     useFocusEffect(
         React.useCallback(() => {
             DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
@@ -50,6 +51,26 @@ export const EditDailyResultDetails = () => {
             });
         }, [])
     );
+
+    React.useEffect(() => {
+        let newCarouselImages: ImageCarouselImage[] = [];
+        updatedImageUrls.forEach((image) => {
+            newCarouselImages.push({
+                url: image,
+                format: 'png',
+                type: 'image',
+                onDelete: onDeleteImage,
+            });
+        });
+        newCarouselImages.push({
+            url: '',
+            format: '',
+            type: 'add_image',
+            uploadImage: uploadImage,
+        });
+
+        setCarouselImages(newCarouselImages);
+    }, [updatedImageUrls]);
 
     const headerTextStyle = {
         fontSize: 16,
@@ -105,22 +126,6 @@ export const EditDailyResultDetails = () => {
 
         setUpdatedImageUrls(imageUrls);
     };
-
-    let carouselImages: ImageCarouselImage[] = [];
-    updatedImageUrls.forEach((image) => {
-        carouselImages.push({
-            url: image,
-            format: 'png',
-            type: 'image',
-            onDelete: onDeleteImage,
-        });
-    });
-    carouselImages.push({
-        url: '',
-        format: '',
-        type: 'add_image',
-        uploadImage: uploadImage,
-    });
 
     if (!plannedDay || !dailyResult) {
         return <View />;
