@@ -17,7 +17,7 @@ export const Today = () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
+        fetchPlannedDay();
         wait(500).then(() => setRefreshing(false));
     }, []);
 
@@ -32,27 +32,29 @@ export const Today = () => {
     }, []);
 
     React.useEffect(() => {
-        const fetchPlannedDay = async () => {
-            if (plannedDay) {
-                const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
-                setDailyResult(foundDailyResult);
-            }
-        };
-
         fetchPlannedDay();
     }, [plannedDay]);
 
-    const togglePlannedTaskStatus = (plannedTask: PlannedTaskModel) => {
+    const fetchPlannedDay = async () => {
+        if (plannedDay) {
+            const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
+            setDailyResult(foundDailyResult);
+        }
+    };
+
+    const togglePlannedTaskStatus = (plannedTask: PlannedTaskModel, currentStatus: string, fastStatusUpdate: Function) => {
         if (!plannedDay) {
             return;
         }
 
         let newStatus = 'INCOMPLETE';
-        if (plannedTask.status === 'COMPLETE') {
+        if (currentStatus === 'COMPLETE') {
             newStatus = 'FAILED';
-        } else if (plannedTask.status === 'INCOMPLETE') {
+        } else if (currentStatus === 'INCOMPLETE') {
             newStatus = 'COMPLETE';
         }
+
+        fastStatusUpdate(newStatus);
 
         let clonedPlannedTask: PlannedTaskModel = clonePlannedTaskModel(plannedTask);
         clonedPlannedTask.status = newStatus;

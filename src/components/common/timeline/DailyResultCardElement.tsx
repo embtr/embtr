@@ -14,11 +14,17 @@ interface Props {
 
 export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     const { colors } = useTheme();
+    const [temporaryStatus, setTemporaryStatus] = React.useState('');
+
+    let status = plannedTask.status;
+    if (temporaryStatus) {
+        status = temporaryStatus;
+    }
 
     let color = 'gray';
-    if (plannedTask.status === 'COMPLETE') {
+    if (status === 'COMPLETE') {
         color = colors.progress_bar_complete;
-    } else if (plannedTask.status === 'FAILED') {
+    } else if (status === 'FAILED') {
         color = colors.progress_bar_failed;
     }
 
@@ -48,7 +54,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                 <TouchableWithoutFeedback
                     onPress={() => {
                         if (onPress) {
-                            onPress(plannedTask);
+                            onPress(plannedTask, status, setTemporaryStatus);
                         }
                     }}
                 >
@@ -63,11 +69,11 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                             justifyContent: 'center',
                         }}
                     >
-                        {plannedTask.status === 'FAILED' ? (
+                        {status === 'FAILED' ? (
                             <View style={{}}>
                                 <Text style={{ color: color }}>X</Text>
                             </View>
-                        ) : plannedTask.status === 'COMPLETE' ? (
+                        ) : status === 'COMPLETE' ? (
                             <Ionicons name={'checkmark'} size={20} color={color} />
                         ) : (
                             <View style={{}}>
