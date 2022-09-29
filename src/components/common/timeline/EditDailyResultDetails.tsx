@@ -106,14 +106,7 @@ export const EditDailyResultDetails = () => {
         setUpdatedImageUrls(imageUrls);
     };
 
-    let carouselImages: ImageCarouselImage[] = [
-        {
-            url: '',
-            format: '',
-            type: 'add_image',
-            uploadImage: uploadImage,
-        },
-    ];
+    let carouselImages: ImageCarouselImage[] = [];
     updatedImageUrls.forEach((image) => {
         carouselImages.push({
             url: image,
@@ -121,6 +114,12 @@ export const EditDailyResultDetails = () => {
             type: 'image',
             onDelete: onDeleteImage,
         });
+    });
+    carouselImages.push({
+        url: '',
+        format: '',
+        type: 'add_image',
+        uploadImage: uploadImage,
     });
 
     if (!plannedDay || !dailyResult) {

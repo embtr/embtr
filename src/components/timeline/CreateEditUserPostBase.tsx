@@ -59,15 +59,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
         setImagesUploading(false);
     };
 
-    let carouselImages: ImageCarouselImage[] = [
-        {
-            url: '',
-            format: '',
-            type: 'add_image',
-            uploadImage: uploadImage,
-        },
-    ];
-
+    let carouselImages: ImageCarouselImage[] = [];
     images.forEach((image) => {
         carouselImages.push({
             url: image,
@@ -75,6 +67,12 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
             type: 'image',
             onDelete: onDeleteImage,
         });
+    });
+    carouselImages.push({
+        url: '',
+        format: '',
+        type: 'add_image',
+        uploadImage: uploadImage,
     });
 
     return (

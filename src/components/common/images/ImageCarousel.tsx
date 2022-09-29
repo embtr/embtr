@@ -1,6 +1,8 @@
+import { isDate } from 'date-fns';
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { Appearance, Dimensions, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CarouselCardItem, CAROUSEL_IMAGE_HEIGHT } from './ImageCarouselItem';
 
 export interface ImageCarouselImage {
@@ -10,6 +12,7 @@ export interface ImageCarouselImage {
     uploadImage?: Function;
     onPress?: Function;
     onDelete?: Function;
+    isDarkTheme?: boolean;
 }
 
 interface Props {
@@ -17,6 +20,8 @@ interface Props {
 }
 
 export const CarouselCards = ({ images }: Props) => {
+    const { setScheme, isDark } = useTheme();
+
     const isCarousel = React.useRef(null);
     const [loadedImages, setLoadedImages] = React.useState<ImageCarouselImage[]>([]);
 
@@ -25,16 +30,17 @@ export const CarouselCards = ({ images }: Props) => {
     };
 
     React.useEffect(() => {
+        let newImages = [...images];
+        newImages[newImages.length-1].isDarkTheme = isDark;
         setLoadedImages([]);
-        wait(100).then(() => {
-            setLoadedImages(images);
+        wait(0).then(() => {
+            setLoadedImages(newImages);
         });
     }, [images]);
 
     return (
         <View style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT + 5 }}>
             <Carousel
-                firstItem={images.length > 0 && images[0]?.type === 'add_image' ? 1 : 0}
                 layout="default"
                 ref={isCarousel}
                 data={loadedImages}
