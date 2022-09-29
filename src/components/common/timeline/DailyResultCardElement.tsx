@@ -5,12 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { startMinuteToString } from 'src/controller/planning/TaskController';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 interface Props {
     plannedTask: PlannedTaskModel;
+    onPress?: Function;
 }
 
-export const DailyResultCardElement = ({ plannedTask }: Props) => {
+export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     const { colors } = useTheme();
 
     let color = 'gray';
@@ -43,29 +45,37 @@ export const DailyResultCardElement = ({ plannedTask }: Props) => {
     return (
         <View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <View
-                    style={{
-                        width: 28,
-                        height: 28,
-                        borderColor: color,
-                        borderWidth: 2,
-                        borderRadius: 9,
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                <TouchableWithoutFeedback
+                    onPress={() => {
+                        if (onPress) {
+                            onPress(plannedTask);
+                        }
                     }}
                 >
-                    {plannedTask.status === 'FAILED' ? (
-                        <View style={{}}>
-                            <Text style={{ color: color }}>X</Text>
-                        </View>
-                    ) : plannedTask.status === 'COMPLETE' ? (
-                        <Ionicons name={'checkmark'} size={20} color={color} />
-                    ) : (
-                        <View style={{}}>
-                            <Text style={{ color: color }}>~</Text>
-                        </View>
-                    )}
-                </View>
+                    <View
+                        style={{
+                            width: 28,
+                            height: 28,
+                            borderColor: color,
+                            borderWidth: 2,
+                            borderRadius: 9,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        {plannedTask.status === 'FAILED' ? (
+                            <View style={{}}>
+                                <Text style={{ color: color }}>X</Text>
+                            </View>
+                        ) : plannedTask.status === 'COMPLETE' ? (
+                            <Ionicons name={'checkmark'} size={20} color={color} />
+                        ) : (
+                            <View style={{}}>
+                                <Text style={{ color: color }}>~</Text>
+                            </View>
+                        )}
+                    </View>
+                </TouchableWithoutFeedback>
 
                 <View style={{ paddingLeft: 5 }}>
                     <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{plannedTask.routine.name}</Text>

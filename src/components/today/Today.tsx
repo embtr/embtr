@@ -2,7 +2,7 @@ import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { RefreshControl, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { clonePlannedTaskModel, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
@@ -42,6 +42,26 @@ export const Today = () => {
         fetchPlannedDay();
     }, [plannedDay]);
 
+    const togglePlannedTaskStatus = (plannedTask: PlannedTaskModel) => {
+        if (!plannedDay) {
+            return;
+        }
+
+        let newStatus = 'INCOMPLETE';
+        if (plannedTask.status === 'COMPLETE') {
+            newStatus = 'FAILED';
+        } else if (plannedTask.status === 'INCOMPLETE') {
+            newStatus = 'COMPLETE';
+        }
+
+        let clonedPlannedTask: PlannedTaskModel = clonePlannedTaskModel(plannedTask);
+        clonedPlannedTask.status = newStatus;
+
+        PlannedDayController.updateTask(plannedDay, clonedPlannedTask, () => {
+            PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
+        });
+    };
+
     return (
         <Screen>
             <View style={{ height: '100%', width: '100%' }}>
@@ -52,7 +72,9 @@ export const Today = () => {
                     <QuoteOfTheDayWidget />
 
                     {/* TODAY'S TASKS WIDGET */}
-                    {plannedDay && dailyResult && <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} />}
+                    {plannedDay && dailyResult && (
+                        <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
+                    )}
 
                     {/* TODAY'S PHOTOS WIDGET */}
                     {plannedDay && dailyResult && <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} />}

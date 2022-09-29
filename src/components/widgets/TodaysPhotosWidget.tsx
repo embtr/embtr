@@ -3,10 +3,11 @@ import { Text, View } from 'react-native';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { CARD_SHADOW, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
 import { useTheme } from '../theme/ThemeProvider';
+import { WidgetBase } from './WidgetBase';
 
 interface Props {
     dailyResult: DailyResultModel;
@@ -65,14 +66,8 @@ export const TodaysPhotosWidget = ({ dailyResult, plannedDay }: Props) => {
         setUpdatedImageUrls(imageUrls);
     };
 
-    let carouselImages: ImageCarouselImage[] = [
-        {
-            url: '',
-            format: '',
-            type: 'add_image',
-            uploadImage: uploadImage,
-        },
-    ];
+    let carouselImages: ImageCarouselImage[] = [];
+
     updatedImageUrls.forEach((image) => {
         carouselImages.push({
             url: image,
@@ -82,27 +77,20 @@ export const TodaysPhotosWidget = ({ dailyResult, plannedDay }: Props) => {
         });
     });
 
+    carouselImages.push({
+        url: '',
+        format: '',
+        type: 'add_image',
+        uploadImage: uploadImage,
+    });
+
     return (
-        <View style={{ paddingLeft: 5, paddingRight: 5, paddingTop: 5 }}>
+        <WidgetBase>
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
-            <View
-                style={[
-                    {
-                        borderRadius: 15,
-                        backgroundColor: colors.timeline_card_background,
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                    },
-                    CARD_SHADOW,
-                ]}
-            >
-                <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Photos</Text>
-                <View style={{ paddingTop: 10 }}>
-                    <CarouselCards images={carouselImages} />
-                </View>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Photos</Text>
+            <View style={{ paddingTop: 10 }}>
+                <CarouselCards images={carouselImages} />
             </View>
-        </View>
+        </WidgetBase>
     );
 };

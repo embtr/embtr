@@ -27,6 +27,19 @@ export interface PlannedDayMetadata {
     locked: boolean;
 }
 
+export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
+    const clonedPlannedTask: PlannedTaskModel = {
+        id: plannedTask.id,
+        routine: plannedTask.routine,
+        status: plannedTask.status,
+        startMinute: plannedTask.startMinute,
+        duration: plannedTask.duration,
+        dayKey: plannedTask.dayKey,
+    };
+
+    return clonedPlannedTask;
+};
+
 export const plannedDayIsComplete = (plannedDay: PlannedDay): boolean => {
     return plannedDay.metadata?.status === 'COMPLETE';
 };
