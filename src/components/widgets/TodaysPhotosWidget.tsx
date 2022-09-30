@@ -12,7 +12,7 @@ import { WidgetBase } from './WidgetBase';
 interface Props {
     dailyResult: DailyResultModel;
     plannedDay: PlannedDay;
-    onImagesChanged: Function
+    onImagesChanged: Function;
 }
 
 export const TodaysPhotosWidget = ({ dailyResult, plannedDay, onImagesChanged }: Props) => {
@@ -40,11 +40,11 @@ export const TodaysPhotosWidget = ({ dailyResult, plannedDay, onImagesChanged }:
     const onUploadImage = async () => {
         setImagesUploading(true);
         setImageUploadProgress('preparing photo upload');
-       
+
         const newImageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
-        let updatedImageUrls = [...dailyResult.data.imageUrls ? dailyResult.data.imageUrls : []];
-        updatedImageUrls = updatedImageUrls.concat(newImageUrls); 
-       
+        let updatedImageUrls = [...(dailyResult.data.imageUrls ? dailyResult.data.imageUrls : [])];
+        updatedImageUrls = updatedImageUrls.concat(newImageUrls);
+
         savePhotos(updatedImageUrls);
 
         setImageUploadProgress('');

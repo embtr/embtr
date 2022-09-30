@@ -8,6 +8,7 @@ import { GoalDetails } from 'src/components/plan/goals/GoalDetails';
 import { CreateDailyTask } from 'src/components/plan/task/CreateDailyTask';
 import { CreateOneTimeTask } from 'src/components/plan/task/CreateOneTimeTask';
 import { PlanDay } from '../plan/planning/PlanDay';
+import { EditOneTimeTask } from '../plan/EditOneTimeTask';
 
 export const SecurePlanTabStack = () => {
     const Stack = createNativeStackNavigator();
@@ -22,6 +23,7 @@ export const SecurePlanTabStack = () => {
             <Stack.Screen name="CreateGoal" component={CreateGoal} />
             <Stack.Screen name="GoalDetails" component={GoalDetails} />
             <Stack.Screen name="PlanDay" component={PlanDay} />
+            <Stack.Screen name="EditOneTimeTask" component={EditOneTimeTask} />
         </Stack.Navigator>
     );
 };

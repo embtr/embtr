@@ -24,7 +24,8 @@ export const CarouselCards = ({ images }: Props) => {
     const isCarousel = React.useRef(null);
     const [loadedImages, setLoadedImages] = React.useState<ImageCarouselImage[]>([]);
 
-    //this may not be needed = but we do need to populate the color based on theme.
+    // for some reason leveraging state here 
+    // causes the re-render to be smooth.
     React.useEffect(() => {
         let newImages = [...images];
         if (newImages.length > 0) {

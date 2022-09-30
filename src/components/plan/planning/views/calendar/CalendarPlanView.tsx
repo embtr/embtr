@@ -1,13 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, LayoutRectangle } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    getTodayKey,
-    plannedTaskIsComplete,
-    plannedTaskIsFailed,
-    plannedTaskIsIncomplete,
-    PlannedTaskModel,
-} from 'src/controller/planning/PlannedDayController';
+import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
