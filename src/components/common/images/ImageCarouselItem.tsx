@@ -44,6 +44,7 @@ export const CarouselCardItem = ({ item, index }: Props) => {
 
     return (
         <TouchableWithoutFeedback
+            key={item.url}
             onPress={
                 item.onPress
                     ? () => {

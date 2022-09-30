@@ -4,6 +4,7 @@ import { RefreshControl, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import PlannedDayController, { clonePlannedTaskModel, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
 import { QuoteOfTheDayWidget } from '../widgets/QuoteOfTheDayWidget';
@@ -15,25 +16,27 @@ export const Today = () => {
     const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
+    const todayKey = getTodayKey();
+
+    // may want to just directly call both to guarentee
+    // upon refresh that we have all new data
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        fetchDailyResult();
+        fetchPlannedDay();
         wait(500).then(() => setRefreshing(false));
     }, []);
 
-    const wait = (timeout: number | undefined) => {
-        return new Promise((resolve) => setTimeout(resolve, timeout));
-    };
-
-    const todayKey = getTodayKey();
-
     React.useEffect(() => {
-        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
+        fetchPlannedDay();
     }, []);
 
     React.useEffect(() => {
         fetchDailyResult();
     }, [plannedDay]);
+
+    const fetchPlannedDay = () => {
+        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
+    };
 
     const fetchDailyResult = async () => {
         if (plannedDay) {

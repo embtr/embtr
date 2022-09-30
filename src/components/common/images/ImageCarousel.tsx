@@ -1,6 +1,5 @@
-import { isDate } from 'date-fns';
 import React from 'react';
-import { Appearance, Dimensions, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CarouselCardItem, CAROUSEL_IMAGE_HEIGHT } from './ImageCarouselItem';
@@ -25,19 +24,13 @@ export const CarouselCards = ({ images }: Props) => {
     const isCarousel = React.useRef(null);
     const [loadedImages, setLoadedImages] = React.useState<ImageCarouselImage[]>([]);
 
-    const wait = (timeout: number | undefined) => {
-        return new Promise((resolve) => setTimeout(resolve, timeout));
-    };
-
+    //this may not be needed = but we do need to populate the color based on theme.
     React.useEffect(() => {
         let newImages = [...images];
         if (newImages.length > 0) {
             newImages[newImages.length - 1].isDarkTheme = isDark;
         }
-        setLoadedImages([]);
-        wait(0).then(() => {
-            setLoadedImages(newImages);
-        });
+        setLoadedImages(newImages);
     }, [images]);
 
     return (
