@@ -21,6 +21,11 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         status = temporaryStatus;
     }
 
+    //clear status once render catches up
+    if (plannedTask.status === temporaryStatus) {
+        setTemporaryStatus('');
+    }
+
     let color = 'gray';
     if (status === 'COMPLETE') {
         color = colors.progress_bar_complete;
