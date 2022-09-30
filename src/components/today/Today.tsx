@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { RefreshControl, View } from 'react-native';
@@ -18,16 +19,18 @@ export const Today = () => {
 
     const todayKey = getTodayKey();
 
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchPlannedDay();
+        }, [])
+    );
+
     // may want to just directly call both to guarentee
     // upon refresh that we have all new data
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         fetchPlannedDay();
         wait(500).then(() => setRefreshing(false));
-    }, []);
-
-    React.useEffect(() => {
-        fetchPlannedDay();
     }, []);
 
     React.useEffect(() => {

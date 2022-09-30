@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, Timestamp } from 'firebase/firestore';
+import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc } from 'firebase/firestore';
 import { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
@@ -12,17 +12,17 @@ class PlannedDayDao {
 
     /*
      * move us to plannedTaskController/Dao
-    */
+     */
     public static async updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
         const userUid = getAuth().currentUser?.uid;
         if (!userUid) {
             return;
         }
 
-        const db: Firestore = getFirebaseConnection(this.name, "updateTask");
+        const db: Firestore = getFirebaseConnection(this.name, 'updateTask');
 
-        await setDoc(doc(db, "planned_day", userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
-        return setDoc(doc(db, "planned_day", userUid, plannedDay.id!, "metadata"), plannedDay.metadata, { merge: true });
+        await setDoc(doc(db, 'planned_day', userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
+        return setDoc(doc(db, 'planned_day', userUid, plannedDay.id!, 'metadata'), plannedDay.metadata, { merge: true });
     }
 
     public static createTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
@@ -31,47 +31,47 @@ class PlannedDayDao {
             return;
         }
 
-        const db: Firestore = getFirebaseConnection(this.name, "createTask");
-        const result = addDoc(collection(db, "planned_day", userUid, plannedDay.id!), plannedTask);
+        const db: Firestore = getFirebaseConnection(this.name, 'createTask');
+        const result = addDoc(collection(db, 'planned_day', userUid, plannedDay.id!), plannedTask);
         return result;
     }
 
     public static async get(uid: string, id: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "get");
+        const db: Firestore = getFirebaseConnection(this.name, 'get');
 
-        const result = await getDocs(collection(db, "planned_day", uid, id));
+        const result = await getDocs(collection(db, 'planned_day', uid, id));
         return result;
     }
 
     public static async delete(id: string, callback: Function) {
-        const db: Firestore = getFirebaseConnection(this.name, "delete");
+        const db: Firestore = getFirebaseConnection(this.name, 'delete');
 
         const userUid = getAuth().currentUser?.uid;
         if (!userUid) {
             return;
         }
 
-        const result = await getDocs(collection(db, "planned_day", userUid, id));
-        result.forEach(plannedDay => {
-            deleteDoc(doc(db, "planned_day", userUid, id, plannedDay.id));
+        const result = await getDocs(collection(db, 'planned_day', userUid, id));
+        result.forEach((plannedDay) => {
+            deleteDoc(doc(db, 'planned_day', userUid, id, plannedDay.id));
         });
 
         callback();
     }
 
-    public static create(plannedDay: PlannedDay) {
-        const db: Firestore = getFirebaseConnection(this.name, "create");
+    public static async create(plannedDay: PlannedDay) {
+        const db: Firestore = getFirebaseConnection(this.name, 'create');
 
         const userUid = getAuth().currentUser?.uid;
         if (!userUid) {
             return;
         }
 
-        plannedDay.plannedTasks.forEach(plannedTask => {
-            addDoc(collection(db, "planned_day", userUid, plannedDay.id!), plannedTask);
-        });
+        for (let plannedTask of plannedDay.plannedTasks) {
+            await addDoc(collection(db, 'planned_day', userUid, plannedDay.id!), plannedTask);
+        }
 
-        setDoc(doc(db, "planned_day/", userUid, plannedDay.id!, "metadata"), plannedDay.metadata);
+        await setDoc(doc(db, 'planned_day/', userUid, plannedDay.id!, 'metadata'), plannedDay.metadata);
     }
 }
 

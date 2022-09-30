@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { CARD_SHADOW } from 'src/util/constants';
 import { useTheme } from '../theme/ThemeProvider';
 
@@ -11,6 +11,9 @@ export const WidgetBase = ({ children }: Props) => {
 
     return (
         <View style={{ paddingLeft: 5, paddingRight: 5, paddingTop: 5 }}>
+            <View style={{ position: 'absolute', zIndex: 1, width: '100%', alignItems: 'flex-end', paddingTop: 5, paddingRight: 5}}>
+                <Text style={{ color: 'white' }}>...</Text>
+            </View>
             <View
                 style={[
                     {
