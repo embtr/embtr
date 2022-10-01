@@ -126,7 +126,12 @@ export const getDayKeyDaysOld = (dayKey: string) => {
     const now: any = new Date();
     const dateDiff = now - then;
 
-    return Math.round(dateDiff / (1000 * 60 * 60 * 24));
+    const daysOld = dateDiff / (1000 * 60 * 60 * 24);
+    if (daysOld < 1) {
+        return 0;
+    }
+
+    return Math.round(daysOld);
 };
 
 class PlannedDayController {
