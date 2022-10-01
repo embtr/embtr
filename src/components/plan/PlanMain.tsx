@@ -108,7 +108,7 @@ export const PlanMain = () => {
                     renderTabBar={(props) => (
                         <TabBar
                             {...props}
-                            indicatorStyle={{ height: 4, borderRadius: 0, backgroundColor: colors.planning_horizontal_indicator }}
+                            indicatorStyle={{ height: 4, borderRadius: 15, backgroundColor: colors.planning_horizontal_indicator }}
                             renderLabel={({ focused, route }) => {
                                 return (
                                     <Text style={{ color: colors.planning_focused_text, fontFamily: 'Poppins_600SemiBold', opacity: focused ? 1.0 : 0.35 }}>
@@ -125,7 +125,7 @@ export const PlanMain = () => {
                                 shadowOpacity: 0,
                                 elevation: 0,
                             }}
-                            indicatorContainerStyle={{ backgroundColor: colors.scroll_tab_background, height: 4, marginTop: 43 }}
+                            indicatorContainerStyle={{ backgroundColor: colors.scroll_tab_background, height: 4, marginTop: 43, borderRadius: 15 }}
                         />
                     )}
                 />
