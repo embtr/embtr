@@ -5,7 +5,7 @@ import { Banner } from 'src/components/common/Banner';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -155,6 +155,7 @@ export const Timeline = () => {
                 innerLeftOnClick={() => {
                     navigation.navigate('CreateUserPost');
                 }}
+                innerRightIcon={'globe-outline'}
                 rightIcon={'notifications-outline'}
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount}

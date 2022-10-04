@@ -28,7 +28,7 @@ export const TimelineElement = ({ title, body, image }: Props) => {
 
             <View style={{ height: 275, marginLeft: 10, marginRight: 10 }}>
                 <View>
-                    <Text style={[headerTextStyle, { paddingTop: 20, textAlign: "center" }]}>{title}</Text>
+                    <Text style={[headerTextStyle, { paddingTop: 20, textAlign: "center" }]}>{title} - hello this is a long desc text to test it out</Text>
                 </View>
 
                 {image && <View style={{ alignItems: "center", paddingTop: 20 }}>

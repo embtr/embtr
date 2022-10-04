@@ -63,7 +63,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
 
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>
-            <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 15 }}>
+            <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 10 }}>
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}

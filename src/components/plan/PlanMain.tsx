@@ -11,9 +11,6 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Planning } from 'src/components/plan/planning/Planning';
-import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu } from 'src/redux/user/GlobalState';
 
 /*
  * Avoid rerenders
@@ -24,9 +21,9 @@ export const PlanMain = () => {
     const { colors } = useTheme();
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
     const [selectedDayKey, onDayChange] = React.useState('');
+    const [useCalendarView, setUseCalendarView] = React.useState<boolean>(false);
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-    const closeMenu = useAppSelector(getCloseMenu);
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
@@ -38,6 +35,7 @@ export const PlanMain = () => {
                             setShowAddTaskModal(false);
                         }}
                         onDayChange={onDayChange}
+                        useCalendarView={useCalendarView}
                     />
                 );
 
@@ -71,16 +69,6 @@ export const PlanMain = () => {
         setShowAddTaskModal(true);
     };
 
-    const menuItems: EmbtrMenuOption[] = [
-        {
-            name: 'Plan Day',
-            onPress: () => {
-                closeMenu();
-                navigation.navigate('PlanDay', { id: selectedDayKey });
-            },
-        },
-    ];
-
     const navigateToTasksCreateTask = () => {
         navigation.navigate('CreateDailyTask');
     };
@@ -97,8 +85,14 @@ export const PlanMain = () => {
                     leftIcon={'add'}
                     leftRoute={'CreateTask'}
                     leftOnClick={index === 0 ? navigateToTomorrowCreateTask : index === 1 ? navigateToTasksCreateTask : navigateToCreateGoals}
-                    rightIcon={index === 0 ? 'ellipsis-horizontal' : undefined}
-                    menuOptions={createEmbtrMenuOptions(menuItems)}
+                    rightIcon={index === 0 ? (useCalendarView ? 'list' : 'calendar-outline') : undefined}
+                    rightOnClick={
+                        index === 0
+                            ? () => {
+                                  setUseCalendarView(!useCalendarView);
+                              }
+                            : undefined
+                    }
                 />
 
                 <TabView

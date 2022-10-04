@@ -22,6 +22,7 @@ export const CARD_SHADOW = {
 }
 
 //FONTS
-export const POPPINS_REGULAR = "Poppins_40Regular";
+export const POPPINS_REGULAR = "Poppins_400Regular";
+export const POPPINS_REGULAR_ITALIC = "Poppins_400Regular_Italic";
 export const POPPINS_MEDIUM = "Poppins_500Medium";
 export const POPPINS_SEMI_BOLD = "Poppins_600SemiBold";

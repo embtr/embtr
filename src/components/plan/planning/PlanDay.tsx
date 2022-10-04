@@ -3,10 +3,9 @@ import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navig
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TaskController, { getDayOfWeekFromDayKey, TaskModel } from 'src/controller/planning/TaskController';
+import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
-import { Countdown } from 'src/components/common/time/Countdown';
 import PlannedDayController, {
     createPlannedTask,
     createPlannedTaskByPlannedTask,
@@ -19,7 +18,6 @@ import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/Go
 import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 
 interface UpdatedPlannedTask {
@@ -28,7 +26,11 @@ interface UpdatedPlannedTask {
     duration: number;
 }
 
-export const PlanDay = () => {
+interface Props {
+    dayKeyId?: string;
+}
+
+export const PlanDay = ({ dayKeyId }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
     const route = useRoute<RouteProp<PlanTabScreens, 'PlanDay'>>();
@@ -40,8 +42,7 @@ export const PlanDay = () => {
     const [locked, setLocked] = React.useState<Boolean | undefined>(undefined);
     const [updatedPlannedTasks, setUpdatedPlannedTasks] = React.useState(new Map<string, UpdatedPlannedTask>());
 
-    const day = getDayOfWeekFromDayKey(route.params.id);
-    const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
+    const dayKey = dayKeyId ? dayKeyId : route.params.id;
 
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
@@ -65,7 +66,7 @@ export const PlanDay = () => {
         React.useCallback(() => {
             TaskController.getTasks(getAuth().currentUser!.uid, (allTasks: TaskModel[]) => {
                 setTasks(allTasks);
-                PlannedDayController.get(getAuth().currentUser?.uid!, route.params.id, (plannedDay: PlannedDay) => {
+                PlannedDayController.get(getAuth().currentUser?.uid!, dayKey, (plannedDay: PlannedDay) => {
                     setPlannedDay(plannedDay);
 
                     let updatedPlannedTasks: Map<string, UpdatedPlannedTask> = new Map<string, UpdatedPlannedTask>();
@@ -95,7 +96,7 @@ export const PlanDay = () => {
                     setUpdatedPlannedTasks(updatedPlannedTasks);
                 });
             });
-        }, [])
+        }, [dayKey])
     );
 
     useFocusEffect(
@@ -239,7 +240,7 @@ export const PlanDay = () => {
     };
 
     /*
-     * move me to the controller!
+     * move me to the controller! 
      */
     const getUpdatedPlannedDay = (): PlannedDay => {
         let plannedtasks: PlannedTaskModel[] = [];
@@ -338,33 +339,6 @@ export const PlanDay = () => {
     return (
         <Screen>
             <View style={{ flex: 1, flexDirection: 'column' }}>
-                <Banner
-                    name="Plan Day"
-                    leftText="Cancel"
-                    leftOnClick={() => {
-                        navigation.goBack();
-                    }}
-                    rightText="Save"
-                    rightOnClick={() => {
-                        if (!locked) {
-                            toggleLock();
-                        }
-                        navigation.goBack();
-                    }}
-                />
-                <View style={{ flex: 1, paddingLeft: 8 }}>
-                    <Text style={{ color: colors.text, fontFamily: 'Poppins_500Medium', fontSize: 14, paddingTop: 25 }}>
-                        Plan your
-                        <Text style={{ color: colors.tomorrow_selected_indicator }}> {dayCapitalized}</Text>
-                    </Text>
-
-                    <View>
-                        <Text style={{ color: colors.text, fontSize: 10, fontFamily: 'Poppins_400Regular' }}>
-                            Starts in <Countdown />
-                        </Text>
-                    </View>
-                </View>
-
                 <View style={{ flex: 8 }}>
                     {taskViews.length > 0 ? (
                         <ScrollView style={{ backgroundColor: colors.background, paddingTop: 5, height: '97%', width: '100%' }}>
@@ -377,7 +351,7 @@ export const PlanDay = () => {
                                 <View style={{ paddingRight: 5 }}>
                                     <Text
                                         onPress={() => {
-                                            navigation.navigate('CreateOneTimeTask', { dayKey: route.params.id });
+                                            navigation.navigate('CreateOneTimeTask', { dayKey: dayKey });
                                         }}
                                         style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
                                     >

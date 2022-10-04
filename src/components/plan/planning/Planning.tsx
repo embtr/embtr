@@ -18,14 +18,16 @@ import { UserType } from 'src/controller/profile/ProfileController';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
+import { PlanDay } from './PlanDay';
 
 interface Props {
     showSelectTaskModal: boolean;
     dismissSelectTaskModal: Function;
     onDayChange: Function;
+    useCalendarView: boolean;
 }
 
-export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayChange }: Props) => {
+export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayChange, useCalendarView }: Props) => {
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
@@ -70,7 +72,11 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
-                <CalendarView plannedToday={plannedToday} onPlanTodayUpdated={setPlannedToday} userType={UserType.USER} />
+                {useCalendarView ? (
+                    <CalendarView plannedToday={plannedToday} onPlanTodayUpdated={setPlannedToday} userType={UserType.USER} />
+                ) : (
+                    <PlanDay dayKeyId={selectedDayKey} />
+                )}
             </View>
         </Screen>
     );

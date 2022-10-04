@@ -4,7 +4,8 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDateFromDayKey, PlannedDay, plannedDayIsComplete } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { HorizontalLine } from '../HorizontalLine';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 
@@ -32,13 +33,10 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
     });
 
     const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
-
     const dayOfWeek = getDayOfWeek(getDateFromDayKey(plannedDay?.id ? plannedDay?.id : ''));
 
     let plannedTaskViews: JSX.Element[] = [];
-
-    plannedDay?.plannedTasks.forEach((plannedTask) => {
-        plannedTaskViews.push(
+    plannedDay?.plannedTasks.forEach((plannedTask) => { plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
             </View>
@@ -46,7 +44,6 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
     });
 
     let carouselImages: ImageCarouselImage[] = [];
-
     dailyResult.data.imageUrls?.forEach((image) => {
         carouselImages.push({
             url: image,
@@ -55,6 +52,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
             onPress: navigateToDetails,
         });
     });
+
     return (
         <View>
             <View style={{ paddingTop: 10 }}>
@@ -84,7 +82,9 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
                         </View>
                     )}
 
-                    <View style={{ paddingTop: 15 }}>{plannedTaskViews}</View>
+                    <View style={{ paddingTop: 15 }}>
+                        <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
+                    </View>
                 </View>
             </View>
         </View>

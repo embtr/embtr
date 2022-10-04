@@ -83,7 +83,7 @@ export const TodaysPhotosWidget = ({ dailyResult, plannedDay, onImagesChanged }:
     return (
         <WidgetBase>
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Photos</Text>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Today's Photos</Text>
             <View style={{ paddingTop: 10 }}>
                 <CarouselCards images={carouselImages} />
             </View>

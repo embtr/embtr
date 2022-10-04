@@ -9,6 +9,7 @@ import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
 import { QuoteOfTheDayWidget } from '../widgets/QuoteOfTheDayWidget';
+import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
 
@@ -76,6 +77,10 @@ export const Today = () => {
                 <Banner name="Today" />
                 <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <View style={{ height: 7 }} />
+
+                    {/* Today Countdown */}
+                    {plannedDay && <TodaysCountdownWidget plannedDay={plannedDay} />}
+
                     {/* QUOTE OF THE DAY WIDGET */}
                     <QuoteOfTheDayWidget />
 

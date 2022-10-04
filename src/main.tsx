@@ -10,8 +10,9 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { Screen } from 'src/components/common/Screen';
 import { useAppSelector } from 'src/redux/Hooks';
 import SafeAreaView from 'react-native-safe-area-view';
-import { LogBox } from 'react-native';
+import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
+import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -22,19 +23,19 @@ const linking: LinkingOptions<RootStackParamList> = {
                 screens: {
                     CurrentUserTab: {
                         screens: {
-                            Profile: "profile",
-                            UserSettings: "settings",
-                            PillarsConfiguration: "configure",
-                            EditUserProfile: "editUserProfile"
-                        }
+                            Profile: 'profile',
+                            UserSettings: 'settings',
+                            PillarsConfiguration: 'configure',
+                            EditUserProfile: 'editUserProfile',
+                        },
                     },
                     TimelineTab: {
                         screens: {
-                            UserSearch: "search",
-                            Timeline: "timeline",
-                            UserProfile: "user",
+                            UserSearch: 'search',
+                            Timeline: 'timeline',
+                            UserProfile: 'user',
                             UserPostDetails: {
-                                path: "timeline/:id/comments",
+                                path: 'timeline/:id/comments',
                                 parse: {
                                     id: (id) => id,
                                 },
@@ -43,7 +44,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                  },
                             },
                             ChallengeDetails: {
-                                path: "challenge/:id/comments",
+                                path: 'challenge/:id/comments',
                                 parse: {
                                     id: (id) => id,
                                 },
@@ -51,13 +52,13 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
                                 //                                  },
                             },
-                            Notifications: "notifications",
-                        }
+                            Notifications: 'notifications',
+                        },
                     },
                     PlanTab: {
                         screens: {
                             TaskDetails: {
-                                path: "tasks/:id/details",
+                                path: 'tasks/:id/details',
                                 parse: {
                                     id: (id) => id,
                                 },
@@ -65,20 +66,20 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
                                 //                                  },
                             },
-                            CreateGoal: "createGoal",
+                            CreateGoal: 'createGoal',
                             GoalDetails: {
-                                path: "goals/:id",
-                                parse: { id: (id) => id }
+                                path: 'goals/:id',
+                                parse: { id: (id) => id },
                             },
-                        }
-                    }
-                }
+                        },
+                    },
+                },
             },
-            About: "about",
-            ReleaseNotes: "releaseNotes",
-            Contact: "contact",
-            Logout: "logout"
-        }
+            About: 'about',
+            ReleaseNotes: 'releaseNotes',
+            Contact: 'contact',
+            Logout: 'logout',
+        },
     },
 };
 
@@ -101,7 +102,22 @@ export const Main = () => {
     }, []);
 
     const isSuccessfullyLoggedIn = () => {
-        return accessLevel === "beta_approved" && userIsLoggedIn;
+        return accessLevel === 'beta_approved' && userIsLoggedIn;
+    };
+
+    let [fontsLoaded] = useFonts({
+        Poppins_400Regular_Italic,
+        Poppins_400Regular,
+        Poppins_500Medium,
+        Poppins_600SemiBold,
+    });
+
+    if (!fontsLoaded) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
     }
 
     return (

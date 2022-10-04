@@ -3,7 +3,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
-
 export const Countdown = () => {
     const { colors } = useTheme();
 
@@ -23,27 +22,27 @@ export const Countdown = () => {
     useFocusEffect(
         React.useCallback(() => {
             setTimeout(() => {
-                setSeconds(60 - date.getSeconds() - 1)
+                setSeconds(60 - date.getSeconds() - 1);
                 setMinutes(60 - date.getMinutes());
                 setHours(24 - date.getHours());
             }, 900);
         }, [date])
     );
 
-    let secondsString = "" + seconds;
+    let secondsString = '' + seconds;
     if (secondsString.length === 1) {
-        secondsString = "0" + secondsString;
+        secondsString = '0' + secondsString;
     }
 
-    let minutesString = "" + minutes;
+    let minutesString = '' + minutes;
     if (minutesString.length == 1) {
-        minutesString = "0" + minutes;
+        minutesString = '0' + minutes;
     }
 
-    let hoursString = "" + hours;
+    let hoursString = '' + hours;
 
     return (
-        <Text style={{ color: colors.text, textAlign: "center", fontSize: 10, paddingTop: 2 }}>
+        <Text style={{ color: colors.text, fontSize: 12, paddingTop: 2 }}>
             {hoursString}h {minutesString}m {secondsString}s
         </Text>
     );
