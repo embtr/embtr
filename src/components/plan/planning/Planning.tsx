@@ -61,6 +61,14 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
         });
     };
 
+    const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
+        PlannedDayController.updateTask(plannedToday!, updatedPlannedTask, () => {
+            if (plannedToday?.id) {
+                PlannedDayController.get(getAuth().currentUser?.uid!, plannedToday?.id, setPlannedToday);
+            }
+        });
+    };
+
     return (
         <Screen>
             <EmbtrMenuCustom />
@@ -73,9 +81,11 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
                 {useCalendarView ? (
-                    <CalendarView plannedToday={plannedToday} onPlanTodayUpdated={setPlannedToday} userType={UserType.USER} />
+                    <CalendarView plannedToday={plannedToday} onTaskUpdated={updateTask} userType={UserType.USER} />
+                ) : plannedToday ? (
+                    <PlanDay plannedDay={plannedToday} onTaskUpdated={updateTask} />
                 ) : (
-                    <PlanDay dayKeyId={selectedDayKey} />
+                    <View />
                 )}
             </View>
         </Screen>

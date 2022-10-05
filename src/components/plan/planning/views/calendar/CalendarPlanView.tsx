@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import * as Haptics from 'expo-haptics';
-import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -109,15 +108,6 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
 
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
-
-    let [fontsLoaded] = useFonts({
-        Poppins_600SemiBold,
-        Poppins_400Regular,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
-    }
 
     const onShortPress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
