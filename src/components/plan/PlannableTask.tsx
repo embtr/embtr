@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { startMinuteToString, TaskModel } from 'src/controller/planning/TaskController';
 import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
@@ -14,6 +14,9 @@ import * as Haptics from 'expo-haptics';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
+import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
+import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
+import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
 
 interface Props {
     plannedTask?: PlannedTaskModel;
@@ -140,16 +143,39 @@ export const PlannableTask = ({ plannedTask, task, locked, onUpdateTask, isEnabl
                             style={{
                                 width: '2%',
                                 height: '100%',
-                                backgroundColor: isEnabled ? colors.tomorrow_selected_indicator : colors.tomorrow_unselected,
+                                backgroundColor:
+                                    plannedTask?.status === 'COMPLETE'
+                                        ? colors.progress_bar_complete
+                                        : plannedTask?.status === 'FAILED'
+                                        ? colors.progress_bar_failed
+                                        : 'gray',
                             }}
                         />
 
                         <View style={{ width: '98%' }}>
                             <View style={{ paddingLeft: 10 }}>
-                                <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>
-                                    {plannedTask?.routine?.name ? plannedTask.routine.name : task?.name ? task.name : ''}
-                                </Text>
-
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>
+                                        {plannedTask?.routine?.name ? plannedTask.routine.name : task?.name ? task.name : ''}
+                                    </Text>
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            alignSelf: 'stretch',
+                                            alignItems: 'flex-end',
+                                            paddingRight: 8,
+                                            paddingTop: 4
+                                        }}
+                                    >
+                                        {plannedTask?.status === 'COMPLETE' ? (
+                                            <TaskCompleteSymbol small={true} />
+                                        ) : plannedTask?.status === 'FAILED' ? (
+                                            <TaskFailedSymbol small={true} />
+                                        ) : (
+                                            <TaskInProgressSymbol small={true} />
+                                        )}
+                                    </View>
+                                </View>
                                 <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
                                     {plannedTask?.routine?.description ? plannedTask?.routine?.description : task?.description}
                                 </Text>

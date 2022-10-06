@@ -12,6 +12,9 @@ import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
+import { TaskFailedSymbol } from 'src/components/common/task_symbols/TaskFailedSymbol';
+import { TaskCompleteSymbol } from 'src/components/common/task_symbols/TaskCompleteSymbol';
+import { TaskInProgressSymbol } from 'src/components/common/task_symbols/TaskInProgressSymbol';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -154,15 +157,11 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
 
                     <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 5 }}>
                         {plannedTaskIsFailed(plannedTask) ? (
-                            <View style={{ paddingRight: 3, paddingTop: 3 }}>
-                                <Text style={{ color: 'red' }}>X</Text>
-                            </View>
+                            <TaskFailedSymbol small={true} />
+                        ) : plannedTaskIsComplete(plannedTask) ? (
+                            <TaskCompleteSymbol small={true} />
                         ) : (
-                            <Ionicons
-                                name={plannedTaskIsComplete(plannedTask) ? 'checkmark-done' : 'checkmark'}
-                                size={20}
-                                color={plannedTaskIsComplete(plannedTask) ? 'green' : colors.secondary_text}
-                            />
+                            <TaskInProgressSymbol small={true} />
                         )}
                     </View>
                 </View>

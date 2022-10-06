@@ -169,17 +169,6 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
                         </View>
                     )}
                 </View>
-
-                <View style={{ flex: 1.5, alignContent: 'center', justifyContent: 'center', alignItems: 'center' }}>
-                    <View style={{ width: '80%' }}>
-                        <EmbtrButton
-                            buttonText={locked ? 'Change Tasks' : 'Confirm Tasks'}
-                            callback={() => {
-                                toggleLock();
-                            }}
-                        />
-                    </View>
-                </View>
             </View>
         </Screen>
     );
