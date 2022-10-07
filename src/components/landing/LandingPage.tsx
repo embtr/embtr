@@ -82,11 +82,6 @@ export const LandingPage = () => {
             <View style={{ width: "100%", flex: 10000, justifyContent: "center", alignItems: "flex-start" }}>
                 <View style={{ width: "100%", height: 600, justifyContent: "center", alignContent: "center", alignItems: "center" }}>
 
-                    <View style={{ alignItems: "center", flex: 1, justifyContent: "center" }}>
-                        <View>
-                            <Image source={require('assets/logo_text.png')} style={{ width: 150, height: 50 }} />
-                        </View>
-                    </View>
 
                     <View style={{ alignItems: "center", flex: 2, justifyContent: "center" }}>
                         <View>
@@ -94,12 +89,18 @@ export const LandingPage = () => {
                         </View>
                     </View>
 
+
+                    <View style={{ alignItems: "center", flex: 1, justifyContent: "center" }}>
+                        <View>
+                            <Image source={require('assets/logo_text.png')} style={{ width: 150, height: 50 }} />
+                        </View>
+                    </View>
                     <View style={[textViewStyle, { flex: 1, justifyContent: "center" }]}>
                         <Text style={textStyle}>
-                            A network of people achieving their wildest dreams.
+                            A community achieving their wildest dreams.
                         </Text>
                         <Text style={textStyle}>
-                            together.
+                            Together.
                         </Text>
                     </View>
 
