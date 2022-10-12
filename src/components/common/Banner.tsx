@@ -96,6 +96,10 @@ export const Banner = ({
         leftOnClick ? leftOnClick() : leftRoute === 'BACK' ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList);
     };
 
+    const rightOnPress = () => {
+        rightOnClick ? rightOnClick() : rightRoute === 'BACK' ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList);
+    };
+
     return (
         <View>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-end', height: 40 }}>
@@ -168,7 +172,7 @@ export const Banner = ({
                             <View style={{ paddingLeft: 10, paddingRight: 10, alignItems: 'center', flex: 1, justifyContent: 'center' }}>
                                 <Text
                                     onPress={() => {
-                                        rightOnClick ? rightOnClick() : undefined;
+                                        rightOnPress();
                                     }}
                                     style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: '#5ba2dc', fontSize: 16 }}
                                 >

@@ -11,6 +11,7 @@ export type TodayTab = {
     CreateOneTimeTask: { dayKey: string };
     EditOneTimeTask: { dayKey: string; plannedTaskId: string };
     PlanDay : { id: string };
+    ConfigureWidgets : undefined;
 };
 
 export type PlanTabScreens = {

@@ -35,3 +35,10 @@ export const POPPINS_REGULAR = 'Poppins_400Regular';
 export const POPPINS_REGULAR_ITALIC = 'Poppins_400Regular_Italic';
 export const POPPINS_MEDIUM = 'Poppins_500Medium';
 export const POPPINS_SEMI_BOLD = 'Poppins_600SemiBold';
+
+//WIDGETS
+export const TIME_LEFT_IN_DAY_WIDGET = 'Time Left In Day';
+export const QUOTE_OF_THE_DAY_WIDGET = 'Quote Of The Day';
+export const TODAYS_TASKS_WIDGET = "Today's Tasks";
+export const TODAYS_PHOTOS_WIDGET = "Today's Photos";
+export const WIDGETS = [TIME_LEFT_IN_DAY_WIDGET, QUOTE_OF_THE_DAY_WIDGET, TODAYS_TASKS_WIDGET, TODAYS_PHOTOS_WIDGET];

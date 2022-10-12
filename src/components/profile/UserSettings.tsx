@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';

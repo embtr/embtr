@@ -1,4 +1,4 @@
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { RefreshControl, View } from 'react-native';
@@ -7,16 +7,27 @@ import PlannedDayController, { clonePlannedTaskModel, getTodayKey, PlannedDay, P
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
+import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
+import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { Screen } from '../common/Screen';
 import { QuoteOfTheDayWidget } from '../widgets/QuoteOfTheDayWidget';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TodayTab } from 'src/navigation/RootStackParamList';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
+import UserController, { UserModel } from 'src/controller/user/UserController';
+import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET } from 'src/util/constants';
 
 export const Today = () => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+    const [user, setUser] = React.useState<UserModel>();
+
+    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const todayKey = getTodayKey();
 
@@ -26,6 +37,11 @@ export const Today = () => {
         }, [])
     );
 
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchUser();
+        }, [])
+    );
     // may want to just directly call both to guarentee
     // upon refresh that we have all new data
     const onRefresh = React.useCallback(() => {
@@ -47,6 +63,11 @@ export const Today = () => {
             const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
             setDailyResult(foundDailyResult);
         }
+    };
+
+    const fetchUser = async () => {
+        const user = await UserController.getCurrentUser();
+        setUser(user);
     };
 
     const togglePlannedTaskStatus = (plannedTask: PlannedTaskModel, currentStatus: string, fastStatusUpdate: Function) => {
@@ -71,26 +92,48 @@ export const Today = () => {
         });
     };
 
+    const closeMenu = useAppSelector(getCloseMenu);
+    const menuOptions: EmbtrMenuOption[] = [
+        {
+            name: 'Configure Widgets',
+            onPress: () => {
+                navigation.navigate('ConfigureWidgets');
+                closeMenu();
+            },
+        },
+    ];
+
+    if (!user) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
+
     return (
         <Screen>
+            <EmbtrMenuCustom />
             <View style={{ height: '100%', width: '100%' }}>
-                <Banner name="Today" />
+                <Banner name="Today" rightIcon={'ellipsis-horizontal'} menuOptions={createEmbtrMenuOptions(menuOptions)} />
                 <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <View style={{ height: 7 }} />
 
                     {/* Today Countdown */}
-                    {plannedDay && <TodaysCountdownWidget plannedDay={plannedDay} />}
+                    {plannedDay && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && <TodaysCountdownWidget plannedDay={plannedDay} />}
 
                     {/* QUOTE OF THE DAY WIDGET */}
-                    <QuoteOfTheDayWidget />
+                    {user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && <QuoteOfTheDayWidget />}
 
                     {/* TODAY'S TASKS WIDGET */}
-                    {plannedDay && dailyResult && (
+                    {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
                         <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
                     )}
 
                     {/* TODAY'S PHOTOS WIDGET */}
-                    {plannedDay && dailyResult && <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />}
+                    {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_PHOTOS_WIDGET) && (
+                        <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
+                    )}
                 </ScrollView>
             </View>
         </Screen>
