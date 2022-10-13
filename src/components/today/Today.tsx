@@ -19,7 +19,8 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import UserController, { UserModel } from 'src/controller/user/UserController';
-import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET } from 'src/util/constants';
+import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET } from 'src/util/constants';
+import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 
 export const Today = () => {
     const [refreshing, setRefreshing] = React.useState(false);
@@ -116,7 +117,7 @@ export const Today = () => {
             <EmbtrMenuCustom />
             <View style={{ height: '100%', width: '100%' }}>
                 <Banner name="Today" rightIcon={'ellipsis-horizontal'} menuOptions={createEmbtrMenuOptions(menuOptions)} />
-                <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                <ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
                     <View style={{ height: 7 }} />
 
                     {/* Today Countdown */}
@@ -130,10 +131,15 @@ export const Today = () => {
                         <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
                     )}
 
+                    {/* TODAY'S NOTES WIDGET */}
+                    {user.today_widgets?.includes(TODAYS_NOTES_WIDGET) && <TodaysNotesWidget />}
+
                     {/* TODAY'S PHOTOS WIDGET */}
                     {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_PHOTOS_WIDGET) && (
                         <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
                     )}
+
+                    <View style={{ height: 7 }} />
                 </ScrollView>
             </View>
         </Screen>

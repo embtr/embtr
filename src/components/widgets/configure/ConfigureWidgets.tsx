@@ -4,7 +4,7 @@ import { Banner } from 'src/components/common/Banner';
 import { ConfigureWidgetToggle } from './ConfigureWidgetToggle';
 import React from 'react';
 import UserController, { UserModel } from 'src/controller/user/UserController';
-import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
+import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export const ConfigureWidgets = () => {
@@ -59,6 +59,9 @@ export const ConfigureWidgets = () => {
                     </View>
                     <View style={{ paddingTop: 5 }}>
                         <ConfigureWidgetToggle name={TODAYS_TASKS_WIDGET} isEnabled={isEnabled(TODAYS_TASKS_WIDGET)} onToggle={onToggle} />
+                    </View>
+                    <View style={{ paddingTop: 5 }}>
+                        <ConfigureWidgetToggle name={TODAYS_NOTES_WIDGET} isEnabled={isEnabled(TODAYS_NOTES_WIDGET)} onToggle={onToggle} />
                     </View>
                     <View style={{ paddingTop: 5 }}>
                         <ConfigureWidgetToggle name={TODAYS_PHOTOS_WIDGET} isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)} onToggle={onToggle} />

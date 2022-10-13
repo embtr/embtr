@@ -11,18 +11,15 @@ export const WidgetBase = ({ children }: Props) => {
 
     return (
         <View style={{ paddingLeft: 5, paddingRight: 5, paddingTop: 5 }}>
-            <View style={{ position: 'absolute', zIndex: 1, width: '100%', alignItems: 'flex-end', paddingTop: 5, paddingRight: 5}}>
-                <Text style={{ color: 'white' }}>...</Text>
-            </View>
             <View
                 style={[
                     {
                         borderRadius: 15,
                         backgroundColor: colors.timeline_card_background,
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                        paddingLeft: 10,
-                        paddingRight: 10,
+                        paddingTop: 5,
+                        paddingBottom: 8,
+                        paddingLeft: 8,
+                        paddingRight: 8,
                     },
                     CARD_SHADOW,
                 ]}
