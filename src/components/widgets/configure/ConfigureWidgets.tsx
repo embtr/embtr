@@ -5,6 +5,7 @@ import { ConfigureWidgetToggle } from './ConfigureWidgetToggle';
 import React from 'react';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const ConfigureWidgets = () => {
     const [user, setUser] = React.useState<UserModel>();
@@ -48,14 +49,22 @@ export const ConfigureWidgets = () => {
         <Screen>
             <Banner name="Widgets" rightText={'close'} rightRoute="BACK" />
 
-            <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
-                <View style={{ paddingTop: 10 }}>
-                    <ConfigureWidgetToggle name={TIME_LEFT_IN_DAY_WIDGET} isEnabled={isEnabled(TIME_LEFT_IN_DAY_WIDGET)} onToggle={onToggle} />
-                    <ConfigureWidgetToggle name={QUOTE_OF_THE_DAY_WIDGET} isEnabled={isEnabled(QUOTE_OF_THE_DAY_WIDGET)} onToggle={onToggle} />
-                    <ConfigureWidgetToggle name={TODAYS_TASKS_WIDGET} isEnabled={isEnabled(TODAYS_TASKS_WIDGET)} onToggle={onToggle} />
-                    <ConfigureWidgetToggle name={TODAYS_PHOTOS_WIDGET} isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)} onToggle={onToggle} />
+            <ScrollView>
+                <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
+                    <View style={{ paddingTop: 10 }}>
+                        <ConfigureWidgetToggle name={TIME_LEFT_IN_DAY_WIDGET} isEnabled={isEnabled(TIME_LEFT_IN_DAY_WIDGET)} onToggle={onToggle} />
+                    </View>
+                    <View style={{ paddingTop: 5 }}>
+                        <ConfigureWidgetToggle name={QUOTE_OF_THE_DAY_WIDGET} isEnabled={isEnabled(QUOTE_OF_THE_DAY_WIDGET)} onToggle={onToggle} />
+                    </View>
+                    <View style={{ paddingTop: 5 }}>
+                        <ConfigureWidgetToggle name={TODAYS_TASKS_WIDGET} isEnabled={isEnabled(TODAYS_TASKS_WIDGET)} onToggle={onToggle} />
+                    </View>
+                    <View style={{ paddingTop: 5 }}>
+                        <ConfigureWidgetToggle name={TODAYS_PHOTOS_WIDGET} isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)} onToggle={onToggle} />
+                    </View>
                 </View>
-            </View>
+            </ScrollView>
         </Screen>
     );
 };

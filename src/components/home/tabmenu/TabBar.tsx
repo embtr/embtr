@@ -12,7 +12,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
 
     const style = StyleSheet.create({
         tabContainer: {
-            height: 60,
+            height: 70,
             shadowOffset: {
                 width: 0,
                 height: -1,
@@ -24,7 +24,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             bottom: 0,
         },
         slider: {
-            marginTop: 2.5,
+            marginTop: 4,
             height: 5,
             width: 5,
             top: 0,
@@ -34,7 +34,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
         },
     });
 
-    const iconSize = 22.5;
+    const iconSize = 25;
     const totalWidth = Dimensions.get("window").width;
     const tabWidth = totalWidth / state.routes.length;
 
