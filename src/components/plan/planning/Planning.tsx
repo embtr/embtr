@@ -33,7 +33,7 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
 
     useFocusEffect(
         React.useCallback(() => {
-            PlannedDayController.get(getAuth().currentUser?.uid!, selectedDayKey, setPlannedToday);
+            refreshPlannedToday(selectedDayKey);
         }, [selectedDayKey])
     );
 
@@ -41,24 +41,27 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
         const newDayKey = getDayKey(day);
         setSelectedDayKey(newDayKey);
         onDayChange(newDayKey);
-        PlannedDayController.get(getAuth().currentUser?.uid!, newDayKey, setPlannedToday);
+        refreshPlannedToday(newDayKey);
     };
 
-    let taskViews: JSX.Element[] = [];
-    plannedToday?.plannedTasks.forEach((plannedTask) => {
-        taskViews.push(<PlannedTask key={plannedTask.id} plannedTask={plannedTask} />);
-    });
+    const refreshPlannedToday = (dayKey: string) => {
+        PlannedDayController.get(getAuth().currentUser?.uid!, dayKey, setPlannedToday);
+    };
 
-    const addHabitFromModal = (habitToAdd: TaskModel | undefined) => {
-        if (!habitToAdd || !plannedToday?.id) {
+    const addHabitsFromModal = async (habits: TaskModel[]) => {
+        if (!plannedToday) {
             return;
         }
 
-        const plannedTask: PlannedTaskModel = createPlannedTask(habitToAdd, 360, 30);
-        PlannedDayController.addTask(plannedToday, plannedTask, () => {
-            PlannedDayController.get(getAuth().currentUser?.uid!, plannedToday!.id!, setPlannedToday);
-            dismissSelectTaskModal();
-        });
+        let createdPlannedTasks: PlannedTaskModel[] = [];
+
+        for (let habit of habits) {
+            const plannedTask: PlannedTaskModel = createPlannedTask(habit, 360, 30);
+            createdPlannedTasks.push(plannedTask);
+        }
+
+        await PlannedDayController.addTasks(plannedToday, createdPlannedTasks);
+        refreshPlannedToday(selectedDayKey);
     };
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
@@ -69,11 +72,16 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
         });
     };
 
+    let taskViews: JSX.Element[] = [];
+    plannedToday?.plannedTasks.forEach((plannedTask) => {
+        taskViews.push(<PlannedTask key={plannedTask.id} plannedTask={plannedTask} />);
+    });
+
     return (
         <Screen>
             <EmbtrMenuCustom />
             {plannedToday?.id && (
-                <AddHabitModal visible={showSelectTaskModal} dayKey={plannedToday?.id} confirm={addHabitFromModal} dismiss={dismissSelectTaskModal} />
+                <AddHabitModal visible={showSelectTaskModal} plannedDay={plannedToday} confirm={addHabitsFromModal} dismiss={dismissSelectTaskModal} />
             )}
 
             <View style={{ flex: 1 }}>

@@ -5,7 +5,6 @@ import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
-import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
@@ -23,10 +22,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
-    const [tasks, setTasks] = React.useState<TaskModel[]>([]);
-
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
-    const [locked, setLocked] = React.useState(plannedDay.metadata?.locked === true);
 
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
@@ -35,7 +31,6 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
         React.useCallback(() => {
             GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
             PillarController.getPillars(getAuth().currentUser!.uid, setPillars);
-            TaskController.getTasks(getAuth().currentUser!.uid, setTasks);
         }, [])
     );
 
@@ -67,52 +62,14 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
                 });
 
                 taskViews.push(
-                    <View key={plannedTask.routine.id + '_locked'} style={{ paddingBottom: 5, alignItems: 'center' }}>
-                        <PlanningTask plannedTask={plannedTask} locked={locked} isChecked={true} onUpdate={onTaskUpdated} goal={taskGoal} pillar={taskPillar} />
+                    <View key={plannedTask.id + '_locked'} style={{ paddingBottom: 5, alignItems: 'center' }}>
+                        <PlanningTask plannedTask={plannedTask} isChecked={true} onUpdate={onTaskUpdated} goal={taskGoal} pillar={taskPillar} />
                     </View>
                 );
             });
 
-            if (locked === false) {
-                // get the rest of the tasks
-                tasks.forEach((task) => {
-                    let taskGoal: GoalModel = FAKE_GOAL;
-                    let taskPillar: PillarModel = FAKE_PILLAR;
-
-                    goals.forEach((goal) => {
-                        if (goal.id === task.goalId) {
-                            taskGoal = goal;
-                            return;
-                        }
-                    });
-
-                    pillars.forEach((pillar) => {
-                        if (pillar.id === taskGoal.pillarId) {
-                            taskPillar = pillar;
-                            return;
-                        }
-                    });
-
-                    let display = true;
-                    plannedDay?.plannedTasks.forEach((plannedTask) => {
-                        if (plannedTask.routine.id === task.id) {
-                            display = false;
-                            return;
-                        }
-                    });
-
-                    if (display) {
-                        taskViews.push(
-                            <View key={task.id} style={{ paddingBottom: 5, alignItems: 'center' }}>
-                                <PlanningTask task={task} locked={false} isChecked={false} onUpdate={onTaskUpdated} goal={taskGoal} pillar={taskPillar} />
-                            </View>
-                        );
-                    }
-                });
-            }
-
             setTaskViews(taskViews);
-        }, [locked, tasks, plannedDay])
+        }, [plannedDay])
     );
 
     const toggleLock = () => {};

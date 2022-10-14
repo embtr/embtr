@@ -8,17 +8,16 @@ import { PillarModel } from 'src/model/PillarModel';
 interface Props {
     plannedTask?: PlannedTaskModel;
     task?: TaskModel;
-    locked: boolean;
     isChecked: boolean;
     onUpdate?: Function;
     goal: GoalModel;
     pillar: PillarModel;
 }
 
-export const PlanningTask = ({ plannedTask, task, locked, isChecked, onUpdate, goal, pillar }: Props) => {
+export const PlanningTask = ({ plannedTask, task, isChecked, onUpdate, goal, pillar }: Props) => {
     return (
         <View>
-            <PlannableTask plannedTask={plannedTask} task={task} locked={locked} isEnabled={isChecked} onUpdateTask={onUpdate} goal={goal} pillar={pillar} />
+            <PlannableTask plannedTask={plannedTask} task={task} isEnabled={isChecked} onUpdateTask={onUpdate} goal={goal} pillar={pillar} />
         </View>
     );
 };

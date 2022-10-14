@@ -35,7 +35,7 @@ export const TodaysTasksWidget = ({ dailyResult, plannedDay, togglePlannedTask }
             {plannedTaskViews.length > 0 && <View style={{ paddingLeft: 10, paddingTop: 15 }}>{plannedTaskViews}</View>}
             {plannedTaskViews.length === 0 && (
                 <View style={{ paddingTop: 5 }}>
-                    <Text style={{ color: 'white' }}>
+                    <Text style={{ color: colors.text }}>
                         you have an empty plate -{' '}
                         <Text
                             onPress={() => {

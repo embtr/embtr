@@ -36,6 +36,24 @@ class PlannedDayDao {
         return result;
     }
 
+    public static async createTasks(plannedDay: PlannedDay, plannedTasks: PlannedTaskModel[]): Promise<PlannedTaskModel[]> {
+        const db: Firestore = getFirebaseConnection(this.name, 'createTasks');
+
+        const userUid = getAuth().currentUser?.uid;
+        if (!userUid) {
+            return [];
+        }
+
+        let createdTasks = [];
+        for (const plannedTask of plannedTasks) {
+            const result = await addDoc(collection(db, 'planned_day', userUid, plannedDay.id!), plannedTask);
+            plannedTask.id = result.id;
+            createdTasks.push(plannedTask);
+        }
+
+        return createdTasks;
+    }
+
     public static async get(uid: string, id: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'get');
 

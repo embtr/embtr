@@ -244,6 +244,13 @@ class PlannedDayController {
         callback();
     }
 
+    public static async addTasks(plannedDay: PlannedDay, plannedTasks: PlannedTaskModel[]) {
+        plannedDay.metadata!.modified = Timestamp.now();
+        const createdPlannedTasks = await PlannedDayDao.createTasks(plannedDay, plannedTasks);
+
+        return createdPlannedTasks;
+    }
+
     public static addTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
         plannedDay.metadata!.modified = Timestamp.now();
         const result = PlannedDayDao.createTask(plannedDay, plannedTask);
