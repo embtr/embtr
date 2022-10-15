@@ -10,17 +10,18 @@ export type MainTabScreens = {
 export type TodayTab = {
     CreateOneTimeTask: { dayKey: string };
     EditOneTimeTask: { dayKey: string; plannedTaskId: string };
-    PlanDay : { id: string };
-    ConfigureWidgets : undefined;
+    PlanDay: { id: string };
+    ConfigureWidgets: undefined;
 };
 
 export type PlanTabScreens = {
+    PlanMain: undefined;
     CreateOneTimeTask: { dayKey: string };
     CreateDailyTask: undefined;
     CreateGoal: undefined;
     GoalDetails: { id: string };
     TaskDetails: { id: string };
-    PlanDay : { id: string };
+    PlanDay: { id: string };
 };
 
 export type TimelineTabScreens = {

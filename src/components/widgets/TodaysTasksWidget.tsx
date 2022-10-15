@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { PlanTabScreens, TodayTab } from 'src/navigation/RootStackParamList';
+import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { DailyResultCardElement } from '../common/timeline/DailyResultCardElement';
 import { useTheme } from '../theme/ThemeProvider';
@@ -18,7 +18,7 @@ interface Props {
 export const TodaysTasksWidget = ({ dailyResult, plannedDay, togglePlannedTask }: Props) => {
     const { colors } = useTheme();
 
-    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
+    const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
 
     let plannedTaskViews: JSX.Element[] = [];
     plannedDay?.plannedTasks.forEach((plannedTask) => {
@@ -40,7 +40,7 @@ export const TodaysTasksWidget = ({ dailyResult, plannedDay, togglePlannedTask }
                         <Text
                             onPress={() => {
                                 if (plannedDay?.id) {
-                                    navigation.navigate('PlanDay', { id: plannedDay.id });
+                                    navigation.navigate('PlanTab', { screen: 'PlanMain' });
                                 }
                             }}
                             style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}

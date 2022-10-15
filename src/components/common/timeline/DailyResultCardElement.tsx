@@ -22,6 +22,9 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     if (temporaryStatus) {
         status = temporaryStatus;
     }
+    if (status === undefined) {
+        status = "INCOMPLETE";
+    }
 
     //clear status once render catches up
     if (plannedTask.status === temporaryStatus) {
