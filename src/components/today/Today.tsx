@@ -10,7 +10,6 @@ import { Banner } from '../common/Banner';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { Screen } from '../common/Screen';
-import { QuoteOfTheDayWidget } from '../widgets/QuoteOfTheDayWidget';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
@@ -21,6 +20,7 @@ import { getCloseMenu } from 'src/redux/user/GlobalState';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET } from 'src/util/constants';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
+import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 
 export const Today = () => {
     const [refreshing, setRefreshing] = React.useState(false);
