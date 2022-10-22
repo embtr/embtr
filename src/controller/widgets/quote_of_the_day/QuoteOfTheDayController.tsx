@@ -1,5 +1,6 @@
 import { getAuth } from 'firebase/auth';
 import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
+import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import QuoteOfTheDayDao from 'src/firebase/firestore/widgets/quote_of_the_day/QuoteOfTheDayDao';
 import { getDaysOld } from 'src/util/GeneralUtility';
 
@@ -114,6 +115,7 @@ class QuoteOfTheDayController {
         metadata.history.push(quoteOfTheDay.id!);
         metadata.updated = Timestamp.now();
         QuoteOfTheDayDao.updateMetadata(metadata);
+        NotificationController.addNotification('system', getAuth().currentUser!.uid, NotificationType.QUOTE_SELECTED, '');
 
         return quoteOfTheDay;
     }
@@ -122,6 +124,7 @@ class QuoteOfTheDayController {
         if (!quote.likes.includes(uid)) {
             quote.likes.push(uid);
             await QuoteOfTheDayDao.update(quote);
+            NotificationController.addNotification(getAuth().currentUser!.uid, uid, NotificationType.QUOTE_LIKE, '');
         }
 
         return quote;

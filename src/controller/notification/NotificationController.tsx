@@ -24,6 +24,8 @@ export enum NotificationType {
     COMPLETED_DAILY_RESULT_LIKE,
     FAILED_DAILY_RESULT_LIKE,
     NEW_FOLLOWER,
+    QUOTE_LIKE,
+    QUOTE_SELECTED,
 }
 
 export const getUnreadNotificationCount = (notifications: NotificationModel[]): number => {
@@ -85,6 +87,7 @@ class NotificationController {
         };
 
         const result = NotificationDao.addNotification(notificationModel);
+
         result.then((addedNotification) => {
             PushNotificationController.sendPostNotificationApiRequest(addedNotification.id);
         });
@@ -110,6 +113,10 @@ class NotificationController {
                 return 'commented on your daily results';
             case NotificationType.NEW_FOLLOWER:
                 return 'now follows you!';
+            case NotificationType.QUOTE_LIKE:
+                return 'liked your quote of the day!';
+            case NotificationType.QUOTE_SELECTED:
+                return "Your quote was selected for today's Quote Of The Day!";
 
             default:
                 return 'tagged you in a comment';
@@ -131,6 +138,9 @@ class NotificationController {
                 return 'DailyResultDetails';
             case NotificationType.NEW_FOLLOWER:
                 return 'UserProfile';
+            case NotificationType.QUOTE_LIKE:
+            case NotificationType.QUOTE_SELECTED:
+                return 'Today';
             default:
                 return '';
         }

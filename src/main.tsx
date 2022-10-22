@@ -55,6 +55,11 @@ const linking: LinkingOptions<RootStackParamList> = {
                             Notifications: 'notifications',
                         },
                     },
+                    TodayTab: {
+                        screens: {
+                            Today: 'today',
+                        },
+                    },
                     PlanTab: {
                         screens: {
                             TaskDetails: {

@@ -50,6 +50,7 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
     });
 
     const isLiked = quoteOfTheDay?.likes.includes(getAuth().currentUser!.uid);
+
     const onLike = async () => {
         if (isLiked || !quoteOfTheDay) {
             return;
@@ -86,7 +87,10 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
 
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}>
-                        added by {addedBy?.name}
+                        added by{' '}
+                        <Text style={{ color: colors.tab_selected, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}>
+                            {addedBy?.name}
+                        </Text>
                     </Text>
                 </View>
             </View>
