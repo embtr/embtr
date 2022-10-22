@@ -22,7 +22,7 @@ const INVALID_QUOTE_OF_THE_DAY: QuoteOfTheDayModel = {
     uid: '',
     quote: '',
     author: '',
-    added: Timestamp.now(),
+    added: Timestamp.fromMillis(Date.now() - 6048000000),
 };
 
 class QuoteOfTheDayController {
@@ -41,9 +41,13 @@ class QuoteOfTheDayController {
     }
 
     public static async get(id: string): Promise<QuoteOfTheDayModel> {
-        const results = await QuoteOfTheDayDao.get(id);
-        let quoteOfTheDay = results.data() as QuoteOfTheDayModel;
-        quoteOfTheDay.id = results.id;
+        const result = await QuoteOfTheDayDao.get(id);
+        if (!result.exists()) {
+            return INVALID_QUOTE_OF_THE_DAY;
+        }
+
+        let quoteOfTheDay = result.data() as QuoteOfTheDayModel;
+        quoteOfTheDay.id = result.id;
 
         return quoteOfTheDay;
     }
@@ -66,6 +70,7 @@ class QuoteOfTheDayController {
     }
 
     public static async getCurrentQuoteOfTheDay(): Promise<QuoteOfTheDayModel> {
+        console.log('getting current quote of the day!');
         const results = await QuoteOfTheDayDao.get('metadata');
         let metadata: QuoteOfTheDayMetadata = results.data() as QuoteOfTheDayMetadata;
         if (!this.metadataHasAllFields(metadata)) {
@@ -77,7 +82,7 @@ class QuoteOfTheDayController {
             quoteOfTheDay = await this.get(metadata.activeId);
         }
 
-        if (quoteOfTheDay) {
+        if (quoteOfTheDay && quoteOfTheDay !== INVALID_QUOTE_OF_THE_DAY) {
             if (this.quoteIsToday(metadata)) {
                 return quoteOfTheDay;
             }

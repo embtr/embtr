@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
+import { getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { CARD_SHADOW } from 'src/util/constants';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';

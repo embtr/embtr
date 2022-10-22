@@ -23,6 +23,7 @@ import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 
 export const Today = () => {
+    const [refreshedDate, setRefreshedDate] = React.useState<Date>();
     const [refreshing, setRefreshing] = React.useState(false);
     const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
@@ -31,6 +32,10 @@ export const Today = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const todayKey = getTodayKey();
+
+    React.useEffect(() => {
+        setRefreshedDate(new Date());
+    }, []);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -48,7 +53,10 @@ export const Today = () => {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         fetchPlannedDay();
-        wait(500).then(() => setRefreshing(false));
+        wait(500).then(() => {
+            setRefreshing(false);
+            setRefreshedDate(new Date());
+        });
     }, []);
 
     React.useEffect(() => {
@@ -124,7 +132,7 @@ export const Today = () => {
                     {plannedDay && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && <TodaysCountdownWidget plannedDay={plannedDay} />}
 
                     {/* QUOTE OF THE DAY WIDGET */}
-                    {user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && <QuoteOfTheDayWidget />}
+                    {user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedDate && <QuoteOfTheDayWidget refreshedDate={refreshedDate} />}
 
                     {/* TODAY'S TASKS WIDGET */}
                     {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
