@@ -3,6 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
+import { getDaysOld } from 'src/util/GeneralUtility';
 import LevelController from '../level/LevelController';
 
 export interface PlannedDay {
@@ -124,14 +125,8 @@ export const getDateFromDayKey = (dayKey: string) => {
 export const getDayKeyDaysOld = (dayKey: string) => {
     const then: any = getDateFromDayKey(dayKey);
     const now: any = new Date();
-    const dateDiff = now - then;
 
-    const daysOld = dateDiff / (1000 * 60 * 60 * 24);
-    if (daysOld < 1) {
-        return 0;
-    }
-
-    return Math.round(daysOld);
+    return getDaysOld(then, now);
 };
 
 class PlannedDayController {
