@@ -8,6 +8,13 @@ class QuoteOfTheDayDao {
 		await addDoc(collection(db, 'quote_of_the_day'), quote);
 	}
 
+	public static async update(quote: QuoteOfTheDayModel) {
+		const db: Firestore = getFirebaseConnection(this.name, 'update');
+		const result = await setDoc(doc(db, 'quote_of_the_day', quote.id!), quote, { merge: true });
+
+		return result;
+	}
+
 	public static async updateMetadata(metadata: QuoteOfTheDayMetadata) {
 		const db: Firestore = getFirebaseConnection(this.name, 'updateMetadata');
 		const result = await setDoc(doc(db, 'quote_of_the_day', 'metadata'), metadata);

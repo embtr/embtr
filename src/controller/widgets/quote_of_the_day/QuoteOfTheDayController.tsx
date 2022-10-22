@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Timestamp } from 'firebase/firestore';
+import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import QuoteOfTheDayDao from 'src/firebase/firestore/widgets/quote_of_the_day/QuoteOfTheDayDao';
 import { getDaysOld } from 'src/util/GeneralUtility';
 
@@ -8,6 +8,7 @@ export interface QuoteOfTheDayModel {
     uid: string;
     quote: string;
     author: string;
+    likes: string[];
     added: Timestamp;
 }
 
@@ -22,6 +23,7 @@ const INVALID_QUOTE_OF_THE_DAY: QuoteOfTheDayModel = {
     uid: '',
     quote: '',
     author: '',
+    likes: [],
     added: Timestamp.fromMillis(Date.now() - 6048000000),
 };
 
@@ -31,11 +33,26 @@ class QuoteOfTheDayController {
             uid: getAuth().currentUser!.uid,
             quote: quote,
             author: author,
+            likes: [],
             added: Timestamp.now(),
         };
 
         return quoteModel;
     }
+
+    public static clone(quote: QuoteOfTheDayModel): QuoteOfTheDayModel {
+        const clone: QuoteOfTheDayModel = {
+            id: quote.id,
+            uid: quote.uid,
+            quote: quote.quote,
+            author: quote.author,
+            added: quote.added,
+            likes: quote.likes,
+        };
+
+        return clone;
+    }
+
     public static async save(quote: QuoteOfTheDayModel) {
         await QuoteOfTheDayDao.save(quote);
     }
@@ -46,9 +63,7 @@ class QuoteOfTheDayController {
             return INVALID_QUOTE_OF_THE_DAY;
         }
 
-        let quoteOfTheDay = result.data() as QuoteOfTheDayModel;
-        quoteOfTheDay.id = result.id;
-
+        const quoteOfTheDay = this.getQuoteOfTheDayFromResult(result);
         return quoteOfTheDay;
     }
 
@@ -60,9 +75,7 @@ class QuoteOfTheDayController {
             if (result.id === 'metadata') {
                 return;
             }
-
-            let quote = result.data() as QuoteOfTheDayModel;
-            quote.id = result.id;
+            const quote = this.getQuoteOfTheDayFromResult(result);
             quotes.push(quote);
         });
 
@@ -70,7 +83,6 @@ class QuoteOfTheDayController {
     }
 
     public static async getCurrentQuoteOfTheDay(): Promise<QuoteOfTheDayModel> {
-        console.log('getting current quote of the day!');
         const results = await QuoteOfTheDayDao.get('metadata');
         let metadata: QuoteOfTheDayMetadata = results.data() as QuoteOfTheDayMetadata;
         if (!this.metadataHasAllFields(metadata)) {
@@ -106,6 +118,15 @@ class QuoteOfTheDayController {
         return quoteOfTheDay;
     }
 
+    public static async addLike(quote: QuoteOfTheDayModel, uid: string): Promise<QuoteOfTheDayModel> {
+        if (!quote.likes.includes(uid)) {
+            quote.likes.push(uid);
+            await QuoteOfTheDayDao.update(quote);
+        }
+
+        return quote;
+    }
+
     private static async getNewQuoteOfTheDay(metadata: QuoteOfTheDayMetadata) {
         let quotes = await this.getAll();
         quotes.sort(() => Math.random() - 0.5);
@@ -138,6 +159,16 @@ class QuoteOfTheDayController {
         };
 
         return metadata;
+    }
+
+    private static getQuoteOfTheDayFromResult(result: QueryDocumentSnapshot<DocumentData>) {
+        let quoteOfTheDay = result.data() as QuoteOfTheDayModel;
+        quoteOfTheDay.id = result.id;
+        if (!quoteOfTheDay.likes) {
+            quoteOfTheDay.likes = [];
+        }
+
+        return quoteOfTheDay;
     }
 }
 

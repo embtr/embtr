@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import ProfileController from 'src/controller/profile/ProfileController';
@@ -10,8 +11,11 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
-import { POPPINS_REGULAR, POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD, WIDGET_LIKE_ICON_SIZE } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
+import { Ionicons } from '@expo/vector-icons';
+import { getAuth } from 'firebase/auth';
+import * as Haptics from 'expo-haptics';
 
 interface Props {
     refreshedDate: Date;
@@ -32,10 +36,8 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
 
     const fetch = async () => {
         const quote: QuoteOfTheDayModel = await QuoteOfTheDayController.getCurrentQuoteOfTheDay();
-        if (quote.id !== quoteOfTheDay?.id) {
-            setQuoteOfTheDay(quote);
-            ProfileController.getProfile(quote.uid, setAddedBy);
-        }
+        setQuoteOfTheDay(quote);
+        ProfileController.getProfile(quote.uid, setAddedBy);
     };
 
     let menuOptions: EmbtrMenuOption[] = [];
@@ -47,6 +49,18 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
         },
     });
 
+    const isLiked = quoteOfTheDay?.likes.includes(getAuth().currentUser!.uid);
+    const onLike = async () => {
+        if (isLiked || !quoteOfTheDay) {
+            return;
+        }
+
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        const clone = QuoteOfTheDayController.clone(quoteOfTheDay);
+        const updatedQuote = await QuoteOfTheDayController.addLike(clone, getAuth().currentUser!.uid);
+        setQuoteOfTheDay(updatedQuote);
+    };
+
     return (
         <WidgetBase menuOptions={menuOptions}>
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Quote Of The Day</Text>
@@ -56,7 +70,26 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
             <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 5, paddingRight: 10, fontSize: 12, textAlign: 'right' }}>
                 - {quoteOfTheDay?.author}
             </Text>
-            <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}>added by {addedBy?.name}</Text>
+            <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableWithoutFeedback onPress={onLike}>
+                            <Ionicons
+                                name={isLiked ? 'heart' : 'heart-outline'}
+                                size={WIDGET_LIKE_ICON_SIZE}
+                                color={isLiked ? 'red' : colors.timeline_card_footer}
+                            />
+                        </TouchableWithoutFeedback>
+                        <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text, paddingLeft: 3, paddingTop: 1 }}>{quoteOfTheDay?.likes.length}</Text>
+                    </View>
+                </View>
+
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}>
+                        added by {addedBy?.name}
+                    </Text>
+                </View>
+            </View>
         </WidgetBase>
     );
 };
