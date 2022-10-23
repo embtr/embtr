@@ -14,6 +14,7 @@ export type TodayTab = {
     PlanDay: { id: string };
     ConfigureWidgets: undefined;
     AddQuoteOfTheDay: undefined;
+    UserProfile: { id: string };
 };
 
 export type PlanTabScreens = {

@@ -2,7 +2,6 @@ import { getAuth } from 'firebase/auth';
 import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import QuoteOfTheDayDao from 'src/firebase/firestore/widgets/quote_of_the_day/QuoteOfTheDayDao';
-import { getDaysOld } from 'src/util/GeneralUtility';
 
 export interface QuoteOfTheDayModel {
     id?: string;
@@ -143,11 +142,21 @@ class QuoteOfTheDayController {
     }
 
     private static quoteIsToday(metadata: QuoteOfTheDayMetadata) {
-        const then = metadata.updated.toDate();
-        const now = Timestamp.now().toDate();
-        const daysOld = getDaysOld(then, now);
+        const then: Date = metadata.updated.toDate();
+        const now: Date = Timestamp.now().toDate();
+        if (then.getFullYear() !== now.getFullYear()) {
+            return false;
+        }
 
-        return daysOld < 1;
+        if (then.getMonth() !== now.getMonth()) {
+            return false;
+        }
+
+        if (then.getDate() !== now.getDate()) {
+            return false;
+        }
+
+        return true;
     }
 
     private static metadataHasAllFields(metadata: QuoteOfTheDayMetadata): boolean {

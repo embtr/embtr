@@ -62,6 +62,14 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
         setQuoteOfTheDay(updatedQuote);
     };
 
+    const navigateToUserProfile = () => {
+        if (!quoteOfTheDay) {
+            return;
+        }
+
+        navigation.navigate('UserProfile', { id: quoteOfTheDay.uid });
+    };
+
     return (
         <WidgetBase menuOptions={menuOptions}>
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Quote Of The Day</Text>
@@ -86,9 +94,15 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
                 </View>
 
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}>
+                    <Text
+                        style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}
+                        onPress={navigateToUserProfile}
+                    >
                         added by{' '}
-                        <Text style={{ color: colors.tab_selected, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}>
+                        <Text
+                            style={{ color: colors.tab_selected, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}
+                            onPress={navigateToUserProfile}
+                        >
                             {addedBy?.name}
                         </Text>
                     </Text>
