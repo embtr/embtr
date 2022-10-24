@@ -67,7 +67,7 @@ class TimelineController {
             .then(() => {
                 timelinePosts = timelinePosts
                     //.sort((a, b) => ((a.type === 'DAILY_RESULT' ? a.modified : a.added) > (b.type === 'DAILY_RESULT' ? b.modified : b.added) ? 1 : -1))
-                    .sort((a, b) => ((a.added) > (b.added) ? 1 : -1))
+                    .sort((a, b) => (a.added > b.added ? 1 : -1))
                     .reverse();
             })
             .then(() => {

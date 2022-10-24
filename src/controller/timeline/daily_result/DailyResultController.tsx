@@ -1,8 +1,8 @@
 import { getAuth } from 'firebase/auth';
-import { Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import { getDayKeyDaysOld, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDayKeyDaysOld, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
@@ -11,6 +11,7 @@ export interface DailyResultModel extends TimelinePostModel {
         status: string;
         plannedDayId: string;
         description?: string;
+        hasTasks: boolean;
         imageUrls?: string[];
     };
 }
@@ -22,6 +23,7 @@ class DailyResultController {
                 plannedDayId: dailyResult.data.plannedDayId,
                 description: dailyResult.data.description,
                 status: dailyResult.data.status,
+                hasTasks: dailyResult.data.hasTasks,
                 imageUrls: dailyResult.data.imageUrls,
             },
             added: dailyResult.added,
@@ -37,6 +39,29 @@ class DailyResultController {
         };
 
         return clone;
+    }
+
+    public static createDailyResultModel(plannedDay: PlannedDay, status: string): DailyResultModel {
+        const uid = getAuth().currentUser!.uid;
+
+        const dailyResult: DailyResultModel = {
+            data: {
+                status: status,
+                hasTasks: plannedDay.plannedTasks.length > 0,
+                plannedDayId: plannedDay.id!,
+            },
+            added: Timestamp.now(),
+            modified: Timestamp.now(),
+            type: 'DAILY_RESULT',
+            uid: uid,
+            public: {
+                comments: [],
+                likes: [],
+            },
+            active: true,
+        };
+
+        return dailyResult;
     }
 
     public static async getOrCreate(plannedDay: PlannedDay, status: string) {
@@ -55,28 +80,6 @@ class DailyResultController {
         }
     }
 
-    public static createDailyResultModel(plannedDay: PlannedDay, status: string): DailyResultModel {
-        const uid = getAuth().currentUser!.uid;
-
-        const dailyResult: DailyResultModel = {
-            data: {
-                status: status,
-                plannedDayId: plannedDay.id!,
-            },
-            added: Timestamp.now(),
-            modified: Timestamp.now(),
-            type: 'DAILY_RESULT',
-            uid: uid,
-            public: {
-                comments: [],
-                likes: [],
-            },
-            active: true,
-        };
-
-        return dailyResult;
-    }
-
     public static async create(dailyResult: DailyResultModel) {
         const result = await DailyResultDao.create(dailyResult);
         dailyResult.id = result?.id;
@@ -85,7 +88,7 @@ class DailyResultController {
     }
 
     public static async update(dailyResult: DailyResultModel) {
-        const result = await DailyResultDao.update(dailyResult);
+        await DailyResultDao.update(dailyResult);
         return dailyResult;
     }
 
@@ -96,62 +99,48 @@ class DailyResultController {
 
     public static async get(id: string, callback: Function) {
         const result = await DailyResultDao.get(id);
-
-        let dailyResult: DailyResultModel = result.data() as DailyResultModel;
-        dailyResult.id = id;
+        const dailyResult = await this.getDailyResultFromData(result);
 
         callback(dailyResult);
     }
 
-    private static async getByDayKey(uid: string, dayKey: string) {
-        const result = await DailyResultDao.getByDayKey(uid, dayKey);
-
-        let dailyResult: DailyResultModel | undefined = undefined;
-        result.forEach((doc) => {
-            dailyResult = doc.data() as DailyResultModel;
-            dailyResult.id = doc.id;
-            return;
-        });
-
-        return dailyResult;
-    }
-
     public static async getAllFinished() {
-        const result = await DailyResultDao.getAll();
+        const results = await DailyResultDao.getAll();
 
         let dailyResults: DailyResultModel[] = [];
-        result.forEach((doc) => {
-            let dailyResult = doc.data() as DailyResultModel;
+        for (const result of results.docs) {
+            const dailyResult = await DailyResultController.getDailyResultFromData(result);
+
+            if (!dailyResult.data.hasTasks) continue;
+
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
                 const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
                 if (daysOld <= 0) {
-                    return;
+                    continue;
                 }
             }
 
-            dailyResult.id = doc.id;
             dailyResults.push(dailyResult);
-        });
+        }
 
         return dailyResults;
     }
 
     public static async getAllFinishedForUser(uid: string) {
-        const result = await DailyResultDao.getAllForUser(uid);
+        const results = await DailyResultDao.getAllForUser(uid);
 
         let dailyResults: DailyResultModel[] = [];
-        result.forEach((doc) => {
-            let dailyResult = doc.data() as DailyResultModel;
+        for (const result of results.docs) {
+            const dailyResult = await DailyResultController.getDailyResultFromData(result);
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
                 const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
                 if (daysOld <= 0) {
-                    return;
+                    continue;
                 }
             }
 
-            dailyResult.id = doc.id;
             dailyResults.push(dailyResult);
-        });
+        }
 
         return dailyResults;
     }
@@ -179,6 +168,27 @@ class DailyResultController {
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
         const imgUrls: string[] = await ImageController.pickAndUploadImages('daily_results', imageUploadProgess);
         return imgUrls;
+    }
+
+    private static async getByDayKey(uid: string, dayKey: string) {
+        const results = await DailyResultDao.getByDayKey(uid, dayKey);
+
+        let dailyResult: DailyResultModel | undefined = undefined;
+        dailyResult = await this.getDailyResultFromData(results.docs[0]);
+
+        return dailyResult;
+    }
+
+    private static async getDailyResultFromData(result: DocumentSnapshot<DocumentData>): Promise<DailyResultModel> {
+        let dailyResult: DailyResultModel = result.data() as DailyResultModel;
+        dailyResult.id = result.id;
+        //if (true) {
+        //    const plannedDay: PlannedDay = await PlannedDayController.getAsync(dailyResult.uid, dailyResult.data.plannedDayId);
+        //    dailyResult.data.hasTasks = plannedDay.plannedTasks.length > 0;
+        //    DailyResultController.update(dailyResult);
+        //}
+
+        return dailyResult;
     }
 }
 

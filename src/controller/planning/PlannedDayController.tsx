@@ -163,6 +163,14 @@ class PlannedDayController {
             });
     }
 
+    public static getAsync(uid: string, id: string): Promise<PlannedDay> {
+        let promise = new Promise<PlannedDay>(function (resolve, reject) {
+            PlannedDayController.get(uid, id, resolve);
+        });
+
+        return promise;
+    }
+
     public static get(uid: string, id: string, callback: Function) {
         let plannedDay: PlannedDay = {
             id: id,
@@ -265,6 +273,7 @@ class PlannedDayController {
         }
 
         dailyResult.data.status = newStatus;
+        dailyResult.data.hasTasks = plannedDay.plannedTasks.length > 0;
         dailyResult.modified = Timestamp.now();
         dailyResult.active = true;
         DailyResultController.update(dailyResult);
