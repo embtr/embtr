@@ -74,10 +74,12 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
         <WidgetBase menuOptions={menuOptions}>
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Quote Of The Day</Text>
             <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR_ITALIC, paddingTop: 5, paddingLeft: 10, paddingRight: 10, fontSize: 14 }}>
+                {'"'}
                 {quoteOfTheDay?.quote}
+                {'"'}
             </Text>
             <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, paddingTop: 5, paddingRight: 10, fontSize: 12, textAlign: 'right' }}>
-                - {quoteOfTheDay?.author}
+                {quoteOfTheDay?.author ? '-' : ''} {quoteOfTheDay?.author}
             </Text>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>

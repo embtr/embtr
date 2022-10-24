@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
-import { View } from 'react-native';
+import { RefreshControl, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
@@ -10,14 +10,16 @@ import { Notification } from 'src/components/notification/Notification';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { CARD_SHADOW } from 'src/util/constants';
+import { wait } from 'src/util/GeneralUtility';
 
 export const Notifications = () => {
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [userProfiles, setUserProfiles] = React.useState<UserProfileModel[]>([]);
+    const [refreshing, setRefreshing] = React.useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
-            NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
+            fetch();
         }, [])
     );
 
@@ -46,6 +48,16 @@ export const Notifications = () => {
             }
         }, [notifications])
     );
+
+    const fetch = () => {
+        NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
+    };
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        fetch();
+        wait(500).then(() => setRefreshing(false));
+    }, []);
 
     const containsUnreadNotification = (): boolean => {
         let containsUnread = false;
@@ -79,7 +91,7 @@ export const Notifications = () => {
     return (
         <Screen>
             <Banner name="Notifications" leftIcon={'arrow-back'} leftRoute={'BACK'} />
-            <ScrollView>{notificationViews}</ScrollView>
+            <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>{notificationViews}</ScrollView>
         </Screen>
     );
 };
