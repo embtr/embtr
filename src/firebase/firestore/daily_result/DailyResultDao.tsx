@@ -43,6 +43,14 @@ class DailyResultDao {
         return querySnapshot;
     }
 
+    public static async getAllFinished() {
+        const db: Firestore = getFirebaseConnection(this.name, 'getAllFinished');
+
+        const q = query(collection(db, COLLECTION_NAME), where('active', '!=', false), where('data.hasTasks', '==', true));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot;
+    }
+
     public static async getAllForUser(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getAllForUser');
 

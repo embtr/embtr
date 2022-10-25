@@ -121,13 +121,11 @@ class DailyResultController {
     }
 
     public static async getAllFinished() {
-        const results = await DailyResultDao.getAll();
+        const results = await DailyResultDao.getAllFinished();
 
         let dailyResults: DailyResultModel[] = [];
         for (const result of results.docs) {
             const dailyResult = await DailyResultController.getDailyResultFromData(result);
-
-            if (!dailyResult.data.hasTasks) continue;
 
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
                 const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
