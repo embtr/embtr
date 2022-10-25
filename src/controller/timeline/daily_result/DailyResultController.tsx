@@ -188,7 +188,9 @@ class DailyResultController {
         const results = await DailyResultDao.getByDayKey(uid, dayKey);
 
         let dailyResult: DailyResultModel | undefined = undefined;
-        dailyResult = await this.getDailyResultFromData(results.docs[0]);
+        if (!results.empty) {
+            dailyResult = await this.getDailyResultFromData(results.docs[0]);
+        }
 
         return dailyResult;
     }
