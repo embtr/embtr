@@ -104,6 +104,22 @@ class DailyResultController {
         callback(dailyResult);
     }
 
+    public static async refresh(dailyResult: DailyResultModel) {
+        const plannedDay: PlannedDay = await PlannedDayController.getAsync(dailyResult.uid, dailyResult.data.plannedDayId);
+        if (!plannedDay.id) {
+            return;
+        }
+
+        if (plannedDay.metadata) {
+            dailyResult.data.status = plannedDay.metadata?.status;
+        }
+        dailyResult.data.hasTasks = plannedDay.plannedTasks.length > 0;
+        dailyResult.modified = Timestamp.now();
+        dailyResult.active = true;
+
+        this.update(dailyResult);
+    }
+
     public static async getAllFinished() {
         const results = await DailyResultDao.getAll();
 

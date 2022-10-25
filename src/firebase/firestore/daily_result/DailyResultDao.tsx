@@ -19,14 +19,14 @@ class DailyResultDao {
         const result = await addDoc(collection(db, COLLECTION_NAME), dailyResult);
         return result;
     }
-    
+
     public static async get(id: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "get");
+        const db: Firestore = getFirebaseConnection(this.name, 'get');
         const result = await getDoc(doc(db, COLLECTION_NAME, id));
 
         return result;
     }
-    
+
     public static async getByDayKey(uid: string, dayKey: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getByDayKey');
         const q = query(collection(db, COLLECTION_NAME), where('uid', '==', uid), where('data.plannedDayId', '==', dayKey));
@@ -42,52 +42,61 @@ class DailyResultDao {
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     }
-    
+
     public static async getAllForUser(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getAllForUser');
 
-        const q = query(collection(db, COLLECTION_NAME), where("uid", "==", uid), where("active", "!=", false));
+        const q = query(collection(db, COLLECTION_NAME), where('uid', '==', uid), where('active', '!=', false));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;
     }
 
     public static async update(dailyResult: DailyResultModel) {
+        console.log("update!")
         const db: Firestore = getFirebaseConnection(this.name, 'update');
 
         dailyResult.modified = Timestamp.now();
         const result = await setDoc(doc(db, COLLECTION_NAME, dailyResult.id!), dailyResult, { merge: true });
- 
+
         return result;
     }
-    
+
     public static like(dailyResult: DailyResultModel, likerUid: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "like");
+        const db: Firestore = getFirebaseConnection(this.name, 'like');
 
         const like: Like = {
             uid: likerUid,
-            added: Timestamp.now()
+            added: Timestamp.now(),
         };
 
-        setDoc(doc(db, "daily_results/" + dailyResult.id), {
-            public: {
-                likes: arrayUnion(like)
-            }
-        }, { merge: true })
+        setDoc(
+            doc(db, 'daily_results/' + dailyResult.id),
+            {
+                public: {
+                    likes: arrayUnion(like),
+                },
+            },
+            { merge: true }
+        );
     }
 
     public static addComment(id: string, uid: string, comment: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "addComment");
+        const db: Firestore = getFirebaseConnection(this.name, 'addComment');
 
-        return setDoc(doc(db, COLLECTION_NAME + "/" + id), {
-            public: {
-                comments: arrayUnion({
-                    uid: uid,
-                    comment: comment,
-                    timestamp: Timestamp.now()
-                })
-            }
-        }, { merge: true });
+        return setDoc(
+            doc(db, COLLECTION_NAME + '/' + id),
+            {
+                public: {
+                    comments: arrayUnion({
+                        uid: uid,
+                        comment: comment,
+                        timestamp: Timestamp.now(),
+                    }),
+                },
+            },
+            { merge: true }
+        );
     }
 }
 

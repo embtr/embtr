@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
 import { getDaysOld } from 'src/util/GeneralUtility';
 import LevelController from '../level/LevelController';
@@ -218,6 +218,7 @@ class PlannedDayController {
     public static replace(plannedDay: PlannedDay) {
         plannedDay.metadata!.modified = Timestamp.now();
         PlannedDayDao.replace(plannedDay);
+        this.refreshDailyResult(plannedDay);
     }
 
     public static getTask(uid: string, dayKey: string, plannedTaskId: string, callback: Function) {
@@ -237,46 +238,38 @@ class PlannedDayController {
         }
 
         plannedDay.metadata!.status = this.getPlannedDayStatus(plannedDay, plannedTask);
-        const newStatus = plannedDay.metadata?.status;
 
         await PlannedDayDao.updateTask(plannedDay, plannedTask);
-
-        await this.handleStatusChange(plannedDay, newStatus);
+        this.refreshDailyResult(plannedDay);
         await LevelController.handlePlannedDayStatusChange(plannedDay);
 
         callback();
     }
 
+    public static async addTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
+        await this.addTasks(plannedDay, [plannedTask]);
+        callback();
+    }
+
     public static async addTasks(plannedDay: PlannedDay, plannedTasks: PlannedTaskModel[]) {
         plannedDay.metadata!.modified = Timestamp.now();
+        plannedDay.metadata!.status = 'INCOMPLETE';
         const createdPlannedTasks = await PlannedDayDao.createTasks(plannedDay, plannedTasks);
+
+        this.refreshDailyResult(plannedDay);
 
         return createdPlannedTasks;
     }
 
-    public static addTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
-        plannedDay.metadata!.modified = Timestamp.now();
-        const result = PlannedDayDao.createTask(plannedDay, plannedTask);
-        result?.then(() => {
-            callback();
-        });
-    }
-
-    private static async handleStatusChange(plannedDay: PlannedDay, newStatus: string) {
+    private static async refreshDailyResult(plannedDay: PlannedDay) {
         if (!plannedDay.id) {
             return;
         }
 
-        let dailyResult = await DailyResultController.getOrCreate(plannedDay, newStatus);
-        if (!dailyResult || (dailyResult?.data.status === newStatus && dailyResult.active)) {
-            return;
+        const dailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
+        if (dailyResult) {
+            DailyResultController.refresh(dailyResult);
         }
-
-        dailyResult.data.status = newStatus;
-        dailyResult.data.hasTasks = plannedDay.plannedTasks.length > 0;
-        dailyResult.modified = Timestamp.now();
-        dailyResult.active = true;
-        DailyResultController.update(dailyResult);
     }
 
     private static createMetadata(): PlannedDayMetadata {
@@ -295,7 +288,15 @@ class PlannedDayController {
         plannedDay.plannedTasks.forEach((currentPlannedTask) => {
             let taskStatus = currentPlannedTask.status;
             if (plannedTask.id === currentPlannedTask.id) {
+                if (plannedTask.status === 'DELETED') {
+                    return;
+                }
+
                 taskStatus = plannedTask.status;
+            }
+
+            if (currentPlannedTask.status === 'DELETED') {
+                return;
             }
 
             if (taskStatus !== 'COMPLETE') {

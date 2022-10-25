@@ -25,15 +25,9 @@ class PlannedDayDao {
         return setDoc(doc(db, 'planned_day', userUid, plannedDay.id!, 'metadata'), plannedDay.metadata, { merge: true });
     }
 
-    public static createTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
-        const userUid = getAuth().currentUser?.uid;
-        if (!userUid) {
-            return;
-        }
-
-        const db: Firestore = getFirebaseConnection(this.name, 'createTask');
-        const result = addDoc(collection(db, 'planned_day', userUid, plannedDay.id!), plannedTask);
-        return result;
+    public static async createTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
+        const result = await this.createTasks(plannedDay, [plannedTask]);
+        return result[0];
     }
 
     public static async createTasks(plannedDay: PlannedDay, plannedTasks: PlannedTaskModel[]): Promise<PlannedTaskModel[]> {
@@ -51,6 +45,7 @@ class PlannedDayDao {
             createdTasks.push(plannedTask);
         }
 
+        setDoc(doc(db, 'planned_day', userUid, plannedDay.id!, 'metadata'), plannedDay.metadata, { merge: true });
         return createdTasks;
     }
 
