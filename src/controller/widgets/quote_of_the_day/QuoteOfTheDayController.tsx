@@ -114,16 +114,18 @@ class QuoteOfTheDayController {
         metadata.history.push(quoteOfTheDay.id!);
         metadata.updated = Timestamp.now();
         QuoteOfTheDayDao.updateMetadata(metadata);
-        NotificationController.addNotification('system', getAuth().currentUser!.uid, NotificationType.QUOTE_SELECTED, '');
+        NotificationController.addNotification('system', quoteOfTheDay.uid, NotificationType.QUOTE_SELECTED, '');
 
         return quoteOfTheDay;
     }
 
-    public static async addLike(quote: QuoteOfTheDayModel, uid: string): Promise<QuoteOfTheDayModel> {
+    public static async addLike(quote: QuoteOfTheDayModel): Promise<QuoteOfTheDayModel> {
+        const uid = getAuth().currentUser!.uid;
+
         if (!quote.likes.includes(uid)) {
             quote.likes.push(uid);
             await QuoteOfTheDayDao.update(quote);
-            NotificationController.addNotification(getAuth().currentUser!.uid, uid, NotificationType.QUOTE_LIKE, '');
+            NotificationController.addNotification(getAuth().currentUser!.uid, quote.uid, NotificationType.QUOTE_LIKE, '');
         }
 
         return quote;
