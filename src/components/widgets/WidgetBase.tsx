@@ -5,6 +5,7 @@ import { getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { CARD_SHADOW } from 'src/util/constants';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     children: any;
@@ -46,17 +47,19 @@ export const WidgetBase = ({ children, menuOptions }: Props) => {
                             position: 'absolute',
                             alignSelf: 'flex-end',
                             alignItems: 'flex-end',
-                            paddingRight: 5,
                             justifyContent: 'center',
                         }}
                     >
                         <TouchableWithoutFeedback
+                            style={{ padding: 4 }}
                             onPress={() => {
                                 updateMenuOptions();
                                 openMenu();
                             }}
                         >
-                            <Text style={{ color: colors.text, justifyContent: 'center' }}> ... </Text>
+                            <View style={{ paddingTop: 0 }}>
+                                <Ionicons name={'ellipsis-horizontal-circle'} size={15} color={colors.text} />
+                            </View>
                         </TouchableWithoutFeedback>
                     </View>
                 )}
