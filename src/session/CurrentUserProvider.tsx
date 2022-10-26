@@ -1,11 +1,14 @@
-import * as React from 'react';
-import { getAuth, onAuthStateChanged, User } from "firebase/auth";
+import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 export const registerAuthStateListener = (callback: Function) => {
     onAuthStateChanged(getAuth(), (user) => {
         callback(user);
     });
-}
+};
+
+export const getCurrentUid = () => {
+    return getAuth().currentUser!.uid;
+};
 
 export const getCurrentUserUid = (callback: Function) => {
     const user: User | null = getAuth().currentUser;
@@ -20,4 +23,4 @@ export const getCurrentUserUid = (callback: Function) => {
             }
         });
     }
-}
+};

@@ -1,14 +1,14 @@
-import { Timestamp } from "firebase/firestore";
-import GoalDao from "src/firebase/firestore/planning/GoalDao";
+import { Timestamp } from 'firebase/firestore';
+import GoalDao from 'src/firebase/firestore/planning/GoalDao';
 
 export interface GoalModel {
-    id?: string,
-    added: Timestamp,
-    name: string,
-    description: string,
-    pillarId?: string
-    deadline: Timestamp,
-    status: string
+    id?: string;
+    added: Timestamp;
+    name: string;
+    description: string;
+    pillarId?: string;
+    deadline: Timestamp;
+    status: string;
 }
 
 export const FAKE_GOAL: GoalModel = {
@@ -16,13 +16,13 @@ export const FAKE_GOAL: GoalModel = {
     name: '',
     description: '',
     deadline: Timestamp.now(),
-    status: "ACTIVE"
-}
+    status: 'ACTIVE',
+};
 
 class GoalController {
     public static createGoal(goal: GoalModel, callback: Function) {
         const result = GoalDao.createGoal(goal);
-        result.then(document => {
+        result.then((document) => {
             callback();
         });
     }
@@ -31,34 +31,39 @@ class GoalController {
         const result = GoalDao.getGoals(uid);
 
         let goals: GoalModel[] = [];
-        result.then(documents => {
-            documents.docs.forEach(document => {
-                let goal: GoalModel = document.data() as GoalModel;
+        result
+            .then((documents) => {
+                documents.docs.forEach((document) => {
+                    let goal: GoalModel = document.data() as GoalModel;
 
-                if (goal.status === "ARCHIVED") {
-                    return;
-                }
+                    if (goal.status === 'ARCHIVED') {
+                        return;
+                    }
 
-                goal.id = document.id;
-                goals.push(goal);
+                    goal.id = document.id;
+                    goals.push(goal);
+                });
+            })
+            .then(() => {
+                goals.sort((a, b) => (a.deadline > b.deadline ? 1 : -1)).reverse();
+                callback(goals);
+            })
+            .catch(() => {
+                callback([]);
             });
-        }).then(() => {
-            goals.sort((a, b) => (a.deadline > b.deadline) ? 1 : -1).reverse();
-            callback(goals);
-        }).catch(() => {
-            callback([]);
-        });
     }
 
     static getGoal(userId: string, id: string, callback: Function) {
         const result = GoalDao.getGoal(userId, id);
-        result.then(document => {
-            let goal: GoalModel = document.data() as GoalModel;
-            goal.id = document.id;
-            callback(goal);
-        }).catch(() => {
-            callback(undefined);
-        });
+        result
+            .then((document) => {
+                let goal: GoalModel = document.data() as GoalModel;
+                goal.id = document.id;
+                callback(goal);
+            })
+            .catch(() => {
+                callback(undefined);
+            });
     }
 
     public static archiveGoal(userId: string, goal: GoalModel, callback: Function) {

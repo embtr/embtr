@@ -18,12 +18,20 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import UserController, { UserModel } from 'src/controller/user/UserController';
-import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET } from 'src/util/constants';
+import {
+    QUOTE_OF_THE_DAY_WIDGET,
+    TIME_LEFT_IN_DAY_WIDGET,
+    TODAYS_NOTES_WIDGET,
+    TODAYS_PHOTOS_WIDGET,
+    TODAYS_TASKS_WIDGET,
+    UPCOMING_GOALS_WIDGET,
+} from 'src/util/constants';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
+import { UpcomingGoalsWidget } from '../widgets/upcoming_goals/UpcomingGoalsWidget';
 
 export const Today = () => {
-    const [refreshedDate, setRefreshedDate] = React.useState<Date>();
+    const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [refreshing, setRefreshing] = React.useState(false);
     const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
@@ -34,7 +42,7 @@ export const Today = () => {
     const todayKey = getTodayKey();
 
     React.useEffect(() => {
-        setRefreshedDate(new Date());
+        setRefreshedTimestamp(new Date());
     }, []);
 
     useFocusEffect(
@@ -55,7 +63,7 @@ export const Today = () => {
         fetchPlannedDay();
         wait(500).then(() => {
             setRefreshing(false);
-            setRefreshedDate(new Date());
+            setRefreshedTimestamp(new Date());
         });
     }, []);
 
@@ -139,7 +147,9 @@ export const Today = () => {
                     {plannedDay && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && <TodaysCountdownWidget plannedDay={plannedDay} />}
 
                     {/* QUOTE OF THE DAY WIDGET */}
-                    {user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedDate && <QuoteOfTheDayWidget refreshedDate={refreshedDate} />}
+                    {user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedTimestamp && (
+                        <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp} />
+                    )}
 
                     {/* TODAY'S TASKS WIDGET */}
                     {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
@@ -152,6 +162,11 @@ export const Today = () => {
                     {/* TODAY'S PHOTOS WIDGET */}
                     {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_PHOTOS_WIDGET) && (
                         <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
+                    )}
+
+                    {/* UPCOMING GOALS WIDGET */}
+                    {refreshedTimestamp && user.today_widgets?.includes(UPCOMING_GOALS_WIDGET) && (
+                        <UpcomingGoalsWidget refreshedTimestamp={refreshedTimestamp} />
                     )}
 
                     <View style={{ height: 7 }} />

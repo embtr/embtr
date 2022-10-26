@@ -4,8 +4,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDateFromDayKey, PlannedDay, plannedDayIsComplete } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { HorizontalLine } from '../HorizontalLine';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 
@@ -36,7 +35,8 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
     const dayOfWeek = getDayOfWeek(getDateFromDayKey(plannedDay?.id ? plannedDay?.id : ''));
 
     let plannedTaskViews: JSX.Element[] = [];
-    plannedDay?.plannedTasks.forEach((plannedTask) => { plannedTaskViews.push(
+    plannedDay?.plannedTasks.forEach((plannedTask) => {
+        plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
             </View>

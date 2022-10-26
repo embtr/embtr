@@ -18,10 +18,10 @@ import { getAuth } from 'firebase/auth';
 import * as Haptics from 'expo-haptics';
 
 interface Props {
-    refreshedDate: Date;
+    refreshedTimestamp: Date;
 }
 
-export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
+export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
 
     const [quoteOfTheDay, setQuoteOfTheDay] = React.useState<QuoteOfTheDayModel>();
@@ -32,7 +32,7 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
 
     React.useEffect(() => {
         fetch();
-    }, [refreshedDate]);
+    }, [refreshedTimestamp]);
 
     const fetch = async () => {
         const quote: QuoteOfTheDayModel = await QuoteOfTheDayController.getCurrentQuoteOfTheDay();
@@ -58,7 +58,7 @@ export const QuoteOfTheDayWidget = ({ refreshedDate }: Props) => {
 
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         const clone = QuoteOfTheDayController.clone(quoteOfTheDay);
-        const updatedQuote = await QuoteOfTheDayController.addLike(clone, getAuth().currentUser!.uid);
+        const updatedQuote = await QuoteOfTheDayController.addLike(clone);
         setQuoteOfTheDay(updatedQuote);
     };
 

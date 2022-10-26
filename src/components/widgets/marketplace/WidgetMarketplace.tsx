@@ -3,7 +3,15 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import React from 'react';
 import UserController, { UserModel } from 'src/controller/user/UserController';
-import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
+import {
+    QUOTE_OF_THE_DAY_WIDGET,
+    TIME_LEFT_IN_DAY_WIDGET,
+    TODAYS_NOTES_WIDGET,
+    TODAYS_PHOTOS_WIDGET,
+    TODAYS_TASKS_WIDGET,
+    UPCOMING_GOALS_WIDGET,
+    WIDGETS,
+} from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { WidgetMarketplaceToggle } from './WidgetMarketplaceToggle';
 
@@ -65,6 +73,9 @@ export const WidgetMarketplace = () => {
                     </View>
                     <View style={{ paddingTop: 5 }}>
                         <WidgetMarketplaceToggle name={TODAYS_PHOTOS_WIDGET} isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)} onToggle={onToggle} />
+                    </View>
+                    <View style={{ paddingTop: 5 }}>
+                        <WidgetMarketplaceToggle name={UPCOMING_GOALS_WIDGET} isEnabled={isEnabled(UPCOMING_GOALS_WIDGET)} onToggle={onToggle} />
                     </View>
                 </View>
             </ScrollView>
