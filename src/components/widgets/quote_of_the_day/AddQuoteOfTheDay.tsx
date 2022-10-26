@@ -31,16 +31,18 @@ export const AddQuoteOfTheDay = () => {
             <ScrollView style={{ width: '100%', height: '100%' }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <TouchableWithoutFeedback
-                        style={{ height: '100%' }}
+                        style={{ height: '100%', alignItems: 'center' }}
                         onPress={() => {
                             Keyboard.dismiss();
                         }}
                     >
                         <View style={{ width: '95%', paddingLeft: 5, paddingTop: 20 }}>
                             <View>
-                                <Text style={{ fontFamily: POPPINS_MEDIUM, color: colors.text, fontSize: 15 }}>Welcome to the Quote Of The Day Widget!</Text>
                                 <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text, fontSize: 12, paddingTop: 5 }}>
-                                    Add a new quote for the chance to be featured as the Quote Of The Day!
+                                    The Quote Of The Day is a community supplied quote pool where one quote is selected per day as the Quote Of The Day.
+                                </Text>
+                                <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text, fontSize: 12, paddingTop: 10 }}>
+                                    Add a new quote to join in on the fun - you might be next!
                                 </Text>
                             </View>
                             <View style={{ height: 30, width: '100%' }} />
