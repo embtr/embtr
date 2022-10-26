@@ -104,9 +104,16 @@ export const Today = () => {
     const closeMenu = useAppSelector(getCloseMenu);
     const menuOptions: EmbtrMenuOption[] = [
         {
-            name: 'Configure Widgets',
+            name: 'Widget Marketplace',
             onPress: () => {
-                navigation.navigate('ConfigureWidgets');
+                navigation.navigate('WidgetMarketplace');
+                closeMenu();
+            },
+        },
+        {
+            // this will be used to delete/ reorder widgets
+            name: 'Configure',
+            onPress: () => {
                 closeMenu();
             },
         },

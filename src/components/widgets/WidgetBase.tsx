@@ -51,7 +51,7 @@ export const WidgetBase = ({ children, menuOptions }: Props) => {
                         }}
                     >
                         <TouchableWithoutFeedback
-                            style={{ padding: 4 }}
+                            style={{ padding: 4, paddingLeft: 7, paddingBottom: 7 }}
                             onPress={() => {
                                 updateMenuOptions();
                                 openMenu();

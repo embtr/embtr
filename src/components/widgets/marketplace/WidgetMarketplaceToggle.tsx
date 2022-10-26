@@ -6,7 +6,7 @@ interface Props {
     onToggle: Function;
 }
 
-export const ConfigureWidgetToggle = ({ name, isEnabled, onToggle }: Props) => {
+export const WidgetMarketplaceToggle = ({ name, isEnabled, onToggle }: Props) => {
     return (
         <EmbtrToggle
             text={name}

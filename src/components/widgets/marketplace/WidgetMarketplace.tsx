@@ -1,13 +1,13 @@
 import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { ConfigureWidgetToggle } from './ConfigureWidgetToggle';
 import React from 'react';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import { QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
+import { WidgetMarketplaceToggle } from './WidgetMarketplaceToggle';
 
-export const ConfigureWidgets = () => {
+export const WidgetMarketplace = () => {
     const [user, setUser] = React.useState<UserModel>();
 
     React.useEffect(() => {
@@ -47,24 +47,24 @@ export const ConfigureWidgets = () => {
 
     return (
         <Screen>
-            <Banner name="Widgets" rightText={'close'} rightRoute="BACK" />
+            <Banner name="Widget Marketplace" rightText={'close'} rightRoute="BACK" />
 
             <ScrollView>
                 <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
                     <View style={{ paddingTop: 10 }}>
-                        <ConfigureWidgetToggle name={TIME_LEFT_IN_DAY_WIDGET} isEnabled={isEnabled(TIME_LEFT_IN_DAY_WIDGET)} onToggle={onToggle} />
+                        <WidgetMarketplaceToggle name={TIME_LEFT_IN_DAY_WIDGET} isEnabled={isEnabled(TIME_LEFT_IN_DAY_WIDGET)} onToggle={onToggle} />
                     </View>
                     <View style={{ paddingTop: 5 }}>
-                        <ConfigureWidgetToggle name={QUOTE_OF_THE_DAY_WIDGET} isEnabled={isEnabled(QUOTE_OF_THE_DAY_WIDGET)} onToggle={onToggle} />
+                        <WidgetMarketplaceToggle name={QUOTE_OF_THE_DAY_WIDGET} isEnabled={isEnabled(QUOTE_OF_THE_DAY_WIDGET)} onToggle={onToggle} />
                     </View>
                     <View style={{ paddingTop: 5 }}>
-                        <ConfigureWidgetToggle name={TODAYS_TASKS_WIDGET} isEnabled={isEnabled(TODAYS_TASKS_WIDGET)} onToggle={onToggle} />
+                        <WidgetMarketplaceToggle name={TODAYS_TASKS_WIDGET} isEnabled={isEnabled(TODAYS_TASKS_WIDGET)} onToggle={onToggle} />
                     </View>
                     <View style={{ paddingTop: 5 }}>
-                        <ConfigureWidgetToggle name={TODAYS_NOTES_WIDGET} isEnabled={isEnabled(TODAYS_NOTES_WIDGET)} onToggle={onToggle} />
+                        <WidgetMarketplaceToggle name={TODAYS_NOTES_WIDGET} isEnabled={isEnabled(TODAYS_NOTES_WIDGET)} onToggle={onToggle} />
                     </View>
                     <View style={{ paddingTop: 5 }}>
-                        <ConfigureWidgetToggle name={TODAYS_PHOTOS_WIDGET} isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)} onToggle={onToggle} />
+                        <WidgetMarketplaceToggle name={TODAYS_PHOTOS_WIDGET} isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)} onToggle={onToggle} />
                     </View>
                 </View>
             </ScrollView>

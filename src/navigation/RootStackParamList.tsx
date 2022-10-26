@@ -12,7 +12,7 @@ export type TodayTab = {
     CreateOneTimeTask: { dayKey: string };
     EditOneTimeTask: { dayKey: string; plannedTaskId: string };
     PlanDay: { id: string };
-    ConfigureWidgets: undefined;
+    WidgetMarketplace: undefined;
     AddQuoteOfTheDay: undefined;
     UserProfile: { id: string };
 };
