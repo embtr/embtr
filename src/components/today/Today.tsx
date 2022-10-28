@@ -1,8 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
-import { RefreshControl, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { RefreshControl, View, TouchableOpacity } from 'react-native';
 import PlannedDayController, { clonePlannedTaskModel, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { wait } from 'src/util/GeneralUtility';
@@ -25,10 +24,12 @@ import {
     TODAYS_PHOTOS_WIDGET,
     TODAYS_TASKS_WIDGET,
     UPCOMING_GOALS_WIDGET,
+    WIDGETS,
 } from 'src/util/constants';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { UpcomingGoalsWidget } from '../widgets/upcoming_goals/UpcomingGoalsWidget';
+import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -36,6 +37,7 @@ export const Today = () => {
     const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [user, setUser] = React.useState<UserModel>();
+    const [widgets, setWidgets] = React.useState<string[]>(WIDGETS);
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
@@ -135,42 +137,58 @@ export const Today = () => {
         );
     }
 
+    const renderItem = ({ item, drag, isActive }: RenderItemParams<string>) => {
+        return (
+            <ScaleDecorator>
+                <TouchableOpacity onLongPress={drag} disabled={isActive}>
+                    {/* Today Countdown */}
+                    {item === TIME_LEFT_IN_DAY_WIDGET && plannedDay && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && (
+                        <TodaysCountdownWidget plannedDay={plannedDay} />
+                    )}
+
+                    {/* QUOTE OF THE DAY WIDGET */}
+                    {item === QUOTE_OF_THE_DAY_WIDGET && user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedTimestamp && (
+                        <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp} />
+                    )}
+
+                    {/* TODAY'S TASKS WIDGET */}
+                    {item === TODAYS_TASKS_WIDGET && plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
+                        <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
+                    )}
+
+                    {/* TODAY'S NOTES WIDGET */}
+                    {item === TODAYS_NOTES_WIDGET && user.today_widgets?.includes(TODAYS_NOTES_WIDGET) && <TodaysNotesWidget />}
+
+                    {/* TODAY'S PHOTOS WIDGET */}
+                    {item === TODAYS_PHOTOS_WIDGET && plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_PHOTOS_WIDGET) && (
+                        <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
+                    )}
+
+                    {/* UPCOMING GOALS WIDGET */}
+                    {item === UPCOMING_GOALS_WIDGET && refreshedTimestamp && user.today_widgets?.includes(UPCOMING_GOALS_WIDGET) && (
+                        <UpcomingGoalsWidget refreshedTimestamp={refreshedTimestamp} />
+                    )}
+                </TouchableOpacity>
+            </ScaleDecorator>
+        );
+    };
+
     return (
         <Screen>
             <EmbtrMenuCustom />
             <View style={{ height: '100%', width: '100%' }}>
                 <Banner name="Today" rightIcon={'ellipsis-horizontal'} menuOptions={createEmbtrMenuOptions(menuOptions)} />
-                <ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                    <View style={{ height: 7 }} />
 
-                    {/* Today Countdown */}
-                    {plannedDay && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && <TodaysCountdownWidget plannedDay={plannedDay} />}
-
-                    {/* QUOTE OF THE DAY WIDGET */}
-                    {user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedTimestamp && (
-                        <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp} />
-                    )}
-
-                    {/* TODAY'S TASKS WIDGET */}
-                    {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
-                        <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
-                    )}
-
-                    {/* TODAY'S NOTES WIDGET */}
-                    {user.today_widgets?.includes(TODAYS_NOTES_WIDGET) && <TodaysNotesWidget />}
-
-                    {/* TODAY'S PHOTOS WIDGET */}
-                    {plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_PHOTOS_WIDGET) && (
-                        <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
-                    )}
-
-                    {/* UPCOMING GOALS WIDGET */}
-                    {refreshedTimestamp && user.today_widgets?.includes(UPCOMING_GOALS_WIDGET) && (
-                        <UpcomingGoalsWidget refreshedTimestamp={refreshedTimestamp} />
-                    )}
-
-                    <View style={{ height: 7 }} />
-                </ScrollView>
+                <DraggableFlatList
+                    style={{ height: '100%', marginBottom: 100, backgroundColor: "red" }}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    data={widgets}
+                    onDragEnd={({ data }) => {
+                        setWidgets(data);
+                    }}
+                    keyExtractor={(item) => item}
+                    renderItem={renderItem}
+                />
             </View>
         </Screen>
     );
