@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
-import { RefreshControl, View, TouchableOpacity, Animated, Easing } from 'react-native';
+import { RefreshControl, View, TouchableOpacity } from 'react-native';
 import PlannedDayController, { clonePlannedTaskModel, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { wait } from 'src/util/GeneralUtility';
@@ -31,6 +31,7 @@ import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWi
 import { UpcomingGoalsWidget } from '../widgets/upcoming_goals/UpcomingGoalsWidget';
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import { WigglableView } from '../common/animated_view/WigglableView';
+import { DeletableView } from '../common/animated_view/DeletableView';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -160,6 +161,25 @@ export const Today = () => {
         setUser(clonedUser);
     };
 
+    const removeWidget = (widgetToDelete: string) => {
+        if (!user) {
+            return;
+        }
+
+        let clonedUser = UserController.clone(user);
+        clonedUser.today_widgets = [];
+        if (user.today_widgets) {
+            for (const widget of user.today_widgets) {
+                if (widget !== widgetToDelete) {
+                    clonedUser.today_widgets.push(widget);
+                }
+            }
+        }
+        UserController.update(clonedUser);
+        setWidgets(clonedUser.today_widgets);
+        setUser(clonedUser);
+    };
+
     const renderItem = ({ item, drag }: RenderItemParams<string>) => {
         return (
             <ScaleDecorator>
@@ -167,42 +187,84 @@ export const Today = () => {
                     {/* Today Countdown */}
                     {item === TIME_LEFT_IN_DAY_WIDGET && plannedDay && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && (
                         <WigglableView wiggle={isConfiguringWidgets}>
-                            <TodaysCountdownWidget plannedDay={plannedDay} />
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(TIME_LEFT_IN_DAY_WIDGET);
+                                }}
+                            >
+                                <TodaysCountdownWidget plannedDay={plannedDay} />
+                            </DeletableView>
                         </WigglableView>
                     )}
 
                     {/* QUOTE OF THE DAY WIDGET */}
                     {item === QUOTE_OF_THE_DAY_WIDGET && user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedTimestamp && (
                         <WigglableView wiggle={isConfiguringWidgets}>
-                            <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp} />
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(QUOTE_OF_THE_DAY_WIDGET);
+                                }}
+                            >
+                                <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp} />
+                            </DeletableView>
                         </WigglableView>
                     )}
 
                     {/* TODAY'S TASKS WIDGET */}
                     {item === TODAYS_TASKS_WIDGET && plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
                         <WigglableView wiggle={isConfiguringWidgets}>
-                            <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(TODAYS_TASKS_WIDGET);
+                                }}
+                            >
+                                <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
+                            </DeletableView>
                         </WigglableView>
                     )}
 
                     {/* TODAY'S NOTES WIDGET */}
                     {item === TODAYS_NOTES_WIDGET && user.today_widgets?.includes(TODAYS_NOTES_WIDGET) && (
                         <WigglableView wiggle={isConfiguringWidgets}>
-                            <TodaysNotesWidget />
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(TODAYS_NOTES_WIDGET);
+                                }}
+                            >
+                                <TodaysNotesWidget />
+                            </DeletableView>
                         </WigglableView>
                     )}
 
                     {/* TODAY'S PHOTOS WIDGET */}
                     {item === TODAYS_PHOTOS_WIDGET && plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_PHOTOS_WIDGET) && (
                         <WigglableView wiggle={isConfiguringWidgets}>
-                            <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(TODAYS_PHOTOS_WIDGET);
+                                }}
+                            >
+                                <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
+                            </DeletableView>
                         </WigglableView>
                     )}
 
                     {/* UPCOMING GOALS WIDGET */}
                     {item === UPCOMING_GOALS_WIDGET && refreshedTimestamp && user.today_widgets?.includes(UPCOMING_GOALS_WIDGET) && (
                         <WigglableView wiggle={isConfiguringWidgets}>
-                            <UpcomingGoalsWidget refreshedTimestamp={refreshedTimestamp} />
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(UPCOMING_GOALS_WIDGET);
+                                }}
+                            >
+                                <UpcomingGoalsWidget refreshedTimestamp={refreshedTimestamp} />
+                            </DeletableView>
                         </WigglableView>
                     )}
                 </TouchableOpacity>
