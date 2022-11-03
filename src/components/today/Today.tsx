@@ -97,6 +97,25 @@ export const Today = () => {
         setUser(user);
     };
 
+    const addSpacerToWidgets = (widgets: string[]) => {
+        let clone = [...widgets];
+        clone.push('SPACER');
+
+        return clone;
+    };
+
+    const updateWidgetsWithoutSpacer = (newWidgets: string[]) => {
+        let cleansedWidgets: string[] = [];
+
+        for (const widget of newWidgets) {
+            if ('SPACER' !== widget) {
+                cleansedWidgets.push(widget);
+            }
+        }
+
+        return cleansedWidgets;
+    };
+
     const togglePlannedTaskStatus = (plannedTask: PlannedTaskModel, currentStatus: string, fastStatusUpdate: Function) => {
         if (!plannedDay) {
             return;
@@ -166,9 +185,13 @@ export const Today = () => {
             return;
         }
 
+        console.log('removing: ' + widgetToDelete);
+
         let clonedUser = UserController.clone(user);
         clonedUser.today_widgets = [];
         if (user.today_widgets) {
+            console.log('today widgets');
+            console.log(user.today_widgets);
             for (const widget of user.today_widgets) {
                 if (widget !== widgetToDelete) {
                     clonedUser.today_widgets.push(widget);
@@ -183,10 +206,10 @@ export const Today = () => {
     const renderItem = ({ item, drag }: RenderItemParams<string>) => {
         return (
             <ScaleDecorator>
-                <TouchableOpacity onLongPress={drag} disabled={!isConfiguringWidgets}>
+                <TouchableOpacity onLongPress={drag} disabled={!isConfiguringWidgets || item == 'SPACER'}>
                     {/* Today Countdown */}
                     {item === TIME_LEFT_IN_DAY_WIDGET && plannedDay && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && (
-                        <WigglableView wiggle={isConfiguringWidgets}>
+                        <WigglableView key={TIME_LEFT_IN_DAY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
                                 onPress={() => {
@@ -200,7 +223,7 @@ export const Today = () => {
 
                     {/* QUOTE OF THE DAY WIDGET */}
                     {item === QUOTE_OF_THE_DAY_WIDGET && user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedTimestamp && (
-                        <WigglableView wiggle={isConfiguringWidgets}>
+                        <WigglableView key={QUOTE_OF_THE_DAY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
                                 onPress={() => {
@@ -214,7 +237,7 @@ export const Today = () => {
 
                     {/* TODAY'S TASKS WIDGET */}
                     {item === TODAYS_TASKS_WIDGET && plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
-                        <WigglableView wiggle={isConfiguringWidgets}>
+                        <WigglableView key={TODAYS_TASKS_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
                                 onPress={() => {
@@ -228,7 +251,7 @@ export const Today = () => {
 
                     {/* TODAY'S NOTES WIDGET */}
                     {item === TODAYS_NOTES_WIDGET && user.today_widgets?.includes(TODAYS_NOTES_WIDGET) && (
-                        <WigglableView wiggle={isConfiguringWidgets}>
+                        <WigglableView key={TODAYS_NOTES_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
                                 onPress={() => {
@@ -242,7 +265,7 @@ export const Today = () => {
 
                     {/* TODAY'S PHOTOS WIDGET */}
                     {item === TODAYS_PHOTOS_WIDGET && plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_PHOTOS_WIDGET) && (
-                        <WigglableView wiggle={isConfiguringWidgets}>
+                        <WigglableView key={TODAYS_PHOTOS_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
                                 onPress={() => {
@@ -256,7 +279,7 @@ export const Today = () => {
 
                     {/* UPCOMING GOALS WIDGET */}
                     {item === UPCOMING_GOALS_WIDGET && refreshedTimestamp && user.today_widgets?.includes(UPCOMING_GOALS_WIDGET) && (
-                        <WigglableView wiggle={isConfiguringWidgets}>
+                        <WigglableView key={UPCOMING_GOALS_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
                                 onPress={() => {
@@ -267,6 +290,8 @@ export const Today = () => {
                             </DeletableView>
                         </WigglableView>
                     )}
+
+                    {item === 'SPACER' && <View key={'SPACER'} style={{ height: 45, width: '100%' }} />}
                 </TouchableOpacity>
             </ScaleDecorator>
         );
@@ -294,9 +319,9 @@ export const Today = () => {
                 <DraggableFlatList
                     style={{ height: '100%', marginBottom: 100 }}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                    data={widgets}
+                    data={addSpacerToWidgets(widgets)}
                     onDragEnd={({ data }) => {
-                        setWidgets(data);
+                        updateWidgetsWithoutSpacer(data);
                     }}
                     keyExtractor={(item) => item}
                     renderItem={renderItem}

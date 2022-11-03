@@ -57,7 +57,7 @@ export const WidgetMarketplace = () => {
 
     return (
         <Screen>
-            <Banner name="Widget Marketplace" rightText={'close'} rightRoute="BACK" />
+            <Banner name="Widget Marketplace" leftText="back" leftRoute="BACK" />
 
             <ScrollView>
                 {/* SEARCH BAR */}
@@ -111,6 +111,7 @@ export const WidgetMarketplace = () => {
                 <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                     <View style={{ paddingTop: 5, width: '100%' }} />
                     {widgetViews}
+                    <View style={{ height: 7 }} />
                 </View>
             </ScrollView>
         </Screen>

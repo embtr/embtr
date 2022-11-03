@@ -28,7 +28,7 @@ export const getWidgets = (filter: string, isEnabled: Function, onToggle: Functi
 
     if (widgetMatchesFilter(TIME_LEFT_IN_DAY_WIDGET, filter)) {
         widgetViews.push(
-            <View style={{ paddingTop: 5, width: '100%' }}>
+            <View key={TIME_LEFT_IN_DAY_WIDGET} style={{ paddingTop: 5, width: '100%' }}>
                 <WidgetMarketplaceToggle
                     name={TIME_LEFT_IN_DAY_WIDGET}
                     description={TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION}
@@ -41,7 +41,7 @@ export const getWidgets = (filter: string, isEnabled: Function, onToggle: Functi
 
     if (widgetMatchesFilter(QUOTE_OF_THE_DAY_WIDGET, filter)) {
         widgetViews.push(
-            <View style={{ paddingTop: 5, width: '100%' }}>
+            <View key={QUOTE_OF_THE_DAY_WIDGET} style={{ paddingTop: 5, width: '100%' }}>
                 <WidgetMarketplaceToggle
                     name={QUOTE_OF_THE_DAY_WIDGET}
                     description={QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION}
@@ -54,7 +54,7 @@ export const getWidgets = (filter: string, isEnabled: Function, onToggle: Functi
 
     if (widgetMatchesFilter(TODAYS_TASKS_WIDGET, filter)) {
         widgetViews.push(
-            <View style={{ paddingTop: 5, width: '100%' }}>
+            <View key={TODAYS_TASKS_WIDGET} style={{ paddingTop: 5, width: '100%' }}>
                 <WidgetMarketplaceToggle
                     name={TODAYS_TASKS_WIDGET}
                     description={TODAYS_TASKS_WIDGET_DESCRIPTION}
@@ -67,7 +67,7 @@ export const getWidgets = (filter: string, isEnabled: Function, onToggle: Functi
 
     if (widgetMatchesFilter(TODAYS_NOTES_WIDGET, filter)) {
         widgetViews.push(
-            <View style={{ paddingTop: 5, width: '100%' }}>
+            <View key={TODAYS_NOTES_WIDGET} style={{ paddingTop: 5, width: '100%' }}>
                 <WidgetMarketplaceToggle
                     name={TODAYS_NOTES_WIDGET}
                     description={TODAYS_NOTES_WIDGET_DESCRIPTION}
@@ -80,7 +80,7 @@ export const getWidgets = (filter: string, isEnabled: Function, onToggle: Functi
 
     if (widgetMatchesFilter(TODAYS_PHOTOS_WIDGET, filter)) {
         widgetViews.push(
-            <View style={{ paddingTop: 5, width: '100%' }}>
+            <View key={TODAYS_PHOTOS_WIDGET} style={{ paddingTop: 5, width: '100%' }}>
                 <WidgetMarketplaceToggle
                     name={TODAYS_PHOTOS_WIDGET}
                     description={TODAYS_PHOTOS_WIDGET_DESCRIPTION}
@@ -93,7 +93,7 @@ export const getWidgets = (filter: string, isEnabled: Function, onToggle: Functi
 
     if (widgetMatchesFilter(UPCOMING_GOALS_WIDGET, filter)) {
         widgetViews.push(
-            <View style={{ paddingTop: 5, width: '100%' }}>
+            <View key={UPCOMING_GOALS_WIDGET} style={{ paddingTop: 5, width: '100%' }}>
                 <WidgetMarketplaceToggle
                     name={UPCOMING_GOALS_WIDGET}
                     description={UPCOMING_GOALS_WIDGET_DESCRIPTION}
