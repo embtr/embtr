@@ -1,25 +1,30 @@
-import { User } from "firebase/auth";
-import UsersDao from "src/firebase/firestore/user/UsersDao";
+import UsersDao from 'src/firebase/firestore/user/UsersDao';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import UserSearchResultObject from "src/firebase/firestore/user/UserSearchResultObject";
+import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
 
 class UsersController {
     public static getUsersByDisplayName(name: string, callback: Function) {
         const result = UsersDao.getUsersByDisplayName(name);
 
         let results: UserProfileModel[] = [];
-        result.then(response => {
-            response.docs.forEach(doc => {
-                const userProfileModel: UserProfileModel = doc.data();
-                results.push(userProfileModel);
-            });
-        }).then(() => {
-            let resultObject: UserSearchResultObject = new UserSearchResultObject();
-            resultObject.query = name;
-            resultObject.results = results;
+        result
+            .then((response) => {
+                response.docs.forEach((doc) => {
+                    if (doc.id === 'system') {
+                        return;
+                    }
 
-            callback(resultObject);
-        });
+                    const userProfileModel: UserProfileModel = doc.data();
+                    results.push(userProfileModel);
+                });
+            })
+            .then(() => {
+                let resultObject: UserSearchResultObject = new UserSearchResultObject();
+                resultObject.query = name;
+                resultObject.results = results;
+
+                callback(resultObject);
+            });
     }
 
     public static getUsersByDisplayNameSubQuery(name: string, currentResults: UserSearchResultObject, callback: Function) {
@@ -27,7 +32,7 @@ class UsersController {
 
         let newResults: UserProfileModel[] = [];
         if (currentResults.results) {
-            currentResults.results.forEach(userProfileModel => {
+            currentResults.results.forEach((userProfileModel) => {
                 if (userProfileModel.nameLower?.startsWith(nameLower)) {
                     newResults.push(userProfileModel);
                 }
