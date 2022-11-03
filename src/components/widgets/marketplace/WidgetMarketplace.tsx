@@ -1,28 +1,18 @@
-import { View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import React from 'react';
 import UserController, { UserModel } from 'src/controller/user/UserController';
-import {
-    QUOTE_OF_THE_DAY_WIDGET,
-    QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION,
-    TIME_LEFT_IN_DAY_WIDGET,
-    TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION,
-    TODAYS_NOTES_WIDGET,
-    TODAYS_NOTES_WIDGET_DESCRIPTION,
-    TODAYS_PHOTOS_WIDGET,
-    TODAYS_PHOTOS_WIDGET_DESCRIPTION,
-    TODAYS_TASKS_WIDGET,
-    TODAYS_TASKS_WIDGET_DESCRIPTION,
-    UPCOMING_GOALS_WIDGET,
-    UPCOMING_GOALS_WIDGET_DESCRIPTION,
-    WIDGETS,
-} from 'src/util/constants';
+import { Ionicons } from '@expo/vector-icons';
+import { CARD_SHADOW, WIDGETS } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
-import { WidgetMarketplaceToggle } from './WidgetMarketplaceToggle';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import { getWidgets } from './WidgetMarketplaceProvider';
 
 export const WidgetMarketplace = () => {
     const [user, setUser] = React.useState<UserModel>();
+    const { colors } = useTheme();
+    const [searchText, setSearchText] = React.useState<string>('');
 
     React.useEffect(() => {
         const fetch = async () => {
@@ -32,6 +22,10 @@ export const WidgetMarketplace = () => {
 
         fetch();
     }, []);
+
+    const onSearchChange = (text: string) => {
+        setSearchText(text);
+    };
 
     const onToggle = (name: string, enabled: boolean) => {
         if (!user) {
@@ -59,60 +53,64 @@ export const WidgetMarketplace = () => {
         return user?.today_widgets?.includes(name) === true;
     };
 
+    let widgetViews: JSX.Element[] = getWidgets(searchText, isEnabled, onToggle);
+
     return (
         <Screen>
             <Banner name="Widget Marketplace" rightText={'close'} rightRoute="BACK" />
 
             <ScrollView>
-                <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
-                    <View style={{ paddingTop: 10, width: '100%' }}>
-                        <WidgetMarketplaceToggle
-                            name={TIME_LEFT_IN_DAY_WIDGET}
-                            description={TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION}
-                            isEnabled={isEnabled(TIME_LEFT_IN_DAY_WIDGET)}
-                            onToggle={onToggle}
+                {/* SEARCH BAR */}
+                <View style={{ paddingTop: 10, width: '100%', alignItems: 'center' }}>
+                    <View
+                        style={[
+                            {
+                                backgroundColor: colors.button_background,
+                                height: 75,
+                                borderRadius: 15,
+                                width: '97%',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            },
+                            CARD_SHADOW,
+                        ]}
+                    >
+                        <View
+                            style={{
+                                alignContent: 'flex-end',
+                                alignItems: 'flex-end',
+                                justifyContent: 'flex-end',
+                                position: 'absolute',
+                                zIndex: -1,
+                                width: '100%',
+                                paddingRight: 15,
+                            }}
+                        >
+                            <Ionicons name={'search'} size={28} color={colors.search_preview} />
+                        </View>
+
+                        <TextInput
+                            style={{
+                                width: '100%',
+                                height: 100,
+                                color: colors.user_search_name,
+                                fontSize: 18,
+                                fontFamily: 'Poppins_400Regular',
+                                paddingLeft: 15,
+                            }}
+                            onChangeText={onSearchChange}
+                            value={searchText}
+                            placeholderTextColor={colors.search_preview}
+                            placeholder={'Search'}
+                            autoCapitalize="none"
                         />
                     </View>
-                    <View style={{ paddingTop: 5, width: '100%' }}>
-                        <WidgetMarketplaceToggle
-                            name={QUOTE_OF_THE_DAY_WIDGET}
-                            description={QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION}
-                            isEnabled={isEnabled(QUOTE_OF_THE_DAY_WIDGET)}
-                            onToggle={onToggle}
-                        />
-                    </View>
-                    <View style={{ paddingTop: 5, width: '100%' }}>
-                        <WidgetMarketplaceToggle
-                            name={TODAYS_TASKS_WIDGET}
-                            description={TODAYS_TASKS_WIDGET_DESCRIPTION}
-                            isEnabled={isEnabled(TODAYS_TASKS_WIDGET)}
-                            onToggle={onToggle}
-                        />
-                    </View>
-                    <View style={{ paddingTop: 5, width: '100%' }}>
-                        <WidgetMarketplaceToggle
-                            name={TODAYS_NOTES_WIDGET}
-                            description={TODAYS_NOTES_WIDGET_DESCRIPTION}
-                            isEnabled={isEnabled(TODAYS_NOTES_WIDGET)}
-                            onToggle={onToggle}
-                        />
-                    </View>
-                    <View style={{ paddingTop: 5, width: '100%' }}>
-                        <WidgetMarketplaceToggle
-                            name={TODAYS_PHOTOS_WIDGET}
-                            description={TODAYS_PHOTOS_WIDGET_DESCRIPTION}
-                            isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)}
-                            onToggle={onToggle}
-                        />
-                    </View>
-                    <View style={{ paddingTop: 5, width: '100%' }}>
-                        <WidgetMarketplaceToggle
-                            name={UPCOMING_GOALS_WIDGET}
-                            description={UPCOMING_GOALS_WIDGET_DESCRIPTION}
-                            isEnabled={isEnabled(UPCOMING_GOALS_WIDGET)}
-                            onToggle={onToggle}
-                        />
-                    </View>
+                </View>
+
+                {/* WIDGETS */}
+                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                    <View style={{ paddingTop: 5, width: '100%' }} />
+                    {widgetViews}
                 </View>
             </ScrollView>
         </Screen>
