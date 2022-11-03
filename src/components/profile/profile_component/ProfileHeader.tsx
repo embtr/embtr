@@ -1,4 +1,4 @@
-import { Text, View, Image } from 'react-native';
+import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';

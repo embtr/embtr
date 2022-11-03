@@ -1,5 +1,16 @@
 import React from 'react';
-import { View, Text, TextInput, Keyboard, KeyboardAvoidingView, Image, ActivityIndicator, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    Keyboard,
+    KeyboardAvoidingView,
+    Image,
+    ActivityIndicator,
+    StyleSheet,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+} from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -16,6 +27,7 @@ import ProfileBannerImage from 'src/components/profile/profile_component/Profile
 import { Ionicons } from '@expo/vector-icons';
 import { BannerInfoModal } from 'src/components/profile/profile_component/BannerInfoModal';
 import { CachedImage } from '../common/images/CachedImage';
+import { wait } from 'src/util/GeneralUtility';
 
 export const EditUserProfile = () => {
     const { colors } = useTheme();
@@ -24,17 +36,23 @@ export const EditUserProfile = () => {
 
     const [userProfile, setUserProfile] = React.useState<UserProfileModel | undefined>();
 
-    const [photoUrl, setPhotoUrl] = React.useState("");
-    const [bannerUrl, setBannerUrl] = React.useState("");
-    const [username, setUsername] = React.useState("");
-    const [displayName, setDisplayName] = React.useState("");
-    const [location, setLocation] = React.useState("");
-    const [bio, setBio] = React.useState("");
+    const [photoUrl, setPhotoUrl] = React.useState('');
+    const [bannerUrl, setBannerUrl] = React.useState('');
+    const [username, setUsername] = React.useState('');
+    const [displayName, setDisplayName] = React.useState('');
+    const [location, setLocation] = React.useState('');
+    const [bio, setBio] = React.useState('');
 
     const [imageUploading, setImageUploading] = React.useState(false);
     const [showBannerInfoModal, setShowBannerInfoModal] = React.useState(false);
 
-    const placeholderOptions: string[] = ["I love pringles <3", "Smarter than your average", "Do people read these?", "Top 10 Horseshoe player on my street.", "Work Hard, Train Harder."];
+    const placeholderOptions: string[] = [
+        'I love pringles <3',
+        'Smarter than your average',
+        'Do people read these?',
+        'Top 10 Horseshoe player on my street.',
+        'Work Hard, Train Harder.',
+    ];
     const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]);
 
     function getRandomInt(min: number, max: number) {
@@ -86,9 +104,10 @@ export const EditUserProfile = () => {
 
     const uploadProfilePhoto = async () => {
         setImageUploading(true);
+        setPhotoUrl('');
         const url = await ProfileController.uploadProfilePhoto();
         if (url) {
-            setPhotoUrl(url);
+                setPhotoUrl(url);
         }
         setImageUploading(false);
     };
@@ -96,8 +115,9 @@ export const EditUserProfile = () => {
     const uploadProfileBanner = async () => {
         setImageUploading(true);
         const url = await ProfileController.uploadProfileBanner();
+        setBannerUrl('');
         if (url) {
-            setBannerUrl(url);
+                setBannerUrl(url);
         }
         setImageUploading(false);
     };
@@ -110,9 +130,9 @@ export const EditUserProfile = () => {
                         StyleSheet.absoluteFill,
                         {
                             zIndex: 3,
-                            backgroundColor: "rgba(0,0,0,0.4)",
-                            alignItems: "center",
-                            justifyContent: "center",
+                            backgroundColor: 'rgba(0,0,0,0.4)',
+                            alignItems: 'center',
+                            justifyContent: 'center',
                         },
                     ]}
                 >
@@ -124,31 +144,53 @@ export const EditUserProfile = () => {
 
     return (
         <Screen>
-            <Banner name={"Edit Profile"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+            <Banner name={'Edit Profile'} leftIcon={'arrow-back'} leftRoute={'BACK'} />
 
             {_maybeRenderUploadingOverlay()}
             <BannerInfoModal visible={showBannerInfoModal} dismiss={hideBannerInfoModal} />
 
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
-                <View style={{ height: "100%", width: "100%" }}>
-                    <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={{ height: '100%', width: '100%' }}>
+                    <KeyboardAvoidingView
+                        style={{ height: '100%' }}
+                        keyboardVerticalOffset={isIosApp() ? -10 : 111}
+                        behavior={isIosApp() ? 'padding' : 'height'}
+                    >
                         <TouchableWithoutFeedback onPress={uploadProfileBanner}>
-
-                            <View style={{ width: "100%", height: 180, alignItems: "flex-end", justifyContent: "flex-end" }}>
-                                <View style={{ zIndex: 3, position: "absolute", alignItems: "flex-end", justifyContent: "flex-end", paddingBottom: 40, paddingRight: 20 }}>
-                                    <View style={{ borderRadius: 50, backgroundColor: colors.text, height: 21, width: 21, alignItems: "center", justifyContent: "center" }}>
+                            <View style={{ width: '100%', height: 180, alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                                <View
+                                    style={{
+                                        zIndex: 3,
+                                        position: 'absolute',
+                                        alignItems: 'flex-end',
+                                        justifyContent: 'flex-end',
+                                        paddingBottom: 40,
+                                        paddingRight: 20,
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            borderRadius: 50,
+                                            backgroundColor: colors.text,
+                                            height: 21,
+                                            width: 21,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
                                         <Ionicons name={'information-circle-outline'} size={22} color={colors.background} onPress={displayBannerInfoModal} />
                                     </View>
                                 </View>
-                                <View style={{ width: "100%", height: "100%", alignItems: "center", paddingTop: 10 }}>
+                                <View style={{ width: '100%', height: '100%', alignItems: 'center', paddingTop: 10 }}>
                                     <ProfileBannerImage sourceUrl={bannerUrl} />
                                 </View>
 
-                                <View style={{ width: "100%", height: "100%", position: "absolute", zIndex: 2, alignItems: "center", justifyContent: "flex-end" }}>
+                                <View
+                                    style={{ width: '100%', height: '100%', position: 'absolute', zIndex: 2, alignItems: 'center', justifyContent: 'flex-end' }}
+                                >
                                     <TouchableOpacity onPress={uploadProfilePhoto}>
-                                        <View style={{ alignItems: "flex-end", justifyContent: "flex-end" }}>
-                                            <CachedImage style={{ width: 100, height: 100, borderRadius: 50 }} uri={photoUrl} /> 
+                                        <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                                            {photoUrl && <CachedImage style={{ width: 100, height: 100, borderRadius: 50 }} uri={photoUrl} />}
                                         </View>
                                     </TouchableOpacity>
                                 </View>
@@ -156,11 +198,34 @@ export const EditUserProfile = () => {
                         </TouchableWithoutFeedback>
 
                         {/* Username */}
-                        <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Username</Text>
+                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    color: colors.goal_primary_font,
+                                    paddingTop: 15,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                    fontFamily: 'Poppins_400Regular',
+                                }}
+                            >
+                                Username
+                            </Text>
                             <TextInput
-                                style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
-                                placeholder={"Username"}
+                                style={{
+                                    padding: 15,
+                                    fontFamily: 'Poppins_400Regular',
+                                    color: colors.goal_primary_font,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    width: '95%',
+                                }}
+                                placeholder={'Username'}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setUsername}
                                 value={username}
@@ -169,11 +234,34 @@ export const EditUserProfile = () => {
                         </View>
 
                         {/* Display Name */}
-                        <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Display Name</Text>
+                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    color: colors.goal_primary_font,
+                                    paddingTop: 15,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                    fontFamily: 'Poppins_400Regular',
+                                }}
+                            >
+                                Display Name
+                            </Text>
                             <TextInput
-                                style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
-                                placeholder={"Display Name"}
+                                style={{
+                                    padding: 15,
+                                    fontFamily: 'Poppins_400Regular',
+                                    color: colors.goal_primary_font,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    width: '95%',
+                                }}
+                                placeholder={'Display Name'}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setDisplayName}
                                 value={displayName}
@@ -182,11 +270,34 @@ export const EditUserProfile = () => {
                         </View>
 
                         {/* Location */}
-                        <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Location</Text>
+                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    color: colors.goal_primary_font,
+                                    paddingTop: 15,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                    fontFamily: 'Poppins_400Regular',
+                                }}
+                            >
+                                Location
+                            </Text>
                             <TextInput
-                                style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
-                                placeholder={"where in the world?"}
+                                style={{
+                                    padding: 15,
+                                    fontFamily: 'Poppins_400Regular',
+                                    color: colors.goal_primary_font,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    width: '95%',
+                                }}
+                                placeholder={'where in the world?'}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setLocation}
                                 value={location}
@@ -195,11 +306,30 @@ export const EditUserProfile = () => {
                         </View>
 
                         {/* Bio */}
-                        <View style={{ paddingTop: 15, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Bio</Text>
+                        <View style={{ paddingTop: 15, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            >
+                                Bio
+                            </Text>
                             <TextInput
-                                textAlignVertical='top'
-                                style={{ width: "95%", fontFamily: "Poppins_400Regular", height: 200, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, color: colors.text, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}
+                                textAlignVertical="top"
+                                style={{
+                                    width: '95%',
+                                    fontFamily: 'Poppins_400Regular',
+                                    height: 200,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    color: colors.text,
+                                    paddingTop: 10,
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                }}
                                 multiline={true}
                                 placeholder={bioPlaceholder}
                                 placeholderTextColor={colors.secondary_text}
@@ -209,29 +339,42 @@ export const EditUserProfile = () => {
                             />
                         </View>
 
-                        <View style={{ zIndex: -1, flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, paddingBottom: 15 }}>
-                            <View style={{ width: "95%" }}>
-                                <EmbtrButton buttonText={'Update Profile'} callback={() => {
-                                    if (userProfile) {
-                                        userProfile.username = username;
-                                        userProfile.name = displayName;
-                                        userProfile.location = location;
-                                        userProfile.bio = bio;
-                                        if (photoUrl) {
-                                            userProfile.photoUrl = photoUrl;
+                        <View
+                            style={{
+                                zIndex: -1,
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'flex-end',
+                                alignSelf: 'stretch',
+                                margin: 5,
+                                paddingBottom: 15,
+                            }}
+                        >
+                            <View style={{ width: '95%' }}>
+                                <EmbtrButton
+                                    buttonText={'Update Profile'}
+                                    callback={() => {
+                                        if (userProfile) {
+                                            userProfile.username = username;
+                                            userProfile.name = displayName;
+                                            userProfile.location = location;
+                                            userProfile.bio = bio;
+                                            if (photoUrl) {
+                                                userProfile.photoUrl = photoUrl;
+                                            }
+                                            if (bannerUrl) {
+                                                userProfile.bannerUrl = bannerUrl;
+                                            }
+                                            ProfileController.updateProfile(userProfile);
                                         }
-                                        if (bannerUrl) {
-                                            userProfile.bannerUrl = bannerUrl;
-                                        }
-                                        ProfileController.updateProfile(userProfile);
-                                    }
-                                    navigation.navigate("Profile");
-                                }} />
+                                        navigation.navigate('Profile');
+                                    }}
+                                />
                             </View>
                         </View>
                     </KeyboardAvoidingView>
                 </View>
             </ScrollView>
-        </Screen >
+        </Screen>
     );
 };

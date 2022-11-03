@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { Screen } from 'src/components/common/Screen';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
@@ -11,6 +10,8 @@ import { ProfileBody } from 'src/components/profile/profile_component/ProfileBod
 import { useFocusEffect } from '@react-navigation/native';
 import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
+import { wait } from 'src/util/GeneralUtility';
+import { getAuth } from 'firebase/auth';
 
 export const CurrentUserProfile = () => {
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
@@ -18,10 +19,9 @@ export const CurrentUserProfile = () => {
     const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const [currentUserId, setCurrentUserId] = React.useState<string | undefined>(undefined);
     useFocusEffect(
         React.useCallback(() => {
-            getCurrentUserUid(setCurrentUserId);
+            fetch();
         }, [])
     );
 
@@ -38,22 +38,19 @@ export const CurrentUserProfile = () => {
         }, [userProfileModel])
     );
 
-    useFocusEffect(
-        React.useCallback(() => {
-            if (currentUserId) {
-                ProfileController.getProfile(currentUserId, (profile: UserProfileModel) => {
-                    setUserProfileModel(profile);
-                });
-            }
-        }, [currentUserId])
-    );
-
-    const wait = (timeout: number | undefined) => {
-        return new Promise((resolve) => setTimeout(resolve, timeout));
+    const fetch = () => {
+        const userId = getAuth().currentUser?.uid;
+        if (userId) {
+            ProfileController.getProfile(userId, (profile: UserProfileModel) => {
+                setUserProfileModel(profile);
+            });
+        }
     };
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        setUserProfileModel(undefined);
+        fetch();
         wait(500).then(() => setRefreshing(false));
     }, []);
 

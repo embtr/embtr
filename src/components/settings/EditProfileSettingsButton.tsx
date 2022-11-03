@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { SettingsButtonElement } from 'src/components/settings/SettingsButtonElement';
 import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
