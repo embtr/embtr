@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Text, View, Switch } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';

@@ -38,10 +38,29 @@ export const POPPINS_SEMI_BOLD = 'Poppins_600SemiBold';
 
 //WIDGETS
 export const TIME_LEFT_IN_DAY_WIDGET = 'Time Left In Day';
+export const TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION = 'A snapshot of how much time remains in the day.';
+
 export const QUOTE_OF_THE_DAY_WIDGET = 'Quote Of The Day';
+export const QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION = 'One quote a day - sourced by the community!';
+
 export const TODAYS_TASKS_WIDGET = "Today's Tasks";
+export const TODAYS_TASKS_WIDGET_DESCRIPTION = "A list of today's tasks.";
+
 export const TODAYS_PHOTOS_WIDGET = "Today's Photos";
+export const TODAYS_PHOTOS_WIDGET_DESCRIPTION = "Add and view your days photo's with this widget!";
+
 export const TODAYS_NOTES_WIDGET = "Today's Notes";
-export const UPCOMING_GOALS_WIDGET = "Upcoming Goals";
-export const WIDGETS = [TIME_LEFT_IN_DAY_WIDGET, QUOTE_OF_THE_DAY_WIDGET, TODAYS_TASKS_WIDGET, TODAYS_PHOTOS_WIDGET, TODAYS_NOTES_WIDGET, UPCOMING_GOALS_WIDGET];
+export const TODAYS_NOTES_WIDGET_DESCRIPTION = 'Have a thought? Jot it down!';
+
+export const UPCOMING_GOALS_WIDGET = 'Upcoming Goals';
+export const UPCOMING_GOALS_WIDGET_DESCRIPTION = 'A simple view of all of your upcoming goals.';
+
+export const WIDGETS = [
+    TIME_LEFT_IN_DAY_WIDGET,
+    QUOTE_OF_THE_DAY_WIDGET,
+    TODAYS_TASKS_WIDGET,
+    TODAYS_PHOTOS_WIDGET,
+    TODAYS_NOTES_WIDGET,
+    UPCOMING_GOALS_WIDGET,
+];
 export const WIDGET_LIKE_ICON_SIZE = 20;

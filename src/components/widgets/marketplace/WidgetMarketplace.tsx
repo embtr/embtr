@@ -5,11 +5,17 @@ import React from 'react';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import {
     QUOTE_OF_THE_DAY_WIDGET,
+    QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION,
     TIME_LEFT_IN_DAY_WIDGET,
+    TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION,
     TODAYS_NOTES_WIDGET,
+    TODAYS_NOTES_WIDGET_DESCRIPTION,
     TODAYS_PHOTOS_WIDGET,
+    TODAYS_PHOTOS_WIDGET_DESCRIPTION,
     TODAYS_TASKS_WIDGET,
+    TODAYS_TASKS_WIDGET_DESCRIPTION,
     UPCOMING_GOALS_WIDGET,
+    UPCOMING_GOALS_WIDGET_DESCRIPTION,
     WIDGETS,
 } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -59,23 +65,53 @@ export const WidgetMarketplace = () => {
 
             <ScrollView>
                 <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
-                    <View style={{ paddingTop: 10 }}>
-                        <WidgetMarketplaceToggle name={TIME_LEFT_IN_DAY_WIDGET} isEnabled={isEnabled(TIME_LEFT_IN_DAY_WIDGET)} onToggle={onToggle} />
+                    <View style={{ paddingTop: 10, width: '100%' }}>
+                        <WidgetMarketplaceToggle
+                            name={TIME_LEFT_IN_DAY_WIDGET}
+                            description={TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION}
+                            isEnabled={isEnabled(TIME_LEFT_IN_DAY_WIDGET)}
+                            onToggle={onToggle}
+                        />
                     </View>
-                    <View style={{ paddingTop: 5 }}>
-                        <WidgetMarketplaceToggle name={QUOTE_OF_THE_DAY_WIDGET} isEnabled={isEnabled(QUOTE_OF_THE_DAY_WIDGET)} onToggle={onToggle} />
+                    <View style={{ paddingTop: 5, width: '100%' }}>
+                        <WidgetMarketplaceToggle
+                            name={QUOTE_OF_THE_DAY_WIDGET}
+                            description={QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION}
+                            isEnabled={isEnabled(QUOTE_OF_THE_DAY_WIDGET)}
+                            onToggle={onToggle}
+                        />
                     </View>
-                    <View style={{ paddingTop: 5 }}>
-                        <WidgetMarketplaceToggle name={TODAYS_TASKS_WIDGET} isEnabled={isEnabled(TODAYS_TASKS_WIDGET)} onToggle={onToggle} />
+                    <View style={{ paddingTop: 5, width: '100%' }}>
+                        <WidgetMarketplaceToggle
+                            name={TODAYS_TASKS_WIDGET}
+                            description={TODAYS_TASKS_WIDGET_DESCRIPTION}
+                            isEnabled={isEnabled(TODAYS_TASKS_WIDGET)}
+                            onToggle={onToggle}
+                        />
                     </View>
-                    <View style={{ paddingTop: 5 }}>
-                        <WidgetMarketplaceToggle name={TODAYS_NOTES_WIDGET} isEnabled={isEnabled(TODAYS_NOTES_WIDGET)} onToggle={onToggle} />
+                    <View style={{ paddingTop: 5, width: '100%' }}>
+                        <WidgetMarketplaceToggle
+                            name={TODAYS_NOTES_WIDGET}
+                            description={TODAYS_NOTES_WIDGET_DESCRIPTION}
+                            isEnabled={isEnabled(TODAYS_NOTES_WIDGET)}
+                            onToggle={onToggle}
+                        />
                     </View>
-                    <View style={{ paddingTop: 5 }}>
-                        <WidgetMarketplaceToggle name={TODAYS_PHOTOS_WIDGET} isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)} onToggle={onToggle} />
+                    <View style={{ paddingTop: 5, width: '100%' }}>
+                        <WidgetMarketplaceToggle
+                            name={TODAYS_PHOTOS_WIDGET}
+                            description={TODAYS_PHOTOS_WIDGET_DESCRIPTION}
+                            isEnabled={isEnabled(TODAYS_PHOTOS_WIDGET)}
+                            onToggle={onToggle}
+                        />
                     </View>
-                    <View style={{ paddingTop: 5 }}>
-                        <WidgetMarketplaceToggle name={UPCOMING_GOALS_WIDGET} isEnabled={isEnabled(UPCOMING_GOALS_WIDGET)} onToggle={onToggle} />
+                    <View style={{ paddingTop: 5, width: '100%' }}>
+                        <WidgetMarketplaceToggle
+                            name={UPCOMING_GOALS_WIDGET}
+                            description={UPCOMING_GOALS_WIDGET_DESCRIPTION}
+                            isEnabled={isEnabled(UPCOMING_GOALS_WIDGET)}
+                            onToggle={onToggle}
+                        />
                     </View>
                 </View>
             </ScrollView>

@@ -50,7 +50,7 @@ export const WigglableView = ({ wiggle, children }: Props) => {
                     {
                         rotate: animatedValue.interpolate({
                             inputRange: [-100, 100],
-                            outputRange: ['-0.007rad', '0.007rad'],
+                            outputRange: ['-0.0075rad', '0.0075rad'],
                         }),
                     },
                 ],
