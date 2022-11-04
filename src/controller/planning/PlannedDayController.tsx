@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
-import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
 import { getDaysOld } from 'src/util/GeneralUtility';
 import LevelController from '../level/LevelController';
@@ -89,10 +89,14 @@ export const getKey = (dayOfMonth: number) => {
     const date = new Date();
     date.setDate(dayOfMonth);
 
-    let month = ('0' + (date.getMonth() + 1)).slice(-2);
-    let day = ('0' + dayOfMonth).slice(-2);
-    let year = date.getFullYear();
+    return getKeyFromDate(date);
+};
 
+export const getKeyFromDate = (date: Date) => {
+    const dateString = date.toISOString();
+    let month = dateString.split('-')[1];
+    let day = dateString.split('-')[2].substring(0, 2);
+    let year = dateString.split('-')[0];
     return month + day + year;
 };
 
@@ -102,6 +106,16 @@ export const getDayKey = (day: number) => {
 
 export const getTodayKey = () => {
     return getKey(new Date().getDate());
+};
+
+export const getPreviousDayKey = (dayKey: string) => {
+    const date = getDateFromDayKey(dayKey);
+
+    const yesterday = date;
+    yesterday.setDate(date.getDate() - 1);
+
+    const result = getKeyFromDate(yesterday);
+    return result;
 };
 
 export const getTomorrowKey = () => {

@@ -8,6 +8,7 @@ import ProfileBannerImage from 'src/components/profile/profile_component/Profile
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
 import { CachedImage } from 'src/components/common/images/CachedImage';
+import { LevelProgress } from './level_progress/LevelProgress';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -93,8 +94,10 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                 <Text style={{ fontSize: 12, fontFamily: 'Poppins_500Medium', color: colors.profile_bio_text, paddingTop: 3 }}>{userProfileModel?.bio}</Text>
             </View>
 
-            <View style={{ paddingBottom: 20 }}>
+            {/* FOLLOWERS/ FOLLOWING */}
+            <View style={{ paddingBottom: 10 }}>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', paddingTop: 10, backgroundColor: colors.background }}>
+                    {/* FOLLOWERS */}
                     <View
                         style={{
                             paddingLeft: 15,
@@ -112,6 +115,8 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                     >
                         <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.profile_following_text }}>{followerCount} Followers</Text>
                     </View>
+
+                    {/* FOLLOWING */}
                     <View
                         style={{
                             paddingLeft: 15,
@@ -129,6 +134,12 @@ export const ProfileHeader = ({ userProfileModel, onFollowUser, onUnfollowUser, 
                     >
                         <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.profile_following_text }}>{followingCount} Following</Text>
                     </View>
+                </View>
+            </View>
+
+            <View style={{ width: '100%', alignItems: 'center' }}>
+                <View style={{ width: '98%', alignItems: 'center' }}>
+                    <LevelProgress user={userProfileModel} />
                 </View>
             </View>
         </View>

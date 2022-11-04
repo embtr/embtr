@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComment';
 import { Comment } from 'src/controller/timeline/TimelineController';
 

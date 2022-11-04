@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
@@ -13,6 +13,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
 import { getAuth } from 'firebase/auth';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();

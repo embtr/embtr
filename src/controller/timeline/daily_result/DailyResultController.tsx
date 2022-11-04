@@ -1,8 +1,15 @@
+import { current } from '@reduxjs/toolkit';
 import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import PlannedDayController, { getDayKeyDaysOld, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, {
+    getDayKeyDaysOld,
+    getPreviousDayKey,
+    getTodayKey,
+    getTomorrowKey,
+    PlannedDay,
+} from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
@@ -99,7 +106,7 @@ class DailyResultController {
 
     public static async get(id: string, callback: Function) {
         const result = await DailyResultDao.get(id);
-        const dailyResult = await this.getDailyResultFromData(result);
+        const dailyResult = this.getDailyResultFromData(result);
 
         callback(dailyResult);
     }
@@ -125,7 +132,7 @@ class DailyResultController {
 
         let dailyResults: DailyResultModel[] = [];
         for (const result of results.docs) {
-            const dailyResult = await DailyResultController.getDailyResultFromData(result);
+            const dailyResult = DailyResultController.getDailyResultFromData(result);
 
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
                 const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
@@ -145,7 +152,7 @@ class DailyResultController {
 
         let dailyResults: DailyResultModel[] = [];
         for (const result of results.docs) {
-            const dailyResult = await DailyResultController.getDailyResultFromData(result);
+            const dailyResult = DailyResultController.getDailyResultFromData(result);
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
                 const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
                 if (daysOld <= 0) {
@@ -184,18 +191,50 @@ class DailyResultController {
         return imgUrls;
     }
 
+    public static async getDailyResultHistory(uid: string) {
+        const results = await DailyResultDao.getAllForUserWithLimit(uid, 30);
+
+        let dailyResults: DailyResultModel[] = [];
+        results.forEach((dailyResultData) => {
+            const dailyResult = this.getDailyResultFromData(dailyResultData);
+            dailyResults.push(dailyResult);
+        });
+
+        let dayKeyToResultMap: Map<string, DailyResultModel> = new Map<string, DailyResultModel>();
+        dailyResults.forEach((dailyResult) => {
+            dayKeyToResultMap.set(dailyResult.data.plannedDayId, dailyResult);
+        });
+
+        let successResults = [];
+        let currentDayKey: string = getTodayKey();
+        for (let i = 0; i < 30; i++) {
+            currentDayKey = getPreviousDayKey(currentDayKey);
+            let successResult = 'INVALID';
+            if (dayKeyToResultMap.has(currentDayKey)) {
+                const result = dayKeyToResultMap.get(currentDayKey);
+                if (result?.data.hasTasks) {
+                    successResult = result.data.status;
+                }
+            }
+            //c.log(currentDayKey + ": " + successResult);
+            successResults.unshift(successResult);
+        }
+
+        return successResults;
+    }
+
     private static async getByDayKey(uid: string, dayKey: string) {
         const results = await DailyResultDao.getByDayKey(uid, dayKey);
 
         let dailyResult: DailyResultModel | undefined = undefined;
         if (!results.empty) {
-            dailyResult = await this.getDailyResultFromData(results.docs[0]);
+            dailyResult = this.getDailyResultFromData(results.docs[0]);
         }
 
         return dailyResult;
     }
 
-    private static async getDailyResultFromData(result: DocumentSnapshot<DocumentData>): Promise<DailyResultModel> {
+    private static getDailyResultFromData(result: DocumentSnapshot<DocumentData>): DailyResultModel {
         let dailyResult: DailyResultModel = result.data() as DailyResultModel;
         dailyResult.id = result.id;
         //if (true) {
