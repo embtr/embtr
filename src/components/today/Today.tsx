@@ -113,7 +113,7 @@ export const Today = () => {
             }
         }
 
-        return cleansedWidgets;
+        setWidgets(cleansedWidgets);
     };
 
     const togglePlannedTaskStatus = (plannedTask: PlannedTaskModel, currentStatus: string, fastStatusUpdate: Function) => {
@@ -148,7 +148,6 @@ export const Today = () => {
             },
         },
         {
-            // this will be used to delete/ reorder widgets
             name: 'Configure',
             onPress: () => {
                 if (!isConfiguringWidgets) {
