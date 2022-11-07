@@ -1,10 +1,10 @@
-import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 export const LevelProgress = ({ user }: Props) => {
     const { colors } = useTheme();
-    const diameter = 8;
+    const diameter = 9;
     const margin = ((getWindowWidth() * 0.98 - 10) / 30 - diameter) / 2;
 
     const [history, setHistory] = React.useState<string[]>([]);
@@ -54,7 +54,7 @@ export const LevelProgress = ({ user }: Props) => {
                         : colors.progress_bar_color,
                     height: diameter,
                     width: diameter,
-                    borderRadius: 25,
+                    borderRadius: 2.7,
                     marginLeft: margin,
                     marginRight: margin,
                 }}
@@ -62,11 +62,44 @@ export const LevelProgress = ({ user }: Props) => {
         );
     }
 
+    let streak = 0;
+    for (let i = history.length - 1; i >= 0; i--) {
+        if (!isSuccess(history[i])) {
+            break;
+        }
+
+        streak++;
+    }
+
+    const yesterday = getYesterday();
+
+    const twoWeeksAgo = getYesterday();
+    twoWeeksAgo.setDate(getYesterday().getDate() - 15);
+
+    const fourWeeksAgo = getYesterday();
+    fourWeeksAgo.setDate(getYesterday().getDate() - 30);
+
+    const yesterdayFormatted = getMonthDayFormatted(yesterday);
+    const twoWeeksAgoFormatted = getMonthDayFormatted(twoWeeksAgo);
+    const fourWeeksAgoFormatted = getMonthDayFormatted(fourWeeksAgo);
+
     return (
         <View style={{ paddingRight: 5, paddingLeft: 5, backgroundColor: colors.timeline_card_background, borderRadius: 7 }}>
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD }}>History</Text>
-            <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, fontSize: 12, paddingTop: 2 }}>current streak: 2 days</Text>
-            <View style={{ flexDirection: 'row', paddingTop: 3, paddingBottom: 10 }}>{views}</View>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, fontSize: 12, paddingTop: 2 }}>current streak: {streak} days</Text>
+            <View style={{ flexDirection: 'row', paddingTop: 3 }}>{views}</View>
+            <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1, paddingBottom: 3, paddingTop: 2 }}>
+                    <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR, fontSize: 8 }}> {fourWeeksAgoFormatted}</Text>
+                </View>
+
+                <View style={{ flex: 1, paddingBottom: 3, paddingTop: 2, alignItems: 'center' }}>
+                    <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR, fontSize: 8 }}> {twoWeeksAgoFormatted}</Text>
+                </View>
+                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR, fontSize: 8 }}>{yesterdayFormatted} </Text>
+                </View>
+            </View>
         </View>
     );
 };

@@ -184,13 +184,9 @@ export const Today = () => {
             return;
         }
 
-        console.log('removing: ' + widgetToDelete);
-
         let clonedUser = UserController.clone(user);
         clonedUser.today_widgets = [];
         if (user.today_widgets) {
-            console.log('today widgets');
-            console.log(user.today_widgets);
             for (const widget of user.today_widgets) {
                 if (widget !== widgetToDelete) {
                     clonedUser.today_widgets.push(widget);

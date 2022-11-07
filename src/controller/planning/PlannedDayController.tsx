@@ -3,7 +3,7 @@ import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
-import { getDaysOld } from 'src/util/GeneralUtility';
+import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
 import LevelController from '../level/LevelController';
 
 export interface PlannedDay {
@@ -93,7 +93,7 @@ export const getKey = (dayOfMonth: number) => {
 };
 
 export const getKeyFromDate = (date: Date) => {
-    const dateString = date.toISOString();
+    const dateString = getDateFormatted(date);
     let month = dateString.split('-')[1];
     let day = dateString.split('-')[2].substring(0, 2);
     let year = dateString.split('-')[0];
