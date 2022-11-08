@@ -10,10 +10,10 @@ import FollowerController, { FollowCounts } from 'src/controller/follower/Follow
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
 import { getAuth } from 'firebase/auth';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { ScrollView } from 'react-native-gesture-handler';
+import { LevelProgressWidget } from '../widgets/level_progress_widget/LevelProgressWidget';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -87,6 +87,14 @@ export const UserProfile = () => {
                                 followingCount={followingCount}
                                 isFollowingUser={isFollowingUser}
                             />
+                        )}
+                    </View>
+
+                    <View style={{ width: '100%', alignItems: 'center' }}>
+                        {userProfileModel && (
+                            <View style={{ width: '98%', alignItems: 'center' }}>
+                                <LevelProgressWidget user={userProfileModel} />
+                            </View>
                         )}
                     </View>
                 </View>
