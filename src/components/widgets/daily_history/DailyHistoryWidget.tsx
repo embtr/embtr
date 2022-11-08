@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 
@@ -81,9 +81,9 @@ export const DailyHistoryWidget = ({ uid }: Props) => {
 
     return (
         <WidgetBase>
-            <Text style={{ color: colors.text, fontFamily: 'Poppins_500Medium', fontSize: 16 }}>Daily History</Text>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Daily History</Text>
 
-            <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, fontSize: 12, paddingTop: 1 }}>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, fontSize: 12, paddingTop: 5 }}>
                 current streak:
                 <Text style={{ color: colors.tab_selected, fontFamily: POPPINS_REGULAR, fontSize: 12, paddingTop: 5 }}>
                     {' '}

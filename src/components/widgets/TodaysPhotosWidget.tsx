@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
@@ -11,11 +10,10 @@ import { WidgetBase } from './WidgetBase';
 
 interface Props {
     dailyResult: DailyResultModel;
-    plannedDay: PlannedDay;
     onImagesChanged: Function;
 }
 
-export const TodaysPhotosWidget = ({ dailyResult, plannedDay, onImagesChanged }: Props) => {
+export const TodaysPhotosWidget = ({ dailyResult, onImagesChanged }: Props) => {
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);

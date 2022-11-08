@@ -269,7 +269,7 @@ export const Today = () => {
                                     removeWidget(TODAYS_PHOTOS_WIDGET);
                                 }}
                             >
-                                <TodaysPhotosWidget plannedDay={plannedDay} dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
+                                <TodaysPhotosWidget dailyResult={dailyResult} onImagesChanged={fetchDailyResult} />
                             </DeletableView>
                         </WigglableView>
                     )}

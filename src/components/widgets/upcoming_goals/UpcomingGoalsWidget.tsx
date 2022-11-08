@@ -1,3 +1,4 @@
+import { differenceInDays } from 'date-fns';
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -30,6 +31,10 @@ export const UpcomingGoalsWidget = ({ refreshedTimestamp }: Props) => {
     if (goals) {
         for (let i = 0; i < goals?.length; i++) {
             const goal = goals[i];
+            const daysRemaining = differenceInDays(goal.deadline.toDate(), new Date());
+            if (daysRemaining < 0) {
+                continue;
+            }
             goalViews.push(
                 <View style={{ paddingTop: i > 0 ? 5 : 0 }}>
                     <UpcomingGoalWidgetElement goal={goal} />
