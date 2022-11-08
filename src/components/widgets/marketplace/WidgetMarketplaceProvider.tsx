@@ -1,5 +1,7 @@
 import { View } from 'react-native';
 import {
+    DAILY_HISTORY_WIDGET,
+    DAILY_HISTORY_WIDGET_DESCRIPTION,
     QUOTE_OF_THE_DAY_WIDGET,
     QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION,
     TIME_LEFT_IN_DAY_WIDGET,
@@ -98,6 +100,19 @@ export const getWidgets = (filter: string, isEnabled: Function, onToggle: Functi
                     name={UPCOMING_GOALS_WIDGET}
                     description={UPCOMING_GOALS_WIDGET_DESCRIPTION}
                     isEnabled={isEnabled(UPCOMING_GOALS_WIDGET)}
+                    onToggle={onToggle}
+                />
+            </View>
+        );
+    }
+
+    if (widgetMatchesFilter(DAILY_HISTORY_WIDGET, filter)) {
+        widgetViews.push(
+            <View key={DAILY_HISTORY_WIDGET} style={{ paddingTop: 5, width: '100%' }}>
+                <WidgetMarketplaceToggle
+                    name={DAILY_HISTORY_WIDGET}
+                    description={DAILY_HISTORY_WIDGET_DESCRIPTION}
+                    isEnabled={isEnabled(DAILY_HISTORY_WIDGET)}
                     onToggle={onToggle}
                 />
             </View>

@@ -3,19 +3,18 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
-    user: UserProfileModel;
+    uid: string;
 }
 
-export const LevelProgressWidget = ({ user }: Props) => {
+export const DailyHistoryWidget = ({ uid }: Props) => {
     const { colors } = useTheme();
     const diameter = 9;
-    const margin = ((getWindowWidth() * 0.98 - 10) / 30 - diameter) / 2;
+    const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
 
     const [history, setHistory] = React.useState<string[]>([]);
 
@@ -24,11 +23,7 @@ export const LevelProgressWidget = ({ user }: Props) => {
     }, []);
 
     const fetch = async () => {
-        if (!user.uid) {
-            return;
-        }
-
-        const history = await DailyResultController.getDailyResultHistory(user.uid);
+        const history = await DailyResultController.getDailyResultHistory(uid);
         setHistory(history);
     };
 

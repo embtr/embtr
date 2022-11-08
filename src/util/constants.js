@@ -55,6 +55,9 @@ export const TODAYS_NOTES_WIDGET_DESCRIPTION = 'Have a thought? Jot it down!';
 export const UPCOMING_GOALS_WIDGET = 'Upcoming Goals';
 export const UPCOMING_GOALS_WIDGET_DESCRIPTION = 'A simple view of all of your upcoming goals.';
 
+export const DAILY_HISTORY_WIDGET = 'Daily History';
+export const DAILY_HISTORY_WIDGET_DESCRIPTION = 'A 50,000 ft. look at your daily results over the last 30 days.';
+
 export const WIDGETS = [
     TIME_LEFT_IN_DAY_WIDGET,
     QUOTE_OF_THE_DAY_WIDGET,
@@ -62,5 +65,7 @@ export const WIDGETS = [
     TODAYS_PHOTOS_WIDGET,
     TODAYS_NOTES_WIDGET,
     UPCOMING_GOALS_WIDGET,
+    DAILY_HISTORY_WIDGET,
 ];
+
 export const WIDGET_LIKE_ICON_SIZE = 20;

@@ -18,6 +18,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import {
+    DAILY_HISTORY_WIDGET,
     QUOTE_OF_THE_DAY_WIDGET,
     TIME_LEFT_IN_DAY_WIDGET,
     TODAYS_NOTES_WIDGET,
@@ -32,6 +33,7 @@ import { UpcomingGoalsWidget } from '../widgets/upcoming_goals/UpcomingGoalsWidg
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import { WigglableView } from '../common/animated_view/WigglableView';
 import { DeletableView } from '../common/animated_view/DeletableView';
+import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -282,6 +284,20 @@ export const Today = () => {
                                 }}
                             >
                                 <UpcomingGoalsWidget refreshedTimestamp={refreshedTimestamp} />
+                            </DeletableView>
+                        </WigglableView>
+                    )}
+
+                    {/* DAILY HISTORY WIDGET*/}
+                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && user.today_widgets?.includes(DAILY_HISTORY_WIDGET) && (
+                        <WigglableView key={DAILY_HISTORY_WIDGET} wiggle={isConfiguringWidgets}>
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(DAILY_HISTORY_WIDGET);
+                                }}
+                            >
+                                <DailyHistoryWidget uid={getAuth().currentUser!.uid} />
                             </DeletableView>
                         </WigglableView>
                     )}

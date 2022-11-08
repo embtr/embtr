@@ -13,7 +13,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { getAuth } from 'firebase/auth';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { ScrollView } from 'react-native-gesture-handler';
-import { LevelProgressWidget } from '../widgets/level_progress_widget/LevelProgressWidget';
+import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -90,13 +90,7 @@ export const UserProfile = () => {
                         )}
                     </View>
 
-                    <View style={{ width: '100%', alignItems: 'center' }}>
-                        {userProfileModel && (
-                            <View style={{ width: '98%', alignItems: 'center' }}>
-                                <LevelProgressWidget user={userProfileModel} />
-                            </View>
-                        )}
-                    </View>
+                    <View style={{ width: '100%', alignItems: 'center' }}>{userProfileModel?.uid && <DailyHistoryWidget uid={userProfileModel.uid} />}</View>
                 </View>
             </ScrollView>
         </Screen>
