@@ -17,7 +17,7 @@ export const TodaysCountdownWidget = ({ plannedDay }: Props) => {
 
     return (
         <WidgetBase>
-            <View style={{ flex: 1, }}>
+            <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.text, fontFamily: 'Poppins_500Medium', fontSize: 16 }}>
                     Happy
                     <Text style={{ color: colors.tomorrow_selected_indicator }}> {dayCapitalized}</Text>!

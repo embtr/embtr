@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, addDoc, collection, setDoc, doc, getDocs, getDoc, query, where, Timestamp, arrayUnion, limit } from 'firebase/firestore';
+import { Firestore, addDoc, collection, setDoc, doc, getDocs, getDoc, query, where, Timestamp, arrayUnion, limit, orderBy } from 'firebase/firestore';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { Like } from 'src/controller/timeline/TimelineController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
@@ -58,7 +58,14 @@ class DailyResultDao {
     public static async getAllForUserWithLimit(uid: string, limitVal?: number) {
         const db: Firestore = getFirebaseConnection(this.name, 'getAllForUserWithLimit');
 
-        const q = query(collection(db, COLLECTION_NAME), where('uid', '==', uid), where('active', '!=', false), limit(limitVal ? limitVal : 10000));
+        const q = query(
+            collection(db, COLLECTION_NAME),
+            where('uid', '==', uid),
+            where('active', '!=', false),
+            orderBy('active'),
+            orderBy('added', 'desc'),
+            limit(limitVal ? limitVal : 10000)
+        );
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;

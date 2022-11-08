@@ -88,7 +88,6 @@ export const UserProfile = () => {
                                 isFollowingUser={isFollowingUser}
                             />
                         )}
-                        {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
                     </View>
                 </View>
             </ScrollView>

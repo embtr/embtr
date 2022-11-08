@@ -127,12 +127,16 @@ export const getDayFromDayKey = (dayKey: string) => {
 };
 
 export const getDateFromDayKey = (dayKey: string) => {
-    const day = dayKey.substring(2, 4);
-    const month = dayKey.substring(0, 2);
-    const year = dayKey.substring(4);
-    const dateStr = year + '-' + month + '-' + day;
+    let date = new Date();
 
-    let date = new Date(dateStr);
+    const day = parseInt(dayKey.substring(2, 4));
+    const month = parseInt(dayKey.substring(0, 2)) - 1;
+    const year = parseInt(dayKey.substring(4));
+
+    date.setFullYear(year);
+    date.setMonth(month);
+    date.setDate(day);
+
     return date;
 };
 
