@@ -35,6 +35,7 @@ import { WigglableView } from '../common/animated_view/WigglableView';
 import { DeletableView } from '../common/animated_view/DeletableView';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -44,6 +45,8 @@ export const Today = () => {
     const [user, setUser] = React.useState<UserModel>();
     const [widgets, setWidgets] = React.useState<string[]>([]);
     const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
+    const [history, setHistory] = React.useState<string[]>([]);
+    const [goals, setGoals] = React.useState<GoalModel[]>([]);
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
@@ -59,11 +62,28 @@ export const Today = () => {
         }, [])
     );
 
+    React.useEffect(() => {
+        fetchDailyResult();
+    }, [plannedDay]);
+
     useFocusEffect(
         React.useCallback(() => {
             fetchUser();
         }, [])
     );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchDailyResultHistory();
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchGoals();
+        }, [])
+    );
+
     // may want to just directly call both to guarentee
     // upon refresh that we have all new data
     const onRefresh = React.useCallback(() => {
@@ -74,10 +94,6 @@ export const Today = () => {
             setRefreshedTimestamp(new Date());
         });
     }, []);
-
-    React.useEffect(() => {
-        fetchDailyResult();
-    }, [plannedDay]);
 
     const fetchPlannedDay = () => {
         PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
@@ -98,6 +114,18 @@ export const Today = () => {
             setWidgets(user.today_widgets);
         }
         setUser(user);
+    };
+
+    const fetchGoals = () => {
+        GoalController.getGoals(getCurrentUid(), (goals: GoalModel[]) => {
+            goals = goals.reverse();
+            setGoals(goals);
+        });
+    };
+
+    const fetchDailyResultHistory = async () => {
+        const history = await DailyResultController.getDailyResultHistory(getCurrentUid());
+        setHistory(history);
     };
 
     const addSpacerToWidgets = (widgets: string[]) => {
@@ -284,7 +312,7 @@ export const Today = () => {
                                     removeWidget(UPCOMING_GOALS_WIDGET);
                                 }}
                             >
-                                <UpcomingGoalsWidget uid={getCurrentUid()} refreshedTimestamp={refreshedTimestamp} />
+                                <UpcomingGoalsWidget goals={goals} />
                             </DeletableView>
                         </WigglableView>
                     )}
@@ -298,7 +326,7 @@ export const Today = () => {
                                     removeWidget(DAILY_HISTORY_WIDGET);
                                 }}
                             >
-                                <DailyHistoryWidget uid={getAuth().currentUser!.uid} />
+                                <DailyHistoryWidget history={history} />
                             </DeletableView>
                         </WigglableView>
                     )}

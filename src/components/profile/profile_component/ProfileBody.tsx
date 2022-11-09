@@ -8,6 +8,7 @@ import { TodayTabRoute } from 'src/components/profile/profile_component/profile_
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
+import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 /*
  * Avoid rerenders
@@ -22,12 +23,14 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => 
     const { colors } = useTheme();
 
     const [index, setIndex] = React.useState(0);
+
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
     React.useEffect(() => {
         fetch();
-    }, []);
+    }, [refreshedTimestamp]);
 
     const fetch = async () => {
         const history = await DailyResultController.getDailyResultHistory(userProfileModel.uid!);
@@ -37,11 +40,9 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => 
             goals = goals.reverse();
             setGoals(goals);
         });
-    };
 
-    React.useEffect(() => {
-        fetch();
-    }, [refreshedTimestamp]);
+        PlannedDayController.get(userProfileModel.uid!, getTodayKey(), setPlannedDay);
+    };
 
     const activityRoute = () => {
         if (index !== 0) {
@@ -52,11 +53,11 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => 
     };
 
     const todayRoute = () => {
-        if (index !== 1) {
+        if (index !== 1 || !plannedDay) {
             return <View />;
         }
 
-        return <TodayTabRoute userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} />;
+        return <TodayTabRoute plannedDay={plannedDay} />;
     };
 
     const pillarsRoute = () => {

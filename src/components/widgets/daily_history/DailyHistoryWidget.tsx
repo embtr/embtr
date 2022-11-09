@@ -1,18 +1,15 @@
-import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
-    uid: string;
     history: string[];
 }
 
-export const DailyHistoryWidget = ({ uid, history }: Props) => {
+export const DailyHistoryWidget = ({ history }: Props) => {
     const { colors } = useTheme();
     const diameter = 9;
     const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
