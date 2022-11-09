@@ -34,6 +34,7 @@ import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-nativ
 import { WigglableView } from '../common/animated_view/WigglableView';
 import { DeletableView } from '../common/animated_view/DeletableView';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -241,7 +242,7 @@ export const Today = () => {
                                     removeWidget(TODAYS_TASKS_WIDGET);
                                 }}
                             >
-                                <TodaysTasksWidget plannedDay={plannedDay} dailyResult={dailyResult} togglePlannedTask={togglePlannedTaskStatus} />
+                                <TodaysTasksWidget plannedDay={plannedDay} togglePlannedTask={togglePlannedTaskStatus} />
                             </DeletableView>
                         </WigglableView>
                     )}
@@ -283,7 +284,7 @@ export const Today = () => {
                                     removeWidget(UPCOMING_GOALS_WIDGET);
                                 }}
                             >
-                                <UpcomingGoalsWidget refreshedTimestamp={refreshedTimestamp} />
+                                <UpcomingGoalsWidget uid={getCurrentUid()} refreshedTimestamp={refreshedTimestamp} />
                             </DeletableView>
                         </WigglableView>
                     )}

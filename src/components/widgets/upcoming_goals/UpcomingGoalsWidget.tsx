@@ -3,16 +3,16 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
 import { UpcomingGoalWidgetElement } from './UpcomingGoalWidgetElement';
 
 interface Props {
     refreshedTimestamp: Date;
+    uid: string;
 }
 
-export const UpcomingGoalsWidget = ({ refreshedTimestamp }: Props) => {
+export const UpcomingGoalsWidget = ({ uid, refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
     const [goals, setGoals] = React.useState<GoalModel[]>();
 
@@ -21,7 +21,7 @@ export const UpcomingGoalsWidget = ({ refreshedTimestamp }: Props) => {
     }, [refreshedTimestamp]);
 
     const fetch = () => {
-        GoalController.getGoals(getCurrentUid(), (goals: GoalModel[]) => {
+        GoalController.getGoals(uid, (goals: GoalModel[]) => {
             goals = goals.reverse();
             setGoals(goals);
         });

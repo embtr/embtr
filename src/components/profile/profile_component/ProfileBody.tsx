@@ -13,9 +13,10 @@ import { TodayTabRoute } from 'src/components/profile/profile_component/profile_
  */
 interface Props {
     userProfileModel: UserProfileModel;
+    refreshedTimestamp: Date;
 }
 
-export const ProfileBody = ({ userProfileModel }: Props) => {
+export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
 
     const [index, setIndex] = React.useState(0);
@@ -25,14 +26,14 @@ export const ProfileBody = ({ userProfileModel }: Props) => {
             case 'activity':
                 return (
                     <View style={index !== 0 && { display: 'none' }}>
-                        <ActivityTabRoute userProfileModel={userProfileModel} />
+                        <ActivityTabRoute userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} />
                     </View>
                 );
 
             case 'today':
                 return (
                     <View style={index !== 1 && { display: 'none' }}>
-                        <TodayTabRoute userProfileModel={userProfileModel} />
+                        <TodayTabRoute userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} />
                     </View>
                 );
 

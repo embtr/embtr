@@ -23,7 +23,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         status = temporaryStatus;
     }
     if (status === undefined) {
-        status = "INCOMPLETE";
+        status = 'INCOMPLETE';
     }
 
     //clear status once render catches up
@@ -55,6 +55,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         <View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TouchableWithoutFeedback
+                    disabled={!onPress}
                     onPress={() => {
                         if (onPress) {
                             onPress(plannedTask, status, setTemporaryStatus);

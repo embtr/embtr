@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { DailyResultCardElement } from '../common/timeline/DailyResultCardElement';
@@ -10,12 +9,11 @@ import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 
 interface Props {
-    dailyResult: DailyResultModel;
     plannedDay: PlannedDay;
-    togglePlannedTask: Function;
+    togglePlannedTask?: Function;
 }
 
-export const TodaysTasksWidget = ({ dailyResult, plannedDay, togglePlannedTask }: Props) => {
+export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
@@ -24,7 +22,7 @@ export const TodaysTasksWidget = ({ dailyResult, plannedDay, togglePlannedTask }
     plannedDay?.plannedTasks.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
-                <DailyResultCardElement plannedTask={plannedTask} onPress={togglePlannedTask} />
+                <DailyResultCardElement plannedTask={plannedTask} onPress={togglePlannedTask ? togglePlannedTask : undefined} />
             </View>
         );
     });

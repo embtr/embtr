@@ -18,6 +18,7 @@ export const CurrentUserProfile = () => {
     const [followerCount, setFollowerCount] = React.useState<number>(0);
     const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
 
     useFocusEffect(
         React.useCallback(() => {
@@ -51,7 +52,10 @@ export const CurrentUserProfile = () => {
         setRefreshing(true);
         setUserProfileModel(undefined);
         fetch();
-        wait(500).then(() => setRefreshing(false));
+        wait(500).then(() => {
+            setRefreshing(false);
+            setRefreshedTimestamp(new Date());
+        });
     }, []);
 
     return (
@@ -71,7 +75,7 @@ export const CurrentUserProfile = () => {
                                 isFollowingUser={false}
                             />
                         )}
-                        {userProfileModel && <ProfileBody userProfileModel={userProfileModel} />}
+                        {userProfileModel && <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} />}
                     </View>
                 </View>
             </ScrollView>
