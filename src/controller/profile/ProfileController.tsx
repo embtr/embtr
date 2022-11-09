@@ -4,11 +4,6 @@ import ProfileDao, { UserProfileModel } from 'src/firebase/firestore/profile/Pro
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { pickImage } from 'src/util/ImagePickerUtil';
 
-export const enum UserType {
-    USER,
-    GUEST,
-}
-
 class ProfileController {
     public static getProfile(uid: string, callback: Function) {
         const result = ProfileDao.getProfile(uid);

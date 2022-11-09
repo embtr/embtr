@@ -14,7 +14,6 @@ import { PlannedTask } from 'src/components/plan/planning/PlannedTask';
 import { CalendarView } from 'src/components/plan/planning/views/calendar/CalendarView';
 import { DayPicker } from 'src/components/plan/planning/DayPicker';
 import { getAuth } from 'firebase/auth';
-import { UserType } from 'src/controller/profile/ProfileController';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
@@ -89,7 +88,7 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
                 {useCalendarView ? (
-                    <CalendarView plannedToday={plannedToday} onTaskUpdated={updateTask} userType={UserType.USER} />
+                    <CalendarView plannedToday={plannedToday} onTaskUpdated={updateTask} />
                 ) : plannedToday ? (
                     <PlanDay plannedDay={plannedToday} onTaskUpdated={updateTask} />
                 ) : (

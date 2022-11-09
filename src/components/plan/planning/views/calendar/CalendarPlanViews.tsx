@@ -2,17 +2,14 @@ import React from 'react';
 import { LayoutRectangle, View } from 'react-native';
 import { CalendarPlanView } from 'src/components/plan/planning/views/calendar/CalendarPlanView';
 import { CalendarPlanViewGroup, GeneratePlanViewGroups } from 'src/components/plan/planning/views/calendar/CalendarPlanViewGroup';
-import { GuestCalendarPlanView } from 'src/components/plan/planning/views/calendar/GuestCalendarPlanView';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { UserType } from 'src/controller/profile/ProfileController';
 
 interface Props {
     plannedToday?: PlannedDay;
-    updateTask?: Function;
-    userType: UserType;
+    updateTask: Function;
 }
 
-export const CalendarPlanViews = ({ plannedToday, updateTask, userType }: Props) => {
+export const CalendarPlanViews = ({ plannedToday, updateTask }: Props) => {
     const [layout, setLayout] = React.useState<LayoutRectangle>();
 
     let generatedGroups: CalendarPlanViewGroup[] = [];
@@ -27,11 +24,7 @@ export const CalendarPlanViews = ({ plannedToday, updateTask, userType }: Props)
             const task = tasks[i];
 
             planViews.push(
-                userType === UserType.USER && updateTask ? (
-                    <CalendarPlanView key={task.id} plannedTask={task} onUpdateTask={updateTask} rowIndex={i} totalInRow={tasks.length} parentLayout={layout} />
-                ) : (
-                    <GuestCalendarPlanView key={task.id} plannedTask={task} rowIndex={i} totalInRow={tasks.length} parentLayout={layout} />
-                )
+                <CalendarPlanView key={task.id} plannedTask={task} onUpdateTask={updateTask} rowIndex={i} totalInRow={tasks.length} parentLayout={layout} />
             );
         }
     });
