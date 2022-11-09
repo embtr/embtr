@@ -4,7 +4,7 @@ import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
 import { Screen } from 'src/components/common/Screen';
-import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
@@ -13,11 +13,7 @@ import ProfileController from 'src/controller/profile/ProfileController';
 import { getAuth } from 'firebase/auth';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { ScrollView } from 'react-native-gesture-handler';
-import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
-import { UpcomingGoalsWidget } from '../widgets/upcoming_goals/UpcomingGoalsWidget';
 import { wait } from 'src/util/GeneralUtility';
-import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { ProfileBody } from './profile_component/ProfileBody';
 
 export const UserProfile = () => {
@@ -32,13 +28,9 @@ export const UserProfile = () => {
     const [followerCount, setFollowerCount] = React.useState<number>(0);
     const [followingCount, setFollowingCount] = React.useState<number>(0);
 
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
-
-    useFocusEffect(
-        React.useCallback(() => {
-            fetch();
-        }, [route.params.id, userProfileModel])
-    );
+    React.useEffect(() => {
+        fetch();
+    }, [route.params.id]);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -52,7 +44,6 @@ export const UserProfile = () => {
     const fetch = () => {
         fetchProfileData();
         fetchFollowCounts();
-        fetchPlannedDay();
     };
 
     const fetchProfileData = () => {
@@ -73,10 +64,6 @@ export const UserProfile = () => {
             setFollowerCount(followCounts.follower_count);
             setFollowingCount(followCounts.following_count);
         });
-    };
-
-    const fetchPlannedDay = () => {
-        PlannedDayController.get(getAuth().currentUser!.uid, getTodayKey(), setPlannedDay);
     };
 
     const onFollowUser = (uid: string) => {

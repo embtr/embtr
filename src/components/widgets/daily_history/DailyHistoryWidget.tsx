@@ -9,23 +9,13 @@ import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
     uid: string;
+    history: string[];
 }
 
-export const DailyHistoryWidget = ({ uid }: Props) => {
+export const DailyHistoryWidget = ({ uid, history }: Props) => {
     const { colors } = useTheme();
     const diameter = 9;
     const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
-
-    const [history, setHistory] = React.useState<string[]>([]);
-
-    React.useEffect(() => {
-        fetch();
-    }, []);
-
-    const fetch = async () => {
-        const history = await DailyResultController.getDailyResultHistory(uid);
-        setHistory(history);
-    };
 
     const isSuccess = (s: string) => {
         return 'COMPLETE' === s;
