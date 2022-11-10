@@ -9,6 +9,9 @@ import DailyResultController from 'src/controller/timeline/daily_result/DailyRes
 import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { PillarModel } from 'src/model/PillarModel';
+import PillarController from 'src/controller/pillar/PillarController';
+import { setPath } from 'react-native-reanimated/lib/types/lib/reanimated2/animation/styleAnimation';
 
 /*
  * Avoid rerenders
@@ -27,6 +30,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => 
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+    const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     React.useEffect(() => {
         fetch();
@@ -42,6 +46,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => 
         });
 
         PlannedDayController.get(userProfileModel.uid!, getTodayKey(), setPlannedDay);
+        PillarController.getPillars(userProfileModel.uid!, setPillars);
     };
 
     const activityRoute = () => {
@@ -49,7 +54,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => 
             return <View />;
         }
 
-        return <ActivityTabRoute userProfileModel={userProfileModel} history={history} goals={goals} />;
+        return <ActivityTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />;
     };
 
     const todayRoute = () => {

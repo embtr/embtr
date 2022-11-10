@@ -58,6 +58,9 @@ export const UPCOMING_GOALS_WIDGET_DESCRIPTION = 'A simple view of all of your u
 export const DAILY_HISTORY_WIDGET = 'Daily History';
 export const DAILY_HISTORY_WIDGET_DESCRIPTION = 'A 50,000 ft. look at your daily results over the last 30 days.';
 
+export const PILLARS_WIDGET = 'Pillars Widget';
+export const PILLARS_WIDGET_DESCRIPTION = 'A snapshot of what you hold most important.';
+
 export const WIDGETS = [
     TIME_LEFT_IN_DAY_WIDGET,
     QUOTE_OF_THE_DAY_WIDGET,
@@ -66,6 +69,7 @@ export const WIDGETS = [
     TODAYS_NOTES_WIDGET,
     UPCOMING_GOALS_WIDGET,
     DAILY_HISTORY_WIDGET,
+    PILLARS_WIDGET,
 ];
 
 export const WIDGET_LIKE_ICON_SIZE = 20;
