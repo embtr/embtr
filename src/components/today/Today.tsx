@@ -19,6 +19,7 @@ import { getCloseMenu } from 'src/redux/user/GlobalState';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import {
     DAILY_HISTORY_WIDGET,
+    PILLARS_WIDGET,
     QUOTE_OF_THE_DAY_WIDGET,
     TIME_LEFT_IN_DAY_WIDGET,
     TODAYS_NOTES_WIDGET,
@@ -36,6 +37,9 @@ import { DeletableView } from '../common/animated_view/DeletableView';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
+import { PillarsWidget } from '../widgets/pillars/PillarsWidget';
+import { PillarModel } from 'src/model/PillarModel';
+import PillarController from 'src/controller/pillar/PillarController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -47,6 +51,7 @@ export const Today = () => {
     const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
+    const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
@@ -81,6 +86,12 @@ export const Today = () => {
     useFocusEffect(
         React.useCallback(() => {
             fetchGoals();
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchPillars();
         }, [])
     );
 
@@ -126,6 +137,10 @@ export const Today = () => {
     const fetchDailyResultHistory = async () => {
         const history = await DailyResultController.getDailyResultHistory(getCurrentUid());
         setHistory(history);
+    };
+
+    const fetchPillars = async () => {
+        PillarController.getPillars(getCurrentUid(), setPillars);
     };
 
     const addSpacerToWidgets = (widgets: string[]) => {
@@ -317,7 +332,7 @@ export const Today = () => {
                         </WigglableView>
                     )}
 
-                    {/* DAILY HISTORY WIDGET*/}
+                    {/* DAILY HISTORY WIDGET */}
                     {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && user.today_widgets?.includes(DAILY_HISTORY_WIDGET) && (
                         <WigglableView key={DAILY_HISTORY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
@@ -331,6 +346,19 @@ export const Today = () => {
                         </WigglableView>
                     )}
 
+                    {/* PILLARS WIDGET */}
+                    {item === PILLARS_WIDGET && refreshedTimestamp && user.today_widgets?.includes(PILLARS_WIDGET) && (
+                        <WigglableView key={PILLARS_WIDGET} wiggle={isConfiguringWidgets}>
+                            <DeletableView
+                                visible={isConfiguringWidgets}
+                                onPress={() => {
+                                    removeWidget(PILLARS_WIDGET);
+                                }}
+                            >
+                                <PillarsWidget pillars={pillars} />
+                            </DeletableView>
+                        </WigglableView>
+                    )}
                     {item === 'SPACER' && <View key={'SPACER'} style={{ height: 45, width: '100%' }} />}
                 </TouchableOpacity>
             </ScaleDecorator>

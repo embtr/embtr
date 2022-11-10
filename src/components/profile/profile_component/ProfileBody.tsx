@@ -11,7 +11,6 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
-import { setPath } from 'react-native-reanimated/lib/types/lib/reanimated2/animation/styleAnimation';
 
 /*
  * Avoid rerenders
@@ -74,7 +73,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => 
     };
 
     const [routes] = React.useState([
-        { key: 'activity', title: 'Activity' },
+        { key: 'activity', title: 'Profile' },
         { key: 'today', title: 'Today' },
         { key: 'pillars', title: 'Pillars' },
     ]);

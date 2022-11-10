@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native';
+import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
-import { PillarsWidgetElement } from './PillarsWidgetElement';
 
 interface Props {
     pillars: PillarModel[];
@@ -17,7 +18,12 @@ export const PillarsWidget = ({ pillars }: Props) => {
         const pillar = pillars[i];
         views.push(
             <View style={{ paddingTop: i > 0 ? 5 : 0 }}>
-                <PillarsWidgetElement pillar={pillar} />
+                {i > 0 && (
+                    <View style={{ paddingTop: 5, paddingBottom: 5 }}>
+                        <HorizontalLine />
+                    </View>
+                )}
+                <Pillar pillarModel={pillar} />
             </View>
         );
     }

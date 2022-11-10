@@ -22,10 +22,12 @@ export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
     plannedDay?.plannedTasks.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
-                <DailyResultCardElement plannedTask={plannedTask} onPress={togglePlannedTask ? togglePlannedTask : undefined} />
+                <DailyResultCardElement plannedTask={plannedTask} onPress={togglePlannedTask} />
             </View>
         );
     });
+
+    const isGuest = togglePlannedTask === undefined;
 
     return (
         <WidgetBase>
@@ -33,19 +35,25 @@ export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
             {plannedTaskViews.length > 0 && <View style={{ paddingLeft: 10, paddingTop: 15 }}>{plannedTaskViews}</View>}
             {plannedTaskViews.length === 0 && (
                 <View style={{ paddingTop: 5 }}>
-                    <Text style={{ color: colors.text }}>
-                        you have an empty plate -{' '}
-                        <Text
-                            onPress={() => {
-                                if (plannedDay?.id) {
-                                    navigation.navigate('PlanTab', { screen: 'PlanMain' });
-                                }
-                            }}
-                            style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
-                        >
-                            plan your day
+                    {isGuest ? (
+                        <Text style={{ color: colors.text }}>
+                            It appears that today is a <Text style={{ color: colors.tab_selected }}>rest day</Text>.
                         </Text>
-                    </Text>
+                    ) : (
+                        <Text style={{ color: colors.text }}>
+                            you have an empty plate -{' '}
+                            <Text
+                                onPress={() => {
+                                    if (plannedDay?.id) {
+                                        navigation.navigate('PlanTab', { screen: 'PlanMain' });
+                                    }
+                                }}
+                                style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
+                            >
+                                plan your day
+                            </Text>
+                        </Text>
+                    )}
                 </View>
             )}
         </WidgetBase>

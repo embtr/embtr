@@ -15,7 +15,7 @@ interface Props {
 
 export const ActivityTabRoute = ({ userProfileModel, history, goals, pillars }: Props) => {
     return (
-        <View>
+        <View style={{ paddingBottom: 50 }}>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <DailyHistoryWidget history={history} />}</View>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <UpcomingGoalsWidget goals={goals} />}</View>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <PillarsWidget pillars={pillars} />}</View>
