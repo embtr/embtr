@@ -1,6 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
 import LevelController from '../level/LevelController';
 import PlannedDayController, { PlannedDay } from './PlannedDayController';
