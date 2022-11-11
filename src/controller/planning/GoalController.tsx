@@ -1,5 +1,6 @@
-import { Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalDao from 'src/firebase/firestore/planning/GoalDao';
+import { PlannedTaskModel } from './PlannedTaskController';
 
 export interface GoalModel {
     id?: string;
@@ -9,6 +10,7 @@ export interface GoalModel {
     pillarId?: string;
     deadline: Timestamp;
     status: string;
+    tasks: PlannedTaskModel[];
 }
 
 export const FAKE_GOAL: GoalModel = {
@@ -17,30 +19,42 @@ export const FAKE_GOAL: GoalModel = {
     description: '',
     deadline: Timestamp.now(),
     status: 'ACTIVE',
+    tasks: [],
+};
+
+export const getCompletedTasksFromGoal = (goal: GoalModel): PlannedTaskModel[] => {
+    let completedTasks: PlannedTaskModel[] = [];
+
+    goal.tasks.forEach((plannedTask: PlannedTaskModel) => {
+        if (plannedTask.status === 'COMPLETE') {
+            completedTasks.push(plannedTask);
+        }
+    });
+
+    return completedTasks;
 };
 
 class GoalController {
     public static createGoal(goal: GoalModel, callback: Function) {
         const result = GoalDao.createGoal(goal);
-        result.then((document) => {
+        result.then(() => {
             callback();
         });
     }
 
-    static getGoals(uid: string, callback: Function) {
+    public static getGoals(uid: string, callback: Function) {
         const result = GoalDao.getGoals(uid);
 
         let goals: GoalModel[] = [];
         result
             .then((documents) => {
                 documents.docs.forEach((document) => {
-                    let goal: GoalModel = document.data() as GoalModel;
+                    const goal = this.createGoalFromData(document);
 
                     if (goal.status === 'ARCHIVED') {
                         return;
                     }
 
-                    goal.id = document.id;
                     goals.push(goal);
                 });
             })
@@ -53,12 +67,11 @@ class GoalController {
             });
     }
 
-    static getGoal(userId: string, id: string, callback: Function) {
+    public static getGoal(userId: string, id: string, callback: Function) {
         const result = GoalDao.getGoal(userId, id);
         result
             .then((document) => {
-                let goal: GoalModel = document.data() as GoalModel;
-                goal.id = document.id;
+                const goal = this.createGoalFromData(document);
                 callback(goal);
             })
             .catch(() => {
@@ -71,6 +84,17 @@ class GoalController {
         result.then((updatedGoal) => {
             callback(updatedGoal);
         });
+    }
+
+    private static createGoalFromData(document: DocumentSnapshot<DocumentData>): GoalModel {
+        let goal: GoalModel = document.data() as GoalModel;
+        goal.id = document.id;
+
+        if (!goal.tasks) {
+            goal.tasks = [];
+        }
+
+        return goal;
     }
 }
 

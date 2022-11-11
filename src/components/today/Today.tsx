@@ -2,7 +2,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { RefreshControl, View, TouchableOpacity } from 'react-native';
-import PlannedDayController, { clonePlannedTaskModel, getTodayKey, PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { clonePlannedTaskModel, getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
@@ -40,6 +40,7 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import { PillarsWidget } from '../widgets/pillars/PillarsWidget';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
+import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -179,7 +180,7 @@ export const Today = () => {
         let clonedPlannedTask: PlannedTaskModel = clonePlannedTaskModel(plannedTask);
         clonedPlannedTask.status = newStatus;
 
-        PlannedDayController.updateTask(plannedDay, clonedPlannedTask, () => {
+        PlannedTaskController.update(plannedDay, clonedPlannedTask, () => {
             PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
         });
     };

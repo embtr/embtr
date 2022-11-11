@@ -1,6 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc } from 'firebase/firestore';
-import { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class PlannedDayDao {

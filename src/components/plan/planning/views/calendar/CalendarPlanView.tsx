@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, LayoutRectangle } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
-import { Ionicons } from '@expo/vector-icons';
+import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete } from 'src/controller/planning/PlannedDayController';
 import { TouchableOpacity } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
@@ -15,6 +14,7 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 import { TaskFailedSymbol } from 'src/components/common/task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from 'src/components/common/task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from 'src/components/common/task_symbols/TaskInProgressSymbol';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     plannedTask: PlannedTaskModel;

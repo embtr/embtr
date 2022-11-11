@@ -1,6 +1,6 @@
 import { View, Text, ColorValue } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { durationToString, startMinuteToString } from 'src/controller/planning/TaskController';
 
 interface Props {

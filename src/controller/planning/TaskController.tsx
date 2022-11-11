@@ -69,14 +69,14 @@ export const durationToString = (duration: number) => {
 class TaskController {
     public static createTask(task: TaskModel, callback: Function) {
         const result = TaskDao.createTask(task);
-        result.then((document) => {
+        result.then(() => {
             callback();
         });
     }
 
     public static archiveTask(task: TaskModel, callback: Function) {
         const result = TaskDao.archiveTask(task);
-        result.then((document) => {
+        result.then(() => {
             callback();
         });
     }

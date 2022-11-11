@@ -1,15 +1,8 @@
-import { current } from '@reduxjs/toolkit';
 import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import PlannedDayController, {
-    getDayKeyDaysOld,
-    getPreviousDayKey,
-    getTodayKey,
-    getTomorrowKey,
-    PlannedDay,
-} from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDayKeyDaysOld, getPreviousDayKey, getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
@@ -222,6 +215,8 @@ class DailyResultController {
 
         return successResults;
     }
+
+    public static async getCachedDailyResultHistory() {}
 
     private static async getByDayKey(uid: string, dayKey: string) {
         const results = await DailyResultDao.getByDayKey(uid, dayKey);

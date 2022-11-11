@@ -1,7 +1,6 @@
 import React from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { View, Text, Keyboard, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamList, TodayTab } from 'src/navigation/RootStackParamList';
@@ -15,9 +14,10 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
-import PlannedDayController, { PlannedDay, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
+import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 export const EditOneTimeTask = () => {
     const { colors } = useTheme();
@@ -53,7 +53,7 @@ export const EditOneTimeTask = () => {
         React.useCallback(() => {
             const uid = getAuth().currentUser?.uid;
             if (uid) {
-                PlannedDayController.getTask(uid, route.params.dayKey, route.params.plannedTaskId, (plannedTask: PlannedTaskModel) => {
+                PlannedTaskController.get(uid, route.params.dayKey, route.params.plannedTaskId, (plannedTask: PlannedTaskModel) => {
                     setName(plannedTask.routine.name);
                     setDetails(plannedTask.routine.description);
 
@@ -127,7 +127,7 @@ export const EditOneTimeTask = () => {
             plannedTask.routine.description = details;
             plannedTask.startMinute = startTime.getHours() * 60 + startTime.getMinutes();
             plannedTask.duration = duration;
-            PlannedDayController.updateTask(plannedDay, plannedTask, () => {
+            PlannedTaskController.updateTask(plannedDay, plannedTask, () => {
                 navigation.goBack();
             });
         }

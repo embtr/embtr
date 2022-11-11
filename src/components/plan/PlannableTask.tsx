@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TaskModel } from 'src/controller/planning/TaskController';
-import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete, PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete } from 'src/controller/planning/PlannedDayController';
 import { CARD_SHADOW } from 'src/util/constants';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -17,6 +17,7 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
+import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     plannedTask?: PlannedTaskModel;

@@ -18,6 +18,7 @@ import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { PlanDay } from './PlanDay';
+import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     showSelectTaskModal: boolean;
@@ -59,12 +60,12 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
             createdPlannedTasks.push(plannedTask);
         }
 
-        await PlannedDayController.addTasks(plannedToday, createdPlannedTasks);
+        await PlannedTaskController.addTasks(plannedToday, createdPlannedTasks);
         refreshPlannedToday(selectedDayKey);
     };
 
     const updateTask = (updatedPlannedTask: PlannedTaskModel) => {
-        PlannedDayController.updateTask(plannedToday!, updatedPlannedTask, () => {
+        PlannedTaskController.update(plannedToday!, updatedPlannedTask, () => {
             if (plannedToday?.id) {
                 PlannedDayController.get(getAuth().currentUser?.uid!, plannedToday?.id, setPlannedToday);
             }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { startMinuteToString } from 'src/controller/planning/TaskController';

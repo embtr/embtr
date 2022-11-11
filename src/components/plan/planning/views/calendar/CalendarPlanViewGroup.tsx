@@ -1,4 +1,4 @@
-import { PlannedTaskModel } from "src/controller/planning/PlannedDayController";
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 export const GeneratePlanViewGroups = (tasks: PlannedTaskModel[]): CalendarPlanViewGroup[] => {
     let calendarPlanViewGroups: CalendarPlanViewGroup[] = [];
@@ -7,7 +7,7 @@ export const GeneratePlanViewGroups = (tasks: PlannedTaskModel[]): CalendarPlanV
         let task = tasks[i];
 
         let found = false;
-        calendarPlanViewGroups.forEach(group => {
+        calendarPlanViewGroups.forEach((group) => {
             if (group.taskFitsInGroup(task)) {
                 group.addTask(task);
                 found = true;
@@ -25,7 +25,7 @@ export const GeneratePlanViewGroups = (tasks: PlannedTaskModel[]): CalendarPlanV
     }
 
     return calendarPlanViewGroups;
-}
+};
 
 export class CalendarPlanViewGroup {
     private tasks: PlannedTaskModel[];
@@ -83,11 +83,11 @@ export class CalendarPlanViewGroup {
     }
 
     public getTasks(): PlannedTaskModel[] {
-        this.tasks.sort((a, b) => ((a.startMinute ? a.startMinute : 0) > (b.startMinute ? b.startMinute : 0)) ? 1 : -1);
+        this.tasks.sort((a, b) => ((a.startMinute ? a.startMinute : 0) > (b.startMinute ? b.startMinute : 0) ? 1 : -1));
         return this.tasks;
     }
 
     public toString() {
-        return "" + this.start + " => " + this.end + " [tasks: " + this.tasks.length + "]";
+        return '' + this.start + ' => ' + this.end + ' [tasks: ' + this.tasks.length + ']';
     }
 }
