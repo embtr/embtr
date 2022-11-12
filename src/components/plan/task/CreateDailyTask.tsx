@@ -1,7 +1,6 @@
 import React from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { View, Text, Keyboard, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
-import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { createTaskModel } from 'src/controller/planning/TaskController';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';

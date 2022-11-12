@@ -15,10 +15,10 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
-import PlannedDayController, { createPlannedTask, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
-import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
+import PlannedTaskController, { createPlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 export const CreateOneTimeTask = () => {
     const { colors } = useTheme();
@@ -82,7 +82,7 @@ export const CreateOneTimeTask = () => {
 
     const createTask = () => {
         const task = createTaskModel(name, details, selectedGoal);
-        const plannedTask = createPlannedTask(task, startTime.getHours() * 60 + startTime.getMinutes(), duration);
+        const plannedTask = createPlannedTaskModel(task, startTime.getHours() * 60 + startTime.getMinutes(), duration, selectedGoal);
         PlannedTaskController.add(plannedDay!, plannedTask, () => {
             navigation.goBack();
         });

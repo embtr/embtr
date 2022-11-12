@@ -22,6 +22,8 @@ export const FAKE_GOAL: GoalModel = {
     tasks: [],
 };
 
+const ARCHIVED = 'ARCHIVED';
+
 export const getCompletedTasksFromGoal = (goal: GoalModel): PlannedTaskModel[] => {
     let completedTasks: PlannedTaskModel[] = [];
 
@@ -51,7 +53,7 @@ class GoalController {
                 documents.docs.forEach((document) => {
                     const goal = this.createGoalFromData(document);
 
-                    if (goal.status === 'ARCHIVED') {
+                    if (goal.status === ARCHIVED) {
                         return;
                     }
 
@@ -79,11 +81,27 @@ class GoalController {
             });
     }
 
-    public static archiveGoal(userId: string, goal: GoalModel, callback: Function) {
-        const result = GoalDao.archiveGoal(userId, goal);
-        result.then((updatedGoal) => {
-            callback(updatedGoal);
+    public static async archiveGoal(goal: GoalModel) {
+        goal.status = ARCHIVED;
+        await GoalDao.update(goal);
+    }
+
+    public static async update(goal: GoalModel) {
+        await GoalDao.update(goal);
+    }
+
+    public static async updateGoalTask(goal: GoalModel, plannedTask: PlannedTaskModel) {
+        let updatedTasks: PlannedTaskModel[] = [];
+
+        goal.tasks.forEach((task) => {
+            if (task.id !== plannedTask.id) {
+                updatedTasks.push(task);
+            }
         });
+
+        updatedTasks.push(plannedTask);
+        goal.tasks = updatedTasks;
+        await this.update(goal);
     }
 
     private static createGoalFromData(document: DocumentSnapshot<DocumentData>): GoalModel {

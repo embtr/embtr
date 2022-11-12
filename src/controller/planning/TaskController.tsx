@@ -25,17 +25,6 @@ export const getDayOfWeek = (date: Date) => {
     return dayOfWeek;
 };
 
-export const createTaskModel = (name: string, description: string, goalId: string) => {
-    const task: TaskModel = {
-        added: Timestamp.now(),
-        name: name,
-        description: description,
-        goalId: goalId,
-    };
-
-    return task;
-};
-
 export const startMinuteToString = (startMinute: number) => {
     const hours = Math.floor(startMinute / 60);
     const minutes = startMinute % 60;
@@ -64,6 +53,17 @@ export const durationToString = (duration: number) => {
     value += '00';
 
     return value;
+};
+
+export const createTaskModel = (name: string, description: string, goalId: string) => {
+    const task: TaskModel = {
+        added: Timestamp.now(),
+        name: name,
+        description: description,
+        goalId: goalId,
+    };
+
+    return task;
 };
 
 class TaskController {

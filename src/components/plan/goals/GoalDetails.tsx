@@ -32,10 +32,9 @@ export const GoalDetails = () => {
     const menuItems: EmbtrMenuOption[] = [
         {
             name: 'Archive',
-            onPress: () => {
-                GoalController.archiveGoal(getAuth().currentUser!.uid, goal, (updatedGoal: GoalModel) => {
-                    navigation.goBack();
-                });
+            onPress: async () => {
+                await GoalController.archiveGoal(goal);
+                navigation.goBack();
             },
         },
         {
@@ -48,9 +47,7 @@ export const GoalDetails = () => {
         },
     ];
 
-    const completedTaskCount = getCompletedTasksFromGoal(goal);
-    if (completedTaskCount) {
-    }
+    const tasksCompleted = getCompletedTasksFromGoal(goal).length;
 
     return (
         <Screen>
@@ -91,7 +88,7 @@ export const GoalDetails = () => {
                         </View>
 
                         <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                            <GoalDetailAttribute attribute={'Tasks Completed'} value={10 + ' Tasks'} />
+                            <GoalDetailAttribute attribute={'Tasks Completed'} value={tasksCompleted + ' Tasks'} />
                             <GoalDetailAttribute attribute={'Tasks Failed'} value={'10'} />
                             <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} />
                         </View>

@@ -1,13 +1,16 @@
 import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import LevelController from '../level/LevelController';
+import GoalController, { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay } from './PlannedDayController';
 
 export interface PlannedTaskModel {
     id?: string;
     routine: TaskModel;
     status?: string;
+    goalId?: string;
     startMinute?: number;
     duration?: number;
     dayKey?: string;
@@ -23,7 +26,22 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
         dayKey: plannedTask.dayKey,
     };
 
+    if (plannedTask.goalId) {
+        clonedPlannedTask.goalId = plannedTask.goalId;
+    }
+
     return clonedPlannedTask;
+};
+
+export const createPlannedTaskModel = (task: TaskModel, startMinute: number, duration: number, goalId: string) => {
+    const plannedTask: PlannedTaskModel = {
+        routine: task,
+        startMinute: startMinute,
+        duration: duration,
+        goalId: goalId,
+    };
+
+    return plannedTask;
 };
 
 class PlannedTaskController {
@@ -47,6 +65,7 @@ class PlannedTaskController {
         plannedDay.metadata!.status = PlannedDayController.getPlannedDayStatus(plannedDay, plannedTask);
 
         await PlannedDayDao.updateTask(plannedDay, plannedTask);
+        this.updateGoalTask(plannedTask);
         PlannedDayController.refreshDailyResult(plannedDay);
         await LevelController.handlePlannedDayStatusChange(plannedDay);
 
@@ -65,7 +84,20 @@ class PlannedTaskController {
 
         PlannedDayController.refreshDailyResult(plannedDay);
 
+        createdPlannedTasks.forEach((createdPlannedTask) => {
+            this.updateGoalTask(createdPlannedTask);
+        });
+
         return createdPlannedTasks;
+    }
+
+    private static async updateGoalTask(plannedTask: PlannedTaskModel) {
+        const goalId = plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
+        if (goalId) {
+            GoalController.getGoal(getCurrentUid(), goalId, (goal: GoalModel) => {
+                GoalController.updateGoalTask(goal, plannedTask);
+            });
+        }
     }
 }
 

@@ -2,41 +2,40 @@ import { getAuth } from 'firebase/auth';
 import { Firestore, collection, addDoc, query, getDocs, getDoc, doc, setDoc } from 'firebase/firestore';
 import { GoalModel } from 'src/controller/planning/GoalController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 class GoalDao {
     public static async createGoal(goal: GoalModel) {
-        const db: Firestore = getFirebaseConnection(this.name, "createGoal");
+        const db: Firestore = getFirebaseConnection(this.name, 'createGoal');
 
         const uid = getAuth().currentUser?.uid;
         if (!uid) {
             return undefined;
         }
 
-        const result = await addDoc(collection(db, "goals", uid, "goals"), goal);
+        const result = await addDoc(collection(db, 'goals', uid, 'goals'), goal);
         return result;
     }
 
     public static async getGoals(uid: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "getGoals");
+        const db: Firestore = getFirebaseConnection(this.name, 'getGoals');
 
-        const q = query(collection(db, "goals", uid, "goals"));
+        const q = query(collection(db, 'goals', uid, 'goals'));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;
     }
 
     public static async getGoal(userId: string, id: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "getGoal");
-        const result = await getDoc(doc(db, "goals", userId, "goals", id));
+        const db: Firestore = getFirebaseConnection(this.name, 'getGoal');
+        const result = await getDoc(doc(db, 'goals', userId, 'goals', id));
         return result;
     }
 
-    public static async archiveGoal(userId: string, goal: GoalModel) {
-        const db: Firestore = getFirebaseConnection(this.name, "archiveGoal");
+    public static async update(goal: GoalModel) {
+        const db: Firestore = getFirebaseConnection(this.name, 'update');
+        const result = await setDoc(doc(db, 'goals', getCurrentUid(), 'goals', goal.id!), goal, { merge: true });
 
-        goal.status = "ARCHIVED";
-        const result = setDoc(doc(db, "goals", userId, "goals", goal.id!), goal, { merge: true });
-        
         return result;
     }
 }

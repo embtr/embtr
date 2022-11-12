@@ -53,16 +53,6 @@ export const createPlannedTaskByPlannedTask = (plannedTask: PlannedTaskModel, st
     return newPlannedTask;
 };
 
-export const createPlannedTask = (task: TaskModel, startMinute: number, duration: number) => {
-    const plannedTask: PlannedTaskModel = {
-        routine: task,
-        startMinute: startMinute,
-        duration: duration,
-    };
-
-    return plannedTask;
-};
-
 export const getKey = (dayOfMonth: number) => {
     const date = new Date();
     date.setDate(dayOfMonth);

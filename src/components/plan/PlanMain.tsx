@@ -20,7 +20,6 @@ import { Planning } from 'src/components/plan/planning/Planning';
 export const PlanMain = () => {
     const { colors } = useTheme();
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
-    const [selectedDayKey, onDayChange] = React.useState('');
     const [useCalendarView, setUseCalendarView] = React.useState<boolean>(false);
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
@@ -34,7 +33,7 @@ export const PlanMain = () => {
                         dismissSelectTaskModal={() => {
                             setShowAddTaskModal(false);
                         }}
-                        onDayChange={onDayChange}
+                        onDayChange={() => {}}
                         useCalendarView={useCalendarView}
                     />
                 );

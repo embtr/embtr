@@ -2,14 +2,7 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
-import PlannedDayController, {
-    createPlannedTask,
-    getDayFromDayKey,
-    getDayKey,
-    getTodayKey,
-    PlannedDay,
-    PlannedTaskModel,
-} from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDayFromDayKey, getDayKey, getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { PlannedTask } from 'src/components/plan/planning/PlannedTask';
 import { CalendarView } from 'src/components/plan/planning/views/calendar/CalendarView';
 import { DayPicker } from 'src/components/plan/planning/DayPicker';
@@ -18,7 +11,7 @@ import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { PlanDay } from './PlanDay';
-import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
+import PlannedTaskController, { createPlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     showSelectTaskModal: boolean;
@@ -56,7 +49,7 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
         let createdPlannedTasks: PlannedTaskModel[] = [];
 
         for (let habit of habits) {
-            const plannedTask: PlannedTaskModel = createPlannedTask(habit, 360, 30);
+            const plannedTask: PlannedTaskModel = createPlannedTaskModel(habit, 360, 30, habit.goalId);
             createdPlannedTasks.push(plannedTask);
         }
 
