@@ -15,7 +15,13 @@ interface Props {
 
 export const ActivityTabRoute = ({ userProfileModel, history, goals, pillars }: Props) => {
     return (
-        <View style={{ paddingBottom: 50 }}>
+        <View style={{ paddingBottom: 5 }}>
+            <View style={{ width: '100%' }}>{userProfileModel?.uid && <DailyHistoryWidget history={history} />}</View>
+            <View style={{ width: '100%' }}>{userProfileModel?.uid && <UpcomingGoalsWidget goals={goals} />}</View>
+            <View style={{ width: '100%' }}>{userProfileModel?.uid && <PillarsWidget pillars={pillars} />}</View>
+            <View style={{ width: '100%' }}>{userProfileModel?.uid && <DailyHistoryWidget history={history} />}</View>
+            <View style={{ width: '100%' }}>{userProfileModel?.uid && <UpcomingGoalsWidget goals={goals} />}</View>
+            <View style={{ width: '100%' }}>{userProfileModel?.uid && <PillarsWidget pillars={pillars} />}</View>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <DailyHistoryWidget history={history} />}</View>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <UpcomingGoalsWidget goals={goals} />}</View>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <PillarsWidget pillars={pillars} />}</View>

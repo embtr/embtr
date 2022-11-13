@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefreshControl, View } from 'react-native';
+import { Animated, RefreshControl, View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
@@ -18,6 +18,8 @@ import { ProfileBody } from './profile_component/ProfileBody';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
+
+    const [animatedValue] = React.useState<Animated.Value>(new Animated.Value(0));
 
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [refreshing, setRefreshing] = React.useState(false);
@@ -98,7 +100,6 @@ export const UserProfile = () => {
                             />
                         )}
                     </View>
-                    {userProfileModel && <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} />}
                 </View>
             </ScrollView>
         </Screen>

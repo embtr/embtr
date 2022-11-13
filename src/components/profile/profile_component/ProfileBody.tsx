@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, NativeScrollEvent, ScrollView } from 'react-native';
 import { TabView, TabBar, SceneMap, SceneRendererProps } from 'react-native-tab-view';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -20,19 +20,33 @@ import { Screen } from 'src/components/common/Screen';
 interface Props {
     userProfileModel: UserProfileModel;
     refreshedTimestamp: Date;
+    onShouldExpand: Function;
 }
 
-export const ProfileBody = ({ userProfileModel, refreshedTimestamp }: Props) => {
+export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpand }: Props) => {
     const { colors } = useTheme();
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
+    const shouldExpand = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
+        return contentOffset.y < 1;
+    };
+
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
             case 'profile':
-                return <ActivityTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />;
+                return (
+                    <ScrollView
+                        scrollEventThrottle={8}
+                        onScroll={({ nativeEvent }) => {
+                            onShouldExpand(shouldExpand(nativeEvent));
+                        }}
+                    >
+                        <ActivityTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
+                    </ScrollView>
+                );
 
             case 'today':
                 if (!plannedDay) {
