@@ -3,14 +3,11 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
 import { UserProfileProBadge } from 'src/components/profile/profile_component/badge/UserProfileProBadge';
-import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import Animated, { Easing, SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import DEFAULT from 'assets/banner.png';
-import { getWindowWidth } from 'src/util/GeneralUtility';
-import React from 'react';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -19,9 +16,7 @@ interface Props {
     followerCount: number;
     followingCount: number;
     isFollowingUser: boolean;
-    animatedHeaderHeight: SharedValue<number>;
-    animatedHeaderBannerRatio: SharedValue<number>;
-    animatedProfileTop: SharedValue<number>;
+    animatedHeaderScale: SharedValue<number>;
 }
 
 export const ProfileHeader = ({
@@ -31,55 +26,28 @@ export const ProfileHeader = ({
     followerCount,
     followingCount,
     isFollowingUser,
-    animatedHeaderHeight,
-    animatedHeaderBannerRatio,
-    animatedProfileTop,
+    animatedHeaderScale,
 }: Props) => {
     const { colors } = useTheme();
 
     const shouldDisplayFollowButton =
         getAuth().currentUser!.uid !== undefined && userProfileModel !== undefined && userProfileModel.uid !== getAuth().currentUser!.uid;
 
-    const style = useAnimatedStyle(() => {
+    const animatedHeaderStyle = useAnimatedStyle(() => {
         return {
-            height: withTiming('' + (100 * animatedHeaderHeight.value) / 3 + '%', {
-                duration: 300,
+            height: withTiming('' + (100 * animatedHeaderScale.value) / 3 + '%', {
+                duration: 200,
                 easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-            }),
-        };
-    });
-
-    const headerContentsStyle = useAnimatedStyle(() => {
-        return {
-            top: withTiming(animatedProfileTop.value, {
-                duration: 300,
-                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-            }),
-        };
-    });
-
-    const [bannerHeight, setBannerHeight] = React.useState<number>(0);
-    const width = getWindowWidth() * 0.95;
-    const height = width / 3;
-    const bannerStyle = useAnimatedStyle(() => {
-        return {
-            height: withTiming(height * animatedHeaderBannerRatio.value, {
-                duration: 300,
-                easing: Easing.bezier(0.25, 0, 0.25, 1),
-            }),
-            width: withTiming(width * animatedHeaderBannerRatio.value, {
-                duration: 300,
-                easing: Easing.bezier(0.25, 0, 0.25, 1),
             }),
         };
     });
 
     return (
-        <Animated.View style={style}>
+        <Animated.View style={animatedHeaderStyle}>
             <View style={{ alignItems: 'center', backgroundColor: 'red' }}>
                 <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'red', paddingTop: 10, paddingBottom: 10 }}>
                     {/* BANNER */}
-                    <Animated.View style={bannerStyle}>
+                    <Animated.View style={{}}>
                         {userProfileModel.bannerUrl ? (
                             <CachedImage style={{ width: '100%', height: '100%', borderRadius: 15 }} uri={userProfileModel.bannerUrl} />
                         ) : (
