@@ -78,13 +78,16 @@ export const CurrentUserProfile = () => {
     }, [shouldExpand]);
 
     const animatedHeaderScale = useSharedValue(1);
+    const animatedBannerScale = useSharedValue(1);
 
     const shrinkHeader = () => {
         animatedHeaderScale.value = 0.33;
+        animatedBannerScale.value = 0.66;
     };
 
     const growHeader = () => {
         animatedHeaderScale.value = 1;
+        animatedBannerScale.value = 1;
     };
 
     return (
@@ -94,6 +97,7 @@ export const CurrentUserProfile = () => {
             {userProfileModel && (
                 <ProfileHeader
                     animatedHeaderScale={animatedHeaderScale}
+                    animatedBannerScale={animatedBannerScale}
                     userProfileModel={userProfileModel}
                     onFollowUser={() => {}}
                     onUnfollowUser={() => {}}

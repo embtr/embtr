@@ -8,6 +8,7 @@ import { getAuth } from 'firebase/auth';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import Animated, { Easing, SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import DEFAULT from 'assets/banner.png';
+import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -17,6 +18,7 @@ interface Props {
     followingCount: number;
     isFollowingUser: boolean;
     animatedHeaderScale: SharedValue<number>;
+    animatedBannerScale: SharedValue<number>;
 }
 
 export const ProfileHeader = ({
@@ -27,6 +29,7 @@ export const ProfileHeader = ({
     followingCount,
     isFollowingUser,
     animatedHeaderScale,
+    animatedBannerScale,
 }: Props) => {
     const { colors } = useTheme();
 
@@ -35,7 +38,22 @@ export const ProfileHeader = ({
 
     const animatedHeaderStyle = useAnimatedStyle(() => {
         return {
-            height: withTiming('' + (100 * animatedHeaderScale.value) / 3 + '%', {
+            height: withTiming('' + ((100 * animatedHeaderScale.value) / 3 + 25) + '%', {
+                duration: 200,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            }),
+        };
+    });
+
+    const width = getWindowWidth() * 0.95;
+    const height = width * 0.33;
+    const animatedBannerStyle = useAnimatedStyle(() => {
+        return {
+            height: withTiming(height * animatedBannerScale.value, {
+                duration: 200,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            }),
+            width: withTiming(width * animatedBannerScale.value, {
                 duration: 200,
                 easing: Easing.bezier(0.25, 0.1, 0.25, 1),
             }),
@@ -47,7 +65,7 @@ export const ProfileHeader = ({
             <View style={{ alignItems: 'center', backgroundColor: 'red' }}>
                 <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'red', paddingTop: 10, paddingBottom: 10 }}>
                     {/* BANNER */}
-                    <Animated.View style={{}}>
+                    <Animated.View style={animatedBannerStyle}>
                         {userProfileModel.bannerUrl ? (
                             <CachedImage style={{ width: '100%', height: '100%', borderRadius: 15 }} uri={userProfileModel.bannerUrl} />
                         ) : (
