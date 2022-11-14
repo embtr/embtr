@@ -10,7 +10,7 @@ import FollowerController, { FollowCounts } from 'src/controller/follower/Follow
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { getAuth } from 'firebase/auth';
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
 
 export const CurrentUserProfile = () => {
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
@@ -18,7 +18,10 @@ export const CurrentUserProfile = () => {
     const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
-    const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
+
+    // used for profile header scroll animation
+    const [shouldExpand, setShouldExpand] = React.useState<boolean>(true);
+    const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -58,79 +61,52 @@ export const CurrentUserProfile = () => {
         });
     }, []);
 
-    const onShouldExpand = (shouldExpand: boolean) => {
+    React.useEffect(() => {
         if (shouldExpand) {
             if (!isExpanded) {
+                console.log('expand!');
                 setIsExpanded(true);
-                console.log('expanding!');
                 growHeader();
             }
         } else if (!shouldExpand) {
             if (isExpanded) {
-                setIsExpanded(false);
                 console.log('collapsing!');
+                setIsExpanded(false);
                 shrinkHeader();
             }
         }
-    };
+    }, [shouldExpand]);
 
-    const config = {
-        damping: 25,
-        mass: 1,
-        stiffness: 300,
-        overshootClamping: true,
-        restSpeedThreshold: 0.001,
-        restDisplacementThreshold: 0.001,
-    };
+    const animatedHeaderHeight = useSharedValue(1);
+    const animatedBannerRatio = useSharedValue(1);
+    const animatedProfileTop = useSharedValue(1);
 
-    const [translateValue] = React.useState(new Animated.Value(0));
-    const [animatedHeight, setAnimatedHeight] = React.useState(new Animated.Value(100));
     const shrinkHeader = () => {
-        console.log('shrinkin!');
-        width.value = 100;
-        // Animation consists of a sequence of steps
+        animatedHeaderHeight.value = 0.33;
     };
 
     const growHeader = () => {
-        width.value = 300;
-        console.log('growing!');
-        // Animation consists of a sequence of steps
+        animatedHeaderHeight.value = 1;
     };
-
-    const interpolatedHeight = animatedHeight.interpolate({
-        inputRange: [0, 100],
-        outputRange: [100, 310],
-    });
-
-    const width = useSharedValue(300);
-
-    const style = useAnimatedStyle(() => {
-        return {
-            height: withTiming(width.value, {
-                duration: 300,
-                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-            }),
-        };
-    });
 
     return (
         <Screen>
             <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
             <EmbtrMenuCustom />
             {userProfileModel && (
-                <Animated.View style={style}>
-                    <ProfileHeader
-                        userProfileModel={userProfileModel}
-                        onFollowUser={() => {}}
-                        onUnfollowUser={() => {}}
-                        followerCount={followerCount}
-                        followingCount={followingCount}
-                        isFollowingUser={false}
-                        animatedValue={translateValue}
-                    />
-                </Animated.View>
+                <ProfileHeader
+                    animatedHeaderHeight={animatedHeaderHeight}
+                    animatedHeaderBannerRatio={animatedBannerRatio}
+                    animatedProfileTop={animatedProfileTop}
+                    userProfileModel={userProfileModel}
+                    onFollowUser={() => {}}
+                    onUnfollowUser={() => {}}
+                    followerCount={followerCount}
+                    followingCount={followingCount}
+                    isFollowingUser={false}
+                />
             )}
-            {userProfileModel && <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={onShouldExpand} />}
+            {userProfileModel && <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={setShouldExpand} />}
         </Screen>
     );
 };
