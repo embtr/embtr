@@ -77,16 +77,16 @@ export const CurrentUserProfile = () => {
         }
     }, [shouldExpand]);
 
-    const animatedHeaderScale = useSharedValue(1);
+    const animatedHeaderContentsScale = useSharedValue(1);
     const animatedBannerScale = useSharedValue(1);
 
     const shrinkHeader = () => {
-        animatedHeaderScale.value = 0.33;
+        animatedHeaderContentsScale.value = 0;
         animatedBannerScale.value = 0.66;
     };
 
     const growHeader = () => {
-        animatedHeaderScale.value = 1;
+        animatedHeaderContentsScale.value = 1;
         animatedBannerScale.value = 1;
     };
 
@@ -96,7 +96,7 @@ export const CurrentUserProfile = () => {
             <EmbtrMenuCustom />
             {userProfileModel && (
                 <ProfileHeader
-                    animatedHeaderScale={animatedHeaderScale}
+                    animatedHeaderContentsScale={animatedHeaderContentsScale}
                     animatedBannerScale={animatedBannerScale}
                     userProfileModel={userProfileModel}
                     onFollowUser={() => {}}

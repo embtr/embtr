@@ -1,4 +1,4 @@
-import { Image, Text, View } from 'react-native';
+import { Image, LayoutChangeEvent, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
@@ -9,6 +9,7 @@ import { CachedImage } from 'src/components/common/images/CachedImage';
 import Animated, { Easing, SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
+import React from 'react';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -17,7 +18,7 @@ interface Props {
     followerCount: number;
     followingCount: number;
     isFollowingUser: boolean;
-    animatedHeaderScale: SharedValue<number>;
+    animatedHeaderContentsScale: SharedValue<number>;
     animatedBannerScale: SharedValue<number>;
 }
 
@@ -28,17 +29,18 @@ export const ProfileHeader = ({
     followerCount,
     followingCount,
     isFollowingUser,
-    animatedHeaderScale,
+    animatedHeaderContentsScale,
     animatedBannerScale,
 }: Props) => {
     const { colors } = useTheme();
+    const [initialHeaderContentsHeight, setInitialHeaderContentsHeight] = React.useState<number>(0);
 
     const shouldDisplayFollowButton =
         getAuth().currentUser!.uid !== undefined && userProfileModel !== undefined && userProfileModel.uid !== getAuth().currentUser!.uid;
 
-    const animatedHeaderStyle = useAnimatedStyle(() => {
+    const animatedHeaderContentsStyle = useAnimatedStyle(() => {
         return {
-            height: withTiming('' + ((100 * animatedHeaderScale.value) / 3 + 25) + '%', {
+            height: withTiming(initialHeaderContentsHeight * animatedHeaderContentsScale.value, {
                 duration: 200,
                 easing: Easing.bezier(0.25, 0.1, 0.25, 1),
             }),
@@ -60,12 +62,34 @@ export const ProfileHeader = ({
         };
     });
 
+    const animatedProfileImageStyle = useAnimatedStyle(() => {
+        return {
+            height: withTiming(height * animatedBannerScale.value * (animatedHeaderContentsScale.value === 1 ? 0.75 : 1.2), {
+                duration: 200,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            }),
+            width: withTiming(height * animatedBannerScale.value * (animatedHeaderContentsScale.value === 1 ? 0.75 : 1.2), {
+                duration: 200,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            }),
+            top: withTiming(height * 0.33 * animatedHeaderContentsScale.value, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) }),
+            borderWidth: withTiming(animatedHeaderContentsScale.value === 1 ? 0 : 3, {
+                duration: 200,
+                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+            }),
+        };
+    });
+
+    const storeInitialHeaderContentsHeight = (event: LayoutChangeEvent) => {
+        setInitialHeaderContentsHeight(event.nativeEvent.layout.height);
+    };
+
     return (
-        <Animated.View style={animatedHeaderStyle}>
-            <View style={{ alignItems: 'center', backgroundColor: 'red' }}>
-                <View style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'red', paddingTop: 10, paddingBottom: 10 }}>
+        <View>
+            <View style={{ alignItems: 'center' }}>
+                <View style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 10, paddingBottom: 10 }}>
                     {/* BANNER */}
-                    <Animated.View style={animatedBannerStyle}>
+                    <Animated.View style={[animatedBannerStyle, { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }]}>
                         {userProfileModel.bannerUrl ? (
                             <CachedImage style={{ width: '100%', height: '100%', borderRadius: 15 }} uri={userProfileModel.bannerUrl} />
                         ) : (
@@ -75,23 +99,34 @@ export const ProfileHeader = ({
 
                     {/* BANNER */}
                     <View style={{ position: 'absolute', zIndex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                            {userProfileModel.photoUrl && <CachedImage style={{ width: 100, height: 100, borderRadius: 50 }} uri={userProfileModel.photoUrl} />}
+                        <Animated.View
+                            style={[
+                                animatedProfileImageStyle,
+                                { alignItems: 'flex-end', justifyContent: 'flex-end', borderRadius: 1000, borderColor: colors.background },
+                            ]}
+                        >
+                            {userProfileModel.photoUrl && (
+                                <CachedImage style={{ width: '100%', height: '100%', borderRadius: 1000 }} uri={userProfileModel.photoUrl} />
+                            )}
                             <View style={{ position: 'absolute', zIndex: 1, paddingBottom: 3, paddingRight: 3 }}>
                                 <ProfileLevel userProfileModel={userProfileModel} />
                             </View>
-                        </View>
+                        </Animated.View>
                     </View>
                 </View>
             </View>
 
-            <Animated.View style={[{ width: '100%', alignItems: 'center', paddingTop: 18 }]}>
+            <Animated.View
+                onLayout={initialHeaderContentsHeight === 0 ? storeInitialHeaderContentsHeight : undefined}
+                style={[initialHeaderContentsHeight !== 0 ? animatedHeaderContentsStyle : undefined, { width: '100%', alignItems: 'center' }]}
+            >
+                <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text, paddingLeft: 90 }}>
+                    {userProfileModel.name}
+                </Text>
+                <UserProfileProBadge />
+
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text, paddingLeft: 90 }}>
-                        {userProfileModel.name}
-                    </Text>
                     <View style={{ flexDirection: 'row', paddingLeft: 10, width: 90 }}>
-                        <UserProfileProBadge />
                         {shouldDisplayFollowButton && (
                             <TouchableOpacity
                                 onPress={() => {
@@ -173,6 +208,6 @@ export const ProfileHeader = ({
                     </View>
                 </View>
             </Animated.View>
-        </Animated.View>
+        </View>
     );
 };
