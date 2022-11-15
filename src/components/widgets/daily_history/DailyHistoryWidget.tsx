@@ -19,7 +19,7 @@ export const DailyHistoryWidget = ({ history }: Props) => {
     };
 
     const isFailed = (s: string) => {
-        return 'FAILED' === s;
+        return 'FAILED' === s || 'INCOMPLETE' === s;
     };
 
     let views: JSX.Element[] = [];
