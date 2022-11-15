@@ -62,6 +62,20 @@ export const ProfileHeader = ({
         };
     });
 
+    const animatedHeaderStyle = useAnimatedStyle(() => {
+        return {
+            paddingBottom: withTiming(
+                animatedHeaderContentsScale.value === 0
+                    ? (height * animatedBannerScale.value * 1.2 - height * animatedBannerScale.value) / 2
+                    : height * animatedBannerScale.value * 0.75 * 0.33,
+                {
+                    duration: 200,
+                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+                }
+            ),
+        };
+    });
+
     const animatedProfileImageStyle = useAnimatedStyle(() => {
         return {
             height: withTiming(height * animatedBannerScale.value * (animatedHeaderContentsScale.value === 1 ? 0.75 : 1.2), {
@@ -72,7 +86,6 @@ export const ProfileHeader = ({
                 duration: 200,
                 easing: Easing.bezier(0.25, 0.1, 0.25, 1),
             }),
-            top: withTiming(height * 0.33 * animatedHeaderContentsScale.value, { duration: 200, easing: Easing.bezier(0.25, 0.1, 0.25, 1) }),
             borderWidth: withTiming(animatedHeaderContentsScale.value === 1 ? 0 : 3, {
                 duration: 200,
                 easing: Easing.bezier(0.25, 0.1, 0.25, 1),
@@ -87,7 +100,7 @@ export const ProfileHeader = ({
     return (
         <View>
             <View style={{ alignItems: 'center' }}>
-                <View style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 10, paddingBottom: 10 }}>
+                <Animated.View style={[animatedHeaderStyle, { alignItems: 'center', justifyContent: 'flex-end', paddingTop: 10 }]}>
                     {/* BANNER */}
                     <Animated.View style={[animatedBannerStyle, { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }]}>
                         {userProfileModel.bannerUrl ? (
@@ -97,12 +110,12 @@ export const ProfileHeader = ({
                         )}
                     </Animated.View>
 
-                    {/* BANNER */}
+                    {/* PROFILE PHOTO */}
                     <View style={{ position: 'absolute', zIndex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
                         <Animated.View
                             style={[
                                 animatedProfileImageStyle,
-                                { alignItems: 'flex-end', justifyContent: 'flex-end', borderRadius: 1000, borderColor: colors.background },
+                                { alignItems: 'flex-end', justifyContent: 'flex-end', borderColor: colors.background, borderRadius: 1000 },
                             ]}
                         >
                             {userProfileModel.photoUrl && (
@@ -113,18 +126,23 @@ export const ProfileHeader = ({
                             </View>
                         </Animated.View>
                     </View>
-                </View>
+                </Animated.View>
             </View>
 
+            {/* PROFILE CONTENT */}
             <Animated.View
                 onLayout={initialHeaderContentsHeight === 0 ? storeInitialHeaderContentsHeight : undefined}
-                style={[initialHeaderContentsHeight !== 0 ? animatedHeaderContentsStyle : undefined, { width: '100%', alignItems: 'center' }]}
+                style={[
+                    initialHeaderContentsHeight !== 0 ? animatedHeaderContentsStyle : undefined,
+                    { overflow: 'hidden', width: '100%', alignItems: 'center' },
+                ]}
             >
-                <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text, paddingLeft: 90 }}>
-                    {userProfileModel.name}
-                </Text>
-                <UserProfileProBadge />
-
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View style={{ width: 41 }} />
+                    <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text }}>{userProfileModel.name}</Text>
+                    <View style={{ width: 3 }} />
+                    <UserProfileProBadge />
+                </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View style={{ flexDirection: 'row', paddingLeft: 10, width: 90 }}>
                         {shouldDisplayFollowButton && (
