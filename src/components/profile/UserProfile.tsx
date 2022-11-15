@@ -15,6 +15,8 @@ import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { ScrollView } from 'react-native-gesture-handler';
 import { wait } from 'src/util/GeneralUtility';
 import { ProfileBody } from './profile_component/ProfileBody';
+import { ScrollChangeEvent } from 'src/util/constants';
+import { useSharedValue } from 'react-native-reanimated';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -29,6 +31,9 @@ export const UserProfile = () => {
 
     const [followerCount, setFollowerCount] = React.useState<number>(0);
     const [followingCount, setFollowingCount] = React.useState<number>(0);
+
+    // used for profile header scroll animation
+    const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
 
     React.useEffect(() => {
         fetch();
@@ -80,28 +85,58 @@ export const UserProfile = () => {
         FollowerController.unfollowUser(getAuth().currentUser!.uid, uid, () => {});
     };
 
+    const shouldExpand = (e: ScrollChangeEvent) => {
+        if (e === ScrollChangeEvent.BEYOND_TOP) {
+            if (!isExpanded) {
+                setIsExpanded(true);
+                growHeader();
+            }
+        } else if (e === ScrollChangeEvent.BELOW_TOP) {
+            if (isExpanded) {
+                setIsExpanded(false);
+                shrinkHeader();
+            }
+        }
+    };
+
+    const animatedHeaderContentsScale = useSharedValue(1);
+    const animatedBannerScale = useSharedValue(1);
+
+    const shrinkHeader = () => {
+        animatedHeaderContentsScale.value = 0;
+        animatedBannerScale.value = 0.66;
+    };
+
+    const growHeader = () => {
+        animatedHeaderContentsScale.value = 1;
+        animatedBannerScale.value = 1;
+    };
+
     return (
         <Screen>
             <Banner name="User Profile" leftIcon={'arrow-back'} leftRoute="BACK" />
 
             <EmbtrMenuCustom />
 
-            <ScrollView showsVerticalScrollIndicator={false} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                <View style={{ alignItems: 'center' }}>
-                    <View style={{ width: isDesktopBrowser() ? '45%' : '100%' }}>
-                        {userProfileModel && (
-                            <ProfileHeader
-                                userProfileModel={userProfileModel}
-                                onFollowUser={onFollowUser}
-                                onUnfollowUser={onUnfollowUser}
-                                followerCount={followerCount}
-                                followingCount={followingCount}
-                                isFollowingUser={isFollowingUser}
-                            />
-                        )}
-                    </View>
+            <View style={{ alignItems: 'center' }}>
+                <View style={{ width: isDesktopBrowser() ? '45%' : '100%' }}>
+                    {userProfileModel && (
+                        <ProfileHeader
+                            animatedBannerScale={animatedBannerScale}
+                            animatedHeaderContentsScale={animatedHeaderContentsScale}
+                            userProfileModel={userProfileModel}
+                            onFollowUser={onFollowUser}
+                            onUnfollowUser={onUnfollowUser}
+                            followerCount={followerCount}
+                            followingCount={followingCount}
+                            isFollowingUser={isFollowingUser}
+                        />
+                    )}
+                    {userProfileModel && (
+                        <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />
+                    )}
                 </View>
-            </ScrollView>
+            </View>
         </Screen>
     );
 };

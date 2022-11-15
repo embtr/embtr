@@ -137,14 +137,17 @@ export const ProfileHeader = ({
                     { overflow: 'hidden', width: '100%', alignItems: 'center' },
                 ]}
             >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ width: 41 }} />
-                    <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text }}>{userProfileModel.name}</Text>
-                    <View style={{ width: 3 }} />
-                    <UserProfileProBadge />
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <View style={{ flexDirection: 'row', paddingLeft: 10, width: 90 }}>
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <View style={{ flex: 1 }} />
+
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
+                        <View style={{ width: 41 }} />
+                        <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text }}>{userProfileModel.name}</Text>
+                        <View style={{ width: 3 }} />
+                        <UserProfileProBadge />
+                    </View>
+
+                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
                         {shouldDisplayFollowButton && (
                             <TouchableOpacity
                                 onPress={() => {
@@ -175,7 +178,6 @@ export const ProfileHeader = ({
                         )}
                     </View>
                 </View>
-
                 <Text style={{ fontSize: 10, fontFamily: 'Poppins_500Medium', color: colors.profile_bio_text }}>{userProfileModel?.location}</Text>
                 <Text style={{ fontSize: 12, fontFamily: 'Poppins_500Medium', color: colors.profile_bio_text, paddingTop: 3 }}>{userProfileModel?.bio}</Text>
 
