@@ -17,7 +17,12 @@ import { SetDurationModal } from 'src/components/plan/SetDurationModal';
 import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
-import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import PlannedTaskController, { getPlannedTaskGoalId, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+
+interface GoalOption {
+    label: string;
+    value: string;
+}
 
 export const EditOneTimeTask = () => {
     const { colors } = useTheme();
@@ -31,8 +36,8 @@ export const EditOneTimeTask = () => {
     const [name, setName] = React.useState('');
     const [details, setDetails] = React.useState('');
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
-    const [setSelectedGoal] = React.useState();
-    const [goalOptions, setGoalOptions] = React.useState([{ label: '', value: '' }]);
+    const [selectedGoal, setSelectedGoal] = React.useState<GoalModel>();
+    const [goalOptions, setGoalOptions] = React.useState<GoalOption[]>([]);
     const [startTime, setStartTime] = React.useState<Date>(Timestamp.now().toDate());
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
     const [durationModalVisible, setDurationModalVisible] = React.useState(false);
@@ -58,8 +63,9 @@ export const EditOneTimeTask = () => {
                     setDetails(plannedTask.routine.description);
 
                     goals.forEach((goal) => {
-                        if (goal.id === plannedTask.routine.goalId) {
-                            //set goal
+                        if (goal.id === getPlannedTaskGoalId(plannedTask)) {
+                            setSelectedGoal(goal);
+                            return;
                         }
                     });
 
@@ -127,7 +133,10 @@ export const EditOneTimeTask = () => {
             plannedTask.routine.description = details;
             plannedTask.startMinute = startTime.getHours() * 60 + startTime.getMinutes();
             plannedTask.duration = duration;
-            PlannedTaskController.updateTask(plannedDay, plannedTask, () => {
+            if (selectedGoal) {
+                plannedTask.goalId = selectedGoal.id;
+            }
+            PlannedTaskController.update(plannedDay, plannedTask, () => {
                 navigation.goBack();
             });
         }
@@ -139,6 +148,15 @@ export const EditOneTimeTask = () => {
 
     const hideCalendar = () => {
         setCalendarVisible(false);
+    };
+
+    const setSelectedGoalFromOption = (goalOption: GoalOption) => {
+        goals.forEach((goal) => {
+            if (goal.id === goalOption.value) {
+                setSelectedGoal(goal);
+                return;
+            }
+        });
     };
 
     return (
@@ -268,7 +286,7 @@ export const EditOneTimeTask = () => {
                         >
                             Goal
                         </Text>
-                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={setSelectedGoal} name={'Goal'} />
+                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={setSelectedGoalFromOption} name={'Goal'} />
                     </View>
 
                     <View style={{ paddingTop: 10, alignItems: 'center' }}>

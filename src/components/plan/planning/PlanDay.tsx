@@ -12,6 +12,7 @@ import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
+import { getPlannedTaskGoalId } from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -48,7 +49,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
                 let taskPillar: PillarModel = FAKE_PILLAR;
 
                 goals.forEach((goal) => {
-                    if (goal.id === plannedTask.routine.goalId) {
+                    if (goal.id === getPlannedTaskGoalId(plannedTask)) {
                         taskGoal = goal;
                         return;
                     }

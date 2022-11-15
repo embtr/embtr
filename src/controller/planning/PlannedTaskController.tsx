@@ -44,6 +44,10 @@ export const createPlannedTaskModel = (task: TaskModel, startMinute: number, dur
     return plannedTask;
 };
 
+export const getPlannedTaskGoalId = (plannedTask: PlannedTaskModel) => {
+    return plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
+};
+
 class PlannedTaskController {
     public static get(uid: string, dayKey: string, plannedTaskId: string, callback: Function) {
         PlannedDayController.get(uid, dayKey, (plannedDay: PlannedDay) => {
@@ -61,7 +65,6 @@ class PlannedTaskController {
         }
 
         plannedDay.metadata!.modified = Timestamp.now();
-
         plannedDay.metadata!.status = PlannedDayController.getPlannedDayStatus(plannedDay, plannedTask);
 
         await PlannedDayDao.updateTask(plannedDay, plannedTask);
