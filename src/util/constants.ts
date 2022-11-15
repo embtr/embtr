@@ -73,3 +73,9 @@ export const WIDGETS = [
 ];
 
 export const WIDGET_LIKE_ICON_SIZE = 20;
+
+export enum ScrollChangeEvent {
+    BEYOND_TOP,
+    AT_TOP,
+    BELOW_TOP
+}

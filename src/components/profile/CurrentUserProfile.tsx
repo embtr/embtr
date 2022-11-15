@@ -11,6 +11,7 @@ import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { getAuth } from 'firebase/auth';
 import { useSharedValue } from 'react-native-reanimated';
+import { ScrollChangeEvent } from 'src/util/constants';
 
 export const CurrentUserProfile = () => {
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
@@ -20,7 +21,6 @@ export const CurrentUserProfile = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
 
     // used for profile header scroll animation
-    const [shouldExpand, setShouldExpand] = React.useState<boolean>(true);
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
 
     useFocusEffect(
@@ -61,21 +61,21 @@ export const CurrentUserProfile = () => {
         });
     }, []);
 
-    React.useEffect(() => {
-        if (shouldExpand) {
+    const shouldExpand = (e: ScrollChangeEvent) => {
+        if (e === ScrollChangeEvent.BEYOND_TOP) {
             if (!isExpanded) {
                 console.log('expand!');
                 setIsExpanded(true);
                 growHeader();
             }
-        } else if (!shouldExpand) {
+        } else if (e === ScrollChangeEvent.BELOW_TOP) {
             if (isExpanded) {
                 console.log('collapsing!');
                 setIsExpanded(false);
                 shrinkHeader();
             }
         }
-    }, [shouldExpand]);
+    };
 
     const animatedHeaderContentsScale = useSharedValue(1);
     const animatedBannerScale = useSharedValue(1);
@@ -106,7 +106,7 @@ export const CurrentUserProfile = () => {
                     isFollowingUser={false}
                 />
             )}
-            {userProfileModel && <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={setShouldExpand} />}
+            {userProfileModel && <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />}
         </Screen>
     );
 };

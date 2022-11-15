@@ -12,6 +12,7 @@ import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/pl
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { Screen } from 'src/components/common/Screen';
+import { ScrollChangeEvent } from 'src/util/constants';
 
 /*
  * Avoid rerenders
@@ -30,8 +31,16 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
-    const shouldExpand = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
-        return contentOffset.y < 1;
+    const shouldExpand = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): ScrollChangeEvent => {
+        if (contentOffset.y < 0) {
+            return ScrollChangeEvent.BEYOND_TOP;
+        }
+
+        if (contentOffset.y == 0) {
+            return ScrollChangeEvent.AT_TOP;
+        }
+
+        return ScrollChangeEvent.BELOW_TOP;
     };
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
@@ -53,10 +62,28 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
                     return <View />;
                 }
 
-                return <TodayTabRoute plannedDay={plannedDay} />;
+                return (
+                    <ScrollView
+                        scrollEventThrottle={8}
+                        onScroll={({ nativeEvent }) => {
+                            onShouldExpand(shouldExpand(nativeEvent));
+                        }}
+                    >
+                        <TodayTabRoute plannedDay={plannedDay} />
+                    </ScrollView>
+                );
 
             case 'pillars':
-                return <PillarsTabRoute userProfileModel={userProfileModel} />;
+                return (
+                    <ScrollView
+                        scrollEventThrottle={8}
+                        onScroll={({ nativeEvent }) => {
+                            onShouldExpand(shouldExpand(nativeEvent));
+                        }}
+                    >
+                        <PillarsTabRoute userProfileModel={userProfileModel} />
+                    </ScrollView>
+                );
         }
 
         return <View></View>;
