@@ -43,6 +43,14 @@ class DailyResultDao {
         return querySnapshot;
     }
 
+    public static async getFinishedWithLimit(limitValue: number) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getFinishedWithLimit');
+
+        const q = query(collection(db, COLLECTION_NAME), where('active', '!=', false), where('data.hasTasks', '==', true), limit(limitValue));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot;
+    }
+
     public static async getAllFinished() {
         const db: Firestore = getFirebaseConnection(this.name, 'getAllFinished');
 

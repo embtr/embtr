@@ -140,6 +140,26 @@ class DailyResultController {
         return dailyResults;
     }
 
+    public static async getFinishedWithLimit(limit: number) {
+        const results = await DailyResultDao.getFinishedWithLimit(limit);
+
+        let dailyResults: DailyResultModel[] = [];
+        for (const result of results.docs) {
+            const dailyResult = DailyResultController.getDailyResultFromData(result);
+
+            if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
+                const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
+                if (daysOld <= 0) {
+                    continue;
+                }
+            }
+
+            dailyResults.push(dailyResult);
+        }
+
+        return dailyResults;
+    }
+
     public static async getAllFinishedForUser(uid: string) {
         const results = await DailyResultDao.getAllForUser(uid);
 
