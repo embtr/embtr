@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import PlannedDayController, { getDayKeyDaysOld, getPreviousDayKey, getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
@@ -14,6 +14,11 @@ export interface DailyResultModel extends TimelinePostModel {
         hasTasks: boolean;
         imageUrls?: string[];
     };
+}
+
+export interface PaginatedDailyResults {
+    results: DailyResultModel[];
+    lastDailyResult?: QueryDocumentSnapshot;
 }
 
 class DailyResultController {
@@ -140,11 +145,13 @@ class DailyResultController {
         return dailyResults;
     }
 
-    public static async getFinishedWithLimit(limit: number) {
-        const results = await DailyResultDao.getFinishedWithLimit(limit);
+    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined, limit: number): Promise<PaginatedDailyResults> {
+        const results = await DailyResultDao.getPaginatedFinished(lastDailyResult, limit);
 
         let dailyResults: DailyResultModel[] = [];
+        let foundLastDailyResult: QueryDocumentSnapshot | undefined = undefined;
         for (const result of results.docs) {
+            foundLastDailyResult = result;
             const dailyResult = DailyResultController.getDailyResultFromData(result);
 
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
@@ -157,7 +164,12 @@ class DailyResultController {
             dailyResults.push(dailyResult);
         }
 
-        return dailyResults;
+        let paginatedDailyResults: PaginatedDailyResults = {
+            results: dailyResults,
+            lastDailyResult: foundLastDailyResult,
+        };
+
+        return paginatedDailyResults;
     }
 
     public static async getAllFinishedForUser(uid: string) {

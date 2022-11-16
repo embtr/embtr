@@ -1,5 +1,22 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, addDoc, collection, setDoc, doc, getDocs, getDoc, query, where, Timestamp, arrayUnion, limit, orderBy } from 'firebase/firestore';
+import {
+    Firestore,
+    addDoc,
+    collection,
+    setDoc,
+    doc,
+    getDocs,
+    getDoc,
+    query,
+    where,
+    Timestamp,
+    arrayUnion,
+    limit,
+    startAfter,
+    orderBy,
+    QueryDocumentSnapshot,
+    startAt,
+} from 'firebase/firestore';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { Like } from 'src/controller/timeline/TimelineController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
@@ -43,10 +60,18 @@ class DailyResultDao {
         return querySnapshot;
     }
 
-    public static async getFinishedWithLimit(limitValue: number) {
+    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined, limitValue: number) {
         const db: Firestore = getFirebaseConnection(this.name, 'getFinishedWithLimit');
 
-        const q = query(collection(db, COLLECTION_NAME), where('active', '!=', false), where('data.hasTasks', '==', true), limit(limitValue));
+        const q = lastDailyResult
+            ? query(
+                  collection(db, COLLECTION_NAME),
+                  where('active', '!=', false),
+                  where('data.hasTasks', '==', true),
+                  startAfter(lastDailyResult),
+                  limit(limitValue)
+              )
+            : query(collection(db, COLLECTION_NAME), where('active', '!=', false), where('data.hasTasks', '==', true), limit(limitValue));
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     }

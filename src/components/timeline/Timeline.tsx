@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RefreshControl, ScrollView, View } from 'react-native';
+import { NativeScrollEvent, RefreshControl, ScrollView, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TimelineController, { TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import TimelineController, { PaginatedTimelinePosts, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';
@@ -37,14 +37,14 @@ export const Timeline = () => {
         elevation: 5,
     };
 
-    const [timelineEntries, setTimelineEntries] = React.useState<TimelinePostModel[]>([]);
+    const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
 
     React.useEffect(() => {
-        TimelineController.getTimelinePosts(setTimelineEntries);
+        TimelineController.getPaginatedTimelinePosts(undefined, undefined, 10, setPaginatedTimelinePosts);
     }, []);
 
     React.useEffect(() => {
@@ -53,7 +53,7 @@ export const Timeline = () => {
 
     React.useEffect(() => {
         let uids: string[] = [];
-        timelineEntries.forEach((timelineEntry) => {
+        paginatedTimelinePosts?.posts.forEach((timelineEntry) => {
             if (!uids.includes(timelineEntry.uid)) {
                 uids.push(timelineEntry.uid);
             }
@@ -67,7 +67,7 @@ export const Timeline = () => {
 
             setTimelineProfiles(profileMap);
         });
-    }, [timelineEntries]);
+    }, [paginatedTimelinePosts]);
 
     const wait = (timeout: number | undefined) => {
         return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -75,7 +75,7 @@ export const Timeline = () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        TimelineController.getTimelinePosts(setTimelineEntries);
+        TimelineController.getPaginatedTimelinePosts(undefined, undefined, 10, setPaginatedTimelinePosts);
         NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
         wait(500).then(() => setRefreshing(false));
     }, []);
@@ -133,7 +133,7 @@ export const Timeline = () => {
 
     React.useEffect(() => {
         let views: JSX.Element[] = [];
-        timelineEntries.forEach((timelineEntry) => {
+        paginatedTimelinePosts?.posts.forEach((timelineEntry) => {
             const view: JSX.Element = createTimelineView(timelineEntry);
             views.push(view);
         });
@@ -144,6 +144,14 @@ export const Timeline = () => {
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+
+    const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
+        return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+    };
+
+    const loadMore = () => {
+        //TimelineController.getTimelinePostsFromPage(setTimelineEntries, lastReturnedTimelinePost, lastReturnedDailyResult);
+    };
 
     return (
         <Screen>
@@ -162,6 +170,12 @@ export const Timeline = () => {
             />
 
             <ScrollView
+                onScroll={({ nativeEvent }) => {
+                    if (isCloseToBottom(nativeEvent)) {
+                        console.log('at bottom!');
+                    }
+                }}
+                scrollEventThrottle={8}
                 keyboardShouldPersistTaps={'handled'}
                 style={{ backgroundColor: colors.background }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { Query, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
@@ -29,14 +29,29 @@ export interface TimelinePostModel {
     active: boolean;
 }
 
+export interface PaginatedTimelinePosts {
+    posts: TimelinePostModel[];
+    lastTimelinePost?: QueryDocumentSnapshot;
+    lastDailyResult?: QueryDocumentSnapshot;
+}
+
 class TimelineController {
-    public static getTimelinePosts(callback: Function) {
-        const result = TimelineDao.getTimelinePostsWithLimit(10);
+    public static async getPaginatedTimelinePosts(
+        lastTimelinePost: QueryDocumentSnapshot | undefined,
+        lastDailyResult: QueryDocumentSnapshot | undefined,
+        limit: number,
+        callback: Function
+    ) {
+        const result = TimelineDao.getPaginatedTimelinePosts(lastTimelinePost, limit);
 
         let timelinePosts: TimelinePostModel[] = [];
+        let foundLastTimelinePost: QueryDocumentSnapshot | undefined = undefined;
+        let foundLastDailyResult: QueryDocumentSnapshot | undefined = undefined;
         result
             .then((response) => {
                 response.docs.forEach((doc) => {
+                    foundLastTimelinePost = doc;
+
                     const type = doc.data()['type'];
 
                     switch (type) {
@@ -61,8 +76,9 @@ class TimelineController {
                 });
             })
             .then(async () => {
-                const dailyResults = await DailyResultController.getFinishedWithLimit(10);
-                timelinePosts = timelinePosts.concat(dailyResults);
+                const paginateDailyResults = await DailyResultController.getPaginatedFinished(lastDailyResult, limit);
+                timelinePosts = timelinePosts.concat(paginateDailyResults.results);
+                foundLastDailyResult = paginateDailyResults.lastDailyResult;
             })
             .then(() => {
                 timelinePosts = timelinePosts
@@ -71,7 +87,13 @@ class TimelineController {
                     .reverse();
             })
             .then(() => {
-                callback(timelinePosts);
+                let paginatedTimelinePosts: PaginatedTimelinePosts = {
+                    posts: timelinePosts,
+                    lastTimelinePost: foundLastTimelinePost,
+                    lastDailyResult: foundLastDailyResult,
+                };
+
+                callback(paginatedTimelinePosts);
             });
     }
 
