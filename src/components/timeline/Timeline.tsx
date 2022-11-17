@@ -16,8 +16,9 @@ import NotificationController, { getUnreadNotificationCount, NotificationModel }
 import { getAuth } from 'firebase/auth';
 import { CARD_SHADOW } from 'src/util/constants';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
-import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, { DailyResultModel, PaginatedDailyResults } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
+import { wait } from 'src/util/GeneralUtility';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -38,22 +39,66 @@ export const Timeline = () => {
     };
 
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
+    const [paginatedDailyResults, setPaginatedDailyResults] = React.useState<PaginatedDailyResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [isLoadingMode, setIsLoadingMode] = React.useState(false);
 
     React.useEffect(() => {
-        TimelineController.getPaginatedTimelinePosts(undefined, undefined, 10, setPaginatedTimelinePosts);
+        fetchPaginatedTimelinePosts();
     }, []);
 
     React.useEffect(() => {
+        fetchPaginatedDailyResults();
+    }, []);
+
+    React.useEffect(() => {
+        fetchNotifications();
+    }, []);
+
+    React.useEffect(() => {
+        updateTimelineViews();
+    }, [timelineProfiles]);
+
+    React.useEffect(() => {
+        fetchPostUsers();
+    }, [paginatedTimelinePosts, paginatedDailyResults]);
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        fetchPaginatedTimelinePosts();
+        fetchPaginatedDailyResults();
+        fetchNotifications();
+        wait(500).then(() => setRefreshing(false));
+    }, []);
+
+    const fetchPaginatedTimelinePosts = () => {
+        TimelineController.getPaginatedTimelinePosts(undefined, 10, setPaginatedTimelinePosts);
+    };
+
+    const fetchPaginatedDailyResults = async () => {
+        const results = await DailyResultController.getPaginatedFinished(undefined, 10);
+        setPaginatedDailyResults(results);
+    };
+
+    const fetchNotifications = () => {
         NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
-    }, []);
+    };
 
-    React.useEffect(() => {
+    const fetchPostUsers = () => {
+        let timelinePosts: TimelinePostModel[] = [];
+        if (paginatedTimelinePosts?.posts) {
+            timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
+        }
+
+        if (paginatedDailyResults?.results) {
+            timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
+        }
+
         let uids: string[] = [];
-        paginatedTimelinePosts?.posts.forEach((timelineEntry) => {
+        timelinePosts.forEach((timelineEntry) => {
             if (!uids.includes(timelineEntry.uid)) {
                 uids.push(timelineEntry.uid);
             }
@@ -67,18 +112,7 @@ export const Timeline = () => {
 
             setTimelineProfiles(profileMap);
         });
-    }, [paginatedTimelinePosts]);
-
-    const wait = (timeout: number | undefined) => {
-        return new Promise((resolve) => setTimeout(resolve, timeout));
     };
-
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        TimelineController.getPaginatedTimelinePosts(undefined, undefined, 10, setPaginatedTimelinePosts);
-        NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
-        wait(500).then(() => setRefreshing(false));
-    }, []);
 
     const createStoryView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
@@ -131,15 +165,25 @@ export const Timeline = () => {
         }
     };
 
-    React.useEffect(() => {
+    const updateTimelineViews = () => {
+        let timelinePosts: TimelinePostModel[] = [];
+        if (paginatedTimelinePosts?.posts) {
+            timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
+        }
+
+        if (paginatedDailyResults?.results) {
+            timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
+        }
+        timelinePosts.sort((a, b) => (a.added <= b.added ? 1 : -1));
+
         let views: JSX.Element[] = [];
-        paginatedTimelinePosts?.posts.forEach((timelineEntry) => {
+        timelinePosts.forEach((timelineEntry) => {
             const view: JSX.Element = createTimelineView(timelineEntry);
             views.push(view);
         });
 
         setTimelineViews(views);
-    }, [timelineProfiles]);
+    };
 
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
@@ -149,8 +193,51 @@ export const Timeline = () => {
         return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
     };
 
+    const addPageOfTimelinePosts = () => {
+        TimelineController.getPaginatedTimelinePosts(paginatedTimelinePosts?.lastTimelinePost, 10, (newPaginatedTimelinePosts: PaginatedTimelinePosts) => {
+            let currentTimelinePosts: PaginatedTimelinePosts = {
+                posts: [],
+                lastTimelinePost: paginatedTimelinePosts?.lastTimelinePost,
+            };
+
+            if (paginatedTimelinePosts?.posts) {
+                currentTimelinePosts.posts = [...paginatedTimelinePosts.posts];
+            }
+
+            currentTimelinePosts.posts = currentTimelinePosts.posts.concat(newPaginatedTimelinePosts.posts);
+            currentTimelinePosts.lastTimelinePost = newPaginatedTimelinePosts.lastTimelinePost;
+
+            setPaginatedTimelinePosts(currentTimelinePosts);
+        });
+    };
+
+    const addPageOfDailyResults = async () => {
+        let currentDailyResults: PaginatedDailyResults = {
+            results: [],
+            lastDailyResult: paginatedDailyResults?.lastDailyResult,
+        };
+
+        if (paginatedDailyResults?.results) {
+            currentDailyResults.results = [...paginatedDailyResults.results];
+        }
+
+        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(paginatedDailyResults?.lastDailyResult, 10);
+
+        currentDailyResults.results = currentDailyResults.results.concat(newPaginatedDailyResults.results);
+        currentDailyResults.lastDailyResult = newPaginatedDailyResults.lastDailyResult;
+
+        setPaginatedDailyResults(currentDailyResults);
+    };
+
     const loadMore = () => {
-        //TimelineController.getTimelinePostsFromPage(setTimelineEntries, lastReturnedTimelinePost, lastReturnedDailyResult);
+        if (isLoadingMode) {
+            return;
+        }
+
+        setIsLoadingMode(true);
+        addPageOfTimelinePosts();
+        addPageOfDailyResults();
+        wait(1000).then(() => setIsLoadingMode(false));
     };
 
     return (
@@ -172,7 +259,7 @@ export const Timeline = () => {
             <ScrollView
                 onScroll={({ nativeEvent }) => {
                     if (isCloseToBottom(nativeEvent)) {
-                        console.log('at bottom!');
+                        loadMore();
                     }
                 }}
                 scrollEventThrottle={8}

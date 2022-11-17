@@ -31,22 +31,20 @@ export interface TimelinePostModel {
 
 export interface PaginatedTimelinePosts {
     posts: TimelinePostModel[];
-    lastTimelinePost?: QueryDocumentSnapshot;
-    lastDailyResult?: QueryDocumentSnapshot;
+    lastTimelinePost: QueryDocumentSnapshot | undefined | null;
 }
 
 class TimelineController {
-    public static async getPaginatedTimelinePosts(
-        lastTimelinePost: QueryDocumentSnapshot | undefined,
-        lastDailyResult: QueryDocumentSnapshot | undefined,
-        limit: number,
-        callback: Function
-    ) {
+    public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined | null, limit: number, callback: Function) {
+        if (lastTimelinePost === null) {
+            callback({ posts: [], lastTimelinePost: null });
+            return;
+        }
+
         const result = TimelineDao.getPaginatedTimelinePosts(lastTimelinePost, limit);
 
         let timelinePosts: TimelinePostModel[] = [];
         let foundLastTimelinePost: QueryDocumentSnapshot | undefined = undefined;
-        let foundLastDailyResult: QueryDocumentSnapshot | undefined = undefined;
         result
             .then((response) => {
                 response.docs.forEach((doc) => {
@@ -75,23 +73,16 @@ class TimelineController {
                     }
                 });
             })
-            .then(async () => {
-                const paginateDailyResults = await DailyResultController.getPaginatedFinished(lastDailyResult, limit);
-                timelinePosts = timelinePosts.concat(paginateDailyResults.results);
-                foundLastDailyResult = paginateDailyResults.lastDailyResult;
-            })
-            .then(() => {
-                timelinePosts = timelinePosts
-                    .sort((a, b) => ((a.type === 'DAILY_RESULT' ? a.modified : a.added) > (b.type === 'DAILY_RESULT' ? b.modified : b.added) ? 1 : -1))
-                    //.sort((a, b) => (a.added > b.added ? 1 : -1))
-                    .reverse();
-            })
             .then(() => {
                 let paginatedTimelinePosts: PaginatedTimelinePosts = {
                     posts: timelinePosts,
                     lastTimelinePost: foundLastTimelinePost,
-                    lastDailyResult: foundLastDailyResult,
                 };
+
+                if (paginatedTimelinePosts.posts.length == 0) {
+                    console.log('no more timeline posts to fetch');
+                    paginatedTimelinePosts.lastTimelinePost = null;
+                }
 
                 callback(paginatedTimelinePosts);
             });

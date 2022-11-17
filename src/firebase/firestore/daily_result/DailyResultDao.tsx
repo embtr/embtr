@@ -68,10 +68,19 @@ class DailyResultDao {
                   collection(db, COLLECTION_NAME),
                   where('active', '!=', false),
                   where('data.hasTasks', '==', true),
+                  orderBy('active'),
+                  orderBy('added', 'desc'),
                   startAfter(lastDailyResult),
                   limit(limitValue)
               )
-            : query(collection(db, COLLECTION_NAME), where('active', '!=', false), where('data.hasTasks', '==', true), limit(limitValue));
+            : query(
+                  collection(db, COLLECTION_NAME),
+                  where('active', '!=', false),
+                  where('data.hasTasks', '==', true),
+                  orderBy('active'),
+                  orderBy('added', 'desc'),
+                  limit(limitValue)
+              );
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     }

@@ -18,7 +18,7 @@ export interface DailyResultModel extends TimelinePostModel {
 
 export interface PaginatedDailyResults {
     results: DailyResultModel[];
-    lastDailyResult?: QueryDocumentSnapshot;
+    lastDailyResult: QueryDocumentSnapshot | undefined | null;
 }
 
 class DailyResultController {
@@ -145,7 +145,11 @@ class DailyResultController {
         return dailyResults;
     }
 
-    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined, limit: number): Promise<PaginatedDailyResults> {
+    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined | null, limit: number): Promise<PaginatedDailyResults> {
+        if (lastDailyResult === null) {
+            return { results: [], lastDailyResult: null };
+        }
+
         const results = await DailyResultDao.getPaginatedFinished(lastDailyResult, limit);
 
         let dailyResults: DailyResultModel[] = [];
@@ -168,6 +172,10 @@ class DailyResultController {
             results: dailyResults,
             lastDailyResult: foundLastDailyResult,
         };
+
+        if (paginatedDailyResults.results.length === 0) {
+            paginatedDailyResults.lastDailyResult = null;
+        }
 
         return paginatedDailyResults;
     }
