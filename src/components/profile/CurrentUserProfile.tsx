@@ -64,13 +64,11 @@ export const CurrentUserProfile = () => {
     const shouldExpand = (e: ScrollChangeEvent) => {
         if (e === ScrollChangeEvent.BEYOND_TOP) {
             if (!isExpanded) {
-                console.log('expand!');
                 setIsExpanded(true);
                 growHeader();
             }
         } else if (e === ScrollChangeEvent.BELOW_TOP) {
             if (isExpanded) {
-                console.log('collapsing!');
                 setIsExpanded(false);
                 shrinkHeader();
             }

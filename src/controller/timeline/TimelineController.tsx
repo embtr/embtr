@@ -1,4 +1,4 @@
-import { Query, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
@@ -35,13 +35,13 @@ export interface PaginatedTimelinePosts {
 }
 
 class TimelineController {
-    public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined | null, limit: number, callback: Function) {
+    public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined | null, cutoffDate: Date, callback: Function) {
         if (lastTimelinePost === null) {
             callback({ posts: [], lastTimelinePost: null });
             return;
         }
 
-        const result = TimelineDao.getPaginatedTimelinePosts(lastTimelinePost, limit);
+        const result = TimelineDao.getPaginatedTimelinePosts(lastTimelinePost, cutoffDate);
 
         let timelinePosts: TimelinePostModel[] = [];
         let foundLastTimelinePost: QueryDocumentSnapshot | undefined = undefined;
@@ -54,21 +54,17 @@ class TimelineController {
 
                     switch (type) {
                         case 'STORY':
-                            let story: StoryModel = doc.data() as StoryModel;
-                            story.id = doc.id;
-                            timelinePosts.push(story);
-                            break;
-
-                        case 'TASK_RESULT':
-                            let taskResult: StoryModel = doc.data() as StoryModel;
-                            taskResult.id = doc.id;
-                            timelinePosts.push(taskResult);
+                            const story = this.getStoryFromData(doc);
+                            if (story.active) {
+                                timelinePosts.push(story);
+                            }
                             break;
 
                         case 'CHALLENGE':
-                            let challenge: ChallengeModel1 = doc.data() as ChallengeModel1;
-                            challenge.id = doc.id;
-                            timelinePosts.push(challenge);
+                            const challenge = this.getChallengeFromData(doc);
+                            if (challenge.active) {
+                                timelinePosts.push(challenge);
+                            }
                             break;
                     }
                 });
@@ -78,11 +74,6 @@ class TimelineController {
                     posts: timelinePosts,
                     lastTimelinePost: foundLastTimelinePost,
                 };
-
-                if (paginatedTimelinePosts.posts.length == 0) {
-                    console.log('no more timeline posts to fetch');
-                    paginatedTimelinePosts.lastTimelinePost = null;
-                }
 
                 callback(paginatedTimelinePosts);
             });
@@ -110,6 +101,20 @@ class TimelineController {
                     .reverse();
                 callback(timelinePosts);
             });
+    }
+
+    private static getStoryFromData(data: DocumentSnapshot<DocumentData>): StoryModel {
+        let story: StoryModel = data.data() as StoryModel;
+        story.id = data.id;
+
+        return story;
+    }
+
+    private static getChallengeFromData(data: DocumentSnapshot<DocumentData>): ChallengeModel1 {
+        let challenge: ChallengeModel1 = data.data() as ChallengeModel1;
+        challenge.id = data.id;
+
+        return challenge;
     }
 }
 

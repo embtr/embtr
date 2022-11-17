@@ -145,18 +145,21 @@ class DailyResultController {
         return dailyResults;
     }
 
-    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined | null, limit: number): Promise<PaginatedDailyResults> {
+    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedDailyResults> {
         if (lastDailyResult === null) {
             return { results: [], lastDailyResult: null };
         }
 
-        const results = await DailyResultDao.getPaginatedFinished(lastDailyResult, limit);
+        const results = await DailyResultDao.getPaginatedFinished(lastDailyResult, cutoffDate);
 
         let dailyResults: DailyResultModel[] = [];
         let foundLastDailyResult: QueryDocumentSnapshot | undefined = undefined;
         for (const result of results.docs) {
             foundLastDailyResult = result;
-            const dailyResult = DailyResultController.getDailyResultFromData(result);
+            const dailyResult = this.getDailyResultFromData(result);
+            if (!dailyResult.active) {
+                continue;
+            }
 
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
                 const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);

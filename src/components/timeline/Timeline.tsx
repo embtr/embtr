@@ -19,10 +19,10 @@ import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import DailyResultController, { DailyResultModel, PaginatedDailyResults } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
+import { getDateMinusDays } from 'src/util/DateUtility';
 
 export const Timeline = () => {
     const { colors } = useTheme();
-
     const card = {
         width: '100%',
         paddingTop: 10,
@@ -38,6 +38,8 @@ export const Timeline = () => {
         elevation: 5,
     };
 
+    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
     const [paginatedDailyResults, setPaginatedDailyResults] = React.useState<PaginatedDailyResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
@@ -45,13 +47,15 @@ export const Timeline = () => {
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoadingMode, setIsLoadingMode] = React.useState(false);
+    const [timelinePostCutoffDate, setTimelinePostCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 1));
+    const [dailyRestultCutoffDate, setDailyResultCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 1));
 
     React.useEffect(() => {
         fetchPaginatedTimelinePosts();
     }, []);
 
     React.useEffect(() => {
-        fetchPaginatedDailyResults();
+        //fetchPaginatedDailyResults();
     }, []);
 
     React.useEffect(() => {
@@ -69,17 +73,17 @@ export const Timeline = () => {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         fetchPaginatedTimelinePosts();
-        fetchPaginatedDailyResults();
+        //fetchPaginatedDailyResults();
         fetchNotifications();
         wait(500).then(() => setRefreshing(false));
     }, []);
 
     const fetchPaginatedTimelinePosts = () => {
-        TimelineController.getPaginatedTimelinePosts(undefined, 10, setPaginatedTimelinePosts);
+        TimelineController.getPaginatedTimelinePosts(undefined, timelinePostCutoffDate, setPaginatedTimelinePosts);
     };
 
     const fetchPaginatedDailyResults = async () => {
-        const results = await DailyResultController.getPaginatedFinished(undefined, 10);
+        const results = await DailyResultController.getPaginatedFinished(undefined, dailyRestultCutoffDate);
         setPaginatedDailyResults(results);
     };
 
@@ -187,31 +191,41 @@ export const Timeline = () => {
 
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
-    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
-
     const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
         return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
     };
 
     const addPageOfTimelinePosts = () => {
-        TimelineController.getPaginatedTimelinePosts(paginatedTimelinePosts?.lastTimelinePost, 10, (newPaginatedTimelinePosts: PaginatedTimelinePosts) => {
-            let currentTimelinePosts: PaginatedTimelinePosts = {
-                posts: [],
-                lastTimelinePost: paginatedTimelinePosts?.lastTimelinePost,
-            };
+        const nextCutoffDate = getDateMinusDays(timelinePostCutoffDate, 1);
+        setTimelinePostCutoffDate(nextCutoffDate);
 
-            if (paginatedTimelinePosts?.posts) {
-                currentTimelinePosts.posts = [...paginatedTimelinePosts.posts];
+        TimelineController.getPaginatedTimelinePosts(
+            paginatedTimelinePosts?.lastTimelinePost,
+            nextCutoffDate,
+            (newPaginatedTimelinePosts: PaginatedTimelinePosts) => {
+                let currentTimelinePosts: PaginatedTimelinePosts = {
+                    posts: [],
+                    lastTimelinePost: paginatedTimelinePosts?.lastTimelinePost,
+                };
+
+                if (paginatedTimelinePosts?.posts) {
+                    currentTimelinePosts.posts = [...paginatedTimelinePosts.posts];
+                }
+
+                if (newPaginatedTimelinePosts.posts.length > 0) {
+                    currentTimelinePosts.posts = currentTimelinePosts.posts.concat(newPaginatedTimelinePosts.posts);
+                    currentTimelinePosts.lastTimelinePost = newPaginatedTimelinePosts.lastTimelinePost;
+                }
+
+                setPaginatedTimelinePosts(currentTimelinePosts);
             }
-
-            currentTimelinePosts.posts = currentTimelinePosts.posts.concat(newPaginatedTimelinePosts.posts);
-            currentTimelinePosts.lastTimelinePost = newPaginatedTimelinePosts.lastTimelinePost;
-
-            setPaginatedTimelinePosts(currentTimelinePosts);
-        });
+        );
     };
 
     const addPageOfDailyResults = async () => {
+        const nextCutOffDate = getDateMinusDays(dailyRestultCutoffDate, 1);
+        setDailyResultCutoffDate(nextCutOffDate);
+
         let currentDailyResults: PaginatedDailyResults = {
             results: [],
             lastDailyResult: paginatedDailyResults?.lastDailyResult,
@@ -221,10 +235,11 @@ export const Timeline = () => {
             currentDailyResults.results = [...paginatedDailyResults.results];
         }
 
-        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(paginatedDailyResults?.lastDailyResult, 10);
-
-        currentDailyResults.results = currentDailyResults.results.concat(newPaginatedDailyResults.results);
-        currentDailyResults.lastDailyResult = newPaginatedDailyResults.lastDailyResult;
+        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(paginatedDailyResults?.lastDailyResult, dailyRestultCutoffDate);
+        if (newPaginatedDailyResults.results.length > 0) {
+            currentDailyResults.results = currentDailyResults.results.concat(newPaginatedDailyResults.results);
+            currentDailyResults.lastDailyResult = newPaginatedDailyResults.lastDailyResult;
+        }
 
         setPaginatedDailyResults(currentDailyResults);
     };

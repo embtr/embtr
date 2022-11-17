@@ -10,9 +10,11 @@ export const getDaysOld = (then: any, now: any): number => {
 };
 
 export const getYesterday = () => {
-    let date: Date = new Date();
-    date.setDate(date.getDate() - 1);
+    return getDateMinusDays(new Date(), 1);
+};
 
+export const getDateMinusDays = (date: Date, days: number): Date => {
+    date.setDate(date.getDate() - days);
     return date;
 };
 

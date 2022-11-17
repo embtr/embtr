@@ -15,7 +15,6 @@ import {
     startAfter,
     orderBy,
     QueryDocumentSnapshot,
-    startAt,
 } from 'firebase/firestore';
 import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { Like } from 'src/controller/timeline/TimelineController';
@@ -60,27 +59,18 @@ class DailyResultDao {
         return querySnapshot;
     }
 
-    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined, limitValue: number) {
+    public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
         const db: Firestore = getFirebaseConnection(this.name, 'getFinishedWithLimit');
 
         const q = lastDailyResult
             ? query(
                   collection(db, COLLECTION_NAME),
-                  where('active', '!=', false),
                   where('data.hasTasks', '==', true),
-                  orderBy('active'),
+                  where('added', '>', cutoffDate),
                   orderBy('added', 'desc'),
-                  startAfter(lastDailyResult),
-                  limit(limitValue)
+                  startAfter(lastDailyResult)
               )
-            : query(
-                  collection(db, COLLECTION_NAME),
-                  where('active', '!=', false),
-                  where('data.hasTasks', '==', true),
-                  orderBy('active'),
-                  orderBy('added', 'desc'),
-                  limit(limitValue)
-              );
+            : query(collection(db, COLLECTION_NAME), where('data.hasTasks', '==', true), where('added', '>', cutoffDate), orderBy('added', 'desc'));
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     }

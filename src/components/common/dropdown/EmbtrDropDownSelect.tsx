@@ -15,7 +15,6 @@ export const EmbtrDropDownSelect = ({ items, onItemSelected, name }: Props) => {
     const [selectedValue, setSelectedValue] = React.useState('');
 
     const itemSelected = (item: any) => {
-        console.log(item);
         setSelectedValue(item);
         onItemSelected(item);
     };

@@ -1,4 +1,4 @@
-import { Firestore, collection, query, orderBy, getDocs, where, limit, startAfter, QueryDocumentSnapshot } from 'firebase/firestore';
+import { Firestore, collection, query, orderBy, getDocs, where, startAfter, QueryDocumentSnapshot } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class TimelineDao {
@@ -11,19 +11,12 @@ class TimelineDao {
         return querySnapshot;
     }
 
-    public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined, limitValue: number) {
+    public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
         const db: Firestore = getFirebaseConnection(this.name, 'getTimelinePosts');
 
         const q = lastTimelinePost
-            ? query(
-                  collection(db, 'timeline'),
-                  where('active', '!=', false),
-                  orderBy('active'),
-                  orderBy('added', 'desc'),
-                  startAfter(lastTimelinePost),
-                  limit(limitValue)
-              )
-            : query(collection(db, 'timeline'), where('active', '!=', false), orderBy('active'), orderBy('added', 'desc'), limit(limitValue));
+            ? query(collection(db, 'timeline'), where('added', '>', cutoffDate), orderBy('added', 'desc'), startAfter(lastTimelinePost))
+            : query(collection(db, 'timeline'), where('added', '>', cutoffDate), orderBy('added', 'desc'));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;
