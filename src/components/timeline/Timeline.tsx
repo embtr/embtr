@@ -20,6 +20,7 @@ import DailyResultController, { DailyResultModel, PaginatedDailyResults } from '
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays } from 'src/util/DateUtility';
+import { getDate } from 'date-fns';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -47,15 +48,15 @@ export const Timeline = () => {
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoadingMode, setIsLoadingMode] = React.useState(false);
-    const [timelinePostCutoffDate, setTimelinePostCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 1));
-    const [dailyRestultCutoffDate, setDailyResultCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 1));
+    const [timelinePostCutoffDate, setTimelinePostCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 3));
+    const [dailyRestultCutoffDate, setDailyResultCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 3));
 
     React.useEffect(() => {
         fetchPaginatedTimelinePosts();
     }, []);
 
     React.useEffect(() => {
-        //fetchPaginatedDailyResults();
+        fetchPaginatedDailyResults();
     }, []);
 
     React.useEffect(() => {
@@ -72,17 +73,25 @@ export const Timeline = () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        setTimelineViews([]);
+
+        setTimelinePostCutoffDate(getDateMinusDays(new Date(), 3));
+        setDailyResultCutoffDate(getDateMinusDays(new Date(), 3));
         fetchPaginatedTimelinePosts();
-        //fetchPaginatedDailyResults();
+        fetchPaginatedDailyResults();
+
+        setNotifications([]);
         fetchNotifications();
         wait(500).then(() => setRefreshing(false));
     }, []);
 
     const fetchPaginatedTimelinePosts = () => {
+        console.log(timelinePostCutoffDate);
         TimelineController.getPaginatedTimelinePosts(undefined, timelinePostCutoffDate, setPaginatedTimelinePosts);
     };
 
     const fetchPaginatedDailyResults = async () => {
+        console.log(dailyRestultCutoffDate);
         const results = await DailyResultController.getPaginatedFinished(undefined, dailyRestultCutoffDate);
         setPaginatedDailyResults(results);
     };
@@ -192,7 +201,7 @@ export const Timeline = () => {
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
     const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
-        return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+        return layoutMeasurement.height + contentOffset.y > contentSize.height + 5;
     };
 
     const addPageOfTimelinePosts = () => {
@@ -272,6 +281,7 @@ export const Timeline = () => {
             />
 
             <ScrollView
+                overScrollMode="always"
                 onScroll={({ nativeEvent }) => {
                     if (isCloseToBottom(nativeEvent)) {
                         loadMore();

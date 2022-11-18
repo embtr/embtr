@@ -72,7 +72,7 @@ export const CreateDailyTask = () => {
 
     return (
         <Screen>
-            <Banner name="Create Task" leftText={'Cancel'} leftRoute="BACK" rightText={'Create'} rightOnClick={createTask} />
+            <Banner name="Create A Habit" leftText={'Cancel'} leftRoute="BACK" rightText={'Create'} rightOnClick={createTask} />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <View style={{ paddingTop: 5 }}>
@@ -97,7 +97,7 @@ export const CreateDailyTask = () => {
                                 paddingRight: 15,
                             }}
                         >
-                            A task should help you make progess towards achieving your goals.
+                            A Habit is a task that you complete on a routine basis. Create a Habit that pushes you towards your goals!
                         </Text>
                     </View>
 
@@ -109,7 +109,7 @@ export const CreateDailyTask = () => {
                             }}
                             style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
                         >
-                            Task
+                            Habit
                         </Text>
                         <TextInput
                             style={{
@@ -122,7 +122,7 @@ export const CreateDailyTask = () => {
                                 borderWidth: 1,
                                 width: '95%',
                             }}
-                            placeholder={'Enter your task'}
+                            placeholder={'Enter your habit'}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={setName}
                             //onChange={() => { setTitleError(false) }}
@@ -157,7 +157,7 @@ export const CreateDailyTask = () => {
                                 paddingRight: 10,
                             }}
                             multiline={true}
-                            placeholder={'What are the details of this task?'}
+                            placeholder={'What are the details of this habit?'}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={setDetails}
                             //onChange={() => { setStoryError(false) }}
@@ -175,7 +175,7 @@ export const CreateDailyTask = () => {
                         >
                             Goal
                         </Text>
-                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={setSelectedGoal} name={'Goals'} />
+                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={setSelectedGoal} name={'Goal'} />
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>

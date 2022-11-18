@@ -6,7 +6,7 @@ import TaskController, { TaskModel } from 'src/controller/planning/TaskControlle
 import { getAuth } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { TodayTab } from 'src/navigation/RootStackParamList';
+import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { ScrollView } from 'react-native-gesture-handler';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
@@ -21,7 +21,7 @@ interface Props {
 export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
-    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const [selectedTasks, setSelectedTasks] = React.useState<string[]>([]);
     const [habits, setHabits] = React.useState<TaskModel[]>([]);
@@ -121,11 +121,11 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    <Text style={{ fontSize: 16, fontFamily: 'Poppins_500Medium', color: colors.text }}>Select Your Tasks</Text>
+                                    <Text style={{ fontSize: 16, fontFamily: 'Poppins_500Medium', color: colors.text }}>Select Your Habits</Text>
                                 </View>
 
                                 <HorizontalLine />
-                                <ScrollView>
+                                <ScrollView style={{ height: '40%' }} showsVerticalScrollIndicator={true}>
                                     <View style={{ alignItems: 'center' }}>{habitViews}</View>
                                 </ScrollView>
                                 <HorizontalLine />
@@ -146,7 +146,15 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
 
                             <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
                                 <Button
-                                    title="Create Task"
+                                    title="Create Habit"
+                                    onPress={() => {
+                                        closeModal();
+                                        navigation.navigate('CreateDailyTask');
+                                    }}
+                                />
+                                <HorizontalLine />
+                                <Button
+                                    title="Create One Time Task"
                                     onPress={() => {
                                         closeModal();
                                         navigation.navigate('CreateOneTimeTask', { dayKey: plannedDay.id! });

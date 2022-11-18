@@ -146,6 +146,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
                         width: totalInRow === 1 ? 225 : width,
                         borderRadius: 6,
                         backgroundColor: colors.timeline_card_background,
+                        overflow: 'hidden',
                     },
                 ]}
             >
