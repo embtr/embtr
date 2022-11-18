@@ -145,7 +145,7 @@ export const CreateOneTimeTask = () => {
                                 paddingRight: 15,
                             }}
                         >
-                            A task should help you make progess towards achieving your goals.
+                            A One Time Task is something you need to do but not on a recurring basis. 
                         </Text>
                     </View>
 

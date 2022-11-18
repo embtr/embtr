@@ -3,7 +3,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { DailyResultCardElement } from '../common/timeline/DailyResultCardElement';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
@@ -17,6 +20,7 @@ export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
+    const closeMenu = useAppSelector(getCloseMenu);
 
     let plannedTaskViews: JSX.Element[] = [];
     plannedDay?.plannedTasks.forEach((plannedTask) => {
@@ -27,10 +31,19 @@ export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
         );
     });
 
+    let menuOptions: EmbtrMenuOption[] = [];
+    menuOptions.push({
+        name: 'Edit',
+        onPress: () => {
+            navigation.navigate('PlanTab', { screen: 'PlanMain' });
+            closeMenu();
+        },
+    });
+
     const isGuest = togglePlannedTask === undefined;
 
     return (
-        <WidgetBase>
+        <WidgetBase menuOptions={menuOptions}>
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Today's Tasks</Text>
             {plannedTaskViews.length > 0 && <View style={{ paddingLeft: 10, paddingTop: 15 }}>{plannedTaskViews}</View>}
             {plannedTaskViews.length === 0 && (

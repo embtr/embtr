@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import * as Haptics from 'expo-haptics';
-import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
+import { CALENDAR_TIME_HEIGHT, CARD_SHADOW } from 'src/util/constants';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
@@ -130,7 +130,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
     let paddingRight = width * rowIndex + 80 + rowIndex * 4;
 
     return (
-        <View style={{ marginLeft: paddingRight, top: plannedTask.startMinute! + CALENDAR_TIME_HEIGHT / 2, position: 'absolute' }}>
+        <View style={[cardShadow, { marginLeft: paddingRight, top: plannedTask.startMinute! + CALENDAR_TIME_HEIGHT / 2, position: 'absolute' }]}>
             <TouchableOpacity
                 onPress={() => {
                     onShortPress();
@@ -138,17 +138,14 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
                 onLongPress={() => {
                     onLongPress();
                 }}
-                style={[
-                    isDark ? {} : cardShadow,
-                    {
-                        minHeight: 50,
-                        height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
-                        width: totalInRow === 1 ? 225 : width,
-                        borderRadius: 6,
-                        backgroundColor: colors.timeline_card_background,
-                        overflow: 'hidden',
-                    },
-                ]}
+                style={{
+                    minHeight: 50,
+                    height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
+                    width: totalInRow === 1 ? 225 : width,
+                    borderRadius: 6,
+                    backgroundColor: colors.timeline_card_background,
+                    overflow: 'hidden',
+                }}
             >
                 <View style={{ flexDirection: 'row', width: '100%', paddingTop: 5, paddingLeft: 5 }}>
                     <View style={{ flex: 5 }}>
