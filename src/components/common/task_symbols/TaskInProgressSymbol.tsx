@@ -1,4 +1,5 @@
 import { Text, View } from 'react-native';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 import {
     POPPINS_SEMI_BOLD,
     SYMBOL_BORDER_RADIUS_LARGE,
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export const TaskInProgressSymbol = ({ small }: Props) => {
+    const { colors } = useTheme();
     const color = 'gray';
 
     const borderSize = small === true ? SYMBOL_SIZE_SMALL : SYMBOL_SIZE_LARGE;
@@ -26,6 +28,7 @@ export const TaskInProgressSymbol = ({ small }: Props) => {
     return (
         <View
             style={{
+                backgroundColor: colors.timeline_card_background,
                 width: borderSize,
                 height: borderSize,
                 borderColor: color,

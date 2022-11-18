@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { PlannableTask } from 'src/components/plan/PlannableTask';
 import { GoalModel } from 'src/controller/planning/GoalController';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedDayController';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { PillarModel } from 'src/model/PillarModel';
 

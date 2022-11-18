@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TaskModel } from 'src/controller/planning/TaskController';
+import { durationToString, startMinuteToString, TaskModel } from 'src/controller/planning/TaskController';
 import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete } from 'src/controller/planning/PlannedDayController';
 import { CARD_SHADOW } from 'src/util/constants';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
@@ -17,7 +17,7 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
-import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     plannedTask?: PlannedTaskModel;
@@ -154,49 +154,79 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
 
                         <View style={{ width: '98%' }}>
                             <View style={{ paddingLeft: 10 }}>
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>
-                                        {plannedTask?.routine?.name ? plannedTask.routine.name : task?.name ? task.name : ''}
-                                    </Text>
+                                <View style={{ flexDirection: 'row', flex: 1 }}>
+                                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                                        <Text
+                                            style={{
+                                                color: colors.goal_primary_font,
+                                                fontFamily: 'Poppins_600SemiBold',
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            {plannedTask?.routine?.name ? plannedTask.routine.name : task?.name ? task.name : ''}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: colors.tab_selected,
+                                                fontFamily: 'Poppins_400Regular',
+                                                fontSize: 9,
+                                                paddingStart: 5,
+                                            }}
+                                        >
+                                            {plannedTask?.routine.id ? 'habit' : ''}
+                                        </Text>
+                                    </View>
                                     <View
                                         style={{
                                             flex: 1,
-                                            alignSelf: 'stretch',
-                                            alignItems: 'flex-end',
-                                            paddingRight: 8,
-                                            paddingTop: 4,
+                                            justifyContent: 'flex-end',
+                                            alignItems: 'center',
+                                            flexDirection: 'row',
+                                            paddingRight: 10,
                                         }}
                                     >
-                                        {plannedTask?.status === 'COMPLETE' ? (
-                                            <TaskCompleteSymbol small={true} />
-                                        ) : plannedTask?.status === 'FAILED' ? (
-                                            <TaskFailedSymbol small={true} />
-                                        ) : (
-                                            <TaskInProgressSymbol small={true} />
-                                        )}
+                                        <View>
+                                            {plannedTask?.status === 'COMPLETE' ? (
+                                                <TaskCompleteSymbol small={true} />
+                                            ) : plannedTask?.status === 'FAILED' ? (
+                                                <TaskFailedSymbol small={true} />
+                                            ) : (
+                                                <TaskInProgressSymbol small={true} />
+                                            )}
+                                        </View>
                                     </View>
                                 </View>
-                                <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
-                                    {plannedTask?.routine?.description ? plannedTask?.routine?.description : task?.description}
-                                </Text>
                             </View>
 
                             <View style={{ paddingTop: 8, marginLeft: 10, marginRight: 10 }}>
                                 <HorizontalLine />
                             </View>
 
-                            <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10 }}>
-                                <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 10, alignItems: 'center' }}>
-                                    <Ionicons name={'stats-chart-outline'} size={14} color={colors.goal_secondary_font} />
-                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 12 }}>
-                                        {goal.name}
+                            <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
+                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
+                                    <Ionicons name={'time'} size={12} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                        {startMinuteToString(plannedTask?.startMinute ? plannedTask.startMinute : 0)}
                                     </Text>
                                 </View>
 
-                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 30 }}>
-                                    <MaterialCommunityIcons name="pillar" size={14} color={colors.goal_secondary_font} />
-                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 12 }}>
-                                        {pillar.name}
+                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
+                                    <MaterialCommunityIcons name="timer" size={12} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                        {durationToString(plannedTask?.duration ? plannedTask.duration : 0)}
+                                    </Text>
+                                </View>
+                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
+                                    <Ionicons name={'stats-chart-outline'} size={12} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                        {goal.name ? goal.name : ''}
+                                    </Text>
+                                </View>
+
+                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
+                                    <MaterialCommunityIcons name="pillar" size={12} color={colors.goal_secondary_font} />
+                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                        {pillar.name ? pillar.name : ''}
                                     </Text>
                                 </View>
                             </View>

@@ -18,6 +18,7 @@ import PlannedDayController, { PlannedDay } from 'src/controller/planning/Planne
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
 import PlannedTaskController, { getPlannedTaskGoalId, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface GoalOption {
     label: string;
@@ -299,7 +300,7 @@ export const EditOneTimeTask = () => {
                             Start Time
                         </Text>
 
-                        <View
+                        <TouchableOpacity
                             style={{
                                 height: 50,
                                 width: '95%',
@@ -311,17 +312,18 @@ export const EditOneTimeTask = () => {
                                 paddingLeft: 15,
                                 flexDirection: 'row',
                             }}
+                            onPress={showCalendar}
                         >
                             <View style={{ flex: 1, justifyContent: 'center' }}>
-                                <Text onPress={showCalendar} style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 16 }}>
+                                <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 16 }}>
                                     {format(startTime, 'h:mm a')}
                                 </Text>
                             </View>
 
                             <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15, justifyContent: 'center' }}>
-                                <Ionicons name="time-outline" size={24} color={colors.goal_primary_font} onPress={showCalendar} />
+                                <Ionicons name="time-outline" size={24} color={colors.goal_primary_font} />
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={{ paddingTop: 10, alignItems: 'center' }}>
@@ -334,7 +336,7 @@ export const EditOneTimeTask = () => {
                             Duration
                         </Text>
 
-                        <View
+                        <TouchableOpacity
                             style={{
                                 height: 50,
                                 width: '95%',
@@ -346,29 +348,18 @@ export const EditOneTimeTask = () => {
                                 paddingLeft: 15,
                                 flexDirection: 'row',
                             }}
+                            onPress={() => {
+                                setDurationModalVisible(true);
+                            }}
                         >
                             <View style={{ flex: 1, justifyContent: 'center' }}>
-                                <Text
-                                    onPress={() => {
-                                        setDurationModalVisible(true);
-                                    }}
-                                    style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 16 }}
-                                >
-                                    {duration} minutes
-                                </Text>
+                                <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 16 }}>{duration} minutes</Text>
                             </View>
 
                             <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15, justifyContent: 'center' }}>
-                                <Ionicons
-                                    name="timer-outline"
-                                    size={24}
-                                    color={colors.goal_primary_font}
-                                    onPress={() => {
-                                        setDurationModalVisible(true);
-                                    }}
-                                />
+                                <Ionicons name="timer-outline" size={24} color={colors.goal_primary_font} />
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>

@@ -3,7 +3,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import PillarController from 'src/controller/pillar/PillarController';

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import * as Haptics from 'expo-haptics';
-import { CALENDAR_TIME_HEIGHT, CARD_SHADOW } from 'src/util/constants';
+import { CALENDAR_TIME_HEIGHT } from 'src/util/constants';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
@@ -26,7 +26,6 @@ interface Props {
 
 export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInRow, parentLayout }: Props) => {
     const { colors } = useTheme();
-    const { setScheme, isDark } = useTheme();
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
     const cardShadow = {
@@ -139,7 +138,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
                     onLongPress();
                 }}
                 style={{
-                    minHeight: 50,
+                    minHeight: 25,
                     height: plannedTask.duration ? plannedTask.duration : plannedTask.duration,
                     width: totalInRow === 1 ? 225 : width,
                     borderRadius: 6,
@@ -150,7 +149,6 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
                 <View style={{ flexDirection: 'row', width: '100%', paddingTop: 5, paddingLeft: 5 }}>
                     <View style={{ flex: 5 }}>
                         <Text style={{ color: colors.text, fontFamily: 'Poppins_600SemiBold', fontSize: 13 }}>{plannedTask.routine.name}</Text>
-                        <Text style={{ color: colors.text, fontFamily: 'Poppins_400Regular', fontSize: 9 }}>{plannedTask.routine.description}</Text>
                     </View>
 
                     <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 5 }}>

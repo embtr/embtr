@@ -29,6 +29,7 @@ export const TaskFailedSymbol = ({ small }: Props) => {
     return (
         <View
             style={{
+                backgroundColor: colors.timeline_card_background,
                 width: borderSize,
                 height: borderSize,
                 borderColor: color,
