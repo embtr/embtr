@@ -27,7 +27,7 @@ import ProfileBannerImage from 'src/components/profile/profile_component/Profile
 import { Ionicons } from '@expo/vector-icons';
 import { BannerInfoModal } from 'src/components/profile/profile_component/BannerInfoModal';
 import { CachedImage } from '../common/images/CachedImage';
-import { wait } from 'src/util/GeneralUtility';
+import { getRandomInt } from 'src/util/GeneralUtility';
 
 export const EditUserProfile = () => {
     const { colors } = useTheme();
@@ -54,12 +54,6 @@ export const EditUserProfile = () => {
         'Work Hard, Train Harder.',
     ];
     const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]);
-
-    function getRandomInt(min: number, max: number) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
 
     const displayBannerInfoModal = () => {
         setShowBannerInfoModal(true);

@@ -1,21 +1,25 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import DropDownPicker from 'react-native-dropdown-picker';
+import DropDownPicker, { ItemType } from 'react-native-dropdown-picker';
 
 interface Props {
-    items: any;
+    items: ItemType<string>[];
+    initial: ItemType<string>;
     onItemSelected: Function;
     name: string;
 }
 
-export const EmbtrDropDownSelect = ({ items, onItemSelected, name }: Props) => {
+export const EmbtrDropDownSelect = ({ items, onItemSelected, initial, name }: Props) => {
     const { colors } = useTheme();
     const [menuOpen, setMenuOption] = React.useState(false);
-    const [selectedValue, setSelectedValue] = React.useState('');
+    const [selectedValue, setSelectedValue] = React.useState<ItemType<string>>(initial);
+
+    React.useEffect(() => {
+        setSelectedValue(initial);
+    }, [initial]);
 
     const itemSelected = (item: any) => {
-        setSelectedValue(item);
         onItemSelected(item);
     };
 
@@ -49,7 +53,7 @@ export const EmbtrDropDownSelect = ({ items, onItemSelected, name }: Props) => {
                 listChildContainerStyle={{ height: 60 }}
                 open={menuOpen}
                 placeholder={hasItems ? 'Select A ' + name : 'No ' + name + 's Found'}
-                value={selectedValue}
+                value={selectedValue.value!}
                 items={items}
                 setOpen={hasItems ? setMenuOption : () => {}}
                 onSelectItem={itemSelected}

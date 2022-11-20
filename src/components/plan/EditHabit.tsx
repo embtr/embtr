@@ -2,111 +2,80 @@ import React from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { View, Text, Keyboard, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import { RootStackParamList, TodayTab } from 'src/navigation/RootStackParamList';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Banner } from 'src/components/common/Banner';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Screen } from 'src/components/common/Screen';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { getAuth } from 'firebase/auth';
-import { Timestamp } from 'firebase/firestore';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { Ionicons } from '@expo/vector-icons';
-import { format } from 'date-fns';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
-import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
+import { DropDownOption, EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
-import PlannedTaskController, { getPlannedTaskGoalId, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import TaskController, { EMPTY_HABIT, TaskModel } from 'src/controller/planning/TaskController';
+import { POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { RandomPlaceHolderTextInput } from '../common/textbox/RandomPlaceholderTextInput';
 
-interface GoalOption {
-    label: string;
-    value: string;
-}
-
-export const EditOneTimeTask = () => {
+export const EditHabit = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const route = useRoute<RouteProp<TodayTab, 'EditOneTimeTask'>>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'EditHabit'>>();
 
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
-    const [plannedTask, setPlannedTask] = React.useState<PlannedTaskModel>();
-
+    const [habit, setHabit] = React.useState<TaskModel>();
     const [name, setName] = React.useState('');
     const [details, setDetails] = React.useState('');
-    const [goals, setGoals] = React.useState<GoalModel[]>([]);
+    const [goalId, setGoalId] = React.useState('');
     const [selectedGoal, setSelectedGoal] = React.useState<GoalModel>();
-    const [goalOptions, setGoalOptions] = React.useState<GoalOption[]>([]);
-    const [startTime, setStartTime] = React.useState<Date>(Timestamp.now().toDate());
+
+    const [goals, setGoals] = React.useState<GoalModel[]>([]);
+    const [goalOptions, setGoalOptions] = React.useState<DropDownOption[]>([]);
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
     const [durationModalVisible, setDurationModalVisible] = React.useState(false);
-    const [duration, setDuration] = React.useState<number>();
 
-    useFocusEffect(
-        React.useCallback(() => {
-            const uid = getAuth().currentUser?.uid;
-            if (uid) {
-                PlannedDayController.get(uid, route.params.dayKey, (plannedDay: PlannedDay) => {
-                    setPlannedDay(plannedDay);
-                });
-            }
-        }, [])
-    );
+    const placeholderOptions = ['Face Care Routine', 'Go For a Run', 'Meditate', 'Read a Book', 'Go For a Walk'];
 
-    useFocusEffect(
-        React.useCallback(() => {
-            const uid = getAuth().currentUser?.uid;
-            if (uid) {
-                PlannedTaskController.get(uid, route.params.dayKey, route.params.plannedTaskId, (plannedTask: PlannedTaskModel) => {
-                    setName(plannedTask.routine.name);
-                    setDetails(plannedTask.routine.description);
+    React.useEffect(() => {
+        if (route.params.id) {
+            TaskController.getTask(route.params.id, setHabit);
+        } else {
+            setHabit(EMPTY_HABIT);
+        }
+    }, []);
 
-                    goals.forEach((goal) => {
-                        if (goal.id === getPlannedTaskGoalId(plannedTask)) {
-                            setSelectedGoal(goal);
-                            return;
-                        }
-                    });
+    React.useEffect(() => {
+        if (habit?.name) {
+            setName(habit.name);
+        }
 
-                    if (plannedTask.startMinute) {
-                        setStartTime(toDateTime(plannedTask.startMinute));
-                    }
+        if (habit?.description) {
+            setDetails(habit.description);
+        }
 
-                    if (plannedTask.duration) {
-                        setDuration(plannedTask.duration);
-                    }
+        if (habit?.goalId) {
+            setGoalId(habit.goalId);
+        }
+    }, [habit]);
 
-                    setPlannedTask(plannedTask);
-                });
-            }
-        }, [])
-    );
+    React.useEffect(() => {
+        GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
+    }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
-        }, [])
-    );
+    React.useEffect(() => {
+        if (goals && habit?.goalId) {
+            updateSelectedGoal(habit.goalId);
+        }
+    }, [goals, habit]);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            let initialItems: any = [];
-            goals.forEach((goal) => {
-                initialItems.push({ label: goal.name, value: goal.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
-            });
+    React.useEffect(() => {
+        let initialItems: any = [];
+        goals.forEach((goal) => {
+            initialItems.push({ label: goal.name, value: goal.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
+        });
 
-            setGoalOptions(initialItems);
-        }, [goals])
-    );
-
-    function toDateTime(secs: number) {
-        var t = new Date(1970, 0, 1); // Epoch
-        t.setHours(Math.floor(secs / 60));
-        t.setMinutes(Math.floor(secs % 60));
-        return t;
-    }
+        setGoalOptions(initialItems);
+    }, [goals]);
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -128,19 +97,18 @@ export const EditOneTimeTask = () => {
         durationMinutesPickerItems.push(<Picker.Item key={'durationminute_' + i} color={colors.text} label={'' + i} value={i} />);
     }
 
-    const saveTask = () => {
-        if (plannedDay && plannedTask) {
-            plannedTask.routine.name = name;
-            plannedTask.routine.description = details;
-            plannedTask.startMinute = startTime.getHours() * 60 + startTime.getMinutes();
-            plannedTask.duration = duration;
-            if (selectedGoal) {
-                plannedTask.goalId = selectedGoal.id;
-            }
-            PlannedTaskController.update(plannedDay, plannedTask, () => {
-                navigation.goBack();
-            });
+    const saveTask = async () => {
+        if (!habit) {
+            return;
         }
+
+        const clone = TaskController.clone(habit);
+        clone.name = name;
+        clone.description = details;
+        clone.goalId = goalId;
+
+        await TaskController.update(clone);
+        navigation.goBack();
     };
 
     const showCalendar = () => {
@@ -151,13 +119,23 @@ export const EditOneTimeTask = () => {
         setCalendarVisible(false);
     };
 
-    const setSelectedGoalFromOption = (goalOption: GoalOption) => {
+    const updateSelectedGoalFromObject = (goalOption: DropDownOption) => {
+        updateSelectedGoal(goalOption.value);
+    };
+
+    const updateSelectedGoal = (goalId: string) => {
+        setGoalId(goalId);
         goals.forEach((goal) => {
-            if (goal.id === goalOption.value) {
+            if (goal.id === goalId) {
                 setSelectedGoal(goal);
                 return;
             }
         });
+    };
+
+    const initialGoalItem: DropDownOption = {
+        label: selectedGoal?.name ? selectedGoal?.name : 'lol',
+        value: selectedGoal?.id ? selectedGoal.id : 'lol',
     };
 
     return (
@@ -166,17 +144,17 @@ export const EditOneTimeTask = () => {
                 isVisible={calendarVisible}
                 mode="time"
                 onConfirm={(date) => {
-                    setStartTime(date);
+                    //setStartTime(date);
                     hideCalendar();
                 }}
                 onCancel={hideCalendar}
-                date={startTime}
+                //date={startTime}
             />
 
             <SetDurationModal
                 visible={durationModalVisible}
                 confirm={(duration: number) => {
-                    setDuration(duration);
+                    // setDuration(duration);
                     setDurationModalVisible(false);
                 }}
                 dismiss={() => {
@@ -184,7 +162,7 @@ export const EditOneTimeTask = () => {
                 }}
             />
 
-            <Banner name="Edit Task" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={saveTask} />
+            <Banner name="Edit Habit" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={saveTask} />
             <ScrollView scrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <View style={{ paddingTop: 5 }}>
@@ -204,12 +182,49 @@ export const EditOneTimeTask = () => {
                                 color: colors.secondary_text,
                                 fontFamily: 'Poppins_400Regular',
                                 paddingTop: 10,
+                                fontSize: 11,
+                                paddingLeft: 25,
+                                paddingRight: 25,
+                            }}
+                        >
+                            define{'  '}
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    fontFamily: POPPINS_REGULAR_ITALIC,
+                                }}
+                            >
+                                /ˈhabət/ n.{'  '}
+                            </Text>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    fontFamily: POPPINS_SEMI_BOLD,
+                                }}
+                            >
+                                1.{' '}
+                            </Text>
+                            a settled or regular tendency or practice, especially one that is hard to give up.
+                        </Text>
+
+                        <Text
+                            onPress={() => {
+                                Keyboard.dismiss();
+                            }}
+                            style={{
+                                color: colors.secondary_text,
+                                fontFamily: 'Poppins_400Regular',
+                                paddingTop: 10,
                                 fontSize: 12,
                                 paddingLeft: 15,
                                 paddingRight: 15,
                             }}
                         >
-                            A task should help you make progess towards achieving your goals.
+                            Create a habit that pushes you to be the best version of you!
                         </Text>
                     </View>
 
@@ -219,28 +234,11 @@ export const EditOneTimeTask = () => {
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: '95%', paddingBottom: 5, fontFamily: 'Poppins_400Regular' }}
                         >
-                            Task
+                            Habit
                         </Text>
-                        <TextInput
-                            style={{
-                                padding: 15,
-                                fontFamily: 'Poppins_400Regular',
-                                color: colors.text,
-                                borderRadius: 12,
-                                backgroundColor: colors.text_input_background,
-                                borderColor: colors.text_input_border,
-                                borderWidth: 1,
-                                width: '95%',
-                            }}
-                            placeholder={'Enter your task'}
-                            placeholderTextColor={colors.secondary_text}
-                            onChangeText={setName}
-                            //onChange={() => { setTitleError(false) }}
-                            value={name}
-                            autoCorrect={true}
-                        />
+                        <RandomPlaceHolderTextInput value={name} onChangeValue={setName} placeholderOptions={placeholderOptions} />
                     </View>
 
                     {/* Description */}
@@ -249,7 +247,7 @@ export const EditOneTimeTask = () => {
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 5, fontFamily: 'Poppins_400Regular' }}
                         >
                             Details
                         </Text>
@@ -283,19 +281,20 @@ export const EditOneTimeTask = () => {
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 5, fontFamily: 'Poppins_400Regular' }}
                         >
                             Goal
                         </Text>
-                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={setSelectedGoalFromOption} name={'Goal'} />
+                        <EmbtrDropDownSelect items={goalOptions} onItemSelected={updateSelectedGoalFromObject} initial={initialGoalItem} name={'Goal'} />
                     </View>
 
+                    {/*
                     <View style={{ paddingTop: 10, alignItems: 'center' }}>
                         <Text
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 5, fontFamily: 'Poppins_400Regular' }}
                         >
                             Start Time
                         </Text>
@@ -319,19 +318,20 @@ export const EditOneTimeTask = () => {
                                     {format(startTime, 'h:mm a')}
                                 </Text>
                             </View>
-
                             <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15, justifyContent: 'center' }}>
                                 <Ionicons name="time-outline" size={24} color={colors.goal_primary_font} />
                             </View>
                         </TouchableOpacity>
                     </View>
 
+*/}
+                    {/*
                     <View style={{ paddingTop: 10, alignItems: 'center' }}>
                         <Text
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 5, fontFamily: 'Poppins_400Regular' }}
                         >
                             Duration
                         </Text>
@@ -361,6 +361,7 @@ export const EditOneTimeTask = () => {
                             </View>
                         </TouchableOpacity>
                     </View>
+*/}
                 </KeyboardAvoidingView>
             </ScrollView>
         </Screen>

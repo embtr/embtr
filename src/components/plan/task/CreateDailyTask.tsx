@@ -12,6 +12,7 @@ import { Screen } from 'src/components/common/Screen';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { getAuth } from 'firebase/auth';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
+import { POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 export const CreateDailyTask = () => {
     const { colors } = useTheme();
@@ -92,12 +93,49 @@ export const CreateDailyTask = () => {
                                 color: colors.secondary_text,
                                 fontFamily: 'Poppins_400Regular',
                                 paddingTop: 10,
+                                fontSize: 11,
+                                paddingLeft: 25,
+                                paddingRight: 25,
+                            }}
+                        >
+                            define{'  '}
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    fontFamily: POPPINS_REGULAR_ITALIC,
+                                }}
+                            >
+                                /ˈhabət/ n.{'  '}
+                            </Text>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    fontFamily: POPPINS_SEMI_BOLD,
+                                }}
+                            >
+                                1.{' '}
+                            </Text>
+                            a settled or regular tendency or practice, especially one that is hard to give up.
+                        </Text>
+
+                        <Text
+                            onPress={() => {
+                                Keyboard.dismiss();
+                            }}
+                            style={{
+                                color: colors.secondary_text,
+                                fontFamily: 'Poppins_400Regular',
+                                paddingTop: 10,
                                 fontSize: 12,
                                 paddingLeft: 15,
                                 paddingRight: 15,
                             }}
                         >
-                            A Habit is a task that you complete on a routine basis. Create a Habit that pushes you towards your goals!
+                            Create a habit that pushes you to be the best version of you!
                         </Text>
                     </View>
 

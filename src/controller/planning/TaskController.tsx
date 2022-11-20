@@ -1,5 +1,6 @@
-import { Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import TaskDao from 'src/firebase/firestore/planning/TaskDao';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 
 export interface TaskModel {
@@ -7,9 +8,16 @@ export interface TaskModel {
     added: Timestamp;
     name: string;
     description: string;
-    goalId: string;
-    active?: boolean;
+    goalId?: string;
+    active: boolean;
 }
+
+export const EMPTY_HABIT: TaskModel = {
+    added: Timestamp.now(),
+    name: '',
+    description: '',
+    active: true,
+};
 
 export const getDayOfWeekFromDayKey = (dayKey: string) => {
     const date = getDateFromDayKey(dayKey);
@@ -61,12 +69,26 @@ export const createTaskModel = (name: string, description: string, goalId: strin
         name: name,
         description: description,
         goalId: goalId,
+        active: true,
     };
 
     return task;
 };
 
 class TaskController {
+    public static clone(task: TaskModel) {
+        const clone: TaskModel = {
+            id: task.id,
+            added: task.added,
+            name: task.name,
+            description: task.description,
+            goalId: task.goalId,
+            active: task.active,
+        };
+
+        return clone;
+    }
+
     public static createTask(task: TaskModel, callback: Function) {
         const result = TaskDao.createTask(task);
         result.then(() => {
@@ -74,24 +96,38 @@ class TaskController {
         });
     }
 
-    public static archiveTask(task: TaskModel, callback: Function) {
-        const result = TaskDao.archiveTask(task);
-        result.then(() => {
-            callback();
-        });
+    public static async update(task: TaskModel) {
+        await TaskDao.update(task);
     }
 
-    static getTask(uid: string, id: string, callback: Function) {
+    public static async archiveTask(task: TaskModel, callback: Function) {
+        task.active = false;
+        await TaskDao.update(task);
+        callback();
+    }
+
+    static getTask(id: string, callback: Function) {
+        const uid = getCurrentUid();
         const result = TaskDao.getTask(uid, id);
         result
             .then((document) => {
-                let task: TaskModel = document.data() as TaskModel;
-                task.id = document.id;
+                const task = this.getTaskFromData(document);
                 callback(task);
             })
             .catch(() => {
                 callback(undefined);
             });
+    }
+
+    private static getTaskFromData(data: DocumentSnapshot<DocumentData>): TaskModel {
+        let task: TaskModel = data.data() as TaskModel;
+        task.id = data.id;
+
+        if (!task.active) {
+            task.active = true;
+        }
+
+        return task;
     }
 
     static getTasks(uid: string, callback: Function) {
