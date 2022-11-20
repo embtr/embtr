@@ -32,7 +32,7 @@ export const lightColors = {
   tab_bar_menu: "#EEEEEE",
   tab_selected: "#FF5E7C",
   tab_unselected: "#8C909E",
-  background: "#F8F8F8",
+  background: "#f6f6f6",
   button_background: "#FFFFFF",
   button_text: "#000000",
   push_button_background: "#FF5E7C",

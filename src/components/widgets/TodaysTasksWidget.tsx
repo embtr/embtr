@@ -43,7 +43,7 @@ export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
     const isGuest = togglePlannedTask === undefined;
 
     return (
-        <WidgetBase menuOptions={menuOptions}>
+        <WidgetBase menuOptions={!isGuest ? menuOptions : undefined}>
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Today's Tasks</Text>
             {plannedTaskViews.length > 0 && <View style={{ paddingLeft: 10, paddingTop: 15 }}>{plannedTaskViews}</View>}
             {plannedTaskViews.length === 0 && (

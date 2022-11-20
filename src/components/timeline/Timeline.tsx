@@ -20,7 +20,6 @@ import DailyResultController, { DailyResultModel, PaginatedDailyResults } from '
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays } from 'src/util/DateUtility';
-import { getDate } from 'date-fns';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -53,11 +52,11 @@ export const Timeline = () => {
 
     React.useEffect(() => {
         fetchPaginatedTimelinePosts();
-    }, []);
+    }, [timelinePostCutoffDate]);
 
     React.useEffect(() => {
         fetchPaginatedDailyResults();
-    }, []);
+    }, [dailyRestultCutoffDate]);
 
     React.useEffect(() => {
         fetchNotifications();
@@ -73,12 +72,10 @@ export const Timeline = () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        setTimelineViews([]);
 
-        setTimelinePostCutoffDate(getDateMinusDays(new Date(), 3));
-        setDailyResultCutoffDate(getDateMinusDays(new Date(), 3));
-        fetchPaginatedTimelinePosts();
-        fetchPaginatedDailyResults();
+        const newCutoffDate = getDateMinusDays(new Date(), 3);
+        setTimelinePostCutoffDate(newCutoffDate);
+        setDailyResultCutoffDate(newCutoffDate);
 
         setNotifications([]);
         fetchNotifications();
@@ -86,12 +83,10 @@ export const Timeline = () => {
     }, []);
 
     const fetchPaginatedTimelinePosts = () => {
-        console.log(timelinePostCutoffDate);
         TimelineController.getPaginatedTimelinePosts(undefined, timelinePostCutoffDate, setPaginatedTimelinePosts);
     };
 
     const fetchPaginatedDailyResults = async () => {
-        console.log(dailyRestultCutoffDate);
         const results = await DailyResultController.getPaginatedFinished(undefined, dailyRestultCutoffDate);
         setPaginatedDailyResults(results);
     };
@@ -261,7 +256,7 @@ export const Timeline = () => {
         setIsLoadingMode(true);
         addPageOfTimelinePosts();
         addPageOfDailyResults();
-        wait(1000).then(() => setIsLoadingMode(false));
+        wait(500).then(() => setIsLoadingMode(false));
     };
 
     return (

@@ -15,6 +15,7 @@ import { TaskFailedSymbol } from 'src/components/common/task_symbols/TaskFailedS
 import { TaskCompleteSymbol } from 'src/components/common/task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from 'src/components/common/task_symbols/TaskInProgressSymbol';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { SchedulePlannableTaskModal } from 'src/components/plan/SchedulePlannableTaskModal';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -27,6 +28,8 @@ interface Props {
 export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInRow, parentLayout }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
+
+    const [editPlannedTaskIsVisible, setEditPlannedTaskIsVisible] = React.useState<boolean>(false);
 
     const cardShadow = {
         shadowColor: '#000',
@@ -101,7 +104,13 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
         if (plannedTaskIsIncomplete(plannedTask)) {
             menuOptions.push({ name: 'Mark as Complete', onPress: toggleCompletion });
             menuOptions.push({ name: 'Mark as Failed', onPress: toggleFailure });
-            menuOptions.push({ name: 'Edit', onPress: navigateToEditTask });
+            menuOptions.push({
+                name: 'Edit',
+                onPress: () => {
+                    closeMenu();
+                    setEditPlannedTaskIsVisible(true);
+                },
+            });
         }
 
         menuOptions.push({ name: 'Delete', onPress: deletePlan, destructive: true });
@@ -119,7 +128,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
 
     const onLongPress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        toggleComplete();
+        setEditPlannedTaskIsVisible(true);
     };
 
     let width = 0;
@@ -130,6 +139,24 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
 
     return (
         <View style={[cardShadow, { marginLeft: paddingRight, top: plannedTask.startMinute! + CALENDAR_TIME_HEIGHT / 2, position: 'absolute' }]}>
+            <SchedulePlannableTaskModal
+                plannedTask={plannedTask!}
+                visible={editPlannedTaskIsVisible}
+                confirm={(startMinute: number, duration: number) => {
+                    if (!plannedTask || !onUpdateTask) {
+                        return;
+                    }
+
+                    plannedTask.startMinute = startMinute;
+                    plannedTask.duration = duration;
+                    onUpdateTask(plannedTask);
+                    setEditPlannedTaskIsVisible(false);
+                }}
+                dismiss={() => {
+                    setEditPlannedTaskIsVisible(false);
+                }}
+            />
+
             <TouchableOpacity
                 onPress={() => {
                     onShortPress();
