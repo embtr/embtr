@@ -143,6 +143,15 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
         setEditPlannedTaskIsVisible(true);
     };
 
+    let durationString = '';
+    if (plannedTask?.duration && plannedTask.duration > 59) {
+        durationString += Math.floor(plannedTask.duration / 60) + 'h ';
+    }
+
+    if (plannedTask?.duration) {
+        durationString += (plannedTask.duration % 60) + 'm';
+    }
+
     return (
         <View style={{ width: '97%' }}>
             <SchedulePlannableTaskModal
@@ -240,7 +249,7 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
                                     <MaterialCommunityIcons name="timer" size={12} color={colors.goal_secondary_font} />
                                     <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
-                                        {durationToString(plannedTask?.duration ? plannedTask.duration : 0)}
+                                        {durationString}
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>

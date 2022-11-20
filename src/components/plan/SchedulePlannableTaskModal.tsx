@@ -5,6 +5,7 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -21,7 +22,8 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
     const [hour, setHour] = React.useState(startHour > 12 ? startHour - 12 : startHour);
     const [minute, setMinute] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute % 60) : 1);
     const [amPm, setAmPm] = React.useState(startHour >= 12 ? 'PM' : 'AM');
-    const [duration, setDuration] = React.useState(plannedTask?.duration ? plannedTask.duration : 0);
+    const [durationHours, setDurationHours] = React.useState(plannedTask?.duration ? plannedTask.duration : 0);
+    const [durationMinutes, setDurationMinutes] = React.useState(plannedTask?.duration ? plannedTask.duration : 0);
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -41,9 +43,14 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
     amPmPickerItems.push(<Picker.Item key={'amPm_am'} color={colors.text} label={'AM'} value={'am'} />);
     amPmPickerItems.push(<Picker.Item key={'amPm_pm'} color={colors.text} label={'PM'} value={'pm'} />);
 
-    let durationPickerItems: JSX.Element[] = [];
-    for (let i = 5; i <= 180; i += 5) {
-        durationPickerItems.push(<Picker.Item key={'duration_' + i} color={colors.text} label={'' + i} value={i} />);
+    let durationHourPickerItems: JSX.Element[] = [];
+    for (let i = 0; i <= 23; i++) {
+        durationHourPickerItems.push(<Picker.Item key={'duration_hours_' + i} color={colors.text} label={'' + i} value={i} />);
+    }
+
+    let durationMinutesPickerItems: JSX.Element[] = [];
+    for (let i = 0; i <= 59; i++) {
+        durationMinutesPickerItems.push(<Picker.Item key={'duration_minutes_' + i} color={colors.text} label={'' + i} value={i} />);
     }
 
     let [fontsLoaded] = useFonts({
@@ -123,14 +130,39 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                     </View>
                                 </View>
 
-                                <View style={{ alignItems: 'center' }}>
-                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: 'Poppins_400Regular' }}>
-                                        Duration (minutes)
-                                    </Text>
-                                    <View style={{ flexDirection: 'row' }}>
-                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={duration} onValueChange={setDuration}>
-                                            {durationPickerItems}
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: 'Poppins_400Regular' }}>Duration</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={durationHours} onValueChange={setDurationHours}>
+                                            {durationHourPickerItems}
                                         </Picker>
+                                        <Text
+                                            style={{
+                                                color: colors.text,
+                                                fontSize: 14,
+                                                paddingTop: 10,
+                                                fontFamily: POPPINS_SEMI_BOLD,
+                                                right: 5,
+                                                paddingBottom: 8,
+                                            }}
+                                        >
+                                            {durationHours === 1 ? 'hour  ' : 'hours'}
+                                        </Text>
+                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={durationMinutes} onValueChange={setDurationMinutes}>
+                                            {durationMinutesPickerItems}
+                                        </Picker>
+                                        <Text
+                                            style={{
+                                                color: colors.text,
+                                                fontSize: 14,
+                                                paddingTop: 10,
+                                                fontFamily: POPPINS_SEMI_BOLD,
+                                                right: 5,
+                                                paddingBottom: 8,
+                                            }}
+                                        >
+                                            minutes
+                                        </Text>
                                     </View>
                                 </View>
 
@@ -140,7 +172,7 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                     <Button
                                         title="Confirm"
                                         onPress={() => {
-                                            confirm(hour * 60 + (amPm === 'pm' ? 720 : 0) + minute, duration);
+                                            confirm(hour * 60 + (amPm === 'pm' ? 720 : 0) + minute, durationHours * 60 + durationMinutes);
                                         }}
                                     />
                                 </View>
