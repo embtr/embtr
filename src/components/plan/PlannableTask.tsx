@@ -93,7 +93,7 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
             menuOptions.push({ name: 'Mark as Incomplete', onPress: toggleCompletion });
             menuOptions.push({ name: 'Mark as Failed', onPress: toggleFailure });
             menuOptions.push({
-                name: 'Edit',
+                name: 'Schedule',
                 onPress: () => {
                     closeMenu();
                     setEditPlannedTaskIsVisible(true);
@@ -105,7 +105,7 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
             menuOptions.push({ name: 'Mark as Incomplete', onPress: toggleFailure });
             menuOptions.push({ name: 'Mark as Complete', onPress: toggleCompletion });
             menuOptions.push({
-                name: 'Edit',
+                name: 'Schedule',
                 onPress: () => {
                     closeMenu();
                     setEditPlannedTaskIsVisible(true);
@@ -117,7 +117,7 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
             menuOptions.push({ name: 'Mark as Complete', onPress: toggleCompletion });
             menuOptions.push({ name: 'Mark as Failed', onPress: toggleFailure });
             menuOptions.push({
-                name: 'Edit',
+                name: 'Schedule',
                 onPress: () => {
                     closeMenu();
                     setEditPlannedTaskIsVisible(true);
