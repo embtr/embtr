@@ -36,7 +36,7 @@ export const TaskDetails = () => {
             name: 'Edit',
             onPress: () => {
                 if (task?.id) {
-                    navigation.navigate('EditHabit', { id: task?.id });
+                    navigation.navigate('CreateEditHabit', { id: task?.id });
                     closeMenu();
                 }
             },

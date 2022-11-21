@@ -78,13 +78,16 @@ export const createTaskModel = (name: string, description: string, goalId: strin
 class TaskController {
     public static clone(task: TaskModel) {
         const clone: TaskModel = {
-            id: task.id,
             added: task.added,
             name: task.name,
             description: task.description,
             goalId: task.goalId,
             active: task.active,
         };
+
+        if (task.id) {
+            clone.id = task.id;
+        }
 
         return clone;
     }

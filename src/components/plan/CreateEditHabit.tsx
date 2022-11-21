@@ -11,17 +11,18 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import { getAuth } from 'firebase/auth';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
-import { DropDownOption, EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
+import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
 import TaskController, { EMPTY_HABIT, TaskModel } from 'src/controller/planning/TaskController';
 import { POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { RandomPlaceHolderTextInput } from '../common/textbox/RandomPlaceholderTextInput';
+import { ItemType } from 'react-native-dropdown-picker';
 
-export const EditHabit = () => {
+export const CreateEditHabit = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const route = useRoute<RouteProp<PlanTabScreens, 'EditHabit'>>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'CreateEditHabit'>>();
 
     const [habit, setHabit] = React.useState<TaskModel>();
     const [name, setName] = React.useState('');
@@ -30,7 +31,7 @@ export const EditHabit = () => {
     const [selectedGoal, setSelectedGoal] = React.useState<GoalModel>();
 
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
-    const [goalOptions, setGoalOptions] = React.useState<DropDownOption[]>([]);
+    const [goalOptions, setGoalOptions] = React.useState<ItemType<string>[]>([]);
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
     const [durationModalVisible, setDurationModalVisible] = React.useState(false);
 
@@ -106,9 +107,14 @@ export const EditHabit = () => {
         clone.name = name;
         clone.description = details;
         clone.goalId = goalId;
-
-        await TaskController.update(clone);
-        navigation.goBack();
+        if (clone.id) {
+            await TaskController.update(clone);
+            navigation.goBack();
+        } else {
+            TaskController.createTask(clone, () => {
+                navigation.goBack();
+            });
+        }
     };
 
     const showCalendar = () => {
@@ -119,8 +125,10 @@ export const EditHabit = () => {
         setCalendarVisible(false);
     };
 
-    const updateSelectedGoalFromObject = (goalOption: DropDownOption) => {
-        updateSelectedGoal(goalOption.value);
+    const updateSelectedGoalFromObject = (goalOption: ItemType<string>) => {
+        if (goalOption.value) {
+            updateSelectedGoal(goalOption.value);
+        }
     };
 
     const updateSelectedGoal = (goalId: string) => {
@@ -133,7 +141,7 @@ export const EditHabit = () => {
         });
     };
 
-    const initialGoalItem: DropDownOption = {
+    const initialGoalItem: ItemType<string> = {
         label: selectedGoal?.name ? selectedGoal?.name : 'lol',
         value: selectedGoal?.id ? selectedGoal.id : 'lol',
     };

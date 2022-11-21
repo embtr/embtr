@@ -114,7 +114,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
                                     <View style={{ paddingLeft: 5 }}>
                                         <Text
                                             onPress={() => {
-                                                navigation.navigate('CreateDailyTask');
+                                                navigation.navigate('CreateEditHabit', { id: undefined });
                                             }}
                                             style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
                                         >

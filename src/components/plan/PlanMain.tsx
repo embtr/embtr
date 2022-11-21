@@ -69,7 +69,7 @@ export const PlanMain = () => {
     };
 
     const navigateToTasksCreateTask = () => {
-        navigation.navigate('CreateDailyTask');
+        navigation.navigate('CreateEditHabit', { id: undefined });
     };
 
     const navigateToCreateGoals = () => {

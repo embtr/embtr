@@ -87,7 +87,7 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
     const navigateToEditTask = () => {
         closeMenu();
         if (plannedTask.dayKey && plannedTask.id) {
-            navigation.navigate('EditHabit', { dayKey: plannedTask.dayKey, plannedTaskId: plannedTask.id });
+            navigation.navigate('CreateEditHabit', { dayKey: plannedTask.dayKey, plannedTaskId: plannedTask.id });
         }
     };
 

@@ -18,9 +18,8 @@ export type TodayTab = {
 
 export type PlanTabScreens = {
     PlanMain: undefined;
-    EditHabit: { id?: string };
+    CreateEditHabit: { id?: string };
     CreateOneTimeTask: { dayKey: string };
-    CreateDailyTask: undefined;
     CreateGoal: undefined;
     GoalDetails: { id: string };
     TaskDetails: { id: string };

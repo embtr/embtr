@@ -149,7 +149,7 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
                                     title="Create Habit"
                                     onPress={() => {
                                         closeModal();
-                                        navigation.navigate('CreateDailyTask');
+                                        navigation.navigate('CreateEditHabit', { id: undefined });
                                     }}
                                 />
                                 <HorizontalLine />
