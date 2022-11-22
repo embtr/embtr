@@ -9,8 +9,8 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW } from 'src/util/constants';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
-import { getAuth } from 'firebase/auth';
 import { PillarModel } from 'src/model/PillarModel';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
     task: TaskModel;
@@ -37,12 +37,10 @@ export const Task = ({ task, pillars }: Props) => {
     });
 
     React.useEffect(() => {
-        const uid = getAuth().currentUser?.uid;
-
-        if (task.goalId && uid) {
-            GoalController.getGoal(uid, task.goalId, setGoal);
+        if (task.goalId !== undefined) {
+            GoalController.getGoal(getCurrentUid(), task.goalId, setGoal);
         }
-    }, [task.goalId]);
+    }, [task]);
 
     return (
         <View style={{ width: '97%' }}>
