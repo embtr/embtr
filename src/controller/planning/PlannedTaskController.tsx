@@ -30,21 +30,33 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
         clonedPlannedTask.goalId = plannedTask.goalId;
     }
 
+    if (!clonedPlannedTask.status) {
+        clonedPlannedTask.status = 'INCOMPLETE';
+    }
+
     return clonedPlannedTask;
 };
 
-export const createPlannedTaskModel = (task: TaskModel, startMinute: number, duration: number, goalId: string) => {
+export const createPlannedTaskModel = (task: TaskModel, startMinute: number, duration: number, goalId?: string) => {
     const plannedTask: PlannedTaskModel = {
         routine: task,
         startMinute: startMinute,
         duration: duration,
-        goalId: goalId,
+        status: 'INCOMPLETE',
     };
+
+    if (goalId) {
+        plannedTask.goalId = goalId;
+    }
 
     return plannedTask;
 };
 
 export const getPlannedTaskGoalId = (plannedTask: PlannedTaskModel) => {
+    if ('' === plannedTask.goalId) {
+        return undefined;
+    }
+
     return plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
 };
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Picker } from '@react-native-picker/picker';
 import { View, Text, Keyboard, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -32,6 +31,7 @@ export const CreateEditHabit = () => {
 
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [goalOptions, setGoalOptions] = React.useState<ItemType<string>[]>([]);
+
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
     const [durationModalVisible, setDurationModalVisible] = React.useState(false);
 
@@ -65,12 +65,20 @@ export const CreateEditHabit = () => {
 
     React.useEffect(() => {
         if (goals && habit?.goalId) {
-            updateSelectedGoal(habit.goalId);
+            updateSelectedGoalById(habit.goalId);
         }
     }, [goals, habit]);
 
     React.useEffect(() => {
-        let initialItems: any = [];
+        let initialItems: any = [
+            {
+                label: 'Select a Goal',
+                value: '',
+                selectedItemLabelStyle: { color: 'blue' },
+                labelStyle: { color: colors.secondary_text },
+                containerStyle: { marginLeft: 10, marginRight: 10 },
+            },
+        ];
         goals.forEach((goal) => {
             initialItems.push({ label: goal.name, value: goal.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
         });
@@ -78,27 +86,7 @@ export const CreateEditHabit = () => {
         setGoalOptions(initialItems);
     }, [goals]);
 
-    let hourPickerItems: JSX.Element[] = [];
-    for (let i = 1; i <= 12; i++) {
-        hourPickerItems.push(<Picker.Item key={'hour_' + i} color={colors.text} label={'' + i} value={i} />);
-    }
-
-    let minutePickerItems: JSX.Element[] = [];
-    for (let i = 0; i < 60; i += 5) {
-        minutePickerItems.push(<Picker.Item key={'minute_' + i} color={colors.text} label={(i < 10 ? '0' : '') + i} value={i} />);
-    }
-
-    let durationHoursPickerItems: JSX.Element[] = [];
-    for (let i = 0; i <= 23; i++) {
-        durationHoursPickerItems.push(<Picker.Item key={'durationhour_' + i} color={colors.text} label={'' + i} value={i} />);
-    }
-
-    let durationMinutesPickerItems: JSX.Element[] = [];
-    for (let i = 0; i < 60; i += 5) {
-        durationMinutesPickerItems.push(<Picker.Item key={'durationminute_' + i} color={colors.text} label={'' + i} value={i} />);
-    }
-
-    const saveTask = async () => {
+    const save = async () => {
         if (!habit) {
             return;
         }
@@ -127,11 +115,14 @@ export const CreateEditHabit = () => {
 
     const updateSelectedGoalFromObject = (goalOption: ItemType<string>) => {
         if (goalOption.value) {
-            updateSelectedGoal(goalOption.value);
+            updateSelectedGoalById(goalOption.value);
+        } else {
+            setGoalId('');
+            setSelectedGoal(undefined);
         }
     };
 
-    const updateSelectedGoal = (goalId: string) => {
+    const updateSelectedGoalById = (goalId: string) => {
         setGoalId(goalId);
         goals.forEach((goal) => {
             if (goal.id === goalId) {
@@ -142,8 +133,8 @@ export const CreateEditHabit = () => {
     };
 
     const initialGoalItem: ItemType<string> = {
-        label: selectedGoal?.name ? selectedGoal?.name : 'lol',
-        value: selectedGoal?.id ? selectedGoal.id : 'lol',
+        label: selectedGoal?.name ? selectedGoal?.name : 'Select a Goal',
+        value: selectedGoal?.id ? selectedGoal.id : '',
     };
 
     return (
@@ -170,7 +161,7 @@ export const CreateEditHabit = () => {
                 }}
             />
 
-            <Banner name="Edit Habit" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={saveTask} />
+            <Banner name={habit?.id ? 'Edit Habit' : 'Create Habit'} leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={save} />
             <ScrollView scrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <View style={{ paddingTop: 5 }}>

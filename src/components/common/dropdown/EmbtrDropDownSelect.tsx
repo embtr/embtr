@@ -49,10 +49,11 @@ export const EmbtrDropDownSelect = ({ items, onItemSelected, initial, name }: Pr
                 }}
                 style={{ borderWidth: 1, borderColor: colors.text_input_border, backgroundColor: colors.text_input_background }}
                 textStyle={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 15 }}
+                selectedItemLabelStyle={{ fontFamily: 'Poppins_400Regular', color: colors.tab_selected, fontSize: 15 }}
                 listItemContainerStyle={{ borderTopWidth: 1, borderColor: colors.text_input_border, height: 50 }}
                 listChildContainerStyle={{ height: 60 }}
                 open={menuOpen}
-                placeholder={hasItems ? 'Select A ' + name : 'No ' + name + 's Found'}
+                placeholder={hasItems ? 'Select a ' + name : 'No ' + name + 's Found'}
                 value={selectedValue.value!}
                 items={items}
                 setOpen={hasItems ? setMenuOption : () => {}}

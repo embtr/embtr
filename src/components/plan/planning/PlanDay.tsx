@@ -3,7 +3,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { getAuth } from 'firebase/auth';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import PillarController from 'src/controller/pillar/PillarController';
@@ -17,9 +16,10 @@ import { getPlannedTaskGoalId } from 'src/controller/planning/PlannedTaskControl
 interface Props {
     plannedDay: PlannedDay;
     onTaskUpdated: Function;
+    onOpenHabitsModal: Function;
 }
 
-export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
+export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
@@ -73,8 +73,6 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
         }, [plannedDay])
     );
 
-    const toggleLock = () => {};
-
     return (
         <Screen>
             <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -90,7 +88,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
                                 <View style={{ paddingRight: 5 }}>
                                     <Text
                                         onPress={() => {
-                                            navigation.navigate('CreateOneTimeTask', { dayKey: plannedDay.id! });
+                                            navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.id! });
                                         }}
                                         style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
                                     >
@@ -102,12 +100,12 @@ export const PlanDay = ({ plannedDay, onTaskUpdated }: Props) => {
                                     <View style={{ paddingLeft: 5 }}>
                                         <Text
                                             onPress={() => {
-                                                toggleLock();
+                                                onOpenHabitsModal();
                                             }}
                                             style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
                                         >
                                             {' '}
-                                            select a task
+                                            select habits
                                         </Text>
                                     </View>
                                 ) : (

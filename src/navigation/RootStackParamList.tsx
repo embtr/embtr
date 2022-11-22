@@ -9,7 +9,7 @@ export type MainTabScreens = {
 
 export type TodayTab = {
     Today: undefined;
-    CreateOneTimeTask: { dayKey: string };
+    CreateEditOneTimeTask: { dayKey: string };
     PlanDay: { id: string };
     WidgetMarketplace: undefined;
     AddQuoteOfTheDay: undefined;
@@ -19,7 +19,7 @@ export type TodayTab = {
 export type PlanTabScreens = {
     PlanMain: undefined;
     CreateEditHabit: { id?: string };
-    CreateOneTimeTask: { dayKey: string };
+    CreateEditOneTimeTask: { dayKey: string; id?: string };
     CreateGoal: undefined;
     GoalDetails: { id: string };
     TaskDetails: { id: string };

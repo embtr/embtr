@@ -63,14 +63,17 @@ export const durationToString = (duration: number) => {
     return value;
 };
 
-export const createTaskModel = (name: string, description: string, goalId: string) => {
+export const createTaskModel = (name: string, description: string, goalId?: string) => {
     const task: TaskModel = {
         added: Timestamp.now(),
         name: name,
         description: description,
-        goalId: goalId,
         active: true,
     };
+
+    if (goalId) {
+        task.goalId = goalId;
+    }
 
     return task;
 };

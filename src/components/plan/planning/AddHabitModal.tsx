@@ -157,7 +157,7 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
                                     title="Create One Time Task"
                                     onPress={() => {
                                         closeModal();
-                                        navigation.navigate('CreateOneTimeTask', { dayKey: plannedDay.id! });
+                                        navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.id! });
                                     }}
                                 />
                                 <HorizontalLine />

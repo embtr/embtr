@@ -15,12 +15,13 @@ import PlannedTaskController, { createPlannedTaskModel, PlannedTaskModel } from 
 
 interface Props {
     showSelectTaskModal: boolean;
+    openSelectTaskModal: Function;
     dismissSelectTaskModal: Function;
     onDayChange: Function;
     useCalendarView: boolean;
 }
 
-export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayChange, useCalendarView }: Props) => {
+export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSelectTaskModal, onDayChange, useCalendarView }: Props) => {
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
@@ -84,7 +85,7 @@ export const Planning = ({ showSelectTaskModal, dismissSelectTaskModal, onDayCha
                 {useCalendarView ? (
                     <CalendarView plannedToday={plannedToday} onTaskUpdated={updateTask} />
                 ) : plannedToday ? (
-                    <PlanDay plannedDay={plannedToday} onTaskUpdated={updateTask} />
+                    <PlanDay plannedDay={plannedToday} onTaskUpdated={updateTask} onOpenHabitsModal={openSelectTaskModal} />
                 ) : (
                     <View />
                 )}

@@ -17,6 +17,9 @@ import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbo
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { SchedulePlannableTaskModal } from './SchedulePlannableTaskModal';
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
     plannedTask?: PlannedTaskModel;
@@ -29,6 +32,7 @@ interface Props {
 
 export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal, pillar }: Props) => {
     const [editPlannedTaskIsVisible, setEditPlannedTaskIsVisible] = React.useState<boolean>(false);
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const { colors } = useTheme();
 
@@ -89,42 +93,24 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
         }
 
         let menuOptions: EmbtrMenuOption[] = [];
-        if (plannedTaskIsComplete(plannedTask)) {
-            menuOptions.push({ name: 'Mark as Incomplete', onPress: toggleCompletion });
-            menuOptions.push({ name: 'Mark as Failed', onPress: toggleFailure });
-            menuOptions.push({
-                name: 'Schedule',
-                onPress: () => {
+        menuOptions.push({ name: 'Mark as Incomplete', onPress: toggleFailure });
+        menuOptions.push({ name: 'Mark as Complete', onPress: toggleCompletion });
+        menuOptions.push({
+            name: 'Schedule',
+            onPress: () => {
+                closeMenu();
+                setEditPlannedTaskIsVisible(true);
+            },
+        });
+        menuOptions.push({
+            name: 'Edit',
+            onPress: () => {
+                if (plannedTask.id && plannedTask.dayKey) {
                     closeMenu();
-                    setEditPlannedTaskIsVisible(true);
-                },
-            });
-        }
-
-        if (plannedTaskIsFailed(plannedTask)) {
-            menuOptions.push({ name: 'Mark as Incomplete', onPress: toggleFailure });
-            menuOptions.push({ name: 'Mark as Complete', onPress: toggleCompletion });
-            menuOptions.push({
-                name: 'Schedule',
-                onPress: () => {
-                    closeMenu();
-                    setEditPlannedTaskIsVisible(true);
-                },
-            });
-        }
-
-        if (plannedTaskIsIncomplete(plannedTask)) {
-            menuOptions.push({ name: 'Mark as Complete', onPress: toggleCompletion });
-            menuOptions.push({ name: 'Mark as Failed', onPress: toggleFailure });
-            menuOptions.push({
-                name: 'Schedule',
-                onPress: () => {
-                    closeMenu();
-                    setEditPlannedTaskIsVisible(true);
-                },
-            });
-        }
-
+                    navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedTask.dayKey, id: plannedTask.id });
+                }
+            },
+        });
         menuOptions.push({ name: 'Delete', onPress: deletePlan, destructive: true });
         dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
     };

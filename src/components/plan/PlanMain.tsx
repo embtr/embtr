@@ -33,6 +33,9 @@ export const PlanMain = () => {
                         dismissSelectTaskModal={() => {
                             setShowAddTaskModal(false);
                         }}
+                        openSelectTaskModal={() => {
+                            setShowAddTaskModal(true);
+                        }}
                         onDayChange={() => {}}
                         useCalendarView={useCalendarView}
                     />
