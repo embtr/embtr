@@ -115,8 +115,10 @@ export const CreateEditOneTimeTask = () => {
             return;
         }
 
-        let clonedPlannedTask: PlannedTaskModel = { goalId, ...plannedTask };
-        clonedPlannedTask.goalId = goalId;
+        let clonedPlannedTask: PlannedTaskModel = { ...plannedTask };
+        if (goalId !== undefined) {
+            clonedPlannedTask.goalId = goalId;
+        }
 
         if (name) {
             clonedPlannedTask.routine.name = name;

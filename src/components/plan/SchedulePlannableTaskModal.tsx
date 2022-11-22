@@ -3,7 +3,7 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
+import { plannedTaskIsIncomplete } from 'src/controller/planning/PlannedDayController';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 
@@ -18,12 +18,14 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
     const { colors } = useTheme();
 
     const startHour = plannedTask?.startMinute ? Math.floor(plannedTask.startMinute / 60) : 1;
+    const initialDurationHours = plannedTask?.duration ? Math.floor(plannedTask.duration / 60) : 0;
+    const initialDurationMinutes = plannedTask?.duration ? Math.floor(plannedTask.duration % 60) : 0;
 
     const [hour, setHour] = React.useState(startHour > 12 ? startHour - 12 : startHour);
     const [minute, setMinute] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute % 60) : 1);
     const [amPm, setAmPm] = React.useState(startHour >= 12 ? 'PM' : 'AM');
-    const [durationHours, setDurationHours] = React.useState(plannedTask?.duration ? plannedTask.duration : 0);
-    const [durationMinutes, setDurationMinutes] = React.useState(plannedTask?.duration ? plannedTask.duration : 0);
+    const [durationHours, setDurationHours] = React.useState(initialDurationHours);
+    const [durationMinutes, setDurationMinutes] = React.useState(initialDurationMinutes);
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
@@ -51,16 +53,6 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
     let durationMinutesPickerItems: JSX.Element[] = [];
     for (let i = 0; i <= 59; i++) {
         durationMinutesPickerItems.push(<Picker.Item key={'duration_minutes_' + i} color={colors.text} label={'' + i} value={i} />);
-    }
-
-    let [fontsLoaded] = useFonts({
-        Poppins_600SemiBold,
-        Poppins_400Regular,
-        Poppins_500Medium,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
     }
 
     return (
@@ -172,7 +164,10 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                     <Button
                                         title="Confirm"
                                         onPress={() => {
-                                            confirm(hour * 60 + (amPm === 'pm' ? 720 : 0) + minute, durationHours * 60 + durationMinutes);
+                                            const startTime = hour * 60 + minute;
+                                            const duration = durationHours * 60 + durationMinutes;
+                                            console.log(durationHours + ' ' + durationMinutes);
+                                            confirm(startTime, duration);
                                         }}
                                     />
                                 </View>
