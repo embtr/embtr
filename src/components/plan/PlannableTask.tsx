@@ -93,8 +93,54 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
         }
 
         let menuOptions: EmbtrMenuOption[] = [];
-        menuOptions.push({ name: 'Mark as Incomplete', onPress: toggleFailure });
-        menuOptions.push({ name: 'Mark as Complete', onPress: toggleCompletion });
+        if (plannedTaskIsComplete(plannedTask)) {
+            menuOptions.push({
+                name: 'Mark as Incomplete',
+                onPress: () => {
+                    closeMenu();
+                    toggleComplete();
+                },
+            });
+            menuOptions.push({
+                name: 'Mark as Failed',
+                onPress: () => {
+                    closeMenu();
+                    toggleFailure();
+                },
+            });
+        }
+        if (plannedTaskIsFailed(plannedTask)) {
+            menuOptions.push({
+                name: 'Mark as Incomplete',
+                onPress: () => {
+                    closeMenu();
+                    toggleFailure();
+                },
+            });
+            menuOptions.push({
+                name: 'Mark as Complete',
+                onPress: () => {
+                    closeMenu();
+                    toggleComplete();
+                },
+            });
+        }
+        if (plannedTaskIsIncomplete(plannedTask)) {
+            menuOptions.push({
+                name: 'Mark as Complete',
+                onPress: () => {
+                    closeMenu();
+                    toggleComplete();
+                },
+            });
+            menuOptions.push({
+                name: 'Mark as Failed',
+                onPress: () => {
+                    closeMenu();
+                    toggleFailure();
+                },
+            });
+        }
         menuOptions.push({
             name: 'Schedule',
             onPress: () => {
