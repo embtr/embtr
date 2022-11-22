@@ -3,13 +3,13 @@ import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
-import { getAuth } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { ScrollView } from 'react-native-gesture-handler';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
     visible: boolean;
@@ -27,15 +27,8 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
     const [habits, setHabits] = React.useState<TaskModel[]>([]);
 
     React.useEffect(() => {
-        const uid = getAuth().currentUser?.uid;
-        if (uid) {
-            TaskController.getTasks(uid, (habits: TaskModel[]) => {
-                if (habits.length > 0) {
-                    setHabits(habits);
-                }
-            });
-        }
-    }, []);
+        TaskController.getTasks(getCurrentUid(), setHabits);
+    }, [visible]);
 
     const taskSelected = (taskId: string, isSelected: boolean) => {
         let newSelectedTasks: string[] = [];

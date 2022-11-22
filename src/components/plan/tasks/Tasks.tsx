@@ -15,50 +15,50 @@ export const Tasks = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
-    const [tasks, setTasks] = React.useState<TaskModel[]>([]);
+    const [habits, setHabits] = React.useState<TaskModel[]>([]);
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     useFocusEffect(
         React.useCallback(() => {
-            TaskController.getTasks(getAuth().currentUser!.uid, setTasks);
+            TaskController.getTasks(getAuth().currentUser!.uid, setHabits);
         }, [])
     );
 
     useFocusEffect(
         React.useCallback(() => {
-            PillarController.getPillars(getAuth().currentUser!.uid, setPillars)
+            PillarController.getPillars(getAuth().currentUser!.uid, setPillars);
         }, [])
     );
 
     let taskViews: JSX.Element[] = [];
-    tasks.forEach(task => {
+    habits.forEach((habit) => {
         taskViews.push(
-            <View key={task.id} style={{ paddingBottom: 5, width: "100%", alignItems: "center" }} >
-                <Task task={task} pillars={pillars} />
+            <View key={habit.id} style={{ paddingBottom: 5, width: '100%', alignItems: 'center' }}>
+                <Task task={habit} pillars={pillars} />
             </View>
         );
     });
 
     //saving for later
     const deleteTask = (task: TaskModel) => {
-        Alert.alert("Archive Task?", "Archive task '" + task.name + "'?", [
-            { text: 'Cancel', onPress: () => { }, style: 'cancel', },
+        Alert.alert('Archive Task?', "Archive task '" + task.name + "'?", [
+            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
             {
-                text: 'Archive', onPress: () => {
+                text: 'Archive',
+                onPress: () => {
                     if (task) {
-                        TaskController.archiveTask(task, () => { TaskController.getTasks(getAuth().currentUser!.uid, setTasks); });
+                        TaskController.archiveTask(task, () => {
+                            TaskController.getTasks(getAuth().currentUser!.uid, setHabits);
+                        });
                     }
-                }
+                },
             },
         ]);
-    }
-
+    };
 
     return (
-        <View style={{ height: "100%" }}>
-            <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>
-                {taskViews}
-            </ScrollView>
+        <View style={{ height: '100%' }}>
+            <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>{taskViews}</ScrollView>
         </View>
     );
 };
