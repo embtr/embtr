@@ -1,7 +1,13 @@
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import TaskDao from 'src/firebase/firestore/planning/TaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { getDateFromDayKey } from './PlannedDayController';
+import { getDateFromDayKey, plannedTaskIsComplete, plannedTaskIsFailed } from './PlannedDayController';
+import { PlannedTaskModel } from './PlannedTaskController';
+
+interface HabitHistoryElementModel {
+    dayKey: string;
+    id: string;
+}
 
 export interface TaskModel {
     id?: string;
@@ -10,6 +16,11 @@ export interface TaskModel {
     description: string;
     goalId?: string;
     active: boolean;
+    history?: {
+        incomplete: HabitHistoryElementModel[];
+        complete: HabitHistoryElementModel[];
+        failed: HabitHistoryElementModel[];
+    };
 }
 
 export const EMPTY_HABIT: TaskModel = {
@@ -69,6 +80,7 @@ export const createTaskModel = (name: string, description: string, goalId?: stri
         name: name,
         description: description,
         active: true,
+        history: { incomplete: [], complete: [], failed: [] },
     };
 
     if (goalId) {
@@ -86,10 +98,15 @@ class TaskController {
             description: task.description,
             goalId: task.goalId,
             active: task.active,
+            history: task.history,
         };
 
         if (task.id) {
             clone.id = task.id;
+        }
+
+        if (!clone.history) {
+            clone.history = { incomplete: [], complete: [], failed: [] };
         }
 
         return clone;
@@ -112,7 +129,7 @@ class TaskController {
         callback();
     }
 
-    static getTask(id: string, callback: Function) {
+    public static getTask(id: string, callback: Function) {
         const uid = getCurrentUid();
         const result = TaskDao.getTask(uid, id);
         result
@@ -123,6 +140,40 @@ class TaskController {
             .catch(() => {
                 callback(undefined);
             });
+    }
+
+    public static async updateHistory(plannedTask: PlannedTaskModel) {
+        if (!plannedTask.id || !plannedTask.dayKey || !plannedTask.routine.id) {
+            return;
+        }
+
+        const habitId: string = plannedTask.routine.id;
+        const plannedTaskId: string = plannedTask.id;
+
+        const habitHistoryElement: HabitHistoryElementModel = {
+            dayKey: plannedTask.dayKey,
+            id: plannedTaskId,
+        };
+
+        this.getTask(habitId, (habit: TaskModel) => {
+            if (!habit.history) {
+                habit.history = { incomplete: [], complete: [], failed: [] };
+            }
+
+            habit.history.incomplete = this.removeElementFromArray(habit.history.incomplete, habitHistoryElement);
+            habit.history.complete = this.removeElementFromArray(habit.history.complete, habitHistoryElement);
+            habit.history.failed = this.removeElementFromArray(habit.history.failed, habitHistoryElement);
+
+            if (plannedTaskIsComplete(plannedTask)) {
+                habit.history.complete.push(habitHistoryElement);
+            } else if (plannedTaskIsFailed(plannedTask)) {
+                habit.history.failed.push(habitHistoryElement);
+            } else {
+                habit.history.incomplete.push(habitHistoryElement);
+            }
+
+            this.update(habit);
+        });
     }
 
     private static getTaskFromData(data: DocumentSnapshot<DocumentData>): TaskModel {
@@ -160,6 +211,18 @@ class TaskController {
             .catch(() => {
                 callback([]);
             });
+    }
+
+    private static removeElementFromArray(list: HabitHistoryElementModel[], element: HabitHistoryElementModel) {
+        const newList: HabitHistoryElementModel[] = [];
+        list.forEach((l) => {
+            if (l.id === element.id) {
+                return;
+            }
+            newList.push(l);
+        });
+
+        return newList;
     }
 }
 

@@ -14,6 +14,7 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { GoalTask } from 'src/components/plan/goals/GoalTask';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();

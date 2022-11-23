@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
-import { TaskModel } from 'src/controller/planning/TaskController';
+import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import LevelController from '../level/LevelController';
@@ -49,6 +49,8 @@ export const createPlannedTaskModel = (task: TaskModel, startMinute: number, dur
         plannedTask.goalId = goalId;
     }
 
+    delete plannedTask.routine['history'];
+
     return plannedTask;
 };
 
@@ -83,6 +85,7 @@ class PlannedTaskController {
         this.updateGoalTask(plannedTask);
         PlannedDayController.refreshDailyResult(plannedDay);
         await LevelController.handlePlannedDayStatusChange(plannedDay);
+        TaskController.updateHistory(plannedTask);
 
         callback();
     }
@@ -100,6 +103,7 @@ class PlannedTaskController {
         PlannedDayController.refreshDailyResult(plannedDay);
 
         createdPlannedTasks.forEach((createdPlannedTask) => {
+            TaskController.updateHistory(createdPlannedTask);
             this.updateGoalTask(createdPlannedTask);
         });
 

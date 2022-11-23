@@ -1,31 +1,35 @@
-import React from 'react';
 import { View, Text } from 'react-native';
 import { GoalTaskCompleteIcon } from 'src/components/plan/goals/GoalTaskCompleteIcon';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
+interface Props {
+    name: string;
+    dayKey: string;
+}
 
-
-export const GoalTask = () => {
+export const GoalTask = ({ name, dayKey }: Props) => {
     const { colors } = useTheme();
 
-    let [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-    });
-
-    if (!fontsLoaded) {
-        return <View />
-    }
-
     return (
-        <View style={{ backgroundColor: colors.button_background, borderRadius: 15, width: "95%", height: 65, flexDirection: "row", alignContent: "center", alignItems: "center" }}>
+        <View
+            style={{
+                backgroundColor: colors.button_background,
+                borderRadius: 15,
+                width: '95%',
+                height: 65,
+                flexDirection: 'row',
+                alignContent: 'center',
+                alignItems: 'center',
+            }}
+        >
             <View style={{ paddingLeft: 10 }}>
                 <GoalTaskCompleteIcon />
             </View>
 
             <View style={{ paddingLeft: 10 }}>
-                <Text style={{ fontFamily: "Poppins_400Regular", fontSize: 12, color: colors.goal_primary_font }}>Task name</Text>
-                <Text style={{ opacity: .75, fontFamily: "Poppins_400Regular", fontSize: 10, paddingLeft: 1, color: colors.goal_secondary_font }}>May 20, 2022</Text>
+                <Text style={{ fontFamily: POPPINS_REGULAR, fontSize: 12, color: colors.goal_primary_font }}>{name}</Text>
+                <Text style={{ opacity: 0.75, fontFamily: POPPINS_REGULAR, fontSize: 10, paddingLeft: 1, color: colors.goal_secondary_font }}>{dayKey}</Text>
             </View>
         </View>
     );
