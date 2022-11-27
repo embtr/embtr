@@ -12,7 +12,6 @@ import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/m
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
-import { GoalTask } from 'src/components/plan/goals/GoalTask';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { format, formatDistance } from 'date-fns';
@@ -20,7 +19,6 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
-import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { HabitHistory } from '../planning/HabitHistory';
 
 export const TaskDetails = () => {
@@ -164,15 +162,8 @@ export const TaskDetails = () => {
                             <GoalDetailAttribute attribute={'Tasks Incomplete'} value={incompletedTasks + (incompletedTasks === 1 ? ' Task' : ' Tasks')} />
                         </View>
 
-                        <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                            <GoalDetailAttribute attribute={'Completion Streak'} value={'15 Days'} isFake={true} />
-                            <GoalDetailAttribute attribute={'Tasks Failed'} value={'10'} isFake={true} />
-                            <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} isFake={true} />
-                        </View>
-
                         <View style={{ paddingTop: 20, width: '100%' }}>
                             <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font }}>History</Text>
-
                             {historyViews}
                         </View>
                     </View>
