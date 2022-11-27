@@ -3,7 +3,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text, Alert } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
+import TaskController, { HabitHistoryElementModel, TaskModel } from 'src/controller/planning/TaskController';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
@@ -20,7 +20,8 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
+import { HabitHistory } from '../planning/HabitHistory';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
@@ -98,6 +99,21 @@ export const TaskDetails = () => {
         },
     ];
 
+    let allTasks: HabitHistoryElementModel[] = [];
+    allTasks = allTasks.concat(task?.history?.incomplete ? task.history.incomplete : []);
+    allTasks = allTasks.concat(task?.history?.complete ? task.history.complete : []);
+    allTasks = allTasks.concat(task?.history?.failed ? task.history.failed : []);
+    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : 0));
+
+    let historyViews: JSX.Element[] = [];
+    allTasks.forEach((history) => {
+        historyViews.push(
+            <View key={history.dayKey + history.name} style={{ paddingTop: 5 }}>
+                <HabitHistory history={history} />
+            </View>
+        );
+    });
+
     if (!task) {
         return (
             <Screen>
@@ -157,12 +173,7 @@ export const TaskDetails = () => {
                         <View style={{ paddingTop: 20, width: '100%' }}>
                             <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font }}>History</Text>
 
-                            <View style={{ paddingTop: 5 }}>
-                                <GoalTask name={task.name} dayKey={'date'} />
-                            </View>
-                            <View style={{ paddingTop: 5 }}>
-                                <GoalTask name={task.name} dayKey={'date'} />
-                            </View>
+                            {historyViews}
                         </View>
                     </View>
                 </View>

@@ -147,7 +147,9 @@ class DailyResultController {
 
     public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedDailyResults> {
         if (lastDailyResult === null) {
-            return { results: [], lastDailyResult: null };
+            //disable prevention of looking in the past for now
+            lastDailyResult = undefined;
+            //return { results: [], lastDailyResult: null };
         }
 
         const results = await DailyResultDao.getPaginatedFinished(lastDailyResult, cutoffDate);

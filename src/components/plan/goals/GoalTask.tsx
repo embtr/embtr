@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { View, Text } from 'react-native';
 import { GoalTaskCompleteIcon } from 'src/components/plan/goals/GoalTaskCompleteIcon';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -5,10 +6,10 @@ import { POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
     name: string;
-    dayKey: string;
+    date: Date;
 }
 
-export const GoalTask = ({ name, dayKey }: Props) => {
+export const GoalTask = ({ name, date }: Props) => {
     const { colors } = useTheme();
 
     return (
@@ -29,7 +30,9 @@ export const GoalTask = ({ name, dayKey }: Props) => {
 
             <View style={{ paddingLeft: 10 }}>
                 <Text style={{ fontFamily: POPPINS_REGULAR, fontSize: 12, color: colors.goal_primary_font }}>{name}</Text>
-                <Text style={{ opacity: 0.75, fontFamily: POPPINS_REGULAR, fontSize: 10, paddingLeft: 1, color: colors.goal_secondary_font }}>{dayKey}</Text>
+                <Text style={{ opacity: 0.75, fontFamily: POPPINS_REGULAR, fontSize: 10, paddingLeft: 1, color: colors.goal_secondary_font }}>
+                    {format(date, 'MMMM dd, yyyy')}
+                </Text>
             </View>
         </View>
     );

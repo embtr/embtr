@@ -4,9 +4,11 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey, plannedTaskIsComplete, plannedTaskIsFailed } from './PlannedDayController';
 import { PlannedTaskModel } from './PlannedTaskController';
 
-interface HabitHistoryElementModel {
+export interface HabitHistoryElementModel {
     dayKey: string;
     id: string;
+    name: string;
+    status: string;
 }
 
 export interface TaskModel {
@@ -153,6 +155,8 @@ class TaskController {
         const habitHistoryElement: HabitHistoryElementModel = {
             dayKey: plannedTask.dayKey,
             id: plannedTaskId,
+            name: plannedTask.routine.name,
+            status: plannedTask.status ? plannedTask.status : 'INCOMPLETE',
         };
 
         this.getTask(habitId, (habit: TaskModel) => {
