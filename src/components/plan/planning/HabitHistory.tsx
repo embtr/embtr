@@ -30,7 +30,7 @@ export const HabitHistory = ({ history }: Props) => {
             <View style={{ paddingLeft: 10 }}>
                 {history.status === 'COMPLETE' && <TaskCompleteSymbol />}
                 {history.status === 'FAILED' && <TaskFailedSymbol />}
-                {history.status === 'INCOMPLETE' && <TaskInProgressSymbol />}
+                {history.status === 'INCOMPLETE' || !history.status && <TaskInProgressSymbol />}
             </View>
 
             <View style={{ paddingLeft: 10 }}>

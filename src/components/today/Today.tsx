@@ -182,7 +182,6 @@ export const Today = () => {
         clonedPlannedTask.status = newStatus;
 
         PlannedTaskController.update(plannedDay, clonedPlannedTask, () => {
-            console.log("updating!");
             TaskController.updateHistory(clonedPlannedTask);
             PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
         });

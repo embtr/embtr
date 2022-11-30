@@ -165,7 +165,6 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                         onPress={() => {
                                             const startTime = hour * 60 + minute;
                                             const duration = durationHours * 60 + durationMinutes;
-                                            console.log(durationHours + ' ' + durationMinutes);
                                             confirm(startTime, duration);
                                         }}
                                     />

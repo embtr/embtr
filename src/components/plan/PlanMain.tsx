@@ -76,7 +76,7 @@ export const PlanMain = () => {
     };
 
     const navigateToCreateGoals = () => {
-        navigation.navigate('CreateGoal');
+        navigation.navigate('CreateEditGoal');
     };
 
     return (

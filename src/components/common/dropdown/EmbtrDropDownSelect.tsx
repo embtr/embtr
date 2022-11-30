@@ -15,11 +15,8 @@ export const EmbtrDropDownSelect = ({ items, onItemSelected, initial, name }: Pr
     const [menuOpen, setMenuOption] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState<ItemType<string>>(initial);
 
-    React.useEffect(() => {
-        setSelectedValue(initial);
-    }, [initial]);
-
     const itemSelected = (item: any) => {
+        setSelectedValue(item);
         onItemSelected(item);
     };
 
@@ -58,7 +55,7 @@ export const EmbtrDropDownSelect = ({ items, onItemSelected, initial, name }: Pr
                 items={items}
                 setOpen={hasItems ? setMenuOption : () => {}}
                 onSelectItem={itemSelected}
-                setValue={setSelectedValue}
+                setValue={() => {}}
                 multiple={false}
             />
         </View>

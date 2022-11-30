@@ -17,8 +17,10 @@ import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { getAuth } from 'firebase/auth';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
+import { ItemType } from 'react-native-dropdown-picker';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
-export const CreateGoal = () => {
+export const CreateEditGoal = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -30,37 +32,37 @@ export const CreateGoal = () => {
     const [deadline, setDeadline] = React.useState<Date>(Timestamp.now().toDate());
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
 
+    const [pillarId, setPillarId] = React.useState('');
+    const [selectedPillar, setSelectedPillar] = React.useState<PillarModel>();
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
+    const [pillarOptions, setPillarOptions] = React.useState([]);
 
-    const [menuOpen, setMenuOption] = React.useState(false);
-    const [selectedPillar, setSelectedPillar] = React.useState('');
-    const [pillarOptions, setPillarOptions] = React.useState([{ label: '', value: '' }]);
+    React.useEffect(() => {
+        PillarController.getPillars(getCurrentUid(), setPillars);
+    }, []);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            const uid = getAuth().currentUser?.uid;
-            if (uid) {
-                PillarController.getPillars(uid, setPillars);
-            }
-        }, [])
-    );
+    React.useEffect(() => {
+        let initialItems: any = [
+            {
+                label: 'Select a Pillar',
+                value: '',
+                selectedItemLabelStyle: { color: 'blue' },
+                labelStyle: { color: colors.secondary_text },
+                containerStyle: { marginLeft: 10, marginRight: 10 },
+            },
+        ];
+        pillars.forEach((pillar) => {
+            initialItems.push({ label: pillar.name, value: pillar.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
+        });
 
-    useFocusEffect(
-        React.useCallback(() => {
-            let initialItems: any = [];
-            pillars.forEach((pillar) => {
-                initialItems.push({ label: pillar.name, value: pillar.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
-            });
-
-            setPillarOptions(initialItems);
-        }, [pillars])
-    );
+        setPillarOptions(initialItems);
+    }, [pillars]);
 
     const createGoal = () => {
         const newGoal: GoalModel = {
             name: goal,
             description: details,
-            pillarId: selectedPillar,
+            pillarId: selectedPillar?.id,
             added: Timestamp.now(),
             deadline: Timestamp.fromDate(deadline),
             status: 'ACTIVE',
@@ -80,7 +82,26 @@ export const CreateGoal = () => {
         setCalendarVisible(false);
     };
 
-    const initialGoalItem: ItemType<string> = {
+    const updateSelectedPillarFromObject = (pillarOption: ItemType<string>) => {
+        if (pillarOption.value) {
+            updateSelectedGoalById(pillarOption.value);
+        } else {
+            setPillarId('');
+            setSelectedPillar(undefined);
+        }
+    };
+
+    const updateSelectedGoalById = (pillarId: string) => {
+        setPillarId(pillarId);
+        pillars.forEach((pillar) => {
+            if (pillar.id === pillarId) {
+                setSelectedPillar(pillar);
+                return;
+            }
+        });
+    };
+
+    const initialPillarItem: ItemType<string> = {
         label: 'Select a Goal',
         value: '',
     };
@@ -217,7 +238,12 @@ export const CreateGoal = () => {
                             >
                                 Pillar
                             </Text>
-                            <EmbtrDropDownSelect items={pillarOptions} onItemSelected={setSelectedPillar} name={'Pillar'} initial={initialGoalItem} />
+                            <EmbtrDropDownSelect
+                                items={pillarOptions}
+                                onItemSelected={updateSelectedPillarFromObject}
+                                initial={initialPillarItem}
+                                name={'Pillar'}
+                            />
                         </View>
 
                         <View style={{ zIndex: -1, paddingTop: 15, alignItems: 'center' }}>
