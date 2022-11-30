@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Image, StyleProp, ImageStyle } from 'react-native';
-import { CacheManager } from 'react-native-expo-image-cache';
+import CacheManager from 'src/controller/image/ImageCacheController';
 
 interface Props {
     uri: string;
