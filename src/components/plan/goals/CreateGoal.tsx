@@ -10,7 +10,7 @@ import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { Timestamp } from 'firebase/firestore';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { PillarModel } from 'src/model/PillarModel';
@@ -23,8 +23,8 @@ export const CreateGoal = () => {
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-    const [goal, setGoal] = React.useState<string>("");
-    const [details, setDetails] = React.useState<string>("");
+    const [goal, setGoal] = React.useState<string>('');
+    const [details, setDetails] = React.useState<string>('');
     const [titleError, setTitleError] = React.useState(false);
     const [storyError, setStoryError] = React.useState(false);
     const [deadline, setDeadline] = React.useState<Date>(Timestamp.now().toDate());
@@ -48,7 +48,7 @@ export const CreateGoal = () => {
     useFocusEffect(
         React.useCallback(() => {
             let initialItems: any = [];
-            pillars.forEach(pillar => {
+            pillars.forEach((pillar) => {
                 initialItems.push({ label: pillar.name, value: pillar.id, containerStyle: { marginLeft: 10, marginRight: 10 } });
             });
 
@@ -63,7 +63,8 @@ export const CreateGoal = () => {
             pillarId: selectedPillar,
             added: Timestamp.now(),
             deadline: Timestamp.fromDate(deadline),
-            status: "ACTIVE"
+            status: 'ACTIVE',
+            tasks: [],
         };
 
         GoalController.createGoal(newGoal, () => {
@@ -79,77 +80,193 @@ export const CreateGoal = () => {
         setCalendarVisible(false);
     };
 
+    const initialGoalItem: ItemType<string> = {
+        label: 'Select a Goal',
+        value: '',
+    };
+
     return (
         <Screen>
-            <Banner name={"Create Goal"} leftIcon={"arrow-back"} leftRoute={"BACK"} />
+            <Banner name={'Create Goal'} leftIcon={'arrow-back'} leftRoute={'BACK'} />
 
             <DateTimePickerModal
                 isVisible={calendarVisible}
                 mode="date"
-                onConfirm={(date) => { setDeadline(date); hideCalendar() }}
+                onConfirm={(date) => {
+                    setDeadline(date);
+                    hideCalendar();
+                }}
                 onCancel={hideCalendar}
             />
 
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
-                <View style={{ height: "100%", width: "100%" }}>
-                    <KeyboardAvoidingView style={{ height: "100%" }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <View style={{ height: '100%', width: '100%' }}>
+                    <KeyboardAvoidingView
+                        style={{ height: '100%' }}
+                        keyboardVerticalOffset={isIosApp() ? -10 : 111}
+                        behavior={isIosApp() ? 'padding' : 'height'}
+                    >
                         <View style={{ paddingTop: 5 }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, fontFamily: "Poppins_600SemiBold", fontSize: 17, paddingTop: 10, paddingLeft: 15 }}>Bring it on!</Text>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_secondary_font, fontFamily: "Poppins_400Regular", paddingTop: 10, fontSize: 12, paddingLeft: 15, paddingRight: 15 }}>Your goal should be some objective achievable by a certain date with clear pass/ fail criteria. Make it happen!.</Text>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 17, paddingTop: 10, paddingLeft: 15 }}
+                            >
+                                Bring it on!
+                            </Text>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    color: colors.goal_secondary_font,
+                                    fontFamily: 'Poppins_400Regular',
+                                    paddingTop: 10,
+                                    fontSize: 12,
+                                    paddingLeft: 15,
+                                    paddingRight: 15,
+                                }}
+                            >
+                                Your goal should be some objective achievable by a certain date with clear pass/ fail criteria. Make it happen!.
+                            </Text>
                         </View>
 
                         {/* Goal/ Title */}
-                        <View style={{ paddingTop: 10, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingTop: 15, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Goal</Text>
+                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{
+                                    color: colors.goal_primary_font,
+                                    paddingTop: 15,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                    fontFamily: 'Poppins_400Regular',
+                                }}
+                            >
+                                Goal
+                            </Text>
                             <TextInput
-                                style={{ padding: 15, fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, width: "95%" }}
-                                placeholder={"Enter your goal"}
+                                style={{
+                                    padding: 15,
+                                    fontFamily: 'Poppins_400Regular',
+                                    color: colors.goal_primary_font,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    width: '95%',
+                                }}
+                                placeholder={'Enter your goal'}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setGoal}
-                                onChange={() => { setTitleError(false) }}
+                                onChange={() => {
+                                    setTitleError(false);
+                                }}
                                 value={goal}
                                 autoCorrect={true}
                             />
                         </View>
 
                         {/* Description */}
-                        <View style={{ paddingTop: 15, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Details</Text>
+                        <View style={{ paddingTop: 15, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            >
+                                Details
+                            </Text>
                             <TextInput
-                                textAlignVertical='top'
-                                style={{ width: "95%", fontFamily: "Poppins_400Regular", height: 200, borderRadius: 12, backgroundColor: colors.text_input_background, borderColor: colors.text_input_border, borderWidth: 1, color: colors.text, paddingTop: 10, paddingLeft: 10, paddingRight: 10 }}
+                                textAlignVertical="top"
+                                style={{
+                                    width: '95%',
+                                    fontFamily: 'Poppins_400Regular',
+                                    height: 200,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    color: colors.text,
+                                    paddingTop: 10,
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                }}
                                 multiline={true}
-                                placeholder={"What are the details of this goal?"}
+                                placeholder={'What are the details of this goal?'}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setDetails}
-                                onChange={() => { setStoryError(false) }}
+                                onChange={() => {
+                                    setStoryError(false);
+                                }}
                                 value={details}
                                 autoCorrect={true}
                             />
                         </View>
 
-                        <View style={{ paddingTop: 15, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.text, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Pillar</Text>
-                            <EmbtrDropDownSelect items={pillarOptions} onItemSelected={setSelectedPillar} name={"Pillar"} />
+                        <View style={{ paddingTop: 15, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            >
+                                Pillar
+                            </Text>
+                            <EmbtrDropDownSelect items={pillarOptions} onItemSelected={setSelectedPillar} name={'Pillar'} initial={initialGoalItem} />
                         </View>
 
-                        <View style={{ zIndex: -1, paddingTop: 15, alignItems: "center" }}>
-                            <Text onPress={() => { Keyboard.dismiss() }} style={{ color: colors.goal_primary_font, paddingLeft: 5, width: "95%", paddingBottom: 10, fontFamily: "Poppins_400Regular" }}>Deadline</Text>
+                        <View style={{ zIndex: -1, paddingTop: 15, alignItems: 'center' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                            >
+                                Deadline
+                            </Text>
 
-                            <View style={{ height: 50, width: "95%", borderRadius: 12, borderColor: colors.text_input_border, borderWidth: 1, backgroundColor: colors.text_input_background, justifyContent: "center", paddingLeft: 15, flexDirection: "row" }}>
-                                <View style={{ flex: 1, justifyContent: "center" }}>
-                                    <Text onPress={showCalendar} style={{ fontFamily: "Poppins_400Regular", color: colors.goal_primary_font, fontSize: 16 }} >{format(deadline, 'MMMM dd, yyyy')}</Text>
+                            <View
+                                style={{
+                                    height: 50,
+                                    width: '95%',
+                                    borderRadius: 12,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    backgroundColor: colors.text_input_background,
+                                    justifyContent: 'center',
+                                    paddingLeft: 15,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <View style={{ flex: 1, justifyContent: 'center' }}>
+                                    <Text onPress={showCalendar} style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 16 }}>
+                                        {format(deadline, 'MMMM dd, yyyy')}
+                                    </Text>
                                 </View>
 
-                                <View style={{ flex: 1, alignItems: "flex-end", paddingRight: 15, justifyContent: "center" }}>
+                                <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15, justifyContent: 'center' }}>
                                     <Ionicons name="calendar-outline" size={24} color={colors.goal_primary_font} onPress={showCalendar} />
                                 </View>
                             </View>
                         </View>
 
-                        <View style={{ zIndex: -1, flex: 1, alignItems: 'center', justifyContent: 'flex-end', alignSelf: 'stretch', margin: 5, paddingBottom: 15 }}>
-                            <View style={{ width: "95%" }}>
+                        <View
+                            style={{
+                                zIndex: -1,
+                                flex: 1,
+                                alignItems: 'center',
+                                justifyContent: 'flex-end',
+                                alignSelf: 'stretch',
+                                margin: 5,
+                                paddingBottom: 15,
+                            }}
+                        >
+                            <View style={{ width: '95%' }}>
                                 <EmbtrButton buttonText={'Create'} callback={createGoal} />
                             </View>
                         </View>
