@@ -102,7 +102,7 @@ export const ProfileHeader = ({
             <View style={{ alignItems: 'center' }}>
                 <Animated.View style={[animatedHeaderStyle, { alignItems: 'center', justifyContent: 'flex-end', paddingTop: 10 }]}>
                     {/* BANNER */}
-                    <Animated.View style={[animatedBannerStyle, { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }]}>
+                    <Animated.View style={[animatedBannerStyle, { alignItems: 'center', justifyContent: 'center' }]}>
                         {userProfileModel.bannerUrl ? (
                             <CachedImage style={{ width: '100%', height: '100%', borderRadius: 15 }} uri={userProfileModel.bannerUrl} />
                         ) : (
