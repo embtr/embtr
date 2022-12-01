@@ -161,7 +161,7 @@ export const CreateEditHabit = () => {
                 }}
             />
 
-            <Banner name={habit?.id ? 'Edit Habit' : 'Create Habit'} leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={save} />
+            <Banner name={habit?.id ? 'Edit Habit' : 'Create Habit'} leftText={'cancel'} leftRoute="BACK" rightText={'save'} rightOnClick={save} />
             <ScrollView scrollEnabled={true} contentContainerStyle={{ flexGrow: 1 }}>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <View style={{ paddingTop: 5 }}>

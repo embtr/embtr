@@ -141,7 +141,7 @@ export const CreateEditGoal = () => {
 
     return (
         <Screen>
-            <Banner name={goal?.id ? 'Edit Goal' : 'Create Goal'} leftIcon={'arrow-back'} leftRoute={'BACK'} rightText={'Save'} rightOnClick={save} />
+            <Banner name={goal?.id ? 'Edit Goal' : 'Create Goal'} leftText={'cancel'} leftRoute={'BACK'} rightText={'save'} rightOnClick={save} />
 
             <DateTimePickerModal
                 isVisible={calendarVisible}
