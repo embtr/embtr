@@ -147,7 +147,7 @@ export const ProfileHeader = ({
                         <UserProfileProBadge />
                     </View>
 
-                    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                         {shouldDisplayFollowButton && (
                             <TouchableOpacity
                                 onPress={() => {

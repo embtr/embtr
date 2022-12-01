@@ -1,6 +1,6 @@
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import TimelineDao from 'src/firebase/firestore/timeline/TimelineDao';
 
@@ -33,6 +33,18 @@ export interface PaginatedTimelinePosts {
     posts: TimelinePostModel[];
     lastTimelinePost: QueryDocumentSnapshot | undefined | null;
 }
+
+export const getTimelinePostAddedDate = (timelinePost: TimelinePostModel) => {
+    let addedDate = timelinePost.added;
+    if (timelinePost.type === 'DAILY_RESULT') {
+        const timelinePostAsDailyResult: DailyResultModel = timelinePost as DailyResultModel;
+        if (timelinePostAsDailyResult.data.completionDate) {
+            addedDate = timelinePostAsDailyResult.data.completionDate;
+        }
+    }
+
+    return addedDate;
+};
 
 class TimelineController {
     public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined | null, cutoffDate: Date, callback: Function) {

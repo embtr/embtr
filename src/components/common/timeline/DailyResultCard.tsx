@@ -16,6 +16,7 @@ import PlannedDayController, { PlannedDay } from 'src/controller/planning/Planne
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { getTimelinePostAddedDate } from 'src/controller/timeline/TimelineController';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -45,7 +46,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         }
     }, [dailyResult]);
 
-    const time = formatDistance(dailyResult.added.toDate(), new Date(), { addSuffix: true });
+    const time = formatDistance(getTimelinePostAddedDate(dailyResult).toDate(), new Date(), { addSuffix: true });
 
     let plannedTaskViews: JSX.Element[] = [];
 

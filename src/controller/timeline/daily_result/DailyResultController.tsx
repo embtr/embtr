@@ -13,6 +13,7 @@ export interface DailyResultModel extends TimelinePostModel {
         description?: string;
         hasTasks: boolean;
         imageUrls?: string[];
+        completionDate?: Timestamp;
     };
 }
 
@@ -30,6 +31,7 @@ class DailyResultController {
                 status: dailyResult.data.status,
                 hasTasks: dailyResult.data.hasTasks,
                 imageUrls: dailyResult.data.imageUrls,
+                completionDate: dailyResult.data.completionDate,
             },
             added: dailyResult.added,
             modified: dailyResult.modified,
@@ -118,6 +120,13 @@ class DailyResultController {
         if (plannedDay.metadata) {
             dailyResult.data.status = plannedDay.metadata?.status;
         }
+
+        const completionDateIsSet = dailyResult.data.completionDate !== undefined;
+        const shouldSetCompletionDate = !completionDateIsSet && dailyResult.data.status && ['FAILED', 'COMPLETE'].includes(dailyResult.data.status);
+        if (shouldSetCompletionDate) {
+            dailyResult.data.completionDate = Timestamp.now();
+        }
+
         dailyResult.data.hasTasks = plannedDay.plannedTasks.length > 0;
         dailyResult.modified = Timestamp.now();
         dailyResult.active = true;

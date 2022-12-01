@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TimelineController, { PaginatedTimelinePosts, TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import TimelineController, { getTimelinePostAddedDate, PaginatedTimelinePosts, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';
@@ -182,7 +182,8 @@ export const Timeline = () => {
         if (paginatedDailyResults?.results) {
             timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
         }
-        timelinePosts.sort((a, b) => (a.added <= b.added ? 1 : -1));
+
+        timelinePosts.sort((a, b) => getTimelinePostAddedDate(b).toDate().getTime() - getTimelinePostAddedDate(a).toDate().getTime());
 
         let views: JSX.Element[] = [];
         timelinePosts.forEach((timelineEntry) => {
