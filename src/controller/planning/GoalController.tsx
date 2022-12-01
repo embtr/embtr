@@ -59,7 +59,6 @@ class GoalController {
     }
 
     public static createGoal(goal: GoalModel, callback: Function) {
-        console.log(goal);
         const result = GoalDao.createGoal(goal);
         result.then(() => {
             callback();

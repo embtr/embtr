@@ -38,7 +38,6 @@ export const CreateEditGoal = () => {
     const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        console.log(route.params);
         if (route.params.id) {
             GoalController.getGoal(getCurrentUid(), route.params.id, setGoal);
         } else {
