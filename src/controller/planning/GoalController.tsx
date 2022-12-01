@@ -37,7 +37,29 @@ export const getCompletedTasksFromGoal = (goal: GoalModel): PlannedTaskModel[] =
 };
 
 class GoalController {
+    public static clone(goal: GoalModel) {
+        const clone: GoalModel = {
+            added: goal.added,
+            name: goal.name,
+            description: goal.description,
+            deadline: goal.deadline,
+            status: goal.status,
+            tasks: goal.tasks,
+        };
+
+        if (goal.id) {
+            clone.id = goal.id;
+        }
+
+        if (goal.pillarId) {
+            clone.pillarId = goal.pillarId;
+        }
+
+        return clone;
+    }
+
     public static createGoal(goal: GoalModel, callback: Function) {
+        console.log(goal);
         const result = GoalDao.createGoal(goal);
         result.then(() => {
             callback();

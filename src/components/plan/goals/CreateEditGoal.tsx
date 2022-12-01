@@ -3,39 +3,68 @@ import { View, Text, TextInput, Keyboard, ScrollView, KeyboardAvoidingView } fro
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { PlanTabScreens, RootStackParamList } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
-import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
+import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
 import { Timestamp } from 'firebase/firestore';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { format } from 'date-fns';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
-import { getAuth } from 'firebase/auth';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { ItemType } from 'react-native-dropdown-picker';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
 export const CreateEditGoal = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'CreateEditGoal'>>();
 
-    const [goal, setGoal] = React.useState<string>('');
-    const [details, setDetails] = React.useState<string>('');
-    const [titleError, setTitleError] = React.useState(false);
-    const [storyError, setStoryError] = React.useState(false);
+    const [goal, setGoal] = React.useState<GoalModel>();
+    const [name, setName] = React.useState<string>('');
+    const [description, setDescription] = React.useState<string>('');
     const [deadline, setDeadline] = React.useState<Date>(Timestamp.now().toDate());
-    const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
-
     const [pillarId, setPillarId] = React.useState('');
     const [selectedPillar, setSelectedPillar] = React.useState<PillarModel>();
+
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
     const [pillarOptions, setPillarOptions] = React.useState([]);
+
+    const [calendarVisible, setCalendarVisible] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        console.log(route.params);
+        if (route.params.id) {
+            GoalController.getGoal(getCurrentUid(), route.params.id, setGoal);
+        } else {
+            setGoal(FAKE_GOAL);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        if (goal?.name) {
+            setName(goal.name);
+        }
+
+        if (goal?.description) {
+            setDescription(goal.description);
+        }
+
+        if (goal?.deadline) {
+            setDeadline(goal.deadline.toDate());
+        }
+    }, [goal]);
+
+    React.useEffect(() => {
+        if (pillars && goal?.pillarId) {
+            updateSelectedPillarById(goal.pillarId);
+        }
+    }, [pillars, goal]);
 
     React.useEffect(() => {
         PillarController.getPillars(getCurrentUid(), setPillars);
@@ -58,20 +87,24 @@ export const CreateEditGoal = () => {
         setPillarOptions(initialItems);
     }, [pillars]);
 
-    const createGoal = () => {
-        const newGoal: GoalModel = {
-            name: goal,
-            description: details,
-            pillarId: selectedPillar?.id,
-            added: Timestamp.now(),
-            deadline: Timestamp.fromDate(deadline),
-            status: 'ACTIVE',
-            tasks: [],
-        };
+    const save = async () => {
+        if (!goal) {
+            return;
+        }
 
-        GoalController.createGoal(newGoal, () => {
+        const clone = GoalController.clone(goal);
+        clone.name = name;
+        clone.description = description;
+        clone.deadline = Timestamp.fromDate(deadline);
+        clone.pillarId = pillarId;
+        if (clone.id) {
+            await GoalController.update(clone);
             navigation.goBack();
-        });
+        } else {
+            GoalController.createGoal(clone, () => {
+                navigation.goBack();
+            });
+        }
     };
 
     const showCalendar = () => {
@@ -84,14 +117,14 @@ export const CreateEditGoal = () => {
 
     const updateSelectedPillarFromObject = (pillarOption: ItemType<string>) => {
         if (pillarOption.value) {
-            updateSelectedGoalById(pillarOption.value);
+            updateSelectedPillarById(pillarOption.value);
         } else {
             setPillarId('');
             setSelectedPillar(undefined);
         }
     };
 
-    const updateSelectedGoalById = (pillarId: string) => {
+    const updateSelectedPillarById = (pillarId: string) => {
         setPillarId(pillarId);
         pillars.forEach((pillar) => {
             if (pillar.id === pillarId) {
@@ -102,13 +135,13 @@ export const CreateEditGoal = () => {
     };
 
     const initialPillarItem: ItemType<string> = {
-        label: 'Select a Goal',
-        value: '',
+        label: selectedPillar?.name ? selectedPillar.name : 'Select a Goal',
+        value: selectedPillar?.id ? selectedPillar.id : '',
     };
 
     return (
         <Screen>
-            <Banner name={'Create Goal'} leftIcon={'arrow-back'} leftRoute={'BACK'} />
+            <Banner name={goal?.id ? 'Edit Goal' : 'Create Goal'} leftIcon={'arrow-back'} leftRoute={'BACK'} rightText={'Save'} rightOnClick={save} />
 
             <DateTimePickerModal
                 isVisible={calendarVisible}
@@ -127,6 +160,7 @@ export const CreateEditGoal = () => {
                         keyboardVerticalOffset={isIosApp() ? -10 : 111}
                         behavior={isIosApp() ? 'padding' : 'height'}
                     >
+                        {/* TOP DESCRIPTION */}
                         <View style={{ paddingTop: 5 }}>
                             <Text
                                 onPress={() => {
@@ -173,7 +207,7 @@ export const CreateEditGoal = () => {
                             <TextInput
                                 style={{
                                     padding: 15,
-                                    fontFamily: 'Poppins_400Regular',
+                                    fontFamily: POPPINS_REGULAR,
                                     color: colors.goal_primary_font,
                                     borderRadius: 12,
                                     backgroundColor: colors.text_input_background,
@@ -183,11 +217,8 @@ export const CreateEditGoal = () => {
                                 }}
                                 placeholder={'Enter your goal'}
                                 placeholderTextColor={colors.secondary_text}
-                                onChangeText={setGoal}
-                                onChange={() => {
-                                    setTitleError(false);
-                                }}
-                                value={goal}
+                                onChangeText={setName}
+                                value={name}
                                 autoCorrect={true}
                             />
                         </View>
@@ -220,11 +251,8 @@ export const CreateEditGoal = () => {
                                 multiline={true}
                                 placeholder={'What are the details of this goal?'}
                                 placeholderTextColor={colors.secondary_text}
-                                onChangeText={setDetails}
-                                onChange={() => {
-                                    setStoryError(false);
-                                }}
-                                value={details}
+                                onChangeText={setDescription}
+                                value={description}
                                 autoCorrect={true}
                             />
                         </View>
@@ -278,22 +306,6 @@ export const CreateEditGoal = () => {
                                 <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15, justifyContent: 'center' }}>
                                     <Ionicons name="calendar-outline" size={24} color={colors.goal_primary_font} onPress={showCalendar} />
                                 </View>
-                            </View>
-                        </View>
-
-                        <View
-                            style={{
-                                zIndex: -1,
-                                flex: 1,
-                                alignItems: 'center',
-                                justifyContent: 'flex-end',
-                                alignSelf: 'stretch',
-                                margin: 5,
-                                paddingBottom: 15,
-                            }}
-                        >
-                            <View style={{ width: '95%' }}>
-                                <EmbtrButton buttonText={'Create'} callback={createGoal} />
                             </View>
                         </View>
                     </KeyboardAvoidingView>

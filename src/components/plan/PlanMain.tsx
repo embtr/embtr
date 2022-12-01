@@ -76,7 +76,7 @@ export const PlanMain = () => {
     };
 
     const navigateToCreateGoals = () => {
-        navigation.navigate('CreateEditGoal');
+        navigation.navigate('CreateEditGoal', { id: undefined });
     };
 
     return (

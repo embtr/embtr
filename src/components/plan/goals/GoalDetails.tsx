@@ -12,9 +12,9 @@ import GoalController, { FAKE_GOAL, getCompletedTasksFromGoal, GoalModel } from 
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
-import { GoalTask } from 'src/components/plan/goals/GoalTask';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
@@ -30,7 +30,18 @@ export const GoalDetails = () => {
         }, [])
     );
 
+    const closeMenu = useAppSelector(getCloseMenu);
+
     const menuItems: EmbtrMenuOption[] = [
+        {
+            name: 'Edit',
+            onPress: () => {
+                if (goal.id) {
+                    navigation.navigate('CreateEditGoal', { id: goal.id });
+                    closeMenu();
+                }
+            },
+        },
         {
             name: 'Archive',
             onPress: async () => {
@@ -100,14 +111,7 @@ export const GoalDetails = () => {
                             <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} />
                         </View>
 
-                        <View style={{ paddingTop: 20, width: '100%' }}>
-                            <View>
-                                <GoalTask />
-                            </View>
-                            <View style={{ paddingTop: 5 }}>
-                                <GoalTask />
-                            </View>
-                        </View>
+                        <View style={{ paddingTop: 20, width: '100%' }}></View>
                     </View>
                 </View>
             </View>

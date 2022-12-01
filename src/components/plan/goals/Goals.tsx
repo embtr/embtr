@@ -34,31 +34,32 @@ export const Goals = () => {
     );
 
     let goalViews: JSX.Element[] = [];
-    goals.forEach(goal => {
+    goals.forEach((goal) => {
         goalViews.push(
-            <View key={goal.id} style={{ paddingBottom: 7.5, width: "100%", alignItems: "center" }}>
+            <View key={goal.id} style={{ paddingBottom: 7.5, width: '100%', alignItems: 'center' }}>
                 <Goal goal={goal} pillars={pillars} />
             </View>
         );
     });
 
     return (
-        <View style={{ height: "100%", width: "100%" }}>
-
-            {
-                goalViews.length > 0
-                    ?
-                    <ScrollView style={{ paddingTop: 7 }}>
-                        {goalViews}
-                    </ScrollView>
-                    :
-                    <View style={{ height: "97%", alignItems: "center", justifyContent: "center" }}>
-                        <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }} >
-                            You have no goals... Let's change that!
-                        </Text>
-                        <Text onPress={() => { navigation.navigate("CreateGoal") }} style={{ color: colors.tab_selected, fontFamily: "Poppins_400Regular" }} > create a goal</Text>
-                    </View>
-            }
+        <View style={{ height: '100%', width: '100%' }}>
+            {goalViews.length > 0 ? (
+                <ScrollView style={{ paddingTop: 7 }}>{goalViews}</ScrollView>
+            ) : (
+                <View style={{ height: '97%', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ color: colors.secondary_text, paddingLeft: 40, paddingRight: 40 }}>You have no goals... Let's change that!</Text>
+                    <Text
+                        onPress={() => {
+                            navigation.navigate('CreateEditGoal', { id: undefined });
+                        }}
+                        style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
+                    >
+                        {' '}
+                        create a goal
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };

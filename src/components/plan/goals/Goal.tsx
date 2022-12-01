@@ -23,7 +23,9 @@ export const Goal = ({ goal, pillars }: Props) => {
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const navigateToDetails = () => {
-        navigation.navigate('GoalDetails', { id: goal.id! });
+        if (goal.id) {
+            navigation.navigate('GoalDetails', { id: goal.id });
+        }
     };
 
     let [fontsLoaded] = useFonts({

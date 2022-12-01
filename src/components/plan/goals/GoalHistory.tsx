@@ -12,7 +12,7 @@ interface Props {
     history: HabitHistoryElementModel;
 }
 
-export const HabitHistory = ({ history }: Props) => {
+export const GorlHistory = ({ history }: Props) => {
     const { colors } = useTheme();
 
     return (
