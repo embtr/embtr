@@ -1,16 +1,5 @@
 import React from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    Keyboard,
-    KeyboardAvoidingView,
-    Image,
-    ActivityIndicator,
-    StyleSheet,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-} from 'react-native';
+import { View, Text, TextInput, Keyboard, KeyboardAvoidingView, ActivityIndicator, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -101,7 +90,7 @@ export const EditUserProfile = () => {
         setPhotoUrl('');
         const url = await ProfileController.uploadProfilePhoto();
         if (url) {
-                setPhotoUrl(url);
+            setPhotoUrl(url);
         }
         setImageUploading(false);
     };
@@ -111,7 +100,7 @@ export const EditUserProfile = () => {
         const url = await ProfileController.uploadProfileBanner();
         setBannerUrl('');
         if (url) {
-                setBannerUrl(url);
+            setBannerUrl(url);
         }
         setImageUploading(false);
     };
