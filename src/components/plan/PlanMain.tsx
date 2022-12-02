@@ -41,7 +41,7 @@ export const PlanMain = () => {
                     />
                 );
 
-            case 'tasks':
+            case 'habits':
                 return <Tasks />;
 
             case 'goals':
@@ -55,7 +55,7 @@ export const PlanMain = () => {
 
     const [routes] = React.useState([
         { key: 'planning', title: 'Planning' },
-        { key: 'tasks', title: 'Habits' },
+        { key: 'habits', title: 'Habits' },
         { key: 'goals', title: 'Goals' },
     ]);
 

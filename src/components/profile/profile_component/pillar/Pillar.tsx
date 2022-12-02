@@ -2,7 +2,6 @@ import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { format } from 'date-fns';
 
 interface Props {
@@ -13,15 +12,6 @@ interface Props {
 
 export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
     const { colors } = useTheme();
-
-    let [fontsLoaded] = useFonts({
-        Poppins_600SemiBold,
-        Poppins_400Regular,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
-    }
 
     return (
         <View style={[{ flexDirection: 'row' }]}>
