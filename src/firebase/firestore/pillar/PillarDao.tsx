@@ -1,6 +1,7 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, doc, setDoc, deleteDoc, Timestamp, getDocs, collection, getDoc } from 'firebase/firestore';
+import { Firestore, doc, setDoc, deleteDoc, Timestamp, getDocs, collection, getDoc, addDoc } from 'firebase/firestore';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
+import { PillarModel } from 'src/model/PillarModel';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 
 class PillarDao {
@@ -25,6 +26,11 @@ class PillarDao {
                 callback();
             });
         });
+    }
+
+    public static async create(pillar: PillarModel) {
+        const db: Firestore = getFirebaseConnection(this.name, 'create');
+        await addDoc(collection(db, 'pillars'), pillar);
     }
 
     public static async deletePillar(pillar: string, callback: Function) {

@@ -19,6 +19,7 @@ export const CurrentUserProfile = () => {
     const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
+    const [isPillarTab, setIsPillarTab] = React.useState(false);
 
     // used for profile header scroll animation
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
@@ -90,7 +91,13 @@ export const CurrentUserProfile = () => {
 
     return (
         <Screen>
-            <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
+            <Banner
+                name="You"
+                leftIcon={isPillarTab ? 'add' : undefined}
+                leftRoute={isPillarTab ? 'CreateEditPillar' : undefined}
+                rightIcon={'cog-outline'}
+                rightRoute="UserSettings"
+            />
             <EmbtrMenuCustom />
             {userProfileModel && (
                 <ProfileHeader
@@ -104,7 +111,14 @@ export const CurrentUserProfile = () => {
                     isFollowingUser={false}
                 />
             )}
-            {userProfileModel && <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />}
+            {userProfileModel && (
+                <ProfileBody
+                    userProfileModel={userProfileModel}
+                    refreshedTimestamp={refreshedTimestamp}
+                    onShouldExpand={shouldExpand}
+                    isPillarTab={setIsPillarTab}
+                />
+            )}
         </Screen>
     );
 };

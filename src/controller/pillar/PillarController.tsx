@@ -1,5 +1,12 @@
+import { Timestamp } from 'firebase/firestore';
 import PillarDao from 'src/firebase/firestore/pillar/PillarDao';
 import { PillarModel } from 'src/model/PillarModel';
+
+export const EMPTY_PILLAR: PillarModel = {
+    name: '',
+    active: true,
+    added: Timestamp.now(),
+};
 
 class PillarController {
     public static addPillar(pillar: string, callback: Function) {

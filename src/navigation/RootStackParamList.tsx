@@ -42,7 +42,8 @@ export type TimelineTabScreens = {
 export type ProfileTabScreens = {
     Profile: undefined;
     UserSettings: undefined;
-    PillarsConfiguration: undefined;
+    CreateEditPillar: undefined;
+    PillarDetails: { id: string };
     EditUserProfile: undefined;
 };
 

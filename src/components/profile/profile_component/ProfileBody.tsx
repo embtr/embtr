@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, Text, NativeScrollEvent, ScrollView } from 'react-native';
-import { TabView, TabBar, SceneMap, SceneRendererProps } from 'react-native-tab-view';
+import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PillarsTabRoute from 'src/components/profile/profile_component/profile_tabs/PillarsTabRoute';
@@ -22,14 +22,17 @@ interface Props {
     userProfileModel: UserProfileModel;
     refreshedTimestamp: Date;
     onShouldExpand: Function;
+    isPillarTab: Functiom;
 }
 
-export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpand }: Props) => {
+export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpand, isPillarTab }: Props) => {
     const { colors } = useTheme();
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
+
+    const [index, setIndex] = React.useState(0);
 
     const shouldExpand = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): ScrollChangeEvent => {
         if (contentOffset.y < 0) {
@@ -93,6 +96,10 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
         fetch();
     }, [refreshedTimestamp]);
 
+    React.useEffect(() => {
+        fetch();
+    }, [refreshedTimestamp]);
+
     const fetch = async () => {
         const history = await DailyResultController.getDailyResultHistory(userProfileModel.uid!);
         setHistory(history);
@@ -106,7 +113,10 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
         PillarController.getPillars(userProfileModel.uid!, setPillars);
     };
 
-    const [index, setIndex] = React.useState(0);
+    const indexChanged = (index: number) => {
+        setIndex(index);
+        isPillarTab(index === 2);
+    };
 
     const [routes] = React.useState([
         { key: 'profile', title: 'Profile' },
@@ -120,7 +130,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
-                    onIndexChange={setIndex}
+                    onIndexChange={indexChanged}
                     renderTabBar={(props) => (
                         <TabBar
                             {...props}
