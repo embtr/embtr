@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import CurrentUserDao from 'src/firebase/firestore/user/CurrentUserDao';
 import { WIDGETS } from 'src/util/constants';
+import { VERSIONS } from 'src/util/FeatureVersions';
 
 export interface UserModel {
     access_level: string;
@@ -8,6 +9,9 @@ export interface UserModel {
     post_notification_token?: string;
     today_widgets?: string[];
     timestamp: Timestamp;
+    feature_versions: {
+        pillar: number;
+    };
 }
 
 class UserController {
@@ -18,6 +22,9 @@ class UserController {
             post_notification_token: user.post_notification_token,
             today_widgets: user.today_widgets,
             timestamp: user.timestamp,
+            feature_versions: {
+                pillar: user.feature_versions.pillar,
+            },
         };
 
         return clone;
@@ -53,6 +60,21 @@ class UserController {
 
     public static async update(user: UserModel) {
         await CurrentUserDao.update(user);
+    }
+
+    public static async updateFeatureVersion(user: UserModel, feature: string, version: number) {
+        if (!user.feature_versions) {
+            user.feature_versions = {
+                pillar: VERSIONS.PILLAR,
+            };
+        }
+
+        switch (feature) {
+            case 'pillar':
+                user.feature_versions.pillar = version;
+        }
+
+        await this.update(user);
     }
 }
 
