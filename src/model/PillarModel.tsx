@@ -6,4 +6,6 @@ export interface PillarModel {
     name: string;
     active: boolean;
     added: Timestamp;
+    timestamp?: Timestamp; //deprecated
+    deprecatedKey?: string;
 }

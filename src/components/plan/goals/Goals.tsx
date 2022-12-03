@@ -10,6 +10,7 @@ import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { PillarModel } from 'src/model/PillarModel';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const Goals = () => {
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
@@ -26,12 +27,14 @@ export const Goals = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            const uid = getAuth().currentUser?.uid;
-            if (uid) {
-                PillarController.getPillars(uid, setPillars);
-            }
+            fetchPillars();
         }, [])
     );
+
+    const fetchPillars = async () => {
+        const pillars = await PillarController.getPillars(getCurrentUid());
+        setPillars(pillars);
+    };
 
     let goalViews: JSX.Element[] = [];
     goals.forEach((goal) => {

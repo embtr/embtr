@@ -1,7 +1,6 @@
 import { Image, View } from 'react-native';
 import DEFAULT from 'assets/banner.png';
 import { CachedImage } from 'src/components/common/images/CachedImage';
-import Animated, { Easing, SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {

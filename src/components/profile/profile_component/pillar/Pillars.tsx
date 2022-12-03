@@ -20,12 +20,15 @@ export const Pillars = ({ userProfileModel }: Props) => {
     const navigation = useNavigation<StackNavigationProp<ProfileTabScreens>>();
 
     React.useEffect(() => {
-        if (userProfileModel?.uid) {
-            PillarController.getPillars(userProfileModel.uid, (updatedPillars: PillarModel[]) => {
-                setPillars(updatedPillars);
-            });
-        }
+        fetchPillars();
     }, []);
+
+    const fetchPillars = async () => {
+        if (userProfileModel?.uid) {
+            const pillars = await PillarController.getPillars(userProfileModel.uid);
+            setPillars(pillars);
+        }
+    };
 
     let pillarViews: JSX.Element[] = [];
     if (pillars.length) {

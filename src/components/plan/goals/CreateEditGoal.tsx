@@ -66,8 +66,13 @@ export const CreateEditGoal = () => {
     }, [pillars, goal]);
 
     React.useEffect(() => {
-        PillarController.getPillars(getCurrentUid(), setPillars);
+        fetchPillars();
     }, []);
+
+    const fetchPillars = async () => {
+        const pillars = await PillarController.getPillars(getCurrentUid());
+        setPillars(pillars);
+    };
 
     React.useEffect(() => {
         let initialItems: any = [

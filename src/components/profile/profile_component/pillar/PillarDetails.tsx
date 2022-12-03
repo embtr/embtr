@@ -48,16 +48,25 @@ export const PillarDetails = () => {
         },
         {
             name: 'Archive',
-            onPress: () => {
+            onPress: async () => {
                 if (isDesktopBrowser()) {
                     if (confirm("archive task '" + pillar?.name + "'")) {
+                        if (pillar) {
+                            await PillarController.archive(pillar);
+                        }
+                        navigation.goBack();
                     }
                 } else {
                     Alert.alert('Archive Task?', "Archive task '" + route.name + "'?", [
                         { text: 'Cancel', onPress: () => {}, style: 'cancel' },
                         {
                             text: 'Archive',
-                            onPress: () => {},
+                            onPress: async () => {
+                                if (pillar) {
+                                    await PillarController.archive(pillar);
+                                }
+                                navigation.goBack();
+                            },
                         },
                     ]);
                 }
@@ -66,10 +75,14 @@ export const PillarDetails = () => {
     ];
 
     if (!pillar) {
-        return <View />;
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
     }
 
-    const daysOld = pillar?.added ? formatDistance(pillar.added.toDate(), new Date()) : "0";
+    const daysOld = pillar?.added ? formatDistance(pillar.added.toDate(), new Date()) : '0';
 
     return (
         <Screen>

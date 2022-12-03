@@ -110,7 +110,14 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
         });
 
         PlannedDayController.get(userProfileModel.uid!, getTodayKey(), setPlannedDay);
-        PillarController.getPillars(userProfileModel.uid!, setPillars);
+        fetchPillars();
+    };
+
+    const fetchPillars = async () => {
+        if (userProfileModel.uid) {
+            const pillars = await PillarController.getPillars(userProfileModel.uid);
+            setPillars(pillars);
+        }
     };
 
     const indexChanged = (index: number) => {

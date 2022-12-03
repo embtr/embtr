@@ -13,6 +13,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import MigrationController from './controller/audit_log/MigrationController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -91,14 +92,25 @@ const linking: LinkingOptions<RootStackParamList> = {
 export const Main = () => {
     const accessLevel = useAppSelector(getAccessLevel);
     const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | null>(null);
+    const [loaded, setLoaded] = React.useState<boolean>(false);
 
     LogBox.ignoreAllLogs();
 
-    //TODO - only do this on very first login
     React.useEffect(() => {
-        ProfileController.registerInitialProfileUpdateListener();
-        PushNotificationController.registerUpdatePostNotificationTokenListener();
-    }, []);
+        const blockingLoad = async () => {
+            ProfileController.registerInitialProfileUpdateListener();
+            PushNotificationController.registerUpdatePostNotificationTokenListener();
+
+            //TODO - only migrate if we haven't yet
+            // https://trello.com/c/yngKDRv3
+            await MigrationController.handleMigrations();
+            setLoaded(true);
+        };
+
+        if (userIsLoggedIn) {
+            blockingLoad();
+        }
+    }, [userIsLoggedIn]);
 
     React.useEffect(() => {
         getCurrentUserUid((user: string) => {
@@ -129,7 +141,7 @@ export const Main = () => {
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
-                    {isSuccessfullyLoggedIn() ? <SecureMainStack /> : <InsecureMainStack />}
+                    {isSuccessfullyLoggedIn() ? loaded ? <SecureMainStack /> : <LoadingPage /> : <InsecureMainStack />}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

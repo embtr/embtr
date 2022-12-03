@@ -10,6 +10,7 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/Task';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const Tasks = () => {
     const { colors } = useTheme();
@@ -26,9 +27,14 @@ export const Tasks = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            PillarController.getPillars(getAuth().currentUser!.uid, setPillars);
+            fetchPillars();
         }, [])
     );
+
+    const fetchPillars = async () => {
+        const pillars = await PillarController.getPillars(getCurrentUid());
+        setPillars(pillars);
+    };
 
     let taskViews: JSX.Element[] = [];
     habits.forEach((habit) => {

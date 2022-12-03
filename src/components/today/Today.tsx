@@ -142,7 +142,8 @@ export const Today = () => {
     };
 
     const fetchPillars = async () => {
-        PillarController.getPillars(getCurrentUid(), setPillars);
+        const pillars = await PillarController.getPillars(getCurrentUid());
+        setPillars(pillars);
     };
 
     const addSpacerToWidgets = (widgets: string[]) => {

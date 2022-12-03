@@ -12,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { getPlannedTaskGoalId } from 'src/controller/planning/PlannedTaskController';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -30,10 +31,23 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
 
     useFocusEffect(
         React.useCallback(() => {
-            GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
-            PillarController.getPillars(getAuth().currentUser!.uid, setPillars);
+            fetch();
         }, [])
     );
+
+    const fetch = () => {
+        fetchGoals();
+        fetchPillars();
+    };
+
+    const fetchGoals = () => {
+        GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
+    };
+    
+    const fetchPillars = async () => {
+        const pillars = await PillarController.getPillars(getCurrentUid());
+        setPillars(pillars);
+    };
 
     /*
      * This section builds the Views for both
