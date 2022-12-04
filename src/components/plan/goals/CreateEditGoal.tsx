@@ -18,6 +18,7 @@ import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDow
 import { ItemType } from 'react-native-dropdown-picker';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { POPPINS_REGULAR } from 'src/util/constants';
+import UserController from 'src/controller/user/UserController';
 
 export const CreateEditGoal = () => {
     const { colors } = useTheme();
@@ -70,7 +71,8 @@ export const CreateEditGoal = () => {
     }, []);
 
     const fetchPillars = async () => {
-        const pillars = await PillarController.getPillars(getCurrentUid());
+        const user = await UserController.getCurrentUser();
+        const pillars = await PillarController.getPillars(user);
         setPillars(pillars);
     };
 

@@ -15,7 +15,7 @@ import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu } from 'src/redux/user/GlobalState';
+import { getCloseMenu, getCurrentUser } from 'src/redux/user/GlobalState';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import {
     DAILY_HISTORY_WIDGET,
@@ -97,6 +97,8 @@ export const Today = () => {
         }, [])
     );
 
+    const currentUser = useAppSelector(getCurrentUser);
+
     // may want to just directly call both to guarentee
     // upon refresh that we have all new data
     const onRefresh = React.useCallback(() => {
@@ -142,7 +144,7 @@ export const Today = () => {
     };
 
     const fetchPillars = async () => {
-        const pillars = await PillarController.getPillars(getCurrentUid());
+        const pillars = await PillarController.getPillars(currentUser);
         setPillars(pillars);
     };
 

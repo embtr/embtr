@@ -12,7 +12,6 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { getAuth } from 'firebase/auth';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
-import { ScrollView } from 'react-native-gesture-handler';
 import { wait } from 'src/util/GeneralUtility';
 import { ProfileBody } from './profile_component/ProfileBody';
 import { ScrollChangeEvent } from 'src/util/constants';
@@ -20,8 +19,6 @@ import { useSharedValue } from 'react-native-reanimated';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
-
-    const [animatedValue] = React.useState<Animated.Value>(new Animated.Value(0));
 
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [refreshing, setRefreshing] = React.useState(false);
@@ -34,6 +31,7 @@ export const UserProfile = () => {
 
     // used for profile header scroll animation
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
+    const [isPillarTab, setIsPillarTab] = React.useState(false);
 
     React.useEffect(() => {
         fetch();
@@ -133,7 +131,12 @@ export const UserProfile = () => {
                         />
                     )}
                     {userProfileModel && (
-                        <ProfileBody userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />
+                        <ProfileBody
+                            userProfileModel={userProfileModel}
+                            refreshedTimestamp={refreshedTimestamp}
+                            onShouldExpand={shouldExpand}
+                            isPillarTab={setIsPillarTab}
+                        />
                     )}
                 </View>
             </View>

@@ -13,7 +13,7 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu } from 'src/redux/user/GlobalState';
+import { getCloseMenu, getCurrentUser } from 'src/redux/user/GlobalState';
 import { format, formatDistance } from 'date-fns';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
@@ -25,8 +25,8 @@ export const TaskDetails = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-
     const route = useRoute<RouteProp<PlanTabScreens, 'TaskDetails'>>();
+
     const [task, setTask] = React.useState<TaskModel>();
     const [goal, setGoal] = React.useState<GoalModel>();
     const [pillar, setPillar] = React.useState<PillarModel>();
@@ -52,7 +52,8 @@ export const TaskDetails = () => {
             return;
         }
 
-        const pillar = await PillarController.get(getCurrentUid(), goal.pillarId);
+        const currentUser = useAppSelector(getCurrentUser);
+        const pillar = await PillarController.get(currentUser, goal.pillarId);
         setPillar(pillar);
     };
 

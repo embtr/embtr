@@ -22,7 +22,7 @@ export const UpcomingGoalsWidget = ({ goals }: Props) => {
                 continue;
             }
             goalViews.push(
-                <View style={{ paddingTop: i > 0 ? 5 : 0 }}>
+                <View key={goal.id + goal.name} style={{ paddingTop: i > 0 ? 5 : 0 }}>
                     <UpcomingGoalWidgetElement goal={goal} />
                 </View>
             );

@@ -64,14 +64,10 @@ class PillarDao {
     }
 
     public static async getDeprecatedPillars(uid: string) {
-        if (uid) {
-            const db: Firestore = getFirebaseConnection(this.name, 'getPillars');
-            const result = await getDocs(collection(db, 'pillars/' + uid + '/active'));
+        const db: Firestore = getFirebaseConnection(this.name, 'getPillars');
+        const result = await getDocs(collection(db, 'pillars/' + uid + '/active'));
 
-            return result;
-        }
-
-        return undefined;
+        return result;
     }
 }
 

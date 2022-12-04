@@ -17,7 +17,7 @@ export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
         <View style={[{ flexDirection: 'row' }]}>
             <View style={{ flex: 1 }}>
                 <View style={{ paddingLeft: 10 }}>
-                    <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 13, color: colors.profile_pillar_title }}>{pillarModel.name}</Text>
+                    <Text style={{ fontFamily: 'Poppins_600SemiBold', fontSize: 13.5, color: colors.profile_pillar_title }}>{pillarModel.name}</Text>
                 </View>
 
                 <View style={{ flexDirection: 'row', width: '100%', paddingTop: 2 }}>

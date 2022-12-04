@@ -1,16 +1,19 @@
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { VERSIONS } from 'src/util/FeatureVersions';
 import PillarController from '../pillar/PillarController';
-import UserController from '../user/UserController';
+import UserController, { UserModel } from '../user/UserController';
 
 class MigrationController {
-    public static async handleMigrations() {
-        await this.handlePillarMigration();
+    public static async handleMigrations(user: UserModel) {
+        await this.handlePillarMigration(user);
     }
 
-    private static async handlePillarMigration() {
+    public static requiresMigration(user: UserModel) {
+        return user.feature_versions?.pillar !== VERSIONS.PILLAR;
+    }
+
+    private static async handlePillarMigration(user: UserModel) {
         await PillarController.migrateDeprecatedPillars(getCurrentUid());
-        const user = await UserController.getCurrentUser();
         await UserController.updateFeatureVersion(user, 'pillar', VERSIONS.PILLAR);
     }
 }

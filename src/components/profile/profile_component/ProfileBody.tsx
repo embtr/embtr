@@ -13,6 +13,7 @@ import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { Screen } from 'src/components/common/Screen';
 import { ScrollChangeEvent } from 'src/util/constants';
+import UserController from 'src/controller/user/UserController';
 
 /*
  * Avoid rerenders
@@ -22,7 +23,7 @@ interface Props {
     userProfileModel: UserProfileModel;
     refreshedTimestamp: Date;
     onShouldExpand: Function;
-    isPillarTab: Functiom;
+    isPillarTab: Function;
 }
 
 export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpand, isPillarTab }: Props) => {
@@ -115,7 +116,8 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
 
     const fetchPillars = async () => {
         if (userProfileModel.uid) {
-            const pillars = await PillarController.getPillars(userProfileModel.uid);
+            const user = await UserController.get(userProfileModel.uid);
+            const pillars = await PillarController.getPillars(user);
             setPillars(pillars);
         }
     };

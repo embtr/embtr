@@ -12,11 +12,11 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu } from 'src/redux/user/GlobalState';
+import { getCloseMenu, getCurrentUser } from 'src/redux/user/GlobalState';
 import { format, formatDistance } from 'date-fns';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
+import UserController from 'src/controller/user/UserController';
 
 export const PillarDetails = () => {
     const { colors } = useTheme();
@@ -31,7 +31,8 @@ export const PillarDetails = () => {
     }, []);
 
     const fetch = async () => {
-        const pillar = await PillarController.get(getCurrentUid(), route.params.id);
+        const user = await UserController.get(route.params.uid);
+        const pillar = await PillarController.get(user, route.params.id);
         setPillar(pillar);
     };
 

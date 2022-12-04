@@ -163,7 +163,7 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                     <Button
                                         title="Confirm"
                                         onPress={() => {
-                                            const startTime = hour * 60 + minute;
+                                            const startTime = hour * 60 + minute + (amPm === 'am' ? 0 : 12 * 60);
                                             const duration = durationHours * 60 + durationMinutes;
                                             confirm(startTime, duration);
                                         }}

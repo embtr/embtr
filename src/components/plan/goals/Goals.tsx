@@ -8,6 +8,7 @@ import { Goal } from 'src/components/plan/goals/Goal';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
+import UserController from 'src/controller/user/UserController';
 import { PillarModel } from 'src/model/PillarModel';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
@@ -32,7 +33,8 @@ export const Goals = () => {
     );
 
     const fetchPillars = async () => {
-        const pillars = await PillarController.getPillars(getCurrentUid());
+        const user = await UserController.getCurrentUser();
+        const pillars = await PillarController.getPillars(user);
         setPillars(pillars);
     };
 

@@ -1,10 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
+import { FAKE, UserModel } from 'src/controller/user/UserController';
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: 'invalid',
     userProfileUrl: '',
+    currentUser: FAKE,
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
     openMenu: () => {},
     closeMenu: () => {},
@@ -14,6 +16,7 @@ const INITIAL_STATE: GlobalState = {
 export interface GlobalState {
     accessLevel: string;
     userProfileUrl: string;
+    currentUser: UserModel;
     menuOptions: EmbtrMenuOptions;
     openMenu: Function;
     closeMenu: Function;
@@ -31,6 +34,9 @@ export const GlobalState = createSlice({
         },
         setUserProfileUrl(state, action) {
             state.userProfileUrl = action.payload;
+        },
+        setCurrentUser(state, action) {
+            state.currentUser = action.payload;
         },
         setMenuOptions(state, action) {
             state.menuOptions = action.payload;
@@ -61,6 +67,14 @@ export const getUserProfileUrl = (state: RootState): string => {
     }
 
     return state.globalState.userProfileUrl;
+};
+
+export const getCurrentUser = (state: RootState): UserModel => {
+    if (!state?.globalState?.currentUser) {
+        return INITIAL_STATE.currentUser;
+    }
+
+    return state.globalState.currentUser;
 };
 
 export const getMenuOptions = (state: RootState): EmbtrMenuOptions => {
@@ -95,5 +109,5 @@ export const getSelectedDayKey = (state: RootState): string => {
     return state.globalState.selectedDayKey;
 };
 
-export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey } = GlobalState.actions;
+export const { setAccessLevel, setUserProfileUrl, setCurrentUser, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey } = GlobalState.actions;
 export default GlobalState.reducer;

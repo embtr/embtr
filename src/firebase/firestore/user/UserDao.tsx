@@ -2,8 +2,9 @@ import { getAuth } from 'firebase/auth';
 import { Firestore, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
 import { UserModel } from 'src/controller/user/UserController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
-class CurrentUserDao {
+class UserDao {
     public static async getBetaRequestStatus(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getBetaRequestStatus');
         const result = await getDoc(doc(db, 'users/', uid));
@@ -28,8 +29,12 @@ class CurrentUserDao {
     }
 
     public static async getCurrentUser() {
-        const db: Firestore = getFirebaseConnection(this.name, 'getCurrentUser');
-        const result = await getDoc(doc(db, 'users/', getAuth().currentUser?.uid!));
+        return this.get(getCurrentUid());
+    }
+
+    public static async get(uid: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'get');
+        const result = await getDoc(doc(db, 'users/', uid));
 
         return result;
     }
@@ -50,14 +55,9 @@ class CurrentUserDao {
     public static async update(user: UserModel) {
         const db: Firestore = getFirebaseConnection(this.name, 'update');
 
-        const uid = getAuth().currentUser?.uid;
-        if (!uid) {
-            return;
-        }
-
-        const result = await setDoc(doc(db, 'users/', uid), user, { merge: true });
+        const result = await setDoc(doc(db, 'users/', user.uid), user, { merge: true });
         return result;
     }
 }
 
-export default CurrentUserDao;
+export default UserDao;

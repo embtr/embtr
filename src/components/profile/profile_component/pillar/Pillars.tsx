@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import PillarController from 'src/controller/pillar/PillarController';
+import UserController from 'src/controller/user/UserController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { PillarModel } from 'src/model/PillarModel';
 import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
@@ -25,7 +26,8 @@ export const Pillars = ({ userProfileModel }: Props) => {
 
     const fetchPillars = async () => {
         if (userProfileModel?.uid) {
-            const pillars = await PillarController.getPillars(userProfileModel.uid);
+            const user = await UserController.get(userProfileModel.uid);
+            const pillars = await PillarController.getPillars(user);
             setPillars(pillars);
         }
     };
@@ -40,7 +42,7 @@ export const Pillars = ({ userProfileModel }: Props) => {
                         <TouchableOpacity
                             onPress={() => {
                                 if (pillarModel.id) {
-                                    navigation.navigate('PillarDetails', { id: pillarModel.id });
+                                    navigation.navigate('PillarDetails', { uid: pillarModel.uid, id: pillarModel.id });
                                 }
                             }}
                         >

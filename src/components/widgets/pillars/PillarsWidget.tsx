@@ -17,12 +17,7 @@ export const PillarsWidget = ({ pillars }: Props) => {
     for (let i = 0; i < pillars.length; i++) {
         const pillar = pillars[i];
         views.push(
-            <View style={{ paddingTop: i > 0 ? 5 : 0 }}>
-                {i > 0 && (
-                    <View style={{ paddingTop: 5, paddingBottom: 5 }}>
-                        <HorizontalLine />
-                    </View>
-                )}
+            <View key={pillar.id + pillar.name} style={{ paddingTop: i > 0 ? 10 : 0 }}>
                 <Pillar pillarModel={pillar} />
             </View>
         );

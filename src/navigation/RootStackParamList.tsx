@@ -37,13 +37,14 @@ export type TimelineTabScreens = {
     DailyResultDetails: { id: string };
     UserProfile: { id: string };
     Notifications: undefined;
+    PillarDetails: { uid: string; id: string };
 };
 
 export type ProfileTabScreens = {
     Profile: undefined;
     UserSettings: undefined;
     CreateEditPillar: undefined;
-    PillarDetails: { id: string };
+    PillarDetails: { uid: string; id: string };
     EditUserProfile: undefined;
 };
 

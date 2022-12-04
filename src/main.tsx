@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
-import { getAccessLevel } from 'src/redux/user/GlobalState';
+import { getAccessLevel, getCurrentUser, setCurrentUser } from 'src/redux/user/GlobalState';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
@@ -8,12 +8,13 @@ import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { Screen } from 'src/components/common/Screen';
-import { useAppSelector } from 'src/redux/Hooks';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import MigrationController from './controller/audit_log/MigrationController';
+import UserController from './controller/user/UserController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -94,21 +95,30 @@ export const Main = () => {
     const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | null>(null);
     const [loaded, setLoaded] = React.useState<boolean>(false);
 
+    const dispatch = useAppDispatch();
+
     LogBox.ignoreAllLogs();
 
     React.useEffect(() => {
         const blockingLoad = async () => {
+            let currentUser = await UserController.getCurrentUser();
+
             ProfileController.registerInitialProfileUpdateListener();
             PushNotificationController.registerUpdatePostNotificationTokenListener();
 
-            //TODO - only migrate if we haven't yet
-            // https://trello.com/c/yngKDRv3
-            await MigrationController.handleMigrations();
+            if (MigrationController.requiresMigration(currentUser)) {
+                await MigrationController.handleMigrations(currentUser);
+            }
+
+            currentUser = await UserController.getCurrentUser();
+            dispatch(setCurrentUser(currentUser));
+
             setLoaded(true);
         };
-
         if (userIsLoggedIn) {
             blockingLoad();
+        } else {
+            dispatch(setCurrentUser(undefined));
         }
     }, [userIsLoggedIn]);
 

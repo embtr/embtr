@@ -1,6 +1,8 @@
 import { Timestamp } from 'firebase/firestore';
 import PillarDao from 'src/firebase/firestore/pillar/PillarDao';
 import { PillarModel } from 'src/model/PillarModel';
+import { VERSIONS } from 'src/util/FeatureVersions';
+import { UserModel } from '../user/UserController';
 
 class PillarController {
     public static async create(pillar: PillarModel) {
@@ -10,7 +12,11 @@ class PillarController {
         return pillar;
     }
 
-    public static async get(uid: string, id: string) {
+    public static async get(user: UserModel, id: string) {
+        if (user.feature_versions?.pillar !== VERSIONS.PILLAR) {
+            return this.getDeprecated(user.uid, id);
+        }
+
         // 1 - if pillar was already migrated - get it by id
         let pillar = await this.getById(id);
         if (pillar) {
@@ -18,18 +24,18 @@ class PillarController {
         }
 
         // 2 - if pillar was migrated but we still look at its old key
-        pillar = await this.getByDeprecatedKey(uid, id);
+        pillar = await this.getByDeprecatedKey(user.uid, id);
         return pillar;
     }
 
-    public static async getPillars(uid: string) {
+    public static async getPillars(user: UserModel) {
         let pillars: PillarModel[] = [];
-        const results = await PillarDao.getPillars(uid);
-        results.docs.forEach((doc) => {
-            const pillar: PillarModel = doc.data() as PillarModel;
-            pillar.id = doc.id;
-            pillars.push(pillar);
-        });
+
+        if (user.feature_versions?.pillar !== VERSIONS.PILLAR) {
+            pillars = await this.getPillarObjectsDeprecated(user);
+        } else {
+            pillars = await this.getPillarObjects(user);
+        }
 
         return pillars;
     }
@@ -54,6 +60,36 @@ class PillarController {
         await this.update(pillar);
     }
 
+    private static async getPillarObjects(user: UserModel) {
+        const pillars: PillarModel[] = [];
+        const results = await PillarDao.getPillars(user.uid);
+        results.docs.forEach((doc) => {
+            const pillar: PillarModel = doc.data() as PillarModel;
+            pillar.id = doc.id;
+            pillars.push(pillar);
+        });
+
+        return pillars;
+    }
+
+    private static async getPillarObjectsDeprecated(user: UserModel) {
+        const pillars: PillarModel[] = [];
+        const results = await PillarDao.getDeprecatedPillars(user.uid);
+        results.docs.forEach((doc) => {
+            const pillar: PillarModel = {
+                uid: user.uid,
+                active: true,
+                id: doc.id,
+                name: doc.id,
+                added: doc.data()['timestamp'],
+            };
+
+            pillars.push(pillar);
+        });
+
+        return pillars;
+    }
+
     private static async getById(id: string) {
         const result = await PillarDao.get(id);
 
@@ -69,7 +105,13 @@ class PillarController {
 
     private static async getDeprecated(uid: string, id: string) {
         const result = await PillarDao.getDeprecated(uid, id);
-        const pillar = result.data() as PillarModel;
+        const pillar: PillarModel = {
+            uid: uid,
+            active: true,
+            id: result.id,
+            name: result.id,
+            added: result.data()!['timestamp'],
+        };
         pillar.id = result.id;
 
         return pillar;

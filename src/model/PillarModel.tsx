@@ -9,3 +9,10 @@ export interface PillarModel {
     timestamp?: Timestamp; //deprecated
     deprecatedKey?: string;
 }
+
+export const FAKE_PILLAR: PillarModel = {
+    uid: '',
+    name: '',
+    active: true,
+    added: Timestamp.now(),
+};

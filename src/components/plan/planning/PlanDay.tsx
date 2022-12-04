@@ -12,7 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { getPlannedTaskGoalId } from 'src/controller/planning/PlannedTaskController';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import UserController from 'src/controller/user/UserController';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -43,9 +43,10 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
     const fetchGoals = () => {
         GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
     };
-    
+
     const fetchPillars = async () => {
-        const pillars = await PillarController.getPillars(getCurrentUid());
+        const user = await UserController.getCurrentUser();
+        const pillars = await PillarController.getPillars(user);
         setPillars(pillars);
     };
 

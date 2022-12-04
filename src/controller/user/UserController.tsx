@@ -1,9 +1,11 @@
 import { Timestamp } from 'firebase/firestore';
-import CurrentUserDao from 'src/firebase/firestore/user/CurrentUserDao';
+import UserDao from 'src/firebase/firestore/user/UserDao';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
 import { VERSIONS } from 'src/util/FeatureVersions';
 
 export interface UserModel {
+    uid: string;
     access_level: string;
     email: string;
     post_notification_token?: string;
@@ -14,9 +16,21 @@ export interface UserModel {
     };
 }
 
+export const FAKE: UserModel = {
+    uid: '',
+    access_level: '',
+    email: '',
+    post_notification_token: '',
+    timestamp: Timestamp.now(),
+    feature_versions: {
+        pillar: 0,
+    },
+};
+
 class UserController {
     public static clone(user: UserModel) {
         const clone: UserModel = {
+            uid: user.uid,
             access_level: user.access_level,
             email: user.email,
             post_notification_token: user.post_notification_token,
@@ -30,23 +44,14 @@ class UserController {
         return clone;
     }
 
-    public static getAccessLevel(uid: string, email: string, callback: Function) {
-        const result = CurrentUserDao.getBetaRequestStatus(uid);
-        result.then((document) => {
-            if (document.exists() && document.data() && document.data()['access_level']) {
-                callback(document.data()['access_level']);
-            } else {
-                const betaCreateResult = CurrentUserDao.requestBetaAccess(uid, email);
-                betaCreateResult.then(() => {
-                    callback('initial_beta_pending');
-                });
-            }
-        });
+    public static async update(user: UserModel) {
+        await UserDao.update(user);
     }
 
-    public static async getCurrentUser() {
-        const userData = await CurrentUserDao.getCurrentUser();
+    public static async get(uid: string) {
+        const userData = await UserDao.get(uid);
         let currentUser: UserModel = userData.data() as UserModel;
+        currentUser.uid = userData.id;
         if (!currentUser.today_widgets) {
             currentUser.today_widgets = WIDGETS;
         }
@@ -54,12 +59,26 @@ class UserController {
         return currentUser;
     }
 
-    public static async updatePostNotificationToken(token: string | null) {
-        await CurrentUserDao.updateField('post_notification_token', token);
+    public static async getCurrentUser() {
+        return await this.get(getCurrentUid());
     }
 
-    public static async update(user: UserModel) {
-        await CurrentUserDao.update(user);
+    public static getAccessLevel(uid: string, email: string, callback: Function) {
+        const result = UserDao.getBetaRequestStatus(uid);
+        result.then((document) => {
+            if (document.exists() && document.data() && document.data()['access_level']) {
+                callback(document.data()['access_level']);
+            } else {
+                const betaCreateResult = UserDao.requestBetaAccess(uid, email);
+                betaCreateResult.then(() => {
+                    callback('initial_beta_pending');
+                });
+            }
+        });
+    }
+
+    public static async updatePostNotificationToken(token: string | null) {
+        await UserDao.updateField('post_notification_token', token);
     }
 
     public static async updateFeatureVersion(user: UserModel, feature: string, version: number) {

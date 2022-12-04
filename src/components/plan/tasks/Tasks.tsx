@@ -11,6 +11,7 @@ import { Task } from 'src/components/plan/Task';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import UserController from 'src/controller/user/UserController';
 
 export const Tasks = () => {
     const { colors } = useTheme();
@@ -32,7 +33,8 @@ export const Tasks = () => {
     );
 
     const fetchPillars = async () => {
-        const pillars = await PillarController.getPillars(getCurrentUid());
+        const user = await UserController.getCurrentUser();
+        const pillars = await PillarController.getPillars(user);
         setPillars(pillars);
     };
 
