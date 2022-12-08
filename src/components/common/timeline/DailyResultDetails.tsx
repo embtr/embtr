@@ -11,6 +11,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
+import UserController from 'src/controller/user/UserController';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
@@ -21,9 +22,15 @@ export const DailyResultDetails = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
+                const user = await UserController.get(dailyResult.uid);
+                const plannedDay = await PlannedDayController.get(user, dailyResult.data.plannedDayId);
+                setPlannedDay(plannedDay);
+            };
+
             DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
                 setDailyResult(dailyResult);
-                PlannedDayController.get(dailyResult.uid, dailyResult.data.plannedDayId, setPlannedDay);
+                fetchPlannedDay(dailyResult);
             });
         }, [])
     );
@@ -46,7 +53,11 @@ export const DailyResultDetails = () => {
     };
 
     if (dailyResult === undefined || plannedDay === undefined) {
-        return <Screen><View></View></Screen>;
+        return (
+            <Screen>
+                <View></View>
+            </Screen>
+        );
     }
 
     const onEdit = () => {

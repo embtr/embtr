@@ -18,9 +18,12 @@ import React from 'react';
 import { RandomPlaceHolderTextInput } from 'src/components/common/textbox/RandomPlaceholderTextInput';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { format } from 'date-fns';
-import PlannedTaskController, { clonePlannedTaskModel, createPlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import PlannedTaskController, { createPlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { current } from '@reduxjs/toolkit';
 
 export const CreateEditOneTimeTask = () => {
     const { colors } = useTheme();
@@ -46,6 +49,8 @@ export const CreateEditOneTimeTask = () => {
 
     const placeholderOptions = ['Face Care Routine', 'Go For a Run', 'Meditate', 'Read a Book', 'Go For a Walk'];
 
+    const currentUser = useAppSelector(getCurrentUser);
+
     React.useEffect(() => {
         GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
     }, []);
@@ -57,13 +62,23 @@ export const CreateEditOneTimeTask = () => {
     }, [goals, plannedTask]);
 
     React.useEffect(() => {
-        PlannedDayController.getOrCreate(route.params.dayKey, setPlannedDay);
+        const fetch = async () => {
+            const plannedDay = await PlannedDayController.getOrCreate(currentUser, route.params.dayKey);
+            setPlannedDay(plannedDay);
+        };
+
+        fetch();
     }, []);
 
     React.useEffect(() => {
-        if (route.params.id && plannedDay?.id) {
-            PlannedTaskController.get(getCurrentUid(), plannedDay?.id, route.params.id, setPlannedTask);
-        }
+        const fetch = async () => {
+            if (route.params.id && plannedDay?.id) {
+                const plannedTask = await PlannedTaskController.get(currentUser, plannedDay?.id, route.params.id);
+                setPlannedTask(plannedTask);
+            }
+        };
+
+        fetch();
     }, [plannedDay]);
 
     React.useEffect(() => {

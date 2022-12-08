@@ -17,6 +17,7 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
 import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
+import UserController from 'src/controller/user/UserController';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -37,6 +38,12 @@ export const EditDailyResultDetails = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
+                const user = await UserController.get(dailyResult.uid);
+                const plannedDay = await PlannedDayController.get(user, dailyResult.data.plannedDayId);
+                setPlannedDay(plannedDay);
+            };
+
             DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
                 if (dailyResult.data.description) {
                     setUpdatedDescription(dailyResult.data.description);
@@ -46,7 +53,7 @@ export const EditDailyResultDetails = () => {
                     setUpdatedImageUrls(dailyResult.data.imageUrls);
                 }
 
-                PlannedDayController.get(dailyResult.uid, dailyResult.data.plannedDayId, setPlannedDay);
+                fetchPlannedDay(dailyResult);
                 setDailyResult(dailyResult);
             });
         }, [])

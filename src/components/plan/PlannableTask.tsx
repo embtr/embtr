@@ -36,11 +36,6 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
 
     const { colors } = useTheme();
 
-    const toggleCompletion = () => {
-        toggleComplete();
-        closeMenu();
-    };
-
     const toggleFailure = () => {
         toggleFailed();
         closeMenu();

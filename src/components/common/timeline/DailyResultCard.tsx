@@ -17,6 +17,7 @@ import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { getTimelinePostAddedDate } from 'src/controller/timeline/TimelineController';
+import UserController from 'src/controller/user/UserController';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -41,8 +42,14 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     };
 
     React.useEffect(() => {
+        const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
+            const user = await UserController.get(dailyResult.uid);
+            const plannedDay = await PlannedDayController.get(user, dailyResult.data.plannedDayId);
+            setPlannedDay(plannedDay);
+        };
+
         if (dailyResult.data.plannedDayId) {
-            PlannedDayController.get(dailyResult.uid, dailyResult.data.plannedDayId, setPlannedDay);
+            fetchPlannedDay(dailyResult);
         }
     }, [dailyResult]);
 

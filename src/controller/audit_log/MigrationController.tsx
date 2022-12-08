@@ -9,7 +9,15 @@ class MigrationController {
     }
 
     public static requiresMigration(user: UserModel) {
+        return this.requiresPillarMigration(user) || this.requiresPlannedTaskMigration(user);
+    }
+
+    public static requiresPillarMigration(user: UserModel) {
         return user.feature_versions?.pillar !== VERSIONS.PILLAR;
+    }
+
+    public static requiresPlannedTaskMigration(user: UserModel) {
+        return user.feature_versions?.planned_task !== VERSIONS.PLANNED_TASK;
     }
 
     private static async handlePillarMigration(user: UserModel) {

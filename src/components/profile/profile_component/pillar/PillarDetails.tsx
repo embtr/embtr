@@ -12,7 +12,7 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, getCurrentUser } from 'src/redux/user/GlobalState';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { format, formatDistance } from 'date-fns';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
@@ -99,7 +99,7 @@ export const PillarDetails = () => {
             <View style={{ flex: 1 }}>
                 <View style={{ paddingLeft: 10 }}>
                     <View style={{ paddingLeft: 10, paddingTop: 10 }}>
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{pillar?.name}</Text>
+                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{pillar.name}</Text>
                         <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}></Text>
                     </View>
 

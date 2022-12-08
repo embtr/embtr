@@ -1,5 +1,4 @@
 import { View, Text } from 'react-native';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { Pillar } from 'src/components/profile/profile_component/pillar/Pillar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PillarModel } from 'src/model/PillarModel';

@@ -2,7 +2,6 @@ import { Timestamp } from 'firebase/firestore';
 import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
-import { VERSIONS } from 'src/util/FeatureVersions';
 
 export interface UserModel {
     uid: string;
@@ -13,6 +12,7 @@ export interface UserModel {
     timestamp: Timestamp;
     feature_versions: {
         pillar: number;
+        planned_task: number;
     };
 }
 
@@ -24,6 +24,7 @@ export const FAKE: UserModel = {
     timestamp: Timestamp.now(),
     feature_versions: {
         pillar: 0,
+        planned_task: 0,
     },
 };
 
@@ -38,6 +39,7 @@ class UserController {
             timestamp: user.timestamp,
             feature_versions: {
                 pillar: user.feature_versions.pillar,
+                planned_task: user.feature_versions.planned_task,
             },
         };
 
@@ -84,13 +86,19 @@ class UserController {
     public static async updateFeatureVersion(user: UserModel, feature: string, version: number) {
         if (!user.feature_versions) {
             user.feature_versions = {
-                pillar: VERSIONS.PILLAR,
+                pillar: 0,
+                planned_task: 0,
             };
         }
 
         switch (feature) {
             case 'pillar':
                 user.feature_versions.pillar = version;
+                break;
+
+            case 'planned_task':
+                user.feature_versions.planned_task = version;
+                break;
         }
 
         await this.update(user);

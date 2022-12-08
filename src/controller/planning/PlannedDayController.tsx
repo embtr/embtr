@@ -1,13 +1,15 @@
-import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
-import { TaskModel } from 'src/controller/planning/TaskController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
-import { PlannedTaskModel } from './PlannedTaskController';
+import MigrationController from '../audit_log/MigrationController';
+import { UserModel } from '../user/UserController';
+import PlannedTaskController, { PlannedTaskModel } from './PlannedTaskController';
 
 export interface PlannedDay {
     id?: string;
+    uid: string;
     metadata?: PlannedDayMetadata;
     plannedTasks: PlannedTaskModel[];
 }
@@ -115,90 +117,58 @@ export const getDayKeyDaysOld = (dayKey: string) => {
     return getDaysOld(then, now);
 };
 
+export const createPlannedDayModel = (id: string) => {
+    const plannedDay: PlannedDay = {
+        id: id,
+        uid: getCurrentUid(),
+        plannedTasks: [],
+    };
+
+    return plannedDay;
+};
+
+export const createMetadata = () => {
+    const metadata: PlannedDayMetadata = {
+        added: Timestamp.now(),
+        status: 'INCOMPLETE',
+        modified: Timestamp.now(),
+        locked: true,
+    };
+
+    return metadata;
+};
+
 class PlannedDayController {
-    public static getOrCreate(id: string, callback: Function) {
-        let plannedDay: PlannedDay = {
-            id: id,
-            metadata: this.createMetadata(),
-            plannedTasks: [],
-        };
+    public static async getOrCreate(user: UserModel, id: string) {
+        const found = await this.get(user, id);
+        if (found) {
+            return found;
+        }
 
-        const response = PlannedDayDao.get(getAuth().currentUser?.uid!, id);
-        response
-            .then((collection) => {
-                if (collection?.empty) {
-                    this.create(plannedDay, callback);
-                } else {
-                    collection?.forEach((currentPlannedTask) => {
-                        if (currentPlannedTask.id === 'metadata') {
-                            plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
-                        } else {
-                            let plannedTask: PlannedTaskModel = currentPlannedTask.data() as PlannedTaskModel;
-                            plannedTask.id = currentPlannedTask.id;
-                            plannedTask.dayKey = id;
-                            plannedDay.plannedTasks.push(plannedTask);
-                        }
-                    });
-                }
-            })
-            .then(() => {
-                plannedDay.plannedTasks.sort((a, b) =>
-                    (a.startMinute ? a.startMinute : a.routine.added) > (b.startMinute ? b.startMinute : b.routine.added) ? 1 : -1
-                );
-                callback(plannedDay);
-            });
+        const created = await this.create(createPlannedDayModel(id));
+        return created;
     }
 
-    public static getAsync(uid: string, id: string): Promise<PlannedDay> {
-        let promise = new Promise<PlannedDay>(function (resolve, reject) {
-            PlannedDayController.get(uid, id, resolve);
-        });
+    public static async get(user: UserModel, id: string) {
+        console.log(user.feature_versions?.pillar);
+        if (MigrationController.requiresPlannedTaskMigration(user)) {
+            return await this.getDeprecated(user.uid, id);
+        }
 
-        return promise;
+        return await this.getCurrent(id);
     }
 
-    public static get(uid: string, id: string, callback: Function) {
-        let plannedDay: PlannedDay = {
-            id: id,
-            metadata: this.createMetadata(),
-            plannedTasks: [],
-        };
+    public static async create(plannedDay: PlannedDay) {
+        plannedDay.metadata = createMetadata();
+        const result = await PlannedDayDao.create(plannedDay);
 
-        const response = PlannedDayDao.get(uid, id);
-        response
-            .then((collection) => {
-                collection?.forEach((currentPlannedTask) => {
-                    if (currentPlannedTask.id === 'metadata') {
-                        plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
-                    } else {
-                        let plannedTask: PlannedTaskModel = currentPlannedTask.data() as PlannedTaskModel;
-                        if (plannedTask.status === 'DELETED') {
-                            return;
-                        }
+        plannedDay.id = result.id;
 
-                        plannedTask.id = currentPlannedTask.id;
-                        plannedTask.dayKey = id;
-                        plannedDay.plannedTasks.push(plannedTask);
-                    }
-                });
-            })
-            .then(() => {
-                plannedDay.plannedTasks.sort((a, b) =>
-                    (a.startMinute ? a.startMinute : a.routine.added) > (b.startMinute ? b.startMinute : b.routine.added) ? 1 : -1
-                );
-                callback(plannedDay);
-            });
+        return plannedDay;
     }
 
     public static delete(id: string, callback: Function) {
         PlannedDayDao.delete(id, callback);
-    }
-
-    public static create(plannedDay: PlannedDay, callback: Function) {
-        plannedDay.metadata = this.createMetadata();
-        PlannedDayDao.create(plannedDay);
-
-        callback(plannedDay);
     }
 
     public static replace(plannedDay: PlannedDay) {
@@ -216,17 +186,6 @@ class PlannedDayController {
         if (dailyResult) {
             DailyResultController.refresh(dailyResult);
         }
-    }
-
-    public static createMetadata(): PlannedDayMetadata {
-        const metadata: PlannedDayMetadata = {
-            added: Timestamp.now(),
-            status: 'INCOMPLETE',
-            modified: Timestamp.now(),
-            locked: true,
-        };
-
-        return metadata;
     }
 
     public static getPlannedDayStatus = (plannedDay: PlannedDay, plannedTask: PlannedTaskModel): string => {
@@ -257,6 +216,50 @@ class PlannedDayController {
 
         return status;
     };
+
+    private static async getCurrent(id: string) {
+        console.log('get current');
+        const result = await PlannedDayDao.get(id);
+        const plannedDay: PlannedDay = result.data() as PlannedDay;
+        plannedDay.id = id;
+
+        const plannedTasks = await PlannedTaskController.getAllInPlannedDay(plannedDay);
+        plannedDay.plannedTasks = plannedTasks;
+
+        return plannedDay;
+    }
+
+    private static async getDeprecated(uid: string, id: string) {
+        console.log('get deprecated');
+        let plannedDay: PlannedDay = {
+            id: id,
+            uid: uid,
+            metadata: createMetadata(),
+            plannedTasks: [],
+        };
+
+        const response = await PlannedDayDao.getDeprecated(uid, id);
+        response.docs.forEach((currentPlannedTask) => {
+            if (currentPlannedTask.id === 'metadata') {
+                plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
+            } else {
+                let plannedTask: PlannedTaskModel = currentPlannedTask.data() as PlannedTaskModel;
+                if (plannedTask.status === 'DELETED') {
+                    return;
+                }
+
+                plannedTask.id = currentPlannedTask.id;
+                plannedTask.dayKey = id;
+                plannedDay.plannedTasks.push(plannedTask);
+            }
+        });
+
+        plannedDay.plannedTasks.sort((a, b) =>
+            (a.startMinute ? a.startMinute : a.routine.added) > (b.startMinute ? b.startMinute : b.routine.added) ? 1 : -1
+        );
+
+        return plannedDay;
+    }
 }
 
 export default PlannedDayController;

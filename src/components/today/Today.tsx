@@ -110,8 +110,9 @@ export const Today = () => {
         });
     }, []);
 
-    const fetchPlannedDay = () => {
-        PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
+    const fetchPlannedDay = async () => {
+        const plannedDay = await PlannedDayController.get(currentUser, todayKey);
+        setPlannedDay(plannedDay);
     };
 
     const fetchDailyResult = async () => {
@@ -186,7 +187,7 @@ export const Today = () => {
 
         PlannedTaskController.update(plannedDay, clonedPlannedTask, () => {
             TaskController.updateHistory(clonedPlannedTask);
-            PlannedDayController.get(getAuth().currentUser!.uid, todayKey, setPlannedDay);
+            fetchPlannedDay();
         });
     };
 
