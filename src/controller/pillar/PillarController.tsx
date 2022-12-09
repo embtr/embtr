@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import PillarDao from 'src/firebase/firestore/pillar/PillarDao';
 import { PillarModel } from 'src/model/PillarModel';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { VERSIONS } from 'src/util/FeatureVersions';
 import { UserModel } from '../user/UserController';
 
@@ -40,7 +41,8 @@ class PillarController {
         return pillars;
     }
 
-    public static async migrateDeprecatedPillars(uid: string) {
+    public static async migrateDeprecatedPillars() {
+        const uid = getCurrentUid();
         const result = await PillarDao.getDeprecatedPillars(uid);
         if (result?.docs) {
             for (const document of result.docs) {

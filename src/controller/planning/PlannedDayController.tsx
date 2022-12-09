@@ -9,6 +9,7 @@ import PlannedTaskController, { PlannedTaskModel } from './PlannedTaskController
 
 export interface PlannedDay {
     id?: string;
+    dayKey: string;
     uid: string;
     metadata?: PlannedDayMetadata;
     plannedTasks: PlannedTaskModel[];
@@ -18,7 +19,6 @@ export interface PlannedDayMetadata {
     added: Timestamp;
     modified: Timestamp;
     status: string;
-    locked: boolean;
 }
 
 export const plannedDayIsComplete = (plannedDay: PlannedDay): boolean => {
@@ -88,6 +88,16 @@ export const getPreviousDayKey = (dayKey: string) => {
     return result;
 };
 
+export const getNextDayKey = (dayKey: string) => {
+    const date = getDateFromDayKey(dayKey);
+
+    const today = date;
+    today.setDate(date.getDate() + 1);
+
+    const result = getKeyFromDate(today);
+    return result;
+};
+
 export const getTomorrowKey = () => {
     return getKey(new Date().getDate() + 1);
 };
@@ -117,9 +127,9 @@ export const getDayKeyDaysOld = (dayKey: string) => {
     return getDaysOld(then, now);
 };
 
-export const createPlannedDayModel = (id: string) => {
+export const createPlannedDayModel = (dayKey: string) => {
     const plannedDay: PlannedDay = {
-        id: id,
+        dayKey: dayKey,
         uid: getCurrentUid(),
         plannedTasks: [],
     };
@@ -132,30 +142,35 @@ export const createMetadata = () => {
         added: Timestamp.now(),
         status: 'INCOMPLETE',
         modified: Timestamp.now(),
-        locked: true,
     };
 
     return metadata;
 };
 
 class PlannedDayController {
-    public static async getOrCreate(user: UserModel, id: string) {
-        const found = await this.get(user, id);
-        if (found) {
-            return found;
+    public static async getOrCreate(user: UserModel, dayKey: string) {
+        let plannedDay = await this.get(user, dayKey);
+        if (!plannedDay) {
+            plannedDay = await this.create(createPlannedDayModel(dayKey));
         }
 
-        const created = await this.create(createPlannedDayModel(id));
-        return created;
+        return plannedDay;
     }
 
-    public static async get(user: UserModel, id: string) {
-        console.log(user.feature_versions?.pillar);
+    public static async get(user: UserModel, dayKey: string) {
+        let plannedDay: PlannedDay | undefined;
         if (MigrationController.requiresPlannedTaskMigration(user)) {
-            return await this.getDeprecated(user.uid, id);
+            plannedDay = await this.getDeprecated(user.uid, dayKey);
+        } else {
+            plannedDay = await this.getByDayKey(user.uid, dayKey);
         }
 
-        return await this.getCurrent(id);
+        if (plannedDay) {
+            const plannedTasks = await PlannedTaskController.getAllInPlannedDay(plannedDay);
+            plannedDay.plannedTasks = plannedTasks;
+        }
+
+        return plannedDay;
     }
 
     public static async create(plannedDay: PlannedDay) {
@@ -164,27 +179,31 @@ class PlannedDayController {
 
         plannedDay.id = result.id;
 
+        const plannedTasks = await PlannedTaskController.getAllInPlannedDay(plannedDay);
+        plannedDay.plannedTasks = plannedTasks;
+
         return plannedDay;
     }
 
     public static delete(id: string, callback: Function) {
+        console.log('deleting: ' + id);
         PlannedDayDao.delete(id, callback);
     }
 
-    public static replace(plannedDay: PlannedDay) {
+    public static replace(user: UserModel, plannedDay: PlannedDay) {
         plannedDay.metadata!.modified = Timestamp.now();
         PlannedDayDao.replace(plannedDay);
-        this.refreshDailyResult(plannedDay);
+        this.refreshDailyResult(user, plannedDay);
     }
 
-    public static async refreshDailyResult(plannedDay: PlannedDay) {
+    public static async refreshDailyResult(user: UserModel, plannedDay: PlannedDay) {
         if (!plannedDay.id) {
             return;
         }
 
         const dailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
         if (dailyResult) {
-            DailyResultController.refresh(dailyResult);
+            DailyResultController.refresh(user, dailyResult);
         }
     }
 
@@ -217,22 +236,44 @@ class PlannedDayController {
         return status;
     };
 
-    private static async getCurrent(id: string) {
-        console.log('get current');
-        const result = await PlannedDayDao.get(id);
-        const plannedDay: PlannedDay = result.data() as PlannedDay;
-        plannedDay.id = id;
+    public static async migrateAllDeprecated(user: UserModel) {
+        let dayKey = '04012022';
+        while (dayKey !== getTodayKey()) {
+            const plannedDay = await this.getDeprecated(user.uid, dayKey);
+            if (plannedDay?.plannedTasks) {
+                for (const plannedTask of plannedDay.plannedTasks) {
+                    plannedTask.uid = user.uid;
+                    plannedTask.plannedDayId = plannedDay.id!;
+                    await PlannedTaskController.add(plannedTask);
+                }
+            }
 
-        const plannedTasks = await PlannedTaskController.getAllInPlannedDay(plannedDay);
-        plannedDay.plannedTasks = plannedTasks;
+            if (plannedDay.id) {
+                this.delete(plannedDay.id, () => {});
+            }
+
+            dayKey = getNextDayKey(dayKey);
+        }
+    }
+
+    private static async getByDayKey(uid: string, dayKey: string) {
+        const result = await PlannedDayDao.getByDayKey(uid, dayKey);
+        if (result.empty) {
+            return undefined;
+        }
+
+        const plannedDay: PlannedDay = result.docs[0].data() as PlannedDay;
+        plannedDay.id = result.docs[0].id;
+        plannedDay.dayKey = dayKey;
+        plannedDay.uid = uid;
 
         return plannedDay;
     }
 
     private static async getDeprecated(uid: string, id: string) {
-        console.log('get deprecated');
         let plannedDay: PlannedDay = {
-            id: id,
+            id: '',
+            dayKey: id,
             uid: uid,
             metadata: createMetadata(),
             plannedTasks: [],
@@ -240,6 +281,8 @@ class PlannedDayController {
 
         const response = await PlannedDayDao.getDeprecated(uid, id);
         response.docs.forEach((currentPlannedTask) => {
+            plannedDay.id = id;
+
             if (currentPlannedTask.id === 'metadata') {
                 plannedDay.metadata = currentPlannedTask.data() as PlannedDayMetadata;
             } else {

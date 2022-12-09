@@ -1,4 +1,5 @@
-import { Timestamp } from 'firebase/firestore';
+import pl from 'date-fns/locale/pl';
+import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
 import PlannedTaskDao from 'src/firebase/firestore/planning/PlannedTaskDao';
@@ -7,12 +8,13 @@ import MigrationController from '../audit_log/MigrationController';
 import LevelController from '../level/LevelController';
 import { UserModel } from '../user/UserController';
 import GoalController, { GoalModel } from './GoalController';
-import PlannedDayController, { PlannedDay } from './PlannedDayController';
+import PlannedDayController, { createMetadata, PlannedDay } from './PlannedDayController';
 
 export interface PlannedTaskModel {
     id?: string;
     uid: string;
     dayKey: string;
+    plannedDayId: string;
     routine: TaskModel;
     status?: string;
     goalId?: string;
@@ -24,6 +26,7 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
     const clonedPlannedTask: PlannedTaskModel = {
         id: plannedTask.id,
         uid: plannedTask.uid,
+        plannedDayId: plannedTask.plannedDayId,
         dayKey: plannedTask.dayKey,
         routine: plannedTask.routine,
         status: plannedTask.status,
@@ -44,11 +47,12 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
     return clonedPlannedTask;
 };
 
-export const createPlannedTaskModel = (dayKey: string, task: TaskModel, startMinute: number, duration: number, goalId?: string) => {
+export const createPlannedTaskModel = (plannedDayId: string, dayKey: string, task: TaskModel, startMinute: number, duration: number, goalId?: string) => {
     const plannedTask: PlannedTaskModel = {
-        routine: task,
         uid: getCurrentUid(),
+        plannedDayId: plannedDayId,
         dayKey: dayKey,
+        routine: task,
         startMinute: startMinute,
         duration: duration,
         status: 'INCOMPLETE',
@@ -113,10 +117,13 @@ class PlannedTaskController {
     public static async getAllInPlannedDay(plannedDay: PlannedDay) {
         const plannedTasks: PlannedTaskModel[] = [];
 
-        const results = await PlannedTaskDao.getAllInPlannedDay(plannedDay.id!);
+        let results = await PlannedTaskDao.getAllInPlannedDayById(plannedDay.id!);
+        if (results.empty) {
+            results = await PlannedTaskDao.getAllInPlannedDayByDayKey(plannedDay.uid, plannedDay.dayKey);
+        }
+
         results.docs.forEach((doc) => {
-            const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
-            plannedTask.id = doc.id;
+            const plannedTask: PlannedTaskModel = this.getPlannedTaskFromData(plannedDay, doc);
             plannedTasks.push(plannedTask);
         });
 
@@ -125,7 +132,7 @@ class PlannedTaskController {
 
     public static async update(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
         if (!plannedDay.metadata) {
-            plannedDay.metadata = PlannedDayController.createMetadata();
+            plannedDay.metadata = createMetadata();
         }
 
         plannedDay.metadata!.modified = Timestamp.now();
@@ -159,6 +166,9 @@ class PlannedTaskController {
 
     private static async getDeprecated(user: UserModel, dayKey: string, id: string): Promise<PlannedTaskModel | undefined> {
         const plannedDay = await PlannedDayController.get(user, dayKey);
+        if (!plannedDay) {
+            return undefined;
+        }
 
         plannedDay.plannedTasks.forEach((plannedTask) => {
             if (plannedTask.id === id) {
@@ -167,6 +177,21 @@ class PlannedTaskController {
         });
 
         return undefined;
+    }
+
+    private static getPlannedTaskFromData(plannedDay: PlannedDay, doc: QueryDocumentSnapshot<DocumentData>) {
+        const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
+        plannedTask.id = doc.id;
+
+        if (plannedDay.id) {
+            plannedTask.plannedDayId = plannedDay.id;
+        }
+
+        if (plannedDay.dayKey) {
+            plannedTask.dayKey = plannedDay.dayKey;
+        }
+
+        return plannedTask;
     }
 }
 

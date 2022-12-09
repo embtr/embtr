@@ -1,8 +1,9 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, getDoc } from 'firebase/firestore';
+import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, getDoc, query, where } from 'firebase/firestore';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 class PlannedDayDao {
     public static replace(plannedDay: PlannedDay) {
@@ -50,6 +51,15 @@ class PlannedDayDao {
         return createdTasks;
     }
 
+    public static async getByDayKey(uid: string, dayKey: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getByDayKey');
+
+        const q = query(collection(db, 'planned_day'), where('dayKey', '==', dayKey), where('uid', '==', uid));
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot;
+    }
+
     public static async get(id: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'get');
 
@@ -58,10 +68,16 @@ class PlannedDayDao {
     }
 
     public static async getDeprecated(uid: string, id: string) {
-        console.log("getting", "planned_day", uid, id)
         const db: Firestore = getFirebaseConnection(this.name, 'getDeprecated');
 
         const result = await getDocs(collection(db, 'planned_day', uid, id));
+        return result;
+    }
+
+    public static async getAllDeprecated() {
+        const db: Firestore = getFirebaseConnection(this.name, 'getAllDeprecated');
+
+        const result = await getDoc(doc(db, 'planned_day', getCurrentUid()));
         return result;
     }
 

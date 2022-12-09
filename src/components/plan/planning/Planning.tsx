@@ -38,11 +38,10 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
         const newDayKey = getDayKey(day);
         setSelectedDayKey(newDayKey);
         onDayChange(newDayKey);
-        refreshPlannedToday(newDayKey);
     };
 
     const refreshPlannedToday = async (dayKey: string) => {
-        const plannedDay = await PlannedDayController.get(currentUser, dayKey);
+        const plannedDay = await PlannedDayController.getOrCreate(currentUser, dayKey);
         setPlannedToday(plannedDay);
     };
 
@@ -54,7 +53,7 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
         let createdPlannedTasks: PlannedTaskModel[] = [];
 
         for (let habit of habits) {
-            const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedToday.id, habit, 360, 30, habit.goalId);
+            const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedToday.id, plannedToday.dayKey, habit, 360, 30, habit.goalId);
             createdPlannedTasks.push(plannedTask);
         }
 
@@ -75,8 +74,6 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
     plannedToday?.plannedTasks.forEach((plannedTask) => {
         taskViews.push(<PlannedTask key={plannedTask.id} plannedTask={plannedTask} />);
     });
-
-    console.log(plannedToday?.id);
 
     return (
         <Screen>

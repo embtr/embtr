@@ -17,7 +17,7 @@ export const CalendarView = ({ plannedToday, onTaskUpdated }: Props) => {
         <ScrollView ref={scrollRef} style={{ flex: 1 }}>
             <Calendar />
             <CalendarPlanViews plannedToday={plannedToday} updateTask={onTaskUpdated} />
-            {plannedToday?.id === getTodayKey() && <TimeIndicator />}
+            {plannedToday?.dayKey === getTodayKey() && <TimeIndicator />}
         </ScrollView>
     );
 };

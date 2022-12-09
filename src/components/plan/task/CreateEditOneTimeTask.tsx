@@ -19,11 +19,9 @@ import { RandomPlaceHolderTextInput } from 'src/components/common/textbox/Random
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { format } from 'date-fns';
 import PlannedTaskController, { createPlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import PlannedDayController, { PlannedDay, plannedTaskIsFailed } from 'src/controller/planning/PlannedDayController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
-import { current } from '@reduxjs/toolkit';
 
 export const CreateEditOneTimeTask = () => {
     const { colors } = useTheme();
@@ -155,12 +153,23 @@ export const CreateEditOneTimeTask = () => {
             navigation.goBack();
         });
     };
-    const createTask = () => {
+    const createTask = async () => {
+        if (!plannedDay?.id || !plannedDay.dayKey) {
+            return;
+        }
+
         const task = createTaskModel(name, details, selectedGoal?.id);
-        const plannedTask = createPlannedTaskModel(task, startTime.getHours() * 60 + startTime.getMinutes(), duration, selectedGoal?.id);
-        PlannedTaskController.add(plannedDay!, plannedTask, () => {
-            navigation.goBack();
-        });
+        const plannedTask = createPlannedTaskModel(
+            plannedDay.id,
+            plannedDay.dayKey,
+            task,
+            startTime.getHours() * 60 + startTime.getMinutes(),
+            duration,
+            selectedGoal?.id
+        );
+
+        await PlannedTaskController.add(plannedTask);
+        navigation.goBack();
     };
 
     const showCalendar = () => {
