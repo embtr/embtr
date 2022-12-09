@@ -1,7 +1,6 @@
 import { VERSIONS } from 'src/util/FeatureVersions';
 import PillarController from '../pillar/PillarController';
 import PlannedDayController from '../planning/PlannedDayController';
-import PlannedTaskController from '../planning/PlannedTaskController';
 import UserController, { UserModel } from '../user/UserController';
 
 class MigrationController {
@@ -32,11 +31,9 @@ class MigrationController {
     }
 
     private static async handlePlannedTaskMigration(user: UserModel) {
-        console.log('handling migration');
         if (!this.requiresPlannedTaskMigration(user)) {
             return;
         }
-        console.log('migrating');
 
         await PlannedDayController.migrateAllDeprecated(user);
         //await UserController.updateFeatureVersion(user, 'planned_task', VERSIONS.PLANNED_TASK);

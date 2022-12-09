@@ -4,12 +4,13 @@ import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import PlannedDayController, { getDayKeyDaysOld, getPreviousDayKey, getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { UserModel } from 'src/controller/user/UserController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
 export interface DailyResultModel extends TimelinePostModel {
     data: {
         status: string;
-        plannedDayId: string;
+        dayKey: string;
         description?: string;
         hasTasks: boolean;
         imageUrls?: string[];
@@ -26,7 +27,7 @@ class DailyResultController {
     public static clone(dailyResult: DailyResultModel): DailyResultModel {
         let clone: DailyResultModel = {
             data: {
-                plannedDayId: dailyResult.data.plannedDayId,
+                dayKey: dailyResult.data.dayKey,
                 description: dailyResult.data.description,
                 status: dailyResult.data.status,
                 hasTasks: dailyResult.data.hasTasks,
@@ -55,7 +56,7 @@ class DailyResultController {
             data: {
                 status: status,
                 hasTasks: plannedDay.plannedTasks.length > 0,
-                plannedDayId: plannedDay.id!,
+                dayKey: plannedDay.dayKey,
             },
             added: Timestamp.now(),
             modified: Timestamp.now(),
@@ -111,9 +112,9 @@ class DailyResultController {
         callback(dailyResult);
     }
 
-    public static async refresh(dailyResult: DailyResultModel) {
-        const plannedDay: PlannedDay = await PlannedDayController.getAsync(dailyResult.uid, dailyResult.data.plannedDayId);
-        if (!plannedDay.id) {
+    public static async refresh(user: UserModel, dailyResult: DailyResultModel) {
+        const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
+        if (!plannedDay || !plannedDay.id) {
             return;
         }
 
@@ -134,6 +135,18 @@ class DailyResultController {
         this.update(dailyResult);
     }
 
+    public static async getAll() {
+        const results = await DailyResultDao.getAll();
+
+        let dailyResults: DailyResultModel[] = [];
+        for (const result of results.docs) {
+            const dailyResult = DailyResultController.getDailyResultFromData(result);
+            dailyResults.push(dailyResult);
+        }
+
+        return dailyResults;
+    }
+
     public static async getAllFinished() {
         const results = await DailyResultDao.getAllFinished();
 
@@ -142,7 +155,7 @@ class DailyResultController {
             const dailyResult = DailyResultController.getDailyResultFromData(result);
 
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
-                const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
+                const daysOld = getDayKeyDaysOld(dailyResult.data.dayKey);
                 if (daysOld <= 0) {
                     continue;
                 }
@@ -173,7 +186,7 @@ class DailyResultController {
             }
 
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
-                const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
+                const daysOld = getDayKeyDaysOld(dailyResult.data.dayKey);
                 if (daysOld <= 0) {
                     continue;
                 }
@@ -201,7 +214,7 @@ class DailyResultController {
         for (const result of results.docs) {
             const dailyResult = DailyResultController.getDailyResultFromData(result);
             if (!['FAILED', 'COMPLETE'].includes(dailyResult.data.status)) {
-                const daysOld = getDayKeyDaysOld(dailyResult.data.plannedDayId);
+                const daysOld = getDayKeyDaysOld(dailyResult.data.dayKey);
                 if (daysOld <= 0) {
                     continue;
                 }
@@ -249,7 +262,7 @@ class DailyResultController {
 
         let dayKeyToResultMap: Map<string, DailyResultModel> = new Map<string, DailyResultModel>();
         dailyResults.forEach((dailyResult) => {
-            dayKeyToResultMap.set(dailyResult.data.plannedDayId, dailyResult);
+            dayKeyToResultMap.set(dailyResult.data.dayKey, dailyResult);
         });
 
         let successResults = [];
@@ -287,8 +300,7 @@ class DailyResultController {
         let dailyResult: DailyResultModel = result.data() as DailyResultModel;
         dailyResult.id = result.id;
         //if (true) {
-        //    const plannedDay: PlannedDay = await PlannedDayController.getAsync(dailyResult.uid, dailyResult.data.plannedDayId);
-        //    dailyResult.data.hasTasks = plannedDay.plannedTasks.length > 0;
+        //    console.log('saving: ', dailyResult.id);
         //    DailyResultController.update(dailyResult);
         //}
 

@@ -14,7 +14,6 @@ export interface PlannedTaskModel {
     id?: string;
     uid: string;
     dayKey: string;
-    plannedDayId: string;
     routine: TaskModel;
     status?: string;
     goalId?: string;
@@ -26,7 +25,6 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
     const clonedPlannedTask: PlannedTaskModel = {
         id: plannedTask.id,
         uid: plannedTask.uid,
-        plannedDayId: plannedTask.plannedDayId,
         dayKey: plannedTask.dayKey,
         routine: plannedTask.routine,
         status: plannedTask.status,
@@ -47,10 +45,9 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
     return clonedPlannedTask;
 };
 
-export const createPlannedTaskModel = (plannedDayId: string, dayKey: string, task: TaskModel, startMinute: number, duration: number, goalId?: string) => {
+export const createPlannedTaskModel = (dayKey: string, task: TaskModel, startMinute: number, duration: number, goalId?: string) => {
     const plannedTask: PlannedTaskModel = {
         uid: getCurrentUid(),
-        plannedDayId: plannedDayId,
         dayKey: dayKey,
         routine: task,
         startMinute: startMinute,
@@ -117,11 +114,7 @@ class PlannedTaskController {
     public static async getAllInPlannedDay(plannedDay: PlannedDay) {
         const plannedTasks: PlannedTaskModel[] = [];
 
-        let results = await PlannedTaskDao.getAllInPlannedDayById(plannedDay.id!);
-        if (results.empty) {
-            results = await PlannedTaskDao.getAllInPlannedDayByDayKey(plannedDay.uid, plannedDay.dayKey);
-        }
-
+        const results = await PlannedTaskDao.getAllInPlannedDayByDayKey(plannedDay.uid, plannedDay.dayKey);
         results.docs.forEach((doc) => {
             const plannedTask: PlannedTaskModel = this.getPlannedTaskFromData(plannedDay, doc);
             plannedTasks.push(plannedTask);
@@ -182,10 +175,6 @@ class PlannedTaskController {
     private static getPlannedTaskFromData(plannedDay: PlannedDay, doc: QueryDocumentSnapshot<DocumentData>) {
         const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
         plannedTask.id = doc.id;
-
-        if (plannedDay.id) {
-            plannedTask.plannedDayId = plannedDay.id;
-        }
 
         if (plannedDay.dayKey) {
             plannedTask.dayKey = plannedDay.dayKey;

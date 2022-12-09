@@ -17,15 +17,6 @@ class PlannedTaskDao {
         return result;
     }
 
-    public static async getAllInPlannedDayById(id: string) {
-        const db: Firestore = getFirebaseConnection(this.name, 'getAllInPlannedDay');
-        const q = query(collection(db, 'planned_tasks'), where('plannedDayId', '==', id));
-
-        const querySnapshot = await getDocs(q);
-
-        return querySnapshot;
-    }
-
     public static async getAllInPlannedDayByDayKey(uid: string, dayKey: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getAllInPlannedDay');
         const q = query(collection(db, 'planned_tasks'), where('uid', '==', uid), where('dayKey', '==', dayKey));

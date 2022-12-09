@@ -24,7 +24,7 @@ export const DailyResultDetails = () => {
         React.useCallback(() => {
             const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
                 const user = await UserController.get(dailyResult.uid);
-                const plannedDay = await PlannedDayController.get(user, dailyResult.data.plannedDayId);
+                const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
                 setPlannedDay(plannedDay);
             };
 

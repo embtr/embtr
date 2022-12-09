@@ -45,7 +45,7 @@ class DailyResultDao {
 
     public static async getByDayKey(uid: string, dayKey: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getByDayKey');
-        const q = query(collection(db, COLLECTION_NAME), where('uid', '==', uid), where('data.plannedDayId', '==', dayKey));
+        const q = query(collection(db, COLLECTION_NAME), where('uid', '==', uid), where('data.dayKey', '==', dayKey));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;

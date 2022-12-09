@@ -243,7 +243,6 @@ class PlannedDayController {
             if (plannedDay?.plannedTasks) {
                 for (const plannedTask of plannedDay.plannedTasks) {
                     plannedTask.uid = user.uid;
-                    plannedTask.plannedDayId = plannedDay.id!;
                     await PlannedTaskController.add(plannedTask);
                 }
             }

@@ -44,13 +44,11 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     React.useEffect(() => {
         const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
             const user = await UserController.get(dailyResult.uid);
-            const plannedDay = await PlannedDayController.get(user, dailyResult.data.plannedDayId);
+            const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
             setPlannedDay(plannedDay);
         };
 
-        if (dailyResult.data.plannedDayId) {
-            fetchPlannedDay(dailyResult);
-        }
+        fetchPlannedDay(dailyResult);
     }, [dailyResult]);
 
     const time = formatDistance(getTimelinePostAddedDate(dailyResult).toDate(), new Date(), { addSuffix: true });
