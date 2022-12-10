@@ -62,6 +62,7 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
 
     const updateTask = async (updatedPlannedTask: PlannedTaskModel) => {
         await PlannedTaskController.update(updatedPlannedTask);
+        refreshPlannedToday(selectedDayKey);
     };
 
     let taskViews: JSX.Element[] = [];
