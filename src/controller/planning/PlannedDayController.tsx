@@ -158,12 +158,7 @@ class PlannedDayController {
     }
 
     public static async get(user: UserModel, dayKey: string) {
-        let plannedDay: PlannedDay | undefined;
-        if (MigrationController.requiresPlannedTaskMigration(user)) {
-            plannedDay = await this.getDeprecated(user.uid, dayKey);
-        } else {
-            plannedDay = await this.getByDayKey(user.uid, dayKey);
-        }
+        const plannedDay = await this.getByDayKey(user.uid, dayKey);
 
         if (plannedDay) {
             const plannedTasks = await PlannedTaskController.getAllInPlannedDay(plannedDay);
@@ -263,8 +258,6 @@ class PlannedDayController {
 
         const plannedDay: PlannedDay = result.docs[0].data() as PlannedDay;
         plannedDay.id = result.docs[0].id;
-        plannedDay.dayKey = dayKey;
-        plannedDay.uid = uid;
 
         return plannedDay;
     }

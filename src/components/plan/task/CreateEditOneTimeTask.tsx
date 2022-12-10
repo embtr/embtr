@@ -19,7 +19,7 @@ import { RandomPlaceHolderTextInput } from 'src/components/common/textbox/Random
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { format } from 'date-fns';
 import PlannedTaskController, { createPlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import PlannedDayController, { PlannedDay, plannedTaskIsFailed } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 
@@ -62,6 +62,8 @@ export const CreateEditOneTimeTask = () => {
     React.useEffect(() => {
         const fetch = async () => {
             const plannedDay = await PlannedDayController.getOrCreate(currentUser, route.params.dayKey);
+            console.log('c');
+            console.log(plannedDay);
             setPlannedDay(plannedDay);
         };
 
@@ -123,7 +125,7 @@ export const CreateEditOneTimeTask = () => {
         setGoalOptions(initialItems);
     }, [goals]);
 
-    const updateTask = () => {
+    const updateTask = async () => {
         if (!plannedTask) {
             return;
         }
@@ -149,25 +151,20 @@ export const CreateEditOneTimeTask = () => {
             clonedPlannedTask.duration = duration;
         }
 
-        PlannedTaskController.update(plannedDay!, clonedPlannedTask, () => {
-            navigation.goBack();
-        });
+        await PlannedTaskController.update(clonedPlannedTask);
+        navigation.goBack();
     };
+
     const createTask = async () => {
-        if (!plannedDay?.id || !plannedDay.dayKey) {
+        if (!plannedDay?.dayKey) {
             return;
         }
 
         const task = createTaskModel(name, details, selectedGoal?.id);
-        const plannedTask = createPlannedTaskModel(
-            plannedDay.id,
-            plannedDay.dayKey,
-            task,
-            startTime.getHours() * 60 + startTime.getMinutes(),
-            duration,
-            selectedGoal?.id
-        );
+        const plannedTask = createPlannedTaskModel(plannedDay.dayKey, task, startTime.getHours() * 60 + startTime.getMinutes(), duration, selectedGoal?.id);
 
+        console.log('adding planned task');
+        console.log(plannedTask);
         await PlannedTaskController.add(plannedTask);
         navigation.goBack();
     };

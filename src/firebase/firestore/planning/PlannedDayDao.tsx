@@ -1,7 +1,6 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, setDoc, getDoc, query, where } from 'firebase/firestore';
+import { Firestore, collection, getDocs, deleteDoc, doc, addDoc, getDoc, query, where } from 'firebase/firestore';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
@@ -10,45 +9,6 @@ class PlannedDayDao {
         this.delete(plannedDay.id!, () => {
             this.create(plannedDay);
         });
-    }
-
-    /*
-     * move us to plannedTaskController/Dao
-     */
-    public static async updateTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
-        const userUid = getAuth().currentUser?.uid;
-        if (!userUid) {
-            return;
-        }
-
-        const db: Firestore = getFirebaseConnection(this.name, 'updateTask');
-
-        await setDoc(doc(db, 'planned_day', userUid, plannedDay.id!, plannedTask.id!), plannedTask, { merge: true });
-        return setDoc(doc(db, 'planned_day', userUid, plannedDay.id!, 'metadata'), plannedDay.metadata, { merge: true });
-    }
-
-    public static async createTask(plannedDay: PlannedDay, plannedTask: PlannedTaskModel) {
-        const result = await this.createTasks(plannedDay, [plannedTask]);
-        return result[0];
-    }
-
-    public static async createTasks(plannedDay: PlannedDay, plannedTasks: PlannedTaskModel[]): Promise<PlannedTaskModel[]> {
-        const db: Firestore = getFirebaseConnection(this.name, 'createTasks');
-
-        const userUid = getAuth().currentUser?.uid;
-        if (!userUid) {
-            return [];
-        }
-
-        let createdTasks = [];
-        for (const plannedTask of plannedTasks) {
-            const result = await addDoc(collection(db, 'planned_day', userUid, plannedDay.id!), plannedTask);
-            plannedTask.id = result.id;
-            createdTasks.push(plannedTask);
-        }
-
-        setDoc(doc(db, 'planned_day', userUid, plannedDay.id!, 'metadata'), plannedDay.metadata, { merge: true });
-        return createdTasks;
     }
 
     public static async getByDayKey(uid: string, dayKey: string) {

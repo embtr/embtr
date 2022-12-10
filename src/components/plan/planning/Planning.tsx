@@ -50,10 +50,9 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
             return;
         }
 
-        let createdPlannedTasks: PlannedTaskModel[] = [];
-
+        const createdPlannedTasks: PlannedTaskModel[] = [];
         for (let habit of habits) {
-            const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedToday.id, plannedToday.dayKey, habit, 360, 30, habit.goalId);
+            const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedToday.dayKey, habit, 360, 30, habit.goalId);
             createdPlannedTasks.push(plannedTask);
         }
 
@@ -62,12 +61,7 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
     };
 
     const updateTask = async (updatedPlannedTask: PlannedTaskModel) => {
-        PlannedTaskController.update(plannedToday!, updatedPlannedTask, async () => {
-            if (plannedToday?.id) {
-                const plannedDay = await PlannedDayController.get(currentUser, plannedToday.id);
-                setPlannedToday(plannedDay);
-            }
-        });
+        await PlannedTaskController.update(updatedPlannedTask);
     };
 
     let taskViews: JSX.Element[] = [];

@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, Firestore, getDoc, query, where, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, Firestore, getDoc, query, where, getDocs, setDoc } from 'firebase/firestore';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { getFirebaseConnection } from '../ConnectionProvider';
 
@@ -13,6 +13,13 @@ class PlannedTaskDao {
     public static async get(id: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'get');
         const result = await getDoc(doc(db, 'planned_tasks/', id));
+
+        return result;
+    }
+
+    public static async update(plannedTask: PlannedTaskModel) {
+        const db: Firestore = getFirebaseConnection(this.name, 'update');
+        const result = await setDoc(doc(db, 'planned_tasks', plannedTask.id!), plannedTask, { merge: true });
 
         return result;
     }

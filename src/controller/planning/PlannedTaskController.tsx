@@ -1,14 +1,10 @@
-import pl from 'date-fns/locale/pl';
-import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
-import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
-import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
+import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
+import { TaskModel } from 'src/controller/planning/TaskController';
 import PlannedTaskDao from 'src/firebase/firestore/planning/PlannedTaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import MigrationController from '../audit_log/MigrationController';
-import LevelController from '../level/LevelController';
 import { UserModel } from '../user/UserController';
-import GoalController, { GoalModel } from './GoalController';
-import PlannedDayController, { createMetadata, PlannedDay } from './PlannedDayController';
+import PlannedDayController, { PlannedDay } from './PlannedDayController';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -123,30 +119,11 @@ class PlannedTaskController {
         return plannedTasks;
     }
 
-    public static async update(plannedDay: PlannedDay, plannedTask: PlannedTaskModel, callback: Function) {
-        if (!plannedDay.metadata) {
-            plannedDay.metadata = createMetadata();
-        }
-
-        plannedDay.metadata!.modified = Timestamp.now();
-        plannedDay.metadata!.status = PlannedDayController.getPlannedDayStatus(plannedDay, plannedTask);
-
-        await PlannedDayDao.updateTask(plannedDay, plannedTask);
-        this.updateGoalTask(plannedTask);
-        PlannedDayController.refreshDailyResult(plannedDay);
-        await LevelController.handlePlannedDayStatusChange(plannedDay);
-        TaskController.updateHistory(plannedTask);
-
-        callback();
-    }
-
-    private static async updateGoalTask(plannedTask: PlannedTaskModel) {
-        const goalId = plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
-        if (goalId) {
-            GoalController.getGoal(getCurrentUid(), goalId, (goal: GoalModel) => {
-                GoalController.updateGoalTask(goal, plannedTask);
-            });
-        }
+    public static async update(plannedTask: PlannedTaskModel) {
+        await PlannedTaskDao.update(plannedTask);
+        //PlannedDayController.refreshDailyResult(plannedDay);
+        //await LevelController.handlePlannedDayStatusChange(plannedDay);
+        //TaskController.updateHistory(plannedTask);
     }
 
     private static async getCurrent(id: string) {

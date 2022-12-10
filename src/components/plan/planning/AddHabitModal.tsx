@@ -23,37 +23,37 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
-    const [selectedTasks, setSelectedTasks] = React.useState<string[]>([]);
+    const [selectedHabits, setSelectedHabits] = React.useState<string[]>([]);
     const [habits, setHabits] = React.useState<TaskModel[]>([]);
 
     React.useEffect(() => {
         TaskController.getTasks(getCurrentUid(), setHabits);
     }, [visible]);
 
-    const taskSelected = (taskId: string, isSelected: boolean) => {
-        let newSelectedTasks: string[] = [];
-        selectedTasks.forEach((selectedTask) => {
-            if (selectedTask !== taskId) {
-                newSelectedTasks.push(selectedTask);
+    const habitSelected = (habitId: string, isSelected: boolean) => {
+        let newSelectedHabits: string[] = [];
+        selectedHabits.forEach((selectedHabit) => {
+            if (selectedHabit !== habitId) {
+                newSelectedHabits.push(selectedHabit);
             }
         });
 
         if (!isSelected) {
-            newSelectedTasks.push(taskId);
+            newSelectedHabits.push(habitId);
         }
 
-        setSelectedTasks(newSelectedTasks);
+        setSelectedHabits(newSelectedHabits);
     };
 
     let habitViews: JSX.Element[] = [];
     habits.forEach((habit) => {
-        const isSelected: boolean = habit.id !== undefined && selectedTasks.includes(habit.id);
+        const isSelected: boolean = habit.id !== undefined && selectedHabits.includes(habit.id);
 
         habitViews.push(
             <TouchableOpacity
                 style={{ width: '100%' }}
                 onPress={() => {
-                    taskSelected(habit.id!, isSelected);
+                    habitSelected(habit.id!, isSelected);
                 }}
             >
                 <View key={habit.id} style={{ height: 40, justifyContent: 'center', width: '100%', paddingLeft: 10 }}>
@@ -65,7 +65,7 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
         );
     });
 
-    const getTasksFromIds = (ids: string[]): TaskModel[] => {
+    const getHabitsFromIds = (ids: string[]): TaskModel[] => {
         let tasks: TaskModel[] = [];
 
         for (const id of ids) {
@@ -81,7 +81,7 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
     };
 
     const closeModal = () => {
-        setSelectedTasks([]);
+        setSelectedHabits([]);
         dismiss();
     };
 
@@ -127,8 +127,8 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
                                     <Button
                                         title="Add Habits"
                                         onPress={() => {
-                                            const tasks = getTasksFromIds(selectedTasks);
-                                            confirm(tasks);
+                                            const habits = getHabitsFromIds(selectedHabits);
+                                            confirm(habits);
                                             closeModal();
                                         }}
                                     />
@@ -150,7 +150,7 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
                                     title="Create One Time Task"
                                     onPress={() => {
                                         closeModal();
-                                        navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.id! });
+                                        navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.dayKey });
                                     }}
                                 />
                                 <HorizontalLine />
