@@ -122,9 +122,9 @@ class PlannedTaskController {
         return plannedTasks;
     }
 
-    public static async update(plannedTask: PlannedTaskModel) {
+    public static async update(user: UserModel, plannedTask: PlannedTaskModel) {
         await PlannedTaskDao.update(plannedTask);
-        //PlannedDayController.refreshDailyResult(plannedDay);
+        await PlannedDayController.refreshDailyResult(user, plannedTask.dayKey);
         //await LevelController.handlePlannedDayStatusChange(plannedDay);
         //TaskController.updateHistory(plannedTask);
     }

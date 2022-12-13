@@ -108,7 +108,7 @@ class LevelController {
     }
 
     private static createOrUpdateLevelElement(level: LevelModel, plannedDay: PlannedDay) {
-        let levelElement: LevelElementModel | undefined = level.levelMap.get(plannedDay.id!);
+        let levelElement: LevelElementModel | undefined = level.levelMap.get(plannedDay.dayKey);
         if (levelElement) {
             levelElement.modified = Timestamp.now();
             levelElement.completed = plannedDayIsComplete(plannedDay);

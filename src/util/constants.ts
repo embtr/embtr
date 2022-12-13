@@ -61,6 +61,12 @@ export const DAILY_HISTORY_WIDGET_DESCRIPTION = 'A 50,000 ft. look at your daily
 export const PILLARS_WIDGET = 'Pillars Widget';
 export const PILLARS_WIDGET_DESCRIPTION = 'A snapshot of what you hold most important.';
 
+//STATUSES
+export const COMPLETE = 'COMPLETE';
+export const INCOMPLETE = 'INCOMPLETE';
+export const FAILED = 'FAILED';
+export const DELETED = 'DELETED'
+
 export const WIDGETS = [
     TIME_LEFT_IN_DAY_WIDGET,
     QUOTE_OF_THE_DAY_WIDGET,

@@ -1,5 +1,4 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { RefreshControl, View, TouchableOpacity } from 'react-native';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
@@ -117,7 +116,7 @@ export const Today = () => {
 
     const fetchDailyResult = async () => {
         if (plannedDay) {
-            const foundDailyResult = await DailyResultController.getOrCreate(plannedDay, 'INCOMPLETE');
+            const foundDailyResult = await DailyResultController.getOrCreate(plannedDay);
             setDailyResult(foundDailyResult);
         }
     };
@@ -168,7 +167,7 @@ export const Today = () => {
         setWidgets(cleansedWidgets);
     };
 
-    const togglePlannedTaskStatus = (plannedTask: PlannedTaskModel, currentStatus: string, fastStatusUpdate: Function) => {
+    const togglePlannedTaskStatus = async (plannedTask: PlannedTaskModel, currentStatus: string, fastStatusUpdate: Function) => {
         if (!plannedDay) {
             return;
         }
@@ -185,10 +184,9 @@ export const Today = () => {
         let clonedPlannedTask: PlannedTaskModel = clonePlannedTaskModel(plannedTask);
         clonedPlannedTask.status = newStatus;
 
-        PlannedTaskController.update(plannedDay, clonedPlannedTask, () => {
-            TaskController.updateHistory(clonedPlannedTask);
-            fetchPlannedDay();
-        });
+        await PlannedTaskController.update(currentUser, clonedPlannedTask);
+        TaskController.updateHistory(clonedPlannedTask);
+        fetchPlannedDay();
     };
 
     const closeMenu = useAppSelector(getCloseMenu);

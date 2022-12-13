@@ -5,7 +5,7 @@ import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 class PlannedDayDao {
-    public static replace(plannedDay: PlannedDay) {
+    public static async replace(plannedDay: PlannedDay) {
         this.delete(plannedDay.id!, () => {
             this.create(plannedDay);
         });

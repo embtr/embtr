@@ -32,7 +32,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
     });
 
     const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
-    const dayOfWeek = getDayOfWeek(getDateFromDayKey(plannedDay?.id ? plannedDay?.id : ''));
+    const dayOfWeek = getDayOfWeek(getDateFromDayKey(plannedDay.dayKey));
 
     let plannedTaskViews: JSX.Element[] = [];
     plannedDay?.plannedTasks.forEach((plannedTask) => {

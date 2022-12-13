@@ -62,8 +62,6 @@ export const CreateEditOneTimeTask = () => {
     React.useEffect(() => {
         const fetch = async () => {
             const plannedDay = await PlannedDayController.getOrCreate(currentUser, route.params.dayKey);
-            console.log('c');
-            console.log(plannedDay);
             setPlannedDay(plannedDay);
         };
 
@@ -151,7 +149,7 @@ export const CreateEditOneTimeTask = () => {
             clonedPlannedTask.duration = duration;
         }
 
-        await PlannedTaskController.update(clonedPlannedTask);
+        await PlannedTaskController.update(currentUser, clonedPlannedTask);
         navigation.goBack();
     };
 
@@ -163,8 +161,6 @@ export const CreateEditOneTimeTask = () => {
         const task = createTaskModel(name, details, selectedGoal?.id);
         const plannedTask = createPlannedTaskModel(plannedDay.dayKey, task, startTime.getHours() * 60 + startTime.getMinutes(), duration, selectedGoal?.id);
 
-        console.log('adding planned task');
-        console.log(plannedTask);
         await PlannedTaskController.add(plannedTask);
         navigation.goBack();
     };

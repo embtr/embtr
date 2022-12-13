@@ -44,7 +44,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     React.useEffect(() => {
         const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
             const user = await UserController.get(dailyResult.uid);
-            const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
+            const plannedDay = await PlannedDayController.getOrCreate(user, dailyResult.data.dayKey);
             setPlannedDay(plannedDay);
         };
 

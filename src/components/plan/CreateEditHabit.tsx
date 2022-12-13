@@ -91,7 +91,7 @@ export const CreateEditHabit = () => {
             return;
         }
 
-        const clone = TaskController.clone(habit);
+        const clone: TaskModel = { ...habit };
         clone.name = name;
         clone.description = details;
         clone.goalId = goalId;

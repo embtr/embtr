@@ -1,9 +1,16 @@
 import { VERSIONS } from 'src/util/FeatureVersions';
 import PillarController from '../pillar/PillarController';
 import PlannedDayController from '../planning/PlannedDayController';
+import PlannedTaskController from '../planning/PlannedTaskController';
+import DailyResultController from '../timeline/daily_result/DailyResultController';
 import UserController, { UserModel } from '../user/UserController';
 
 class MigrationController {
+    public static async update() {
+        //await PlannedDayController.migrateAllDeprecated();
+        //DailyResultController.migrate();
+    }
+
     public static async handleMigrations(user: UserModel) {
         await this.handlePillarMigration(user);
         await this.handlePlannedTaskMigration(user);

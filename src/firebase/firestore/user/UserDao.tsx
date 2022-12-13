@@ -1,5 +1,5 @@
 import { getAuth } from 'firebase/auth';
-import { Firestore, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
+import { Firestore, doc, setDoc, getDoc, Timestamp, getDocs, collection } from 'firebase/firestore';
 import { UserModel } from 'src/controller/user/UserController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
@@ -35,6 +35,14 @@ class UserDao {
     public static async get(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'get');
         const result = await getDoc(doc(db, 'users/', uid));
+
+        return result;
+    }
+
+
+    public static async getAll() {
+		const db: Firestore = getFirebaseConnection(this.name, 'getAll');
+		const result = await getDocs(collection(db, 'users/'));
 
         return result;
     }

@@ -61,6 +61,21 @@ class UserController {
         return currentUser;
     }
 
+    public static async getAll() {
+        const results = await UserDao.getAll();
+        const users: UserModel[] = [];
+        results.forEach((result) => {
+            let user: UserModel = result.data() as UserModel;
+            user.uid = result.id;
+            if (!user.today_widgets) {
+                user.today_widgets = WIDGETS;
+            }
+            users.push(user);
+        });
+
+        return users;
+    }
+
     public static async getCurrentUser() {
         return await this.get(getCurrentUid());
     }

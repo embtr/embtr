@@ -12,7 +12,7 @@ interface Props {
 export const TodaysCountdownWidget = ({ plannedDay }: Props) => {
     const { colors } = useTheme();
 
-    const day = getDayOfWeekFromDayKey(plannedDay.id!);
+    const day = getDayOfWeekFromDayKey(plannedDay.dayKey);
     const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
 
     return (
