@@ -113,6 +113,9 @@ class PlannedTaskController {
         const results = await PlannedTaskDao.getAllInPlannedDayByDayKey(plannedDay.uid, plannedDay.dayKey);
         results.docs.forEach((doc) => {
             const plannedTask: PlannedTaskModel = this.getPlannedTaskFromData(plannedDay, doc);
+            if (plannedTask.status === 'DELETED') {
+                return;
+            }
             plannedTasks.push(plannedTask);
         });
 
