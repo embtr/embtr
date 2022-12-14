@@ -39,7 +39,7 @@ export const CreateEditHabit = () => {
 
     React.useEffect(() => {
         if (route.params.id) {
-            TaskController.getTask(route.params.id, setHabit);
+            TaskController.getHabit(route.params.id, setHabit);
         } else {
             setHabit(EMPTY_HABIT);
         }

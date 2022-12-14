@@ -32,7 +32,7 @@ export const TaskDetails = () => {
     const [pillar, setPillar] = React.useState<PillarModel>();
 
     React.useEffect(() => {
-        TaskController.getTask(route.params.id, setTask);
+        TaskController.getHabit(route.params.id, setTask);
     }, []);
 
     React.useEffect(() => {

@@ -13,6 +13,7 @@ export interface HabitHistoryElementModel {
 
 export interface TaskModel {
     id?: string;
+    uid: string;
     added: Timestamp;
     name: string;
     description: string;
@@ -26,6 +27,7 @@ export interface TaskModel {
 }
 
 export const EMPTY_HABIT: TaskModel = {
+    uid: "",
     added: Timestamp.now(),
     name: '',
     description: '',
@@ -78,6 +80,7 @@ export const durationToString = (duration: number) => {
 
 export const createTaskModel = (name: string, description: string, goalId?: string) => {
     const task: TaskModel = {
+        uid: getCurrentUid(),
         added: Timestamp.now(),
         name: name,
         description: description,
@@ -95,6 +98,8 @@ export const createTaskModel = (name: string, description: string, goalId?: stri
 class TaskController {
     public static clone(task: TaskModel) {
         const clone: TaskModel = {
+            id: task.id,
+            uid: task.uid,
             added: task.added,
             name: task.name,
             description: task.description,
@@ -131,7 +136,7 @@ class TaskController {
         callback();
     }
 
-    public static getTask(id: string, callback: Function) {
+    public static getHabit(id: string, callback: Function) {
         const uid = getCurrentUid();
         const result = TaskDao.getTask(uid, id);
         result
@@ -159,7 +164,7 @@ class TaskController {
             status: plannedTask.status ? plannedTask.status : 'INCOMPLETE',
         };
 
-        this.getTask(habitId, (habit: TaskModel) => {
+        this.getHabit(habitId, (habit: TaskModel) => {
             if (!habit.history) {
                 habit.history = { incomplete: [], complete: [], failed: [] };
             }

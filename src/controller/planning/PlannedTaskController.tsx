@@ -1,5 +1,5 @@
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import { TaskModel } from 'src/controller/planning/TaskController';
+import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import PlannedTaskDao from 'src/firebase/firestore/planning/PlannedTaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import MigrationController from '../audit_log/MigrationController';
@@ -73,6 +73,8 @@ class PlannedTaskController {
         const results = await PlannedTaskDao.add(plannedTask);
         plannedTask.id = results.id;
 
+        TaskController.updateHistory(plannedTask);
+
         return plannedTask;
     }
 
@@ -125,8 +127,8 @@ class PlannedTaskController {
     public static async update(user: UserModel, plannedTask: PlannedTaskModel) {
         await PlannedTaskDao.update(plannedTask);
         await PlannedDayController.refreshDailyResult(user, plannedTask.dayKey);
+        TaskController.updateHistory(plannedTask);
         //await LevelController.handlePlannedDayStatusChange(plannedDay);
-        //TaskController.updateHistory(plannedTask);
     }
 
     private static async getCurrent(id: string) {
