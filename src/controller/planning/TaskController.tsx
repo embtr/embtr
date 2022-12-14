@@ -1,14 +1,13 @@
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import TaskDao from 'src/firebase/firestore/planning/TaskDao';
+import { PlannedTaskHistoryElementModel, PlannedTaskHistoryModel } from 'src/model/Models';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { updatePlannedTaskHistory } from 'src/util/HistoryUtility';
 import { getDateFromDayKey, plannedTaskIsComplete, plannedTaskIsFailed } from './PlannedDayController';
 import { PlannedTaskModel } from './PlannedTaskController';
 
-export interface HabitHistoryElementModel {
-    dayKey: string;
-    id: string;
-    name: string;
-    status: string;
+interface TaskHistoryModel {
+    plannedTaskHistory: PlannedTaskHistoryModel;
 }
 
 export interface TaskModel {
@@ -19,19 +18,24 @@ export interface TaskModel {
     description: string;
     goalId?: string;
     active: boolean;
-    history?: {
-        incomplete: HabitHistoryElementModel[];
-        complete: HabitHistoryElementModel[];
-        failed: HabitHistoryElementModel[];
-    };
+    history: TaskHistoryModel;
 }
 
+export const EMPTY_HISTORY: TaskHistoryModel = {
+    plannedTaskHistory: {
+        complete: [],
+        incomplete: [],
+        failed: [],
+    },
+};
+
 export const EMPTY_HABIT: TaskModel = {
-    uid: "",
+    uid: '',
     added: Timestamp.now(),
     name: '',
     description: '',
     active: true,
+    history: EMPTY_HISTORY,
 };
 
 export const getDayOfWeekFromDayKey = (dayKey: string) => {
@@ -85,7 +89,7 @@ export const createTaskModel = (name: string, description: string, goalId?: stri
         name: name,
         description: description,
         active: true,
-        history: { incomplete: [], complete: [], failed: [] },
+        history: EMPTY_HISTORY,
     };
 
     if (goalId) {
@@ -113,7 +117,7 @@ class TaskController {
         }
 
         if (!clone.history) {
-            clone.history = { incomplete: [], complete: [], failed: [] };
+            clone.history = EMPTY_HISTORY;
         }
 
         return clone;
@@ -150,37 +154,13 @@ class TaskController {
     }
 
     public static async updateHistory(plannedTask: PlannedTaskModel) {
-        if (!plannedTask.id || !plannedTask.dayKey || !plannedTask.routine.id) {
+        if (!plannedTask.routine.id) {
             return;
         }
 
         const habitId: string = plannedTask.routine.id;
-        const plannedTaskId: string = plannedTask.id;
-
-        const habitHistoryElement: HabitHistoryElementModel = {
-            dayKey: plannedTask.dayKey,
-            id: plannedTaskId,
-            name: plannedTask.routine.name,
-            status: plannedTask.status ? plannedTask.status : 'INCOMPLETE',
-        };
-
         this.getHabit(habitId, (habit: TaskModel) => {
-            if (!habit.history) {
-                habit.history = { incomplete: [], complete: [], failed: [] };
-            }
-
-            habit.history.incomplete = this.removeElementFromArray(habit.history.incomplete, habitHistoryElement);
-            habit.history.complete = this.removeElementFromArray(habit.history.complete, habitHistoryElement);
-            habit.history.failed = this.removeElementFromArray(habit.history.failed, habitHistoryElement);
-
-            if (plannedTaskIsComplete(plannedTask)) {
-                habit.history.complete.push(habitHistoryElement);
-            } else if (plannedTaskIsFailed(plannedTask)) {
-                habit.history.failed.push(habitHistoryElement);
-            } else {
-                habit.history.incomplete.push(habitHistoryElement);
-            }
-
+            habit.history.plannedTaskHistory = updatePlannedTaskHistory(habit.history.plannedTaskHistory, plannedTask);
             this.update(habit);
         });
     }
@@ -220,18 +200,6 @@ class TaskController {
             .catch(() => {
                 callback([]);
             });
-    }
-
-    private static removeElementFromArray(list: HabitHistoryElementModel[], element: HabitHistoryElementModel) {
-        const newList: HabitHistoryElementModel[] = [];
-        list.forEach((l) => {
-            if (l.id === element.id) {
-                return;
-            }
-            newList.push(l);
-        });
-
-        return newList;
     }
 }
 

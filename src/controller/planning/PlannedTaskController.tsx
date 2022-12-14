@@ -1,9 +1,10 @@
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
+import TaskController, { EMPTY_HISTORY, TaskModel } from 'src/controller/planning/TaskController';
 import PlannedTaskDao from 'src/firebase/firestore/planning/PlannedTaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import MigrationController from '../audit_log/MigrationController';
 import { UserModel } from '../user/UserController';
+import GoalController from './GoalController';
 import PlannedDayController, { PlannedDay } from './PlannedDayController';
 
 export interface PlannedTaskModel {
@@ -36,7 +37,9 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
         clonedPlannedTask.status = 'INCOMPLETE';
     }
 
-    delete plannedTask.routine['history'];
+    if (clonedPlannedTask.routine.history) {
+        clonedPlannedTask.routine.history = EMPTY_HISTORY;
+    }
 
     return clonedPlannedTask;
 };
@@ -55,7 +58,9 @@ export const createPlannedTaskModel = (dayKey: string, task: TaskModel, startMin
         plannedTask.goalId = goalId;
     }
 
-    delete plannedTask.routine.history;
+    if (plannedTask.routine.history) {
+        plannedTask.routine.history = EMPTY_HISTORY;
+    }
 
     return plannedTask;
 };
@@ -128,6 +133,7 @@ class PlannedTaskController {
         await PlannedTaskDao.update(plannedTask);
         await PlannedDayController.refreshDailyResult(user, plannedTask.dayKey);
         TaskController.updateHistory(plannedTask);
+        GoalController.updateHistory(plannedTask);
         //await LevelController.handlePlannedDayStatusChange(plannedDay);
     }
 

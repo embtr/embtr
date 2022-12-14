@@ -1,50 +1,56 @@
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalDao from 'src/firebase/firestore/planning/GoalDao';
+import { PlannedTaskHistoryModel } from 'src/model/Models';
+import { updatePlannedTaskHistory } from 'src/util/HistoryUtility';
+import { plannedTaskIsFailed } from './PlannedDayController';
 import { PlannedTaskModel } from './PlannedTaskController';
+
+interface GoalHistoryModel {
+    plannedTaskHistory: PlannedTaskHistoryModel;
+}
 
 export interface GoalModel {
     id?: string;
+    uid: string;
     added: Timestamp;
     name: string;
     description: string;
     pillarId?: string;
     deadline: Timestamp;
     status: string;
-    tasks: PlannedTaskModel[];
+    history: GoalHistoryModel;
 }
 
+const EMPTY_HISTORY: GoalHistoryModel = {
+    plannedTaskHistory: {
+        complete: [],
+        incomplete: [],
+        failed: [],
+    },
+};
+
 export const FAKE_GOAL: GoalModel = {
+    uid: '',
     added: Timestamp.now(),
     name: '',
     description: '',
     deadline: Timestamp.now(),
     status: 'ACTIVE',
-    tasks: [],
+    history: EMPTY_HISTORY,
 };
 
 const ARCHIVED = 'ARCHIVED';
 
-export const getCompletedTasksFromGoal = (goal: GoalModel): PlannedTaskModel[] => {
-    let completedTasks: PlannedTaskModel[] = [];
-
-    goal.tasks.forEach((plannedTask: PlannedTaskModel) => {
-        if (plannedTask.status === 'COMPLETE') {
-            completedTasks.push(plannedTask);
-        }
-    });
-
-    return completedTasks;
-};
-
 class GoalController {
     public static clone(goal: GoalModel) {
         const clone: GoalModel = {
+            uid: goal.uid,
             added: goal.added,
             name: goal.name,
             description: goal.description,
             deadline: goal.deadline,
             status: goal.status,
-            tasks: goal.tasks,
+            history: goal.history,
         };
 
         if (goal.id) {
@@ -72,7 +78,7 @@ class GoalController {
         result
             .then((documents) => {
                 documents.docs.forEach((document) => {
-                    const goal = this.createGoalFromData(document);
+                    const goal = this.createGoalFromData(uid, document);
 
                     if (goal.status === ARCHIVED) {
                         return;
@@ -90,11 +96,11 @@ class GoalController {
             });
     }
 
-    public static getGoal(userId: string, id: string, callback: Function) {
-        const result = GoalDao.getGoal(userId, id);
+    public static getGoal(uid: string, id: string, callback: Function) {
+        const result = GoalDao.getGoal(uid, id);
         result
             .then((document) => {
-                const goal = this.createGoalFromData(document);
+                const goal = this.createGoalFromData(uid, document);
                 callback(goal);
             })
             .catch(() => {
@@ -111,26 +117,28 @@ class GoalController {
         await GoalDao.update(goal);
     }
 
-    public static async updateGoalTask(goal: GoalModel, plannedTask: PlannedTaskModel) {
-        let updatedTasks: PlannedTaskModel[] = [];
+    public static async updateHistory(plannedTask: PlannedTaskModel) {
+        if (!plannedTask.id || (!plannedTask.goalId && !plannedTask.routine.id)) {
+            return;
+        }
 
-        goal.tasks.forEach((task) => {
-            if (task.id !== plannedTask.id) {
-                updatedTasks.push(task);
-            }
+        let goalId = plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
+        this.getGoal(plannedTask.uid, goalId!, (goal: GoalModel) => {
+            goal.history.plannedTaskHistory = updatePlannedTaskHistory(goal.history.plannedTaskHistory, plannedTask);
+            this.update(goal);
         });
-
-        updatedTasks.push(plannedTask);
-        goal.tasks = updatedTasks;
-        await this.update(goal);
     }
 
-    private static createGoalFromData(document: DocumentSnapshot<DocumentData>): GoalModel {
+    private static createGoalFromData(uid: string, document: DocumentSnapshot<DocumentData>): GoalModel {
         let goal: GoalModel = document.data() as GoalModel;
         goal.id = document.id;
 
-        if (!goal.tasks) {
-            goal.tasks = [];
+        if (!goal.history) {
+            goal.history = EMPTY_HISTORY;
+        }
+
+        if (!goal.uid) {
+            goal.uid = uid;
         }
 
         return goal;
