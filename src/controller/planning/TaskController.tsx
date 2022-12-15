@@ -145,7 +145,7 @@ class TaskController {
         const result = TaskDao.getTask(uid, id);
         result
             .then((document) => {
-                const task = this.getTaskFromData(document);
+                const task = this.getHabitFromData(document);
                 callback(task);
             })
             .catch(() => {
@@ -160,20 +160,25 @@ class TaskController {
 
         const habitId: string = plannedTask.routine.id;
         this.getHabit(habitId, (habit: TaskModel) => {
+            console.log(habit);
             habit.history.plannedTaskHistory = updatePlannedTaskHistory(habit.history.plannedTaskHistory, plannedTask);
             this.update(habit);
         });
     }
 
-    private static getTaskFromData(data: DocumentSnapshot<DocumentData>): TaskModel {
-        let task: TaskModel = data.data() as TaskModel;
-        task.id = data.id;
+    private static getHabitFromData(data: DocumentSnapshot<DocumentData>): TaskModel {
+        let habit: TaskModel = data.data() as TaskModel;
+        habit.id = data.id;
 
-        if (!task.active) {
-            task.active = true;
+        if (!habit.active) {
+            habit.active = true;
         }
 
-        return task;
+        if (!habit.history.plannedTaskHistory) {
+            habit.history = EMPTY_HISTORY;
+        }
+
+        return habit;
     }
 
     static getTasks(uid: string, callback: Function) {

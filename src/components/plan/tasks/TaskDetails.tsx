@@ -3,7 +3,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text, Alert } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TaskController, { HabitHistoryElementModel, TaskModel } from 'src/controller/planning/TaskController';
+import TaskController, { TaskModel } from 'src/controller/planning/TaskController';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
@@ -20,6 +20,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { HabitHistory } from '../planning/HabitHistory';
+import { PlannedTaskHistoryElementModel } from 'src/model/Models';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
@@ -98,10 +99,10 @@ export const TaskDetails = () => {
         },
     ];
 
-    let allTasks: HabitHistoryElementModel[] = [];
-    allTasks = allTasks.concat(task?.history?.incomplete ? task.history.incomplete : []);
-    allTasks = allTasks.concat(task?.history?.complete ? task.history.complete : []);
-    allTasks = allTasks.concat(task?.history?.failed ? task.history.failed : []);
+    let allTasks: PlannedTaskHistoryElementModel[] = [];
+    allTasks = allTasks.concat(task?.history?.plannedTaskHistory.incomplete ? task.history.plannedTaskHistory.incomplete : []);
+    allTasks = allTasks.concat(task?.history?.plannedTaskHistory.complete ? task.history.plannedTaskHistory.complete : []);
+    allTasks = allTasks.concat(task?.history?.plannedTaskHistory.failed ? task.history.plannedTaskHistory.failed : []);
     allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : 0));
 
     let historyViews: JSX.Element[] = [];
@@ -122,9 +123,9 @@ export const TaskDetails = () => {
     }
 
     const daysOld = formatDistance(task.added.toDate(), new Date());
-    const incompletedTasks = task.history ? task.history.incomplete.length : 0;
-    const completedTasks = task.history ? task.history.complete.length : 0;
-    const failedTasks = task.history ? task.history.failed.length : 0;
+    const incompletedTasks = task.history ? task.history.plannedTaskHistory.incomplete.length : 0;
+    const completedTasks = task.history ? task.history.plannedTaskHistory.complete.length : 0;
+    const failedTasks = task.history ? task.history.plannedTaskHistory.failed.length : 0;
 
     return (
         <Screen>
