@@ -1,16 +1,19 @@
 import { plannedTaskIsComplete, plannedTaskIsFailed } from 'src/controller/planning/PlannedDayController';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { PlannedTaskHistoryElementModel, PlannedTaskHistoryModel } from 'src/model/Models';
+import { getOptional } from './GeneralUtility';
 
 export const updatePlannedTaskHistory = (plannedTaskHistory: PlannedTaskHistoryModel, plannedTask: PlannedTaskModel): PlannedTaskHistoryModel => {
-    if (!plannedTask.id || !plannedTask.dayKey || !plannedTask.routine.id) {
+    if (!plannedTask.id || !plannedTask.dayKey) {
         return plannedTaskHistory;
     }
+
+    const name = getOptional(plannedTask.routine.name);
 
     const plannedTaskHistoryElement: PlannedTaskHistoryElementModel = {
         dayKey: plannedTask.dayKey,
         id: plannedTask.id,
-        name: plannedTask.routine.name,
+        name: name,
         status: plannedTask.status ? plannedTask.status : 'INCOMPLETE',
     };
 

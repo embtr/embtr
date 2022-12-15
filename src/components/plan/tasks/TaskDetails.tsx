@@ -103,7 +103,7 @@ export const TaskDetails = () => {
     allTasks = allTasks.concat(task?.history?.plannedTaskHistory.incomplete ? task.history.plannedTaskHistory.incomplete : []);
     allTasks = allTasks.concat(task?.history?.plannedTaskHistory.complete ? task.history.plannedTaskHistory.complete : []);
     allTasks = allTasks.concat(task?.history?.plannedTaskHistory.failed ? task.history.plannedTaskHistory.failed : []);
-    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : 0));
+    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : -1));
 
     let historyViews: JSX.Element[] = [];
     allTasks.forEach((history) => {

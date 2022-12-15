@@ -102,7 +102,7 @@ export const GoalDetails = () => {
     allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.incomplete ? goal.history.plannedTaskHistory.incomplete : []);
     allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.complete ? goal.history.plannedTaskHistory.complete : []);
     allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.failed ? goal.history.plannedTaskHistory.failed : []);
-    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : 0));
+    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : -1));
 
     let historyViews: JSX.Element[] = [];
     allTasks.forEach((history) => {
