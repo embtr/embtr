@@ -8,13 +8,19 @@ import { getAuth } from 'firebase/auth';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
-import GoalController, { FAKE_GOAL, getCompletedTasksFromGoal, GoalModel } from 'src/controller/planning/GoalController';
+import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
+import { format, formatDistance } from 'date-fns';
+import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
+import PillarController from 'src/controller/pillar/PillarController';
+import UserController, { FAKE_USER, UserModel } from 'src/controller/user/UserController';
+import { PlannedTaskHistoryElementModel } from 'src/model/Models';
+import { HabitHistory } from '../planning/HabitHistory';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
@@ -23,12 +29,40 @@ export const GoalDetails = () => {
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const [goal, setGoal] = React.useState<GoalModel>(FAKE_GOAL);
+    const [user, setUser] = React.useState<UserModel>(FAKE_USER);
+    const [pillar, setPillar] = React.useState<PillarModel>(FAKE_PILLAR);
 
     useFocusEffect(
         React.useCallback(() => {
             GoalController.getGoal(getAuth().currentUser!.uid, route.params.id, setGoal);
         }, [])
     );
+
+    React.useEffect(() => {
+        const fetch = async () => {
+            const user = await UserController.get(goal.uid);
+            setUser(user);
+        };
+
+        if (goal.uid) {
+            fetch();
+        }
+    }, [goal]);
+
+    React.useEffect(() => {
+        if (!user.uid || !goal.pillarId) {
+            return;
+        }
+
+        const fetch = async () => {
+            const pillar = await PillarController.get(user, goal.pillarId!);
+            if (pillar) {
+                setPillar(pillar);
+            }
+        };
+
+        fetch();
+    }, [user, goal]);
 
     const closeMenu = useAppSelector(getCloseMenu);
 
@@ -59,7 +93,25 @@ export const GoalDetails = () => {
         },
     ];
 
-    const tasksCompleted = getCompletedTasksFromGoal(goal).length;
+    const tasksCompleted = goal.history.plannedTaskHistory.complete.length;
+    const tasksIncomplete = goal.history.plannedTaskHistory.incomplete.length;
+    const tasksFailed = goal.history.plannedTaskHistory.failed.length;
+    const daysOld = formatDistance(goal.added.toDate(), new Date());
+
+    let allTasks: PlannedTaskHistoryElementModel[] = [];
+    allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.incomplete ? goal.history.plannedTaskHistory.incomplete : []);
+    allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.complete ? goal.history.plannedTaskHistory.complete : []);
+    allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.failed ? goal.history.plannedTaskHistory.failed : []);
+    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : 0));
+
+    let historyViews: JSX.Element[] = [];
+    allTasks.forEach((history) => {
+        historyViews.push(
+            <View key={history.dayKey + history.name} style={{ paddingTop: 5 }}>
+                <HabitHistory history={history} />
+            </View>
+        );
+    });
 
     return (
         <Screen>
@@ -94,24 +146,27 @@ export const GoalDetails = () => {
 
                     <View style={{ paddingTop: 20, paddingBottom: 10 }}>
                         <View style={{ flexDirection: 'row' }}>
-                            <GoalDetailAttribute attribute={'Created'} value={'Jun 20 2022'} />
-                            <GoalDetailAttribute attribute={'Days Remaining'} value={'45 Days'} />
-                            <GoalDetailAttribute attribute={'Pillar'} value={'Fitness'} />
+                            <GoalDetailAttribute attribute={'Created'} value={format(goal.added.toDate(), 'MMMM dd, yyyy')} />
+                            <GoalDetailAttribute attribute={'Days Remaining'} value={daysOld} />
+                            <GoalDetailAttribute attribute={'Pillar'} value={pillar.name} />
                         </View>
 
                         <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                            <GoalDetailAttribute attribute={'Tasks Completed'} value={tasksCompleted + ' Tasks'} />
-                            <GoalDetailAttribute attribute={'Tasks Failed'} value={'10'} />
-                            <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} />
+                            <GoalDetailAttribute attribute={'Tasks Completed'} value={tasksCompleted + ' Task' + (tasksCompleted === 1 ? '' : 's')} />
+                            <GoalDetailAttribute attribute={'Tasks Incomplete'} value={tasksIncomplete + ' Task' + (tasksIncomplete === 1 ? '' : 's')} />
+                            <GoalDetailAttribute attribute={'Tasks Failed'} value={tasksFailed + ' Task' + (tasksFailed === 1 ? '' : 's')} />
                         </View>
 
                         <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                            <GoalDetailAttribute attribute={'Completion Streak'} value={'15 Days'} />
-                            <GoalDetailAttribute attribute={'Tasks Failed'} value={'10'} />
-                            <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} />
+                            <GoalDetailAttribute attribute={'Completion Streak'} value={'15 Days'} isFake={true} />
+                            <GoalDetailAttribute attribute={'Tasks Failed'} value={'10'} isFake={true} />
+                            <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} isFake={true} />
                         </View>
 
-                        <View style={{ paddingTop: 20, width: '100%' }}></View>
+                        <View style={{ paddingTop: 20, width: '100%' }}>
+                            <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font }}>History</Text>
+                            {historyViews}
+                        </View>
                     </View>
                 </View>
             </View>

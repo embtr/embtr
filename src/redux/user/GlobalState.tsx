@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { FAKE, UserModel } from 'src/controller/user/UserController';
+import { FAKE_USER, UserModel } from 'src/controller/user/UserController';
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: 'invalid',
     userProfileUrl: '',
-    currentUser: FAKE,
+    currentUser: FAKE_USER,
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
     openMenu: () => {},
     closeMenu: () => {},

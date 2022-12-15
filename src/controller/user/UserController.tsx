@@ -16,7 +16,7 @@ export interface UserModel {
     };
 }
 
-export const FAKE: UserModel = {
+export const FAKE_USER: UserModel = {
     uid: '',
     access_level: '',
     email: '',
