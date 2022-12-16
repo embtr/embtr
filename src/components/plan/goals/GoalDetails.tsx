@@ -19,8 +19,9 @@ import { format, formatDistance } from 'date-fns';
 import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import UserController, { FAKE_USER, UserModel } from 'src/controller/user/UserController';
-import { PlannedTaskHistoryElementModel } from 'src/model/Models';
 import { HabitHistory } from '../planning/HabitHistory';
+import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
@@ -31,6 +32,7 @@ export const GoalDetails = () => {
     const [goal, setGoal] = React.useState<GoalModel>(FAKE_GOAL);
     const [user, setUser] = React.useState<UserModel>(FAKE_USER);
     const [pillar, setPillar] = React.useState<PillarModel>(FAKE_PILLAR);
+    const [taskHistory, setTaskHistory] = React.useState<PlannedTaskModel[]>([]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -64,6 +66,19 @@ export const GoalDetails = () => {
         fetch();
     }, [user, goal]);
 
+    React.useEffect(() => {
+        const fetch = async () => {
+            if (!goal?.id) {
+                return;
+            }
+
+            const tasks = await PlannedTaskController.getGoalHistory(goal.id);
+            setTaskHistory(tasks);
+        };
+
+        fetch();
+    }, [goal]);
+
     const closeMenu = useAppSelector(getCloseMenu);
 
     const menuItems: EmbtrMenuOption[] = [
@@ -93,22 +108,16 @@ export const GoalDetails = () => {
         },
     ];
 
-    const tasksCompleted = goal.history.plannedTaskHistory.complete.length;
-    const tasksIncomplete = goal.history.plannedTaskHistory.incomplete.length;
-    const tasksFailed = goal.history.plannedTaskHistory.failed.length;
+    const completedTasks = taskHistory.filter((e) => e.status === COMPLETE).length;
+    const incompletedTasks = taskHistory.filter((e) => e.status === INCOMPLETE).length;
+    const failedTasks = taskHistory.filter((e) => e.status === FAILED).length;
     const daysOld = formatDistance(goal.added.toDate(), new Date());
 
-    let allTasks: PlannedTaskHistoryElementModel[] = [];
-    allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.incomplete ? goal.history.plannedTaskHistory.incomplete : []);
-    allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.complete ? goal.history.plannedTaskHistory.complete : []);
-    allTasks = allTasks.concat(goal?.history?.plannedTaskHistory.failed ? goal.history.plannedTaskHistory.failed : []);
-    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : -1));
-
     let historyViews: JSX.Element[] = [];
-    allTasks.forEach((history) => {
+    taskHistory.forEach((task) => {
         historyViews.push(
-            <View key={history.dayKey + history.name} style={{ paddingTop: 5 }}>
-                <HabitHistory history={history} />
+            <View key={task.id} style={{ paddingTop: 5 }}>
+                <HabitHistory history={task} />
             </View>
         );
     });
@@ -152,9 +161,9 @@ export const GoalDetails = () => {
                         </View>
 
                         <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                            <GoalDetailAttribute attribute={'Tasks Completed'} value={tasksCompleted + ' Task' + (tasksCompleted === 1 ? '' : 's')} />
-                            <GoalDetailAttribute attribute={'Tasks Incomplete'} value={tasksIncomplete + ' Task' + (tasksIncomplete === 1 ? '' : 's')} />
-                            <GoalDetailAttribute attribute={'Tasks Failed'} value={tasksFailed + ' Task' + (tasksFailed === 1 ? '' : 's')} />
+                            <GoalDetailAttribute attribute={'Tasks Completed'} value={completedTasks + ' Task' + (completedTasks === 1 ? '' : 's')} />
+                            <GoalDetailAttribute attribute={'Tasks Incomplete'} value={incompletedTasks + ' Task' + (incompletedTasks === 1 ? '' : 's')} />
+                            <GoalDetailAttribute attribute={'Tasks Failed'} value={failedTasks + ' Task' + (failedTasks === 1 ? '' : 's')} />
                         </View>
 
                         <View style={{ flexDirection: 'row', paddingTop: 10 }}>

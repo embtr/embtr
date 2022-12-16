@@ -1,10 +1,10 @@
-import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
-import TaskController, { EMPTY_HISTORY, TaskModel } from 'src/controller/planning/TaskController';
+import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { TaskModel } from 'src/controller/planning/TaskController';
 import PlannedTaskDao from 'src/firebase/firestore/planning/PlannedTaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import MigrationController from '../audit_log/MigrationController';
+import { DELETED } from 'src/util/constants';
 import { UserModel } from '../user/UserController';
-import GoalController from './GoalController';
+import GoalController, { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay } from './PlannedDayController';
 
 export interface PlannedTaskModel {
@@ -16,6 +16,8 @@ export interface PlannedTaskModel {
     goalId?: string;
     startMinute?: number;
     duration?: number;
+    added: Timestamp;
+    modified: Timestamp;
 }
 
 export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
@@ -27,6 +29,8 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
         status: plannedTask.status,
         startMinute: plannedTask.startMinute,
         duration: plannedTask.duration,
+        added: plannedTask.added,
+        modified: plannedTask.modified,
     };
 
     if (plannedTask.goalId) {
@@ -35,10 +39,6 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
 
     if (!clonedPlannedTask.status) {
         clonedPlannedTask.status = 'INCOMPLETE';
-    }
-
-    if (clonedPlannedTask.routine.history) {
-        clonedPlannedTask.routine.history = EMPTY_HISTORY;
     }
 
     return clonedPlannedTask;
@@ -52,14 +52,12 @@ export const createPlannedTaskModel = (dayKey: string, task: TaskModel, startMin
         startMinute: startMinute,
         duration: duration,
         status: 'INCOMPLETE',
+        added: Timestamp.now(),
+        modified: Timestamp.now(),
     };
 
     if (goalId) {
         plannedTask.goalId = goalId;
-    }
-
-    if (plannedTask.routine.history) {
-        plannedTask.routine.history = EMPTY_HISTORY;
     }
 
     return plannedTask;
@@ -77,8 +75,6 @@ class PlannedTaskController {
     public static async add(plannedTask: PlannedTaskModel) {
         const results = await PlannedTaskDao.add(plannedTask);
         plannedTask.id = results.id;
-
-        TaskController.updateHistory(plannedTask);
 
         return plannedTask;
     }
@@ -103,14 +99,8 @@ class PlannedTaskController {
         //});
     }
 
-    public static async get(user: UserModel, dayKey: string, id: string) {
-        let plannedTask: PlannedTaskModel | undefined;
-        if (MigrationController.requiresPlannedTaskMigration(user)) {
-            plannedTask = await this.getDeprecated(user, dayKey, id);
-        } else {
-            plannedTask = await this.getCurrent(id);
-        }
-
+    public static async get(id: string) {
+        const plannedTask: PlannedTaskModel = await this.getCurrent(id);
         return plannedTask;
     }
 
@@ -130,11 +120,70 @@ class PlannedTaskController {
     }
 
     public static async update(user: UserModel, plannedTask: PlannedTaskModel) {
+        //update old goal
+        const oldPlannedTask = await this.get(plannedTask.id!);
+        const oldGoalId = getPlannedTaskGoalId(oldPlannedTask);
+        const newGoalId = getPlannedTaskGoalId(plannedTask);
+        if (oldGoalId && oldGoalId !== newGoalId) {
+            GoalController.getGoal(plannedTask.uid, oldGoalId, (oldGoal: GoalModel) => {
+                GoalController.removePlannedTaskFromGoal(oldGoal, plannedTask);
+            });
+        }
+
+        //update task
         await PlannedTaskDao.update(plannedTask);
+
+        //update daily result
         await PlannedDayController.refreshDailyResult(user, plannedTask.dayKey);
-        TaskController.updateHistory(plannedTask);
+
+        //update history
         GoalController.updateHistory(plannedTask);
+
         //await LevelController.handlePlannedDayStatusChange(plannedDay);
+    }
+
+    public static async getHabitHistory(habitId: string) {
+        const results = await PlannedTaskDao.getAllWithHabitId(habitId);
+
+        const plannedTasks: PlannedTaskModel[] = [];
+        results.docs.forEach((doc) => {
+            const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
+            plannedTask.id = doc.id;
+
+            if (plannedTask.status === DELETED) {
+                return;
+            }
+
+            if (!this.isValidDayKey(plannedTask.dayKey)) {
+                return;
+            }
+
+            plannedTasks.push(plannedTask);
+        });
+
+        return plannedTasks;
+    }
+
+    public static async getGoalHistory(goalId: string) {
+        const results = await PlannedTaskDao.getAllWithGoalId(goalId);
+
+        const plannedTasks: PlannedTaskModel[] = [];
+        results.docs.forEach((doc) => {
+            const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
+            plannedTask.id = doc.id;
+
+            if (plannedTask.status === DELETED) {
+                return;
+            }
+
+            if (!this.isValidDayKey(plannedTask.dayKey)) {
+                return;
+            }
+
+            plannedTasks.push(plannedTask);
+        });
+
+        return plannedTasks;
     }
 
     private static async getCurrent(id: string) {
@@ -143,21 +192,6 @@ class PlannedTaskController {
         plannedTask.id = results.id;
 
         return plannedTask;
-    }
-
-    private static async getDeprecated(user: UserModel, dayKey: string, id: string): Promise<PlannedTaskModel | undefined> {
-        const plannedDay = await PlannedDayController.get(user, dayKey);
-        if (!plannedDay) {
-            return undefined;
-        }
-
-        plannedDay.plannedTasks.forEach((plannedTask) => {
-            if (plannedTask.id === id) {
-                return plannedTask;
-            }
-        });
-
-        return undefined;
     }
 
     private static getPlannedTaskFromData(plannedDay: PlannedDay, doc: QueryDocumentSnapshot<DocumentData>) {
@@ -169,6 +203,10 @@ class PlannedTaskController {
         }
 
         return plannedTask;
+    }
+
+    private static isValidDayKey(dayKey: string) {
+        return dayKey && dayKey.length === 8 && /^\d+$/.test(dayKey);
     }
 }
 

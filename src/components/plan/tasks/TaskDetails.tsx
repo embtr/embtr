@@ -20,7 +20,8 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { HabitHistory } from '../planning/HabitHistory';
-import { PlannedTaskHistoryElementModel } from 'src/model/Models';
+import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
@@ -31,6 +32,7 @@ export const TaskDetails = () => {
     const [task, setTask] = React.useState<TaskModel>();
     const [goal, setGoal] = React.useState<GoalModel>();
     const [pillar, setPillar] = React.useState<PillarModel>();
+    const [taskHistory, setTaskHistory] = React.useState<PlannedTaskModel[]>([]);
 
     React.useEffect(() => {
         TaskController.getHabit(route.params.id, setTask);
@@ -46,6 +48,20 @@ export const TaskDetails = () => {
 
     React.useEffect(() => {
         fetchPillar();
+    }, [task]);
+
+    React.useEffect(() => {
+        const fetch = async () => {
+            if (!task?.id) {
+                return;
+            }
+
+            console.log("getting history for", task.id);
+            const tasks = await PlannedTaskController.getHabitHistory(task.id);
+            setTaskHistory(tasks);
+        };
+
+        fetch();
     }, [task]);
 
     const fetchPillar = async () => {
@@ -99,17 +115,11 @@ export const TaskDetails = () => {
         },
     ];
 
-    let allTasks: PlannedTaskHistoryElementModel[] = [];
-    allTasks = allTasks.concat(task?.history?.plannedTaskHistory.incomplete ? task.history.plannedTaskHistory.incomplete : []);
-    allTasks = allTasks.concat(task?.history?.plannedTaskHistory.complete ? task.history.plannedTaskHistory.complete : []);
-    allTasks = allTasks.concat(task?.history?.plannedTaskHistory.failed ? task.history.plannedTaskHistory.failed : []);
-    allTasks = allTasks.sort((a, b) => (a.dayKey < b.dayKey ? 1 : -1));
-
     let historyViews: JSX.Element[] = [];
-    allTasks.forEach((history) => {
+    taskHistory.forEach((task) => {
         historyViews.push(
-            <View key={history.dayKey + history.name} style={{ paddingTop: 5 }}>
-                <HabitHistory history={history} />
+            <View key={task.id} style={{ paddingTop: 5 }}>
+                <HabitHistory history={task} />
             </View>
         );
     });
@@ -123,9 +133,9 @@ export const TaskDetails = () => {
     }
 
     const daysOld = formatDistance(task.added.toDate(), new Date());
-    const incompletedTasks = task.history ? task.history.plannedTaskHistory.incomplete.length : 0;
-    const completedTasks = task.history ? task.history.plannedTaskHistory.complete.length : 0;
-    const failedTasks = task.history ? task.history.plannedTaskHistory.failed.length : 0;
+    const completedTasks = taskHistory.filter((e) => e.status === COMPLETE).length;
+    const incompletedTasks = taskHistory.filter((e) => e.status === INCOMPLETE).length;
+    const failedTasks = taskHistory.filter((e) => e.status === FAILED).length;
 
     return (
         <Screen>

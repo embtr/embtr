@@ -1,13 +1,6 @@
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalDao from 'src/firebase/firestore/planning/GoalDao';
-import { PlannedTaskHistoryModel } from 'src/model/Models';
-import { updatePlannedTaskHistory } from 'src/util/HistoryUtility';
-import { plannedTaskIsFailed } from './PlannedDayController';
 import { PlannedTaskModel } from './PlannedTaskController';
-
-interface GoalHistoryModel {
-    plannedTaskHistory: PlannedTaskHistoryModel;
-}
 
 export interface GoalModel {
     id?: string;
@@ -18,16 +11,7 @@ export interface GoalModel {
     pillarId?: string;
     deadline: Timestamp;
     status: string;
-    history: GoalHistoryModel;
 }
-
-const EMPTY_HISTORY: GoalHistoryModel = {
-    plannedTaskHistory: {
-        complete: [],
-        incomplete: [],
-        failed: [],
-    },
-};
 
 export const FAKE_GOAL: GoalModel = {
     uid: '',
@@ -36,7 +20,6 @@ export const FAKE_GOAL: GoalModel = {
     description: '',
     deadline: Timestamp.now(),
     status: 'ACTIVE',
-    history: EMPTY_HISTORY,
 };
 
 const ARCHIVED = 'ARCHIVED';
@@ -50,7 +33,6 @@ class GoalController {
             description: goal.description,
             deadline: goal.deadline,
             status: goal.status,
-            history: goal.history,
         };
 
         if (goal.id) {
@@ -117,25 +99,9 @@ class GoalController {
         await GoalDao.update(goal);
     }
 
-    public static async updateHistory(plannedTask: PlannedTaskModel) {
-        if (!plannedTask.id || (!plannedTask.goalId && !plannedTask.routine.id)) {
-            return;
-        }
-
-        let goalId = plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
-        this.getGoal(plannedTask.uid, goalId!, (goal: GoalModel) => {
-            goal.history.plannedTaskHistory = updatePlannedTaskHistory(goal.history.plannedTaskHistory, plannedTask);
-            this.update(goal);
-        });
-    }
-
     private static createGoalFromData(uid: string, document: DocumentSnapshot<DocumentData>): GoalModel {
         let goal: GoalModel = document.data() as GoalModel;
         goal.id = document.id;
-
-        if (!goal.history) {
-            goal.history = EMPTY_HISTORY;
-        }
 
         if (!goal.uid) {
             goal.uid = uid;

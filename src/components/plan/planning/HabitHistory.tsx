@@ -5,15 +5,17 @@ import { TaskFailedSymbol } from 'src/components/common/task_symbols/TaskFailedS
 import { TaskInProgressSymbol } from 'src/components/common/task_symbols/TaskInProgressSymbol';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
-import { HabitHistoryElementModel } from 'src/controller/planning/TaskController';
+import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
-    history: HabitHistoryElementModel;
+    history: PlannedTaskModel;
 }
 
 export const HabitHistory = ({ history }: Props) => {
     const { colors } = useTheme();
+
+    console.log("processing DayKey:", history.dayKey, "for id:", history.id);
 
     return (
         <View
@@ -34,7 +36,7 @@ export const HabitHistory = ({ history }: Props) => {
             </View>
 
             <View style={{ paddingLeft: 10 }}>
-                <Text style={{ fontFamily: POPPINS_REGULAR, fontSize: 12, color: colors.goal_primary_font }}>{history.name}</Text>
+                <Text style={{ fontFamily: POPPINS_REGULAR, fontSize: 12, color: colors.goal_primary_font }}>{history.routine.name}</Text>
                 <Text style={{ opacity: 0.75, fontFamily: POPPINS_REGULAR, fontSize: 10, paddingLeft: 1, color: colors.goal_secondary_font }}>
                     {format(getDateFromDayKey(history.dayKey), 'MMMM dd, yyyy')}
                 </Text>

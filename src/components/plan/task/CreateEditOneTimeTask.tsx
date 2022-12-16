@@ -71,7 +71,7 @@ export const CreateEditOneTimeTask = () => {
     React.useEffect(() => {
         const fetch = async () => {
             if (route.params.id && plannedDay?.id) {
-                const plannedTask = await PlannedTaskController.get(currentUser, plannedDay?.id, route.params.id);
+                const plannedTask = await PlannedTaskController.get(route.params.id);
                 setPlannedTask(plannedTask);
             }
         };

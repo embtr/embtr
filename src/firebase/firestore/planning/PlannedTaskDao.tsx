@@ -32,6 +32,24 @@ class PlannedTaskDao {
 
         return querySnapshot;
     }
+
+    public static async getAllWithHabitId(habitId: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getAllWithHabitId');
+        const q = query(collection(db, 'planned_tasks'), where('routine.id', '==', habitId));
+
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot;
+    }
+
+    public static async getAllWithGoalId(goalId: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getAllWithGoalId');
+        const q = query(collection(db, 'planned_tasks'), where('goalId', '==', goalId));
+
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot;
+    }
 }
 
 export default PlannedTaskDao;

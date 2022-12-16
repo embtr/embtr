@@ -1,14 +1,7 @@
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import TaskDao from 'src/firebase/firestore/planning/TaskDao';
-import { PlannedTaskHistoryElementModel, PlannedTaskHistoryModel } from 'src/model/Models';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { updatePlannedTaskHistory } from 'src/util/HistoryUtility';
-import { getDateFromDayKey, plannedTaskIsComplete, plannedTaskIsFailed } from './PlannedDayController';
-import { PlannedTaskModel } from './PlannedTaskController';
-
-interface TaskHistoryModel {
-    plannedTaskHistory: PlannedTaskHistoryModel;
-}
+import { getDateFromDayKey } from './PlannedDayController';
 
 export interface TaskModel {
     id?: string;
@@ -18,25 +11,7 @@ export interface TaskModel {
     description: string;
     goalId?: string;
     active: boolean;
-    history: TaskHistoryModel;
 }
-
-export const EMPTY_HISTORY: TaskHistoryModel = {
-    plannedTaskHistory: {
-        complete: [],
-        incomplete: [],
-        failed: [],
-    },
-};
-
-export const EMPTY_HABIT: TaskModel = {
-    uid: '',
-    added: Timestamp.now(),
-    name: '',
-    description: '',
-    active: true,
-    history: EMPTY_HISTORY,
-};
 
 export const getDayOfWeekFromDayKey = (dayKey: string) => {
     const date = getDateFromDayKey(dayKey);
@@ -89,7 +64,6 @@ export const createTaskModel = (name: string, description: string, goalId?: stri
         name: name,
         description: description,
         active: true,
-        history: EMPTY_HISTORY,
     };
 
     if (goalId) {
@@ -109,15 +83,10 @@ class TaskController {
             description: task.description,
             goalId: task.goalId,
             active: task.active,
-            history: task.history,
         };
 
         if (task.id) {
             clone.id = task.id;
-        }
-
-        if (!clone.history) {
-            clone.history = EMPTY_HISTORY;
         }
 
         return clone;
@@ -153,29 +122,12 @@ class TaskController {
             });
     }
 
-    public static async updateHistory(plannedTask: PlannedTaskModel) {
-        if (!plannedTask.routine.id) {
-            return;
-        }
-
-        const habitId: string = plannedTask.routine.id;
-        this.getHabit(habitId, (habit: TaskModel) => {
-            console.log(habit);
-            habit.history.plannedTaskHistory = updatePlannedTaskHistory(habit.history.plannedTaskHistory, plannedTask);
-            this.update(habit);
-        });
-    }
-
     private static getHabitFromData(data: DocumentSnapshot<DocumentData>): TaskModel {
         let habit: TaskModel = data.data() as TaskModel;
         habit.id = data.id;
 
         if (!habit.active) {
             habit.active = true;
-        }
-
-        if (!habit.history.plannedTaskHistory) {
-            habit.history = EMPTY_HISTORY;
         }
 
         return habit;

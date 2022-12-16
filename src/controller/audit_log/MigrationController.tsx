@@ -1,8 +1,5 @@
 import { VERSIONS } from 'src/util/FeatureVersions';
 import PillarController from '../pillar/PillarController';
-import PlannedDayController from '../planning/PlannedDayController';
-import PlannedTaskController from '../planning/PlannedTaskController';
-import DailyResultController from '../timeline/daily_result/DailyResultController';
 import UserController, { UserModel } from '../user/UserController';
 
 class MigrationController {
@@ -13,7 +10,6 @@ class MigrationController {
 
     public static async handleMigrations(user: UserModel) {
         await this.handlePillarMigration(user);
-        await this.handlePlannedTaskMigration(user);
     }
 
     public static requiresMigration(user: UserModel) {
@@ -35,15 +31,6 @@ class MigrationController {
 
         await PillarController.migrateDeprecatedPillars();
         await UserController.updateFeatureVersion(user, 'pillar', VERSIONS.PILLAR);
-    }
-
-    private static async handlePlannedTaskMigration(user: UserModel) {
-        if (!this.requiresPlannedTaskMigration(user)) {
-            return;
-        }
-
-        await PlannedDayController.migrateAllDeprecated(user);
-        //await UserController.updateFeatureVersion(user, 'planned_task', VERSIONS.PLANNED_TASK);
     }
 }
 
