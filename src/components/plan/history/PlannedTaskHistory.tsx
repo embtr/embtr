@@ -13,13 +13,15 @@ export const PlannedTaskHistory = ({ history }: Props) => {
     const { colors } = useTheme();
 
     let historyViews: JSX.Element[] = [];
-    history.forEach((task) => {
-        historyViews.push(
-            <View key={task.id} style={{ paddingTop: 5 }}>
-                <PlannedTaskHistoryElement history={task} />
-            </View>
-        );
-    });
+    history
+        .sort((a, b) => (a.dayKey > b.dayKey ? -1 : 1))
+        .forEach((task) => {
+            historyViews.push(
+                <View key={task.id} style={{ paddingTop: 5 }}>
+                    <PlannedTaskHistoryElement history={task} />
+                </View>
+            );
+        });
 
     return (
         <View style={{ flex: 1 }}>
