@@ -1,6 +1,5 @@
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalDao from 'src/firebase/firestore/planning/GoalDao';
-import { PlannedTaskModel } from './PlannedTaskController';
 
 export interface GoalModel {
     id?: string;

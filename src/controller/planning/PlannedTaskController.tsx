@@ -1,10 +1,9 @@
-import { DocumentData, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { DocumentData, QueryDocumentSnapshot, QuerySnapshot, Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import PlannedTaskDao from 'src/firebase/firestore/planning/PlannedTaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { DELETED } from 'src/util/constants';
 import { UserModel } from '../user/UserController';
-import GoalController, { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay } from './PlannedDayController';
 
 export interface PlannedTaskModel {
@@ -105,85 +104,34 @@ class PlannedTaskController {
     }
 
     public static async getAllInPlannedDay(plannedDay: PlannedDay) {
-        const plannedTasks: PlannedTaskModel[] = [];
-
         const results = await PlannedTaskDao.getAllInPlannedDayByDayKey(plannedDay.uid, plannedDay.dayKey);
-        results.docs.forEach((doc) => {
-            const plannedTask: PlannedTaskModel = this.getPlannedTaskFromData(plannedDay, doc);
-            if (plannedTask.status === 'DELETED') {
-                return;
-            }
-            plannedTasks.push(plannedTask);
-        });
 
+        const plannedTasks: PlannedTaskModel[] = this.getPlannedTasksFromResults(results);
         return plannedTasks;
-    }
-
-    public static async update(user: UserModel, plannedTask: PlannedTaskModel) {
-        //update old goal
-        const oldPlannedTask = await this.get(plannedTask.id!);
-        const oldGoalId = getPlannedTaskGoalId(oldPlannedTask);
-        const newGoalId = getPlannedTaskGoalId(plannedTask);
-        if (oldGoalId && oldGoalId !== newGoalId) {
-            GoalController.getGoal(plannedTask.uid, oldGoalId, (oldGoal: GoalModel) => {
-                GoalController.removePlannedTaskFromGoal(oldGoal, plannedTask);
-            });
-        }
-
-        //update task
-        await PlannedTaskDao.update(plannedTask);
-
-        //update daily result
-        await PlannedDayController.refreshDailyResult(user, plannedTask.dayKey);
-
-        //update history
-        GoalController.updateHistory(plannedTask);
-
-        //await LevelController.handlePlannedDayStatusChange(plannedDay);
     }
 
     public static async getHabitHistory(habitId: string) {
         const results = await PlannedTaskDao.getAllWithHabitId(habitId);
 
-        const plannedTasks: PlannedTaskModel[] = [];
-        results.docs.forEach((doc) => {
-            const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
-            plannedTask.id = doc.id;
-
-            if (plannedTask.status === DELETED) {
-                return;
-            }
-
-            if (!this.isValidDayKey(plannedTask.dayKey)) {
-                return;
-            }
-
-            plannedTasks.push(plannedTask);
-        });
-
+        const plannedTasks: PlannedTaskModel[] = this.getPlannedTasksFromResults(results);
         return plannedTasks;
     }
 
     public static async getGoalHistory(goalId: string) {
         const results = await PlannedTaskDao.getAllWithGoalId(goalId);
 
-        const plannedTasks: PlannedTaskModel[] = [];
-        results.docs.forEach((doc) => {
-            const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
-            plannedTask.id = doc.id;
-
-            if (plannedTask.status === DELETED) {
-                return;
-            }
-
-            if (!this.isValidDayKey(plannedTask.dayKey)) {
-                return;
-            }
-
-            plannedTasks.push(plannedTask);
-        });
-
+        const plannedTasks: PlannedTaskModel[] = this.getPlannedTasksFromResults(results);
         return plannedTasks;
+    }
+
+    public static async update(user: UserModel, plannedTask: PlannedTaskModel) {
+        //update task
+        await PlannedTaskDao.update(plannedTask);
+
+        //update daily result
+        await PlannedDayController.refreshDailyResult(user, plannedTask.dayKey);
+
+        //await LevelController.handlePlannedDayStatusChange(plannedDay);
     }
 
     private static async getCurrent(id: string) {
@@ -194,13 +142,28 @@ class PlannedTaskController {
         return plannedTask;
     }
 
-    private static getPlannedTaskFromData(plannedDay: PlannedDay, doc: QueryDocumentSnapshot<DocumentData>) {
+    private static getPlannedTasksFromResults(results: QuerySnapshot<DocumentData>) {
+        const plannedTasks: PlannedTaskModel[] = [];
+        results.docs.forEach((doc) => {
+            const plannedTask: PlannedTaskModel = this.getPlannedTaskFromData(doc);
+
+            if (plannedTask.status === DELETED) {
+                return;
+            }
+
+            if (!this.isValidDayKey(plannedTask.dayKey)) {
+                return;
+            }
+
+            plannedTasks.push(plannedTask);
+        });
+
+        return plannedTasks;
+    }
+
+    private static getPlannedTaskFromData(doc: QueryDocumentSnapshot<DocumentData>) {
         const plannedTask: PlannedTaskModel = doc.data() as PlannedTaskModel;
         plannedTask.id = doc.id;
-
-        if (plannedDay.dayKey) {
-            plannedTask.dayKey = plannedDay.dayKey;
-        }
 
         return plannedTask;
     }

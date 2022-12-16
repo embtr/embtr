@@ -19,9 +19,9 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
-import { HabitHistory } from '../planning/HabitHistory';
 import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
+import { PlannedTaskHistory } from '../history/PlannedTaskHistory';
 
 export const TaskDetails = () => {
     const { colors } = useTheme();
@@ -56,7 +56,6 @@ export const TaskDetails = () => {
                 return;
             }
 
-            console.log("getting history for", task.id);
             const tasks = await PlannedTaskController.getHabitHistory(task.id);
             setTaskHistory(tasks);
         };
@@ -115,15 +114,6 @@ export const TaskDetails = () => {
         },
     ];
 
-    let historyViews: JSX.Element[] = [];
-    taskHistory.forEach((task) => {
-        historyViews.push(
-            <View key={task.id} style={{ paddingTop: 5 }}>
-                <HabitHistory history={task} />
-            </View>
-        );
-    });
-
     if (!task) {
         return (
             <Screen>
@@ -148,39 +138,32 @@ export const TaskDetails = () => {
             />
             <EmbtrMenuCustom />
 
-            <View style={{ flex: 1 }}>
-                <View style={{ paddingLeft: 10 }}>
-                    <View style={{ paddingLeft: 10, paddingTop: 10 }}>
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{task?.name}</Text>
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
-                            {task?.description}
-                        </Text>
-                    </View>
+            <View style={{ paddingLeft: 10, paddingTop: 10 }}>
+                <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{task?.name}</Text>
+                <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
+                    {task?.description}
+                </Text>
+            </View>
 
-                    <View style={{ paddingTop: 15, marginLeft: 10, marginRight: 10 }}>
-                        <HorizontalLine />
-                    </View>
+            <View style={{ paddingTop: 15, marginLeft: 10, marginRight: 10 }}>
+                <HorizontalLine />
+            </View>
 
-                    <View style={{ paddingTop: 20, paddingBottom: 10 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <GoalDetailAttribute attribute={'Created'} value={format(task?.added.toDate(), 'MMMM dd, yyyy')} />
-                            <GoalDetailAttribute attribute={'Days Old'} value={daysOld} />
-                            <GoalDetailAttribute attribute={'Pillar'} value={pillar?.id ? pillar.id : 'N/A'} />
-                        </View>
+            <View style={{ paddingTop: 20, paddingBottom: 10 }}>
+                <View style={{ flexDirection: 'row' }}>
+                    <GoalDetailAttribute attribute={'Created'} value={format(task?.added.toDate(), 'MMMM dd, yyyy')} />
+                    <GoalDetailAttribute attribute={'Days Old'} value={daysOld} />
+                    <GoalDetailAttribute attribute={'Pillar'} value={pillar?.id ? pillar.id : 'N/A'} />
+                </View>
 
-                        <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                            <GoalDetailAttribute attribute={'Tasks Completed'} value={completedTasks + (completedTasks === 1 ? ' Task' : ' Tasks')} />
-                            <GoalDetailAttribute attribute={'Tasks Failed'} value={failedTasks + (failedTasks === 1 ? ' Task' : ' Tasks')} />
-                            <GoalDetailAttribute attribute={'Tasks Incomplete'} value={incompletedTasks + (incompletedTasks === 1 ? ' Task' : ' Tasks')} />
-                        </View>
-
-                        <View style={{ paddingTop: 20, width: '100%' }}>
-                            <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font }}>History</Text>
-                            {historyViews}
-                        </View>
-                    </View>
+                <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                    <GoalDetailAttribute attribute={'Tasks Completed'} value={completedTasks + (completedTasks === 1 ? ' Task' : ' Tasks')} />
+                    <GoalDetailAttribute attribute={'Tasks Failed'} value={failedTasks + (failedTasks === 1 ? ' Task' : ' Tasks')} />
+                    <GoalDetailAttribute attribute={'Tasks Incomplete'} value={incompletedTasks + (incompletedTasks === 1 ? ' Task' : ' Tasks')} />
                 </View>
             </View>
+
+            <PlannedTaskHistory history={taskHistory} />
         </Screen>
     );
 };
