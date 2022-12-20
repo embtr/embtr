@@ -4,6 +4,8 @@ import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Banner } from 'src/components/common/Banner';
+import { Screen } from 'src/components/common/Screen';
 import { Goal } from 'src/components/plan/goals/Goal';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PillarController from 'src/controller/pillar/PillarController';
@@ -11,7 +13,6 @@ import GoalController, { GoalModel } from 'src/controller/planning/GoalControlle
 import UserController from 'src/controller/user/UserController';
 import { PillarModel } from 'src/model/PillarModel';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const Goals = () => {
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
@@ -48,7 +49,9 @@ export const Goals = () => {
     });
 
     return (
-        <View style={{ height: '100%', width: '100%' }}>
+        <Screen>
+            <Banner name={'Goals'} leftText={'back'} leftRoute="BACK" />
+
             {goalViews.length > 0 ? (
                 <ScrollView style={{ paddingTop: 7 }}>{goalViews}</ScrollView>
             ) : (
@@ -65,6 +68,6 @@ export const Goals = () => {
                     </Text>
                 </View>
             )}
-        </View>
+        </Screen>
     );
 };

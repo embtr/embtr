@@ -8,7 +8,7 @@ import { getAuth } from 'firebase/auth';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
-import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
+import GoalController, { FAKE_GOAL, getProgressPercent, GoalModel } from 'src/controller/planning/GoalController';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
@@ -20,9 +20,7 @@ import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import UserController, { FAKE_USER, UserModel } from 'src/controller/user/UserController';
 import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import { COMPLETE, FAILED, INCOMPLETE, POPPINS_SEMI_BOLD } from 'src/util/constants';
-import { ScrollView } from 'react-native-gesture-handler';
-import { PlannedTaskHistoryElement } from '../history/PlannedTaskHistoryElement';
+import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
 import { PlannedTaskHistory } from '../history/PlannedTaskHistory';
 
 export const GoalDetails = () => {
@@ -115,6 +113,8 @@ export const GoalDetails = () => {
     const failedTasks = taskHistory.filter((e) => e.status === FAILED).length;
     const daysOld = formatDistance(goal.added.toDate(), new Date());
 
+    const progressPercent = getProgressPercent(goal);
+
     return (
         <Screen>
             <Banner
@@ -141,7 +141,7 @@ export const GoalDetails = () => {
 
                 <View style={{ paddingLeft: 10, paddingTop: 15 }}>
                     <View style={{ width: '100%', alignContent: 'center', paddingTop: 5 }}>
-                        <ProgressBar progress={1} />
+                        <ProgressBar progress={progressPercent} />
                     </View>
                 </View>
 

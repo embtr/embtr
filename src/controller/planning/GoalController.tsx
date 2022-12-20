@@ -1,3 +1,4 @@
+import { differenceInDays } from 'date-fns';
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalDao from 'src/firebase/firestore/planning/GoalDao';
 
@@ -22,6 +23,15 @@ export const FAKE_GOAL: GoalModel = {
 };
 
 const ARCHIVED = 'ARCHIVED';
+
+export const getProgressPercent = (goal: GoalModel) => {
+    const totalDays = differenceInDays(goal.deadline.toDate(), goal.added.toDate());
+    const daysRemaining = differenceInDays(goal.deadline.toDate(), new Date());
+    const daysPassed = totalDays - daysRemaining;
+    const daysRemainingPercent = Math.min(100, Math.floor((daysPassed / totalDays) * 100));
+
+    return daysRemainingPercent;
+};
 
 class GoalController {
     public static clone(goal: GoalModel) {

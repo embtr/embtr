@@ -25,6 +25,7 @@ export type PlanTabScreens = {
     CreateEditOneTimeTask: { dayKey: string; id?: string };
     CreateEditGoal: { id?: string };
     GoalDetails: { id: string };
+    Goals: undefined;
     TaskDetails: { id: string };
     PlanDay: { id: string };
 };

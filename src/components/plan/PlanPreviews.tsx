@@ -1,7 +1,9 @@
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { HabitsPreview } from './HabitsPreview';
+import { GoalPreviews } from './GoalPreviews';
+import { HabitPreviews } from './HabitPreviews';
+import { PillarPreviews } from './PillarPreviews';
 
 export const PlanPreviews = () => {
     const { colors } = useTheme();
@@ -9,8 +11,14 @@ export const PlanPreviews = () => {
     return (
         <View style={{ height: '100%' }}>
             <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>
-                <HabitsPreview />
-                <HabitsPreview />
+                <View style={{ paddingTop: 10 }} />
+                <HabitPreviews />
+
+                <View style={{ paddingTop: 20 }} />
+                <GoalPreviews />
+
+                <View style={{ paddingTop: 20 }} />
+                <PillarPreviews />
             </ScrollView>
         </View>
     );
