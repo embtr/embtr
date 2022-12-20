@@ -54,8 +54,8 @@ export const PlanMain = () => {
     const [index, setIndex] = React.useState(0);
 
     const [routes] = React.useState([
-        { key: 'planning', title: 'Planning' },
-        { key: 'habits', title: 'Habits' },
+        { key: 'planning', title: 'Schedule' },
+        { key: 'habits', title: 'Plan' },
         { key: 'goals', title: 'Goals' },
     ]);
 

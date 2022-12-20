@@ -16,7 +16,7 @@ interface Props {
     pillars: PillarModel[];
 }
 
-export const TaskPreview = ({ task, pillars }: Props) => {
+export const HabitPreview = ({ task, pillars }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
