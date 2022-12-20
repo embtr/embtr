@@ -4,13 +4,13 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
 import { Banner } from 'src/components/common/Banner';
-import { Tasks } from 'src/components/plan/tasks/Tasks';
 import { Goals } from 'src/components/plan/goals/Goals';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { Planning } from 'src/components/plan/planning/Planning';
+import { PlanPreviews } from './PlanPreviews';
+import { Planning } from './planning/Planning';
 
 /*
  * Avoid rerenders
@@ -42,7 +42,7 @@ export const PlanMain = () => {
                 );
 
             case 'habits':
-                return <Tasks />;
+                return <PlanPreviews />;
 
             case 'goals':
                 return <Goals />;

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { View, Text, TextStyle } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
@@ -109,7 +108,7 @@ export const Banner = ({
                         <Ionicons name={leftIcon} size={iconSize} color={colors.text} onPress={leftOnPress} />
                     ) : leftText ? (
                         <View style={{ paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text onPress={leftOnPress} style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: '#5ba2dc', fontSize: 16 }}>
+                            <Text onPress={leftOnPress} style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: colors.link, fontSize: 16 }}>
                                 {leftText}
                             </Text>
                         </View>
@@ -174,7 +173,7 @@ export const Banner = ({
                                     onPress={() => {
                                         rightOnPress();
                                     }}
-                                    style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: '#5ba2dc', fontSize: 16 }}
+                                    style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: colors.link, fontSize: 16 }}
                                 >
                                     {rightText}
                                 </Text>

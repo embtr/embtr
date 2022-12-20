@@ -12,8 +12,10 @@ import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import UserController from 'src/controller/user/UserController';
+import { Banner } from 'src/components/common/Banner';
+import { Screen } from 'src/components/common/Screen';
 
-export const Tasks = () => {
+export const Habits = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
@@ -65,8 +67,11 @@ export const Tasks = () => {
     };
 
     return (
-        <View style={{ height: '100%' }}>
-            <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>{taskViews}</ScrollView>
-        </View>
+        <Screen>
+            <View style={{ height: '100%' }}>
+                <Banner name={'Habits'} leftText={'back'} leftRoute="BACK" />
+                <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>{taskViews}</ScrollView>
+            </View>
+        </Screen>
     );
 };

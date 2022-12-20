@@ -18,6 +18,9 @@ export type TodayTab = {
 
 export type PlanTabScreens = {
     PlanMain: undefined;
+    PlanPreviews: undefined;
+    Habits: undefined;
+    Planning: undefined;
     CreateEditHabit: { id?: string };
     CreateEditOneTimeTask: { dayKey: string; id?: string };
     CreateEditGoal: { id?: string };
