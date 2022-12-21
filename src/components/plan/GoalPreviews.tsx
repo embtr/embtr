@@ -39,7 +39,7 @@ export const GoalPreviews = () => {
     );
 
     let goalPreviews: JSX.Element[] = [];
-    for (let i = 0; i < (goals.length <= 3 ? goals.length : 3); i++) {
+    for (let i = 0; i < goals.length; i++) {
         const goal = goals[i];
 
         goalPreviews.push(

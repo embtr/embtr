@@ -67,7 +67,7 @@ class PillarController {
         if (result.docs.length) {
             const pillarData = result.docs[0].data();
             const pillar = pillarData as PillarModel;
-            pillar.id = pillarData.id;
+            pillar.id = result.docs[0].id;
 
             return pillar;
         }

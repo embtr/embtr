@@ -110,6 +110,13 @@ class PlannedTaskController {
         return plannedTask;
     }
 
+    public static async getAll(user: UserModel) {
+        const results = await PlannedTaskDao.getAll(user.uid);
+
+        const plannedTasks: PlannedTaskModel[] = this.getPlannedTasksFromResults(results);
+        return plannedTasks;
+    }
+
     public static async getAllInPlannedDay(plannedDay: PlannedDay) {
         const results = await PlannedTaskDao.getAllInPlannedDayByDayKey(plannedDay.uid, plannedDay.dayKey);
 

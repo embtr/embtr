@@ -30,7 +30,7 @@ export const PillarPreviews = () => {
     );
 
     let pillarPreviews: JSX.Element[] = [];
-    for (let i = 0; i < (pillars.length <= 3 ? pillars.length : 3); i++) {
+    for (let i = 0; i < pillars.length; i++) {
         const pillar = pillars[i];
 
         pillarPreviews.push(

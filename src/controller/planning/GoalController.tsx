@@ -87,6 +87,18 @@ class GoalController {
             });
     }
 
+    public static async getGoalsAsync(uid: string) {
+        const results = await GoalDao.getGoals(uid);
+
+        const goals: GoalModel[] = [];
+        results.docs.forEach((doc) => {
+            const goal = this.createGoalFromData(uid, doc);
+            goals.push(goal);
+        });
+
+        return goals;
+    }
+
     public static getGoal(uid: string, id: string, callback: Function) {
         const result = GoalDao.getGoal(uid, id);
         result
