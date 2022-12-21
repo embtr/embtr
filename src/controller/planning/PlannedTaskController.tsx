@@ -4,6 +4,7 @@ import PlannedTaskDao from 'src/firebase/firestore/planning/PlannedTaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { DELETED } from 'src/util/constants';
 import { UserModel } from '../user/UserController';
+import { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay } from './PlannedDayController';
 
 export interface PlannedTaskModel {
@@ -13,6 +14,7 @@ export interface PlannedTaskModel {
     routine: TaskModel;
     status?: string;
     goalId?: string;
+    pillarId?: string;
     startMinute?: number;
     duration?: number;
     added: Timestamp;
@@ -36,6 +38,10 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
         clonedPlannedTask.goalId = plannedTask.goalId;
     }
 
+    if (plannedTask.pillarId) {
+        clonedPlannedTask.pillarId = plannedTask.pillarId;
+    }
+
     if (!clonedPlannedTask.status) {
         clonedPlannedTask.status = 'INCOMPLETE';
     }
@@ -43,7 +49,7 @@ export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
     return clonedPlannedTask;
 };
 
-export const createPlannedTaskModel = (dayKey: string, task: TaskModel, startMinute: number, duration: number, goalId?: string) => {
+export const createPlannedTaskModel = (dayKey: string, task: TaskModel, startMinute: number, duration: number, goal?: GoalModel) => {
     const plannedTask: PlannedTaskModel = {
         uid: getCurrentUid(),
         dayKey: dayKey,
@@ -55,8 +61,9 @@ export const createPlannedTaskModel = (dayKey: string, task: TaskModel, startMin
         modified: Timestamp.now(),
     };
 
-    if (goalId) {
-        plannedTask.goalId = goalId;
+    if (goal) {
+        plannedTask.goalId = goal.id;
+        plannedTask.pillarId = goal.pillarId;
     }
 
     return plannedTask;
@@ -71,17 +78,17 @@ export const getPlannedTaskGoalId = (plannedTask: PlannedTaskModel) => {
 };
 
 class PlannedTaskController {
-    public static async add(plannedTask: PlannedTaskModel) {
-        const results = await PlannedTaskDao.add(plannedTask);
+    public static async create(plannedTask: PlannedTaskModel) {
+        const results = await PlannedTaskDao.create(plannedTask);
         plannedTask.id = results.id;
 
         return plannedTask;
     }
 
-    public static async addTasks(plannedTasks: PlannedTaskModel[]) {
+    public static async createTasks(plannedTasks: PlannedTaskModel[]) {
         const createdPlannedTasks: PlannedTaskModel[] = [];
         for (const plannedTask of plannedTasks) {
-            const result = await this.add(plannedTask);
+            const result = await this.create(plannedTask);
             createdPlannedTasks.push(result);
         }
 
@@ -119,6 +126,13 @@ class PlannedTaskController {
 
     public static async getGoalHistory(goalId: string) {
         const results = await PlannedTaskDao.getAllWithGoalId(goalId);
+
+        const plannedTasks: PlannedTaskModel[] = this.getPlannedTasksFromResults(results);
+        return plannedTasks;
+    }
+
+    public static async getPillarHistory(pillarId: string) {
+        const results = await PlannedTaskDao.getAllWithPillarId(pillarId);
 
         const plannedTasks: PlannedTaskModel[] = this.getPlannedTasksFromResults(results);
         return plannedTasks;

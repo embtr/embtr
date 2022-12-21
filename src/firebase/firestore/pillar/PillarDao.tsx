@@ -47,13 +47,6 @@ class PillarDao {
         return querySnapshot;
     }
 
-    public static async getDeprecated(uid: string, id: string) {
-        const db: Firestore = getFirebaseConnection(this.name, 'getDeprecated');
-        const result = await getDoc(doc(db, 'pillars/' + uid + '/active/' + id));
-
-        return result;
-    }
-
     public static async getByDeprecatedKey(uid: string, key: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getByDeprecatedKey');
 
@@ -61,13 +54,6 @@ class PillarDao {
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;
-    }
-
-    public static async getDeprecatedPillars(uid: string) {
-        const db: Firestore = getFirebaseConnection(this.name, 'getPillars');
-        const result = await getDocs(collection(db, 'pillars/' + uid + '/active'));
-
-        return result;
     }
 }
 

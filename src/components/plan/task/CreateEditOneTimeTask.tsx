@@ -131,6 +131,12 @@ export const CreateEditOneTimeTask = () => {
         let clonedPlannedTask: PlannedTaskModel = { ...plannedTask };
         if (goalId !== undefined) {
             clonedPlannedTask.goalId = goalId;
+            for (const goal of goals) {
+                if (goal.id === goalId && goal.pillarId) {
+                    clonedPlannedTask.pillarId = goal.pillarId;
+                    break;
+                }
+            }
         }
 
         if (name) {
@@ -159,7 +165,7 @@ export const CreateEditOneTimeTask = () => {
         }
 
         const task = createTaskModel(name, details, selectedGoal?.id);
-        const plannedTask = createPlannedTaskModel(plannedDay.dayKey, task, startTime.getHours() * 60 + startTime.getMinutes(), duration, selectedGoal?.id);
+        const plannedTask = createPlannedTaskModel(plannedDay.dayKey, task, startTime.getHours() * 60 + startTime.getMinutes(), duration, selectedGoal);
 
         await PlannedTaskController.add(plannedTask);
         navigation.goBack();

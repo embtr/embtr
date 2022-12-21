@@ -106,9 +106,7 @@ export const Main = () => {
             ProfileController.registerInitialProfileUpdateListener();
             PushNotificationController.registerUpdatePostNotificationTokenListener();
 
-            if (MigrationController.requiresMigration(currentUser)) {
-                await MigrationController.handleMigrations(currentUser);
-            }
+            //await MigrationController.handleMigrations();
 
             currentUser = await UserController.getCurrentUser();
             dispatch(setCurrentUser(currentUser));

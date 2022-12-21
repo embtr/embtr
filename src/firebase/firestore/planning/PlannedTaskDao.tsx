@@ -3,8 +3,8 @@ import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController'
 import { getFirebaseConnection } from '../ConnectionProvider';
 
 class PlannedTaskDao {
-    public static async add(plannedTask: PlannedTaskModel) {
-        const db: Firestore = getFirebaseConnection(this.name, 'add');
+    public static async create(plannedTask: PlannedTaskModel) {
+        const db: Firestore = getFirebaseConnection(this.name, 'create');
         const result = await addDoc(collection(db, 'planned_tasks'), plannedTask);
 
         return result;
@@ -45,6 +45,15 @@ class PlannedTaskDao {
     public static async getAllWithGoalId(goalId: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getAllWithGoalId');
         const q = query(collection(db, 'planned_tasks'), where('goalId', '==', goalId));
+
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot;
+    }
+
+    public static async getAllWithPillarId(pillarId: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getAllWithPillarId');
+        const q = query(collection(db, 'planned_tasks'), where('pillarId', '==', pillarId));
 
         const querySnapshot = await getDocs(q);
 
