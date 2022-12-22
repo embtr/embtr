@@ -3,13 +3,13 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import * as React from 'react';
 import { View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { PillarPreview } from 'src/components/plan/PillarPreview';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import PillarController from 'src/controller/pillar/PillarController';
 import UserController from 'src/controller/user/UserController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { PillarModel } from 'src/model/PillarModel';
 import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
-import { ProfilePillar } from './ProfilePillar';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -46,7 +46,7 @@ export const ProfilePillars = ({ userProfileModel }: Props) => {
                                 }
                             }}
                         >
-                            <ProfilePillar pillarModel={pillarModel} />
+                            <PillarPreview pillar={pillarModel} />
                         </TouchableOpacity>
                     </WidgetBase>
                 </View>

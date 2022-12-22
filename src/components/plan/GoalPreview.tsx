@@ -36,7 +36,7 @@ export const GoalPreview = ({ goal, pillars }: Props) => {
     return (
         <View style={{ width: '97%' }}>
             <TouchableWithoutFeedback onPress={navigateToDetails}>
-                <View style={[{ backgroundColor: colors.button_background, borderRadius: 9 }, CARD_SHADOW]}>
+                <View style={[{ backgroundColor: colors.timeline_card_background, borderRadius: 9 }, CARD_SHADOW]}>
                     <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
                         <View style={{ flex: 1, paddingLeft: 10 }}>
                             <Text style={{ color: colors.goal_primary_font, fontFamily: POPPINS_SEMI_BOLD, fontSize: 14 }}>{goal.name}</Text>

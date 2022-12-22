@@ -67,7 +67,6 @@ export const PlanMain = () => {
     };
 
     const navigateToTasksCreateTask = () => {
-
         navigation.navigate('CreateEditHabit', { id: undefined });
     };
 

@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { ProfilePillar } from 'src/components/profile/profile_component/pillar/ProfilePillar';
+import { PillarPreview } from 'src/components/plan/PillarPreview';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
@@ -17,7 +17,7 @@ export const PillarsWidget = ({ pillars }: Props) => {
         const pillar = pillars[i];
         views.push(
             <View key={pillar.id + pillar.name} style={{ paddingTop: i > 0 ? 10 : 0 }}>
-                <ProfilePillar pillarModel={pillar} />
+                <PillarPreview pillar={pillar} />
             </View>
         );
     }
