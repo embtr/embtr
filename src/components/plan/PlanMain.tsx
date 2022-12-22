@@ -4,7 +4,6 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
 import { Banner } from 'src/components/common/Banner';
-import { Goals } from 'src/components/plan/goals/Goals';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -43,9 +42,6 @@ export const PlanMain = () => {
 
             case 'habits':
                 return <PlanPreviews />;
-
-            case 'goals':
-                return <Goals />;
         }
 
         return <View></View>;
@@ -56,7 +52,6 @@ export const PlanMain = () => {
     const [routes] = React.useState([
         { key: 'planning', title: 'Schedule' },
         { key: 'habits', title: 'Plan' },
-        { key: 'goals', title: 'Goals' },
     ]);
 
     let [fontsLoaded] = useFonts({
@@ -72,11 +67,8 @@ export const PlanMain = () => {
     };
 
     const navigateToTasksCreateTask = () => {
-        navigation.navigate('CreateEditHabit', { id: undefined });
-    };
 
-    const navigateToCreateGoals = () => {
-        navigation.navigate('CreateEditGoal', { id: undefined });
+        navigation.navigate('CreateEditHabit', { id: undefined });
     };
 
     return (
@@ -84,9 +76,9 @@ export const PlanMain = () => {
             <View style={{ height: '100%' }}>
                 <Banner
                     name={'Planning'}
-                    leftIcon={'add'}
+                    leftIcon={index === 0 ? 'add' : undefined}
                     leftRoute={'CreateTask'}
-                    leftOnClick={index === 0 ? navigateToTomorrowCreateTask : index === 1 ? navigateToTasksCreateTask : navigateToCreateGoals}
+                    leftOnClick={index === 0 ? navigateToTomorrowCreateTask : navigateToTasksCreateTask}
                     rightIcon={index === 0 ? (useCalendarView ? 'list' : 'calendar-outline') : undefined}
                     rightOnClick={
                         index === 0

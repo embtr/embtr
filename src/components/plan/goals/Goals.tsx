@@ -50,7 +50,15 @@ export const Goals = () => {
 
     return (
         <Screen>
-            <Banner name={'Goals'} leftText={'back'} leftRoute="BACK" />
+            <Banner
+                name={'Goals'}
+                leftText={'back'}
+                leftRoute="BACK"
+                rightIcon={'add'}
+                rightOnClick={() => {
+                    navigation.navigate('CreateEditGoal', { id: undefined });
+                }}
+            />
 
             {goalViews.length > 0 ? (
                 <ScrollView style={{ paddingTop: 7 }}>{goalViews}</ScrollView>

@@ -110,7 +110,11 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
             setGoals(goals);
         });
 
-        PlannedDayController.get(userProfileModel.uid!, getTodayKey(), setPlannedDay);
+        if (userProfileModel.uid) {
+            const user = await UserController.get(userProfileModel.uid);
+            const plannedDay = await PlannedDayController.get(user, getTodayKey());
+            setPlannedDay(plannedDay);
+        }
         fetchPillars();
     };
 

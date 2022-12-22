@@ -3,6 +3,8 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PillarModel } from 'src/model/PillarModel';
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { format } from 'date-fns';
+import React from 'react';
+import PlannedTaskController, { getLongestStreak, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     pillarModel: PillarModel;
@@ -10,8 +12,23 @@ interface Props {
     deleteOnPress?: Function;
 }
 
-export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
+export const ProfilePillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
     const { colors } = useTheme();
+
+    const [pillarHistory, setPillarHistory] = React.useState<PlannedTaskModel[]>([]);
+    React.useEffect(() => {
+        const fetch = async () => {
+            if (pillarModel.id) {
+                const pillarHistory = await PlannedTaskController.getPillarHistory(pillarModel.id);
+                setPillarHistory(pillarHistory);
+            }
+        };
+
+        fetch();
+    }, [pillarModel]);
+
+    const totalUsage = pillarHistory.length;
+    const longestStreak = getLongestStreak(pillarHistory);
 
     return (
         <View style={[{ flexDirection: 'row' }]}>
@@ -28,7 +45,7 @@ export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
                                 Created
                             </Text>
                             <Text style={{ fontSize: 11, fontFamily: 'Poppins_400Regular', color: colors.tab_selected }}>
-                                {format(pillarModel.added.toDate(), 'MMMM dd, yyyy')}
+                                {format(pillarModel.added.toDate(), 'MMM dd, yyyy')}
                             </Text>
                         </View>
                     </View>
@@ -39,7 +56,7 @@ export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
                             <Text style={{ fontSize: 10, fontFamily: 'Poppins_400Regular', color: colors.profile_pillar_attribute_name, opacity: 0.8 }}>
                                 Tasks Completed
                             </Text>
-                            <Text style={{ fontSize: 11, fontFamily: 'Poppins_400Regular', color: '#c809eb' }}>184</Text>
+                            <Text style={{ fontSize: 11, fontFamily: 'Poppins_400Regular', color: '#c809eb' }}>{totalUsage}</Text>
                         </View>
                     </View>
 
@@ -49,7 +66,7 @@ export const Pillar = ({ pillarModel, enableDelete, deleteOnPress }: Props) => {
                             <Text style={{ fontSize: 10, fontFamily: 'Poppins_400Regular', color: colors.profile_pillar_attribute_name, opacity: 0.8 }}>
                                 Longest Streak
                             </Text>
-                            <Text style={{ fontSize: 11, fontFamily: 'Poppins_400Regular', color: colors.progress_bar_complete }}>8</Text>
+                            <Text style={{ fontSize: 11, fontFamily: 'Poppins_400Regular', color: colors.progress_bar_complete }}>{longestStreak}</Text>
                         </View>
                     </View>
                 </View>

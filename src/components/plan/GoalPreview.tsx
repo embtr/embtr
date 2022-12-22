@@ -40,7 +40,7 @@ export const GoalPreview = ({ goal, pillars }: Props) => {
                     <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
                         <View style={{ flex: 1, paddingLeft: 10 }}>
                             <Text style={{ color: colors.goal_primary_font, fontFamily: POPPINS_SEMI_BOLD, fontSize: 14 }}>{goal.name}</Text>
-                            <Text style={{ color: colors.goal_secondary_font, fontFamily: POPPINS_REGULAR, fontSize: 10 }}>{goal.description}</Text>
+                            <Text style={{ color: colors.goal_secondary_font, opacity: .90, fontFamily: POPPINS_REGULAR, fontSize: 10 }}>{goal.description}</Text>
                         </View>
 
                         <View style={{ flex: 1, paddingLeft: 10 }}>
@@ -50,8 +50,16 @@ export const GoalPreview = ({ goal, pillars }: Props) => {
 
                             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
                                 <MaterialCommunityIcons name="pillar" size={12} color={colors.tab_selected} />
-                                <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: POPPINS_REGULAR, fontSize: 10 }}>
-                                    {pillarName}
+                                <Text
+                                    style={{
+                                        paddingLeft: 5,
+                                        color: colors.goal_secondary_font,
+                                        opacity: pillarName ? 1 : 0.5,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 10,
+                                    }}
+                                >
+                                    {pillarName ? pillarName : 'no pillar'}
                                 </Text>
                             </View>
                         </View>

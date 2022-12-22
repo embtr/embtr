@@ -14,7 +14,7 @@ import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribu
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { format, formatDistance } from 'date-fns';
-import { PillarModel } from 'src/model/PillarModel';
+import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import UserController from 'src/controller/user/UserController';
 
@@ -22,9 +22,9 @@ export const PillarDetails = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-    const route = useRoute<RouteProp<ProfileTabScreens, 'PillarDetails'>>();
+    const route = useRoute<RouteProp<PlanTabScreens, 'PillarDetails'>>();
 
-    const [pillar, setPillar] = React.useState<PillarModel>();
+    const [pillar, setPillar] = React.useState<PillarModel>(FAKE_PILLAR);
 
     React.useEffect(() => {
         fetch();
@@ -33,7 +33,9 @@ export const PillarDetails = () => {
     const fetch = async () => {
         const user = await UserController.get(route.params.uid);
         const pillar = await PillarController.get(user, route.params.id);
-        setPillar(pillar);
+        if (pillar) {
+            setPillar(pillar);
+        }
     };
 
     const closeMenu = useAppSelector(getCloseMenu);
@@ -74,14 +76,6 @@ export const PillarDetails = () => {
             },
         },
     ];
-
-    if (!pillar) {
-        return (
-            <Screen>
-                <View />
-            </Screen>
-        );
-    }
 
     const daysOld = pillar?.added ? formatDistance(pillar.added.toDate(), new Date()) : '0';
 

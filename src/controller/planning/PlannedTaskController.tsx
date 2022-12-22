@@ -5,7 +5,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { DELETED } from 'src/util/constants';
 import { UserModel } from '../user/UserController';
 import { GoalModel } from './GoalController';
-import PlannedDayController, { PlannedDay } from './PlannedDayController';
+import PlannedDayController, { PlannedDay, plannedTaskIsComplete } from './PlannedDayController';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -75,6 +75,22 @@ export const getPlannedTaskGoalId = (plannedTask: PlannedTaskModel) => {
     }
 
     return plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
+};
+
+export const getLongestStreak = (plannedTasks: PlannedTaskModel[]): number => {
+    let currentLength = 0;
+    let longestLength = 0;
+
+    for (const plannedTask of plannedTasks.sort((a, b) => (a.dayKey > b.dayKey ? 1 : -1))) {
+        if (plannedTaskIsComplete(plannedTask)) {
+            currentLength++;
+            longestLength = Math.max(longestLength, currentLength);
+        } else {
+            currentLength = 0;
+        }
+    }
+
+    return longestLength;
 };
 
 class PlannedTaskController {

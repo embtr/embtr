@@ -50,7 +50,7 @@ export const PillarPreviews = () => {
                     <Text
                         style={{ textAlign: 'right', paddingRight: 10, color: colors.tab_selected, fontSize: 14, fontFamily: POPPINS_SEMI_BOLD }}
                         onPress={() => {
-                            navigation.navigate('Goals');
+                            navigation.navigate('Pillars');
                         }}
                     >
                         See all

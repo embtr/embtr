@@ -28,6 +28,9 @@ export type PlanTabScreens = {
     Goals: undefined;
     TaskDetails: { id: string };
     PlanDay: { id: string };
+    Pillars: undefined;
+    CreateEditPillar: undefined;
+    PillarDetails: { uid: string; id: string };
 };
 
 export type TimelineTabScreens = {

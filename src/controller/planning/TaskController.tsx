@@ -73,6 +73,14 @@ export const createTaskModel = (name: string, description: string, goalId?: stri
     return task;
 };
 
+export const FAKE_HABIT: TaskModel = {
+    uid: "",
+    added: Timestamp.now(),
+    name: '',
+    description: '',
+    active: true,
+};
+
 class TaskController {
     public static clone(task: TaskModel) {
         const clone: TaskModel = {

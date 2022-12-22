@@ -1,6 +1,6 @@
-import { Pillars } from 'src/components/profile/profile_component/pillar/Pillars';
 import { View } from 'react-native';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { ProfilePillars } from '../pillar/ProfilePillars';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -9,7 +9,7 @@ interface Props {
 function PillarsTabRoute({ userProfileModel }: Props) {
     return (
         <View>
-            <Pillars userProfileModel={userProfileModel} />
+            <ProfilePillars userProfileModel={userProfileModel} />
         </View>
     );
 }

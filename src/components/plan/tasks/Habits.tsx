@@ -10,7 +10,6 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Task } from 'src/components/plan/Task';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import UserController from 'src/controller/user/UserController';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
@@ -69,7 +68,15 @@ export const Habits = () => {
     return (
         <Screen>
             <View style={{ height: '100%' }}>
-                <Banner name={'Habits'} leftText={'back'} leftRoute="BACK" />
+                <Banner
+                    name={'Habits'}
+                    leftText={'back'}
+                    leftRoute="BACK"
+                    rightIcon={'add'}
+                    rightOnClick={() => {
+                        navigation.navigate('CreateEditHabit', { id: undefined });
+                    }}
+                />
                 <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>{taskViews}</ScrollView>
             </View>
         </Screen>

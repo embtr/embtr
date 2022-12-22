@@ -8,6 +8,9 @@ import { CreateEditGoal } from '../plan/goals/CreateEditGoal';
 import { PlanPreviews } from '../plan/PlanPreviews';
 import { Habits } from '../plan/tasks/Habits';
 import { Goals } from '../plan/goals/Goals';
+import { Pillars } from '../plan/pillars/Pillars';
+import { CreateEditPillar } from '../profile/profile_component/pillar/CreateEditPillar';
+import { PillarDetails } from '../profile/profile_component/pillar/PillarDetails';
 
 export const SecurePlanTabStack = () => {
     const Stack = createNativeStackNavigator();
@@ -23,6 +26,9 @@ export const SecurePlanTabStack = () => {
             <Stack.Screen name="GoalDetails" component={GoalDetails} />
             <Stack.Screen name="Goals" component={Goals} />
             <Stack.Screen name="CreateEditHabit" component={CreateEditHabit} />
+            <Stack.Screen name="Pillars" component={Pillars} />
+            <Stack.Screen name="PillarDetails" component={PillarDetails} />
+            <Stack.Screen name="CreateEditPillar" component={CreateEditPillar} />
         </Stack.Navigator>
     );
 };

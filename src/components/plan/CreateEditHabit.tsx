@@ -12,7 +12,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
-import TaskController, { EMPTY_HABIT, TaskModel } from 'src/controller/planning/TaskController';
+import TaskController, { FAKE_HABIT, TaskModel } from 'src/controller/planning/TaskController';
 import { POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { RandomPlaceHolderTextInput } from '../common/textbox/RandomPlaceholderTextInput';
 import { ItemType } from 'react-native-dropdown-picker';
@@ -41,7 +41,7 @@ export const CreateEditHabit = () => {
         if (route.params.id) {
             TaskController.getHabit(route.params.id, setHabit);
         } else {
-            setHabit(EMPTY_HABIT);
+            setHabit(FAKE_HABIT);
         }
     }, []);
 

@@ -19,6 +19,8 @@ export const PlanPreviews = () => {
 
                 <View style={{ paddingTop: 20 }} />
                 <PillarPreviews />
+
+                <View style={{ paddingTop: 10 }} />
             </ScrollView>
         </View>
     );
