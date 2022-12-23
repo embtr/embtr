@@ -3,30 +3,30 @@ import { View, Text, NativeScrollEvent, ScrollView } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import PillarsTabRoute from 'src/components/profile/profile_component/profile_tabs/PillarsTabRoute';
 import { TodayTabRoute } from 'src/components/profile/profile_component/profile_tabs/TodayTabRoute';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { Screen } from 'src/components/common/Screen';
 import { ScrollChangeEvent } from 'src/util/constants';
-import UserController from 'src/controller/user/UserController';
+import UserController, { UserModel } from 'src/controller/user/UserController';
+import { ProfileTabRoute } from './profile_tabs/ProfileTabRoute';
+import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
 
 /*
  * Avoid rerenders
  * https://github.com/satya164/react-native-tab-view#avoid-unnecessary-re-renders
  */
 interface Props {
+    user: UserModel;
     userProfileModel: UserProfileModel;
     refreshedTimestamp: Date;
     onShouldExpand: Function;
-    isPillarTab: Function;
 }
 
-export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpand, isPillarTab }: Props) => {
+export const ProfileBody = ({ user, userProfileModel, refreshedTimestamp, onShouldExpand }: Props) => {
     const { colors } = useTheme();
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
@@ -57,7 +57,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
                     >
-                        <ActivityTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
+                        <ProfileTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
                     </ScrollView>
                 );
 
@@ -85,12 +85,12 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
                     >
-                        <ActivityTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
+                        <ActivityTabRoute user={user} userProfile={userProfileModel} />
                     </ScrollView>
                 );
         }
 
-        return <View></View>;
+        return <View />;
     };
 
     React.useEffect(() => {
@@ -128,7 +128,6 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
 
     const indexChanged = (index: number) => {
         setIndex(index);
-        isPillarTab(index === 2);
     };
 
     const [routes] = React.useState([

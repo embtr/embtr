@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, RefreshControl, View } from 'react-native';
+import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
@@ -16,6 +16,7 @@ import { wait } from 'src/util/GeneralUtility';
 import { ProfileBody } from './profile_component/ProfileBody';
 import { ScrollChangeEvent } from 'src/util/constants';
 import { useSharedValue } from 'react-native-reanimated';
+import UserController, { UserModel } from 'src/controller/user/UserController';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -23,6 +24,7 @@ export const UserProfile = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [refreshing, setRefreshing] = React.useState(false);
 
+    const [user, setUser] = React.useState<UserModel>();
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
     const [isFollowingUser, setIsFollowingUser] = React.useState(false);
 
@@ -31,7 +33,6 @@ export const UserProfile = () => {
 
     // used for profile header scroll animation
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
-    const [isPillarTab, setIsPillarTab] = React.useState(false);
 
     React.useEffect(() => {
         fetch();
@@ -47,8 +48,18 @@ export const UserProfile = () => {
     }, []);
 
     const fetch = () => {
+        fetchUser();
         fetchProfileData();
         fetchFollowCounts();
+    };
+
+    const fetchUser = async () => {
+        if (!route.params.id) {
+            return;
+        }
+
+        const user = await UserController.get(route.params.id);
+        setUser(user);
     };
 
     const fetchProfileData = () => {
@@ -113,33 +124,23 @@ export const UserProfile = () => {
     return (
         <Screen>
             <Banner name="User Profile" leftIcon={'arrow-back'} leftRoute="BACK" />
-
             <EmbtrMenuCustom />
 
-            <View style={{ alignItems: 'center' }}>
-                <View style={{ width: isDesktopBrowser() ? '45%' : '100%' }}>
-                    {userProfileModel && (
-                        <ProfileHeader
-                            animatedBannerScale={animatedBannerScale}
-                            animatedHeaderContentsScale={animatedHeaderContentsScale}
-                            userProfileModel={userProfileModel}
-                            onFollowUser={onFollowUser}
-                            onUnfollowUser={onUnfollowUser}
-                            followerCount={followerCount}
-                            followingCount={followingCount}
-                            isFollowingUser={isFollowingUser}
-                        />
-                    )}
-                    {userProfileModel && (
-                        <ProfileBody
-                            userProfileModel={userProfileModel}
-                            refreshedTimestamp={refreshedTimestamp}
-                            onShouldExpand={shouldExpand}
-                            isPillarTab={setIsPillarTab}
-                        />
-                    )}
-                </View>
-            </View>
+            {userProfileModel && (
+                <ProfileHeader
+                    animatedBannerScale={animatedBannerScale}
+                    animatedHeaderContentsScale={animatedHeaderContentsScale}
+                    userProfileModel={userProfileModel}
+                    onFollowUser={onFollowUser}
+                    onUnfollowUser={onUnfollowUser}
+                    followerCount={followerCount}
+                    followingCount={followingCount}
+                    isFollowingUser={isFollowingUser}
+                />
+            )}
+            {user && userProfileModel && (
+                <ProfileBody user={user} userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />
+            )}
         </Screen>
     );
 };

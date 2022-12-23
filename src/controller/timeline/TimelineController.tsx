@@ -3,6 +3,7 @@ import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeCont
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import TimelineDao from 'src/firebase/firestore/timeline/TimelineDao';
+import { UserModel } from '../user/UserController';
 
 export interface Comment {
     uid: string;
@@ -48,12 +49,26 @@ export const getTimelinePostAddedDate = (timelinePost: TimelinePostModel) => {
 
 class TimelineController {
     public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined | null, cutoffDate: Date, callback: Function) {
+        return await this.getPaginatedTimelinePostsForUser(undefined, lastTimelinePost, cutoffDate, callback);
+    }
+
+    public static async getPaginatedTimelinePostsForUser(
+        user: UserModel | undefined,
+        lastTimelinePost: QueryDocumentSnapshot | undefined | null,
+        cutoffDate: Date,
+        callback: Function
+    ) {
         if (lastTimelinePost === null) {
             callback({ posts: [], lastTimelinePost: null });
             return;
         }
 
-        const result = TimelineDao.getPaginatedTimelinePosts(lastTimelinePost, cutoffDate);
+        let result;
+        if (user) {
+            result = TimelineDao.getPaginatedTimelinePostsForUser(user.uid, lastTimelinePost, cutoffDate);
+        } else {
+            result = TimelineDao.getPaginatedTimelinePosts(lastTimelinePost, cutoffDate);
+        }
 
         let timelinePosts: TimelinePostModel[] = [];
         let foundLastTimelinePost: QueryDocumentSnapshot | undefined = undefined;
@@ -67,7 +82,7 @@ class TimelineController {
                     switch (type) {
                         case 'STORY':
                             const story = this.getStoryFromData(doc);
-                            if (story.active) {
+                            if (true) {
                                 timelinePosts.push(story);
                             }
                             break;

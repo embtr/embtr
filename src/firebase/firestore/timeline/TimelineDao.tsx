@@ -14,9 +14,28 @@ class TimelineDao {
     public static async getPaginatedTimelinePosts(lastTimelinePost: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
         const db: Firestore = getFirebaseConnection(this.name, 'getTimelinePosts');
 
-        const q = lastTimelinePost
+        let q = lastTimelinePost
             ? query(collection(db, 'timeline'), where('added', '>', cutoffDate), orderBy('added', 'desc'), startAfter(lastTimelinePost))
             : query(collection(db, 'timeline'), where('added', '>', cutoffDate), orderBy('added', 'desc'));
+
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot;
+    }
+
+    public static async getPaginatedTimelinePostsForUser(uid: string, lastTimelinePost: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getTimelinePostsForUser');
+
+        let q = lastTimelinePost
+            ? query(
+                  collection(db, 'timeline'),
+                  where('added', '>', cutoffDate),
+                  where('uid', '==', uid),
+                  orderBy('added', 'desc'),
+                  startAfter(lastTimelinePost)
+              )
+            : query(collection(db, 'timeline'), where('added', '>', cutoffDate), where('uid', '==', uid), orderBy('added', 'desc'));
+
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;

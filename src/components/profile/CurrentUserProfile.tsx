@@ -12,6 +12,8 @@ import { wait } from 'src/util/GeneralUtility';
 import { getAuth } from 'firebase/auth';
 import { useSharedValue } from 'react-native-reanimated';
 import { ScrollChangeEvent } from 'src/util/constants';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 export const CurrentUserProfile = () => {
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
@@ -19,10 +21,10 @@ export const CurrentUserProfile = () => {
     const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
-    const [isPillarTab, setIsPillarTab] = React.useState(false);
 
     // used for profile header scroll animation
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
+    const currentUser = useAppSelector(getCurrentUser);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -91,13 +93,7 @@ export const CurrentUserProfile = () => {
 
     return (
         <Screen>
-            <Banner
-                name="You"
-                leftIcon={isPillarTab ? 'add' : undefined}
-                leftRoute={isPillarTab ? 'CreateEditPillar' : undefined}
-                rightIcon={'cog-outline'}
-                rightRoute="UserSettings"
-            />
+            <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
             <EmbtrMenuCustom />
             {userProfileModel && (
                 <ProfileHeader
@@ -112,12 +108,7 @@ export const CurrentUserProfile = () => {
                 />
             )}
             {userProfileModel && (
-                <ProfileBody
-                    userProfileModel={userProfileModel}
-                    refreshedTimestamp={refreshedTimestamp}
-                    onShouldExpand={shouldExpand}
-                    isPillarTab={setIsPillarTab}
-                />
+                <ProfileBody user={currentUser} userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />
             )}
         </Screen>
     );

@@ -176,13 +176,26 @@ class DailyResultController {
     }
 
     public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedDailyResults> {
+        return await this.getPaginatedFinishedForUser(undefined, lastDailyResult, cutoffDate);
+    }
+
+    public static async getPaginatedFinishedForUser(
+        user: UserModel | undefined,
+        lastDailyResult: QueryDocumentSnapshot | undefined | null,
+        cutoffDate: Date
+    ): Promise<PaginatedDailyResults> {
         if (lastDailyResult === null) {
             //disable prevention of looking in the past for now
             lastDailyResult = undefined;
             //return { results: [], lastDailyResult: null };
         }
 
-        const results = await DailyResultDao.getPaginatedFinished(lastDailyResult, cutoffDate);
+        let results;
+        if (user) {
+            results = await DailyResultDao.getPaginatedFinishedForUser(user.uid, lastDailyResult, cutoffDate);
+        } else {
+            results = await DailyResultDao.getPaginatedFinished(lastDailyResult, cutoffDate);
+        }
 
         let dailyResults: DailyResultModel[] = [];
         let foundLastDailyResult: QueryDocumentSnapshot | undefined = undefined;

@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TimelineController, { getTimelinePostAddedDate, PaginatedTimelinePosts, TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import TimelineController, { PaginatedTimelinePosts, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';

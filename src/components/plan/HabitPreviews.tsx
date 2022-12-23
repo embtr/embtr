@@ -39,7 +39,7 @@ export const HabitPreviews = () => {
     };
 
     let habitPreviews: JSX.Element[] = [];
-    for (let i = 0; i < (habits.length <= 3 ? habits.length : 3); i++) {
+    for (let i = 0; i < (habits.length <= 5 ? habits.length : 5); i++) {
         const habit = habits[i];
 
         habitPreviews.push(

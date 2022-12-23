@@ -68,7 +68,7 @@ class DailyResultDao {
     }
 
     public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
-        const db: Firestore = getFirebaseConnection(this.name, 'getFinishedWithLimit');
+        const db: Firestore = getFirebaseConnection(this.name, 'getPaginatedFinished');
 
         const q = lastDailyResult
             ? query(
@@ -79,6 +79,29 @@ class DailyResultDao {
                   startAfter(lastDailyResult)
               )
             : query(collection(db, COLLECTION_NAME), where('data.hasTasks', '==', true), where('added', '>', cutoffDate), orderBy('added', 'desc'));
+        const querySnapshot = await getDocs(q);
+        return querySnapshot;
+    }
+
+    public static async getPaginatedFinishedForUser(uid: string, lastDailyResult: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getPaginatedFinishedForUser');
+
+        const q = lastDailyResult
+            ? query(
+                  collection(db, COLLECTION_NAME),
+                  where('data.hasTasks', '==', true),
+                  where('added', '>', cutoffDate),
+                  where('uid', '==', uid),
+                  orderBy('added', 'desc'),
+                  startAfter(lastDailyResult)
+              )
+            : query(
+                  collection(db, COLLECTION_NAME),
+                  where('data.hasTasks', '==', true),
+                  where('added', '>', cutoffDate),
+                  where('uid', '==', uid),
+                  orderBy('added', 'desc')
+              );
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     }
