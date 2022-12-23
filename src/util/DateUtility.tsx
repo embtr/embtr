@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 export const getDaysOld = (then: any, now: any): number => {
     const dateDiff = now - then;
 
@@ -16,6 +18,31 @@ export const getYesterday = () => {
 export const getDateMinusDays = (date: Date, days: number): Date => {
     date.setDate(date.getDate() - days);
     return date;
+};
+
+export const getDatePretty = (date: Date): string => {
+    const daysOld = getDaysOld(date, new Date());
+
+    if (daysOld == 0) {
+        return 'Today';
+    }
+
+    if (daysOld == 1) {
+        return 'Yesterday';
+    }
+
+    return format(date, 'MMMM dd, yyyy');
+};
+
+export const getTimePretty = (date: Date): string => {
+    return format(date, 'h:m aaa');
+};
+
+export const getDatePrettyWithTime = (date: Date): string => {
+    let datePretty = getDatePretty(date);
+    datePretty = datePretty + ' at ' + getTimePretty(date);
+
+    return datePretty;
 };
 
 export const getDateFormatted = (date: Date) => {

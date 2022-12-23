@@ -11,13 +11,12 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { TIMELINE_CARD_PADDING, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_ICON_COUNT_SIZE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { formatDistance } from 'date-fns';
-import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDateFromDayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { getTimelinePostAddedDate } from 'src/controller/timeline/TimelineController';
 import UserController from 'src/controller/user/UserController';
+import { getDatePretty } from 'src/util/DateUtility';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -51,7 +50,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         fetchPlannedDay(dailyResult);
     }, [dailyResult]);
 
-    const time = formatDistance(getTimelinePostAddedDate(dailyResult).toDate(), new Date(), { addSuffix: true });
+    const datePretty = getDatePretty(getDateFromDayKey(dailyResult.data.dayKey));
 
     let plannedTaskViews: JSX.Element[] = [];
 
@@ -84,7 +83,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
                                     <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
-                                        {time}
+                                        {datePretty}
                                     </Text>
                                 </View>
                             </View>

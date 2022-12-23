@@ -19,7 +19,8 @@ import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import DailyResultController, { DailyResultModel, PaginatedDailyResults } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
-import { getDateMinusDays } from 'src/util/DateUtility';
+import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
+import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -183,7 +184,27 @@ export const Timeline = () => {
             timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
         }
 
-        timelinePosts.sort((a, b) => getTimelinePostAddedDate(b).toDate().getTime() - getTimelinePostAddedDate(a).toDate().getTime());
+        const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
+            let postADate = postA.added.toDate();
+            if (postA.type === 'DAILY_RESULT') {
+                const dailyResult = postA as DailyResultModel;
+                postADate = getDateFromDayKey(dailyResult.data.dayKey);
+            }
+
+            let postBDate = postB.added.toDate();
+            if (postB.type === 'DAILY_RESULT') {
+                const dailyResult = postB as DailyResultModel;
+                postBDate = getDateFromDayKey(dailyResult.data.dayKey);
+            }
+
+            if (getDaysOld(postADate, new Date()) === getDaysOld(postBDate, new Date())) {
+                postADate = postA.added.toDate();
+                postBDate = postB.added.toDate();
+            }
+
+            return postBDate.getTime() - postADate.getTime();
+        };
+        timelinePosts.sort((a, b) => handleSort(a, b));
 
         let views: JSX.Element[] = [];
         timelinePosts.forEach((timelineEntry) => {

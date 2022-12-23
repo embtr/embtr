@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Text, TextStyle, View, Image, ImageSourcePropType } from 'react-native';
+import { Text, TextStyle, View, Image, ImageSourcePropType, TimePickerAndroid } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { Timestamp } from 'firebase/firestore';
-import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
@@ -11,6 +10,7 @@ import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_P
 import * as Haptics from 'expo-haptics';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+import { getDatePrettyWithTime } from 'src/util/DateUtility';
 
 interface Props {
     staticImage?: ImageSourcePropType;
@@ -93,7 +93,7 @@ export const TextCard = ({
         onCommented();
     };
 
-    const time = formatDistance(added.toDate(), new Date(), { addSuffix: true });
+    const datePretty = getDatePrettyWithTime(added.toDate());
 
     let bodyWithNewLines = body;
 
@@ -113,7 +113,7 @@ export const TextCard = ({
             url: image,
             format: 'png',
             type: 'image',
-            onPress: navigateToDetails
+            onPress: navigateToDetails,
         });
     });
 
@@ -135,9 +135,9 @@ export const TextCard = ({
                                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                                     <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{name}</Text>
                                 </View>
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
+                                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
                                     <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
-                                        {time}
+                                        {datePretty}
                                     </Text>
                                 </View>
                             </View>

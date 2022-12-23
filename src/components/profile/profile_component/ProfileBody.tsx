@@ -77,7 +77,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
                     </ScrollView>
                 );
 
-            case 'pillars':
+            case 'activity':
                 return (
                     <ScrollView
                         scrollEventThrottle={8}
@@ -85,7 +85,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
                     >
-                        <PillarsTabRoute userProfileModel={userProfileModel} />
+                        <ActivityTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
                     </ScrollView>
                 );
         }
@@ -134,7 +134,7 @@ export const ProfileBody = ({ userProfileModel, refreshedTimestamp, onShouldExpa
     const [routes] = React.useState([
         { key: 'profile', title: 'Profile' },
         { key: 'today', title: 'Today' },
-        { key: 'pillars', title: 'Pillars' },
+        { key: 'activity', title: 'Activity' },
     ]);
 
     return (
