@@ -1,9 +1,7 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
 import { Text, View } from 'react-native';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { UserModel } from 'src/controller/user/UserController';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';

@@ -15,12 +15,15 @@ import { ProfileBody } from './profile_component/ProfileBody';
 import { ScrollChangeEvent } from 'src/util/constants';
 import { useSharedValue } from 'react-native-reanimated';
 import UserController, { UserModel } from 'src/controller/user/UserController';
+import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { fetchUserInfoAsync } from 'expo-auth-session';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
 
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [refreshing, setRefreshing] = React.useState(false);
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
     const [user, setUser] = React.useState<UserModel>();
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
@@ -33,51 +36,52 @@ export const UserProfile = () => {
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
 
     React.useEffect(() => {
-        fetch();
+        fetchInitial();
     }, [route.params.id]);
+
+    React.useEffect(() => {
+        fetchPlannedDay();
+    }, [user]);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        fetch();
+        fetchInitial();
         wait(500).then(() => {
             setRefreshing(false);
             setRefreshedTimestamp(new Date());
         });
     }, []);
 
-    const fetch = () => {
+    const fetchInitial = () => {
         fetchUser();
         fetchProfileData();
         fetchFollowCounts();
     };
 
     const fetchUser = async () => {
-        if (!route.params.id) {
-            return;
-        }
-
         const user = await UserController.get(route.params.id);
         setUser(user);
     };
 
     const fetchProfileData = () => {
-        if (!route.params.id) {
-            return;
-        }
-
         ProfileController.getProfile(route.params.id, setUserProfileModel);
         FollowerController.isFollowingUser(getCurrentUid(), route.params.id, setIsFollowingUser);
     };
 
     const fetchFollowCounts = () => {
-        if (!userProfileModel?.uid) {
-            return;
-        }
-
-        FollowerController.getFollowCounts(userProfileModel.uid, (followCounts: FollowCounts) => {
+        FollowerController.getFollowCounts(route.params.id, (followCounts: FollowCounts) => {
             setFollowerCount(followCounts.follower_count);
             setFollowingCount(followCounts.following_count);
         });
+    };
+
+    const fetchPlannedDay = async () => {
+        if (!user) {
+            return;
+        }
+
+        const plannedDay = await PlannedDayController.get(user, getTodayKey());
+        setPlannedDay(plannedDay);
     };
 
     const onFollowUser = (uid: string) => {
@@ -136,8 +140,9 @@ export const UserProfile = () => {
                     isFollowingUser={isFollowingUser}
                 />
             )}
-            {user && userProfileModel && (
+            {plannedDay && user && userProfileModel && (
                 <ProfileBody
+                    plannedDay={plannedDay}
                     isRefreshing={refreshing}
                     onRefresh={onRefresh}
                     user={user}
