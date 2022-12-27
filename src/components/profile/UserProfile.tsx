@@ -139,7 +139,14 @@ export const UserProfile = () => {
                 />
             )}
             {user && userProfileModel && (
-                <ProfileBody user={user} userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />
+                <ProfileBody
+                    isRefreshing={refreshing}
+                    onRefresh={onRefresh}
+                    user={user}
+                    userProfileModel={userProfileModel}
+                    refreshedTimestamp={refreshedTimestamp}
+                    onShouldExpand={shouldExpand}
+                />
             )}
         </Screen>
     );

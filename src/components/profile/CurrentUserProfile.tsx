@@ -14,6 +14,7 @@ import { useSharedValue } from 'react-native-reanimated';
 import { ScrollChangeEvent } from 'src/util/constants';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
+import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 export const CurrentUserProfile = () => {
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
@@ -21,16 +22,16 @@ export const CurrentUserProfile = () => {
     const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
     // used for profile header scroll animation
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
     const currentUser = useAppSelector(getCurrentUser);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetch();
-        }, [])
-    );
+    React.useEffect(() => {
+        fetchUserProfile();
+        fetchPlannedDay();
+    }, []);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -45,7 +46,7 @@ export const CurrentUserProfile = () => {
         }, [userProfileModel])
     );
 
-    const fetch = () => {
+    const fetchUserProfile = () => {
         const userId = getAuth().currentUser?.uid;
         if (userId) {
             ProfileController.getProfile(userId, (profile: UserProfileModel) => {
@@ -54,10 +55,15 @@ export const CurrentUserProfile = () => {
         }
     };
 
+    const fetchPlannedDay = async () => {
+        const plannedDay = await PlannedDayController.getOrCreate(currentUser, getTodayKey());
+        setPlannedDay(plannedDay);
+    };
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        setUserProfileModel(undefined);
-        fetch();
+        fetchUserProfile();
+        fetchPlannedDay();
         wait(500).then(() => {
             setRefreshing(false);
             setRefreshedTimestamp(new Date());
@@ -107,8 +113,16 @@ export const CurrentUserProfile = () => {
                     isFollowingUser={false}
                 />
             )}
-            {userProfileModel && (
-                <ProfileBody user={currentUser} userProfileModel={userProfileModel} refreshedTimestamp={refreshedTimestamp} onShouldExpand={shouldExpand} />
+            {plannedDay && userProfileModel && (
+                <ProfileBody
+                    plannedDay={plannedDay}
+                    onRefresh={onRefresh}
+                    isRefreshing={refreshing}
+                    user={currentUser}
+                    userProfileModel={userProfileModel}
+                    refreshedTimestamp={refreshedTimestamp}
+                    onShouldExpand={shouldExpand}
+                />
             )}
         </Screen>
     );

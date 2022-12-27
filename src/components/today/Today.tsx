@@ -40,7 +40,6 @@ import { PillarsWidget } from '../widgets/pillars/PillarsWidget';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import PlannedTaskController, { clonePlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import TaskController from 'src/controller/planning/TaskController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -289,7 +288,7 @@ export const Today = () => {
                                     removeWidget(TODAYS_TASKS_WIDGET);
                                 }}
                             >
-                                <TodaysTasksWidget plannedDay={plannedDay} togglePlannedTask={togglePlannedTaskStatus} />
+                                <TodaysTasksWidget user={user} togglePlannedTask={togglePlannedTaskStatus} />
                             </DeletableView>
                         </WigglableView>
                     )}

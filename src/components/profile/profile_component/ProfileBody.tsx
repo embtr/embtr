@@ -6,7 +6,6 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TodayTabRoute } from 'src/components/profile/profile_component/profile_tabs/TodayTabRoute';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import { Screen } from 'src/components/common/Screen';
@@ -14,23 +13,27 @@ import { ScrollChangeEvent } from 'src/util/constants';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import { ProfileTabRoute } from './profile_tabs/ProfileTabRoute';
 import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 /*
  * Avoid rerenders
  * https://github.com/satya164/react-native-tab-view#avoid-unnecessary-re-renders
  */
 interface Props {
+    plannedDay: PlannedDay;
     user: UserModel;
     userProfileModel: UserProfileModel;
+    onRefresh: Function;
+    isRefreshing: boolean;
     refreshedTimestamp: Date;
     onShouldExpand: Function;
 }
 
-export const ProfileBody = ({ user, userProfileModel, refreshedTimestamp, onShouldExpand }: Props) => {
+export const ProfileBody = ({ plannedDay, user, userProfileModel, onRefresh, isRefreshing, refreshedTimestamp, onShouldExpand }: Props) => {
     const { colors } = useTheme();
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     const [index, setIndex] = React.useState(0);
@@ -52,6 +55,14 @@ export const ProfileBody = ({ user, userProfileModel, refreshedTimestamp, onShou
             case 'profile':
                 return (
                     <ScrollView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isRefreshing}
+                                onRefresh={() => {
+                                    onRefresh();
+                                }}
+                            />
+                        }
                         scrollEventThrottle={8}
                         onScroll={({ nativeEvent }) => {
                             onShouldExpand(shouldExpand(nativeEvent));
@@ -62,12 +73,16 @@ export const ProfileBody = ({ user, userProfileModel, refreshedTimestamp, onShou
                 );
 
             case 'today':
-                if (!plannedDay) {
-                    return <View />;
-                }
-
                 return (
                     <ScrollView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isRefreshing}
+                                onRefresh={() => {
+                                    onRefresh();
+                                }}
+                            />
+                        }
                         scrollEventThrottle={8}
                         onScroll={({ nativeEvent }) => {
                             onShouldExpand(shouldExpand(nativeEvent));
@@ -80,6 +95,14 @@ export const ProfileBody = ({ user, userProfileModel, refreshedTimestamp, onShou
             case 'activity':
                 return (
                     <ScrollView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={isRefreshing}
+                                onRefresh={() => {
+                                    onRefresh();
+                                }}
+                            />
+                        }
                         scrollEventThrottle={8}
                         onScroll={({ nativeEvent }) => {
                             onShouldExpand(shouldExpand(nativeEvent));
@@ -110,11 +133,6 @@ export const ProfileBody = ({ user, userProfileModel, refreshedTimestamp, onShou
             setGoals(goals);
         });
 
-        if (userProfileModel.uid) {
-            const user = await UserController.get(userProfileModel.uid);
-            const plannedDay = await PlannedDayController.get(user, getTodayKey());
-            setPlannedDay(plannedDay);
-        }
         fetchPillars();
     };
 
