@@ -108,7 +108,7 @@ export const ProfileBody = ({ plannedDay, user, userProfileModel, onRefresh, isR
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
                     >
-                        <ActivityTabRoute user={user} userProfile={userProfileModel} />
+                        <ActivityTabRoute refreshedTimestamp={refreshedTimestamp} user={user} userProfile={userProfileModel} />
                     </ScrollView>
                 );
         }

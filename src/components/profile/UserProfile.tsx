@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
 import { Screen } from 'src/components/common/Screen';
 import { RouteProp, useRoute } from '@react-navigation/native';

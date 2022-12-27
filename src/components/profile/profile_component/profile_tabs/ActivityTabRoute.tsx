@@ -16,9 +16,15 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 interface Props {
     user: UserModel;
     userProfile: UserProfileModel;
+    refreshedTimestamp: Date;
 }
 
-export const ActivityTabRoute = ({ user, userProfile }: Props) => {
+const getDefaultCutoffDate = () => {
+    const date = getDateMinusDays(new Date(), 3);
+    return date;
+};
+
+export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
     const card = {
         width: '100%',
@@ -32,8 +38,12 @@ export const ActivityTabRoute = ({ user, userProfile }: Props) => {
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoadingMode, setIsLoadingMode] = React.useState(false);
-    const [timelinePostCutoffDate, setTimelinePostCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 3));
-    const [dailyRestultCutoffDate, setDailyResultCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 3));
+    const [timelinePostCutoffDate, setTimelinePostCutoffDate] = React.useState<Date>(getDefaultCutoffDate());
+    const [dailyRestultCutoffDate, setDailyResultCutoffDate] = React.useState<Date>(getDefaultCutoffDate());
+
+    React.useEffect(() => {
+        onRefresh();
+    }, [refreshedTimestamp]);
 
     React.useEffect(() => {
         fetchPaginatedTimelinePostsForUser();
@@ -50,9 +60,11 @@ export const ActivityTabRoute = ({ user, userProfile }: Props) => {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
 
-        const newCutoffDate = getDateMinusDays(new Date(), 3);
-        setTimelinePostCutoffDate(newCutoffDate);
-        setDailyResultCutoffDate(newCutoffDate);
+        setTimelinePostCutoffDate(new Date());
+        setTimelinePostCutoffDate(getDefaultCutoffDate());
+
+        setDailyResultCutoffDate(new Date());
+        setDailyResultCutoffDate(getDefaultCutoffDate());
 
         wait(500).then(() => setRefreshing(false));
     }, []);
