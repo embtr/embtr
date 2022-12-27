@@ -17,6 +17,7 @@ import { DailyResultBody } from './DailyResultBody';
 import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import UserController from 'src/controller/user/UserController';
 import { getDatePretty } from 'src/util/DateUtility';
+import * as Haptics from 'expo-haptics';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -38,6 +39,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         DailyResultController.like(dailyResult, getAuth().currentUser!.uid);
         setLikes(likes + 1);
         setIsLiked(true);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     };
 
     React.useEffect(() => {
