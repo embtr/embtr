@@ -50,6 +50,11 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         fetchPlannedDay(dailyResult);
     }, [dailyResult]);
 
+    React.useEffect(() => {
+        setLikes(dailyResult.public.likes.length);
+        setCommentCount(dailyResult.public.comments.length);
+    }, [dailyResult]);
+
     const datePretty = getDatePretty(getDateFromDayKey(dailyResult.data.dayKey));
 
     let plannedTaskViews: JSX.Element[] = [];
