@@ -40,6 +40,7 @@ import { PillarsWidget } from '../widgets/pillars/PillarsWidget';
 import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import PlannedTaskController, { clonePlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
+import AccessLogController from 'src/controller/access_log/AccessLogController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -92,6 +93,12 @@ export const Today = () => {
     useFocusEffect(
         React.useCallback(() => {
             fetchPillars();
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            AccessLogController.addTodayPageAccesLog();
         }, [])
     );
 

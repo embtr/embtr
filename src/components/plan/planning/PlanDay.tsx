@@ -13,6 +13,7 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { getPlannedTaskGoalId } from 'src/controller/planning/PlannedTaskController';
 import UserController from 'src/controller/user/UserController';
+import AccessLogController from 'src/controller/access_log/AccessLogController';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -32,6 +33,12 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
     useFocusEffect(
         React.useCallback(() => {
             fetch();
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            AccessLogController.addPlanningListPageAccesLog();
         }, [])
     );
 

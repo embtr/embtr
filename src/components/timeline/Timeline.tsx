@@ -5,7 +5,7 @@ import { Banner } from 'src/components/common/Banner';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -21,6 +21,7 @@ import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard'
 import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
+import AccessLogController from 'src/controller/access_log/AccessLogController';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -70,6 +71,12 @@ export const Timeline = () => {
     React.useEffect(() => {
         fetchPostUsers();
     }, [paginatedTimelinePosts, paginatedDailyResults]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            AccessLogController.addTimelinePageAccesLog();
+        }, [])
+    );
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);

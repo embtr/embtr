@@ -15,6 +15,7 @@ import { ProfileTabRoute } from './profile_tabs/ProfileTabRoute';
 import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import AccessLogController from 'src/controller/access_log/AccessLogController';
 
 /*
  * Avoid rerenders
@@ -37,6 +38,26 @@ export const ProfileBody = ({ plannedDay, user, userProfileModel, onRefresh, isR
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
 
     const [index, setIndex] = React.useState(0);
+
+    React.useEffect(() => {
+        logAccessLog(index);
+    }, [index]);
+
+    const logAccessLog = (index: number) => {
+        switch (index) {
+            case 0:
+                AccessLogController.addProfileActivityPageAccesLog();
+                break;
+
+            case 1:
+                AccessLogController.addProfileTodayPageAccesLog();
+                break;
+
+            case 2:
+                AccessLogController.addProfileActivityPageAccesLog();
+                break;
+        }
+    };
 
     const shouldExpand = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): ScrollChangeEvent => {
         if (contentOffset.y < 0) {

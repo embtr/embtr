@@ -16,7 +16,6 @@ import { ScrollChangeEvent } from 'src/util/constants';
 import { useSharedValue } from 'react-native-reanimated';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { fetchUserInfoAsync } from 'expo-auth-session';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -80,7 +79,7 @@ export const UserProfile = () => {
             return;
         }
 
-        const plannedDay = await PlannedDayController.get(user, getTodayKey());
+        const plannedDay = await PlannedDayController.getOrCreate(user, getTodayKey());
         setPlannedDay(plannedDay);
     };
 
