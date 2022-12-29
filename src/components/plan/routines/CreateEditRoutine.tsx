@@ -9,10 +9,14 @@ import { Screen } from 'src/components/common/Screen';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { RandomPlaceHolderTextInput } from 'src/components/common/textbox/RandomPlaceholderTextInput';
-import { FAKE_ROUTINE, RoutineModel } from 'src/controller/routine/RoutineController';
+import RoutineController, { createRoutineModel, FAKE_ROUTINE, RoutineModel } from 'src/controller/routine/RoutineController';
 import { AddHabitModal } from '../planning/AddHabitModal';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { RoutineHabit } from './RoutineHabit';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
+import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const CreateEditRoutine = () => {
     const { colors } = useTheme();
@@ -24,6 +28,7 @@ export const CreateEditRoutine = () => {
     const [name, setName] = React.useState('');
     const [details, setDetails] = React.useState('');
     const [showModal, setShowModal] = React.useState(false);
+    const [showScheduleModal, setShowScheduleModal] = React.useState(false);
     const [habits, setHabits] = React.useState<TaskModel[]>([]);
 
     const placeholderOptions = ['Morning Routine', 'Workout Routine'];
@@ -36,7 +41,37 @@ export const CreateEditRoutine = () => {
         }
     }, []);
 
-    const save = () => {};
+    const dispatch = useAppDispatch();
+    const openMenu = useAppSelector(getOpenMenu);
+    const closeMenu = useAppSelector(getCloseMenu);
+
+    const updateMenuOptions = () => {
+        let menuOptions: EmbtrMenuOption[] = [];
+        menuOptions.push({
+            name: 'Schedule',
+            onPress: () => {
+                closeMenu();
+                setShowScheduleModal(true);
+            },
+        });
+
+        menuOptions.push({ name: 'Delete', onPress: () => {}, destructive: true });
+        dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
+    };
+
+    const save = async () => {
+        if (routine.id) {
+            const clone = { ...routine };
+            clone.name = name;
+            clone.description = details;
+            await RoutineController.update(clone);
+        } else {
+            const routine = createRoutineModel(name, details);
+            await RoutineController.create(routine);
+        }
+
+        navigation.goBack();
+    };
 
     const confirmHabits = (selectedHabits: TaskModel[]) => {
         let clone = [...habits];
