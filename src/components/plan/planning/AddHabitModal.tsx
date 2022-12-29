@@ -13,7 +13,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
     visible: boolean;
-    plannedDay: PlannedDay;
+    plannedDay?: PlannedDay;
     confirm: Function;
     dismiss: Function;
 }
@@ -146,14 +146,18 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
                                         navigation.navigate('CreateEditHabit', { id: undefined });
                                     }}
                                 />
-                                <HorizontalLine />
-                                <Button
-                                    title="Create One Time Task"
-                                    onPress={() => {
-                                        closeModal();
-                                        navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.dayKey });
-                                    }}
-                                />
+                                {plannedDay && (
+                                    <View>
+                                        <HorizontalLine />
+                                        <Button
+                                            title="Create One Time Task"
+                                            onPress={() => {
+                                                closeModal();
+                                                navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.dayKey });
+                                            }}
+                                        />
+                                    </View>
+                                )}
                                 <HorizontalLine />
                                 <Button
                                     title="Cancel"

@@ -4,6 +4,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { GoalPreviews } from './GoalPreviews';
 import { HabitPreviews } from './HabitPreviews';
 import { PillarPreviews } from './PillarPreviews';
+import { RoutinePreviews } from './routines/RoutinePreviews';
 
 export const PlanPreviews = () => {
     const { colors } = useTheme();
@@ -13,6 +14,9 @@ export const PlanPreviews = () => {
             <ScrollView style={{ backgroundColor: colors.background, paddingTop: 7 }}>
                 <View style={{ paddingTop: 10 }} />
                 <HabitPreviews />
+
+                <View style={{ paddingTop: 10 }} />
+                <RoutinePreviews />
 
                 <View style={{ paddingTop: 20 }} />
                 <GoalPreviews />
