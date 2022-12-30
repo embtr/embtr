@@ -38,6 +38,13 @@ export const createRoutineModel = (name: string, description: string) => {
 };
 
 class RoutineController {
+	public static async get(id: string) {
+		const results = await RoutineDao.get(id);
+		const routineModel = this.getRoutineFromData(results);
+
+		return routineModel;
+	}
+
 	public static async getAll(user: UserModel) {
 		const results = await RoutineDao.getAll(user.uid);
 

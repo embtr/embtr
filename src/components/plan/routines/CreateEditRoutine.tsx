@@ -35,7 +35,7 @@ export const CreateEditRoutine = () => {
 
     React.useEffect(() => {
         if (route.params.id) {
-            //RoutineController.get(route.params.id, setHabit);
+            fetchRoutine();
         } else {
             setRoutine(FAKE_ROUTINE);
         }
@@ -57,6 +57,16 @@ export const CreateEditRoutine = () => {
 
         menuOptions.push({ name: 'Delete', onPress: () => {}, destructive: true });
         dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
+    };
+
+    const fetchRoutine = async () => {
+        const routine = await RoutineController.get(route.params.id!);
+        const routineHabits = await RoutineHabitController.getAllInRoutine(routine);
+
+        setRoutine(routine);
+        setName(routine.name);
+        setDetails(routine.description);
+        setRoutineHabits(routineHabits);
     };
 
     const save = async () => {

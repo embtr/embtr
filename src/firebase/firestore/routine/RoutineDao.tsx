@@ -1,8 +1,15 @@
-import { Firestore, collection, where, getDocs, query, addDoc, setDoc, doc } from 'firebase/firestore';
+import { Firestore, collection, where, getDocs, query, addDoc, setDoc, doc, getDoc } from 'firebase/firestore';
 import { RoutineModel } from 'src/controller/routine/RoutineController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
 class RoutineDao {
+    public static async get(id: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'get');
+        const result = await getDoc(doc(db, 'routines/', id));
+
+        return result;
+    }
+
     public static async getAll(uid: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'getAll');
 

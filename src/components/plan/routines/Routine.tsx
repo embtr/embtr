@@ -15,7 +15,9 @@ export const Routine = ({ routine }: Props) => {
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
-    const navigateToDetails = () => {};
+    const navigateToDetails = () => {
+        navigation.navigate('CreateEditRoutine', { id: routine.id });
+    };
 
     return (
         <View style={{ width: '97%' }}>

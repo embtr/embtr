@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import RoutineHabitDao from 'src/firebase/firestore/routine/RoutineHabitDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { FAKE_HABIT, TaskModel } from '../planning/TaskController';
@@ -54,6 +54,18 @@ export const createRoutineHabitModel = (routine: RoutineModel, habit: TaskModel)
 };
 
 class RoutineHabitController {
+	public static async getAllInRoutine(routine: RoutineModel) {
+		const results = await RoutineHabitDao.getAllInRoutine(routine.id);
+
+		const routineHabits: RoutineHabitModel[] = [];
+		results.forEach((result) => {
+			const routineHabit: RoutineHabitModel = this.getRoutineHabitFromData(result);
+			routineHabits.push(routineHabit);
+		});
+
+		return routineHabits;
+	}
+
 	public static async create(routineHabit: RoutineHabitModel) {
 		const results = await RoutineHabitDao.create(routineHabit);
 		routineHabit.id = results.id;
@@ -71,5 +83,13 @@ class RoutineHabitController {
 
 		return createdRoutineHabits;
 	}
+
+	private static getRoutineHabitFromData(data: DocumentSnapshot<DocumentData>): RoutineHabitModel {
+		let routineHabit: RoutineHabitModel = data.data() as RoutineHabitModel;
+		routineHabit.id = data.id;
+
+		return routineHabit;
+	}
 }
+
 export default RoutineHabitController;
