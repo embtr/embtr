@@ -1,5 +1,4 @@
-import { DocumentData, DocumentSnapshot } from 'firebase/firestore';
-import { result } from 'lodash';
+import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import RoutineDao from 'src/firebase/firestore/routine/RoutineDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { UserModel } from '../user/UserController';
@@ -10,6 +9,8 @@ export interface RoutineModel {
 	name: string;
 	description: string;
 	active: boolean;
+	added: Timestamp;
+	modified: Timestamp;
 }
 
 export const FAKE_ROUTINE: RoutineModel = {
@@ -18,6 +19,8 @@ export const FAKE_ROUTINE: RoutineModel = {
 	name: '',
 	description: '',
 	active: false,
+	added: Timestamp.now(),
+	modified: Timestamp.now(),
 };
 
 export const createRoutineModel = (name: string, description: string) => {
@@ -27,6 +30,8 @@ export const createRoutineModel = (name: string, description: string) => {
 		name: name,
 		description: description,
 		active: true,
+		added: Timestamp.now(),
+		modified: Timestamp.now(),
 	};
 
 	return routine;

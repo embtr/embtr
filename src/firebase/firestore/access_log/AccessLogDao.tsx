@@ -1,4 +1,4 @@
-import { Firestore, doc, setDoc, addDoc, collection } from 'firebase/firestore';
+import { Firestore, addDoc, collection } from 'firebase/firestore';
 import { AccessLogModel } from 'src/controller/access_log/AccessLogController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 

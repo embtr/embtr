@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -17,9 +17,11 @@ export const Routines = () => {
 
     const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
 
-    React.useEffect(() => {
-        fetchRoutines();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchRoutines();
+        }, [])
+    );
 
     const fetchRoutines = async () => {
         const user = await UserController.getCurrentUser();

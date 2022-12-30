@@ -7,6 +7,7 @@ export interface TaskModel {
     id?: string;
     uid: string;
     added: Timestamp;
+    modified: Timestamp;
     name: string;
     description: string;
     goalId?: string;
@@ -61,6 +62,7 @@ export const createTaskModel = (name: string, description: string, goalId?: stri
     const task: TaskModel = {
         uid: getCurrentUid(),
         added: Timestamp.now(),
+        modified: Timestamp.now(),
         name: name,
         description: description,
         active: true,
@@ -76,6 +78,7 @@ export const createTaskModel = (name: string, description: string, goalId?: stri
 export const FAKE_HABIT: TaskModel = {
     uid: '',
     added: Timestamp.now(),
+    modified: Timestamp.now(),
     name: '',
     description: '',
     active: true,
@@ -87,6 +90,7 @@ class TaskController {
             id: task.id,
             uid: task.uid,
             added: task.added,
+            modified: task.modified,
             name: task.name,
             description: task.description,
             goalId: task.goalId,
@@ -108,6 +112,7 @@ class TaskController {
     }
 
     public static async update(task: TaskModel) {
+        task.modified = Timestamp.now();
         await TaskDao.update(task);
     }
 

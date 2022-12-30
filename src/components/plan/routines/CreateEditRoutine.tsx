@@ -16,7 +16,7 @@ import { RoutineHabit } from './RoutineHabit';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import RoutineHabitController, { createRoutineHabitModels, RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
 
 export const CreateEditRoutine = () => {
     const { colors } = useTheme();
@@ -29,7 +29,7 @@ export const CreateEditRoutine = () => {
     const [details, setDetails] = React.useState('');
     const [showModal, setShowModal] = React.useState(false);
     const [showScheduleModal, setShowScheduleModal] = React.useState(false);
-    const [habits, setHabits] = React.useState<TaskModel[]>([]);
+    const [routineHabits, setRoutineHabits] = React.useState<RoutineHabitModel[]>([]);
 
     const placeholderOptions = ['Morning Routine', 'Workout Routine'];
 
@@ -61,30 +61,47 @@ export const CreateEditRoutine = () => {
 
     const save = async () => {
         if (routine.id) {
-            const clone = { ...routine };
-            clone.name = name;
-            clone.description = details;
-            await RoutineController.update(clone);
+            await updateRoutine();
         } else {
-            const routine = createRoutineModel(name, details);
-            await RoutineController.create(routine);
+            await createRoutine();
         }
 
         navigation.goBack();
     };
 
-    const confirmHabits = (selectedHabits: TaskModel[]) => {
-        let clone = [...habits];
-        clone = clone.concat(selectedHabits);
+    const updateRoutine = async () => {
+        const clone = { ...routine };
+        clone.name = name;
+        clone.description = details;
+        await RoutineController.update(clone);
+    };
 
-        setHabits(clone);
+    const createRoutine = async () => {
+        const routineToCreate = createRoutineModel(name, details);
+        const createdRoutine = await RoutineController.create(routineToCreate);
+        await createRoutineHabits(createdRoutine);
+    };
+
+    const createRoutineHabits = async (routine: RoutineModel) => {
+        for (const routineHabit of routineHabits) {
+            routineHabit.routineId = routine.id;
+            RoutineHabitController.create(routineHabit);
+        }
+    };
+
+    const confirmHabits = (selectedHabits: TaskModel[]) => {
+        let clone = [...routineHabits];
+        const createdRoutineHabits = createRoutineHabitModels(FAKE_ROUTINE, selectedHabits);
+        clone = clone.concat(createdRoutineHabits);
+
+        setRoutineHabits(clone);
     };
 
     const habitViews: JSX.Element[] = [];
-    habits.forEach((habit) => {
+    routineHabits.forEach((routineHabit) => {
         habitViews.push(
-            <View key={habit.id} style={{ width: '95%', paddingBottom: 5 }}>
-                <RoutineHabit habit={habit} />
+            <View key={routineHabit.id} style={{ width: '95%', paddingBottom: 5 }}>
+                <RoutineHabit routineHabit={routineHabit} />
             </View>
         );
     });

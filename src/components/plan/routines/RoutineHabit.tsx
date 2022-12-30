@@ -1,6 +1,4 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TaskModel } from 'src/controller/planning/TaskController';
 import { CARD_SHADOW } from 'src/util/constants';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -11,12 +9,14 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
-    habit: TaskModel;
+    routineHabit: RoutineHabitModel;
 }
 
-export const RoutineHabit = ({ habit }: Props) => {
+export const RoutineHabit = ({ routineHabit }: Props) => {
     const [editPlannedTaskIsVisible, setEditPlannedTaskIsVisible] = React.useState<boolean>(false);
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
@@ -58,7 +58,7 @@ export const RoutineHabit = ({ habit }: Props) => {
                                         fontSize: 14,
                                     }}
                                 >
-                                    {habit.name}
+                                    {routineHabit.habit.name}
                                 </Text>
                                 <Text
                                     style={{
