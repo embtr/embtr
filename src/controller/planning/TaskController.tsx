@@ -43,19 +43,21 @@ export const durationToString = (duration: number) => {
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
 
-    let minutesString: string = minutes.toString();
+    let hoursString = '00';
+    if (hours > 0) {
+        hoursString = hours.toString();
+    }
+
+    let minutesString = '00';
+    if (minutes > 0) {
+        minutesString = minutes.toString();
+    }
+
     if (minutesString.length == 1) {
         minutesString = '0' + minutesString;
     }
 
-    let value = '';
-    if (hours > 0) {
-        value += hours + ':';
-    }
-    value += minutesString + ':';
-    value += '00';
-
-    return value;
+    return hoursString + ':' + minutesString;
 };
 
 export const createTaskModel = (name: string, description: string, goalId?: string) => {
@@ -120,6 +122,14 @@ class TaskController {
         task.active = false;
         await TaskDao.update(task);
         callback();
+    }
+
+    public static async getHabitAsync(id: string) {
+        const uid = getCurrentUid();
+        const result = await TaskDao.getTask(uid, id);
+
+        const habit = this.getHabitFromData(result);
+        return habit;
     }
 
     public static getHabit(id: string, callback: Function) {

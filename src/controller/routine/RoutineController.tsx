@@ -65,7 +65,7 @@ class RoutineController {
 	}
 
 	public static async update(routine: RoutineModel) {
-		await RoutineDao.create(routine);
+		await RoutineDao.update(routine);
 		return routine;
 	}
 

@@ -1,13 +1,14 @@
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import RoutineHabitDao from 'src/firebase/firestore/routine/RoutineHabitDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { FAKE_HABIT, TaskModel } from '../planning/TaskController';
+import TaskController, { FAKE_HABIT, TaskModel } from '../planning/TaskController';
 import { RoutineModel } from './RoutineController';
 
 export interface RoutineHabitModel {
 	id: string;
 	uid: string;
 	routineId: string;
+	habitId: string;
 	habit: TaskModel;
 	startMinute: number;
 	duration: number;
@@ -20,6 +21,7 @@ export const FAKE_ROUTINE_HABIT: RoutineHabitModel = {
 	id: '',
 	uid: '',
 	routineId: '',
+	habitId: '',
 	habit: FAKE_HABIT,
 	startMinute: 0,
 	duration: 0,
@@ -42,6 +44,7 @@ export const createRoutineHabitModel = (routine: RoutineModel, habit: TaskModel)
 		id: '',
 		uid: getCurrentUid(),
 		routineId: routine.id,
+		habitId: habit.id ? habit.id : '',
 		habit: habit,
 		startMinute: 0,
 		duration: 0,
@@ -58,10 +61,17 @@ class RoutineHabitController {
 		const results = await RoutineHabitDao.getAllInRoutine(routine.id);
 
 		const routineHabits: RoutineHabitModel[] = [];
-		results.forEach((result) => {
+		for (const result of results.docs) {
 			const routineHabit: RoutineHabitModel = this.getRoutineHabitFromData(result);
+			if (!routineHabit.active) {
+				continue;
+			}
+			if (routineHabit.habitId) {
+				const habit = await TaskController.getHabitAsync(routineHabit.habitId);
+				routineHabit.habit = habit;
+			}
 			routineHabits.push(routineHabit);
-		});
+		}
 
 		return routineHabits;
 	}
@@ -70,6 +80,11 @@ class RoutineHabitController {
 		const results = await RoutineHabitDao.create(routineHabit);
 		routineHabit.id = results.id;
 
+		return routineHabit;
+	}
+
+	public static async update(routineHabit: RoutineHabitModel) {
+		await RoutineHabitDao.update(routineHabit);
 		return routineHabit;
 	}
 

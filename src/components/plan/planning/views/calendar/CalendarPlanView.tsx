@@ -184,7 +184,10 @@ export const CalendarPlanView = ({ plannedTask, onUpdateTask, rowIndex, totalInR
     return (
         <View style={[cardShadow, { marginLeft: paddingRight, top: plannedTask.startMinute! + CALENDAR_TIME_HEIGHT / 2, position: 'absolute' }]}>
             <SchedulePlannableTaskModal
-                plannedTask={plannedTask!}
+                name={plannedTask.routine.name}
+                description={plannedTask.routine.description}
+                initialStartMinute={plannedTask.startMinute ? plannedTask.startMinute : 0}
+                initialDuration={plannedTask.duration ? plannedTask.duration : 0}
                 visible={editPlannedTaskIsVisible}
                 confirm={(startMinute: number, duration: number) => {
                     if (!plannedTask || !onUpdateTask) {

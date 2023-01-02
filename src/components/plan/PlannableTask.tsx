@@ -181,23 +181,28 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
 
     return (
         <View style={{ width: '97%' }}>
-            <SchedulePlannableTaskModal
-                plannedTask={plannedTask!}
-                visible={editPlannedTaskIsVisible}
-                confirm={(startMinute: number, duration: number) => {
-                    if (!plannedTask || !onUpdateTask) {
-                        return;
-                    }
+            {plannedTask && (
+                <SchedulePlannableTaskModal
+                    name={plannedTask.routine.name}
+                    description={plannedTask.routine.description}
+                    initialStartMinute={plannedTask.startMinute ? plannedTask.startMinute : 0}
+                    initialDuration={plannedTask.duration ? plannedTask.duration : 0}
+                    visible={editPlannedTaskIsVisible}
+                    confirm={(startMinute: number, duration: number) => {
+                        if (!plannedTask || !onUpdateTask) {
+                            return;
+                        }
 
-                    plannedTask.startMinute = startMinute;
-                    plannedTask.duration = duration;
-                    onUpdateTask(plannedTask);
-                    setEditPlannedTaskIsVisible(false);
-                }}
-                dismiss={() => {
-                    setEditPlannedTaskIsVisible(false);
-                }}
-            />
+                        plannedTask.startMinute = startMinute;
+                        plannedTask.duration = duration;
+                        onUpdateTask(plannedTask);
+                        setEditPlannedTaskIsVisible(false);
+                    }}
+                    dismiss={() => {
+                        setEditPlannedTaskIsVisible(false);
+                    }}
+                />
+            )}
 
             <TouchableOpacity onPress={onShortPress} onLongPress={onLongPress}>
                 <View style={[{ backgroundColor: isEnabled ? colors.button_background : colors.tomorrow_unselected, borderRadius: 15 }, CARD_SHADOW]}>

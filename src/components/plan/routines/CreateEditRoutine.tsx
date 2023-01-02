@@ -13,10 +13,8 @@ import RoutineController, { createRoutineModel, FAKE_ROUTINE, RoutineModel } fro
 import { AddHabitModal } from '../planning/AddHabitModal';
 import { TaskModel } from 'src/controller/planning/TaskController';
 import { RoutineHabit } from './RoutineHabit';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
-import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import RoutineHabitController, { createRoutineHabitModels, RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
+import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 
 export const CreateEditRoutine = () => {
     const { colors } = useTheme();
@@ -27,8 +25,7 @@ export const CreateEditRoutine = () => {
     const [routine, setRoutine] = React.useState<RoutineModel>(FAKE_ROUTINE);
     const [name, setName] = React.useState('');
     const [details, setDetails] = React.useState('');
-    const [showModal, setShowModal] = React.useState(false);
-    const [showScheduleModal, setShowScheduleModal] = React.useState(false);
+    const [showAddHabitsModal, setShowAddHabitsModal] = React.useState(false);
     const [routineHabits, setRoutineHabits] = React.useState<RoutineHabitModel[]>([]);
 
     const placeholderOptions = ['Morning Routine', 'Workout Routine'];
@@ -40,24 +37,6 @@ export const CreateEditRoutine = () => {
             setRoutine(FAKE_ROUTINE);
         }
     }, []);
-
-    const dispatch = useAppDispatch();
-    const openMenu = useAppSelector(getOpenMenu);
-    const closeMenu = useAppSelector(getCloseMenu);
-
-    const updateMenuOptions = () => {
-        let menuOptions: EmbtrMenuOption[] = [];
-        menuOptions.push({
-            name: 'Schedule',
-            onPress: () => {
-                closeMenu();
-                setShowScheduleModal(true);
-            },
-        });
-
-        menuOptions.push({ name: 'Delete', onPress: () => {}, destructive: true });
-        dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
-    };
 
     const fetchRoutine = async () => {
         const routine = await RoutineController.get(route.params.id!);
@@ -72,6 +51,7 @@ export const CreateEditRoutine = () => {
     const save = async () => {
         if (routine.id) {
             await updateRoutine();
+            await updateRoutineHabits();
         } else {
             await createRoutine();
         }
@@ -83,7 +63,20 @@ export const CreateEditRoutine = () => {
         const clone = { ...routine };
         clone.name = name;
         clone.description = details;
+
         await RoutineController.update(clone);
+    };
+
+    const updateRoutineHabits = async () => {
+        for (const routineHabit of routineHabits) {
+            routineHabit.routineId = routine.id;
+
+            if (routineHabit.id) {
+                await RoutineHabitController.update(routineHabit);
+            } else {
+                await RoutineHabitController.create(routineHabit);
+            }
+        }
     };
 
     const createRoutine = async () => {
@@ -107,11 +100,24 @@ export const CreateEditRoutine = () => {
         setRoutineHabits(clone);
     };
 
+    const onRoutineHabitUpdated = (updatedRoutineHabit: RoutineHabitModel) => {
+        const updatedRoutineHabits: RoutineHabitModel[] = [];
+        routineHabits.forEach((routineHabit) => {
+            if (routineHabit.id === updatedRoutineHabit.id) {
+                return;
+            }
+            updatedRoutineHabits.push(routineHabit);
+        });
+
+        updatedRoutineHabits.push(updatedRoutineHabit);
+        setRoutineHabits(updatedRoutineHabits);
+    };
+
     const habitViews: JSX.Element[] = [];
     routineHabits.forEach((routineHabit) => {
         habitViews.push(
-            <View key={routineHabit.id} style={{ width: '95%', paddingBottom: 5 }}>
-                <RoutineHabit routineHabit={routineHabit} />
+            <View key={routineHabit.id} style={{ width: '100%', paddingBottom: 5 }}>
+                <RoutineHabit routineHabit={routineHabit} onUpdateRoutineHabit={onRoutineHabitUpdated} />
             </View>
         );
     });
@@ -119,13 +125,15 @@ export const CreateEditRoutine = () => {
     return (
         <Screen>
             <ScrollView>
+                <EmbtrMenuCustom />
+
                 <Banner name={routine.id ? 'Edit Routine' : 'Create Routine'} leftText={'cancel'} leftRoute="BACK" rightText={'save'} rightOnClick={save} />
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <AddHabitModal
-                        visible={showModal}
+                        visible={showAddHabitsModal}
                         confirm={confirmHabits}
                         dismiss={() => {
-                            setShowModal(false);
+                            setShowAddHabitsModal(false);
                         }}
                     />
                     <View style={{ paddingTop: 5 }}>
@@ -230,7 +238,7 @@ export const CreateEditRoutine = () => {
                                 paddingRight: 10,
                             }}
                             multiline={true}
-                            placeholder={'What are the details of this task?'}
+                            placeholder={'What are the details of this routine?'}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={setDetails}
                             //onChange={() => { setStoryError(false) }}
@@ -253,7 +261,7 @@ export const CreateEditRoutine = () => {
                             <Text
                                 style={{ color: colors.link, textAlign: 'right', flex: 1, paddingRight: 5 }}
                                 onPress={() => {
-                                    setShowModal(true);
+                                    setShowAddHabitsModal(true);
                                 }}
                             >
                                 Add Habits

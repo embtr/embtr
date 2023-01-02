@@ -3,26 +3,28 @@ import * as React from 'react';
 import { View, Text, TouchableOpacity, Modal, Button } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 interface Props {
-    plannedTask: PlannedTaskModel;
+    name: string;
+    description: string;
+    initialStartMinute: number;
+    initialDuration: number;
     visible: boolean;
     confirm: Function;
     dismiss: Function;
 }
 
-export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dismiss }: Props) => {
+export const SchedulePlannableTaskModal = ({ name, description, initialStartMinute, initialDuration, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
-    const startHour = plannedTask?.startMinute ? Math.floor(plannedTask.startMinute / 60) : 1;
-    const initialDurationHours = plannedTask?.duration ? Math.floor(plannedTask.duration / 60) : 0;
-    const initialDurationMinutes = plannedTask?.duration ? Math.floor(plannedTask.duration % 60) : 0;
+    const initialStartHour = Math.floor(initialStartMinute / 60);
+    const initialDurationHours = Math.floor(initialDuration / 60);
+    const initialDurationMinutes = Math.floor(initialDuration % 60);
 
-    const [hour, setHour] = React.useState(startHour > 12 ? startHour - 12 : startHour);
-    const [minute, setMinute] = React.useState(plannedTask?.startMinute ? Math.floor(plannedTask.startMinute % 60) : 1);
-    const [amPm, setAmPm] = React.useState(startHour >= 12 ? 'PM' : 'AM');
+    const [hour, setHour] = React.useState(initialStartHour > 12 ? initialStartHour - 12 : initialStartHour);
+    const [minute, setMinute] = React.useState(Math.floor(initialStartMinute % 60));
+    const [amPm, setAmPm] = React.useState(initialStartMinute >= 12 ? 'PM' : 'AM');
     const [durationHours, setDurationHours] = React.useState(initialDurationHours);
     const [durationMinutes, setDurationMinutes] = React.useState(initialDurationMinutes);
 
@@ -84,7 +86,7 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                         <View>
                             <View style={{ width: 300, backgroundColor: colors.modal_background, borderRadius: 12, justifyContent: 'space-around' }}>
                                 <Text style={{ color: colors.text, fontSize: 16, paddingTop: 10, paddingLeft: 10, fontFamily: 'Poppins_500Medium' }}>
-                                    {plannedTask.routine.name}
+                                    {name}
                                 </Text>
 
                                 <Text
@@ -97,7 +99,7 @@ export const SchedulePlannableTaskModal = ({ plannedTask, visible, confirm, dism
                                         fontFamily: 'Poppins_400Regular',
                                     }}
                                 >
-                                    {plannedTask.routine.description}
+                                    {description}
                                 </Text>
 
                                 <View style={{ width: '100%', alignItems: 'center', paddingTop: 10 }}>
