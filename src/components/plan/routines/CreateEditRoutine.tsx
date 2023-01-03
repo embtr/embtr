@@ -15,7 +15,6 @@ import { TaskModel } from 'src/controller/planning/TaskController';
 import { RoutineHabit } from './RoutineHabit';
 import RoutineHabitController, { createRoutineHabitModels, RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
-import { getRandomInt } from 'src/util/GeneralUtility';
 
 export const CreateEditRoutine = () => {
     const { colors } = useTheme();
@@ -93,7 +92,7 @@ export const CreateEditRoutine = () => {
         }
     };
 
-    const confirmHabits = (selectedHabits: TaskModel[]) => {
+    const onAddHabits = (selectedHabits: TaskModel[]) => {
         let clone = [...routineHabits];
         const createdRoutineHabits = createRoutineHabitModels(FAKE_ROUTINE, selectedHabits);
         clone = clone.concat(createdRoutineHabits);
@@ -136,7 +135,7 @@ export const CreateEditRoutine = () => {
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <AddHabitModal
                         visible={showAddHabitsModal}
-                        confirm={confirmHabits}
+                        confirm={onAddHabits}
                         dismiss={() => {
                             setShowAddHabitsModal(false);
                         }}

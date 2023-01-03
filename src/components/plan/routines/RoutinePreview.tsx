@@ -14,7 +14,9 @@ export const RoutinePreview = ({ routine }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-    const navigateToDetails = () => {};
+    const navigateToDetails = () => {
+        navigation.navigate('RoutineDetails', { id: routine.id });
+    };
 
     return (
         <View style={{ width: '97%' }}>
