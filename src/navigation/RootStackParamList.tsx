@@ -33,6 +33,7 @@ export type PlanTabScreens = {
     Pillars: undefined;
     CreateEditPillar: undefined;
     PillarDetails: { uid: string; id: string };
+    RoutineDetails: { id: string };
 };
 
 export type TimelineTabScreens = {

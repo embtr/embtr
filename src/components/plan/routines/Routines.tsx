@@ -9,7 +9,7 @@ import { Screen } from 'src/components/common/Screen';
 import React from 'react';
 import RoutineController, { RoutineModel } from 'src/controller/routine/RoutineController';
 import UserController from 'src/controller/user/UserController';
-import { Routine } from './Routine';
+import { RoutineElement } from './RoutineElement';
 
 export const Routines = () => {
     const { colors } = useTheme();
@@ -33,7 +33,7 @@ export const Routines = () => {
     routines.forEach((routine) => {
         taskViews.push(
             <View key={routine.id} style={{ paddingBottom: 5, width: '100%', alignItems: 'center' }}>
-                <Routine routine={routine} />
+                <RoutineElement routine={routine} />
             </View>
         );
     });

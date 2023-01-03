@@ -14,7 +14,7 @@ import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/Go
 
 interface Props {
     routineHabit: RoutineHabitModel;
-    onUpdateRoutineHabit: Function;
+    onUpdateRoutineHabit?: Function;
 }
 
 export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
@@ -42,19 +42,23 @@ export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
             },
         });
 
-        menuOptions.push({ name: 'Delete', onPress: () => {
-            markAsDeleted();
-            closeMenu();
-        }, destructive: true });
+        menuOptions.push({
+            name: 'Delete',
+            onPress: () => {
+                markAsDeleted();
+                closeMenu();
+            },
+            destructive: true,
+        });
 
         dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
     };
 
     const markAsDeleted = () => {
-        const clone = {... routineHabit};
+        const clone = { ...routineHabit };
         clone.active = false;
-        onUpdateRoutineHabit(clone);
-    }
+        onUpdateRoutineHabit!(clone);
+    };
 
     const createUpdatedRoutineHabit = (startMinute: number, duration: number): RoutineHabitModel => {
         const clone = { ...routineHabit };
@@ -68,7 +72,7 @@ export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
     const duration = durationToString(routineHabit.duration);
 
     return (
-        <View style={{ width: '100%' }}>
+        <View style={{ width: '97%' }}>
             <SchedulePlannableTaskModal
                 name={routineHabit.habit.name}
                 description={routineHabit.habit.description}
@@ -77,7 +81,7 @@ export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
                 visible={showScheduleModal}
                 confirm={(startMinute: number, duration: number) => {
                     const updatedRoutineHabit = createUpdatedRoutineHabit(startMinute, duration);
-                    onUpdateRoutineHabit(updatedRoutineHabit);
+                    onUpdateRoutineHabit!(updatedRoutineHabit);
                     setShowScheduleModal(false);
                 }}
                 dismiss={() => {

@@ -10,13 +10,13 @@ interface Props {
     routine: RoutineModel;
 }
 
-export const Routine = ({ routine }: Props) => {
+export const RoutineElement = ({ routine }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const navigateToDetails = () => {
-        navigation.navigate('CreateEditRoutine', { id: routine.id });
+        navigation.navigate('RoutineDetails', { id: routine.id });
     };
 
     return (

@@ -13,6 +13,7 @@ import { CreateEditPillar } from '../profile/profile_component/pillar/CreateEdit
 import { PillarDetails } from '../profile/profile_component/pillar/PillarDetails';
 import { Routines } from '../plan/routines/Routines';
 import { CreateEditRoutine } from '../plan/routines/CreateEditRoutine';
+import { RoutineDetails } from '../plan/routines/RoutineDetails';
 
 export const SecurePlanTabStack = () => {
     const Stack = createNativeStackNavigator();
@@ -33,6 +34,7 @@ export const SecurePlanTabStack = () => {
             <Stack.Screen name="PillarDetails" component={PillarDetails} />
             <Stack.Screen name="CreateEditPillar" component={CreateEditPillar} />
             <Stack.Screen name="CreateEditRoutine" component={CreateEditRoutine} />
+            <Stack.Screen name="RoutineDetails" component={RoutineDetails} />
         </Stack.Navigator>
     );
 };
