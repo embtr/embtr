@@ -1,3 +1,4 @@
+import { uuidv4 } from '@firebase/util';
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import RoutineHabitDao from 'src/firebase/firestore/routine/RoutineHabitDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
@@ -41,7 +42,7 @@ export const createRoutineHabitModels = (routine: RoutineModel, habits: TaskMode
 };
 export const createRoutineHabitModel = (routine: RoutineModel, habit: TaskModel): RoutineHabitModel => {
 	const routineHabit: RoutineHabitModel = {
-		id: '',
+		id: uuidv4(),
 		uid: getCurrentUid(),
 		routineId: routine.id,
 		habitId: habit.id ? habit.id : '',

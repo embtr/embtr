@@ -15,6 +15,7 @@ import { TaskModel } from 'src/controller/planning/TaskController';
 import { RoutineHabit } from './RoutineHabit';
 import RoutineHabitController, { createRoutineHabitModels, RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
+import { getRandomInt } from 'src/util/GeneralUtility';
 
 export const CreateEditRoutine = () => {
     const { colors } = useTheme();
@@ -115,6 +116,10 @@ export const CreateEditRoutine = () => {
 
     const habitViews: JSX.Element[] = [];
     routineHabits.forEach((routineHabit) => {
+        if (!routineHabit.active) {
+            return;
+        }
+
         habitViews.push(
             <View key={routineHabit.id} style={{ width: '100%', paddingBottom: 5 }}>
                 <RoutineHabit routineHabit={routineHabit} onUpdateRoutineHabit={onRoutineHabitUpdated} />
