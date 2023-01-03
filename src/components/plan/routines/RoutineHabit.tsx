@@ -11,16 +11,21 @@ import { SchedulePlannableTaskModal } from '../SchedulePlannableTaskModal';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { startMinuteToString, durationToString } from 'src/controller/planning/TaskController';
 import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
     routineHabit: RoutineHabitModel;
-    onUpdateRoutineHabit?: Function;
+    onUpdateRoutineHabit: Function;
 }
 
 export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
     const { colors } = useTheme();
     const [showScheduleModal, setShowScheduleModal] = React.useState<boolean>(false);
     const [goal, setGoal] = React.useState<GoalModel>(FAKE_GOAL);
+
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     React.useEffect(() => {
         if (routineHabit.habit?.goalId) {
@@ -31,19 +36,28 @@ export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
     const dispatch = useAppDispatch();
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
+    const canEdit = onUpdateRoutineHabit !== undefined;
 
     const updateMenuOptions = () => {
         let menuOptions: EmbtrMenuOption[] = [];
         menuOptions.push({
-            name: 'Schedule',
+            name: 'Details',
             onPress: () => {
+                navigation.navigate('TaskDetails', { id: routineHabit.habitId });
                 closeMenu();
-                setShowScheduleModal(true);
             },
         });
 
         menuOptions.push({
-            name: 'Delete',
+            name: 'Schedule',
+            onPress: () => {
+                setShowScheduleModal(true);
+                closeMenu();
+            },
+        });
+
+        menuOptions.push({
+            name: 'Remove From Routine',
             onPress: () => {
                 markAsDeleted();
                 closeMenu();
@@ -57,7 +71,7 @@ export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
     const markAsDeleted = () => {
         const clone = { ...routineHabit };
         clone.active = false;
-        onUpdateRoutineHabit!(clone);
+        onUpdateRoutineHabit(clone);
     };
 
     const createUpdatedRoutineHabit = (startMinute: number, duration: number): RoutineHabitModel => {
@@ -81,7 +95,7 @@ export const RoutineHabit = ({ routineHabit, onUpdateRoutineHabit }: Props) => {
                 visible={showScheduleModal}
                 confirm={(startMinute: number, duration: number) => {
                     const updatedRoutineHabit = createUpdatedRoutineHabit(startMinute, duration);
-                    onUpdateRoutineHabit!(updatedRoutineHabit);
+                    onUpdateRoutineHabit(updatedRoutineHabit);
                     setShowScheduleModal(false);
                 }}
                 dismiss={() => {

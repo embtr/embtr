@@ -43,8 +43,8 @@ export const SchedulePlannableTaskModal = ({ name, description, initialStartMinu
     }
 
     let amPmPickerItems: JSX.Element[] = [];
-    amPmPickerItems.push(<Picker.Item key={'amPm_am'} color={colors.text} label={'AM'} value={'am'} />);
-    amPmPickerItems.push(<Picker.Item key={'amPm_pm'} color={colors.text} label={'PM'} value={'pm'} />);
+    amPmPickerItems.push(<Picker.Item key={'amPm_am'} color={colors.text} label={'AM'} value={'AM'} />);
+    amPmPickerItems.push(<Picker.Item key={'amPm_pm'} color={colors.text} label={'PM'} value={'PM'} />);
 
     let durationHourPickerItems: JSX.Element[] = [];
     for (let i = 0; i <= 23; i++) {
@@ -165,7 +165,7 @@ export const SchedulePlannableTaskModal = ({ name, description, initialStartMinu
                                     <Button
                                         title="Confirm"
                                         onPress={() => {
-                                            const startTime = hour * 60 + minute + (amPm === 'am' ? 0 : 12 * 60);
+                                            const startTime = hour * 60 + minute + (amPm === 'AM' ? 0 : 12 * 60);
                                             const duration = durationHours * 60 + durationMinutes;
                                             confirm(startTime, duration);
                                         }}

@@ -29,12 +29,7 @@ export const RoutineDetails = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            const fetch = async () => {
-                const routine = await RoutineController.get(route.params.id);
-                setRoutine(routine);
-            };
-
-            fetch();
+            fetchRoutine();
         }, [])
     );
 
@@ -48,6 +43,11 @@ export const RoutineDetails = () => {
 
         fetch();
     }, [routine]);
+
+    const fetchRoutine = async () => {
+        const routine = await RoutineController.get(route.params.id);
+        setRoutine(routine);
+    };
 
     const closeMenu = useAppSelector(getCloseMenu);
     const menuItems: EmbtrMenuOption[] = [
@@ -69,6 +69,11 @@ export const RoutineDetails = () => {
     const incompletedTasks = 0; //taskHistory.filter((e) => e.status === INCOMPLETE).length;
     const failedTasks = 0; //taskHistory.filter((e) => e.status === FAILED).length;
 
+    const updateHabit = async (routineHabit: RoutineHabitModel) => {
+        await RoutineHabitController.update(routineHabit);
+        fetchRoutine();
+    };
+
     const habitViews: JSX.Element[] = [];
     routineHabits.forEach((routineHabit) => {
         if (!routineHabit.active) {
@@ -77,7 +82,7 @@ export const RoutineDetails = () => {
 
         habitViews.push(
             <View key={routineHabit.id} style={{ width: '100%', paddingBottom: 5, alignItems: 'center' }}>
-                <RoutineHabit routineHabit={routineHabit} />
+                <RoutineHabit routineHabit={routineHabit} onUpdateRoutineHabit={updateHabit} />
             </View>
         );
     });
