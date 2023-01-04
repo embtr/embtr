@@ -15,6 +15,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
 
 interface Props {
     showSelectTaskModal: boolean;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSelectTaskModal, onDayChange, useCalendarView }: Props) => {
+    const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
@@ -32,11 +34,17 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
 
     useFocusEffect(
         React.useCallback(() => {
+            GoalController.getGoals(currentUser.uid, setGoals);
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
             refreshPlannedToday(selectedDayKey);
         }, [selectedDayKey])
     );
 
-    const getGoal = (goals: GoalModel[], goalId: string) => {
+    const getGoal = (goalId: string) => {
         for (const goal of goals) {
             if (goal.id === goalId) {
                 return goal;
@@ -57,26 +65,64 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
         setPlannedToday(plannedDay);
     };
 
-    const addHabitsFromModal = async (habits: TaskModel[]) => {
+    const getPlannedTasksFromHabits = (habits: TaskModel[]) => {
         if (!plannedToday?.id) {
             return;
         }
 
         const createdPlannedTasks: PlannedTaskModel[] = [];
-        GoalController.getGoals(getCurrentUid(), (goals: GoalModel[]) => {
-            for (let habit of habits) {
-                let goal = undefined;
-                if (habit.goalId) {
-                    goal = getGoal(goals, habit.goalId);
-                }
-
-                const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedToday.dayKey, habit, 360, 30, goal);
-                createdPlannedTasks.push(plannedTask);
+        for (let habit of habits) {
+            let goal = undefined;
+            if (habit.goalId) {
+                goal = getGoal(habit.goalId);
             }
 
-            PlannedTaskController.createTasks(createdPlannedTasks);
-            refreshPlannedToday(selectedDayKey);
-        });
+            const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedToday.dayKey, habit, 360, 30, goal);
+            createdPlannedTasks.push(plannedTask);
+        }
+
+        return createdPlannedTasks;
+    };
+
+    const getPlannedTasksFromRoutineHabits = (routineHabits: RoutineHabitModel[]) => {
+        if (!plannedToday?.id) {
+            return;
+        }
+
+        const createdPlannedTasks: PlannedTaskModel[] = [];
+        for (let routineHabit of routineHabits) {
+            let goal = undefined;
+            if (routineHabit.habit.goalId) {
+                goal = getGoal(routineHabit.habit.goalId);
+            }
+
+            const plannedTask: PlannedTaskModel = createPlannedTaskModel(
+                plannedToday.dayKey,
+                routineHabit.habit,
+                routineHabit.startMinute,
+                routineHabit.duration,
+                goal
+            );
+
+            createdPlannedTasks.push(plannedTask);
+        }
+
+        return createdPlannedTasks;
+    };
+
+    const addHabitsFromModal = async (habits: TaskModel[], routineHabits: RoutineHabitModel[]) => {
+        const plannedTasksFromHabits = getPlannedTasksFromHabits(habits);
+        const plannedTasksFromRoutineHabits = getPlannedTasksFromRoutineHabits(routineHabits);
+
+        if (plannedTasksFromHabits) {
+            await PlannedTaskController.createTasks(plannedTasksFromHabits);
+        }
+
+        if (plannedTasksFromRoutineHabits) {
+            await PlannedTaskController.createTasks(plannedTasksFromRoutineHabits);
+        }
+
+        refreshPlannedToday(selectedDayKey);
     };
 
     const updateTask = async (updatedPlannedTask: PlannedTaskModel) => {
