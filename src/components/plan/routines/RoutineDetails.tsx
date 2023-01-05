@@ -60,9 +60,19 @@ export const RoutineDetails = () => {
         },
         {
             name: 'Archive',
-            onPress: () => {},
+            onPress: () => {
+                updateRoutineAsInactive();
+                navigation.goBack();
+                closeMenu();
+            },
         },
     ];
+
+    const updateRoutineAsInactive = async () => {
+        const clone = { ...routine };
+        clone.active = false;
+        await RoutineController.update(clone);
+    };
 
     const daysOld = formatDistance(routine.added.toDate(), new Date());
     const completedTasks = 0; // taskHistory.filter((e) => e.status === COMPLETE).length;

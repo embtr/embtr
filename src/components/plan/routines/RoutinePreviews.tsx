@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
@@ -15,9 +15,11 @@ export const RoutinePreviews = () => {
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
     const [routines, setRoutines] = React.useState<RoutineModel[]>([]);
 
-    React.useEffect(() => {
-        fetchRoutines();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchRoutines();
+        }, [])
+    );
 
     const fetchRoutines = async () => {
         const user = await UserController.getCurrentUser();
