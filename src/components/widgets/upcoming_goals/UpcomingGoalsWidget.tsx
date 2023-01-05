@@ -32,7 +32,23 @@ export const UpcomingGoalsWidget = ({ goals }: Props) => {
     return (
         <WidgetBase>
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Upcoming Goals</Text>
-            <View style={{ paddingTop: 10 }}>{goalViews}</View>
+            {goalViews.length > 0 ? (
+                <View style={{ paddingTop: 10 }}>{goalViews}</View>
+            ) : (
+                <Text style={{ color: colors.text, paddingTop: 5 }}>
+                    you have no active goals -{' '}
+                    <Text
+                        onPress={() => {
+                            //if (plannedDay?.id) {
+                            //    navigation.navigate('PlanTab', { screen: 'PlanMain' });
+                            //}
+                        }}
+                        style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
+                    >
+                        create one
+                    </Text>
+                </Text>
+            )}
         </WidgetBase>
     );
 };
