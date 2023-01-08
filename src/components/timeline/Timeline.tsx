@@ -274,7 +274,7 @@ export const Timeline = () => {
         }
 
         setIsLoadingMode(true);
-        setLookbackDays(lookbackDays + 1);
+        setLookbackDays(lookbackDays + 3);
         wait(500).then(() => setIsLoadingMode(false));
     };
 
