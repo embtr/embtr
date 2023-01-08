@@ -42,6 +42,8 @@ export const Timeline = () => {
 
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
+    const INITIAL_DAYS = 5;
+
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
     const [paginatedDailyResults, setPaginatedDailyResults] = React.useState<PaginatedDailyResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
@@ -49,16 +51,15 @@ export const Timeline = () => {
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoadingMode, setIsLoadingMode] = React.useState(false);
-    const [timelinePostCutoffDate, setTimelinePostCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 3));
-    const [dailyRestultCutoffDate, setDailyResultCutoffDate] = React.useState<Date>(getDateMinusDays(new Date(), 3));
+    const [lookbackDays, setLookbackDays] = React.useState(INITIAL_DAYS);
 
     React.useEffect(() => {
-        fetchPaginatedTimelinePosts();
-    }, [timelinePostCutoffDate]);
+        addPageOfTimelinePosts();
+    }, [lookbackDays]);
 
     React.useEffect(() => {
-        fetchPaginatedDailyResults();
-    }, [dailyRestultCutoffDate]);
+        addPageOfDailyResults();
+    }, [lookbackDays]);
 
     React.useEffect(() => {
         fetchNotifications();
@@ -78,26 +79,20 @@ export const Timeline = () => {
         }, [])
     );
 
+    const getLookbackDate = () => {
+        const lookbackDate = getDateMinusDays(new Date(), lookbackDays);
+        return lookbackDate;
+    };
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
 
-        const newCutoffDate = getDateMinusDays(new Date(), 3);
-        setTimelinePostCutoffDate(newCutoffDate);
-        setDailyResultCutoffDate(newCutoffDate);
+        setLookbackDays(INITIAL_DAYS);
 
         setNotifications([]);
         fetchNotifications();
         wait(500).then(() => setRefreshing(false));
     }, []);
-
-    const fetchPaginatedTimelinePosts = () => {
-        TimelineController.getPaginatedTimelinePosts(undefined, timelinePostCutoffDate, setPaginatedTimelinePosts);
-    };
-
-    const fetchPaginatedDailyResults = async () => {
-        const results = await DailyResultController.getPaginatedFinished(undefined, dailyRestultCutoffDate);
-        setPaginatedDailyResults(results);
-    };
 
     const fetchNotifications = () => {
         NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
@@ -225,26 +220,24 @@ export const Timeline = () => {
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
     const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
-        return layoutMeasurement.height + contentOffset.y > contentSize.height + 5;
+        return layoutMeasurement.height + contentOffset.y > contentSize.height - 15;
     };
 
     const addPageOfTimelinePosts = () => {
-        const nextCutoffDate = getDateMinusDays(timelinePostCutoffDate, 1);
-        setTimelinePostCutoffDate(nextCutoffDate);
+        let currentTimelinePosts: PaginatedTimelinePosts = {
+            posts: [],
+            lastTimelinePost: undefined,
+        };
+
+        if (paginatedTimelinePosts?.posts && lookbackDays !== INITIAL_DAYS) {
+            currentTimelinePosts.posts = [...paginatedTimelinePosts.posts];
+            currentTimelinePosts.lastTimelinePost = paginatedTimelinePosts?.lastTimelinePost;
+        }
 
         TimelineController.getPaginatedTimelinePosts(
-            paginatedTimelinePosts?.lastTimelinePost,
-            nextCutoffDate,
+            currentTimelinePosts?.lastTimelinePost,
+            getLookbackDate(),
             (newPaginatedTimelinePosts: PaginatedTimelinePosts) => {
-                let currentTimelinePosts: PaginatedTimelinePosts = {
-                    posts: [],
-                    lastTimelinePost: paginatedTimelinePosts?.lastTimelinePost,
-                };
-
-                if (paginatedTimelinePosts?.posts) {
-                    currentTimelinePosts.posts = [...paginatedTimelinePosts.posts];
-                }
-
                 if (newPaginatedTimelinePosts.posts.length > 0) {
                     currentTimelinePosts.posts = currentTimelinePosts.posts.concat(newPaginatedTimelinePosts.posts);
                     currentTimelinePosts.lastTimelinePost = newPaginatedTimelinePosts.lastTimelinePost;
@@ -256,19 +249,17 @@ export const Timeline = () => {
     };
 
     const addPageOfDailyResults = async () => {
-        const nextCutOffDate = getDateMinusDays(dailyRestultCutoffDate, 1);
-        setDailyResultCutoffDate(nextCutOffDate);
-
         let currentDailyResults: PaginatedDailyResults = {
             results: [],
-            lastDailyResult: paginatedDailyResults?.lastDailyResult,
+            lastDailyResult: undefined,
         };
 
-        if (paginatedDailyResults?.results) {
+        if (paginatedDailyResults?.results && lookbackDays !== INITIAL_DAYS) {
             currentDailyResults.results = [...paginatedDailyResults.results];
+            currentDailyResults.lastDailyResult = paginatedDailyResults?.lastDailyResult;
         }
 
-        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(paginatedDailyResults?.lastDailyResult, dailyRestultCutoffDate);
+        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(currentDailyResults.lastDailyResult, getLookbackDate());
         if (newPaginatedDailyResults.results.length > 0) {
             currentDailyResults.results = currentDailyResults.results.concat(newPaginatedDailyResults.results);
             currentDailyResults.lastDailyResult = newPaginatedDailyResults.lastDailyResult;
@@ -283,8 +274,7 @@ export const Timeline = () => {
         }
 
         setIsLoadingMode(true);
-        addPageOfTimelinePosts();
-        addPageOfDailyResults();
+        setLookbackDays(lookbackDays + 1);
         wait(500).then(() => setIsLoadingMode(false));
     };
 
