@@ -97,7 +97,7 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
             >
                 <View style={{ height: 40, justifyContent: 'center', width: '100%', paddingLeft: 10 }}>
                     <View>
-                        <Text style={{ color: isSelected ? colors.text : 'gray', fontFamily: POPPINS_REGULAR }}>{routine.name}</Text>
+                        <Text style={{ color: isSelected ? colors.tab_selected : 'gray', fontFamily: POPPINS_REGULAR }}>{routine.name}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -118,7 +118,7 @@ export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) 
             >
                 <View style={{ height: 40, justifyContent: 'center', width: '100%', paddingLeft: 10 }}>
                     <View>
-                        <Text style={{ color: isSelected ? colors.text : 'gray', fontFamily: POPPINS_REGULAR }}>{habit.name}</Text>
+                        <Text style={{ color: isSelected ? colors.tab_selected : 'gray', fontFamily: POPPINS_REGULAR }}>{habit.name}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
