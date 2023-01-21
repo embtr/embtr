@@ -31,3 +31,9 @@ android no pull to refresh on today page
 add cancel to widget configure page - also change done to save
 
 android add habit/ routine modal buttons to not look bootleg
+
+android add a comment looks terrible
+
+android commenting doesn't work
+
+commenting push notification send in reverse (says commenter was tagged by reciever)
