@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
-import { getAccessLevel, getCurrentUser, setCurrentUser } from 'src/redux/user/GlobalState';
+import { getAccessLevel, setCurrentUser } from 'src/redux/user/GlobalState';
 import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
@@ -13,7 +13,6 @@ import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
-import MigrationController from './controller/audit_log/MigrationController';
 import UserController from './controller/user/UserController';
 
 const linking: LinkingOptions<RootStackParamList> = {
@@ -105,8 +104,6 @@ export const Main = () => {
 
             ProfileController.registerInitialProfileUpdateListener();
             PushNotificationController.registerUpdatePostNotificationTokenListener();
-
-            //await MigrationController.handleMigrations();
 
             currentUser = await UserController.getCurrentUser();
             dispatch(setCurrentUser(currentUser));
