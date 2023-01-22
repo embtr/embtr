@@ -1,7 +1,10 @@
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { differenceInDays } from 'date-fns';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { GoalModel } from 'src/controller/planning/GoalController';
+import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
 import { UpcomingGoalWidgetElement } from './UpcomingGoalWidgetElement';
@@ -12,6 +15,8 @@ interface Props {
 
 export const UpcomingGoalsWidget = ({ goals }: Props) => {
     const { colors } = useTheme();
+
+    const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
 
     let goalViews: JSX.Element[] = [];
     if (goals) {
@@ -39,9 +44,8 @@ export const UpcomingGoalsWidget = ({ goals }: Props) => {
                     you have no active goals -{' '}
                     <Text
                         onPress={() => {
-                            //if (plannedDay?.id) {
-                            //    navigation.navigate('PlanTab', { screen: 'PlanMain' });
-                            //}
+                            navigation.dispatch(CommonActions.reset({ index: 2, routes: [{ name: 'PlanMain' }] }));
+                            navigation.navigate('PlanTab', { screen: 'CreateEditGoal', params: { id: undefined } });
                         }}
                         style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
                     >
