@@ -1,3 +1,4 @@
+import { ImagePickerResult } from 'expo-image-picker';
 import { User } from 'firebase/auth';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import ProfileDao, { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
@@ -61,9 +62,11 @@ class ProfileController {
     }
 
     public static async uploadProfilePhoto(): Promise<string | undefined> {
-        const result = await pickImage();
-        if (result && !result.cancelled) {
-            const uploadUrl = await uploadImage(result, 'profiles/');
+        const result: ImagePickerResult = await pickImage();
+
+        if (result && !result.canceled && result.assets.length > 0) {
+            const selectedImage = result.assets[0];
+            const uploadUrl = await uploadImage(selectedImage, 'profiles/');
             return uploadUrl;
         }
 
@@ -71,9 +74,11 @@ class ProfileController {
     }
 
     public static async uploadProfileBanner(): Promise<string | undefined> {
-        const result = await pickImage();
-        if (result && !result.cancelled) {
-            const uploadUrl = await uploadImage(result, 'profiles/');
+        const result: ImagePickerResult = await pickImage();
+
+        if (result && !result.canceled && result.assets.length > 0) {
+            const selectedImage = result.assets[0];
+            const uploadUrl = await uploadImage(selectedImage, 'profiles/');
             return uploadUrl;
         }
 

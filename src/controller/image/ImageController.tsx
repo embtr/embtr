@@ -10,21 +10,24 @@ export interface ImageUploadProgressReport {
 class ImageController {
     public static async pickAndUploadImage(bucket: string): Promise<string> {
         const result: ImagePicker.ImagePickerResult = await pickImage();
-        if (result.cancelled) {
+        if (result.canceled || result.assets.length < 1) {
             return '';
         }
 
-        const url = await uploadImage(result, bucket);
+        const selectedImage: ImagePicker.ImagePickerAsset = result.assets[0];
+        const url = await uploadImage(selectedImage, bucket);
         return url;
     }
 
     public static async pickAndUploadImages(bucket: string, imageUploadProgess?: Function): Promise<string[]> {
-        const results: ImagePicker.ImagePickerMultipleResult = await pickImages();
-        if (results.cancelled) {
+        const results: ImagePicker.ImagePickerResult = await pickImages();
+
+        if (results.canceled || results.assets.length < 1) {
             return [];
         }
 
-        const urls = await uploadImages(results.selected, bucket, imageUploadProgess);
+        const selectedImages: ImagePicker.ImagePickerAsset[] = results.assets;
+        const urls = await uploadImages(selectedImages, bucket, imageUploadProgess);
 
         if (urls) {
             return urls;
