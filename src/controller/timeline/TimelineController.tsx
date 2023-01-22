@@ -82,7 +82,7 @@ class TimelineController {
                     switch (type) {
                         case 'STORY':
                             const story = this.getStoryFromData(doc);
-                            if (true) {
+                            if (story.active) {
                                 timelinePosts.push(story);
                             }
                             break;
