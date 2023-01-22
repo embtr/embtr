@@ -52,14 +52,15 @@ export const Timeline = () => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoadingMode, setIsLoadingMode] = React.useState(false);
     const [lookbackDays, setLookbackDays] = React.useState(INITIAL_DAYS);
+    const [forceRefreshTimestamp, setForceRefreshTimestamp] = React.useState(new Date());
 
     React.useEffect(() => {
         addPageOfTimelinePosts();
-    }, [lookbackDays]);
+    }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
         addPageOfDailyResults();
-    }, [lookbackDays]);
+    }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
         fetchNotifications();
@@ -87,7 +88,9 @@ export const Timeline = () => {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
 
+        //this will trigger a reset on all dependents
         setLookbackDays(INITIAL_DAYS);
+        setForceRefreshTimestamp(new Date());
 
         setNotifications([]);
         fetchNotifications();
