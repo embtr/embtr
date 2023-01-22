@@ -4,7 +4,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 
 export const uploadImages = async (
-    pickerResults: ImagePicker.ImagePickerResult[],
+    pickerResults: ImagePicker.ImagePickerAsset[],
     bucket: string,
     reportImageUploadProgress?: Function
 ): Promise<string[] | undefined> => {
@@ -32,8 +32,8 @@ export const uploadImages = async (
     return uploadUrls;
 };
 
-export const uploadImage = async (pickerResult: ImagePicker.ImagePickerResult, bucket: string): Promise<string> => {
-    if (!pickerResult || pickerResult.cancelled) {
+export const uploadImage = async (pickerResult: ImagePicker.ImagePickerAsset, bucket: string): Promise<string> => {
+    if (!pickerResult) {
         return '';
     }
 

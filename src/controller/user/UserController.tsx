@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
@@ -52,24 +52,35 @@ class UserController {
 
     public static async get(uid: string) {
         const userData = await UserDao.get(uid);
-        let currentUser: UserModel = userData.data() as UserModel;
-        currentUser.uid = userData.id;
-        if (!currentUser.today_widgets) {
-            currentUser.today_widgets = WIDGETS;
-        }
+        const currentUser: UserModel = this.getUserFromData(userData);
 
         return currentUser;
+    }
+
+    private static getUserFromData(data: DocumentSnapshot<DocumentData>): UserModel {
+        const user: UserModel = data.data() as UserModel;
+        user.uid = data.id;
+
+        if (!user.feature_versions.pillar) {
+            user.feature_versions.pillar = 0;
+        }
+
+        if (!user.feature_versions.planned_task) {
+            user.feature_versions.planned_task = 0;
+        }
+
+        if (!user.today_widgets) {
+            user.today_widgets = WIDGETS;
+        }
+
+        return user;
     }
 
     public static async getAll() {
         const results = await UserDao.getAll();
         const users: UserModel[] = [];
         results.forEach((result) => {
-            let user: UserModel = result.data() as UserModel;
-            user.uid = result.id;
-            if (!user.today_widgets) {
-                user.today_widgets = WIDGETS;
-            }
+            let user: UserModel = this.getUserFromData(result);
             users.push(user);
         });
 
