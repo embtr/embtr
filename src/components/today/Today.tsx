@@ -295,7 +295,7 @@ export const Today = () => {
                                     removeWidget(TODAYS_TASKS_WIDGET);
                                 }}
                             >
-                                <TodaysTasksWidget user={user} togglePlannedTask={togglePlannedTaskStatus} />
+                                <TodaysTasksWidget plannedDay={plannedDay} togglePlannedTask={togglePlannedTaskStatus} />
                             </DeletableView>
                         </WigglableView>
                     )}
