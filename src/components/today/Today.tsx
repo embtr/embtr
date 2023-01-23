@@ -1,6 +1,6 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { RefreshControl, View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { wait } from 'src/util/GeneralUtility';
@@ -41,6 +41,7 @@ import { PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import PlannedTaskController, { clonePlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
