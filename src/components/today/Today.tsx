@@ -338,7 +338,7 @@ export const Today = () => {
                                     removeWidget(UPCOMING_GOALS_WIDGET);
                                 }}
                             >
-                                <UpcomingGoalsWidget goals={goals} />
+                                <UpcomingGoalsWidget user={user} goals={goals} />
                             </DeletableView>
                         </WigglableView>
                     )}

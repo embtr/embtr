@@ -89,7 +89,7 @@ export const ProfileBody = ({ plannedDay, user, userProfileModel, onRefresh, isR
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
                     >
-                        <ProfileTabRoute userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
+                        <ProfileTabRoute user={user} userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
                     </ScrollView>
                 );
 
