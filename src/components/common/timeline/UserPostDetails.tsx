@@ -10,6 +10,7 @@ import { Alert, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Comment } from 'src/controller/timeline/TimelineController';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
@@ -36,6 +37,15 @@ export const UserPostDetails = () => {
                 StoryController.getStory(route.params.id, setStoryModel);
             });
         }
+    };
+
+    const deleteComment = async (comment: Comment) => {
+        if (!storyModel || !comment) {
+            return;
+        }
+
+        await StoryController.deleteComment(storyModel, comment);
+        StoryController.getStory(route.params.id, setStoryModel);
     };
 
     const navigateToEdit = () => {
@@ -68,6 +78,7 @@ export const UserPostDetails = () => {
                     added={storyModel.added.toDate()}
                     comments={storyModel?.public.comments ? storyModel?.public.comments : []}
                     submitComment={submitComment}
+                    deleteComment={deleteComment}
                     onEdit={navigateToEdit}
                     onDelete={deletePost}
                 >

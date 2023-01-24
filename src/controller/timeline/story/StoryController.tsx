@@ -2,14 +2,14 @@ import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { Comment, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import StoryDao from 'src/firebase/firestore/story/StoryDao';
 
 export interface StoryModel extends TimelinePostModel {
     data: {
         title: string;
         story: string;
-        images: string[]
+        images: string[];
     };
 }
 
@@ -40,7 +40,7 @@ export const copyStory = (story: StoryModel): StoryModel => {
         data: {
             title: story.data.title,
             story: story.data.story,
-            images: [...story.data.images]
+            images: [...story.data.images],
         },
     };
 
@@ -62,7 +62,7 @@ export const createStory = (uid: string, title: string, story: string, images: s
         data: {
             title: title,
             story: story,
-            images: images 
+            images: images,
         },
     };
 };
@@ -118,7 +118,7 @@ class StoryController {
     }
 
     public static async update(story: StoryModel) {
-    story.modified = Timestamp.now();
+        story.modified = Timestamp.now();
         await StoryDao.update(story);
     }
 
@@ -135,6 +135,25 @@ class StoryController {
         StoryDao.addComment(id, uid, commentText).then(() => {
             callback();
         });
+    }
+
+    public static async deleteComment(story: StoryModel, commentToDelete: Comment) {
+        const comments: Comment[] = [];
+
+        story.public.comments.forEach((comment) => {
+            if (
+                comment.uid === commentToDelete.uid &&
+                comment.comment === comment.comment &&
+                comment.timestamp.toString() === commentToDelete.timestamp.toString()
+            ) {
+                return;
+            }
+
+            comments.push(comment);
+        });
+
+        story.public.comments = comments;
+        await this.update(story);
     }
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {

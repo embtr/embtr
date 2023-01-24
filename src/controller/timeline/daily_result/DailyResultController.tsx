@@ -9,7 +9,7 @@ import PlannedDayController, {
     getTodayKey,
     PlannedDay,
 } from 'src/controller/planning/PlannedDayController';
-import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { Comment, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { UserModel } from 'src/controller/user/UserController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
 
@@ -265,6 +265,25 @@ class DailyResultController {
         DailyResultDao.addComment(id, uid, commentText).then(() => {
             callback();
         });
+    }
+
+    public static async deleteComment(dailyResult: DailyResultModel, commentToDelete: Comment) {
+        const comments: Comment[] = [];
+
+        dailyResult.public.comments.forEach((comment) => {
+            if (
+                comment.uid === commentToDelete.uid &&
+                comment.comment === comment.comment &&
+                comment.timestamp.toString() === commentToDelete.timestamp.toString()
+            ) {
+                return;
+            }
+
+            comments.push(comment);
+        });
+
+        dailyResult.public.comments = comments;
+        await this.update(dailyResult);
     }
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {

@@ -28,11 +28,12 @@ interface Props {
     added: Date;
     comments: Comment[];
     submitComment: Function;
+    deleteComment: Function;
     onEdit?: Function;
     onDelete?: Function;
 }
 
-export const PostDetails = ({ type, authorUid, children, added, comments, submitComment, onEdit, onDelete }: Props) => {
+export const PostDetails = ({ type, authorUid, children, added, comments, submitComment, deleteComment, onEdit, onDelete }: Props) => {
     const { colors } = useTheme();
 
     const closeMenu = useAppSelector(getCloseMenu);
@@ -137,7 +138,7 @@ export const PostDetails = ({ type, authorUid, children, added, comments, submit
                         <View style={{ height: 1, width: '100%', backgroundColor: colors.today_calendar_line, opacity: 0.25 }} />
                     </View>
 
-                    <CommentsScrollView comments={comments} />
+                    <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
                 </ScrollView>
 
                 {currentUserProfile && author && (

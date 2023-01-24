@@ -28,11 +28,16 @@ export const ChallengeDetails = () => {
         }
     };
 
+    const deleteComment = (comment: Comment) => {
+        console.log(comment);
+    };
+
     return (
         <PostDetails
-            title={challengeModel?.data.title ? challengeModel.data.title : ""}
+            title={challengeModel?.data.title ? challengeModel.data.title : ''}
             comments={challengeModel?.public.comments ? challengeModel?.public.comments : []}
             submitComment={submitComment}
+            deleteComment={deleteComment}
         />
-    )
-}
+    );
+};

@@ -12,6 +12,7 @@ import NotificationController, { NotificationType } from 'src/controller/notific
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import UserController from 'src/controller/user/UserController';
+import { Comment } from 'src/controller/timeline/TimelineController';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
@@ -52,6 +53,15 @@ export const DailyResultDetails = () => {
         });
     };
 
+    const deleteComment = async (comment: Comment) => {
+        if (!dailyResult || !comment) {
+            return;
+        }
+
+        await DailyResultController.deleteComment(dailyResult, comment);
+        DailyResultController.get(route.params.id, setDailyResult);
+    };
+
     if (dailyResult === undefined || plannedDay === undefined) {
         return (
             <Screen>
@@ -89,6 +99,7 @@ export const DailyResultDetails = () => {
                 added={dailyResult.added.toDate()}
                 comments={dailyResult?.public.comments}
                 submitComment={submitComment}
+                deleteComment={deleteComment}
                 onEdit={onEdit}
                 onDelete={onDelete}
             >
