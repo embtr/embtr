@@ -42,7 +42,6 @@ export class UsernameTagTracker {
             newCommentText = newCommentText.replace(new RegExp(taggedUser.name!, 'g'), '<user_uid>' + taggedUser.uid + '</user_uid>');
         });
 
-        console.log(taggedUsers);
         return newCommentText;
     }
 

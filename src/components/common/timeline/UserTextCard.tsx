@@ -6,6 +6,8 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser, getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -20,6 +22,20 @@ export const UserTextCard = ({ userProfileModel, story }: Props) => {
     const [updatedStory, setUpdatedStory] = React.useState<StoryModel>();
 
     const storyToUse = updatedStory ? updatedStory : story;
+    const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
+
+    const dispatch = useAppDispatch();
+
+    React.useEffect(() => {
+        if (!story.id) {
+            return;
+        }
+
+        if (timelineCardRefreshRequests.includes(story.id)) {
+            StoryController.getStory(story.id, setUpdatedStory);
+            dispatch(removeTimelineCardRefreshRequest(story.id));
+        }
+    }, [timelineCardRefreshRequests]);
 
     const onLike = async () => {
         if (!story.id) {

@@ -11,6 +11,8 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment } from 'src/controller/timeline/TimelineController';
+import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { useAppDispatch } from 'src/redux/Hooks';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
@@ -69,12 +71,15 @@ export const UserPostDetails = () => {
         }
     };
 
+    const dispatch = useAppDispatch();
+
     const onLike = async () => {
         if (!storyModel) {
             return;
         }
 
         await StoryController.likeStory(storyModel, getAuth().currentUser!.uid);
+        dispatch(addTimelineCardRefreshRequest(storyModel.id));
         StoryController.getStory(route.params.id, setStoryModel);
     };
 

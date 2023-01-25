@@ -11,6 +11,7 @@ const INITIAL_STATE: GlobalState = {
     openMenu: () => {},
     closeMenu: () => {},
     selectedDayKey: 'invalid',
+    timelineCardRefreshRequests: [],
 };
 
 export interface GlobalState {
@@ -21,6 +22,7 @@ export interface GlobalState {
     openMenu: Function;
     closeMenu: Function;
     selectedDayKey: string;
+    timelineCardRefreshRequests: string[];
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -49,6 +51,18 @@ export const GlobalState = createSlice({
         },
         setSelectedDayKey(state, action) {
             state.selectedDayKey = action.payload;
+        },
+        addTimelineCardRefreshRequest(state, action) {
+            let updatedTimelineCardRefreshRequests = state.timelineCardRefreshRequests;
+            if (!updatedTimelineCardRefreshRequests) {
+                updatedTimelineCardRefreshRequests = [];
+            }
+
+            updatedTimelineCardRefreshRequests = updatedTimelineCardRefreshRequests.concat(action.payload);
+            state.timelineCardRefreshRequests = updatedTimelineCardRefreshRequests;
+        },
+        removeTimelineCardRefreshRequest(state, action) {
+            state.timelineCardRefreshRequests = state.timelineCardRefreshRequests.filter((item) => item !== action.payload);
         },
     },
 });
@@ -109,5 +123,23 @@ export const getSelectedDayKey = (state: RootState): string => {
     return state.globalState.selectedDayKey;
 };
 
-export const { setAccessLevel, setUserProfileUrl, setCurrentUser, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey } = GlobalState.actions;
+export const getTimelineCardRefreshRequests = (state: RootState): string[] => {
+    if (!state?.globalState.closeMenu) {
+        return INITIAL_STATE.timelineCardRefreshRequests;
+    }
+
+    return state.globalState.timelineCardRefreshRequests;
+};
+
+export const {
+    setAccessLevel,
+    setUserProfileUrl,
+    setCurrentUser,
+    setMenuOptions,
+    setOpenMenu,
+    setCloseMenu,
+    setSelectedDayKey,
+    addTimelineCardRefreshRequest,
+    removeTimelineCardRefreshRequest,
+} = GlobalState.actions;
 export default GlobalState.reducer;
