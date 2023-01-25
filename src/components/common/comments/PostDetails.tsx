@@ -10,7 +10,7 @@ import { Comment, Like } from 'src/controller/timeline/TimelineController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFocusEffect } from '@react-navigation/native';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';

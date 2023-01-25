@@ -44,7 +44,7 @@ export type TimelineTabScreens = {
     EditDailyResultDetails: { id: string };
     UserPostDetails: { id: string };
     ChallengeDetails: { id: string };
-    DailyResultDetails: { id: string; onRefocus?: Function };
+    DailyResultDetails: { id: string };
     UserProfile: { id: string };
     Notifications: undefined;
     PillarDetails: { uid: string; id: string };

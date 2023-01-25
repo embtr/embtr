@@ -58,9 +58,6 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const navigateToDetails = () => {
         navigation.navigate('DailyResultDetails', {
             id: dailyResultToUse.id ? dailyResultToUse.id : '',
-            onRefocus: () => {
-                console.log('refocus was hit!');
-            },
         });
     };
 
