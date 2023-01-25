@@ -33,6 +33,8 @@ export const UserTextCard = ({ userProfileModel, story }: Props) => {
 
         if (timelineCardRefreshRequests.includes(story.id)) {
             StoryController.getStory(story.id, setUpdatedStory);
+
+            //remove card from the refresh request list
             dispatch(removeTimelineCardRefreshRequest(story.id));
         }
     }, [timelineCardRefreshRequests]);

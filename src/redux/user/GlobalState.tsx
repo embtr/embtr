@@ -124,7 +124,7 @@ export const getSelectedDayKey = (state: RootState): string => {
 };
 
 export const getTimelineCardRefreshRequests = (state: RootState): string[] => {
-    if (!state?.globalState.closeMenu) {
+    if (!state?.globalState.timelineCardRefreshRequests) {
         return INITIAL_STATE.timelineCardRefreshRequests;
     }
 
