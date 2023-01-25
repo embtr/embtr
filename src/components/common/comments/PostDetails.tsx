@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { KeyboardAvoidingView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { CommentsTextInput } from 'src/components/common/comments/CommentsTextInput';
-import { Comment } from 'src/controller/timeline/TimelineController';
+import { Comment, Like } from 'src/controller/timeline/TimelineController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFocusEffect } from '@react-navigation/native';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { ScrollView } from 'react-native-gesture-handler';
 import { getAuth } from 'firebase/auth';
@@ -20,20 +20,23 @@ import { createEmbtrMenuOptions, EmbtrMenuOption } from '../menu/EmbtrMenuOption
 import { EmbtrMenuCustom } from '../menu/EmbtrMenuCustom';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
+import PostDetailsActionBar from './PostDetailsActionBar';
 
 interface Props {
     type: string;
     authorUid: string;
     children: any;
     added: Date;
+    likes: Like[];
     comments: Comment[];
+    onLike: Function;
     submitComment: Function;
     deleteComment: Function;
     onEdit?: Function;
     onDelete?: Function;
 }
 
-export const PostDetails = ({ type, authorUid, children, added, comments, submitComment, deleteComment, onEdit, onDelete }: Props) => {
+export const PostDetails = ({ type, authorUid, children, added, likes, comments, onLike, submitComment, deleteComment, onEdit, onDelete }: Props) => {
     const { colors } = useTheme();
 
     const closeMenu = useAppSelector(getCloseMenu);
@@ -134,7 +137,9 @@ export const PostDetails = ({ type, authorUid, children, added, comments, submit
                     {/*this is the body of the post*/}
                     {children}
 
-                    <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%', paddingTop: 10, paddingBottom: 10 }}>
+                    <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
+
+                    <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%' }}>
                         <View style={{ height: 1, width: '100%', backgroundColor: colors.today_calendar_line, opacity: 0.25 }} />
                     </View>
 

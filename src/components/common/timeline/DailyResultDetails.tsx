@@ -13,6 +13,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import UserController from 'src/controller/user/UserController';
 import { Comment } from 'src/controller/timeline/TimelineController';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
@@ -23,18 +24,22 @@ export const DailyResultDetails = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
-                const user = await UserController.get(dailyResult.uid);
-                const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
-                setPlannedDay(plannedDay);
-            };
-
-            DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
-                setDailyResult(dailyResult);
-                fetchPlannedDay(dailyResult);
-            });
+            fetchData();
         }, [])
     );
+
+    const fetchData = () => {
+        const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
+            const user = await UserController.get(dailyResult.uid);
+            const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
+            setPlannedDay(plannedDay);
+        };
+
+        DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
+            setDailyResult(dailyResult);
+            fetchPlannedDay(dailyResult);
+        });
+    };
 
     const submitComment = (text: string, taggedUsers: UserProfileModel[]) => {
         const user = getAuth().currentUser;
@@ -91,13 +96,20 @@ export const DailyResultDetails = () => {
         ]);
     };
 
+    const onLike = async () => {
+        await DailyResultController.like(dailyResult, getCurrentUid());
+        fetchData();
+    };
+
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <PostDetails
                 type={'Daily Result'}
                 authorUid={dailyResult.uid}
                 added={dailyResult.added.toDate()}
-                comments={dailyResult?.public.comments}
+                likes={dailyResult?.public.likes ? dailyResult.public.likes : []}
+                comments={dailyResult?.public.comments ? dailyResult.public.comments : []}
+                onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}
                 onEdit={onEdit}

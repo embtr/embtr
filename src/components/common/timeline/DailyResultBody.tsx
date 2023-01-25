@@ -72,9 +72,9 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
                 </View>
 
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                    <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>
-                        {dailyResult.data.description ? dailyResult.data.description : ''}
-                    </Text>
+                    {dailyResult.data.description && (
+                        <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>{dailyResult.data.description}</Text>
+                    )}
 
                     {dailyResult.data.imageUrls && dailyResult.data.imageUrls.length > 0 && (
                         <View style={{ paddingTop: 15 }}>
@@ -82,7 +82,7 @@ export const DailyResultBody = ({ dailyResult, plannedDay, navigateToDetails }: 
                         </View>
                     )}
 
-                    <View style={{ paddingTop: 15 }}>
+                    <View style={{ paddingTop: 5 }}>
                         <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
                     </View>
                 </View>

@@ -1,46 +1,51 @@
-import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import StoryController, { StoryModel, timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
+import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { getAuth } from 'firebase/auth';
+import React from 'react';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
 interface Props {
-    userProfileModel: UserProfileModel,
-    story: StoryModel
+    userProfileModel: UserProfileModel;
+    story: StoryModel;
 }
 
 export const UserTextCard = ({ userProfileModel, story }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
 
-    const [likes, setLikes] = React.useState(story.public.likes.length);
+    const [updatedStory, setUpdatedStory] = React.useState<StoryModel>();
 
-    const onLike = () => {
-        StoryController.likeStory(story, getAuth().currentUser!.uid);
-        setLikes(likes + 1);
-    }
+    const storyToUse = updatedStory ? updatedStory : story;
 
-    const onCommented = () => {
-        navigation.navigate('UserPostDetails', { id: story?.id ? story.id : "" })
+    const onLike = async () => {
+        if (!story.id) {
+            return;
+        }
+
+        await StoryController.likeStory(story, getAuth().currentUser!.uid);
+        StoryController.getStory(story.id, setUpdatedStory);
     };
 
-    const isLiked = timelineEntryWasLikedBy(story, getAuth().currentUser!.uid);
+    const onCommented = () => {
+        navigation.navigate('UserPostDetails', { id: story?.id ? story.id : '' });
+    };
 
-    return <TextCard
-        userProfileModel={userProfileModel}
-        added={story.added}
-        name={userProfileModel.name!}
-        isLiked={isLiked}
-        title={story.data.title}
-        body={story.data.story}
-        images={story.data.images ? story.data.images : []}
-        likes={likes}
-        comments={story.public.comments.length}
-        onLike={onLike}
-        onCommented={onCommented}
-    />
-}
+    return (
+        <TextCard
+            userProfileModel={userProfileModel}
+            added={storyToUse.added}
+            name={userProfileModel.name!}
+            title={storyToUse.data.title}
+            body={storyToUse.data.story}
+            images={storyToUse.data.images ? storyToUse.data.images : []}
+            likes={storyToUse.public.likes ? storyToUse.public.likes : []}
+            comments={story.public.comments ? storyToUse.public.comments : []}
+            onLike={onLike}
+            onCommented={onCommented}
+        />
+    );
+};

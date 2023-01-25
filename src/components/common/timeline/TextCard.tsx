@@ -1,16 +1,15 @@
-import * as React from 'react';
-import { Text, TextStyle, View, Image, ImageSourcePropType, TimePickerAndroid } from 'react-native';
+import { Text, TextStyle, View, Image, ImageSourcePropType } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Ionicons } from '@expo/vector-icons';
 import { Timestamp } from 'firebase/firestore';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
-import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import * as Haptics from 'expo-haptics';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
-import { TouchableWithoutFeedback, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
+import PostDetailsActionBar from '../comments/PostDetailsActionBar';
+import { Comment, Like } from 'src/controller/timeline/TimelineController';
 
 interface Props {
     staticImage?: ImageSourcePropType;
@@ -22,11 +21,10 @@ interface Props {
     body: string;
     images: string[];
 
-    likes: number;
+    likes: Like[];
     onLike: Function;
-    isLiked: boolean;
 
-    comments: number;
+    comments: Comment[];
     onCommented: Function;
 
     participants?: number;
@@ -34,23 +32,7 @@ interface Props {
     isAccepted?: boolean;
 }
 
-export const TextCard = ({
-    staticImage,
-    userProfileModel,
-    added,
-    name,
-    title,
-    body,
-    images,
-    likes,
-    comments,
-    participants,
-    onLike,
-    onAccepted,
-    onCommented,
-    isLiked,
-    isAccepted,
-}: Props) => {
+export const TextCard = ({ staticImage, userProfileModel, added, name, title, body, images, likes, onLike, comments, onCommented }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -65,29 +47,6 @@ export const TextCard = ({
         fontFamily: 'Poppins_400Regular',
         color: colors.timeline_card_body,
     } as TextStyle;
-
-    const [acceptedPressed, setAcceptedPressed] = React.useState(isAccepted);
-    const [heartPressed, setHeartPressed] = React.useState(isLiked);
-
-    const onAcceptedPressed = () => {
-        if (acceptedPressed) {
-            return;
-        }
-
-        setAcceptedPressed(true);
-        onAccepted!();
-    };
-
-    const onHeartPressed = () => {
-        if (heartPressed) {
-            return;
-        }
-
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-
-        setHeartPressed(true);
-        onLike();
-    };
 
     const navigateToDetails = () => {
         onCommented();
@@ -168,6 +127,7 @@ export const TextCard = ({
                 {/**********/}
                 {/* PHOTOS */}
                 {/**********/}
+
                 {carouselImages.length > 0 && (
                     <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
                         <CarouselCards images={carouselImages} />
@@ -178,44 +138,7 @@ export const TextCard = ({
                 {/* FOOTER */}
                 {/**********/}
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flexDirection: 'row', flex: 1 }}>
-                            <TouchableOpacity onPress={isLiked ? undefined : onHeartPressed}>
-                                <Ionicons
-                                    name={heartPressed ? 'heart' : 'heart-outline'}
-                                    size={TIMELINE_CARD_ICON_SIZE}
-                                    color={heartPressed ? 'red' : colors.timeline_card_footer}
-                                />
-                            </TouchableOpacity>
-
-                            <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
-                                <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
-                                    {likes}
-                                </Text>
-                            </View>
-
-                            <View style={{ borderColor: colors.text, paddingLeft: 20 }}>
-                                <Ionicons name={'chatbox-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} />
-                            </View>
-
-                            <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
-                                <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
-                                    {comments}
-                                </Text>
-                            </View>
-                        </View>
-
-                        <View style={{ flex: 1 }}>
-                            <TouchableOpacity
-                                style={{ alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}
-                                onPress={() => {
-                                    alert("I don't work yet :(");
-                                }}
-                            >
-                                <Ionicons name={'share-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
                 </View>
             </View>
         </TouchableWithoutFeedback>

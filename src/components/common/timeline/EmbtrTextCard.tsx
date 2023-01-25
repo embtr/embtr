@@ -9,7 +9,7 @@ import ChallengeController, { ChallengeModel1, challengeWasAcceptedBy, challenge
 type commentsNavigationProp = StackNavigationProp<TimelineTabScreens, 'ChallengeDetails'>;
 
 interface Props {
-    challengeModel: ChallengeModel1
+    challengeModel: ChallengeModel1;
 }
 
 export const EmbtrTextCard = ({ challengeModel }: Props) => {
@@ -30,28 +30,27 @@ export const EmbtrTextCard = ({ challengeModel }: Props) => {
     const onLike = () => {
         ChallengeController.likeChallenge(challengeModel.id, uid!);
         setLikes(likes + 1);
-    }
+    };
 
     const onCommented = () => {
-        navigation.navigate('ChallengeDetails', { id: challengeModel?.id ? challengeModel.id : "" })
+        navigation.navigate('ChallengeDetails', { id: challengeModel?.id ? challengeModel.id : '' });
     };
 
     return (
         <TextCard
             staticImage={require('assets/logo.png')}
-            name={"embtr."}
+            name={'embtr.'}
             added={challengeModel.added}
             title={challengeModel.data.title}
             body={challengeModel.data.story}
             images={[]}
-            likes={likes}
-            comments={comments}
+            likes={challengeModel.public.likes}
+            comments={challengeModel.public.comments}
             participants={participants}
-            isLiked={isLiked}
             isAccepted={isChallengeAccepted}
             onAccepted={onChallengeAccepted}
             onLike={onLike}
             onCommented={onCommented}
         />
-    )
-}
+    );
+};

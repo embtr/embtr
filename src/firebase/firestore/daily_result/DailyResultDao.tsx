@@ -143,7 +143,7 @@ class DailyResultDao {
         return result;
     }
 
-    public static like(dailyResult: DailyResultModel, likerUid: string) {
+    public static async like(dailyResult: DailyResultModel, likerUid: string) {
         const db: Firestore = getFirebaseConnection(this.name, 'like');
 
         const like: Like = {
@@ -151,7 +151,7 @@ class DailyResultDao {
             added: Timestamp.now(),
         };
 
-        setDoc(
+        await setDoc(
             doc(db, 'daily_results/' + dailyResult.id),
             {
                 public: {

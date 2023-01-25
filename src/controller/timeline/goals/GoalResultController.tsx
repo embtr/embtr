@@ -22,6 +22,13 @@ class GoalResultController {
         return goalResults;
     }
 
+    public static async create(goalResult: GoalResultModel) {
+        const sanitized = this.sanitizeForDatabase(goalResult);
+        GoalResultDao.create(sanitized);
+
+        return goalResult;
+    }
+
     public static async update(goalResult: GoalResultModel) {
         const sanitized = this.sanitizeForDatabase(goalResult);
         GoalResultDao.update(sanitized);

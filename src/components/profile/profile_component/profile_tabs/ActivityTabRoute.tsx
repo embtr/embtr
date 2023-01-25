@@ -12,6 +12,8 @@ import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { UserModel } from 'src/controller/user/UserController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { Timestamp } from 'firebase/firestore';
 
 interface Props {
     user: UserModel;

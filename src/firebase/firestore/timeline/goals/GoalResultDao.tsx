@@ -1,9 +1,6 @@
-import { getAuth } from 'firebase/auth';
 import { Firestore, collection, addDoc, query, getDocs, doc, setDoc, where } from 'firebase/firestore';
-import { GoalModel } from 'src/controller/planning/GoalController';
 import { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 class GoalResultDao {
     public static async create(goalResult: GoalResultModel) {

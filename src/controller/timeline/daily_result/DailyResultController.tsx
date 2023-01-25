@@ -247,12 +247,12 @@ class DailyResultController {
         return dailyResults;
     }
 
-    public static like(dailyResult: DailyResultModel, likerUid: string) {
+    public static async like(dailyResult: DailyResultModel, likerUid: string) {
         if (!dailyResult.id) {
             return;
         }
 
-        DailyResultDao.like(dailyResult, likerUid);
+        await DailyResultDao.like(dailyResult, likerUid);
         NotificationController.addNotification(
             likerUid,
             dailyResult.uid,

@@ -166,6 +166,12 @@ export const GoalDetails = () => {
                 </View>
 
                 <PlannedTaskHistory history={taskHistory} />
+
+                <View>
+
+                </View>
+
+
             </View>
         </Screen>
     );

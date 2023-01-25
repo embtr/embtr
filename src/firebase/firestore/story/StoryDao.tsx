@@ -13,61 +13,71 @@ class StoryDao {
             return;
         }
 
-        const db: Firestore = getFirebaseConnection(this.name, "addStory");
+        const db: Firestore = getFirebaseConnection(this.name, 'addStory');
 
-        await addDoc(collection(db, "timeline"), story);
+        await addDoc(collection(db, 'timeline'), story);
         callback();
-    };
+    }
 
     public static async update(story: StoryModel) {
-        const db: Firestore = getFirebaseConnection(this.name, "update");
+        const db: Firestore = getFirebaseConnection(this.name, 'update');
 
-       await setDoc(doc(db, "timeline", story.id!), story, {merge: true});
+        await setDoc(doc(db, 'timeline', story.id!), story, { merge: true });
     }
 
     public static async getStories() {
-        const db: Firestore = getFirebaseConnection(this.name, "getStories");
+        const db: Firestore = getFirebaseConnection(this.name, 'getStories');
 
-        const q = query(collection(db, "timeline"), orderBy("added", "desc"));
+        const q = query(collection(db, 'timeline'), orderBy('added', 'desc'));
         const querySnapshot = await getDocs(q);
 
         return querySnapshot;
     }
 
     public static async getStory(id: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "getStory");
+        const db: Firestore = getFirebaseConnection(this.name, 'getStory');
 
-        const result = await getDoc(doc(db, "timeline/" + id));
+        const result = await getDoc(doc(db, 'timeline/' + id));
         return result;
     }
 
-    public static likeStory(id: string, userUid: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "likeStory");
+    public static async likeStory(id: string, userUid: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'likeStory');
 
         const like: Like = {
             uid: userUid,
-            added: Timestamp.now()
+            added: Timestamp.now(),
         };
 
-        setDoc(doc(db, "timeline/" + id), {
-            public: {
-                likes: arrayUnion(like)
-            }
-        }, { merge: true })
+        const result = await setDoc(
+            doc(db, 'timeline/' + id),
+            {
+                public: {
+                    likes: arrayUnion(like),
+                },
+            },
+            { merge: true }
+        );
+
+        return result;
     }
 
     public static addComment(id: string, uid: string, comment: string) {
-        const db: Firestore = getFirebaseConnection(this.name, "addComment");
+        const db: Firestore = getFirebaseConnection(this.name, 'addComment');
 
-        return setDoc(doc(db, "timeline/" + id), {
-            public: {
-                comments: arrayUnion({
-                    uid: uid,
-                    comment: comment,
-                    timestamp: Timestamp.now()
-                })
-            }
-        }, { merge: true });
+        return setDoc(
+            doc(db, 'timeline/' + id),
+            {
+                public: {
+                    comments: arrayUnion({
+                        uid: uid,
+                        comment: comment,
+                        timestamp: Timestamp.now(),
+                    }),
+                },
+            },
+            { merge: true }
+        );
     }
 }
 

@@ -69,6 +69,15 @@ export const UserPostDetails = () => {
         }
     };
 
+    const onLike = async () => {
+        if (!storyModel) {
+            return;
+        }
+
+        await StoryController.likeStory(storyModel, getAuth().currentUser!.uid);
+        StoryController.getStory(route.params.id, setStoryModel);
+    };
+
     if (storyModel) {
         return (
             <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
@@ -76,7 +85,9 @@ export const UserPostDetails = () => {
                     type={'Post'}
                     authorUid={storyModel.uid ? storyModel.uid : ''}
                     added={storyModel.added.toDate()}
+                    likes={storyModel?.public.likes ? storyModel.public.likes : []}
                     comments={storyModel?.public.comments ? storyModel?.public.comments : []}
+                    onLike={onLike}
                     submitComment={submitComment}
                     deleteComment={deleteComment}
                     onEdit={navigateToEdit}

@@ -64,7 +64,15 @@ export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUse
     };
 
     return (
-        <View style={{ width: '100%', alignItems: 'center' }}>
+        <View
+            style={{
+                width: '100%',
+                paddingLeft: focused ? 0 : 5,
+                paddingRight: focused ? 0 : 5,
+                flexDirection: 'row',
+                alignItems: 'center',
+            }}
+        >
             <View
                 style={{
                     backgroundColor: colors.text_input_background,
@@ -72,7 +80,7 @@ export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUse
                     marginBottom: 6,
                     paddingTop: 8,
                     paddingBottom: 8,
-                    width: focused ? '100%' : '98%',
+                    flex: 1,
                 }}
             >
                 <UserTagBox input={commentText} userTagged={applyUsernameTag} />

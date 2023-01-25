@@ -2,7 +2,7 @@ import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import { Comment, TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { Comment, Like, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import StoryDao from 'src/firebase/firestore/story/StoryDao';
 
 export interface StoryModel extends TimelinePostModel {
@@ -13,9 +13,9 @@ export interface StoryModel extends TimelinePostModel {
     };
 }
 
-export const timelineEntryWasLikedBy = (timelinePost: TimelinePostModel, uid: string): boolean => {
+export const timelineEntryWasLikedBy = (likes: Like[], uid: string): boolean => {
     let isLiked = false;
-    timelinePost.public.likes.forEach((like) => {
+    likes.forEach((like) => {
         if (like.uid === uid) {
             isLiked = true;
             return;
@@ -122,12 +122,12 @@ class StoryController {
         await StoryDao.update(story);
     }
 
-    public static likeStory(story: StoryModel, userUid: string) {
+    public static async likeStory(story: StoryModel, userUid: string) {
         if (!story.id) {
             return;
         }
 
-        StoryDao.likeStory(story.id, userUid);
+        await StoryDao.likeStory(story.id, userUid);
         NotificationController.addNotification(userUid, story.uid, NotificationType.TIMELINE_LIKE, story.id);
     }
 
