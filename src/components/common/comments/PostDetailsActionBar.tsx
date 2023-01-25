@@ -21,6 +21,10 @@ const PostDetailsActionBar = ({ likes, comments, onLike }: Props) => {
     const isLiked = timelineEntryWasLikedBy(likes, getCurrentUid());
     const [heartPressed, setHeartPressed] = React.useState(isLiked);
 
+    React.useEffect(() => {
+        setHeartPressed(isLiked);
+    }, [isLiked]);
+
     const onHeartPressed = () => {
         if (!heartPressed) {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
