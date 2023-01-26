@@ -7,7 +7,7 @@ import StoryController, { StoryModel } from 'src/controller/timeline/story/Story
 import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getCurrentUser, getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { KeyboardAvoidingView, Text, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, Text, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -137,7 +137,9 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
                     {/*this is the body of the post*/}
                     {children}
 
-                    <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
+                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}>
+                        <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
+                    </View>
 
                     <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%' }}>
                         <View style={{ height: 1, width: '100%', backgroundColor: colors.today_calendar_line, opacity: 0.25 }} />
