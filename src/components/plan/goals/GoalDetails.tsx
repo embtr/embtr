@@ -20,8 +20,11 @@ import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import UserController, { FAKE_USER, UserModel } from 'src/controller/user/UserController';
 import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
+import { COMPLETE, FAILED, INCOMPLETE, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedTaskHistory } from '../history/PlannedTaskHistory';
+import PostDetailsActionBar from 'src/components/common/comments/PostDetailsActionBar';
+import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
@@ -125,54 +128,86 @@ export const GoalDetails = () => {
                 menuOptions={createEmbtrMenuOptions(menuItems)}
             />
             <EmbtrMenuCustom />
+            <ScrollView>
+                <View style={{ flex: 1 }}>
+                    <View style={{ paddingLeft: 10, paddingTop: 10 }}>
+                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{goal.name}</Text>
 
-            <View style={{ flex: 1 }}>
-                <View style={{ paddingLeft: 10, paddingTop: 10 }}>
-                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{goal.name}</Text>
-
-                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
-                        {goal.description}
-                    </Text>
-                </View>
-
-                <View style={{ paddingTop: 15, marginLeft: 10, marginRight: 10 }}>
-                    <HorizontalLine />
-                </View>
-
-                <View style={{ paddingLeft: 10, paddingTop: 15 }}>
-                    <View style={{ width: '100%', alignContent: 'center', paddingTop: 5 }}>
-                        <ProgressBar progress={progressPercent} />
-                    </View>
-                </View>
-
-                <View style={{ paddingTop: 20, paddingBottom: 10 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <GoalDetailAttribute attribute={'Created'} value={format(goal.added.toDate(), 'MMMM dd, yyyy')} />
-                        <GoalDetailAttribute attribute={'Days Remaining'} value={daysOld} />
-                        <GoalDetailAttribute attribute={'Pillar'} value={pillar.name} />
+                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
+                            {goal.description}
+                        </Text>
                     </View>
 
-                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                        <GoalDetailAttribute attribute={'Tasks Completed'} value={completedTasks + ' Task' + (completedTasks === 1 ? '' : 's')} />
-                        <GoalDetailAttribute attribute={'Tasks Incomplete'} value={incompletedTasks + ' Task' + (incompletedTasks === 1 ? '' : 's')} />
-                        <GoalDetailAttribute attribute={'Tasks Failed'} value={failedTasks + ' Task' + (failedTasks === 1 ? '' : 's')} />
+                    <View style={{ paddingTop: 15, marginLeft: 10, marginRight: 10 }}>
+                        <HorizontalLine />
                     </View>
 
-                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                        <GoalDetailAttribute attribute={'Completion Streak'} value={'15 Days'} isFake={true} />
-                        <GoalDetailAttribute attribute={'Tasks Failed'} value={'10'} isFake={true} />
-                        <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} isFake={true} />
+                    <View style={{ paddingLeft: 10, paddingTop: 15 }}>
+                        <View style={{ width: '100%', alignContent: 'center', paddingTop: 5 }}>
+                            <ProgressBar progress={progressPercent} />
+                        </View>
+                    </View>
+
+                    <View style={{ paddingTop: 20, paddingBottom: 10 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <GoalDetailAttribute attribute={'Created'} value={format(goal.added.toDate(), 'MMMM dd, yyyy')} />
+                            <GoalDetailAttribute attribute={'Days Remaining'} value={daysOld} />
+                            <GoalDetailAttribute attribute={'Pillar'} value={pillar.name} />
+                        </View>
+
+                        <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                            <GoalDetailAttribute attribute={'Tasks Completed'} value={completedTasks + ' Task' + (completedTasks === 1 ? '' : 's')} />
+                            <GoalDetailAttribute attribute={'Tasks Incomplete'} value={incompletedTasks + ' Task' + (incompletedTasks === 1 ? '' : 's')} />
+                            <GoalDetailAttribute attribute={'Tasks Failed'} value={failedTasks + ' Task' + (failedTasks === 1 ? '' : 's')} />
+                        </View>
+
+                        <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                            <GoalDetailAttribute attribute={'Completion Streak'} value={'15 Days'} isFake={true} />
+                            <GoalDetailAttribute attribute={'Tasks Failed'} value={'10'} isFake={true} />
+                            <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} isFake={true} />
+                        </View>
+                    </View>
+
+                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
+                        <PostDetailsActionBar likes={goal.public.likes} comments={goal.public.comments} onLike={() => {}} />
+                    </View>
+
+                    <View style={{ paddingTop: 5, marginLeft: 10, marginRight: 10 }}>
+                        <HorizontalLine />
+                    </View>
+
+                    <PlannedTaskHistory history={taskHistory} />
+                    <View>
+                        <Text
+                            style={{
+                                textAlign: 'right',
+                                paddingTop: 3,
+                                paddingRight: 15,
+                                fontFamily: POPPINS_SEMI_BOLD,
+                                fontSize: 12,
+                                color: colors.secondary_text,
+                            }}
+                        >
+                            View All
+                        </Text>
+                    </View>
+
+                    <View style={{ paddingTop: 20, width: '100%' }}>
+                        <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.goal_primary_font, paddingLeft: 7 }}>Comments</Text>
+                    </View>
+                    <CommentsScrollView comments={goal.public.comments} onDeleteComment={() => {}} />
+                    <View>
+                        <Text
+                            onPress={() => {
+                                if (goal.id) navigation.navigate('ViewAllComments', { uid: goal.uid, goalId: goal.id });
+                            }}
+                            style={{ textAlign: 'right', paddingRight: 15, fontFamily: POPPINS_SEMI_BOLD, fontSize: 12, color: colors.secondary_text }}
+                        >
+                            View All
+                        </Text>
                     </View>
                 </View>
-
-                <PlannedTaskHistory history={taskHistory} />
-
-                <View>
-
-                </View>
-
-
-            </View>
+            </ScrollView>
         </Screen>
     );
 };

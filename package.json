@@ -50,6 +50,7 @@
         "react-native-gesture-handler": "~2.8.0",
         "react-native-hold-menu": "^0.1.2",
         "react-native-keyboard-accessory": "^0.1.16",
+        "react-native-keyboard-aware-scroll-view": "^0.9.5",
         "react-native-menu-view": "^1.2.2",
         "react-native-modal-datetime-picker": "^13.1.2",
         "react-native-pager-view": "6.0.1",

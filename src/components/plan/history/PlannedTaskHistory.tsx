@@ -24,7 +24,7 @@ export const PlannedTaskHistory = ({ history }: Props) => {
         });
 
     return (
-        <View style={{ flex: 1 }}>
+        <View>
             <View style={{ paddingTop: 20, width: '100%' }}>
                 <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.goal_primary_font, paddingLeft: 7 }}>History</Text>
             </View>

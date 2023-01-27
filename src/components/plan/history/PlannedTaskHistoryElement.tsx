@@ -6,7 +6,7 @@ import { TaskInProgressSymbol } from 'src/components/common/task_symbols/TaskInP
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import { COMPLETE, FAILED, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, COMPLETE, FAILED, POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
     history: PlannedTaskModel;
@@ -18,15 +18,18 @@ export const PlannedTaskHistoryElement = ({ history }: Props) => {
     return (
         <View style={{ width: '100%', alignItems: 'center' }}>
             <View
-                style={{
-                    backgroundColor: colors.button_background,
-                    borderRadius: 15,
-                    width: '97%',
-                    height: 65,
-                    flexDirection: 'row',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                }}
+                style={[
+                    {
+                        backgroundColor: colors.button_background,
+                        borderRadius: 15,
+                        width: '97%',
+                        height: 65,
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                    },
+                    CARD_SHADOW,
+                ]}
             >
                 <View style={{ paddingLeft: 10 }}>
                     {history.status === COMPLETE && <TaskCompleteSymbol />}

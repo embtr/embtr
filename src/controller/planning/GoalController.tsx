@@ -1,6 +1,7 @@
 import { differenceInDays } from 'date-fns';
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalDao from 'src/firebase/firestore/planning/GoalDao';
+import { Comment, Like } from 'src/controller/timeline/TimelineController';
 
 export interface GoalModel {
     id?: string;
@@ -11,6 +12,10 @@ export interface GoalModel {
     pillarId?: string;
     deadline: Timestamp;
     status: string;
+    public: {
+        comments: Comment[];
+        likes: Like[];
+    };
 }
 
 export const FAKE_GOAL: GoalModel = {
@@ -20,6 +25,10 @@ export const FAKE_GOAL: GoalModel = {
     description: '',
     deadline: Timestamp.now(),
     status: 'ACTIVE',
+    public: {
+        comments: [],
+        likes: [],
+    },
 };
 
 const ARCHIVED = 'ARCHIVED';
@@ -42,6 +51,10 @@ class GoalController {
             description: goal.description,
             deadline: goal.deadline,
             status: goal.status,
+            public: {
+                comments: goal.public.comments,
+                likes: goal.public.likes,
+            },
         };
 
         if (goal.id) {
@@ -126,6 +139,13 @@ class GoalController {
 
         if (!goal.uid) {
             goal.uid = uid;
+        }
+
+        if (!goal.public) {
+            goal.public = {
+                likes: [],
+                comments: [],
+            };
         }
 
         return goal;
