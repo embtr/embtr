@@ -21,6 +21,7 @@ import { EmbtrMenuCustom } from '../menu/EmbtrMenuCustom';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PostDetailsActionBar from './PostDetailsActionBar';
+import ScrollableTextInputBox from '../textbox/ScrollableTextInputBox';
 
 interface Props {
     type: string;
@@ -60,12 +61,6 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
         }, [])
     );
 
-    const scrollRef = React.useRef<ScrollView>(null);
-
-    const onCommentCountChanged = () => {
-        scrollRef.current?.scrollTo({ x: 0, y: 0, animated: false });
-    };
-
     const daysRemaining = formatDistance(added, new Date(), { addSuffix: true });
 
     const menuItems: EmbtrMenuOption[] = [
@@ -94,22 +89,23 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
 
     return (
         <Screen>
-            <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 40 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-                {userIsAuthor ? (
-                    <Banner
-                        name={type}
-                        leftIcon={'arrow-back'}
-                        leftRoute="BACK"
-                        rightIcon={'ellipsis-horizontal'}
-                        menuOptions={createEmbtrMenuOptions(menuItems)}
-                    />
-                ) : (
-                    <Banner name={type} leftIcon={'arrow-back'} leftRoute="BACK" />
-                )}
-                {userIsAuthor && <EmbtrMenuCustom />}
-                <HorizontalLine />
-                <ScrollView onContentSizeChange={onCommentCountChanged} ref={scrollRef} style={{ flex: 1 }}>
-                    <View style={{ width: '100%', flexDirection: 'row' }}>
+            {userIsAuthor ? (
+                <Banner
+                    name={type}
+                    leftIcon={'arrow-back'}
+                    leftRoute="BACK"
+                    rightIcon={'ellipsis-horizontal'}
+                    menuOptions={createEmbtrMenuOptions(menuItems)}
+                />
+            ) : (
+                <Banner name={type} leftIcon={'arrow-back'} leftRoute="BACK" />
+            )}
+            {userIsAuthor && <EmbtrMenuCustom />}
+            <HorizontalLine />
+
+            {currentUserProfile && author && (
+                <ScrollableTextInputBox currentUser={currentUserProfile} postOwner={author} submitComment={submitComment}>
+                    <View style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
                             <View>{author && <NavigatableUserImage userProfileModel={author} size={45} />}</View>
 
@@ -146,12 +142,8 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
                     </View>
 
                     <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
-                </ScrollView>
-
-                {currentUserProfile && author && (
-                    <CommentsTextInput currentUserProfile={currentUserProfile} authorUserProfile={author} submitComment={submitComment} />
-                )}
-            </KeyboardAvoidingView>
+                </ScrollableTextInputBox>
+            )}
         </Screen>
     );
 };

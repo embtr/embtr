@@ -13,9 +13,9 @@ import { Timestamp } from 'firebase/firestore';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { KeyboardAvoidingView, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { isIOS } from 'react-device-detect';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Banner } from '../Banner';
+import ScrollableTextInputBox from './ScrollableTextInputBox';
 
 const ViewAllComments = () => {
     const route = useRoute<RouteProp<PlanTabScreens, 'ViewAllComments'>>();
@@ -61,18 +61,10 @@ const ViewAllComments = () => {
         <Screen>
             <Banner name={'Comments'} leftIcon={'arrow-back'} leftRoute="BACK" />
 
-            {isIosApp() ? (
-                <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 40 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
-                    <ScrollView>{goal?.public.comments && <CommentsScrollView comments={comments} onDeleteComment={() => {}} />}</ScrollView>
-                    {currentUser && postOwner && <CommentsTextInput currentUserProfile={currentUser} authorUserProfile={postOwner} submitComment={() => {}} />}
-                </KeyboardAvoidingView>
-            ) : (
-                <View style={{ flex: 1 }}>
-                    <KeyboardAwareScrollView enableOnAndroid={true} extraScrollHeight={20}>
-                        <ScrollView>{goal?.public.comments && <CommentsScrollView comments={comments} onDeleteComment={() => {}} />}</ScrollView>
-                    </KeyboardAwareScrollView>
-                    {currentUser && postOwner && <CommentsTextInput currentUserProfile={currentUser} authorUserProfile={postOwner} submitComment={() => {}} />}
-                </View>
+            {currentUser && postOwner && (
+                <ScrollableTextInputBox currentUser={currentUser} postOwner={postOwner}>
+                    {goal?.public.comments && <CommentsScrollView comments={comments} onDeleteComment={() => {}} />}
+                </ScrollableTextInputBox>
             )}
         </Screen>
     );

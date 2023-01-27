@@ -6,6 +6,7 @@ import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox'
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { isIosApp } from 'src/util/DeviceUtil';
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
@@ -71,26 +72,33 @@ export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUse
                 paddingRight: focused ? 0 : 5,
                 flexDirection: 'row',
                 alignItems: 'center',
+                paddingBottom: focused ? 0 : 3,
             }}
         >
             <View
                 style={{
                     backgroundColor: colors.text_input_background,
+
                     borderRadius: focused ? 0 : 15,
-                    marginBottom: 6,
-                    paddingTop: 8,
+                    paddingTop: focused ? 0 : 8,
                     paddingBottom: 8,
                     flex: 1,
                 }}
             >
                 <UserTagBox input={commentText} userTagged={applyUsernameTag} />
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                    }}
+                >
                     <View style={{ paddingLeft: 10 }}>
                         {currentUserProfile && <NavigatableUserImage userProfileModel={currentUserProfile} size={30} denyNavigation={true} />}
                     </View>
                     <TextInput
-                        style={{ paddingLeft: 10, color: colors.text, flex: 1 }}
+                        style={{ paddingLeft: 10, color: colors.text, flex: 1, paddingBottom: focused ? 15 : 0, paddingTop: focused ? 15 : 0 }}
                         placeholder={'add a comment...'}
                         placeholderTextColor={colors.secondary_text}
                         onChangeText={(text) => setCommentText(text)}
@@ -102,7 +110,7 @@ export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUse
                         onBlur={() => setFocused(false)}
                     />
 
-                    <View style={{ width: 90, paddingRight: 15 }}>
+                    <View style={{ width: 90, paddingRight: 15, paddingBottom: isIosApp() ? 0 : focused ? 4 : 0 }}>
                         <EmbtrButton
                             buttonText={'send'}
                             callback={() => {
