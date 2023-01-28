@@ -22,6 +22,7 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
         if (isCurrentUsersComment) {
             commentViews.push(
                 <SwipeableDeleteCard
+                    key={comment.comment + comment.uid + comment.timestamp.toString()}
                     onDelete={() => {
                         if (onDeleteComment) {
                             onDeleteComment(comment);
