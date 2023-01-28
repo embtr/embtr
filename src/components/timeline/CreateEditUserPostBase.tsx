@@ -9,6 +9,7 @@ import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarouse
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
     title: string;
@@ -26,8 +27,6 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
-    const [titleError, setTitleError] = React.useState(false);
-    const [storyError, setStoryError] = React.useState(false);
 
     const setT = (t: string) => {
         setTitle(t);
@@ -110,15 +109,35 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                     </View>
 
                     {/* TITLE */}
-                    <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
-                        >
-                            Title
-                        </Text>
+                    <View style={{ paddingTop: 10, paddingLeft: 10 }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                }}
+                                style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, fontFamily: POPPINS_REGULAR }}
+                            >
+                                Title
+                            </Text>
+
+                            {title.length < 1 && (
+                                <Text
+                                    onPress={() => {
+                                        Keyboard.dismiss();
+                                    }}
+                                    style={{
+                                        alignSelf: 'flex-end',
+                                        color: colors.tab_selected,
+                                        paddingLeft: 5,
+                                        paddingBottom: 3,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 10,
+                                    }}
+                                >
+                                    title cannot be blank
+                                </Text>
+                            )}
+                        </View>
                         <TextInput
                             style={{
                                 padding: 15,
@@ -132,9 +151,6 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                             placeholder={'Enter Your Story Title'}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={setT}
-                            onChange={() => {
-                                setTitleError(false);
-                            }}
                             value={title}
                         />
                     </View>
@@ -167,9 +183,6 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                             placeholder={"Be someone's inspiration."}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={setB}
-                            onChange={() => {
-                                setStoryError(false);
-                            }}
                             value={body}
                         />
                     </View>
@@ -195,7 +208,9 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                                 <EmbtrButton
                                     buttonText={'Submit'}
                                     callback={() => {
-                                        onSubmit();
+                                        if (title.length > 0) {
+                                            onSubmit();
+                                        }
                                     }}
                                 />
                             </View>
