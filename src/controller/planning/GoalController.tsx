@@ -133,6 +133,34 @@ class GoalController {
         await GoalDao.update(goal);
     }
 
+    public static async addComment(uid: string, goal: GoalModel, comment: string) {
+        const clone = this.clone(goal);
+
+        const commentObject: Comment = { uid: uid, comment: comment, timestamp: Timestamp.now() };
+        clone.public.comments.push(commentObject);
+
+        await this.update(clone);
+    }
+
+    public static async deleteComment(goal: GoalModel, commentToDelete: Comment) {
+        const comments: Comment[] = [];
+
+        goal.public.comments.forEach((comment) => {
+            if (
+                comment.uid === commentToDelete.uid &&
+                comment.comment === comment.comment &&
+                comment.timestamp.toString() === commentToDelete.timestamp.toString()
+            ) {
+                return;
+            }
+
+            comments.push(comment);
+        });
+
+        goal.public.comments = comments;
+        await this.update(goal);
+    }
+
     private static createGoalFromData(uid: string, document: DocumentSnapshot<DocumentData>): GoalModel {
         let goal: GoalModel = document.data() as GoalModel;
         goal.id = document.id;

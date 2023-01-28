@@ -7,15 +7,10 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { CommentsScrollView } from '../comments/CommentsScrollView';
 import { Screen } from '../Screen';
-import { CommentsTextInput } from 'src/components/common/comments/CommentsTextInput';
-import { Comment } from 'src/controller/timeline/TimelineController';
-import { Timestamp } from 'firebase/firestore';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { KeyboardAvoidingView, View } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { isIosApp } from 'src/util/DeviceUtil';
 import { Banner } from '../Banner';
 import ScrollableTextInputBox from './ScrollableTextInputBox';
+import { Comment } from 'src/controller/timeline/TimelineController';
+import { Timestamp } from 'firebase/firestore';
 
 const ViewAllComments = () => {
     const route = useRoute<RouteProp<PlanTabScreens, 'ViewAllComments'>>();
@@ -28,7 +23,7 @@ const ViewAllComments = () => {
     const goalId = route.params.goalId;
 
     React.useEffect(() => {
-        GoalController.getGoal(uid, goalId, setGoal);
+        fetchGoal();
     }, []);
 
     React.useEffect(() => {
@@ -39,31 +34,34 @@ const ViewAllComments = () => {
         ProfileController.getProfile(getCurrentUid(), setCurrentUser);
     }, []);
 
-    const comments: Comment[] = [
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-        { comment: 'hello there', uid: getCurrentUid(), timestamp: Timestamp.now() },
-    ];
+    const fetchGoal = () => {
+        GoalController.getGoal(uid, goalId, setGoal);
+    };
+
+    const onSubmitComment = async (comment: string) => {
+        if (!goal) {
+            return;
+        }
+
+        await GoalController.addComment(getCurrentUid(), goal, comment);
+        fetchGoal();
+    };
+
+    const onDeleteComment = async (comment: Comment) => {
+        if (!goal) {
+            return;
+        }
+        await GoalController.deleteComment(goal, comment);
+        fetchGoal();
+    };
 
     return (
         <Screen>
             <Banner name={'Comments'} leftIcon={'arrow-back'} leftRoute="BACK" />
 
             {currentUser && postOwner && (
-                <ScrollableTextInputBox currentUser={currentUser} postOwner={postOwner}>
-                    {goal?.public.comments && <CommentsScrollView comments={comments} onDeleteComment={() => {}} />}
+                <ScrollableTextInputBox currentUser={currentUser} postOwner={postOwner} submitComment={onSubmitComment}>
+                    {goal?.public.comments && <CommentsScrollView comments={goal.public.comments} onDeleteComment={onDeleteComment} />}
                 </ScrollableTextInputBox>
             )}
         </Screen>
