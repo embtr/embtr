@@ -5,20 +5,27 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import SwipeableDeleteCard from '../swipeable/SwipeableDeleteCard';
 
 interface Props {
-    onDeleteComment: Function;
+    onDeleteComment?: Function;
     comments: Comment[];
+    limit?: number;
 }
 
-export const CommentsScrollView = ({ comments, onDeleteComment }: Props) => {
+export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) => {
     let commentViews: JSX.Element[] = [];
-    comments.forEach((comment) => {
+
+    const max = limit ? limit : comments.length;
+    for (let i = 0; i < max; i++) {
+        const comment: Comment = comments[i];
+
         const isCurrentUsersComment = comment.uid === getCurrentUid();
 
         if (isCurrentUsersComment) {
             commentViews.push(
                 <SwipeableDeleteCard
                     onDelete={() => {
-                        onDeleteComment(comment);
+                        if (onDeleteComment) {
+                            onDeleteComment(comment);
+                        }
                     }}
                 >
                     <View key={comment.uid + comment.comment + comment.timestamp} style={{ marginBottom: 7.5, paddingTop: 15 }}>
@@ -33,7 +40,7 @@ export const CommentsScrollView = ({ comments, onDeleteComment }: Props) => {
                 </View>
             );
         }
-    });
+    }
 
     return <View>{commentViews}</View>;
 };

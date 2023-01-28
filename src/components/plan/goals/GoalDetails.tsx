@@ -25,6 +25,7 @@ import { PlannedTaskHistory } from '../history/PlannedTaskHistory';
 import PostDetailsActionBar from 'src/components/common/comments/PostDetailsActionBar';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { ScrollView } from 'react-native-gesture-handler';
+import CommentsShortView from 'src/components/common/comments/CommentsShortView';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
@@ -177,35 +178,12 @@ export const GoalDetails = () => {
                     </View>
 
                     <PlannedTaskHistory history={taskHistory} />
-                    <View>
-                        <Text
-                            style={{
-                                textAlign: 'right',
-                                paddingTop: 3,
-                                paddingRight: 15,
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 12,
-                                color: colors.secondary_text,
-                            }}
-                        >
-                            View All
-                        </Text>
-                    </View>
-
-                    <View style={{ paddingTop: 20, width: '100%' }}>
-                        <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.goal_primary_font, paddingLeft: 7 }}>Comments</Text>
-                    </View>
-                    <CommentsScrollView comments={goal.public.comments} onDeleteComment={() => {}} />
-                    <View>
-                        <Text
-                            onPress={() => {
-                                if (goal.id) navigation.navigate('ViewAllComments', { uid: goal.uid, goalId: goal.id });
-                            }}
-                            style={{ textAlign: 'right', paddingRight: 15, fontFamily: POPPINS_SEMI_BOLD, fontSize: 12, color: colors.secondary_text }}
-                        >
-                            View All
-                        </Text>
-                    </View>
+                    <CommentsShortView
+                        comments={goal.public.comments}
+                        onViewAll={() => {
+                            if (goal.id) navigation.navigate('ViewAllComments', { uid: goal.uid, goalId: goal.id });
+                        }}
+                    />
                 </View>
             </ScrollView>
         </Screen>
