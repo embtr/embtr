@@ -1,6 +1,7 @@
-import { View, Text } from 'react-native';
+import { View, Text, Linking } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
+import ParsedText from 'react-native-parsed-text';
 
 interface Props {
     title: string;
@@ -26,7 +27,12 @@ export const UserPostBody = ({ title, post, images }: Props) => {
                 <Text style={{ fontFamily: 'Poppins_500Medium', fontSize: 16, color: colors.timeline_card_body }}>{title}</Text>
             </View>
             <View style={{ paddingTop: 10, paddingLeft: 15 }}>
-                <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, color: colors.timeline_card_header }}>{post}</Text>
+                <ParsedText
+                    parse={[{ type: 'url', style: { color: 'blue' }, onPress: (url) => Linking.openURL(url) }]}
+                    style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, color: colors.timeline_card_header }}
+                >
+                    {post}
+                </ParsedText>
             </View>
 
             {carouselImages.length > 0 && (
