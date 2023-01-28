@@ -10,8 +10,8 @@ import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
 
 interface Props {
-    input: string,
-    userTagged: Function
+    input: string;
+    userTagged: Function;
 }
 
 export const UserTagBox = ({ input, userTagged }: Props) => {
@@ -52,17 +52,16 @@ export const UserTagBox = ({ input, userTagged }: Props) => {
 
     let usernameTagOptionsViews: JSX.Element[] = [];
     if (usernameTagOptions) {
-        usernameTagOptions.forEach(usernameTagOption => {
+        usernameTagOptions.forEach((usernameTagOption) => {
             usernameTagOptionsViews.push(<UserTag key={usernameTagOption.uid} userProfile={usernameTagOption} onPress={userTagged} />);
         });
     }
 
-    return (
-        display ?
-            (<View style={{ padding: 1, backgroundColor: colors.background_medium, borderWidth: 1, borderColor: colors.background_heavy, borderRadius: 5 }} >
-                {usernameTagOptionsViews}
-            </View >)
-            :
-            (<View />)
-    )
-}
+    return display ? (
+        <View style={{ padding: 1, backgroundColor: colors.background_medium, borderWidth: 1, borderColor: colors.background_heavy, borderRadius: 5 }}>
+            {usernameTagOptionsViews}
+        </View>
+    ) : (
+        <View />
+    );
+};

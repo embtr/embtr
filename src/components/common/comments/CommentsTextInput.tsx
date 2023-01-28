@@ -1,4 +1,3 @@
-import { getAuth } from 'firebase/auth';
 import * as React from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
@@ -41,14 +40,6 @@ export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUse
         setCommentText(newComment);
 
         let applyTag = true;
-        if (userProfile.uid === authorUserProfile.uid) {
-            applyTag = false;
-        }
-
-        if (userProfile.uid === getAuth().currentUser!.uid) {
-            applyTag = false;
-        }
-
         taggedUsers.forEach((taggedUser) => {
             if (taggedUser.uid === userProfile.uid) {
                 applyTag = false;

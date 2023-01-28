@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import ProfileController from 'src/controller/profile/ProfileController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { Text } from 'react-native';

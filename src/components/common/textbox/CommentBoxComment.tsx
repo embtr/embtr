@@ -8,7 +8,7 @@ import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { Comment } from 'src/controller/timeline/TimelineController';
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
-import { COMMENT_ICON_SIZE, TIMELINE_CARD_ICON_SIZE } from 'src/util/constants';
+import { COMMENT_ICON_SIZE } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
