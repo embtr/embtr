@@ -133,6 +133,15 @@ class GoalController {
         await GoalDao.update(goal);
     }
 
+    public static async addLike(goal: GoalModel, likerUid: string) {
+        const clone = this.clone(goal);
+
+        const likeObject: Like = { uid: likerUid, added: Timestamp.now() };
+        clone.public.likes.push(likeObject);
+
+        await this.update(clone);
+    }
+
     public static async addComment(uid: string, goal: GoalModel, comment: string) {
         const clone = this.clone(goal);
 

@@ -23,9 +23,9 @@ import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning
 import { COMPLETE, FAILED, INCOMPLETE, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedTaskHistory } from '../history/PlannedTaskHistory';
 import PostDetailsActionBar from 'src/components/common/comments/PostDetailsActionBar';
-import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { ScrollView } from 'react-native-gesture-handler';
 import CommentsShortView from 'src/components/common/comments/CommentsShortView';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
@@ -119,6 +119,10 @@ export const GoalDetails = () => {
 
     const progressPercent = getProgressPercent(goal);
 
+    const onLike = () => {
+        GoalController.addLike(goal, getCurrentUid());
+    };
+
     return (
         <Screen>
             <Banner
@@ -170,7 +174,7 @@ export const GoalDetails = () => {
                     </View>
 
                     <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
-                        <PostDetailsActionBar likes={goal.public.likes} comments={goal.public.comments} onLike={() => {}} />
+                        <PostDetailsActionBar likes={goal.public.likes} comments={goal.public.comments} onLike={onLike} />
                     </View>
 
                     <View style={{ paddingTop: 5, marginLeft: 10, marginRight: 10 }}>

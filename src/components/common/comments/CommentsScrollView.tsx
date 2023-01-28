@@ -13,7 +13,11 @@ interface Props {
 export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) => {
     let commentViews: JSX.Element[] = [];
 
-    const max = limit ? limit : comments.length;
+    let max = limit ? limit : comments.length;
+    if (comments.length < max) {
+        max = comments.length;
+    }
+
     for (let i = 0; i < max; i++) {
         const comment: Comment = comments[i];
 
