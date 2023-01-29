@@ -116,7 +116,7 @@ export const SetDurationModal = ({ visible, confirm, dismiss }: Props) => {
                                                         paddingBottom: 8,
                                                     }}
                                                 >
-                                                    {durationHours + ' hours'}
+                                                    {durationHours + (durationHours === 1 ? ' hour' : ' hours')}
                                                 </Text>
                                             </View>
                                             <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
