@@ -2,7 +2,7 @@
   "expo": {
     "name": "embtr",
     "slug": "embtr",
-    "version": "0.0.231",
+    "version": "0.0.232",
     "orientation": "portrait",
     "icon": "assets/app_icon.png",
     "scheme": "embtr",
@@ -25,7 +25,7 @@
       "config": {
         "usesNonExemptEncryption": false
       },
-      "buildNumber": "0.0.231"
+      "buildNumber": "0.0.232"
     },
     "android": {
       "adaptiveIcon": {
@@ -36,7 +36,7 @@
       "package": "com.brentryczak.embtr",
       "googleServicesFile": "./google-services.json",
       "softwareKeyboardLayoutMode": "pan",
-      "versionCode": 470000231
+      "versionCode": 470000232
     },
     "web": {
       "favicon": "assets/favicon.png"
