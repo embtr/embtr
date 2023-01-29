@@ -3,7 +3,8 @@ import * as React from 'react';
 import { View, TouchableOpacity, Modal, Button, Text } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_REGULAR } from 'src/util/constants';
+import { isIosApp } from 'src/util/DeviceUtil';
 
 interface Props {
     visible: boolean;
@@ -17,32 +18,14 @@ export const SetDurationModal = ({ visible, confirm, dismiss }: Props) => {
     const [durationHours, setDurationHours] = React.useState(0);
     const [durationMinutes, setDurationMinutes] = React.useState(30);
 
-    let hourPickerItems: JSX.Element[] = [];
-    for (let i = 1; i <= 12; i++) {
-        hourPickerItems.push(<Picker.Item key={'hour_' + i} color={colors.text} label={'' + i} value={i} />);
-    }
-
-    let minutePickerItems: JSX.Element[] = [];
-    for (let i = 0; i <= 59; i += 15) {
-        let val = '' + i;
-        if (i < 10) {
-            val = '0' + i;
-        }
-        minutePickerItems.push(<Picker.Item key={'minute_' + val} color={colors.text} label={'' + val} value={i} />);
-    }
-
-    let amPmPickerItems: JSX.Element[] = [];
-    amPmPickerItems.push(<Picker.Item key={'amPm_am'} color={colors.text} label={'AM'} value={'am'} />);
-    amPmPickerItems.push(<Picker.Item key={'amPm_pm'} color={colors.text} label={'PM'} value={'pm'} />);
-
     let durationHourPickerItems: JSX.Element[] = [];
     for (let i = 0; i <= 23; i++) {
-        durationHourPickerItems.push(<Picker.Item key={'duration_hours_' + i} color={colors.text} label={'' + i} value={i} />);
+        durationHourPickerItems.push(<Picker.Item key={'duration_hours_' + i} color={isIosApp() ? colors.text : 'black'} label={'' + i} value={i} />);
     }
 
     let durationMinutesPickerItems: JSX.Element[] = [];
     for (let i = 0; i <= 59; i++) {
-        durationMinutesPickerItems.push(<Picker.Item key={'duration_minutes_' + i} color={colors.text} label={'' + i} value={i} />);
+        durationMinutesPickerItems.push(<Picker.Item key={'duration_minutes_' + i} color={isIosApp() ? colors.text : 'black'} label={'' + i} value={i} />);
     }
 
     return (
@@ -62,36 +45,41 @@ export const SetDurationModal = ({ visible, confirm, dismiss }: Props) => {
                                 dismiss();
                             }}
                         />
-                        <View>
-                            <View style={{ width: 300, backgroundColor: colors.modal_background, borderRadius: 12, justifyContent: 'space-around' }}>
+                        <View style={{ width: '100%', alignItems: 'center' }}>
+                            <View style={{ width: '80%', backgroundColor: colors.modal_background, borderRadius: 12 }}>
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: 'Poppins_400Regular' }}>Duration</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={durationHours} onValueChange={setDurationHours}>
+                                        <Picker style={{ flex: 1, color: colors.text }} selectedValue={durationHours} onValueChange={setDurationHours}>
                                             {durationHourPickerItems}
                                         </Picker>
                                         <Text
                                             style={{
+                                                flex: 1,
                                                 color: colors.text,
                                                 fontSize: 14,
                                                 paddingTop: 10,
-                                                fontFamily: POPPINS_SEMI_BOLD,
-                                                right: 5,
+                                                fontFamily: POPPINS_REGULAR,
                                                 paddingBottom: 8,
                                             }}
                                         >
                                             {durationHours === 1 ? 'hour  ' : 'hours'}
                                         </Text>
-                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={durationMinutes} onValueChange={setDurationMinutes}>
+                                        <Picker
+                                            itemStyle={{ textAlign: 'center' }}
+                                            style={{ flex: 1, color: colors.text }}
+                                            selectedValue={durationMinutes}
+                                            onValueChange={setDurationMinutes}
+                                        >
                                             {durationMinutesPickerItems}
                                         </Picker>
                                         <Text
                                             style={{
+                                                flex: 1,
                                                 color: colors.text,
                                                 fontSize: 14,
                                                 paddingTop: 10,
-                                                fontFamily: POPPINS_SEMI_BOLD,
-                                                right: 5,
+                                                fontFamily: POPPINS_REGULAR,
                                                 paddingBottom: 8,
                                             }}
                                         >
@@ -114,7 +102,7 @@ export const SetDurationModal = ({ visible, confirm, dismiss }: Props) => {
 
                             <View style={{ height: 5 }} />
 
-                            <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
+                            <View style={{ width: '80%', backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
                                 <Button
                                     title="Cancel"
                                     onPress={() => {

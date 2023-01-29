@@ -65,3 +65,16 @@ export const getMonthDayFormatted = (date: Date) => {
 
     return [month, day].join('/');
 };
+
+export const getDurationPretty = (duration: number): string => {
+    let durationString = '';
+    if (duration > 59) {
+        durationString += Math.floor(duration / 60) + 'h ';
+    }
+
+    if (duration) {
+        durationString += (duration % 60) + 'm';
+    }
+
+    return durationString;
+};

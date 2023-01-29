@@ -30,7 +30,7 @@ export const SchedulePlannableTaskModal = ({ name, description, initialStartMinu
 
     let hourPickerItems: JSX.Element[] = [];
     for (let i = 1; i <= 12; i++) {
-        hourPickerItems.push(<Picker.Item key={'hour_' + i} color={colors.text} label={'' + i} value={i} />);
+        hourPickerItems.push(<Picker.Item key={'hour_' + i} color={'black'} label={'' + i} value={i} />);
     }
 
     let minutePickerItems: JSX.Element[] = [];
@@ -39,21 +39,21 @@ export const SchedulePlannableTaskModal = ({ name, description, initialStartMinu
         if (i < 10) {
             val = '0' + i;
         }
-        minutePickerItems.push(<Picker.Item key={'minute_' + val} color={colors.text} label={'' + val} value={i} />);
+        minutePickerItems.push(<Picker.Item key={'minute_' + val} color={'black'} label={'' + val} value={i} />);
     }
 
     let amPmPickerItems: JSX.Element[] = [];
-    amPmPickerItems.push(<Picker.Item key={'amPm_am'} color={colors.text} label={'AM'} value={'AM'} />);
-    amPmPickerItems.push(<Picker.Item key={'amPm_pm'} color={colors.text} label={'PM'} value={'PM'} />);
+    amPmPickerItems.push(<Picker.Item key={'amPm_am'} color={'black'} label={'AM'} value={'AM'} />);
+    amPmPickerItems.push(<Picker.Item key={'amPm_pm'} color={'black'} label={'PM'} value={'PM'} />);
 
     let durationHourPickerItems: JSX.Element[] = [];
     for (let i = 0; i <= 23; i++) {
-        durationHourPickerItems.push(<Picker.Item key={'duration_hours_' + i} color={colors.text} label={'' + i} value={i} />);
+        durationHourPickerItems.push(<Picker.Item key={'duration_hours_' + i} color={'black'} label={'' + i} value={i} />);
     }
 
     let durationMinutesPickerItems: JSX.Element[] = [];
-    for (let i = 0; i <= 59; i++) {
-        durationMinutesPickerItems.push(<Picker.Item key={'duration_minutes_' + i} color={colors.text} label={'' + i} value={i} />);
+    for (let i = 0; i <= 59; i += 15) {
+        durationMinutesPickerItems.push(<Picker.Item key={'duration_minutes_' + i} color={'black'} label={'' + i} value={i} />);
     }
 
     return (
@@ -111,13 +111,17 @@ export const SchedulePlannableTaskModal = ({ name, description, initialStartMinu
                                 <View style={{ alignItems: 'center' }}>
                                     <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: 'Poppins_400Regular' }}>Start Time</Text>
                                     <View style={{ flexDirection: 'row' }}>
-                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={hour} onValueChange={setHour}>
+                                        <Picker style={{ height: 100, width: 85, color: colors.text }} selectedValue={hour} onValueChange={setHour}>
                                             {hourPickerItems}
                                         </Picker>
-                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={minute} onValueChange={setMinute}>
+                                        <Picker style={{ height: 100, width: 85, color: colors.text }} selectedValue={minute} onValueChange={setMinute}>
                                             {minutePickerItems}
                                         </Picker>
-                                        <Picker style={{ width: 95, color: colors.text, borderRadius: 0 }} selectedValue={amPm} onValueChange={setAmPm}>
+                                        <Picker
+                                            style={{ height: 100, width: 95, color: colors.text, borderRadius: 0 }}
+                                            selectedValue={amPm}
+                                            onValueChange={setAmPm}
+                                        >
                                             {amPmPickerItems}
                                         </Picker>
                                     </View>
@@ -126,7 +130,11 @@ export const SchedulePlannableTaskModal = ({ name, description, initialStartMinu
                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: 'Poppins_400Regular' }}>Duration</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={durationHours} onValueChange={setDurationHours}>
+                                        <Picker
+                                            style={{ height: 100, width: 85, color: colors.text }}
+                                            selectedValue={durationHours}
+                                            onValueChange={setDurationHours}
+                                        >
                                             {durationHourPickerItems}
                                         </Picker>
                                         <Text
@@ -141,7 +149,11 @@ export const SchedulePlannableTaskModal = ({ name, description, initialStartMinu
                                         >
                                             {durationHours === 1 ? 'hour  ' : 'hours'}
                                         </Text>
-                                        <Picker style={{ width: 85, color: colors.text }} selectedValue={durationMinutes} onValueChange={setDurationMinutes}>
+                                        <Picker
+                                            style={{ height: 100, width: 85, color: colors.text }}
+                                            selectedValue={durationMinutes}
+                                            onValueChange={setDurationMinutes}
+                                        >
                                             {durationMinutesPickerItems}
                                         </Picker>
                                         <Text

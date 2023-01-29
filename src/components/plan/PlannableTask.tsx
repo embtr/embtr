@@ -20,6 +20,7 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { getDurationPretty } from 'src/util/DateUtility';
 
 interface Props {
     plannedTask?: PlannedTaskModel;
@@ -170,14 +171,7 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
         setEditPlannedTaskIsVisible(true);
     };
 
-    let durationString = '';
-    if (plannedTask?.duration && plannedTask.duration > 59) {
-        durationString += Math.floor(plannedTask.duration / 60) + 'h ';
-    }
-
-    if (plannedTask?.duration) {
-        durationString += (plannedTask.duration % 60) + 'm';
-    }
+    const durationString = plannedTask?.duration ? getDurationPretty(plannedTask?.duration) : '';
 
     return (
         <View style={{ width: '97%' }}>

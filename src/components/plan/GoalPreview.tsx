@@ -20,7 +20,7 @@ export const GoalPreview = ({ goal, pillars }: Props) => {
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const navigateToDetails = () => {
-        navigation.navigate('GoalDetails', { id: goal.id! });
+        navigation.navigate('GoalDetails', { uid: goal.uid, id: goal.id! });
     };
 
     let pillarName = '';

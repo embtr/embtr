@@ -26,7 +26,7 @@ export type PlanTabScreens = {
     CreateEditOneTimeTask: { dayKey: string; id?: string };
     CreateEditGoal: { id?: string };
     CreateEditRoutine: { id?: string };
-    GoalDetails: { id: string };
+    GoalDetails: { uid: string; id: string };
     Goals: undefined;
     TaskDetails: { id: string };
     PlanDay: { id: string };
@@ -49,6 +49,7 @@ export type TimelineTabScreens = {
     UserProfile: { id: string };
     Notifications: undefined;
     PillarDetails: { uid: string; id: string };
+    ViewAllComments: { uid: string; goalId: string };
 };
 
 export type ProfileTabScreens = {
@@ -57,6 +58,7 @@ export type ProfileTabScreens = {
     CreateEditPillar: undefined;
     PillarDetails: { uid: string; id: string };
     EditUserProfile: undefined;
+    GoalDetails: { uid: string; id: string };
 };
 
 export type RootStackParamList = {

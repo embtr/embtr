@@ -20,7 +20,7 @@ import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import UserController, { FAKE_USER, UserModel } from 'src/controller/user/UserController';
 import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import { COMPLETE, FAILED, INCOMPLETE, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { COMPLETE, FAILED, INCOMPLETE, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedTaskHistory } from '../history/PlannedTaskHistory';
 import PostDetailsActionBar from 'src/components/common/comments/PostDetailsActionBar';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -40,7 +40,7 @@ export const GoalDetails = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            GoalController.getGoal(getAuth().currentUser!.uid, route.params.id, setGoal);
+            GoalController.getGoal(route.params.uid, route.params.id, setGoal);
         }, [])
     );
 

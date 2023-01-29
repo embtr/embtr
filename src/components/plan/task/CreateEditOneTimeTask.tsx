@@ -11,7 +11,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { createTaskModel } from 'src/controller/planning/TaskController';
+import { createTaskModel, durationToString } from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { ItemType } from 'react-native-dropdown-picker';
 import React from 'react';
@@ -22,6 +22,7 @@ import PlannedTaskController, { createPlannedTaskModel, PlannedTaskModel } from 
 import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { getDurationPretty } from 'src/util/DateUtility';
 
 export const CreateEditOneTimeTask = () => {
     const { colors } = useTheme();
@@ -385,7 +386,9 @@ export const CreateEditOneTimeTask = () => {
                             }}
                         >
                             <View style={{ flex: 1, justifyContent: 'center' }}>
-                                <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 16 }}>{duration} minutes</Text>
+                                <Text style={{ fontFamily: 'Poppins_400Regular', color: colors.goal_primary_font, fontSize: 16 }}>
+                                    {getDurationPretty(duration)}
+                                </Text>
                             </View>
 
                             <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 15, justifyContent: 'center' }}>
