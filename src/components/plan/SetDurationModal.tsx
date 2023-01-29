@@ -1,10 +1,9 @@
-import { Picker } from '@react-native-picker/picker';
 import * as React from 'react';
 import { View, TouchableOpacity, Modal, Button, Text } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_REGULAR } from 'src/util/constants';
-import { isIosApp } from 'src/util/DeviceUtil';
+import Slider from '@react-native-community/slider';
 
 interface Props {
     visible: boolean;
@@ -17,16 +16,6 @@ export const SetDurationModal = ({ visible, confirm, dismiss }: Props) => {
 
     const [durationHours, setDurationHours] = React.useState(0);
     const [durationMinutes, setDurationMinutes] = React.useState(30);
-
-    let durationHourPickerItems: JSX.Element[] = [];
-    for (let i = 0; i <= 23; i++) {
-        durationHourPickerItems.push(<Picker.Item key={'duration_hours_' + i} color={isIosApp() ? colors.text : 'black'} label={'' + i} value={i} />);
-    }
-
-    let durationMinutesPickerItems: JSX.Element[] = [];
-    for (let i = 0; i <= 59; i++) {
-        durationMinutesPickerItems.push(<Picker.Item key={'duration_minutes_' + i} color={isIosApp() ? colors.text : 'black'} label={'' + i} value={i} />);
-    }
 
     return (
         <View>
@@ -47,47 +36,67 @@ export const SetDurationModal = ({ visible, confirm, dismiss }: Props) => {
                         />
                         <View style={{ width: '100%', alignItems: 'center' }}>
                             <View style={{ width: '80%', backgroundColor: colors.modal_background, borderRadius: 12 }}>
-                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                    <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: 'Poppins_400Regular' }}>Duration</Text>
-                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Picker style={{ flex: 1, color: colors.text }} selectedValue={durationHours} onValueChange={setDurationHours}>
-                                            {durationHourPickerItems}
-                                        </Picker>
-                                        <Text
-                                            style={{
-                                                flex: 1,
-                                                color: colors.text,
-                                                fontSize: 14,
-                                                paddingTop: 10,
-                                                fontFamily: POPPINS_REGULAR,
-                                                paddingBottom: 8,
-                                            }}
-                                        >
-                                            {durationHours === 1 ? 'hour  ' : 'hours'}
-                                        </Text>
-                                        <Picker
-                                            itemStyle={{ textAlign: 'center' }}
-                                            style={{ flex: 1, color: colors.text }}
-                                            selectedValue={durationMinutes}
-                                            onValueChange={setDurationMinutes}
-                                        >
-                                            {durationMinutesPickerItems}
-                                        </Picker>
-                                        <Text
-                                            style={{
-                                                flex: 1,
-                                                color: colors.text,
-                                                fontSize: 14,
-                                                paddingTop: 10,
-                                                fontFamily: POPPINS_REGULAR,
-                                                paddingBottom: 8,
-                                            }}
-                                        >
-                                            minutes
-                                        </Text>
-                                    </View>
+                                <Text style={{ color: colors.text, fontSize: 12, paddingTop: 10, fontFamily: 'Poppins_400Regular', textAlign: 'center' }}>
+                                    Duration
+                                </Text>
+
+                                <Text style={{ color: colors.text, fontSize: 16, fontFamily: 'Poppins_400Regular', textAlign: 'center', paddingTop: 5 }}>
+                                    {durationHours}h {durationMinutes}m
+                                </Text>
+
+                                <View style={{ flexDirection: 'row', paddingLeft: 5, paddingTop: 15 }}>
+                                    {/* BODY */}
+                                    <Slider
+                                        style={{ flex: 1, height: 40 }}
+                                        step={1}
+                                        minimumValue={0}
+                                        maximumValue={23}
+                                        onValueChange={setDurationHours}
+                                        value={durationHours}
+                                        minimumTrackTintColor={colors.tab_selected}
+                                    />
+                                    <Text
+                                        style={{
+                                            width: 80,
+                                            paddingLeft: 5,
+                                            color: colors.text,
+                                            fontSize: 14,
+                                            paddingTop: 10,
+                                            fontFamily: POPPINS_REGULAR,
+                                            paddingBottom: 8,
+                                        }}
+                                    >
+                                        {' hours'}
+                                    </Text>
                                 </View>
 
+                                <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
+                                    <Slider
+                                        style={{ flex: 1, height: 40 }}
+                                        step={5}
+                                        minimumValue={0}
+                                        maximumValue={55}
+                                        minimumTrackTintColor={colors.tab_selected}
+                                        maximumTrackTintColor={colors.secondary_text}
+                                        value={durationMinutes}
+                                        onValueChange={setDurationMinutes}
+                                    />
+                                    <Text
+                                        style={{
+                                            width: 80,
+                                            paddingLeft: 5,
+                                            color: colors.text,
+                                            fontSize: 14,
+                                            paddingTop: 10,
+                                            fontFamily: POPPINS_REGULAR,
+                                            paddingBottom: 8,
+                                        }}
+                                    >
+                                        {' minutes'}
+                                    </Text>
+                                </View>
+
+                                <View style={{ height: 35 }} />
                                 <HorizontalLine />
 
                                 <View style={{ backgroundColor: colors.modal_background, borderRadius: 12, paddingTop: 2.5, paddingBottom: 2.5 }}>
