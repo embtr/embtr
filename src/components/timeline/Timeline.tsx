@@ -22,6 +22,7 @@ import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
+import GoalResultController, { PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -46,6 +47,7 @@ export const Timeline = () => {
 
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
     const [paginatedDailyResults, setPaginatedDailyResults] = React.useState<PaginatedDailyResults>();
+    const [paginatedGoalResults, setPaginatedGoalResults] = React.useState<PaginatedGoalResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
@@ -63,6 +65,10 @@ export const Timeline = () => {
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
+        addPageOfGoalResults();
+    }, [lookbackDays, forceRefreshTimestamp]);
+
+    React.useEffect(() => {
         fetchNotifications();
     }, []);
 
@@ -72,7 +78,7 @@ export const Timeline = () => {
 
     React.useEffect(() => {
         fetchPostUsers();
-    }, [paginatedTimelinePosts, paginatedDailyResults]);
+    }, [paginatedTimelinePosts, paginatedDailyResults, paginatedGoalResults]);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -109,6 +115,10 @@ export const Timeline = () => {
 
         if (paginatedDailyResults?.results) {
             timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
+        }
+
+        if (paginatedGoalResults?.results) {
+            timelinePosts = timelinePosts.concat(paginatedGoalResults.results);
         }
 
         let uids: string[] = [];
@@ -163,7 +173,22 @@ export const Timeline = () => {
         return <View />;
     };
 
+    const createGoalResultView = (timelineEntry: TimelinePostModel) => {
+        const profile = timelineProfiles.get(timelineEntry.uid);
+
+        if (profile) {
+            return (
+                <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
+                    <UserTextCard userProfileModel={profile} story={timelineEntry as StoryModel} />
+                </View>
+            );
+        }
+
+        return <View />;
+    };
+
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
+        console.log(timelineEntry);
         switch (timelineEntry.type) {
             case 'STORY':
                 return createStoryView(timelineEntry);
@@ -173,6 +198,9 @@ export const Timeline = () => {
 
             case 'DAILY_RESULT':
                 return createDailyResultView(timelineEntry);
+
+            case 'GOAL_RESULT':
+                return createGoalResultView(timelineEntry);
 
             default:
                 return <View />;
@@ -187,6 +215,10 @@ export const Timeline = () => {
 
         if (paginatedDailyResults?.results) {
             timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
+        }
+
+        if (paginatedGoalResults?.results) {
+            timelinePosts = timelinePosts.concat(paginatedGoalResults.results);
         }
 
         const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
@@ -269,6 +301,27 @@ export const Timeline = () => {
         }
 
         setPaginatedDailyResults(currentDailyResults);
+    };
+
+    const addPageOfGoalResults = async () => {
+        let currentGoalResults: PaginatedGoalResults = {
+            results: [],
+            lastGoalResult: undefined,
+        };
+
+        if (paginatedGoalResults?.results && lookbackDays !== INITIAL_DAYS) {
+            currentGoalResults.results = [...paginatedGoalResults.results];
+            currentGoalResults.lastGoalResult = paginatedGoalResults?.lastGoalResult;
+        }
+
+        const newPaginatedGoalResults = await GoalResultController.getPaginated(currentGoalResults.lastGoalResult, getLookbackDate());
+        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(currentGoalResults.lastGoalResult, getLookbackDate());
+        if (newPaginatedDailyResults.results.length > 0) {
+            currentGoalResults.results = currentGoalResults.results.concat(newPaginatedGoalResults.results);
+            currentGoalResults.lastGoalResult = newPaginatedDailyResults.lastDailyResult;
+        }
+
+        setPaginatedGoalResults(currentGoalResults);
     };
 
     const loadMore = () => {

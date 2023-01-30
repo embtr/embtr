@@ -1,4 +1,4 @@
-import { Firestore, collection, addDoc, query, getDocs, doc, setDoc, where } from 'firebase/firestore';
+import { Firestore, collection, addDoc, query, getDocs, doc, setDoc, where, QueryDocumentSnapshot, orderBy, startAfter } from 'firebase/firestore';
 import { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
 import { getFirebaseConnection } from 'src/firebase/firestore/ConnectionProvider';
 
@@ -16,6 +16,16 @@ class GoalResultDao {
         const q = query(collection(db, 'goal_results'), where('data.goal.id', '==', goalId));
         const querySnapshot = await getDocs(q);
 
+        return querySnapshot;
+    }
+
+    public static async getPaginated(lastGoalResult: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getPaginated');
+
+        const q = lastGoalResult
+            ? query(collection(db, 'goal_results'), where('added', '>', cutoffDate), orderBy('added', 'desc'), startAfter(lastGoalResult))
+            : query(collection(db, 'goal_results'), where('added', '>', cutoffDate), orderBy('added', 'desc'));
+        const querySnapshot = await getDocs(q);
         return querySnapshot;
     }
 

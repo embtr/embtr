@@ -1,4 +1,4 @@
-import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import GoalResultDao from 'src/firebase/firestore/timeline/goals/GoalResultDao';
@@ -14,7 +14,46 @@ export interface GoalResultModel extends TimelinePostModel {
     };
 }
 
+export interface PaginatedGoalResults {
+    results: GoalResultModel[];
+    lastGoalResult: QueryDocumentSnapshot | undefined | null;
+}
+
 class GoalResultController {
+    public static async getPaginated(lastGoalResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedGoalResults> {
+        if (lastGoalResult === null) {
+            //disable prevention of looking in the past for now
+            lastGoalResult = undefined;
+            //return { results: [], lastDailyResult: null };
+        }
+
+        let results = await GoalResultDao.getPaginated(lastGoalResult, cutoffDate);
+
+        let goalResults: GoalResultModel[] = [];
+        let foundLastGoalResult: QueryDocumentSnapshot | undefined = undefined;
+        for (const result of results.docs) {
+            foundLastGoalResult = result;
+            const goalResult = await this.getGoalResultFromData(result);
+
+            if (!goalResult.active) {
+                continue;
+            }
+
+            goalResults.push(goalResult);
+        }
+
+        let paginatedGoalResults: PaginatedGoalResults = {
+            results: goalResults,
+            lastGoalResult: foundLastGoalResult,
+        };
+
+        if (paginatedGoalResults.results.length === 0) {
+            paginatedGoalResults.lastGoalResult = null;
+        }
+
+        return paginatedGoalResults;
+    }
+
     public static async getByGoalId(goalId: string) {
         const result = await GoalResultDao.getByGoalId(goalId);
         const goalResults = await this.getGoalResultFromData(result.docs[0]);
