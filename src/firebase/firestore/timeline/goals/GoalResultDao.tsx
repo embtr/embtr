@@ -19,12 +19,38 @@ class GoalResultDao {
         return querySnapshot;
     }
 
+    public static async getPaginatedForUser(uid: string, lastGoalResult: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
+        const db: Firestore = getFirebaseConnection(this.name, 'getPaginatedForUser');
+
+        const q = lastGoalResult
+            ? query(
+                  collection(db, 'goal_results'),
+                  where('data.completionDate', '>', cutoffDate),
+                  where('uid', '==', uid),
+                  orderBy('data.completionDate', 'desc'),
+                  startAfter(lastGoalResult)
+              )
+            : query(
+                  collection(db, 'goal_results'),
+                  where('data.completionDate', '>', cutoffDate),
+                  where('uid', '==', uid),
+                  orderBy('data.completionDate', 'desc')
+              );
+        const querySnapshot = await getDocs(q);
+        return querySnapshot;
+    }
+
     public static async getPaginated(lastGoalResult: QueryDocumentSnapshot | undefined, cutoffDate: Date) {
         const db: Firestore = getFirebaseConnection(this.name, 'getPaginated');
 
         const q = lastGoalResult
-            ? query(collection(db, 'goal_results'), where('added', '>', cutoffDate), orderBy('added', 'desc'), startAfter(lastGoalResult))
-            : query(collection(db, 'goal_results'), where('added', '>', cutoffDate), orderBy('added', 'desc'));
+            ? query(
+                  collection(db, 'goal_results'),
+                  where('data.completionDate', '>', cutoffDate),
+                  orderBy('data.completionDate', 'desc'),
+                  startAfter(lastGoalResult)
+              )
+            : query(collection(db, 'goal_results'), where('data.completionDate', '>', cutoffDate), orderBy('data.completionDate', 'desc'));
         const querySnapshot = await getDocs(q);
         return querySnapshot;
     }

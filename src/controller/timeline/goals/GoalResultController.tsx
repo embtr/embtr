@@ -1,6 +1,7 @@
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { UserModel } from 'src/controller/user/UserController';
 import GoalResultDao from 'src/firebase/firestore/timeline/goals/GoalResultDao';
 
 export interface GoalResultModel extends TimelinePostModel {
@@ -21,13 +22,26 @@ export interface PaginatedGoalResults {
 
 class GoalResultController {
     public static async getPaginated(lastGoalResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedGoalResults> {
+        return this.getPaginatedForUser(undefined, lastGoalResult, cutoffDate);
+    }
+
+    public static async getPaginatedForUser(
+        user: UserModel | undefined,
+        lastGoalResult: QueryDocumentSnapshot | undefined | null,
+        cutoffDate: Date
+    ): Promise<PaginatedGoalResults> {
         if (lastGoalResult === null) {
             //disable prevention of looking in the past for now
             lastGoalResult = undefined;
             //return { results: [], lastDailyResult: null };
         }
 
-        let results = await GoalResultDao.getPaginated(lastGoalResult, cutoffDate);
+        let results;
+        if (user) {
+            results = await GoalResultDao.getPaginatedForUser(user.uid, lastGoalResult, cutoffDate);
+        } else {
+            results = await GoalResultDao.getPaginated(lastGoalResult, cutoffDate);
+        }
 
         let goalResults: GoalResultModel[] = [];
         let foundLastGoalResult: QueryDocumentSnapshot | undefined = undefined;

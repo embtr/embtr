@@ -22,7 +22,8 @@ import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
-import GoalResultController, { PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
+import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
+import { GoalResultCard } from '../common/timeline/GoalResultCard';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -179,7 +180,7 @@ export const Timeline = () => {
         if (profile) {
             return (
                 <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                    <UserTextCard userProfileModel={profile} story={timelineEntry as StoryModel} />
+                    <GoalResultCard userProfileModel={profile} goalResult={timelineEntry as GoalResultModel} />
                 </View>
             );
         }
@@ -188,7 +189,6 @@ export const Timeline = () => {
     };
 
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
-        console.log(timelineEntry);
         switch (timelineEntry.type) {
             case 'STORY':
                 return createStoryView(timelineEntry);
@@ -226,12 +226,18 @@ export const Timeline = () => {
             if (postA.type === 'DAILY_RESULT') {
                 const dailyResult = postA as DailyResultModel;
                 postADate = getDateFromDayKey(dailyResult.data.dayKey);
+            } else if (postA.type === 'GOAL_RESULT') {
+                const goalResult = postA as GoalResultModel;
+                postADate = goalResult.data.completionDate.toDate();
             }
 
             let postBDate = postB.added.toDate();
             if (postB.type === 'DAILY_RESULT') {
                 const dailyResult = postB as DailyResultModel;
                 postBDate = getDateFromDayKey(dailyResult.data.dayKey);
+            } else if (postB.type === 'GOAL_RESULT') {
+                const goalResult = postB as GoalResultModel;
+                postBDate = goalResult.data.completionDate.toDate();
             }
 
             if (getDaysOld(postADate, new Date()) === getDaysOld(postBDate, new Date())) {
@@ -315,10 +321,9 @@ export const Timeline = () => {
         }
 
         const newPaginatedGoalResults = await GoalResultController.getPaginated(currentGoalResults.lastGoalResult, getLookbackDate());
-        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(currentGoalResults.lastGoalResult, getLookbackDate());
-        if (newPaginatedDailyResults.results.length > 0) {
+        if (newPaginatedGoalResults.results.length > 0) {
             currentGoalResults.results = currentGoalResults.results.concat(newPaginatedGoalResults.results);
-            currentGoalResults.lastGoalResult = newPaginatedDailyResults.lastDailyResult;
+            currentGoalResults.lastGoalResult = newPaginatedGoalResults.lastGoalResult;
         }
 
         setPaginatedGoalResults(currentGoalResults);

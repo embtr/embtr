@@ -14,6 +14,8 @@ import { UserModel } from 'src/controller/user/UserController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { Timestamp } from 'firebase/firestore';
+import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
+import { GoalResultCard } from 'src/components/common/timeline/GoalResultCard';
 
 interface Props {
     user: UserModel;
@@ -28,6 +30,7 @@ const getDefaultCutoffDate = () => {
 
 export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
+
     const card = {
         width: '100%',
         paddingTop: 10,
@@ -37,11 +40,13 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
 
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
     const [paginatedDailyResults, setPaginatedDailyResults] = React.useState<PaginatedDailyResults>();
+    const [paginatedGoalResults, setPaginatedGoalResults] = React.useState<PaginatedGoalResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [isLoadingMode, setIsLoadingMode] = React.useState(false);
     const [timelinePostCutoffDate, setTimelinePostCutoffDate] = React.useState<Date>(getDefaultCutoffDate());
     const [dailyRestultCutoffDate, setDailyResultCutoffDate] = React.useState<Date>(getDefaultCutoffDate());
+    const [goalResultCutoffDate, setGoalResultCutoffDate] = React.useState<Date>(getDefaultCutoffDate());
 
     React.useEffect(() => {
         onRefresh();
@@ -56,6 +61,10 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
     }, [dailyRestultCutoffDate]);
 
     React.useEffect(() => {
+        fetchPaginatedGoalResultsForUser();
+    }, [goalResultCutoffDate]);
+
+    React.useEffect(() => {
         updateTimelineViews();
     }, [paginatedTimelinePosts, paginatedDailyResults]);
 
@@ -68,6 +77,9 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
         setDailyResultCutoffDate(new Date());
         setDailyResultCutoffDate(getDefaultCutoffDate());
 
+        setGoalResultCutoffDate(new Date());
+        setGoalResultCutoffDate(getDefaultCutoffDate());
+
         wait(500).then(() => setRefreshing(false));
     }, []);
 
@@ -78,6 +90,11 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
     const fetchPaginatedDailyResultsForUser = async () => {
         const results = await DailyResultController.getPaginatedFinishedForUser(user, undefined, dailyRestultCutoffDate);
         setPaginatedDailyResults(results);
+    };
+
+    const fetchPaginatedGoalResultsForUser = async () => {
+        const results = await GoalResultController.getPaginatedForUser(user, undefined, goalResultCutoffDate);
+        setPaginatedGoalResults(results);
     };
 
     const createStoryView = (timelineEntry: TimelinePostModel) => {
@@ -96,6 +113,14 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
         );
     };
 
+    const createGoalResultView = (timelineEntry: TimelinePostModel) => {
+        return (
+            <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
+                <GoalResultCard goalResult={timelineEntry as GoalResultModel} userProfileModel={userProfile} />
+            </View>
+        );
+    };
+
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
         switch (timelineEntry.type) {
             case 'STORY':
@@ -103,6 +128,9 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
 
             case 'DAILY_RESULT':
                 return createDailyResultView(timelineEntry);
+
+            case 'GOAL_RESULT':
+                return createGoalResultView(timelineEntry);
 
             default:
                 return <View />;
@@ -119,17 +147,27 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
             timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
         }
 
+        if (paginatedGoalResults?.results) {
+            timelinePosts = timelinePosts.concat(paginatedGoalResults.results);
+        }
+
         const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
             let postADate = postA.added.toDate();
             if (postA.type === 'DAILY_RESULT') {
                 const dailyResult = postA as DailyResultModel;
                 postADate = getDateFromDayKey(dailyResult.data.dayKey);
+            } else if (postA.type === 'GOAL_RESULT') {
+                const goalResult = postA as GoalResultModel;
+                postADate = goalResult.data.completionDate.toDate();
             }
 
             let postBDate = postB.added.toDate();
             if (postB.type === 'DAILY_RESULT') {
                 const dailyResult = postB as DailyResultModel;
                 postBDate = getDateFromDayKey(dailyResult.data.dayKey);
+            } else if (postB.type === 'GOAL_RESULT') {
+                const goalResult = postB as GoalResultModel;
+                postBDate = goalResult.data.completionDate.toDate();
             }
 
             if (getDaysOld(postADate, new Date()) === getDaysOld(postBDate, new Date())) {
