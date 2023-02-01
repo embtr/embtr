@@ -100,7 +100,7 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
                                 </View>
                             </View>
                             <View style={{ flex: 1, alignItems: 'flex-end', paddingRight: 20 }}>
-                                <Ionicons name={'trophy-outline'} size={40} color={'gold'} />
+                                <Ionicons name={'trophy'} size={40} color={colors.trophy_icon} />
                             </View>
                         </View>
 

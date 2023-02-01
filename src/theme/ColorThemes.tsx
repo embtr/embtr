@@ -76,6 +76,8 @@ export const lightColors = {
     profile_pillar_attribute_icon: 'rgba(000,000,000,.7)',
     profile_pillar_separator: '#000000',
     link: '#5ba2dc',
+
+    trophy_icon: '#FFC100',
 };
 
 // Dark theme colors
@@ -156,4 +158,6 @@ export const darkColors = {
     profile_pillar_attribute_icon: 'rgba(255,255,255,.7)',
     profile_pillar_separator: '#DFDFDF',
     link: '#5ba2dc',
+
+    trophy_icon: '#FFC100',
 };
