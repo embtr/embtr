@@ -50,6 +50,7 @@ export type TimelineTabScreens = {
     Notifications: undefined;
     PillarDetails: { uid: string; id: string };
     ViewAllComments: { uid: string; goalId: string };
+    GoalDetails: { uid: string; id: string };
 };
 
 export type ProfileTabScreens = {

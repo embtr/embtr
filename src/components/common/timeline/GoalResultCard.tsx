@@ -12,14 +12,21 @@ import React from 'react';
 import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { getDatePretty } from 'src/util/DateUtility';
 import { DailyResultHeader } from './DailyResultHeader';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
     userProfileModel: UserProfileModel;
     goalResult: GoalResultModel;
 }
 
+type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
+
 export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
     const { colors } = useTheme();
+
+    const navigation = useNavigation<timelineCommentsScreenProp>();
 
     const onLike = () => {};
     const onCommented = () => {};
@@ -51,8 +58,19 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
     const likes = goalResult.data.goal.goal?.public.likes ?? [];
     const comments = goalResult.data.goal.goal?.public.comments ?? [];
 
+    const navigateToDetails = () => {
+        if (!goalResult?.id) {
+            return;
+        }
+
+        navigation.navigate('GoalDetails', {
+            uid: goalResult.uid,
+            id: goalResult.data.goal.id,
+        });
+    };
+
     return (
-        <TouchableWithoutFeedback onPress={() => {}}>
+        <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 10 }}>
                 {/**********/}
                 {/* HEADER */}

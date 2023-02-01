@@ -1,7 +1,6 @@
 import { Text, View } from 'react-native';
 import { TaskCompleteSymbol } from 'src/components/common/task_symbols/TaskCompleteSymbol';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { GoalModel } from 'src/controller/planning/GoalController';
 import { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
 import { formatDate, getDatePretty } from 'src/util/DateUtility';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';

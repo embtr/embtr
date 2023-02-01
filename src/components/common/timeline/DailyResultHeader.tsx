@@ -4,8 +4,6 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDatePretty } from 'src/util/DateUtility';
-import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
-import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 
 interface Props {
     userProfileModel: UserProfileModel;
