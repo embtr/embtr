@@ -27,7 +27,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import CommentsShortView from 'src/components/common/comments/CommentsShortView';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import GoalResultController, { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
-import { TaskCompleteSymbol } from 'src/components/common/task_symbols/TaskCompleteSymbol';
 import { GoalCompleteStamp } from './GoalCompleteStamp';
 
 export const GoalDetails = () => {
@@ -41,6 +40,9 @@ export const GoalDetails = () => {
     const [user, setUser] = React.useState<UserModel>(FAKE_USER);
     const [pillar, setPillar] = React.useState<PillarModel>(FAKE_PILLAR);
     const [taskHistory, setTaskHistory] = React.useState<PlannedTaskModel[]>([]);
+
+    const source = route.params.source;
+    const title = source === 'timeline' ? 'Goal Results' : 'Goal Details';
 
     useFocusEffect(
         React.useCallback(() => {
@@ -123,22 +125,44 @@ export const GoalDetails = () => {
                 }
             },
         },
-        {
+    ];
+    if (source === 'timeline') {
+        menuItems.push({
+            name: 'Delete Post',
+            onPress: () => {
+                if (goalResult) {
+                    GoalResultController.delete(goalResult);
+                    navigation.goBack();
+                }
+            },
+        });
+    } else {
+        menuItems.push({
             name: 'Archive',
             onPress: async () => {
                 await GoalController.archiveGoal(goal);
                 navigation.goBack();
             },
-        },
-    ];
-
-    if (goal.status !== 'COMPLETE') {
-        menuItems.push({
-            name: 'Complete',
-            onPress: () => {
-                completeGoal();
-            },
         });
+        if (goal.status !== 'COMPLETE') {
+            menuItems.push({
+                name: 'Complete',
+                onPress: () => {
+                    completeGoal();
+                },
+            });
+        }
+        if (goal.status === 'COMPLETE' && !goalResult?.active) {
+            menuItems.push({
+                name: 'Restore Post',
+                onPress: () => {
+                    if (goalResult) {
+                        GoalResultController.restore(goalResult);
+                        navigation.goBack();
+                    }
+                },
+            });
+        }
     }
 
     const completedTasks = taskHistory.filter((e) => e.status === COMPLETE).length;
@@ -154,13 +178,7 @@ export const GoalDetails = () => {
 
     return (
         <Screen>
-            <Banner
-                name={'Goal Details'}
-                leftIcon={'arrow-back'}
-                leftRoute={'BACK'}
-                rightIcon={'ellipsis-horizontal'}
-                menuOptions={createEmbtrMenuOptions(menuItems)}
-            />
+            <Banner name={title} leftIcon={'arrow-back'} leftRoute={'BACK'} rightIcon={'ellipsis-horizontal'} menuOptions={createEmbtrMenuOptions(menuItems)} />
             <EmbtrMenuCustom />
             <ScrollView>
                 <View style={{ flex: 1 }}>

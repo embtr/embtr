@@ -119,6 +119,15 @@ class GoalResultController {
         return goalResult;
     }
 
+    public static async restore(goalResult: GoalResultModel) {
+        goalResult.active = true;
+
+        const sanitized = this.sanitizeForDatabase(goalResult);
+        await GoalResultDao.update(sanitized);
+
+        return goalResult;
+    }
+
     private static async getGoalResultFromData(data: DocumentSnapshot<DocumentData>) {
         let goalResult = data.data() as GoalResultModel;
         goalResult.id = data.id;

@@ -57,7 +57,7 @@ class GoalResultDao {
 
     public static async update(goalResult: GoalResultModel) {
         const db: Firestore = getFirebaseConnection(this.name, 'update');
-        const result = await setDoc(doc(db, 'goal_results'), goalResult, { merge: true });
+        const result = await setDoc(doc(db, 'goal_results', goalResult.id!), goalResult, { merge: true });
 
         return result;
     }

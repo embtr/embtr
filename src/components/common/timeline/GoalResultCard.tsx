@@ -66,6 +66,7 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
         navigation.navigate('GoalDetails', {
             uid: goalResult.uid,
             id: goalResult.data.goal.id,
+            source: 'timeline',
         });
     };
 

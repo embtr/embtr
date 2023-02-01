@@ -56,7 +56,7 @@ export const lightColors = {
     goal_primary_font: '#292929',
     goal_secondary_font: '#1B1F31',
     progress_bar_color: '#DFDFDF',
-    progress_bar_complete: '#6FDC84',
+    progress_bar_complete: '#25B24A',
     progress_bar_failed: '#FF5E7C',
 
     tomorrow_selected_indicator: '#FF5E7C',
@@ -138,7 +138,7 @@ export const darkColors = {
     goal_primary_font: '#FFFFFF',
     goal_secondary_font: '#EEEEEE',
     progress_bar_color: '#DFDFDF',
-    progress_bar_complete: '#6FDC84',
+    progress_bar_complete: '#25B24A',
     progress_bar_failed: '#FF5E7C',
 
     tomorrow_selected_indicator: '#F14E6B',

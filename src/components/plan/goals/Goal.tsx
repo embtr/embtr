@@ -29,7 +29,7 @@ export const Goal = ({ goal, pillars }: Props) => {
 
     const navigateToDetails = () => {
         if (goal.id) {
-            navigation.navigate('GoalDetails', { uid: goal.uid, id: goal.id });
+            navigation.navigate('GoalDetails', { uid: goal.uid, id: goal.id, source: 'plan' });
         }
     };
 
