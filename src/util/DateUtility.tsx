@@ -21,7 +21,7 @@ export const getDateMinusDays = (date: Date, days: number): Date => {
 };
 
 export const formatDate = (date: Date): string => {
-    return format(date, 'MMMM dd, yyyy');
+    return format(date, 'MMM dd, yyyy');
 };
 
 export const getDatePretty = (date: Date): string => {
