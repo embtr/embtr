@@ -11,6 +11,9 @@ import { CARD_SHADOW } from 'src/util/constants';
 import { GoalModel } from 'src/controller/planning/GoalController';
 import { differenceInDays } from 'date-fns';
 import { PillarModel } from 'src/model/PillarModel';
+import GoalResultController, { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
+import React from 'react';
+import { GoalCompleteStamp } from './GoalCompleteStamp';
 
 interface Props {
     goal: GoalModel;
@@ -22,11 +25,26 @@ export const Goal = ({ goal, pillars }: Props) => {
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
+    const [goalResult, setGoalResult] = React.useState<GoalResultModel>();
+
     const navigateToDetails = () => {
         if (goal.id) {
-            navigation.navigate('GoalDetails', { id: goal.id });
+            navigation.navigate('GoalDetails', { uid: goal.uid, id: goal.id });
         }
     };
+
+    React.useEffect(() => {
+        const fetch = async () => {
+            if (!goal.id) {
+                return;
+            }
+
+            const goalResult = await GoalResultController.getByGoalId(goal.id);
+            setGoalResult(goalResult);
+        };
+
+        fetch();
+    }, [goal]);
 
     let [fontsLoaded] = useFonts({
         Poppins_600SemiBold,
@@ -55,12 +73,15 @@ export const Goal = ({ goal, pillars }: Props) => {
         <View style={{ width: '97%' }}>
             <TouchableOpacity onPress={navigateToDetails}>
                 <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, paddingTop: 10 }, CARD_SHADOW]}>
-                    <View style={{ paddingLeft: 10 }}>
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{goal.name}</Text>
+                    <View style={{ flexDirection: 'row', paddingRight: 25 }}>
+                        <View style={{ paddingLeft: 10 }}>
+                            <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{goal.name}</Text>
 
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
-                            {goal.description}
-                        </Text>
+                            <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
+                                {goal.description}
+                            </Text>
+                        </View>
+                        {goal.status === 'COMPLETE' && goalResult?.data.completionDate && <GoalCompleteStamp goalResult={goalResult} />}
                     </View>
 
                     <View style={{ paddingTop: 8, marginLeft: 10, marginRight: 10 }}>

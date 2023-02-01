@@ -4,10 +4,11 @@ import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_REGULAR_ITALIC, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getProgressPercent, GoalModel } from 'src/controller/planning/GoalController';
 import { PillarModel } from 'src/model/PillarModel';
 import { ProgressBar } from './goals/ProgressBar';
+import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 
 interface Props {
     goal: GoalModel;
@@ -40,7 +41,9 @@ export const GoalPreview = ({ goal, pillars }: Props) => {
                     <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
                         <View style={{ flex: 1, paddingLeft: 10 }}>
                             <Text style={{ color: colors.goal_primary_font, fontFamily: POPPINS_SEMI_BOLD, fontSize: 14 }}>{goal.name}</Text>
-                            <Text style={{ color: colors.goal_secondary_font, opacity: .90, fontFamily: POPPINS_REGULAR, fontSize: 10 }}>{goal.description}</Text>
+                            <Text style={{ color: colors.goal_secondary_font, opacity: 0.9, fontFamily: POPPINS_REGULAR, fontSize: 10 }}>
+                                {goal.description}
+                            </Text>
                         </View>
 
                         <View style={{ flex: 1, paddingLeft: 10 }}>
@@ -48,19 +51,40 @@ export const GoalPreview = ({ goal, pillars }: Props) => {
                                 <ProgressBar progress={progressPercent} />
                             </View>
 
-                            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name="pillar" size={12} color={colors.tab_selected} />
-                                <Text
-                                    style={{
-                                        paddingLeft: 5,
-                                        color: colors.goal_secondary_font,
-                                        opacity: pillarName ? 1 : 0.5,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 10,
-                                    }}
-                                >
-                                    {pillarName ? pillarName : 'no pillar'}
-                                </Text>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+                                    <MaterialCommunityIcons name="pillar" size={12} color={colors.tab_selected} />
+                                    <Text
+                                        style={{
+                                            paddingLeft: 5,
+                                            color: colors.goal_secondary_font,
+                                            opacity: pillarName ? 1 : 0.5,
+                                            fontFamily: POPPINS_REGULAR,
+                                            fontSize: 10,
+                                        }}
+                                    >
+                                        {pillarName ? pillarName : 'no pillar'}
+                                    </Text>
+                                </View>
+                                {goal.status === 'COMPLETE' ? (
+                                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                                        <TaskCompleteSymbol small={true} />
+                                        <Text
+                                            style={{
+                                                marginTop: 0.5,
+                                                paddingLeft: 5,
+                                                color: colors.progress_bar_complete,
+                                                opacity: pillarName ? 1 : 0.5,
+                                                fontFamily: POPPINS_REGULAR,
+                                                fontSize: 11,
+                                            }}
+                                        >
+                                            Comlete
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <View style={{ flex: 1 }} />
+                                )}
                             </View>
                         </View>
                     </View>

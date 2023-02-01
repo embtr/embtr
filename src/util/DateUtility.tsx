@@ -20,6 +20,10 @@ export const getDateMinusDays = (date: Date, days: number): Date => {
     return date;
 };
 
+export const formatDate = (date: Date): string => {
+    return format(date, 'MMMM dd, yyyy');
+};
+
 export const getDatePretty = (date: Date): string => {
     const daysOld = getDaysOld(date, new Date());
 

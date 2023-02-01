@@ -7,7 +7,6 @@ import GoalResultDao from 'src/firebase/firestore/timeline/goals/GoalResultDao';
 export interface GoalResultModel extends TimelinePostModel {
     data: {
         completionDate: Timestamp;
-        status: string;
         goal: {
             id: string;
             goal?: GoalModel;
@@ -21,6 +20,28 @@ export interface PaginatedGoalResults {
 }
 
 class GoalResultController {
+    public static createGoalResultModel(goal: GoalModel) {
+        const goalResult: GoalResultModel = {
+            uid: goal.uid,
+            added: Timestamp.now(),
+            active: true,
+            data: {
+                completionDate: Timestamp.now(),
+                goal: {
+                    id: goal.id!,
+                },
+            },
+            modified: Timestamp.now(),
+            type: 'GOAL_RESULT',
+            public: {
+                comments: [],
+                likes: [],
+            },
+        };
+
+        return goalResult;
+    }
+
     public static async getPaginated(lastGoalResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedGoalResults> {
         return this.getPaginatedForUser(undefined, lastGoalResult, cutoffDate);
     }

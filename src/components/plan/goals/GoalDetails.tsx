@@ -20,12 +20,15 @@ import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
 import UserController, { FAKE_USER, UserModel } from 'src/controller/user/UserController';
 import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import { COMPLETE, FAILED, INCOMPLETE, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { COMPLETE, FAILED, INCOMPLETE, POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedTaskHistory } from '../history/PlannedTaskHistory';
 import PostDetailsActionBar from 'src/components/common/comments/PostDetailsActionBar';
 import { ScrollView } from 'react-native-gesture-handler';
 import CommentsShortView from 'src/components/common/comments/CommentsShortView';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import GoalResultController, { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
+import { TaskCompleteSymbol } from 'src/components/common/task_symbols/TaskCompleteSymbol';
+import { GoalCompleteStamp } from './GoalCompleteStamp';
 
 export const GoalDetails = () => {
     const { colors } = useTheme();
@@ -34,6 +37,7 @@ export const GoalDetails = () => {
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const [goal, setGoal] = React.useState<GoalModel>(FAKE_GOAL);
+    const [goalResult, setGoalResult] = React.useState<GoalResultModel>();
     const [user, setUser] = React.useState<UserModel>(FAKE_USER);
     const [pillar, setPillar] = React.useState<PillarModel>(FAKE_PILLAR);
     const [taskHistory, setTaskHistory] = React.useState<PlannedTaskModel[]>([]);
@@ -53,6 +57,19 @@ export const GoalDetails = () => {
         if (goal.uid) {
             fetch();
         }
+    }, [goal]);
+
+    React.useEffect(() => {
+        const fetch = async () => {
+            if (!goal.id) {
+                return;
+            }
+
+            const goalResult = await GoalResultController.getByGoalId(goal.id);
+            setGoalResult(goalResult);
+        };
+
+        fetch();
     }, [goal]);
 
     React.useEffect(() => {
@@ -83,6 +100,17 @@ export const GoalDetails = () => {
         fetch();
     }, [goal]);
 
+    const completeGoal = async () => {
+        const clone = GoalController.clone(goal);
+        clone.status = 'COMPLETE';
+        await GoalController.update(clone);
+
+        const goalResult = GoalResultController.createGoalResultModel(goal);
+        await GoalResultController.create(goalResult);
+
+        navigation.goBack();
+    };
+
     const closeMenu = useAppSelector(getCloseMenu);
 
     const menuItems: EmbtrMenuOption[] = [
@@ -102,15 +130,16 @@ export const GoalDetails = () => {
                 navigation.goBack();
             },
         },
-        {
-            name: 'Complete',
-            onPress: () => {},
-        },
-        {
-            name: 'Fail',
-            onPress: () => {},
-        },
     ];
+
+    if (goal.status !== 'COMPLETE') {
+        menuItems.push({
+            name: 'Complete',
+            onPress: () => {
+                completeGoal();
+            },
+        });
+    }
 
     const completedTasks = taskHistory.filter((e) => e.status === COMPLETE).length;
     const incompletedTasks = taskHistory.filter((e) => e.status === INCOMPLETE).length;
@@ -135,12 +164,18 @@ export const GoalDetails = () => {
             <EmbtrMenuCustom />
             <ScrollView>
                 <View style={{ flex: 1 }}>
-                    <View style={{ paddingLeft: 10, paddingTop: 10 }}>
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{goal.name}</Text>
+                    <View style={{ flexDirection: 'row', paddingLeft: 10, paddingTop: 10 }}>
+                        <View style={{ flex: 1 }}>
+                            <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 16 }}>{goal.name}</Text>
 
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
-                            {goal.description}
-                        </Text>
+                            <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
+                                {goal.description}
+                            </Text>
+                        </View>
+
+                        <View style={{ paddingRight: 25 }}>
+                            {goal.status === 'COMPLETE' && goalResult?.data.completionDate && <GoalCompleteStamp goalResult={goalResult} />}
+                        </View>
                     </View>
 
                     <View style={{ paddingTop: 15, marginLeft: 10, marginRight: 10 }}>
