@@ -11,6 +11,7 @@ import { GoalResultElement } from './goal_result/GoalResultElement';
 import React from 'react';
 import PlannedTaskController, { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { getDatePretty } from 'src/util/DateUtility';
+import { DailyResultHeader } from './DailyResultHeader';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -45,10 +46,10 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
         fetch();
     }, []);
 
-    const title = goalResult.data.goal.goal?.name ? goalResult.data.goal.goal?.name : '';
-    const description = goalResult.data.goal.goal?.description ? goalResult.data.goal.goal?.description : '';
-    const likes = goalResult.data.goal.goal?.public.likes ? goalResult.data.goal.goal.public.likes : [];
-    const comments = goalResult.data.goal.goal?.public.comments ? goalResult.data.goal.goal.public.comments : [];
+    const title = goalResult.data.goal.goal?.name ?? '';
+    const description = goalResult.data.goal.goal?.description ?? '';
+    const likes = goalResult.data.goal.goal?.public.likes ?? [];
+    const comments = goalResult.data.goal.goal?.public.comments ?? [];
 
     return (
         <TouchableWithoutFeedback onPress={() => {}}>
@@ -56,30 +57,7 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <View style={{ width: '100%', flexDirection: 'row' }}>
-                    <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
-                        <View>{userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}</View>
-
-                        <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{userProfileModel.name}</Text>
-                                </View>
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
-                                    <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
-                                        {getDatePretty(goalResult.data.completionDate.toDate())}
-                                    </Text>
-                                </View>
-                            </View>
-
-                            <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                                <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>
-                                    {userProfileModel?.location}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                <DailyResultHeader userProfileModel={userProfileModel} date={goalResult.data.completionDate.toDate()} />
 
                 {/**********/}
                 {/*  BODY  */}

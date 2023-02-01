@@ -16,6 +16,7 @@ import UserController from 'src/controller/user/UserController';
 import { getDatePretty } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { DailyResultHeader } from './DailyResultHeader';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -43,8 +44,6 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
         fetchPlannedDay(dailyResultToUse);
     }, [dailyResult]);
 
-    const datePretty = getDatePretty(getDateFromDayKey(dailyResultToUse.data.dayKey));
-
     let plannedTaskViews: JSX.Element[] = [];
 
     plannedDay?.plannedTasks.forEach((plannedTask) => {
@@ -57,7 +56,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
 
     const navigateToDetails = () => {
         navigation.navigate('DailyResultDetails', {
-            id: dailyResultToUse.id ? dailyResultToUse.id : '',
+            id: dailyResultToUse.id ?? '',
         });
     };
 
@@ -76,30 +75,7 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <View style={{ width: '100%', flexDirection: 'row' }}>
-                    <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
-                        <View>{userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}</View>
-
-                        <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{userProfileModel.name}</Text>
-                                </View>
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
-                                    <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
-                                        {datePretty}
-                                    </Text>
-                                </View>
-                            </View>
-
-                            <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                                <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>
-                                    {userProfileModel?.location}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                {plannedDay?.dayKey && <DailyResultHeader userProfileModel={userProfileModel} date={getDateFromDayKey(plannedDay?.dayKey)} />}
 
                 {/**********/}
                 {/*  BODY  */}
