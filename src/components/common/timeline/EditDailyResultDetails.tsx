@@ -93,7 +93,7 @@ export const EditDailyResultDetails = () => {
         }
     });
     const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
-    const dayOfWeek = getDayOfWeek(getDateFromDayKey(plannedDay?.id ? plannedDay?.id : ''));
+    const dayOfWeek = plannedDay?.id ? getDayOfWeek(getDateFromDayKey(plannedDay?.id)) : undefined;
 
     let plannedTaskViews: JSX.Element[] = [];
     plannedDay?.plannedTasks.forEach((plannedTask) => {
@@ -170,14 +170,16 @@ export const EditDailyResultDetails = () => {
                         </View>
 
                         {/* COMPLETED/ FAILED */}
-                        <View style={{ paddingTop: 5 }}>
-                            <Text style={headerTextStyle}>
-                                {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
-                                <Text style={{ color: plannedDayIsComplete(plannedDay) ? colors.progress_bar_complete : colors.progress_bar_failed }}>
-                                    {plannedDayIsComplete(plannedDay) ? 'Complete!' : 'Failed!'}
+                        {dayOfWeek && (
+                            <View style={{ paddingTop: 5 }}>
+                                <Text style={headerTextStyle}>
+                                    {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
+                                    <Text style={{ color: plannedDayIsComplete(plannedDay) ? colors.progress_bar_complete : colors.progress_bar_failed }}>
+                                        {plannedDayIsComplete(plannedDay) ? 'Complete!' : 'Failed!'}
+                                    </Text>
                                 </Text>
-                            </Text>
-                        </View>
+                            </View>
+                        )}
 
                         {/* STORY */}
                         <View style={{ paddingTop: 20, alignItems: 'center' }}>
