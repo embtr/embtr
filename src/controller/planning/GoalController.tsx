@@ -2,6 +2,7 @@ import { differenceInDays } from 'date-fns';
 import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import GoalDao from 'src/firebase/firestore/planning/GoalDao';
 import { Comment, Like } from 'src/controller/timeline/TimelineController';
+import NotificationController, { NotificationType } from '../notification/NotificationController';
 
 export interface GoalModel {
     id?: string;
@@ -138,21 +139,33 @@ class GoalController {
     }
 
     public static async addLike(goal: GoalModel, likerUid: string) {
+        if (!goal.id) {
+            return;
+        }
+
         const clone = this.clone(goal);
 
         const likeObject: Like = { uid: likerUid, added: Timestamp.now() };
         clone.public.likes.push(likeObject);
 
         await this.update(clone);
+
+        NotificationController.addNotification(likerUid, goal.uid, NotificationType.GOAL_LIKE, goal.id);
     }
 
     public static async addComment(uid: string, goal: GoalModel, comment: string) {
+        if (!goal.id) {
+            return;
+        }
+
         const clone = this.clone(goal);
 
         const commentObject: Comment = { uid: uid, comment: comment, timestamp: Timestamp.now() };
         clone.public.comments.push(commentObject);
 
         await this.update(clone);
+
+        NotificationController.addNotification(uid, goal.uid, NotificationType.GOAL_COMMENT, goal.id);
     }
 
     public static async deleteComment(goal: GoalModel, commentToDelete: Comment) {

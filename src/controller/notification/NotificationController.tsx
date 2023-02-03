@@ -26,6 +26,8 @@ export enum NotificationType {
     NEW_FOLLOWER,
     QUOTE_LIKE,
     QUOTE_SELECTED,
+    GOAL_COMMENT,
+    GOAL_LIKE,
 }
 
 export const getUnreadNotificationCount = (notifications: NotificationModel[]): number => {
@@ -117,6 +119,10 @@ class NotificationController {
                 return 'liked your quote of the day!';
             case NotificationType.QUOTE_SELECTED:
                 return "Your quote was selected for today's Quote Of The Day!";
+            case NotificationType.GOAL_COMMENT:
+                return 'commented on your goal';
+            case NotificationType.GOAL_LIKE:
+                return 'liked your goal';
 
             default:
                 return 'tagged you in a comment';
