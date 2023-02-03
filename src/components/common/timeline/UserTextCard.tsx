@@ -1,15 +1,11 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
-
-type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
+import { getCurrentTab, getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -17,7 +13,8 @@ interface Props {
 }
 
 export const UserTextCard = ({ userProfileModel, story }: Props) => {
-    const navigation = useNavigation<timelineCommentsScreenProp>();
+    const currentTab = useAppSelector(getCurrentTab);
+    const navigation = getNavigationHook(currentTab)();
 
     const [updatedStory, setUpdatedStory] = React.useState<StoryModel>();
 
@@ -49,6 +46,7 @@ export const UserTextCard = ({ userProfileModel, story }: Props) => {
     };
 
     const onCommented = () => {
+        // @ts-ignore
         navigation.navigate('UserPostDetails', { id: story?.id ? story.id : '' });
     };
 

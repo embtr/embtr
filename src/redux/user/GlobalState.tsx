@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { FAKE_USER, UserModel } from 'src/controller/user/UserController';
+import { TABS } from 'src/components/home/Dashboard';
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: 'invalid',
@@ -12,6 +13,7 @@ const INITIAL_STATE: GlobalState = {
     closeMenu: () => {},
     selectedDayKey: 'invalid',
     timelineCardRefreshRequests: [],
+    currentTab: TABS.TIMELINE,
 };
 
 export interface GlobalState {
@@ -23,6 +25,7 @@ export interface GlobalState {
     closeMenu: Function;
     selectedDayKey: string;
     timelineCardRefreshRequests: string[];
+    currentTab: string;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -63,6 +66,9 @@ export const GlobalState = createSlice({
         },
         removeTimelineCardRefreshRequest(state, action) {
             state.timelineCardRefreshRequests = state.timelineCardRefreshRequests.filter((item) => item !== action.payload);
+        },
+        setCurrentTab(state, action) {
+            state.currentTab = action.payload;
         },
     },
 });
@@ -131,6 +137,14 @@ export const getTimelineCardRefreshRequests = (state: RootState): string[] => {
     return state.globalState.timelineCardRefreshRequests;
 };
 
+export const getCurrentTab = (state: RootState) => {
+    if (!state?.globalState.currentTab) {
+        return INITIAL_STATE.currentTab;
+    }
+
+    return state.globalState.currentTab;
+};
+
 export const {
     setAccessLevel,
     setUserProfileUrl,
@@ -141,5 +155,6 @@ export const {
     setSelectedDayKey,
     addTimelineCardRefreshRequest,
     removeTimelineCardRefreshRequest,
+    setCurrentTab,
 } = GlobalState.actions;
 export default GlobalState.reducer;

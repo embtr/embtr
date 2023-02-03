@@ -60,6 +60,7 @@ export type ProfileTabScreens = {
     PillarDetails: { uid: string; id: string };
     EditUserProfile: undefined;
     GoalDetails: { uid: string; id: string; source: string };
+    UserPostDetails: { id: string };
 };
 
 export type RootStackParamList = {

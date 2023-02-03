@@ -8,6 +8,8 @@ import { CommonActions } from '@react-navigation/native';
 import { TodayTab } from 'src/components/today/TodayTab';
 import { PlanTab } from 'src/components/plan/PlanTab';
 import { TabBar } from 'src/components/home/tabmenu/TabBar';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { setCurrentTab } from 'src/redux/user/GlobalState';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,6 +21,8 @@ export const TABS = {
 };
 
 export const Dashboard = () => {
+    const dispatch = useAppDispatch();
+
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>
             <Tab.Navigator
@@ -35,6 +39,8 @@ export const Dashboard = () => {
                     name={TABS.TIMELINE}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
+                            dispatch(setCurrentTab(TABS.TIMELINE));
+
                             const currentlyInFocus = navigation.isFocused();
                             if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Timeline') {
                                 e.preventDefault();
@@ -49,6 +55,8 @@ export const Dashboard = () => {
                     name={TABS.TODAY}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
+                            dispatch(setCurrentTab(TABS.TODAY));
+
                             const currentlyInFocus = navigation.isFocused();
                             if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Today') {
                                 e.preventDefault();
@@ -63,6 +71,8 @@ export const Dashboard = () => {
                     name={TABS.PLAN}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
+                            dispatch(setCurrentTab(TABS.PLAN));
+
                             const currentlyInFocus = navigation.isFocused();
                             if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'PlanMain') {
                                 e.preventDefault();
@@ -77,6 +87,8 @@ export const Dashboard = () => {
                     name={TABS.USER_PROFILE}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
+                            dispatch(setCurrentTab(TABS.USER_PROFILE));
+
                             const currentlyInFocus = navigation.isFocused();
                             if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Profile') {
                                 e.preventDefault();

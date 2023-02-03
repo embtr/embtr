@@ -9,6 +9,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
+import { useAppSelector } from 'src/redux/Hooks';
 
 interface Props {
     user: UserModel;

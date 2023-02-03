@@ -5,6 +5,8 @@ import { EditUserProfile } from 'src/components/profile/EditUserProfile';
 import { PillarDetails } from '../profile/profile_component/pillar/PillarDetails';
 import { CreateEditPillar } from '../profile/profile_component/pillar/CreateEditPillar';
 import { GoalDetails } from '../plan/goals/GoalDetails';
+import { UserPostDetails } from '../common/timeline/UserPostDetails';
+import { UserProfile } from '../profile/UserProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +19,8 @@ export const SecureUserTabStack = () => {
             <Stack.Screen name="PillarDetails" component={PillarDetails} />
             <Stack.Screen name="CreateEditPillar" component={CreateEditPillar} />
             <Stack.Screen name="GoalDetails" component={GoalDetails} />
+            <Stack.Screen name="UserPostDetails" component={UserPostDetails} />
+            <Stack.Screen name="UserProfile" component={UserProfile} />
         </Stack.Navigator>
     );
 };
