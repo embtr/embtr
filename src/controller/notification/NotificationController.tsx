@@ -147,6 +147,9 @@ class NotificationController {
             case NotificationType.QUOTE_LIKE:
             case NotificationType.QUOTE_SELECTED:
                 return 'Today';
+            case NotificationType.GOAL_COMMENT:
+            case NotificationType.GOAL_LIKE:
+                return 'GoalDetails';
             default:
                 return '';
         }

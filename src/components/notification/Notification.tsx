@@ -33,10 +33,16 @@ export const Notification = ({ notification, userProfile }: Props) => {
 
     const time = formatDistance(notification.added.toDate(), new Date(), { addSuffix: true });
 
+    const params = {
+        id: notification.target_uid,
+        uid: notification.uid,
+        source: 'timeline',
+    };
+
     return (
         <TouchableOpacity
             onPress={() => {
-                navigation.navigate(notification.target_page as keyof TimelineTabScreens, { id: notification.target_uid });
+                navigation.navigate(notification.target_page as keyof TimelineTabScreens, { ...params });
             }}
         >
             <View style={{ width: '100%', alignContent: 'center', alignItems: 'center' }}>
