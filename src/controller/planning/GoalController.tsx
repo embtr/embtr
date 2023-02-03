@@ -37,7 +37,11 @@ export const getProgressPercent = (goal: GoalModel) => {
     const totalDays = differenceInDays(goal.deadline.toDate(), goal.added.toDate());
     const daysRemaining = differenceInDays(goal.deadline.toDate(), new Date());
     const daysPassed = totalDays - daysRemaining;
-    const daysRemainingPercent = Math.min(100, Math.floor((daysPassed / totalDays) * 100));
+    let daysRemainingPercent = Math.min(100, Math.floor((daysPassed / totalDays) * 100));
+
+    if (!daysRemainingPercent) {
+        daysRemainingPercent = 0;
+    }
 
     return daysRemainingPercent;
 };

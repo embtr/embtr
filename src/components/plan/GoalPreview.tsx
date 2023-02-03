@@ -79,7 +79,7 @@ export const GoalPreview = ({ goal, pillars }: Props) => {
                                                 fontSize: 11,
                                             }}
                                         >
-                                            Comlete
+                                            Complete
                                         </Text>
                                     </View>
                                 ) : (

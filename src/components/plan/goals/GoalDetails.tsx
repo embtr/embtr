@@ -176,6 +176,8 @@ export const GoalDetails = () => {
         GoalController.addLike(goal, getCurrentUid());
     };
 
+    console.log('progressPercent', progressPercent);
+
     return (
         <Screen>
             <Banner name={title} leftIcon={'arrow-back'} leftRoute={'BACK'} rightIcon={'ellipsis-horizontal'} menuOptions={createEmbtrMenuOptions(menuItems)} />
@@ -195,17 +197,20 @@ export const GoalDetails = () => {
                             {goal.status === 'COMPLETE' && goalResult?.data.completionDate && <GoalCompleteStamp goalResult={goalResult} />}
                         </View>
                     </View>
-
                     <View style={{ paddingTop: 15, marginLeft: 10, marginRight: 10 }}>
                         <HorizontalLine />
                     </View>
-
-                    <View style={{ paddingLeft: 10, paddingTop: 15 }}>
+                    <View style={{ paddingTop: 20, width: '100%' }}>
+                        <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.goal_primary_font, paddingLeft: 7 }}>Progress</Text>
+                    </View>
+                    <View style={{ paddingLeft: 10 }}>
                         <View style={{ width: '100%', alignContent: 'center', paddingTop: 5 }}>
                             <ProgressBar progress={progressPercent} />
                         </View>
                     </View>
-
+                    <View style={{ paddingTop: 20, width: '100%' }}>
+                        <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.goal_primary_font, paddingLeft: 7 }}>Statistics</Text>
+                    </View>
                     <View style={{ paddingTop: 20, paddingBottom: 10 }}>
                         <View style={{ flexDirection: 'row' }}>
                             <GoalDetailAttribute attribute={'Created'} value={format(goal.added.toDate(), 'MMMM dd, yyyy')} />
@@ -225,15 +230,9 @@ export const GoalDetails = () => {
                             <GoalDetailAttribute attribute={'Completion Rate'} value={'60% Completed'} isFake={true} />
                         </View>
                     </View>
-
                     <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
                         <PostDetailsActionBar likes={goal.public.likes} comments={goal.public.comments} onLike={onLike} />
                     </View>
-
-                    <View style={{ paddingTop: 5, marginLeft: 10, marginRight: 10 }}>
-                        <HorizontalLine />
-                    </View>
-
                     <PlannedTaskHistory history={taskHistory} />
                     <CommentsShortView
                         comments={goal.public.comments}
