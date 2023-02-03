@@ -366,7 +366,7 @@ export const Today = () => {
                                     removeWidget(PILLARS_WIDGET);
                                 }}
                             >
-                                <PillarsWidget pillars={pillars} />
+                                <PillarsWidget user={user} pillars={pillars} />
                             </DeletableView>
                         </WigglableView>
                     )}

@@ -20,7 +20,7 @@ export const ProfileTabRoute = ({ user, userProfileModel, history, goals, pillar
         <View style={{ paddingBottom: 5 }}>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <DailyHistoryWidget history={history} />}</View>
             <View style={{ width: '100%' }}>{userProfileModel?.uid && <UpcomingGoalsWidget user={user} goals={goals} />}</View>
-            <View style={{ width: '100%' }}>{userProfileModel?.uid && <PillarsWidget pillars={pillars} />}</View>
+            <View style={{ width: '100%' }}>{userProfileModel?.uid && <PillarsWidget user={user} pillars={pillars} />}</View>
         </View>
     );
 };
