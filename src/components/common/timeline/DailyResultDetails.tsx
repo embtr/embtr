@@ -14,10 +14,13 @@ import { Screen } from '../Screen';
 import UserController from 'src/controller/user/UserController';
 import { Comment } from 'src/controller/timeline/TimelineController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const dispatch = useAppDispatch();
 
     const [dailyResult, setDailyResult] = React.useState<DailyResultModel | undefined>(undefined);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
@@ -98,6 +101,7 @@ export const DailyResultDetails = () => {
 
     const onLike = async () => {
         await DailyResultController.like(dailyResult, getCurrentUid());
+        dispatch(addTimelineCardRefreshRequest(dailyResult.id));
         fetchData();
     };
 

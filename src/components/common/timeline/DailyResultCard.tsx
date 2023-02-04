@@ -17,6 +17,8 @@ import { getDatePretty } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { DailyResultHeader } from './DailyResultHeader';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -33,6 +35,22 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
     const dailyResultToUse = updatedDailyResult ? updatedDailyResult : dailyResult;
+
+    const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
+
+    const dispatch = useAppDispatch();
+    React.useEffect(() => {
+        if (!dailyResult.id) {
+            return;
+        }
+
+        if (timelineCardRefreshRequests.includes(dailyResult.id)) {
+            DailyResultController.get(dailyResult.id, setUpdatedDailyResult);
+
+            //remove card from the refresh request list
+            dispatch(removeTimelineCardRefreshRequest(dailyResult.id));
+        }
+    }, [timelineCardRefreshRequests]);
 
     React.useEffect(() => {
         const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
