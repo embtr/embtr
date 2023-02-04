@@ -4,7 +4,7 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
-import { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
+import GoalResultController, { GoalResultModel } from 'src/controller/timeline/goals/GoalResultController';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { GoalResultElement } from './goal_result/GoalResultElement';
@@ -15,6 +15,8 @@ import { DailyResultHeader } from './DailyResultHeader';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 
 interface Props {
     userProfileModel: UserProfileModel;
@@ -25,12 +27,12 @@ type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserP
 
 export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
     const { colors } = useTheme();
-
     const navigation = useNavigation<timelineCommentsScreenProp>();
+    const dispatch = useAppDispatch();
 
     const onLike = () => {};
-    const onCommented = () => {};
 
+    const [goalResultToUse, setGoalResultToUse] = React.useState<GoalResultModel>(goalResult);
     const [taskHistory, setTaskHistory] = React.useState<PlannedTaskModel[]>([]);
 
     const headerTextStyle = {
@@ -39,6 +41,16 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
         color: colors.timeline_card_body,
         paddingLeft: TIMELINE_CARD_PADDING,
     } as TextStyle;
+
+    const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
+    React.useEffect(() => {
+        if (timelineCardRefreshRequests.includes(goalResultToUse.data.goal.id)) {
+            fetchGoalResult();
+
+            //remove card from the refresh request list
+            dispatch(removeTimelineCardRefreshRequest(goalResultToUse.data.goal.id));
+        }
+    }, [timelineCardRefreshRequests]);
 
     React.useEffect(() => {
         const fetch = async () => {
@@ -53,10 +65,15 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
         fetch();
     }, []);
 
-    const title = goalResult.data.goal.goal?.name ?? '';
-    const description = goalResult.data.goal.goal?.description ?? '';
-    const likes = goalResult.data.goal.goal?.public.likes ?? [];
-    const comments = goalResult.data.goal.goal?.public.comments ?? [];
+    const fetchGoalResult = async () => {
+        const newGoalResultToUse = await GoalResultController.getByGoalId(goalResultToUse.data.goal.id);
+        setGoalResultToUse(newGoalResultToUse);
+    };
+
+    const title = goalResultToUse.data.goal.goal?.name ?? '';
+    const description = goalResultToUse.data.goal.goal?.description ?? '';
+    const likes = goalResultToUse.data.goal.goal?.public.likes ?? [];
+    const comments = goalResultToUse.data.goal.goal?.public.comments ?? [];
 
     const navigateToDetails = () => {
         if (!goalResult?.id) {
@@ -64,8 +81,8 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
         }
 
         navigation.navigate('GoalDetails', {
-            uid: goalResult.uid,
-            id: goalResult.data.goal.id,
+            uid: goalResultToUse.uid,
+            id: goalResultToUse.data.goal.id,
             source: 'timeline',
         });
     };
@@ -76,7 +93,7 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <DailyResultHeader userProfileModel={userProfileModel} date={goalResult.data.completionDate.toDate()} />
+                <DailyResultHeader userProfileModel={userProfileModel} date={goalResultToUse.data.completionDate.toDate()} />
 
                 {/**********/}
                 {/*  BODY  */}
@@ -106,7 +123,7 @@ export const GoalResultCard = ({ userProfileModel, goalResult }: Props) => {
                         </View>
 
                         <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                            <GoalResultElement field="Date Complete" value={getDatePretty(goalResult.data.completionDate.toDate())} />
+                            <GoalResultElement field="Date Complete" value={getDatePretty(goalResultToUse.data.completionDate.toDate())} />
 
                             <View style={{ paddingTop: 4 }}>
                                 <GoalResultElement field="Total Tasks" value={'' + taskHistory.length} />

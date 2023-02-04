@@ -29,6 +29,7 @@ interface Props {
 
 export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
+    const dispatch = useAppDispatch();
     const { colors } = useTheme();
 
     const [updatedDailyResult, setUpdatedDailyResult] = React.useState<DailyResultModel>();
@@ -38,7 +39,6 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
 
     const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
 
-    const dispatch = useAppDispatch();
     React.useEffect(() => {
         if (!dailyResult.id) {
             return;
