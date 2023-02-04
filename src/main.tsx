@@ -1,7 +1,7 @@
 import React from 'react';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { getAccessLevel, setCurrentUser } from 'src/redux/user/GlobalState';
-import { getCurrentUid, getCurrentUserUid } from 'src/session/CurrentUserProvider';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { SecureMainStack } from 'src/components/home/SecureMainStack';
@@ -54,11 +54,11 @@ const linking: LinkingOptions<RootStackParamList> = {
                                 //                                  },
                             },
                             GoalDetails: {
-                                path: 'goal/:id/comments',
+                                path: 'goal/:uid/:id/comments',
                                 parse: {
                                     id: (id) => id,
                                     source: 'timeline',
-                                    uid: getCurrentUid(),
+                                    uid: (uid) => uid,
                                 },
                                 //                                  stringify: {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
