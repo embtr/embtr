@@ -150,7 +150,7 @@ export const getDayKeyDaysOld = (dayKey: string) => {
     return getDaysOld(then, now);
 };
 
-export const createPlannedDayModel = (dayKey: string) => {
+export const createPlannedDayModel = (uid: string, dayKey: string) => {
     const plannedDay: PlannedDay = {
         dayKey: dayKey,
         uid: getCurrentUid(),
@@ -173,7 +173,7 @@ class PlannedDayController {
     public static async getOrCreate(user: UserModel, dayKey: string) {
         let plannedDay = await this.get(user, dayKey);
         if (!plannedDay) {
-            plannedDay = await this.create(createPlannedDayModel(dayKey));
+            plannedDay = await this.create(createPlannedDayModel(user.uid, dayKey));
         }
 
         return plannedDay;
