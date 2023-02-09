@@ -11,7 +11,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { SetDurationModal } from 'src/components/plan/SetDurationModal';
 import { EmbtrDropDownSelect } from 'src/components/common/dropdown/EmbtrDropDownSelect';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { createTaskModel, durationToString } from 'src/controller/planning/TaskController';
+import { createTaskModel } from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { ItemType } from 'react-native-dropdown-picker';
 import React from 'react';

@@ -178,8 +178,6 @@ export const GoalDetails = () => {
         GoalController.addLike(goal, getCurrentUid());
     };
 
-    console.log('progressPercent', progressPercent);
-
     return (
         <Screen>
             <Banner name={title} leftIcon={'arrow-back'} leftRoute={'BACK'} rightIcon={'ellipsis-horizontal'} menuOptions={createEmbtrMenuOptions(menuItems)} />

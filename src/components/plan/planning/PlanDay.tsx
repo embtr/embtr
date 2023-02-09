@@ -1,19 +1,19 @@
-import React from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { getAuth } from 'firebase/auth';
-import { View, Text, ScrollView } from 'react-native';
-import { useTheme } from 'src/components/theme/ThemeProvider';
+import React from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import { Screen } from 'src/components/common/Screen';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import AccessLogController from 'src/controller/access_log/AccessLogController';
 import PillarController from 'src/controller/pillar/PillarController';
 import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
-import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { Screen } from 'src/components/common/Screen';
+import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { getPlannedTaskGoalId } from 'src/controller/planning/PlannedTaskController';
 import UserController from 'src/controller/user/UserController';
-import AccessLogController from 'src/controller/access_log/AccessLogController';
+import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
+import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -110,7 +110,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
                                 <View style={{ paddingRight: 5 }}>
                                     <Text
                                         onPress={() => {
-                                            navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.id! });
+                                            navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.dayKey });
                                         }}
                                         style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
                                     >
@@ -118,7 +118,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
                                         create a task
                                     </Text>
                                 </View>
-                                {goals.length > 0 ? (
+                                {goals.length > 0 && (
                                     <View style={{ paddingLeft: 5 }}>
                                         <Text
                                             onPress={() => {
@@ -128,18 +128,6 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
                                         >
                                             {' '}
                                             select habits
-                                        </Text>
-                                    </View>
-                                ) : (
-                                    <View style={{ paddingLeft: 5 }}>
-                                        <Text
-                                            onPress={() => {
-                                                navigation.navigate('CreateEditHabit', { id: undefined });
-                                            }}
-                                            style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
-                                        >
-                                            {' '}
-                                            create a task
                                         </Text>
                                     </View>
                                 )}

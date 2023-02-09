@@ -1,4 +1,3 @@
-import * as React from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import { GoogleAuthProvider, signInWithCredential, getAuth } from "firebase/auth";
 import { AuthSessionResult } from 'expo-auth-session';

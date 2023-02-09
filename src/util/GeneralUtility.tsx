@@ -9,6 +9,11 @@ export const getWindowWidth = () => {
     return width;
 };
 
+export const getWindowHeight = () => {
+    const height = Dimensions.get('window').height;
+    return height;
+};
+
 export const getRandomInt = (min: number, max: number) => {
     min = Math.ceil(min);
     max = Math.floor(max);
