@@ -1,37 +1,27 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./",
-    "paths": {
-      "src/*": [
-        "./src/*"
-      ],
-      "assets/*": [
-        "./assets/*"
-      ],
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "src/*": ["./src/*"],
+            "resources/*": ["./resources/*"],
+            "assets/*": ["./assets/*"]
+        },
+        "target": "es6",
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "allowJs": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "jsx": "react-jsx"
     },
-    "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src",
-    "./src/type.d.ts"
-  ],
-  "extends": "expo/tsconfig.base"
+    "include": ["src", "resources", "./src/type.d.ts"],
+    "extends": "expo/tsconfig.base"
 }

@@ -2,6 +2,8 @@ import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
+import axios from 'axios';
+import { CreateUserRequest, Response } from 'resources/types';
 
 export interface UserModel {
     uid: string;
@@ -32,6 +34,22 @@ class UserController {
         };
 
         return clone;
+    }
+
+    public static async registerUser(email: string, password: string): Promise<Response> {
+        const body: CreateUserRequest = {
+            email,
+            password,
+        };
+
+        return await axios
+            .post('http://192.168.1.213:3000/user/create/', body)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
     }
 
     public static async update(user: UserModel) {

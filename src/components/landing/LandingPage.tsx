@@ -4,7 +4,7 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { UserCredential } from 'firebase/auth';
+import { UserCredential, sendEmailVerification } from 'firebase/auth';
 import UserController from 'src/controller/user/UserController';
 import { LandingFooter } from 'src/components/landing/LandingFooter';
 import { LandingBetaStatus } from 'src/components/landing/LandingBetaStatus';
@@ -81,19 +81,16 @@ export const LandingPage = () => {
         setDisplayLoginModal(false);
     };
 
-    const onRegisterModalCancel = () => {
-        setDisplayRegisterModal(false);
-    };
-
-    const onRegisterModalConfirm = () => {
-        setDisplayRegisterModal(false);
-    };
-
     return (
         <Screen>
             <ModalContainingComponent modalVisible={displayLoginModal || displayRegisterModal} />
             <LoginModal visible={displayLoginModal} onAuthenticated={onAuthenticated} confirm={onLoginModalConfirm} dismiss={onLoginModalCancel} />
-            <RegisterModal visible={displayRegisterModal} confirm={onRegisterModalConfirm} dismiss={onRegisterModalCancel} />
+            <RegisterModal
+                visible={displayRegisterModal}
+                onDismiss={() => {
+                    setDisplayRegisterModal(false);
+                }}
+            />
 
             <View style={{ width: '100%', flex: 10000, justifyContent: 'center', alignItems: 'flex-start' }}>
                 <View style={{ width: '100%', height: 600, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
