@@ -1,19 +1,20 @@
 import React from 'react';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
-import { getAccessLevel, setCurrentUser } from 'src/redux/user/GlobalState';
-import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
+import { setCurrentUser } from 'src/redux/user/GlobalState';
+import { getCurrentUserUid, registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { Screen } from 'src/components/common/Screen';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { useAppDispatch } from 'src/redux/Hooks';
 import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
+import { User, getAuth } from 'firebase/auth';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -101,13 +102,13 @@ const linking: LinkingOptions<RootStackParamList> = {
 };
 
 export const Main = () => {
-    const accessLevel = useAppSelector(getAccessLevel);
-    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | null>(null);
+    const [user, setUser] = React.useState<User | undefined>(undefined);
     const [loaded, setLoaded] = React.useState<boolean>(false);
 
     const dispatch = useAppDispatch();
 
     LogBox.ignoreAllLogs();
+    registerAuthStateListener(setUser);
 
     React.useEffect(() => {
         const blockingLoad = async () => {
@@ -121,21 +122,19 @@ export const Main = () => {
 
             setLoaded(true);
         };
-        if (userIsLoggedIn) {
+        if (isLoggedIn()) {
             blockingLoad();
         } else {
             dispatch(setCurrentUser(undefined));
         }
-    }, [userIsLoggedIn]);
+    }, [user]);
 
-    React.useEffect(() => {
-        getCurrentUserUid((user: string) => {
-            setUserIsLoggedIn(user !== null);
-        });
-    }, []);
+    const isLoggedIn = () => {
+        return user;
+    };
 
-    const isSuccessfullyLoggedIn = () => {
-        return accessLevel === 'beta_approved' && userIsLoggedIn;
+    const isEmailVerified = () => {
+        return isLoggedIn() && user?.emailVerified;
     };
 
     let [fontsLoaded] = useFonts({
@@ -157,7 +156,7 @@ export const Main = () => {
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
-                    {isSuccessfullyLoggedIn() ? loaded ? <SecureMainStack /> : <LoadingPage /> : <InsecureMainStack />}
+                    {isLoggedIn() ? loaded ? <SecureMainStack /> : <LoadingPage /> : <InsecureMainStack />}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>
