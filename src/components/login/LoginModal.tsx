@@ -6,6 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { isIosApp } from 'src/util/DeviceUtil';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
     visible: boolean;
@@ -19,6 +20,7 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
 
     const [email, setEmail] = React.useState<string>('');
     const [password, setPassword] = React.useState<string>('');
+    const [emailVerified, setEmailVerified] = React.useState<boolean>(true);
 
     const [keyboardOpen, setKeyboardOpen] = React.useState(false);
 
@@ -56,80 +58,103 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                     }}
                 />
 
-                <View style={{ width: 300, backgroundColor: colors.modal_background, borderRadius: 7, justifyContent: 'space-around' }}>
-                    <View style={{ alignItems: 'center', width: '100%', paddingTop: 15, paddingBottom: 10 }}>
-                        <View>
-                            <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.text }}>Embtr Login</Text>
+                <View
+                    style={{
+                        width: 300,
+                        height: getWindowHeight() / 4,
+                        backgroundColor: colors.modal_background,
+                        borderRadius: 7,
+                    }}
+                >
+                    <View style={{ alignItems: 'center', flex: 1, width: '100%' }}>
+                        <View style={{ flex: 1, width: '100%' }}>
+                            <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.text, paddingTop: 15, textAlign: 'center' }}>
+                                Embtr Login
+                            </Text>
                         </View>
-                        <View style={{ paddingTop: 10 }}>
-                            <Text style={{ fontSize: 12, fontFamily: 'Poppins_400Regular', paddingLeft: 10, paddingRight: 10, color: colors.text }}></Text>
-                        </View>
-                        <View style={{ width: '100%', alignItems: 'center', paddingTop: 10, paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
-                            <TextInput
-                                textAlignVertical="top"
-                                style={{
-                                    width: '95%',
-                                    fontFamily: 'Poppins_400Regular',
-                                    borderRadius: 7,
-                                    backgroundColor: colors.text_input_background,
-                                    borderColor: colors.text_input_border,
-                                    borderWidth: 1,
-                                    color: colors.text,
-                                    paddingTop: 10,
-                                    paddingBottom: isIosApp() ? 8 : 0,
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                }}
-                                placeholder={'email'}
-                                placeholderTextColor={colors.secondary_text}
-                                onChangeText={setEmail}
-                                value={email}
-                            />
-                        </View>
-                        <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
-                            <TextInput
-                                textAlignVertical="top"
-                                style={{
-                                    width: '95%',
-                                    fontFamily: 'Poppins_400Regular',
-                                    borderRadius: 7,
-                                    backgroundColor: colors.text_input_background,
-                                    borderColor: colors.text_input_border,
-                                    borderWidth: 1,
-                                    color: colors.text,
-                                    paddingTop: 10,
-                                    paddingBottom: isIosApp() ? 8 : 0,
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                }}
-                                placeholder={'password'}
-                                placeholderTextColor={colors.secondary_text}
-                                onChangeText={setPassword}
-                                value={password}
-                                secureTextEntry
-                            />
+                        {emailVerified ? (
+                            <View style={{ width: '100%', flex: 2 }}>
+                                <View style={{ width: '100%', alignItems: 'center', paddingTop: 10, paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
+                                    <TextInput
+                                        textAlignVertical="top"
+                                        style={{
+                                            width: '95%',
+                                            fontFamily: 'Poppins_400Regular',
+                                            borderRadius: 7,
+                                            backgroundColor: colors.text_input_background,
+                                            borderColor: colors.text_input_border,
+                                            borderWidth: 1,
+                                            color: colors.text,
+                                            paddingTop: 10,
+                                            paddingBottom: isIosApp() ? 8 : 0,
+                                            paddingLeft: 10,
+                                            paddingRight: 10,
+                                        }}
+                                        placeholder={'email'}
+                                        placeholderTextColor={colors.secondary_text}
+                                        onChangeText={setEmail}
+                                        value={email}
+                                    />
+                                </View>
+                                <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
+                                    <TextInput
+                                        textAlignVertical="top"
+                                        style={{
+                                            width: '95%',
+                                            fontFamily: 'Poppins_400Regular',
+                                            borderRadius: 7,
+                                            backgroundColor: colors.text_input_background,
+                                            borderColor: colors.text_input_border,
+                                            borderWidth: 1,
+                                            color: colors.text,
+                                            paddingTop: 10,
+                                            paddingBottom: isIosApp() ? 8 : 0,
+                                            paddingLeft: 10,
+                                            paddingRight: 10,
+                                        }}
+                                        placeholder={'password'}
+                                        placeholderTextColor={colors.secondary_text}
+                                        onChangeText={setPassword}
+                                        value={password}
+                                        secureTextEntry
+                                    />
+                                </View>
+                            </View>
+                        ) : (
+                            <View style={{ flex: 2, justifyContent: 'center' }}>
+                                <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>please verify your email.</Text>
+                            </View>
+                        )}
+
+                        <View style={{ flex: 1, width: '100%' }}>
+                            {emailVerified ? (
+                                <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
+                                    <HorizontalLine />
+                                    <Button
+                                        title="Login"
+                                        onPress={() => {
+                                            const auth = getAuth();
+                                            signInWithEmailAndPassword(auth, email, password)
+                                                .then((userCredential) => {
+                                                    setEmailVerified(userCredential.user.emailVerified);
+                                                })
+                                                .catch((error) => {
+                                                    const errorCode = error.code;
+                                                    const errorMessage = error.message;
+                                                });
+
+                                            dismiss();
+                                        }}
+                                    />
+                                </View>
+                            ) : (
+                                <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
+                                    <HorizontalLine />
+                                    <Button title="Resend Email" onPress={() => {}} />
+                                </View>
+                            )}
                         </View>
                     </View>
-
-                    <HorizontalLine />
-                    <Button
-                        title="Login"
-                        onPress={() => {
-                            const auth = getAuth();
-                            signInWithEmailAndPassword(auth, email, password)
-                                .then((userCredential) => {
-                                    // Signed in
-                                    onAuthenticated(userCredential);
-                                    // ...
-                                })
-                                .catch((error) => {
-                                    const errorCode = error.code;
-                                    const errorMessage = error.message;
-                                });
-
-                            dismiss();
-                        }}
-                    />
                 </View>
 
                 <TouchableOpacity

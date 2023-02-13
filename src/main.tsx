@@ -156,7 +156,7 @@ export const Main = () => {
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
-                    {isLoggedIn() ? loaded ? <SecureMainStack /> : <LoadingPage /> : <InsecureMainStack />}
+                    {isEmailVerified() ? loaded ? <SecureMainStack /> : <LoadingPage /> : <InsecureMainStack />}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

@@ -4,13 +4,10 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { UserCredential, sendEmailVerification } from 'firebase/auth';
-import UserController from 'src/controller/user/UserController';
+import { UserCredential } from 'firebase/auth';
 import { LandingFooter } from 'src/components/landing/LandingFooter';
-import { LandingBetaStatus } from 'src/components/landing/LandingBetaStatus';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getAccessLevel, setAccessLevel } from 'src/redux/user/GlobalState';
-import MailController from 'src/controller/mail/MailController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getAccessLevel } from 'src/redux/user/GlobalState';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { EmbtrButton } from '../common/button/EmbtrButton';
@@ -28,10 +25,6 @@ export const LandingPage = () => {
         fontFamily: 'Poppins_400Regular',
     } as TextStyle;
 
-    const betaRequestStatusViewStyle = {
-        width: '95%',
-    } as ViewStyle;
-
     const textViewStyle = {
         width: isDesktopBrowser() ? '60%' : '95%',
     } as ViewStyle;
@@ -40,26 +33,10 @@ export const LandingPage = () => {
     const [displayLoginModal, setDisplayLoginModal] = React.useState(false);
     const [displayRegisterModal, setDisplayRegisterModal] = React.useState(false);
 
-    const dispatch = useAppDispatch();
     const accessLevel = useAppSelector(getAccessLevel);
 
     const onAuthenticated = (userCredential: UserCredential) => {
         if (userCredential?.user?.uid && userCredential?.user?.email) {
-            UserController.getAccessLevel(userCredential.user.uid, userCredential.user.email, (accessLevel: string) => {
-                if (accessLevel) {
-                    dispatch(setAccessLevel(accessLevel));
-
-                    if (accessLevel === 'initial_beta_pending') {
-                        MailController.sendWelcomeToBetaMail(userCredential.user.email!);
-                    }
-
-                    if (accessLevel !== 'beta_approved') {
-                        setRegistrationStatus(accessLevel);
-                    }
-                } else {
-                    setRegistrationStatus('error_data');
-                }
-            });
         } else {
             setRegistrationStatus('error_auth');
         }
@@ -69,10 +46,6 @@ export const LandingPage = () => {
         return accessLevel === 'beta_approved' && registrationStatus === 'invalid';
     };
 
-    if (shouldDisplayLoadingPage()) {
-        return <LoadingPage />;
-    }
-
     const onLoginModalCancel = () => {
         setDisplayLoginModal(false);
     };
@@ -80,6 +53,10 @@ export const LandingPage = () => {
     const onLoginModalConfirm = () => {
         setDisplayLoginModal(false);
     };
+
+    if (shouldDisplayLoadingPage()) {
+        return <LoadingPage />;
+    }
 
     return (
         <Screen>
@@ -92,31 +69,29 @@ export const LandingPage = () => {
                 }}
             />
 
-            <View style={{ width: '100%', flex: 10000, justifyContent: 'center', alignItems: 'flex-start' }}>
-                <View style={{ width: '100%', height: 600, justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-                    <View style={{ alignItems: 'center', flex: 2, justifyContent: 'center' }}>
+            <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
+                {/* FLEX 1 LOGO */}
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <View style={{ bottom: '10%' }}>
                         <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
                     </View>
+                    <Image source={require('assets/logo_text.png')} style={{ width: 150, height: 50 }} />
+                </View>
 
-                    <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center' }}>
-                        <Image source={require('assets/logo_text.png')} style={{ width: 150, height: 50 }} />
-                    </View>
-                    <View style={[textViewStyle, { flex: 1, justifyContent: 'center' }]}>
-                        <Text style={textStyle}>A community achieving their wildest dreams.</Text>
-                        <Text style={textStyle}>Together.</Text>
-                    </View>
-
-                    {registrationStatus !== 'invalid' && (
-                        <View style={[betaRequestStatusViewStyle, { flex: 1, justifyContent: 'center' }]}>
-                            <LandingBetaStatus registrationStatus={registrationStatus} />
+                {/* FLEX 3 BUTTONS*/}
+                <View style={{ flex: 1 }}>
+                    {/* FLEX 2 TEXY*/}
+                    <View style={{ flex: 1 }}>
+                        <View style={[textViewStyle, { flex: 1, justifyContent: 'center' }]}>
+                            <Text style={textStyle}>A community achieving their wildest dreams.</Text>
+                            <Text style={textStyle}>Together.</Text>
                         </View>
-                    )}
 
-                    {registrationStatus === 'invalid' && (
-                        <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <View style={{ flex: 2, alignItems: 'center' }}>
                             <View style={{ width: 300 }}>
                                 <FirebaseAuthenticate buttonText="Login With Google" callback={onAuthenticated} />
                             </View>
+
                             <View style={{ width: 300, paddingTop: 6 }}>
                                 <EmbtrButton
                                     color={'#e300ef'}
@@ -126,7 +101,8 @@ export const LandingPage = () => {
                                     }}
                                 />
                             </View>
-                            <Text style={{ color: colors.text, textAlign: 'center', fontFamily: POPPINS_REGULAR, paddingTop: 10 }}>New here? Sign up.</Text>
+
+                            <Text style={{ color: colors.text, textAlign: 'center', fontFamily: POPPINS_REGULAR, paddingTop: 20 }}>New here? Sign up.</Text>
                             <View style={{ width: 300, paddingTop: 6 }}>
                                 <EmbtrButton
                                     color="#b50017"
@@ -137,15 +113,9 @@ export const LandingPage = () => {
                                 />
                             </View>
                         </View>
-                    )}
+                    </View>
                 </View>
             </View>
-
-            {isDesktopBrowser() && (
-                <View style={{ justifyContent: 'flex-end', flex: 1, width: '100%' }}>
-                    <LandingFooter />
-                </View>
-            )}
         </Screen>
     );
 };

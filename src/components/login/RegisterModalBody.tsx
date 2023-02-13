@@ -24,9 +24,9 @@ export const RegisterModalBody = ({ confirm }: Props) => {
 
     return (
         <View style={{ width: 300, height: getWindowHeight() / 3, backgroundColor: colors.modal_background, borderRadius: 7, justifyContent: 'space-around' }}>
-            <View style={{ alignItems: 'center', width: '100%', paddingTop: 15, paddingBottom: 10, height: '100%' }}>
+            <View style={{ flex: 1, alignItems: 'center', paddingTop: 10 }}>
                 <View>
-                    <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.text }}>Embtr Login</Text>
+                    <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.text }}>Sign Up For Embtr</Text>
                 </View>
                 <View style={{ paddingTop: 10 }}>
                     <Text
@@ -54,6 +54,9 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                         Sign up below.
                     </Text>
                 </View>
+            </View>
+
+            <View style={{ width: '100%', flex: 2 }}>
                 <View style={{ width: '100%', alignItems: 'center', paddingTop: 10, paddingBottom: error ? 0 : 10, paddingLeft: 2, paddingRight: 2 }}>
                     <TextInput
                         textAlignVertical="top"
@@ -66,6 +69,7 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                             borderWidth: 1,
                             color: colors.text,
                             paddingTop: 10,
+                            paddingBottom: isIosApp() ? 8 : 0,
                             paddingLeft: 10,
                             paddingRight: 10,
                         }}
@@ -129,34 +133,36 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                 </View>
             </View>
 
-            <HorizontalLine />
-            <Button
-                title="Sign Up"
-                onPress={() => {
-                    const handleSignUp = async () => {
-                        const result: Response = await UserController.registerUser(email, password);
-                        switch (result.internalCode) {
-                            case Code.SUCCESS:
-                                setError('');
-                                confirm();
-                                break;
+            <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+                <HorizontalLine />
+                <Button
+                    title="Sign Up"
+                    onPress={() => {
+                        const handleSignUp = async () => {
+                            const result: Response = await UserController.registerUser(email, password);
+                            switch (result.internalCode) {
+                                case Code.SUCCESS:
+                                    setError('');
+                                    confirm();
+                                    break;
 
-                            case Code.CREATE_USER_EMAIL_IN_USE:
-                                setError('email already in use');
-                                break;
+                                case Code.CREATE_USER_EMAIL_IN_USE:
+                                    setError('email already in use');
+                                    break;
 
-                            case Code.CREATE_USER_INVALID_EMAIL:
-                                setError('email address is invalid');
-                                break;
+                                case Code.CREATE_USER_INVALID_EMAIL:
+                                    setError('email address is invalid');
+                                    break;
 
-                            case Code.CREATE_USER_INVALID_PASSWORD:
-                                setError('password is invalid');
-                        }
-                    };
+                                case Code.CREATE_USER_INVALID_PASSWORD:
+                                    setError('password is invalid');
+                            }
+                        };
 
-                    handleSignUp();
-                }}
-            />
+                        handleSignUp();
+                    }}
+                />
+            </View>
         </View>
     );
 };
