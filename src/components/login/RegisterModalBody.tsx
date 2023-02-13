@@ -79,13 +79,17 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                         value={email}
                     />
                 </View>
+
                 {error && (
-                    <View style={{ width: '100%' }}>
-                        <Text style={{ paddingLeft: 20, marginBottom: 5, color: colors.error, fontSize: 12, fontFamily: POPPINS_SEMI_BOLD }}>{error}</Text>
+                    <View style={{ width: '100%', flexDirection: 'row', paddingTop: 5 }}>
+                        <Text style={{ flex: 1, paddingLeft: 20, color: colors.error, fontSize: 12, fontFamily: POPPINS_SEMI_BOLD }}>{error}</Text>
+                        {error.includes('in use') && (
+                            <Text style={{ flex: 1, paddingLeft: 20, color: colors.link, fontSize: 12, fontFamily: POPPINS_SEMI_BOLD }}>reset password</Text>
+                        )}
                     </View>
                 )}
 
-                <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
+                <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2, paddingTop: error ? 5 : 0 }}>
                     <TextInput
                         textAlignVertical="top"
                         style={{

@@ -102,7 +102,7 @@ export const LandingPage = () => {
                                 />
                             </View>
 
-                            <Text style={{ color: colors.text, textAlign: 'center', fontFamily: POPPINS_REGULAR, paddingTop: 20 }}>New here? Sign up.</Text>
+                            <Text style={{ color: colors.text, textAlign: 'center', fontFamily: POPPINS_REGULAR, paddingTop: 20 }}>New to embtr? Sign up.</Text>
                             <View style={{ width: 300, paddingTop: 6 }}>
                                 <EmbtrButton
                                     color="#b50017"
