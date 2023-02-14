@@ -8,6 +8,8 @@ import * as Haptics from 'expo-haptics';
 import { Comment, Like } from 'src/controller/timeline/TimelineController';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import LottieView from 'lottie-react-native';
+import { wait } from 'src/util/GeneralUtility';
 
 interface Props {
     likes: Like[];
@@ -21,12 +23,18 @@ const PostDetailsActionBar = ({ likes, comments, onLike }: Props) => {
     const isLiked = timelineEntryWasLikedBy(likes, getCurrentUid());
     const [heartPressed, setHeartPressed] = React.useState(isLiked);
 
+    const animation = React.useRef(null);
+
     React.useEffect(() => {
         setHeartPressed(isLiked);
     }, [isLiked]);
 
     const onHeartPressed = () => {
         if (!heartPressed) {
+            animation.current?.play();
+            wait(1000).then(() => {
+                animation.current?.reset();
+            });
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             setHeartPressed(true);
             onLike();
@@ -35,6 +43,20 @@ const PostDetailsActionBar = ({ likes, comments, onLike }: Props) => {
 
     return (
         <View style={{ flexDirection: 'row' }}>
+            <View style={{ height: 0, width: 0, position: 'relative' }}>
+                <View style={{ position: 'absolute', zIndex: -1, width: 200, height: 200, left: -144, top: -27, transform: [{ scaleX: -1 }] }}>
+                    <LottieView
+                        autoPlay={false}
+                        ref={animation}
+                        style={{
+                            width: 80,
+                            height: 80,
+                        }}
+                        source={require('../../../../resources/lottie-heart.json')}
+                    />
+                </View>
+            </View>
+
             <View style={{ flexDirection: 'row', flex: 1 }}>
                 <TouchableOpacity onPress={heartPressed ? undefined : onHeartPressed}>
                     <Ionicons

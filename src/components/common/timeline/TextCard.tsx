@@ -9,9 +9,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { Comment, Like } from 'src/controller/timeline/TimelineController';
-import LottieView from 'lottie-react-native';
 import React from 'react';
-import { wait } from 'src/util/GeneralUtility';
 
 interface Props {
     staticImage?: ImageSourcePropType;
@@ -36,8 +34,6 @@ interface Props {
 
 export const TextCard = ({ staticImage, userProfileModel, added, name, title, body, images, likes, onLike, comments, onCommented }: Props) => {
     const { colors } = useTheme();
-
-    const animation = React.useRef(null);
 
     const headerTextStyle = {
         fontSize: 16,
@@ -77,14 +73,6 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
             onPress: navigateToDetails,
         });
     });
-
-    const handleOnLike = () => {
-        animation.current?.play();
-        wait(1000).then(() => {
-            animation.current?.reset();
-        });
-        onLike();
-    };
 
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>
@@ -148,22 +136,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                 {/* FOOTER */}
                 {/**********/}
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, zIndex: 1, paddingBottom: TIMELINE_CARD_PADDING }}>
-                    <PostDetailsActionBar likes={likes} comments={comments} onLike={handleOnLike} />
-                </View>
-
-                <View style={{ height: 0, width: 0, position: 'relative' }}>
-                    <View style={{ position: 'absolute', zIndex: -1, width: 200, height: 200, left: -132, top: -65, transform: [{ scaleX: -1 }] }}>
-                        <LottieView
-                            autoPlay={false}
-                            duration={1000}
-                            ref={animation}
-                            style={{
-                                width: 80,
-                                height: 80,
-                            }}
-                            source={require('../../../../resources/lottie-heart.json')}
-                        />
-                    </View>
+                    <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
                 </View>
             </View>
         </TouchableWithoutFeedback>
