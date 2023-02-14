@@ -3,7 +3,7 @@ import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
 import axios from 'axios';
-import { CreateUserRequest, Response } from 'resources/types';
+import { CreateUserRequest, ForgotPasswordRequest, Response } from 'resources/types';
 
 export interface UserModel {
     uid: string;
@@ -44,6 +44,21 @@ class UserController {
 
         return await axios
             .post('http://192.168.1.213:3000/user/create/', body)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async forgotPassword(email: string): Promise<Response> {
+        const body: ForgotPasswordRequest = {
+            email,
+        };
+
+        return await axios
+            .post('http://192.168.1.213:3000/user/forgot_password/', body)
             .then((success) => {
                 return success.data;
             })

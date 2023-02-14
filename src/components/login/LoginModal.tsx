@@ -6,7 +6,8 @@ import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import UserController from 'src/controller/user/UserController';
 
 interface Props {
     visible: boolean;
@@ -21,6 +22,8 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
     const [email, setEmail] = React.useState<string>('');
     const [password, setPassword] = React.useState<string>('');
     const [emailVerified, setEmailVerified] = React.useState<boolean>(true);
+    const [error, setError] = React.useState<string>('');
+    const [status, setStatus] = React.useState<string>('');
 
     const [keyboardOpen, setKeyboardOpen] = React.useState(false);
 
@@ -28,8 +31,21 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
         if (keyboardOpen) {
             Keyboard.dismiss();
         } else {
+            resetModal();
+            resetFields();
+            setEmailVerified(true);
             dismiss();
         }
+    };
+
+    const resetModal = () => {
+        setEmail('');
+        setPassword('');
+    };
+
+    const resetFields = () => {
+        setError('');
+        setStatus('');
     };
 
     React.useEffect(() => {
@@ -41,6 +57,33 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
             Keyboard.removeAllListeners('keyboardDidHide');
         };
     }, []);
+
+    const handleForgotPassword = async () => {
+        resetFields();
+
+        if (email.length == 0) {
+            setError('email is required');
+            return;
+        }
+
+        setError('');
+        const result = await UserController.forgotPassword(email);
+        if (result.success) {
+            setStatus('password reset email sent');
+        }
+    };
+
+    const handleLoginError = (errorCode: string) => {
+        switch (errorCode) {
+            case 'auth/invalid-email':
+            case 'auth/internal-error':
+            case 'auth/wrong-password':
+                setError('invalid email or password');
+                break;
+            default:
+                setError('invalid email or password');
+        }
+    };
 
     return (
         <Modal visible={visible} transparent={true} animationType={'slide'}>
@@ -61,7 +104,7 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                 <View
                     style={{
                         width: 300,
-                        height: getWindowHeight() / 4,
+                        height: getWindowHeight() / 3.5,
                         backgroundColor: colors.modal_background,
                         borderRadius: 7,
                     }}
@@ -74,7 +117,16 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                         </View>
                         {emailVerified ? (
                             <View style={{ width: '100%', flex: 2 }}>
-                                <View style={{ width: '100%', alignItems: 'center', paddingTop: 10, paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        alignItems: 'center',
+                                        paddingTop: 10,
+                                        paddingBottom: status || error ? 0 : 10,
+                                        paddingLeft: 2,
+                                        paddingRight: 2,
+                                    }}
+                                >
                                     <TextInput
                                         textAlignVertical="top"
                                         style={{
@@ -96,6 +148,37 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                                         value={email}
                                     />
                                 </View>
+
+                                {status && (
+                                    <View style={{ width: '100%', flexDirection: 'row' }}>
+                                        <Text
+                                            style={{
+                                                paddingLeft: 20,
+                                                color: colors.progress_bar_complete,
+                                                fontSize: 12,
+                                                fontFamily: POPPINS_SEMI_BOLD,
+                                            }}
+                                        >
+                                            {status}
+                                        </Text>
+                                    </View>
+                                )}
+
+                                {error && (
+                                    <View style={{ width: '100%', flexDirection: 'row' }}>
+                                        <Text
+                                            style={{
+                                                paddingLeft: 20,
+                                                color: colors.error,
+                                                fontSize: 12,
+                                                fontFamily: POPPINS_SEMI_BOLD,
+                                            }}
+                                        >
+                                            {error}
+                                        </Text>
+                                    </View>
+                                )}
+
                                 <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
                                     <TextInput
                                         textAlignVertical="top"
@@ -119,6 +202,17 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                                         secureTextEntry
                                     />
                                 </View>
+
+                                <View style={{ width: '100%', paddingBottom: 10 }}>
+                                    <Text
+                                        style={{ color: colors.link, fontFamily: POPPINS_REGULAR, paddingLeft: 10 }}
+                                        onPress={() => {
+                                            handleForgotPassword();
+                                        }}
+                                    >
+                                        forgot password
+                                    </Text>
+                                </View>
                             </View>
                         ) : (
                             <View style={{ flex: 2, justifyContent: 'center' }}>
@@ -136,21 +230,33 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                                             const auth = getAuth();
                                             signInWithEmailAndPassword(auth, email, password)
                                                 .then((userCredential) => {
-                                                    setEmailVerified(userCredential.user.emailVerified);
+                                                    resetFields();
+                                                    if (!userCredential.user.emailVerified) {
+                                                        setEmailVerified(false);
+                                                        getAuth().signOut();
+                                                    } else {
+                                                        setEmailVerified(true);
+                                                        dismiss();
+                                                    }
                                                 })
                                                 .catch((error) => {
                                                     const errorCode = error.code;
-                                                    const errorMessage = error.message;
+                                                    console.log(errorCode);
+                                                    console.log(error.message);
+                                                    handleLoginError(errorCode);
                                                 });
-
-                                            dismiss();
                                         }}
                                     />
                                 </View>
                             ) : (
                                 <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
                                     <HorizontalLine />
-                                    <Button title="Resend Email" onPress={() => {}} />
+                                    <Button
+                                        title="Resend Email"
+                                        onPress={() => {
+                                            alert(email);
+                                        }}
+                                    />
                                 </View>
                             )}
                         </View>
