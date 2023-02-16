@@ -3,7 +3,7 @@ import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
 import axios from 'axios';
-import { CreateUserRequest, ForgotPasswordRequest, Response } from 'resources/types';
+import { CreateUserRequest, ForgotPasswordRequest, Response, VerifyEmailRequest } from 'resources/types';
 
 export interface UserModel {
     uid: string;
@@ -67,6 +67,21 @@ class UserController {
             });
     }
 
+    public static async sendVerifyEmail(email: string): Promise<Response> {
+        const body: VerifyEmailRequest = {
+            email,
+        };
+
+        return await axios
+            .post('http://192.168.1.213:3000/user/send_verification_email', body)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     public static async update(user: UserModel) {
         await UserDao.update(user);
     }
@@ -104,18 +119,8 @@ class UserController {
         return await this.get(getCurrentUid());
     }
 
-    public static getAccessLevel(uid: string, email: string, callback: Function) {
-        const result = UserDao.getBetaRequestStatus(uid);
-        result.then((document) => {
-            if (document.exists() && document.data() && document.data()['access_level']) {
-                callback(document.data()['access_level']);
-            } else {
-                const betaCreateResult = UserDao.requestBetaAccess(uid, email);
-                betaCreateResult.then(() => {
-                    callback('initial_beta_pending');
-                });
-            }
-        });
+    public static async createUser(uid: string, email: string) {
+        await UserDao.createUser(uid, email);
     }
 
     public static async updatePostNotificationToken(token: string | null) {

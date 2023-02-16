@@ -4,11 +4,6 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { UserCredential } from 'firebase/auth';
-import { LandingFooter } from 'src/components/landing/LandingFooter';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getAccessLevel } from 'src/redux/user/GlobalState';
-import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { EmbtrButton } from '../common/button/EmbtrButton';
 import { LoginModal } from '../login/LoginModal';
@@ -29,22 +24,8 @@ export const LandingPage = () => {
         width: isDesktopBrowser() ? '60%' : '95%',
     } as ViewStyle;
 
-    const [registrationStatus, setRegistrationStatus] = React.useState('invalid');
     const [displayLoginModal, setDisplayLoginModal] = React.useState(false);
     const [displayRegisterModal, setDisplayRegisterModal] = React.useState(false);
-
-    const accessLevel = useAppSelector(getAccessLevel);
-
-    const onAuthenticated = (userCredential: UserCredential) => {
-        if (userCredential?.user?.uid && userCredential?.user?.email) {
-        } else {
-            setRegistrationStatus('error_auth');
-        }
-    };
-
-    const shouldDisplayLoadingPage = () => {
-        return accessLevel === 'beta_approved' && registrationStatus === 'invalid';
-    };
 
     const onLoginModalCancel = () => {
         setDisplayLoginModal(false);
@@ -54,14 +35,10 @@ export const LandingPage = () => {
         setDisplayLoginModal(false);
     };
 
-    if (shouldDisplayLoadingPage()) {
-        return <LoadingPage />;
-    }
-
     return (
         <Screen>
             <ModalContainingComponent modalVisible={displayLoginModal || displayRegisterModal} />
-            <LoginModal visible={displayLoginModal} onAuthenticated={onAuthenticated} confirm={onLoginModalConfirm} dismiss={onLoginModalCancel} />
+            <LoginModal visible={displayLoginModal} confirm={onLoginModalConfirm} dismiss={onLoginModalCancel} />
             <RegisterModal
                 visible={displayRegisterModal}
                 onDismiss={() => {
@@ -89,7 +66,7 @@ export const LandingPage = () => {
 
                         <View style={{ flex: 2, alignItems: 'center' }}>
                             <View style={{ width: 300 }}>
-                                <FirebaseAuthenticate buttonText="Login With Google" callback={onAuthenticated} />
+                                <FirebaseAuthenticate buttonText="Login With Google" />
                             </View>
 
                             <View style={{ width: 300, paddingTop: 6 }}>

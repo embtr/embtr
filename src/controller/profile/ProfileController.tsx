@@ -48,10 +48,12 @@ class ProfileController {
 
     private static setInitialProfile(user: User) {
         const uid: string = user.uid;
-        const name: string = user.displayName!;
-        const nameLower: string = user.displayName!.toLowerCase();
+        const name: string = user.displayName ?? 'new user';
+        const nameLower: string = name.toLowerCase();
         const email: string = user.email!;
-        const photoUrl: string = user.photoURL!;
+        const photoUrl: string =
+            user.photoURL ??
+            'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6';
 
         ProfileDao.updateProfile({ uid: uid, name: name, nameLower: nameLower, email: email, photoUrl: photoUrl });
     }

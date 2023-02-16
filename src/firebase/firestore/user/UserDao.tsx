@@ -12,14 +12,13 @@ class UserDao {
         return result;
     }
 
-    public static async requestBetaAccess(uid: string, email: string) {
-        const db: Firestore = getFirebaseConnection(this.name, 'requestBetaAccess');
+    public static async createUser(uid: string, email: string) {
+        const db: Firestore = getFirebaseConnection(this.name, 'createUser');
 
         const result = await getDoc(doc(db, 'users/', uid)).then((result) => {
             if (!result.exists()) {
                 setDoc(doc(db, 'users/', uid), {
                     email: email,
-                    access_level: 'beta_pending',
                     timestamp: Timestamp.now(),
                 });
             }
@@ -39,10 +38,9 @@ class UserDao {
         return result;
     }
 
-
     public static async getAll() {
-		const db: Firestore = getFirebaseConnection(this.name, 'getAll');
-		const result = await getDocs(collection(db, 'users/'));
+        const db: Firestore = getFirebaseConnection(this.name, 'getAll');
+        const result = await getDocs(collection(db, 'users/'));
 
         return result;
     }

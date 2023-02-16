@@ -14,7 +14,7 @@ import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
-import { User, getAuth } from 'firebase/auth';
+import { User, UserCredential, getAuth } from 'firebase/auth';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -110,8 +110,16 @@ export const Main = () => {
     LogBox.ignoreAllLogs();
     registerAuthStateListener(setUser);
 
+    const createUserIfNew = async (user: User) => {
+        if (user.uid && user.email) {
+            await UserController.createUser(user.uid, user.email);
+        }
+    };
+
     React.useEffect(() => {
         const blockingLoad = async () => {
+            await createUserIfNew(user!);
+
             let currentUser = await UserController.getCurrentUser();
 
             ProfileController.registerInitialProfileUpdateListener();

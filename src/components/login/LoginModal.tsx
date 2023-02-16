@@ -13,10 +13,9 @@ interface Props {
     visible: boolean;
     confirm: Function;
     dismiss: Function;
-    onAuthenticated: Function;
 }
 
-export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props) => {
+export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
     const [email, setEmail] = React.useState<string>('');
@@ -215,8 +214,15 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                                 </View>
                             </View>
                         ) : (
-                            <View style={{ flex: 2, justifyContent: 'center' }}>
-                                <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>please verify your email.</Text>
+                            <View style={{ flex: 2 }}>
+                                <View style={{ justifyContent: 'center' }}>
+                                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>please verify your email.</Text>
+                                </View>
+                                <View style={{ justifyContent: 'center' }}>
+                                    <Text style={{ color: colors.progress_bar_complete, fontFamily: POPPINS_REGULAR, textAlign: 'center' }}>
+                                        {status ?? ''}
+                                    </Text>
+                                </View>
                             </View>
                         )}
 
@@ -241,8 +247,6 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                                                 })
                                                 .catch((error) => {
                                                     const errorCode = error.code;
-                                                    console.log(errorCode);
-                                                    console.log(error.message);
                                                     handleLoginError(errorCode);
                                                 });
                                         }}
@@ -253,8 +257,13 @@ export const LoginModal = ({ visible, confirm, dismiss, onAuthenticated }: Props
                                     <HorizontalLine />
                                     <Button
                                         title="Resend Email"
-                                        onPress={() => {
-                                            alert(email);
+                                        onPress={async () => {
+                                            const result = await UserController.sendVerifyEmail(email);
+                                            if (result.success) {
+                                                setStatus('email sent!');
+                                            } else {
+                                                setError('error sending email');
+                                            }
                                         }}
                                     />
                                 </View>
