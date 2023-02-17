@@ -4,6 +4,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
 import axios from 'axios';
 import { CreateUserRequest, ForgotPasswordRequest, Response, VerifyEmailRequest } from 'resources/types';
+import { Code } from 'resources/codes';
 
 export interface UserModel {
     uid: string;

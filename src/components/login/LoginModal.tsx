@@ -8,6 +8,7 @@ import { getWindowHeight } from 'src/util/GeneralUtility';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import UserController from 'src/controller/user/UserController';
+import { Code } from 'resources/codes';
 
 interface Props {
     visible: boolean;
@@ -216,11 +217,18 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                         ) : (
                             <View style={{ flex: 2 }}>
                                 <View style={{ justifyContent: 'center' }}>
-                                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>please verify your email.</Text>
+                                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, textAlign: 'center' }}>please verify your email.</Text>
                                 </View>
                                 <View style={{ justifyContent: 'center' }}>
-                                    <Text style={{ color: colors.progress_bar_complete, fontFamily: POPPINS_REGULAR, textAlign: 'center' }}>
-                                        {status ?? ''}
+                                    <Text
+                                        style={{
+                                            color: status ? colors.progress_bar_complete : colors.error,
+                                            fontFamily: POPPINS_REGULAR,
+                                            textAlign: 'center',
+                                            fontSize: 12,
+                                        }}
+                                    >
+                                        {status || error || ''}
                                     </Text>
                                 </View>
                             </View>
@@ -258,11 +266,21 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                                     <Button
                                         title="Resend Email"
                                         onPress={async () => {
+                                            resetFields();
                                             const result = await UserController.sendVerifyEmail(email);
-                                            if (result.success) {
-                                                setStatus('email sent!');
-                                            } else {
-                                                setError('error sending email');
+
+                                            switch (result.internalCode) {
+                                                case Code.SUCCESS:
+                                                    setStatus('verification email sent!');
+                                                    break;
+
+                                                case Code.SEND_VERIFICATION_EMAIL_TOO_MANY_ATTEMPTS:
+                                                    setError('please wait a few moments before trying again.');
+                                                    break;
+
+                                                default:
+                                                    setError('error sending email');
+                                                    break;
                                             }
                                         }}
                                     />
