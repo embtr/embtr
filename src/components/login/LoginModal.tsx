@@ -21,7 +21,7 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
 
     const [email, setEmail] = React.useState<string>('');
     const [password, setPassword] = React.useState<string>('');
-    const [emailVerified, setEmailVerified] = React.useState<boolean>(true);
+    const [needsEmailVerfied, setNeedsEmailVerified] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>('');
     const [status, setStatus] = React.useState<string>('');
 
@@ -33,7 +33,7 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
         } else {
             resetModal();
             resetFields();
-            setEmailVerified(true);
+            setNeedsEmailVerified(false);
             dismiss();
         }
     };
@@ -85,6 +85,27 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
         }
     };
 
+    const sendVerficationEmail = async () => {
+        resetFields();
+        const result = await UserController.sendVerifyEmail(email);
+        setNeedsEmailVerified(false);
+
+        switch (result.internalCode) {
+            case Code.SUCCESS:
+                resetModal();
+                setStatus('verification email sent!');
+                break;
+
+            case Code.SEND_VERIFICATION_EMAIL_TOO_MANY_ATTEMPTS:
+                setError('email recently sent, try again soon.');
+                break;
+
+            default:
+                setError('error sending email');
+                break;
+        }
+    };
+
     return (
         <Modal visible={visible} transparent={true} animationType={'slide'}>
             <TouchableOpacity
@@ -115,177 +136,148 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                                 Embtr Login
                             </Text>
                         </View>
-                        {emailVerified ? (
-                            <View style={{ width: '100%', flex: 2 }}>
-                                <View
-                                    style={{
-                                        width: '100%',
-                                        alignItems: 'center',
-                                        paddingTop: 10,
-                                        paddingBottom: status || error ? 0 : 10,
-                                        paddingLeft: 2,
-                                        paddingRight: 2,
-                                    }}
-                                >
-                                    <TextInput
-                                        textAlignVertical="top"
-                                        style={{
-                                            width: '95%',
-                                            fontFamily: 'Poppins_400Regular',
-                                            borderRadius: 7,
-                                            backgroundColor: colors.text_input_background,
-                                            borderColor: colors.text_input_border,
-                                            borderWidth: 1,
-                                            color: colors.text,
-                                            paddingTop: 10,
-                                            paddingBottom: isIosApp() ? 8 : 0,
-                                            paddingLeft: 10,
-                                            paddingRight: 10,
-                                        }}
-                                        placeholder={'email'}
-                                        placeholderTextColor={colors.secondary_text}
-                                        onChangeText={setEmail}
-                                        value={email}
-                                    />
-                                </View>
 
-                                {status && (
-                                    <View style={{ width: '100%', flexDirection: 'row' }}>
-                                        <Text
-                                            style={{
-                                                paddingLeft: 20,
-                                                color: colors.progress_bar_complete,
-                                                fontSize: 12,
-                                                fontFamily: POPPINS_SEMI_BOLD,
-                                            }}
-                                        >
-                                            {status}
-                                        </Text>
-                                    </View>
-                                )}
-
-                                {error && (
-                                    <View style={{ width: '100%', flexDirection: 'row' }}>
-                                        <Text
-                                            style={{
-                                                paddingLeft: 20,
-                                                color: colors.error,
-                                                fontSize: 12,
-                                                fontFamily: POPPINS_SEMI_BOLD,
-                                            }}
-                                        >
-                                            {error}
-                                        </Text>
-                                    </View>
-                                )}
-
-                                <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
-                                    <TextInput
-                                        textAlignVertical="top"
-                                        style={{
-                                            width: '95%',
-                                            fontFamily: 'Poppins_400Regular',
-                                            borderRadius: 7,
-                                            backgroundColor: colors.text_input_background,
-                                            borderColor: colors.text_input_border,
-                                            borderWidth: 1,
-                                            color: colors.text,
-                                            paddingTop: 10,
-                                            paddingBottom: isIosApp() ? 8 : 0,
-                                            paddingLeft: 10,
-                                            paddingRight: 10,
-                                        }}
-                                        placeholder={'password'}
-                                        placeholderTextColor={colors.secondary_text}
-                                        onChangeText={setPassword}
-                                        value={password}
-                                        secureTextEntry
-                                    />
-                                </View>
-
-                                <View style={{ width: '100%', paddingBottom: 10 }}>
-                                    <Text
-                                        style={{ color: colors.link, fontFamily: POPPINS_REGULAR, paddingLeft: 10 }}
-                                        onPress={() => {
-                                            handleForgotPassword();
-                                        }}
-                                    >
-                                        forgot password
-                                    </Text>
-                                </View>
-                            </View>
-                        ) : (
-                            <View style={{ flex: 2 }}>
-                                <View style={{ justifyContent: 'center' }}>
-                                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, textAlign: 'center' }}>please verify your email.</Text>
-                                </View>
-                                <View style={{ justifyContent: 'center' }}>
-                                    <Text
-                                        style={{
-                                            color: status ? colors.progress_bar_complete : colors.error,
-                                            fontFamily: POPPINS_REGULAR,
-                                            textAlign: 'center',
-                                            fontSize: 12,
-                                        }}
-                                    >
-                                        {status || error || ''}
-                                    </Text>
-                                </View>
-                            </View>
-                        )}
-
-                        <View style={{ flex: 1, width: '100%' }}>
-                            {emailVerified ? (
-                                <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
-                                    <HorizontalLine />
-                                    <Button
-                                        title="Login"
-                                        onPress={() => {
-                                            const auth = getAuth();
-                                            signInWithEmailAndPassword(auth, email, password)
-                                                .then((userCredential) => {
-                                                    resetFields();
-                                                    if (!userCredential.user.emailVerified) {
-                                                        setEmailVerified(false);
-                                                        getAuth().signOut();
-                                                    } else {
-                                                        setEmailVerified(true);
-                                                        dismiss();
-                                                    }
-                                                })
-                                                .catch((error) => {
-                                                    const errorCode = error.code;
-                                                    handleLoginError(errorCode);
-                                                });
-                                        }}
-                                    />
-                                </View>
-                            ) : (
-                                <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
-                                    <HorizontalLine />
+                        {/*}
                                     <Button
                                         title="Resend Email"
-                                        onPress={async () => {
-                                            resetFields();
-                                            const result = await UserController.sendVerifyEmail(email);
-
-                                            switch (result.internalCode) {
-                                                case Code.SUCCESS:
-                                                    setStatus('verification email sent!');
-                                                    break;
-
-                                                case Code.SEND_VERIFICATION_EMAIL_TOO_MANY_ATTEMPTS:
-                                                    setError('please wait a few moments before trying again.');
-                                                    break;
-
-                                                default:
-                                                    setError('error sending email');
-                                                    break;
-                                            }
-                                        }}
                                     />
+{*/}
+
+                        {/* LOGIN COMPONENTS */}
+                        <View style={{ width: '100%', flex: 2 }}>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    paddingTop: 10,
+                                    paddingBottom: status || error ? 0 : 10,
+                                    paddingLeft: 2,
+                                    paddingRight: 2,
+                                }}
+                            >
+                                <TextInput
+                                    textAlignVertical="top"
+                                    style={{
+                                        width: '95%',
+                                        fontFamily: 'Poppins_400Regular',
+                                        borderRadius: 7,
+                                        backgroundColor: colors.text_input_background,
+                                        borderColor: colors.text_input_border,
+                                        borderWidth: 1,
+                                        color: colors.text,
+                                        paddingTop: 10,
+                                        paddingBottom: isIosApp() ? 8 : 0,
+                                        paddingLeft: 10,
+                                        paddingRight: 10,
+                                    }}
+                                    placeholder={'email'}
+                                    placeholderTextColor={colors.secondary_text}
+                                    onChangeText={setEmail}
+                                    value={email}
+                                />
+                            </View>
+
+                            {status && (
+                                <View style={{ width: '100%', flexDirection: 'row' }}>
+                                    <Text
+                                        style={{
+                                            paddingLeft: 20,
+                                            color: colors.progress_bar_complete,
+                                            fontSize: 12,
+                                            fontFamily: POPPINS_SEMI_BOLD,
+                                        }}
+                                    >
+                                        {status}
+                                    </Text>
                                 </View>
                             )}
+
+                            {error && (
+                                <View style={{ width: '100%', flexDirection: 'row' }}>
+                                    <Text
+                                        style={{
+                                            paddingLeft: 20,
+                                            color: colors.error,
+                                            fontSize: 12,
+                                            fontFamily: POPPINS_SEMI_BOLD,
+                                        }}
+                                    >
+                                        {error}
+                                    </Text>
+                                </View>
+                            )}
+
+                            <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
+                                <TextInput
+                                    textAlignVertical="top"
+                                    style={{
+                                        width: '95%',
+                                        fontFamily: 'Poppins_400Regular',
+                                        borderRadius: 7,
+                                        backgroundColor: colors.text_input_background,
+                                        borderColor: colors.text_input_border,
+                                        borderWidth: 1,
+                                        color: colors.text,
+                                        paddingTop: 10,
+                                        paddingBottom: isIosApp() ? 8 : 0,
+                                        paddingLeft: 10,
+                                        paddingRight: 10,
+                                    }}
+                                    placeholder={'password'}
+                                    placeholderTextColor={colors.secondary_text}
+                                    onChangeText={setPassword}
+                                    value={password}
+                                    secureTextEntry
+                                />
+                            </View>
+
+                            <View style={{ width: '100%', paddingBottom: 10, flexDirection: 'row' }}>
+                                <Text
+                                    style={{ color: colors.link, fontFamily: POPPINS_REGULAR, paddingLeft: 5 }}
+                                    onPress={() => {
+                                        handleForgotPassword();
+                                    }}
+                                >
+                                    forgot password
+                                </Text>
+                                {needsEmailVerfied && (
+                                    <Text
+                                        style={{ flex: 1, color: colors.link, fontFamily: POPPINS_REGULAR, textAlign: 'right', paddingRight: 5 }}
+                                        onPress={() => {
+                                            sendVerficationEmail();
+                                        }}
+                                    >
+                                        send verification email
+                                    </Text>
+                                )}
+                            </View>
+                        </View>
+
+                        <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
+                            <HorizontalLine />
+                            <Button
+                                title="Login"
+                                onPress={() => {
+                                    const auth = getAuth();
+                                    signInWithEmailAndPassword(auth, email, password)
+                                        .then((userCredential) => {
+                                            resetFields();
+
+                                            if (!userCredential.user.emailVerified) {
+                                                setError('please verify your email address');
+                                                getAuth().signOut();
+                                                setNeedsEmailVerified(true);
+                                            } else {
+                                                dismiss();
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            const errorCode = error.code;
+                                            handleLoginError(errorCode);
+                                            setNeedsEmailVerified(false);
+                                        });
+                                }}
+                            />
                         </View>
                     </View>
                 </View>
