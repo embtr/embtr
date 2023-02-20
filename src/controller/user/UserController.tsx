@@ -4,7 +4,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
 import axios from 'axios';
 import { CreateUserRequest, ForgotPasswordRequest, Response, VerifyEmailRequest } from 'resources/types';
-import { Code } from 'resources/codes';
+import { getApiUrl } from 'src/util/UrlUtility';
 
 export interface UserModel {
     uid: string;
@@ -44,7 +44,7 @@ class UserController {
         };
 
         return await axios
-            .post('http://192.168.1.213:3000/user/create/', body)
+            .post(getApiUrl('/user/create/'), body)
             .then((success) => {
                 return success.data;
             })
@@ -54,12 +54,14 @@ class UserController {
     }
 
     public static async forgotPassword(email: string): Promise<Response> {
+        console.log(getApiUrl('/user/forgot_password/'));
+        console.log(email);
         const body: ForgotPasswordRequest = {
             email,
         };
 
         return await axios
-            .post('http://192.168.1.213:3000/user/forgot_password/', body)
+            .post(getApiUrl('/user/forgot_password/'), body)
             .then((success) => {
                 return success.data;
             })
@@ -74,7 +76,7 @@ class UserController {
         };
 
         return await axios
-            .post('http://192.168.1.213:3000/user/send_verification_email', body)
+            .post(getApiUrl('/user/send_verification_email'), body)
             .then((success) => {
                 return success.data;
             })
