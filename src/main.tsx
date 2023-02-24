@@ -112,7 +112,7 @@ export const Main = () => {
 
     const createUserIfNew = async (user: User) => {
         if (user.uid && user.email) {
-            await UserController.createUser(user.uid, user.email);
+            await UserController.createUserIfNew(user.uid);
         }
     };
 

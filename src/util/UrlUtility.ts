@@ -2,5 +2,7 @@ import Constants from 'expo-constants';
 
 export const getApiUrl = (path: string) => {
     const apiUrl = Constants.expoConfig?.extra?.apiUrl;
-    return `${apiUrl}${path}`;
+    const url = `${apiUrl}${path}`;
+
+    return url;
 };

@@ -3,8 +3,11 @@ import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
 import axios from 'axios';
-import { CreateUserRequest, ForgotPasswordRequest, Response, VerifyEmailRequest } from 'resources/types';
 import { getApiUrl } from 'src/util/UrlUtility';
+import { Response, CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest, GetUserResponse } from 'resources/types';
+import { USER } from 'resources/endpoints';
+import { getAuth } from 'firebase/auth';
+import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
 
 export interface UserModel {
     uid: string;
@@ -23,6 +26,9 @@ export const FAKE_USER: UserModel = {
     timestamp: Timestamp.now(),
 };
 
+const ACCOUNT_ENDPOINT = 'account';
+const USER_ENDPOINT = 'user';
+
 class UserController {
     public static clone(user: UserModel) {
         const clone: UserModel = {
@@ -37,14 +43,14 @@ class UserController {
         return clone;
     }
 
-    public static async registerUser(email: string, password: string): Promise<Response> {
-        const body: CreateUserRequest = {
+    public static async createAccount(email: string, password: string): Promise<Response> {
+        const body: CreateAccountRequest = {
             email,
             password,
         };
 
         return await axios
-            .post(getApiUrl('/user/create/'), body)
+            .post(getApiUrl(`/${ACCOUNT_ENDPOINT}/create/`), body)
             .then((success) => {
                 return success.data;
             })
@@ -54,14 +60,12 @@ class UserController {
     }
 
     public static async forgotPassword(email: string): Promise<Response> {
-        console.log(getApiUrl('/user/forgot_password/'));
-        console.log(email);
-        const body: ForgotPasswordRequest = {
+        const body: ForgotAccountPasswordRequest = {
             email,
         };
 
         return await axios
-            .post(getApiUrl('/user/forgot_password/'), body)
+            .post(getApiUrl(`/${ACCOUNT_ENDPOINT}/forgot_password/`), body)
             .then((success) => {
                 return success.data;
             })
@@ -71,12 +75,12 @@ class UserController {
     }
 
     public static async sendVerifyEmail(email: string): Promise<Response> {
-        const body: VerifyEmailRequest = {
+        const body: VerifyAccountEmailRequest = {
             email,
         };
 
         return await axios
-            .post(getApiUrl('/user/send_verification_email'), body)
+            .post(getApiUrl(`/${ACCOUNT_ENDPOINT}/send_verification_email`), body)
             .then((success) => {
                 return success.data;
             })
@@ -85,11 +89,62 @@ class UserController {
             });
     }
 
+    public static async getUser(uid: string): Promise<GetUserResponse> {
+        return await axios
+            .get(getApiUrl(`/${USER_ENDPOINT}/${uid}`), {
+                headers: {
+                    Authorization: `Bearer ${await getAuthTokenId()}`,
+                },
+            })
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async createUser() {
+        return await axios
+            .post(
+                getApiUrl(`/${USER_ENDPOINT}/`),
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${await getAuthTokenId()}`,
+                    },
+                }
+            )
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async createUserIfNew(uid: string) {
+        const userResponse: GetUserResponse = await this.getUser(uid);
+        if (userResponse.success) {
+            console.log('skipping user creation, user already exists on new system');
+            return;
+        }
+
+        console.log('creating user on new system');
+
+        await this.createUser();
+    }
+
+    /*
+     * ============= OLD SYSTEM LOGIC ==============
+     */
+
     public static async update(user: UserModel) {
         await UserDao.update(user);
     }
 
     public static async get(uid: string) {
+        //attempt get on new server, if not there try old
         const userData = await UserDao.get(uid);
         const currentUser: UserModel = this.getUserFromData(userData);
 
@@ -120,10 +175,6 @@ class UserController {
 
     public static async getCurrentUser() {
         return await this.get(getCurrentUid());
-    }
-
-    public static async createUser(uid: string, email: string) {
-        await UserDao.createUser(uid, email);
     }
 
     public static async updatePostNotificationToken(token: string | null) {

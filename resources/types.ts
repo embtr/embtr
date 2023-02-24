@@ -32,3 +32,16 @@ export interface Response {
 export interface AuthenticationResponse extends Response {
     token?: string;
 }
+
+export interface GetUserResponse extends Response {
+    user?: {
+        uid: string;
+        email: string;
+    }
+}
+
+export interface CreateUserRequest {
+}
+
+export interface CreateUserResponse extends Response {
+}

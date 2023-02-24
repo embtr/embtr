@@ -143,22 +143,22 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                     title="Sign Up"
                     onPress={() => {
                         const handleSignUp = async () => {
-                            const result: Response = await UserController.registerUser(email, password);
+                            const result: Response = await UserController.createAccount(email, password);
                             switch (result.internalCode) {
                                 case Code.SUCCESS:
                                     setError('');
                                     confirm();
                                     break;
 
-                                case Code.CREATE_USER_EMAIL_IN_USE:
+                                case Code.CREATE_ACCOUNT_EMAIL_IN_USE:
                                     setError('email already in use');
                                     break;
 
-                                case Code.CREATE_USER_INVALID_EMAIL:
+                                case Code.CREATE_ACCOUNT_INVALID_EMAIL:
                                     setError('email address is invalid');
                                     break;
 
-                                case Code.CREATE_USER_INVALID_PASSWORD:
+                                case Code.CREATE_ACCOUNT_INVALID_PASSWORD:
                                     setError('password is invalid');
                             }
                         };
