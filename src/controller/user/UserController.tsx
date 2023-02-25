@@ -5,8 +5,6 @@ import { WIDGETS } from 'src/util/constants';
 import axios from 'axios';
 import { getApiUrl } from 'src/util/UrlUtility';
 import { Response, CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest, GetUserResponse } from 'resources/types';
-import { USER } from 'resources/endpoints';
-import { getAuth } from 'firebase/auth';
 import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
 
 export interface UserModel {

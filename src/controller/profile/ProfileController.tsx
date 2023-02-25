@@ -1,9 +1,14 @@
+import axios from 'axios';
 import { ImagePickerResult } from 'expo-image-picker';
 import { User } from 'firebase/auth';
+import { USER } from 'resources/endpoints';
+import { UpdateUserRequest } from 'resources/types';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import ProfileDao, { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { pickImage } from 'src/util/ImagePickerUtil';
+import { getApiUrl } from 'src/util/UrlUtility';
+import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
 
 class ProfileController {
     public static getProfile(uid: string, callback: Function) {
@@ -56,6 +61,29 @@ class ProfileController {
             'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6';
 
         ProfileDao.updateProfile({ uid: uid, name: name, nameLower: nameLower, email: email, photoUrl: photoUrl });
+    }
+
+    public static async updateProfileThroughApi(userProfile: UserProfileModel) {
+        const body: UpdateUserRequest = {
+            displayName: userProfile.name,
+            username: userProfile.username,
+            location: userProfile.location,
+            bio: userProfile.bio,
+        };
+
+        return await axios
+            .patch(getApiUrl(`${USER}`), body, {
+                headers: {
+                    Authorization: `Bearer ${await getAuthTokenId()}`,
+                },
+            })
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                console.log(error);
+                return error.response.data;
+            });
     }
 
     public static async updateProfile(userProfile: UserProfileModel) {
