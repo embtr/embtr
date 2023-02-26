@@ -6,6 +6,7 @@ import axios from 'axios';
 import { getApiUrl } from 'src/util/UrlUtility';
 import { Response, CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest, GetUserResponse } from 'resources/types';
 import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
+import { getAuth } from 'firebase/auth';
 
 export interface UserModel {
     uid: string;
@@ -113,10 +114,12 @@ class UserController {
                     },
                 }
             )
-            .then((success) => {
+            .then(async (success) => {
+                this.forceRefreshIdToken();
                 return success.data;
             })
             .catch((error) => {
+                getAuth().currentUser?.getIdToken(true);
                 return error.response.data;
             });
     }
@@ -124,13 +127,41 @@ class UserController {
     public static async createUserIfNew(uid: string) {
         const userResponse: GetUserResponse = await this.getUser(uid);
         if (userResponse.success) {
-            console.log('skipping user creation, user already exists on new system');
             return;
         }
 
-        console.log('creating user on new system');
-
         await this.createUser();
+    }
+
+    public static async get(uid: string) {
+        const user = await this.getFromNewSystem(uid);
+        if (user) {
+            return user;
+        }
+
+        return await this.getFromOldSystem(uid);
+    }
+
+    public static async getFromNewSystem(uid: string): Promise<UserModel | null> {
+        const userResponse: GetUserResponse = await this.getUser(uid);
+        if (userResponse.success && userResponse.user) {
+            const user: UserModel = {
+                uid: userResponse.user.uid!,
+                email: userResponse.user.email!,
+                access_level: '',
+                post_notification_token: '',
+                today_widgets: WIDGETS,
+                timestamp: Timestamp.now(),
+            };
+
+            return user;
+        }
+
+        return null;
+    }
+
+    private static async forceRefreshIdToken() {
+        await getAuth().currentUser?.getIdToken(true);
     }
 
     /*
@@ -141,12 +172,11 @@ class UserController {
         await UserDao.update(user);
     }
 
-    public static async get(uid: string) {
-        //attempt get on new server, if not there try old
+    public static async getFromOldSystem(uid: string): Promise<UserModel | null> {
         const userData = await UserDao.get(uid);
-        const currentUser: UserModel = this.getUserFromData(userData);
+        const user: UserModel = this.getUserFromData(userData);
 
-        return currentUser;
+        return user;
     }
 
     private static getUserFromData(data: DocumentSnapshot<DocumentData>): UserModel {
