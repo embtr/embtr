@@ -2,11 +2,9 @@ import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
-import axios from 'axios';
-import { getApiUrl } from 'src/util/UrlUtility';
 import { Response, CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest, GetUserResponse } from 'resources/types';
-import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
 import { getAuth } from 'firebase/auth';
+import axiosInstance from 'src/axios/axios';
 
 export interface UserModel {
     uid: string;
@@ -48,8 +46,8 @@ class UserController {
             password,
         };
 
-        return await axios
-            .post(getApiUrl(`/${ACCOUNT_ENDPOINT}/create/`), body)
+        return await axiosInstance
+            .post(`/${ACCOUNT_ENDPOINT}/create/`, body)
             .then((success) => {
                 return success.data;
             })
@@ -63,8 +61,8 @@ class UserController {
             email,
         };
 
-        return await axios
-            .post(getApiUrl(`/${ACCOUNT_ENDPOINT}/forgot_password/`), body)
+        return await axiosInstance
+            .post(`/${ACCOUNT_ENDPOINT}/forgot_password/`, body)
             .then((success) => {
                 return success.data;
             })
@@ -78,8 +76,8 @@ class UserController {
             email,
         };
 
-        return await axios
-            .post(getApiUrl(`/${ACCOUNT_ENDPOINT}/send_verification_email`), body)
+        return await axiosInstance
+            .post(`/${ACCOUNT_ENDPOINT}/send_verification_email`, body)
             .then((success) => {
                 return success.data;
             })
@@ -89,12 +87,8 @@ class UserController {
     }
 
     public static async getUser(uid: string): Promise<GetUserResponse> {
-        return await axios
-            .get(getApiUrl(`/${USER_ENDPOINT}/${uid}`), {
-                headers: {
-                    Authorization: `Bearer ${await getAuthTokenId()}`,
-                },
-            })
+        return await axiosInstance
+            .get(`/${USER_ENDPOINT}/${uid}`)
             .then((success) => {
                 return success.data;
             })
@@ -104,16 +98,8 @@ class UserController {
     }
 
     public static async createUser() {
-        return await axios
-            .post(
-                getApiUrl(`/${USER_ENDPOINT}/`),
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${await getAuthTokenId()}`,
-                    },
-                }
-            )
+        return await axiosInstance
+            .post(`/${USER_ENDPOINT}/`)
             .then(async (success) => {
                 this.forceRefreshIdToken();
                 return success.data;

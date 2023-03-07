@@ -10,6 +10,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { PlanPreviews } from './PlanPreviews';
 import { Planning } from './planning/Planning';
+import { Tasks } from './tasks/Tasks';
 
 /*
  * Avoid rerenders
@@ -42,9 +43,12 @@ export const PlanMain = () => {
 
             case 'habits':
                 return <PlanPreviews />;
+
+            case 'tasks':
+                return <Tasks />;
         }
 
-        return <View></View>;
+        return <View />;
     };
 
     const [index, setIndex] = React.useState(0);
@@ -52,15 +56,8 @@ export const PlanMain = () => {
     const [routes] = React.useState([
         { key: 'planning', title: 'Schedule' },
         { key: 'habits', title: 'Plan' },
+        { key: 'tasks', title: 'Tasks' },
     ]);
-
-    let [fontsLoaded] = useFonts({
-        Poppins_600SemiBold,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
-    }
 
     const navigateToTomorrowCreateTask = () => {
         setShowAddTaskModal(true);

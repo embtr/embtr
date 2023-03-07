@@ -10,15 +10,13 @@ import FollowerController from 'src/controller/follower/FollowerController';
 import { useFocusEffect } from '@react-navigation/native';
 import { UserSearchUtility } from 'src/util/user/UserSearchUtility';
 import { getAuth } from 'firebase/auth';
-import { useFonts, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { CARD_SHADOW, USER_SEARCH_WIDTH } from 'src/util/constants';
-
 
 export const UserSearch = () => {
     const { colors } = useTheme();
 
     const [userSearchUtility, setUserSearchUtility] = React.useState<UserSearchUtility | undefined>(undefined);
-    const [searchText, setSearchText] = React.useState("");
+    const [searchText, setSearchText] = React.useState('');
 
     const [searchResults, setSearchResults] = React.useState<UserSearchResultObject | undefined>(undefined);
     const [followingUids, setFollowingUids] = React.useState<string[]>([]);
@@ -28,13 +26,13 @@ export const UserSearch = () => {
         if (userSearchUtility) {
             userSearchUtility.updateSearch(text, setSearchResults);
         }
-    }
+    };
 
     const onFollowUser = (uid: string) => {
         let followingUidsCopy = followingUids.slice(0);
         followingUidsCopy.push(uid);
         setFollowingUids(followingUidsCopy);
-    }
+    };
 
     const onUnfollowUser = (uid: string) => {
         let followingUidsCopy = followingUids.slice(0);
@@ -45,14 +43,14 @@ export const UserSearch = () => {
                 return;
             }
         }
-    }
+    };
 
     React.useEffect(() => {
         setUserSearchUtility(new UserSearchUtility());
     }, []);
 
     React.useEffect(() => {
-        onSearchChange("");
+        onSearchChange('');
     }, [userSearchUtility]);
 
     useFocusEffect(
@@ -61,46 +59,72 @@ export const UserSearch = () => {
         }, [])
     );
 
-    let [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-    });
-
-    if (!fontsLoaded) {
-        return <View />
-    }
-
     return (
         <Screen>
             <View style={{ paddingBottom: 20 }}>
-                <Banner name='User Search' leftIcon={"arrow-back"} leftRoute="Timeline" />
+                <Banner name="User Search" leftIcon={'arrow-back'} leftRoute="Timeline" />
             </View>
 
             <ScrollView>
-                <View style={{ alignItems: "center" }}>
-
-                    <View style={[{ backgroundColor: colors.button_background, height: 75, borderRadius: 15, width: USER_SEARCH_WIDTH, flexDirection: "row", alignItems: "center" }, CARD_SHADOW]}>
-                        <View style={{ alignContent: "flex-end", alignItems: "flex-end", justifyContent: "flex-end", position: "absolute", zIndex: -1, width: "100%", paddingRight: 15 }} >
+                <View style={{ alignItems: 'center' }}>
+                    <View
+                        style={[
+                            {
+                                backgroundColor: colors.button_background,
+                                height: 75,
+                                borderRadius: 15,
+                                width: USER_SEARCH_WIDTH,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            },
+                            CARD_SHADOW,
+                        ]}
+                    >
+                        <View
+                            style={{
+                                alignContent: 'flex-end',
+                                alignItems: 'flex-end',
+                                justifyContent: 'flex-end',
+                                position: 'absolute',
+                                zIndex: -1,
+                                width: '100%',
+                                paddingRight: 15,
+                            }}
+                        >
                             <Ionicons name={'search'} size={28} color={colors.search_preview} />
                         </View>
 
                         <TextInput
-                            style={{ width: "100%", height: "100%", color: colors.user_search_name, fontSize: 18, fontFamily: "Poppins_400Regular", paddingLeft: 15 }}
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                color: colors.user_search_name,
+                                fontSize: 18,
+                                fontFamily: 'Poppins_400Regular',
+                                paddingLeft: 15,
+                            }}
                             onChangeText={onSearchChange}
                             value={searchText}
                             placeholderTextColor={colors.search_preview}
-                            placeholder={"Search"}
-                            autoCapitalize='none'
+                            placeholder={'Search'}
+                            autoCapitalize="none"
                         />
                     </View>
 
-                    <View style={{ paddingTop: 10, width: "100%" }}>
-                        {searchResults?.results
-                            ? <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={searchResults.results!} />
-                            : <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />}
+                    <View style={{ paddingTop: 10, width: '100%' }}>
+                        {searchResults?.results ? (
+                            <UserSearchResults
+                                followingUids={followingUids}
+                                onFollowUser={onFollowUser}
+                                onUnfollowUser={onUnfollowUser}
+                                searchResults={searchResults.results!}
+                            />
+                        ) : (
+                            <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />
+                        )}
                     </View>
                 </View>
             </ScrollView>
         </Screen>
-
     );
-}
+};

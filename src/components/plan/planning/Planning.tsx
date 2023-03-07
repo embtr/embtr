@@ -14,7 +14,6 @@ import PlannedTaskController, { createPlannedTaskModel, PlannedTaskModel } from 
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
 
 interface Props {
@@ -61,6 +60,9 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
     };
 
     const refreshPlannedToday = async (dayKey: string) => {
+        const result = await PlannedDayController.getOrCreateViaApi(dayKey);
+        console.log(result);
+
         const plannedDay = await PlannedDayController.getOrCreate(currentUser, dayKey);
         setPlannedToday(plannedDay);
     };

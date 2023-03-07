@@ -2,6 +2,8 @@ import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import TaskDao from 'src/firebase/firestore/planning/TaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
+import axiosInstance from 'src/axios/axios';
+import { TASK } from 'resources/endpoints';
 
 export interface TaskModel {
     id?: string;
@@ -87,6 +89,20 @@ export const FAKE_HABIT: TaskModel = {
 };
 
 class TaskController {
+    public static async search(query: string) {
+        return await axiosInstance
+            .get(`${TASK}`, { params: { q: query } })
+            .then((success) => {
+                return success.data.tasks as TaskModel[];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
+    /*
+     * OLD LOGIC BELOW ~~~~~
+     */
     public static clone(task: TaskModel) {
         const clone: TaskModel = {
             id: task.id,

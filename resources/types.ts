@@ -51,6 +51,9 @@ export interface GetTaskResponse extends Response {
     task?: TaskModel
 }
 
+export interface SearchTasksResponse extends Response {
+    tasks: TaskModel[]
+}
 
 export interface CreateTaskRequest {
     title: string;
@@ -61,10 +64,24 @@ export interface CreateTaskResponse extends Response {
 
 }
 
+export interface GetPlannedDayRequest {
+    userId: number;
+    dayKey: string;
+}
+
 export interface GetPlannedDayResponse extends Response {
     plannedDay?: PlannedDayModel
 }
 
+export interface CreatePlannedDayRequest {
+    dayKey: string;
+}
+
 export interface CreatePlannedDayResponse extends Response {
 
+}
+
+export interface CreatePlannedTaskRequest {
+    taskId: number,
+    plannedDayId: number
 }

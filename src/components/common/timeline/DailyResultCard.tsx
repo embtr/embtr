@@ -4,8 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import { View, Text } from 'react-native';
-import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
+import { View } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PlannedDayController, { getDateFromDayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
@@ -13,7 +12,6 @@ import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import UserController from 'src/controller/user/UserController';
-import { getDatePretty } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { DailyResultHeader } from './DailyResultHeader';
@@ -55,6 +53,10 @@ export const DailyResultCard = ({ userProfileModel, dailyResult }: Props) => {
     React.useEffect(() => {
         const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
             const user = await UserController.get(dailyResult.uid);
+            if (!user) {
+                return;
+            }
+
             const plannedDay = await PlannedDayController.getOrCreate(user, dailyResult.data.dayKey);
             setPlannedDay(plannedDay);
         };

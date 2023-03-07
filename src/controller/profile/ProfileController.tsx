@@ -3,6 +3,7 @@ import { ImagePickerResult } from 'expo-image-picker';
 import { User } from 'firebase/auth';
 import { USER } from 'resources/endpoints';
 import { UpdateUserRequest } from 'resources/types';
+import axiosInstance from 'src/axios/axios';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import ProfileDao, { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
@@ -71,17 +72,12 @@ class ProfileController {
             bio: userProfile.bio,
         };
 
-        return await axios
-            .patch(getApiUrl(`${USER}`), body, {
-                headers: {
-                    Authorization: `Bearer ${await getAuthTokenId()}`,
-                },
-            })
+        return await axiosInstance
+            .patch(`${USER}`, body)
             .then((success) => {
                 return success.data;
             })
             .catch((error) => {
-                console.log(error);
                 return error.response.data;
             });
     }

@@ -13,9 +13,9 @@ export interface TaskModel {
 }
 
 export interface PlannedDayModel {
-    user: UserModel;
-    dayKey: string;
-    date: Date;
-    createdAt: Date;
-    updatedAt: Date;
+    user?: UserModel;
+    dayKey?: string;
+    date?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
