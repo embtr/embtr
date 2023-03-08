@@ -15,6 +15,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
 import { RoutineHabitModel } from 'src/controller/routine/RoutineHabitController';
+import { PlannedDayModel } from 'resources/models';
 
 interface Props {
     showSelectTaskModal: boolean;
@@ -26,7 +27,7 @@ interface Props {
 
 export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSelectTaskModal, onDayChange, useCalendarView }: Props) => {
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
-    const [plannedToday, setPlannedToday] = React.useState<PlannedDay>();
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDayModel>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
     const currentUser = useAppSelector(getCurrentUser);
@@ -61,14 +62,11 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
 
     const refreshPlannedToday = async (dayKey: string) => {
         const result = await PlannedDayController.getOrCreateViaApi(dayKey);
-        console.log(result);
-
-        const plannedDay = await PlannedDayController.getOrCreate(currentUser, dayKey);
-        setPlannedToday(plannedDay);
+        setPlannedDay(result);
     };
 
     const getPlannedTasksFromHabits = (habits: TaskModel[]) => {
-        if (!plannedToday?.id) {
+        if (!plannedDay?.dayKey) {
             return;
         }
 
@@ -79,7 +77,7 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
                 goal = getGoal(habit.goalId);
             }
 
-            const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedToday.dayKey, habit, 360, 30, goal);
+            const plannedTask: PlannedTaskModel = createPlannedTaskModel(plannedDay.dayKey, habit, 360, 30, goal);
             createdPlannedTasks.push(plannedTask);
         }
 
@@ -87,7 +85,7 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
     };
 
     const getPlannedTasksFromRoutineHabits = (routineHabits: RoutineHabitModel[]) => {
-        if (!plannedToday?.id) {
+        if (!plannedDay?.dayKey) {
             return;
         }
 
@@ -99,7 +97,7 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
             }
 
             const plannedTask: PlannedTaskModel = createPlannedTaskModel(
-                plannedToday.dayKey,
+                plannedDay.dayKey,
                 routineHabit.habit,
                 routineHabit.startMinute,
                 routineHabit.duration,
@@ -133,28 +131,28 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
     };
 
     let taskViews: JSX.Element[] = [];
-    plannedToday?.plannedTasks.forEach((plannedTask) => {
-        taskViews.push(<PlannedTask key={plannedTask.id} plannedTask={plannedTask} />);
-    });
+    //plannedToday?.plannedTasks.forEach((plannedTask) => {
+    //    taskViews.push(<PlannedTask key={plannedTask.id} plannedTask={plannedTask} />);
+    //});
 
     return (
         <Screen>
             <EmbtrMenuCustom />
-            {plannedToday?.id && (
-                <AddHabitModal visible={showSelectTaskModal} plannedDay={plannedToday} confirm={addHabitsFromModal} dismiss={dismissSelectTaskModal} />
+            {plannedDay?.id && (
+                <AddHabitModal visible={showSelectTaskModal} plannedDay={plannedDay} confirm={addHabitsFromModal} dismiss={dismissSelectTaskModal} />
             )}
 
             <View style={{ flex: 1 }}>
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
-                {useCalendarView ? (
+                {/* useCalendarView ? (
                     <CalendarView plannedToday={plannedToday} onTaskUpdated={updateTask} />
                 ) : plannedToday ? (
                     <PlanDay plannedDay={plannedToday} onTaskUpdated={updateTask} onOpenHabitsModal={openSelectTaskModal} />
                 ) : (
                     <View />
-                )}
+                )*/}
             </View>
         </Screen>
     );

@@ -6,6 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, Store } from './src/redux/store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { HoldMenuProvider } from 'react-native-hold-menu';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 export default function App() {
     return (
@@ -15,12 +16,14 @@ export default function App() {
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeProvider>
                             <HoldMenuProvider>
-                                <Main />
+                                <RootSiblingParent>
+                                    <Main />
+                                </RootSiblingParent>
                             </HoldMenuProvider>
                         </ThemeProvider>
                     </PersistGate>
                 </Provider>
             </SafeAreaProvider>
-        </React.StrictMode >
+        </React.StrictMode>
     );
-};
+}

@@ -6,6 +6,10 @@ import { DELETED } from 'src/util/constants';
 import { UserModel } from '../user/UserController';
 import { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay, plannedTaskIsComplete } from './PlannedDayController';
+import { TaskModel as NewTaskModel, PlannedDayModel } from 'resources/models';
+import { CreatePlannedTaskRequest } from 'resources/types';
+import axiosInstance from 'src/axios/axios';
+import { PLANNED_DAY } from 'resources/endpoints';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -94,6 +98,31 @@ export const getLongestStreak = (plannedTasks: PlannedTaskModel[]): number => {
 };
 
 class PlannedTaskController {
+    public static async addTaskViaApi(plannedDay: PlannedDayModel, task: NewTaskModel) {
+        if (!plannedDay.id || !task.id) {
+            return;
+        }
+
+        const request: CreatePlannedTaskRequest = {
+            plannedDayId: plannedDay.id,
+            taskId: task.id,
+        };
+
+        return await axiosInstance
+            .post(`${PLANNED_DAY}planned-task/`, request)
+            .then((success) => {
+                console.log('success!');
+                return success.data;
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                return error.response.data;
+            });
+    }
+
+    /*
+     * OLD CODE
+     */
     public static async create(plannedTask: PlannedTaskModel) {
         const results = await PlannedTaskDao.create(plannedTask);
         plannedTask.id = results.id;

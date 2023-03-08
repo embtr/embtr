@@ -89,7 +89,7 @@ export const FAKE_HABIT: TaskModel = {
 };
 
 class TaskController {
-    public static async search(query: string) {
+    public static async search(query: string): Promise<TaskModel[]> {
         return await axiosInstance
             .get(`${TASK}`, { params: { q: query } })
             .then((success) => {

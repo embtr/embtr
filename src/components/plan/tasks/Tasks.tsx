@@ -2,13 +2,19 @@ import React from 'react';
 import { CARD_SHADOW } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { ScrollView, TextInput, View } from 'react-native';
-import { TaskModel } from 'resources/models';
+import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
+import { PlannedDayModel, TaskModel } from 'resources/models';
 import TaskController from 'src/controller/planning/TaskController';
 import { TaskPreview } from './TaskPreview';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
-export const Tasks = () => {
+interface Props {
+    plannedDay: PlannedDayModel;
+}
+
+export const Tasks = ({ plannedDay }: Props) => {
     const { colors } = useTheme();
+
     const [searchText, setSearchText] = React.useState('');
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
 
@@ -23,7 +29,6 @@ export const Tasks = () => {
 
     const fetchTasks = async (text: string) => {
         const results = await TaskController.search(text);
-        console.log(results);
         setTasks(results);
     };
 
@@ -32,7 +37,7 @@ export const Tasks = () => {
         const task = tasks[i];
         taskElements.push(
             <View style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
-                <TaskPreview task={task} />
+                <TaskPreview plannedDay={plannedDay} task={task} />
             </View>
         );
     }
@@ -87,7 +92,7 @@ export const Tasks = () => {
                 </View>
             </View>
 
-            <ScrollView style={{ flex: 1 }}>
+            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ width: '100%', height: '100%' }}>
                 <View style={{ paddingTop: 10, width: '100%' }}>{taskElements}</View>
             </ScrollView>
         </View>
