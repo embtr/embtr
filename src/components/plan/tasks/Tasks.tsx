@@ -3,9 +3,10 @@ import { CARD_SHADOW } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TextInput, View } from 'react-native';
-import { PlannedDayModel, TaskModel } from 'resources/models';
 import TaskController from 'src/controller/planning/TaskController';
 import { TaskPreview } from './TaskPreview';
+import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { TaskModel } from 'resources/models/TaskModel';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -39,6 +40,15 @@ export const Tasks = ({ plannedDay }: Props) => {
                 <TaskPreview plannedDay={plannedDay} task={task} />
             </View>
         );
+    }
+    if (searchText) {
+        if (!tasks.find((task) => task.title?.toLowerCase() === searchText.toLowerCase())) {
+            taskElements.push(
+                <View style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
+                    <TaskPreview plannedDay={plannedDay} task={{ id: undefined, title: searchText, description: '' }} />
+                </View>
+            );
+        }
     }
 
     return (

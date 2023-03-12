@@ -4,6 +4,8 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { TASK } from 'resources/endpoints';
+import { TaskModel as NewTaskModel } from 'resources/models/TaskModel';
+import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/TaskTypes';
 
 export interface TaskModel {
     id?: string;
@@ -89,7 +91,24 @@ export const FAKE_HABIT: TaskModel = {
 };
 
 class TaskController {
-    public static async search(query: string): Promise<TaskModel[]> {
+    public static async createViaApi(title: string): Promise<NewTaskModel> {
+        const request: CreateTaskRequest = {
+            title,
+        };
+
+        return await axiosInstance
+            .post(`${TASK}`, request)
+            .then((success) => {
+                const response: CreateTaskResponse = success.data;
+                return response.task;
+            })
+            .catch((error) => {
+                console.log(error.response.data);
+                return error.response.data;
+            });
+    }
+
+    public static async search(query: string): Promise<NewTaskModel[]> {
         return await axiosInstance
             .get(`${TASK}`, { params: { q: query } })
             .then((success) => {

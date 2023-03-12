@@ -6,6 +6,7 @@ import React from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { PlannedDayModel } from 'resources/models/PlannedDayModel';
 import { TaskModel } from 'resources/models/TaskModel';
+import TaskController from 'src/controller/planning/TaskController';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -49,8 +50,13 @@ export const TaskPreview = ({ plannedDay, task }: Props) => {
                             </TouchableOpacity>
                         ) : (
                             <TouchableOpacity
-                                onPress={() => {
-                                    PlannedTaskController.addTaskViaApi(plannedDay, task);
+                                onPress={async () => {
+                                    let taskToAdd = task;
+
+                                    if (!task.id) {
+                                        taskToAdd = await TaskController.createViaApi(task.title!);
+                                    }
+                                    PlannedTaskController.addTaskViaApi(plannedDay, taskToAdd);
                                     setAdded(!add);
                                     Toast.show('task added!', {
                                         duration: Toast.durations.LONG,
