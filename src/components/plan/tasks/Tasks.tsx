@@ -2,11 +2,10 @@ import React from 'react';
 import { CARD_SHADOW } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { ScrollView, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TextInput, View } from 'react-native';
 import { PlannedDayModel, TaskModel } from 'resources/models';
 import TaskController from 'src/controller/planning/TaskController';
 import { TaskPreview } from './TaskPreview';
-import { RootSiblingParent } from 'react-native-root-siblings';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -28,7 +27,7 @@ export const Tasks = ({ plannedDay }: Props) => {
     };
 
     const fetchTasks = async (text: string) => {
-        const results = await TaskController.search(text);
+        const results: TaskModel[] = await TaskController.search(text);
         setTasks(results);
     };
 

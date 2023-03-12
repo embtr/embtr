@@ -2,9 +2,11 @@ import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
 import UserDao from 'src/firebase/firestore/user/UserDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
-import { Response, CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest, GetUserResponse } from 'resources/types';
 import { getAuth } from 'firebase/auth';
 import axiosInstance from 'src/axios/axios';
+import { CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest } from 'resources/types/AccountTypes';
+import { GetUserResponse } from 'resources/types/UserTypes';
+import { Response } from 'resources/types/RequestTypes';
 
 export interface UserModel {
     uid: string;

@@ -6,10 +6,11 @@ import { DELETED } from 'src/util/constants';
 import { UserModel } from '../user/UserController';
 import { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay, plannedTaskIsComplete } from './PlannedDayController';
-import { TaskModel as NewTaskModel, PlannedDayModel } from 'resources/models';
-import { CreatePlannedTaskRequest } from 'resources/types';
 import axiosInstance from 'src/axios/axios';
 import { PLANNED_DAY } from 'resources/endpoints';
+import { CreatePlannedTaskRequest } from 'resources/types/PlannedTaskTypes';
+import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { TaskModel as NewTaskModel } from 'resources/models/TaskModel';
 
 export interface PlannedTaskModel {
     id?: string;

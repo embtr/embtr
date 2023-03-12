@@ -6,14 +6,11 @@ import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
 import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
 import { UserModel } from '../user/UserController';
 import PlannedTaskController, { PlannedTaskModel } from './PlannedTaskController';
-import { CreatePlannedDayRequest, CreatePlannedDayResponse, GetPlannedDayRequest, GetPlannedDayResponse } from 'resources/types';
-import { getAuth } from 'firebase/auth';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
-import axios from 'axios';
-import { getApiUrl } from 'src/util/UrlUtility';
-import { PLANNED_DAY, PLANNED_TASK } from 'resources/endpoints';
+import { PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
-import { PlannedDayModel } from 'resources/models';
+import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { CreatePlannedDayRequest, CreatePlannedDayResponse, GetPlannedDayResponse } from 'resources/types/PlannedDayTypes';
 
 export interface PlannedDay {
     id?: string;
@@ -176,10 +173,7 @@ export const createMetadata = () => {
 
 class PlannedDayController {
     public static async createViaApi(dayKey: string): Promise<CreatePlannedDayResponse> {
-        const userId = await getUserIdFromToken();
-
         const body: CreatePlannedDayRequest = {
-            userId,
             dayKey,
         };
 

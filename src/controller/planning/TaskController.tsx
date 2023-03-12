@@ -93,7 +93,7 @@ class TaskController {
         return await axiosInstance
             .get(`${TASK}`, { params: { q: query } })
             .then((success) => {
-                return success.data.tasks as TaskModel[];
+                return success.data.tasks;
             })
             .catch((error) => {
                 return [];

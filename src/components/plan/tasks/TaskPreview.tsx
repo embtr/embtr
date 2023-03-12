@@ -1,11 +1,11 @@
 import { View, Text, Button, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
-import { PlannedDayModel, TaskModel } from 'resources/models';
 import Toast from 'react-native-root-toast';
 import React from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
+import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { TaskModel } from 'resources/models/TaskModel';
 
 interface Props {
     plannedDay: PlannedDayModel;

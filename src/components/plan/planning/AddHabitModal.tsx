@@ -3,8 +3,8 @@ import { Tasks } from '../tasks/Tasks';
 import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
 import { Banner } from 'src/components/common/Banner';
-import { PlannedDayModel } from 'resources/models';
 import { RootSiblingParent } from 'react-native-root-siblings';
+import { PlannedDayModel } from 'resources/models/PlannedDayModel';
 
 interface Props {
     visible: boolean;

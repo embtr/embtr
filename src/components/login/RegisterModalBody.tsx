@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Button, Text, Keyboard } from 'react-native';
+import { View, Button, Text } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextInput } from 'react-native-gesture-handler';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { Response } from 'resources/types';
+import { Response } from 'resources/types/RequestTypes';
 import UserController from 'src/controller/user/UserController';
 import { Code } from '../../../resources/codes';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
