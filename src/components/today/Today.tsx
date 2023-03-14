@@ -130,6 +130,10 @@ export const Today = () => {
 
     const fetchUser = async () => {
         const user = await UserController.getCurrentUser();
+        if (!user) {
+            return;
+        }
+
         if (!user.today_widgets) {
             setWidgets(WIDGETS);
         } else {

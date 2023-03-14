@@ -103,7 +103,6 @@ class TaskController {
                 return response.task;
             })
             .catch((error) => {
-                console.log(error.response.data);
                 return error.response.data;
             });
     }

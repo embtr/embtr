@@ -1,85 +1,59 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { durationToString, startMinuteToString, TaskModel } from 'src/controller/planning/TaskController';
-import { plannedTaskIsComplete, plannedTaskIsFailed, plannedTaskIsIncomplete } from 'src/controller/planning/PlannedDayController';
 import { CARD_SHADOW } from 'src/util/constants';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { PillarModel } from 'src/model/PillarModel';
-import { GoalModel } from 'src/controller/planning/GoalController';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
+import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
+import { PlannedTaskModel } from 'resources/models/PlannedTaskModel';
+import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
-import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
-import { PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import { SchedulePlannableTaskModal } from './SchedulePlannableTaskModal';
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { getDurationPretty } from 'src/util/DateUtility';
 
 interface Props {
-    plannedTask?: PlannedTaskModel;
-    task?: TaskModel;
-    onUpdateTask?: Function;
+    plannedTask: PlannedTaskModel;
+    onUpdateTask: Function;
     isEnabled: boolean;
-    goal: GoalModel;
-    pillar: PillarModel;
 }
 
-export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal, pillar }: Props) => {
-    const [editPlannedTaskIsVisible, setEditPlannedTaskIsVisible] = React.useState<boolean>(false);
-    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-
+export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) => {
     const { colors } = useTheme();
-
-    const toggleFailure = () => {
-        toggleFailed();
-        closeMenu();
-    };
-
-    const deletePlan = () => {
-        if (!plannedTask || !onUpdateTask) {
-            return;
-        }
-
-        plannedTask.status = 'DELETED';
-
-        onUpdateTask(plannedTask);
-        closeMenu();
-    };
 
     const dispatch = useAppDispatch();
 
-    const toggleComplete = () => {
-        if (!plannedTask || !onUpdateTask) {
-            return;
-        }
+    const toggleComplete = async () => {
+        if (!plannedTask) return;
 
-        if (plannedTaskIsComplete(plannedTask)) {
-            plannedTask.status = 'INCOMPLETE';
-        } else {
-            plannedTask.status = 'COMPLETE';
-        }
-
+        plannedTask.status = 'COMPLETE';
+        await PlannedTaskController.updateViaApi(plannedTask);
         onUpdateTask(plannedTask);
     };
 
-    const toggleFailed = () => {
-        if (!plannedTask || !onUpdateTask) {
-            return;
-        }
+    const toggleIncomplete = async () => {
+        if (!plannedTask) return;
 
-        if (plannedTaskIsFailed(plannedTask)) {
-            plannedTask.status = 'INCOMPLETE';
-        } else {
-            plannedTask.status = 'FAILED';
-        }
+        plannedTask.status = 'INCOMPLETE';
+        await PlannedTaskController.updateViaApi(plannedTask);
+        onUpdateTask(plannedTask);
+    };
 
+    const toggleFailed = async () => {
+        if (!plannedTask) return;
+
+        plannedTask.status = 'FAILED';
+        await PlannedTaskController.updateViaApi(plannedTask);
+        onUpdateTask(plannedTask);
+    };
+
+    const toggleDeleted = async () => {
+        if (!plannedTask) return;
+
+        plannedTask.active = false;
+
+        await PlannedTaskController.updateViaApi(plannedTask);
         onUpdateTask(plannedTask);
     };
 
@@ -89,71 +63,38 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
         }
 
         let menuOptions: EmbtrMenuOption[] = [];
-        if (plannedTaskIsComplete(plannedTask)) {
-            menuOptions.push({
-                name: 'Mark as Incomplete',
-                onPress: () => {
-                    closeMenu();
-                    toggleComplete();
-                },
-            });
-            menuOptions.push({
-                name: 'Mark as Failed',
-                onPress: () => {
-                    closeMenu();
-                    toggleFailure();
-                },
-            });
-        }
-        if (plannedTaskIsFailed(plannedTask)) {
-            menuOptions.push({
-                name: 'Mark as Incomplete',
-                onPress: () => {
-                    closeMenu();
-                    toggleFailure();
-                },
-            });
-            menuOptions.push({
-                name: 'Mark as Complete',
-                onPress: () => {
-                    closeMenu();
-                    toggleComplete();
-                },
-            });
-        }
-        if (plannedTaskIsIncomplete(plannedTask)) {
-            menuOptions.push({
-                name: 'Mark as Complete',
-                onPress: () => {
-                    closeMenu();
-                    toggleComplete();
-                },
-            });
-            menuOptions.push({
-                name: 'Mark as Failed',
-                onPress: () => {
-                    closeMenu();
-                    toggleFailure();
-                },
-            });
-        }
         menuOptions.push({
-            name: 'Schedule',
+            name: 'Mark as Complete',
             onPress: () => {
                 closeMenu();
-                setEditPlannedTaskIsVisible(true);
+                toggleComplete();
             },
         });
+
         menuOptions.push({
-            name: 'Edit',
+            name: 'Mark as Incomplete',
             onPress: () => {
-                if (plannedTask.id && plannedTask.dayKey) {
-                    closeMenu();
-                    navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedTask.dayKey, id: plannedTask.id });
-                }
+                closeMenu();
+                toggleIncomplete();
             },
         });
-        menuOptions.push({ name: 'Delete', onPress: deletePlan, destructive: true });
+
+        menuOptions.push({
+            name: 'Mark as Failed',
+            onPress: () => {
+                closeMenu();
+                toggleFailed();
+            },
+        });
+
+        menuOptions.push({
+            name: 'Delete',
+            onPress: () => {
+                closeMenu();
+                toggleDeleted();
+            },
+            destructive: true,
+        });
         dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
     };
 
@@ -168,36 +109,10 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
 
     const onLongPress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        setEditPlannedTaskIsVisible(true);
     };
-
-    const durationString = plannedTask?.duration ? getDurationPretty(plannedTask?.duration) : '';
 
     return (
         <View style={{ width: '97%' }}>
-            {plannedTask && (
-                <SchedulePlannableTaskModal
-                    name={plannedTask.routine.name}
-                    description={plannedTask.routine.description}
-                    initialStartMinute={plannedTask.startMinute ? plannedTask.startMinute : 0}
-                    initialDuration={plannedTask.duration ? plannedTask.duration : 0}
-                    visible={editPlannedTaskIsVisible}
-                    confirm={(startMinute: number, duration: number) => {
-                        if (!plannedTask || !onUpdateTask) {
-                            return;
-                        }
-
-                        plannedTask.startMinute = startMinute;
-                        plannedTask.duration = duration;
-                        onUpdateTask(plannedTask);
-                        setEditPlannedTaskIsVisible(false);
-                    }}
-                    dismiss={() => {
-                        setEditPlannedTaskIsVisible(false);
-                    }}
-                />
-            )}
-
             <TouchableOpacity onPress={onShortPress} onLongPress={onLongPress}>
                 <View style={[{ backgroundColor: isEnabled ? colors.button_background : colors.tomorrow_unselected, borderRadius: 15 }, CARD_SHADOW]}>
                     <View style={{ borderRadius: 15, flexDirection: 'row', overflow: 'hidden' }}>
@@ -225,7 +140,7 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
                                                 fontSize: 14,
                                             }}
                                         >
-                                            {plannedTask?.routine?.name ? plannedTask.routine.name : task?.name ? task.name : ''}
+                                            {plannedTask?.task?.title}
                                         </Text>
                                         <Text
                                             style={{
@@ -235,7 +150,7 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
                                                 paddingStart: 5,
                                             }}
                                         >
-                                            {plannedTask?.routine.id ? 'habit' : ''}
+                                            {/*plannedTask?.routine.id ? 'habit' : ''*/}
                                         </Text>
                                     </View>
                                     <View
@@ -268,27 +183,27 @@ export const PlannableTask = ({ plannedTask, task, onUpdateTask, isEnabled, goal
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
                                     <Ionicons name={'time'} size={12} color={colors.goal_secondary_font} />
                                     <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
-                                        {startMinuteToString(plannedTask?.startMinute ? plannedTask.startMinute : 0)}
+                                        filler 1
                                     </Text>
                                 </View>
 
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
                                     <MaterialCommunityIcons name="timer" size={12} color={colors.goal_secondary_font} />
                                     <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
-                                        {durationString}
+                                        filler 2
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
                                     <Ionicons name={'stats-chart-outline'} size={12} color={colors.goal_secondary_font} />
                                     <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
-                                        {goal.name}
+                                        filler 3
                                     </Text>
                                 </View>
 
                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
                                     <MaterialCommunityIcons name="pillar" size={12} color={colors.goal_secondary_font} />
                                     <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
-                                        {pillar.name}
+                                        filler 4
                                     </Text>
                                 </View>
                             </View>

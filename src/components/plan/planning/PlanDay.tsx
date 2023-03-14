@@ -1,22 +1,18 @@
+import React from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { getAuth } from 'firebase/auth';
-import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
+import { PlannedDayModel } from 'resources/models/PlannedDayModel';
 import { Screen } from 'src/components/common/Screen';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
-import PillarController from 'src/controller/pillar/PillarController';
-import GoalController, { FAKE_GOAL, GoalModel } from 'src/controller/planning/GoalController';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { getPlannedTaskGoalId } from 'src/controller/planning/PlannedTaskController';
-import UserController from 'src/controller/user/UserController';
-import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
+import { GoalModel } from 'src/controller/planning/GoalController';
+import { PillarModel } from 'src/model/PillarModel';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
-    plannedDay: PlannedDay;
+    plannedDay: PlannedDayModel;
     onTaskUpdated: Function;
     onOpenHabitsModal: Function;
 }
@@ -32,61 +28,19 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
 
     useFocusEffect(
         React.useCallback(() => {
-            fetch();
-        }, [])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
             AccessLogController.addPlanningListPageAccesLog();
         }, [])
     );
 
-    const fetch = () => {
-        fetchGoals();
-        fetchPillars();
-    };
-
-    const fetchGoals = () => {
-        GoalController.getGoals(getAuth().currentUser!.uid, setGoals);
-    };
-
-    const fetchPillars = async () => {
-        const user = await UserController.getCurrentUser();
-        const pillars = await PillarController.getPillars(user);
-        setPillars(pillars);
-    };
-
-    /*
-     * This section builds the Views for both
-     * the selected tasks as well as the unselected days.
-     */
     useFocusEffect(
         React.useCallback(() => {
             let taskViews: JSX.Element[] = [];
 
             // get all current planned tasks
-            plannedDay?.plannedTasks.forEach((plannedTask) => {
-                let taskGoal: GoalModel = FAKE_GOAL;
-                let taskPillar: PillarModel = FAKE_PILLAR;
-
-                goals.forEach((goal) => {
-                    if (goal.id === getPlannedTaskGoalId(plannedTask)) {
-                        taskGoal = goal;
-                        return;
-                    }
-                });
-
-                pillars.forEach((pillar) => {
-                    if (pillar.id === taskGoal.pillarId) {
-                        taskPillar = pillar;
-                        return;
-                    }
-                });
-
+            plannedDay?.plannedTasks?.forEach((plannedTask) => {
                 taskViews.push(
                     <View key={plannedTask.id + '_locked'} style={{ paddingBottom: 5, alignItems: 'center' }}>
-                        <PlanningTask plannedTask={plannedTask} isChecked={true} onUpdate={onTaskUpdated} goal={taskGoal} pillar={taskPillar} />
+                        <PlanningTask plannedTask={plannedTask} isChecked={true} onUpdate={onTaskUpdated} />
                     </View>
                 );
             });
@@ -110,7 +64,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
                                 <View style={{ paddingRight: 5 }}>
                                     <Text
                                         onPress={() => {
-                                            navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.dayKey });
+                                            //navigation.navigate('CreateEditOneTimeTask', { dayKey: plannedDay.dayKey });
                                         }}
                                         style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
                                     >

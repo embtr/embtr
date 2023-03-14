@@ -8,8 +8,9 @@ import { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay, plannedTaskIsComplete } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { PLANNED_DAY } from 'resources/endpoints';
-import { CreatePlannedTaskRequest } from 'resources/types/PlannedTaskTypes';
+import { CreatePlannedTaskRequest, UpdatePlannedTaskRequest } from 'resources/types/PlannedTaskTypes';
 import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { PlannedTaskModel as NewPlannedTaskModel } from 'resources/models/PlannedTaskModel';
 import { TaskModel as NewTaskModel } from 'resources/models/TaskModel';
 
 export interface PlannedTaskModel {
@@ -112,11 +113,24 @@ class PlannedTaskController {
         return await axiosInstance
             .post(`${PLANNED_DAY}planned-task/`, request)
             .then((success) => {
-                console.log('success!');
                 return success.data;
             })
             .catch((error) => {
-                console.log(error.response.data);
+                return error.response.data;
+            });
+    }
+
+    public static async updateViaApi(plannedTask: NewPlannedTaskModel) {
+        const request: UpdatePlannedTaskRequest = {
+            plannedTask,
+        };
+
+        return await axiosInstance
+            .patch(`${PLANNED_DAY}planned-task/`, request)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
                 return error.response.data;
             });
     }

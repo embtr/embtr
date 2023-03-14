@@ -9,11 +9,10 @@ import { PlannedDayModel } from 'resources/models/PlannedDayModel';
 interface Props {
     visible: boolean;
     plannedDay: PlannedDayModel;
-    confirm: Function;
     dismiss: Function;
 }
 
-export const AddHabitModal = ({ visible, plannedDay, confirm, dismiss }: Props) => {
+export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
     const closeModal = () => {
         dismiss();
     };
