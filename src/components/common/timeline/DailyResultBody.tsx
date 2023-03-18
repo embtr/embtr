@@ -1,16 +1,14 @@
 import { View, Text, TextStyle } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDateFromDayKey, PlannedDay, plannedDayIsComplete } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
-import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
+import { ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
-import { DayResultModel } from 'resources/models/DayResultModel';
+import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
 
 interface Props {
-    dayResult: DayResultModel;
+    dayResult: PlannedDayResultModel;
     navigateToDetails?: Function;
 }
 
@@ -24,8 +22,6 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
         paddingLeft: TIMELINE_CARD_PADDING,
     } as TextStyle;
 
-    let completedCount = 0;
-
     let plannedTaskViews: JSX.Element[] = [];
     dayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
         plannedTaskViews.push(
@@ -36,18 +32,29 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
     });
 
     let carouselImages: ImageCarouselImage[] = [];
+    const dayOfWeek = getDayOfWeek(dayResult.plannedDay?.date!);
+
+    let totalTasks = dayResult.plannedDay?.plannedTasks?.length;
+    let completedCount = 0;
+    dayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
+        if (plannedTask.status === 'COMPLETE') {
+            completedCount++;
+        }
+    });
+
+    const percentComplete = 100 * (completedCount / totalTasks!);
 
     return (
         <View>
             <View style={{ paddingTop: 10 }}>
                 <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
                     <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                        <ProgressBar progress={80} success={true} />
+                        <ProgressBar progress={percentComplete} success={true} />
                     </View>
                 </View>
 
                 <View style={{ paddingTop: 5 }}>
-                    <Text style={headerTextStyle}>{'Tuesday'}</Text>
+                    <Text style={headerTextStyle}>{dayOfWeek}</Text>
                 </View>
 
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>

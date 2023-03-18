@@ -1,8 +1,8 @@
 import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
-import { DAY_RESULT } from 'resources/endpoints';
-import { DayResultModel } from 'resources/models/DayResultModel';
-import { GetDayResultsResponse } from 'resources/types/DayResultTypes';
+import { PLANNED_DAY_RESULT } from 'resources/endpoints';
+import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import { GetPlannedDayResultsResponse } from 'resources/types/PlannedDayResultTypes';
 import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
@@ -31,7 +31,7 @@ export interface DailyResultModel extends TimelinePostModel {
 
 export interface DayResultTimelinePost extends TimelinePostModel {
     data: {
-        dayResult: DayResultModel;
+        dayResult: PlannedDayResultModel;
     };
 }
 
@@ -185,11 +185,11 @@ class DailyResultController {
         return dailyResults;
     }
 
-    public static async getAllViaApi(): Promise<DayResultModel[]> {
+    public static async getAllViaApi(): Promise<PlannedDayResultModel[]> {
         return await axiosInstance
-            .get(`${DAY_RESULT}`)
+            .get(`${PLANNED_DAY_RESULT}`)
             .then((success) => {
-                const response = success.data as GetDayResultsResponse;
+                const response = success.data as GetPlannedDayResultsResponse;
                 return response.dayResults ?? [];
             })
             .catch((error) => {
@@ -197,14 +197,14 @@ class DailyResultController {
             });
     }
 
-    public static async getViaApi(id: number): Promise<DayResultModel> {
+    public static async getViaApi(id: number): Promise<PlannedDayResultModel> {
         return await axiosInstance
-            .get(`${DAY_RESULT}${id}`)
+            .get(`${PLANNED_DAY_RESULT}${id}`)
             .then((success) => {
-                return success.data as DayResultModel;
+                return success.data as PlannedDayResultModel;
             })
             .catch((error) => {
-                return error.response.data as DayResultModel;
+                return error.response.data as PlannedDayResultModel;
             });
     }
 

@@ -30,15 +30,6 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         setTemporaryStatus('');
     }
 
-    let [fontsLoaded] = useFonts({
-        Poppins_400Regular,
-        Poppins_600SemiBold,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
-    }
-
     let durationString = '';
 
     return (
@@ -55,9 +46,16 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                     {status === 'FAILED' ? <TaskFailedSymbol /> : status === 'COMPLETE' ? <TaskCompleteSymbol /> : <TaskInProgressSymbol />}
                 </TouchableWithoutFeedback>
 
+                {/*
+                old impl used to have have a second line for the task description
+
                 <View style={{ paddingLeft: 5 }}>
                     <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{plannedTask.task?.title}</Text>
                     <Text style={{ color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 9 }}></Text>
+                </View>*/}
+
+                <View style={{ paddingLeft: 5 }}>
+                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{plannedTask.task?.title}</Text>
                 </View>
             </View>
         </View>

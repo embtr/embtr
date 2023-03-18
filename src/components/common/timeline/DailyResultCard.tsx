@@ -3,21 +3,18 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import DailyResultController, { DailyResultModel, DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { View } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import PlannedDayController, { getDateFromDayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import UserController from 'src/controller/user/UserController';
-import PostDetailsActionBar from '../comments/PostDetailsActionBar';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { DailyResultHeader } from './DailyResultHeader';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
-import { DayResultModel } from 'resources/models/DayResultModel';
+import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -31,7 +28,7 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
     const dispatch = useAppDispatch();
     const { colors } = useTheme();
 
-    const [updatedDayResult, setUpdatedDayResult] = React.useState<DayResultModel>();
+    const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>();
     const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
 
     React.useEffect(() => {
@@ -61,7 +58,15 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
         );
     });
 
-    const navigateToDetails = () => {};
+    const navigateToDetails = () => {
+        if (!dayResult.data.dayResult.id) {
+            return;
+        }
+
+        navigation.navigate('DailyResultDetails', {
+            id: dayResult.data.dayResult.id,
+        });
+    };
 
     const onLike = async () => {};
 
@@ -71,7 +76,7 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <DailyResultHeader userProfileModel={userProfileModel} date={dayResult.added.toDate()} />
+                <DailyResultHeader userProfileModel={userProfileModel} date={dayResult.data.dayResult.plannedDay?.date!} />
 
                 {/**********/}
                 {/*  BODY  */}
@@ -81,7 +86,9 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
                 {/**********/}
                 {/* FOOTER */}
                 {/**********/}
-                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}></View>
+                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
+                    <PostDetailsActionBar likes={[]} comments={[]} onLike={onLike} />
+                </View>
             </View>
         </TouchableWithoutFeedback>
     );

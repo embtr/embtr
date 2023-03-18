@@ -23,7 +23,7 @@ import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
 import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 import { GoalResultCard } from '../common/timeline/GoalResultCard';
-import { DayResultModel } from 'resources/models/DayResultModel';
+import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
 import { Timestamp } from 'firebase/firestore';
 
 export const Timeline = () => {
@@ -48,7 +48,7 @@ export const Timeline = () => {
     const INITIAL_DAYS = 5;
 
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
-    const [dayResults, setDayResults] = React.useState<DayResultModel[]>([]);
+    const [dayResults, setDayResults] = React.useState<PlannedDayResultModel[]>([]);
     const [paginatedGoalResults, setPaginatedGoalResults] = React.useState<PaginatedGoalResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
@@ -110,7 +110,7 @@ export const Timeline = () => {
         }
 
         if (dayResults.length > 0) {
-            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: DayResultModel) => {
+            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: PlannedDayResultModel) => {
                 const dayResultTimelinePost: DayResultTimelinePost = {
                     added: Timestamp.fromDate(dayResult.createdAt!),
                     modified: Timestamp.fromDate(dayResult.updatedAt!),
@@ -227,7 +227,7 @@ export const Timeline = () => {
             timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
         }
 
-        const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: DayResultModel) => {
+        const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: PlannedDayResultModel) => {
             const dayResultTimelinePost: DayResultTimelinePost = {
                 added: Timestamp.fromDate(dayResult.createdAt!),
                 modified: Timestamp.fromDate(dayResult.updatedAt!),

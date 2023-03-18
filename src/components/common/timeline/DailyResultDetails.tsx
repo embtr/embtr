@@ -3,46 +3,36 @@ import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navig
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { Alert, View } from 'react-native';
-import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { getAuth } from 'firebase/auth';
 import { DailyResultBody } from './DailyResultBody';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
-import UserController from 'src/controller/user/UserController';
 import { Comment } from 'src/controller/timeline/TimelineController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
     const dispatch = useAppDispatch();
 
-    const [dailyResult, setDailyResult] = React.useState<DailyResultModel | undefined>(undefined);
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
+    const [dayResult, setDayResult] = React.useState<PlannedDayResultModel | undefined>(undefined);
+
+    const fetchData = async () => {
+        const dayResult = await DailyResultController.getViaApi(route.params.id);
+        setDayResult(dayResult);
+    };
 
     useFocusEffect(
         React.useCallback(() => {
             fetchData();
         }, [])
     );
-
-    const fetchData = () => {
-        const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
-            const user = await UserController.get(dailyResult.uid);
-            const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
-            setPlannedDay(plannedDay);
-        };
-
-        DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
-            setDailyResult(dailyResult);
-            fetchPlannedDay(dailyResult);
-        });
-    };
 
     const submitComment = (text: string, taggedUsers: UserProfileModel[]) => {
         const user = getAuth().currentUser;
