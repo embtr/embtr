@@ -10,6 +10,10 @@ import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { PlanPreviews } from './PlanPreviews';
 import { Planning } from './planning/Planning';
 import { Tasks } from './tasks/Tasks';
+import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 
 /*
  * Avoid rerenders
@@ -20,6 +24,7 @@ export const PlanMain = () => {
     const { colors } = useTheme();
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
     const [useCalendarView, setUseCalendarView] = React.useState<boolean>(false);
+    const [selectedDayKey, setSelectedDayKey] = React.useState<string>('');
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
@@ -35,7 +40,7 @@ export const PlanMain = () => {
                         openSelectTaskModal={() => {
                             setShowAddTaskModal(true);
                         }}
-                        onDayChange={() => {}}
+                        onDayChange={setSelectedDayKey}
                         useCalendarView={useCalendarView}
                     />
                 );
@@ -66,6 +71,21 @@ export const PlanMain = () => {
         navigation.navigate('CreateEditHabit', { id: undefined });
     };
 
+    const closeMenu = useAppSelector(getCloseMenu);
+    const menuItems: EmbtrMenuOption[] = [
+        {
+            name: 'Complete Day',
+            onPress: async () => {
+                const plannedDay = await PlannedDayController.getViaApi(selectedDayKey);
+                if (plannedDay.plannedDay) {
+                    PlannedDayController.completeDayViaApi(plannedDay.plannedDay);
+                }
+
+                closeMenu();
+            },
+        },
+    ];
+
     return (
         <Screen>
             <View style={{ height: '100%' }}>
@@ -74,14 +94,8 @@ export const PlanMain = () => {
                     leftIcon={index === 0 ? 'add' : undefined}
                     leftRoute={'CreateTask'}
                     leftOnClick={index === 0 ? navigateToTomorrowCreateTask : navigateToTasksCreateTask}
-                    rightIcon={index === 0 ? (useCalendarView ? 'list' : 'calendar-outline') : undefined}
-                    rightOnClick={
-                        index === 0
-                            ? () => {
-                                  setUseCalendarView(!useCalendarView);
-                              }
-                            : undefined
-                    }
+                    rightIcon={'ellipsis-horizontal'}
+                    menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
 
                 <TabView

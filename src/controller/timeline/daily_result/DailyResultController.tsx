@@ -1,5 +1,9 @@
 import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
+import { DAY_RESULT } from 'resources/endpoints';
+import { DayResultModel } from 'resources/models/DayResultModel';
+import { GetDayResultsResponse } from 'resources/types/DayResultTypes';
+import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import PlannedDayController, {
@@ -22,6 +26,12 @@ export interface DailyResultModel extends TimelinePostModel {
         hasTasks: boolean;
         imageUrls?: string[];
         completionDate?: Timestamp;
+    };
+}
+
+export interface DayResultTimelinePost extends TimelinePostModel {
+    data: {
+        dayResult: DayResultModel;
     };
 }
 
@@ -173,6 +183,29 @@ class DailyResultController {
         }
 
         return dailyResults;
+    }
+
+    public static async getAllViaApi(): Promise<DayResultModel[]> {
+        return await axiosInstance
+            .get(`${DAY_RESULT}`)
+            .then((success) => {
+                const response = success.data as GetDayResultsResponse;
+                return response.dayResults ?? [];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
+    public static async getViaApi(id: number): Promise<DayResultModel> {
+        return await axiosInstance
+            .get(`${DAY_RESULT}${id}`)
+            .then((success) => {
+                return success.data as DayResultModel;
+            })
+            .catch((error) => {
+                return error.response.data as DayResultModel;
+            });
     }
 
     public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedDailyResults> {

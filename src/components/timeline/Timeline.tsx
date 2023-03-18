@@ -16,14 +16,15 @@ import NotificationController, { getUnreadNotificationCount, NotificationModel }
 import { getAuth } from 'firebase/auth';
 import { CARD_SHADOW } from 'src/util/constants';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
-import DailyResultController, { DailyResultModel, PaginatedDailyResults } from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
-import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
 import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 import { GoalResultCard } from '../common/timeline/GoalResultCard';
+import { DayResultModel } from 'resources/models/DayResultModel';
+import { Timestamp } from 'firebase/firestore';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -47,7 +48,7 @@ export const Timeline = () => {
     const INITIAL_DAYS = 5;
 
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
-    const [paginatedDailyResults, setPaginatedDailyResults] = React.useState<PaginatedDailyResults>();
+    const [dayResults, setDayResults] = React.useState<DayResultModel[]>([]);
     const [paginatedGoalResults, setPaginatedGoalResults] = React.useState<PaginatedGoalResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
@@ -62,7 +63,7 @@ export const Timeline = () => {
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
-        addPageOfDailyResults();
+        getDayResults();
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
@@ -79,13 +80,7 @@ export const Timeline = () => {
 
     React.useEffect(() => {
         fetchPostUsers();
-    }, [paginatedTimelinePosts, paginatedDailyResults, paginatedGoalResults]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            AccessLogController.addTimelinePageAccesLog();
-        }, [])
-    );
+    }, [paginatedTimelinePosts, dayResults, paginatedGoalResults]);
 
     const getLookbackDate = () => {
         const lookbackDate = getDateMinusDays(new Date(), lookbackDays);
@@ -114,8 +109,27 @@ export const Timeline = () => {
             timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
         }
 
-        if (paginatedDailyResults?.results) {
-            timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
+        if (dayResults.length > 0) {
+            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: DayResultModel) => {
+                const dayResultTimelinePost: DayResultTimelinePost = {
+                    added: Timestamp.fromDate(dayResult.createdAt!),
+                    modified: Timestamp.fromDate(dayResult.updatedAt!),
+                    type: 'DAILY_RESULT',
+                    uid: dayResult.plannedDay!.user!.uid!,
+                    public: {
+                        comments: [],
+                        likes: [],
+                    },
+                    data: {
+                        dayResult: dayResult,
+                    },
+                    active: true,
+                };
+
+                return dayResultTimelinePost;
+            });
+
+            timelinePosts = timelinePosts.concat(dayResultTimelinePosts);
         }
 
         if (paginatedGoalResults?.results) {
@@ -166,7 +180,7 @@ export const Timeline = () => {
         if (profile) {
             return (
                 <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                    <DailyResultCard dailyResult={timelineEntry as DailyResultModel} userProfileModel={profile} />
+                    <DailyResultCard dayResult={timelineEntry as DayResultTimelinePost} userProfileModel={profile} />
                 </View>
             );
         }
@@ -213,9 +227,25 @@ export const Timeline = () => {
             timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
         }
 
-        if (paginatedDailyResults?.results) {
-            timelinePosts = timelinePosts.concat(paginatedDailyResults.results);
-        }
+        const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: DayResultModel) => {
+            const dayResultTimelinePost: DayResultTimelinePost = {
+                added: Timestamp.fromDate(dayResult.createdAt!),
+                modified: Timestamp.fromDate(dayResult.updatedAt!),
+                type: 'DAILY_RESULT',
+                uid: dayResult.plannedDay!.user!.uid!,
+                public: {
+                    comments: [],
+                    likes: [],
+                },
+                data: {
+                    dayResult: dayResult,
+                },
+                active: true,
+            };
+
+            return dayResultTimelinePost;
+        });
+        timelinePosts = timelinePosts.concat(dayResultTimelinePosts);
 
         if (paginatedGoalResults?.results) {
             timelinePosts = timelinePosts.concat(paginatedGoalResults.results);
@@ -224,24 +254,17 @@ export const Timeline = () => {
         const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
             let postADate = postA.added.toDate();
             if (postA.type === 'DAILY_RESULT') {
-                const dailyResult = postA as DailyResultModel;
-                postADate = getDateFromDayKey(dailyResult.data.dayKey);
-            } else if (postA.type === 'GOAL_RESULT') {
-                const goalResult = postA as GoalResultModel;
-                postADate = goalResult.data.completionDate.toDate();
+                const dayResult = postA as DayResultTimelinePost;
+                postADate = dayResult.data.dayResult.plannedDay!.date!;
+            } else {
+                postADate = postA.added.toDate();
             }
 
             let postBDate = postB.added.toDate();
             if (postB.type === 'DAILY_RESULT') {
-                const dailyResult = postB as DailyResultModel;
-                postBDate = getDateFromDayKey(dailyResult.data.dayKey);
-            } else if (postB.type === 'GOAL_RESULT') {
-                const goalResult = postB as GoalResultModel;
-                postBDate = goalResult.data.completionDate.toDate();
-            }
-
-            if (getDaysOld(postADate, new Date()) === getDaysOld(postBDate, new Date())) {
-                postADate = postA.added.toDate();
+                const dayResult = postB as DayResultTimelinePost;
+                postBDate = dayResult.data.dayResult.plannedDay!.date!;
+            } else {
                 postBDate = postB.added.toDate();
             }
 
@@ -289,24 +312,9 @@ export const Timeline = () => {
         );
     };
 
-    const addPageOfDailyResults = async () => {
-        let currentDailyResults: PaginatedDailyResults = {
-            results: [],
-            lastDailyResult: undefined,
-        };
-
-        if (paginatedDailyResults?.results && lookbackDays !== INITIAL_DAYS) {
-            currentDailyResults.results = [...paginatedDailyResults.results];
-            currentDailyResults.lastDailyResult = paginatedDailyResults?.lastDailyResult;
-        }
-
-        const newPaginatedDailyResults = await DailyResultController.getPaginatedFinished(currentDailyResults.lastDailyResult, getLookbackDate());
-        if (newPaginatedDailyResults.results.length > 0) {
-            currentDailyResults.results = currentDailyResults.results.concat(newPaginatedDailyResults.results);
-            currentDailyResults.lastDailyResult = newPaginatedDailyResults.lastDailyResult;
-        }
-
-        setPaginatedDailyResults(currentDailyResults);
+    const getDayResults = async () => {
+        const dayResults = await DailyResultController.getAllViaApi();
+        setDayResults(dayResults);
     };
 
     const addPageOfGoalResults = async () => {

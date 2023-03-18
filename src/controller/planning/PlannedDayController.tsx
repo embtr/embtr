@@ -7,10 +7,11 @@ import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
 import { UserModel } from '../user/UserController';
 import PlannedTaskController, { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
-import { PLANNED_DAY } from 'resources/endpoints';
+import { DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
 import { PlannedDayModel } from 'resources/models/PlannedDayModel';
 import { CreatePlannedDayRequest, CreatePlannedDayResponse, GetPlannedDayResponse } from 'resources/types/PlannedDayTypes';
+import { CreateDayResultRequest } from 'resources/types/DayResultTypes';
 
 export interface PlannedDay {
     id?: string;
@@ -172,6 +173,21 @@ export const createMetadata = () => {
 };
 
 class PlannedDayController {
+    public static async completeDayViaApi(plannedDay: PlannedDayModel): Promise<GetPlannedDayResponse> {
+        const body: CreateDayResultRequest = {
+            plannedDayId: plannedDay.id ?? 0,
+        };
+
+        return await axiosInstance
+            .post(`${DAY_RESULT}`, body)
+            .then((success) => {
+                return success.data as GetPlannedDayResponse;
+            })
+            .catch((error) => {
+                return error.response.data as GetPlannedDayResponse;
+            });
+    }
+
     public static async createViaApi(dayKey: string): Promise<CreatePlannedDayResponse> {
         const body: CreatePlannedDayRequest = {
             dayKey,

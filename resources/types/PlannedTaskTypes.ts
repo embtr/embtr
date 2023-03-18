@@ -11,6 +11,6 @@ export interface UpdatePlannedTaskRequest {
 }
 
 export interface UpdatePlannedTaskResponse extends Response {
-  plannedtask?: PlannedTaskModel
+  plannedTask?: PlannedTaskModel
 
 } 
