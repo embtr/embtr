@@ -348,7 +348,7 @@ export const EditUserProfile = () => {
                                             if (bannerUrl) {
                                                 userProfile.bannerUrl = bannerUrl;
                                             }
-                                            ProfileController.updateProfileThroughApi(userProfile);
+                                            ProfileController.updateProfileViaApi(userProfile);
                                             ProfileController.updateProfile(userProfile);
                                         }
                                         navigation.navigate('Profile');

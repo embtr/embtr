@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
+import { UserModel } from 'resources/models/UserModel';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
@@ -10,11 +11,9 @@ import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
     submitComment: Function;
-    currentUserProfile: UserProfileModel;
-    authorUserProfile: UserProfileModel;
 }
 
-export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUserProfile }: Props) => {
+export const CommentsTextInput = ({ submitComment }: Props) => {
     const { colors } = useTheme();
 
     const [commentText, setCommentText] = React.useState('');
@@ -86,7 +85,7 @@ export const CommentsTextInput = ({ submitComment, currentUserProfile, authorUse
                     }}
                 >
                     <View style={{ paddingLeft: 10 }}>
-                        {currentUserProfile && <NavigatableUserImage userProfileModel={currentUserProfile} size={30} denyNavigation={true} />}
+                        {/*currentUserProfile && <NavigatableUserImage userProfileModel={currentUserProfile} size={30} denyNavigation={true} />*/}
                     </View>
                     <TextInput
                         style={{ paddingLeft: 10, color: colors.text, flex: 1, paddingBottom: focused ? 15 : 0, paddingTop: focused ? 15 : 0 }}

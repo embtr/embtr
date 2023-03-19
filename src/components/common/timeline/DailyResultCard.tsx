@@ -9,12 +9,12 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { DailyResultHeader } from './DailyResultHeader';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -59,6 +59,7 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
     });
 
     const navigateToDetails = () => {
+        console.log('navigateToDetails');
         if (!dayResult.data.dayResult.id) {
             return;
         }

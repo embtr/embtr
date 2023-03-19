@@ -45,22 +45,20 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
     const percentComplete = 100 * (completedCount / totalTasks!);
 
     return (
-        <View>
-            <View style={{ paddingTop: 10 }}>
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                        <ProgressBar progress={percentComplete} success={true} />
-                    </View>
+        <View style={{ paddingTop: 10 }}>
+            <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
+                    <ProgressBar progress={percentComplete} success={true} />
                 </View>
+            </View>
 
+            <View style={{ paddingTop: 5 }}>
+                <Text style={headerTextStyle}>{dayOfWeek}</Text>
+            </View>
+
+            <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
                 <View style={{ paddingTop: 5 }}>
-                    <Text style={headerTextStyle}>{dayOfWeek}</Text>
-                </View>
-
-                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                    <View style={{ paddingTop: 5 }}>
-                        <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
-                    </View>
+                    <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
                 </View>
             </View>
         </View>
