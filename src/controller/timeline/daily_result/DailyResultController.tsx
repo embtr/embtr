@@ -2,7 +2,7 @@ import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
 import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
-import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse } from 'resources/types/PlannedDayResultTypes';
+import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayRequest } from 'resources/types/PlannedDayResultTypes';
 import { GetPlannedDayResponse } from 'resources/types/PlannedDayTypes';
 import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
@@ -42,6 +42,49 @@ export interface PaginatedDailyResults {
 }
 
 class DailyResultController {
+    public static async getAllViaApi(): Promise<PlannedDayResultModel[]> {
+        return await axiosInstance
+            .get(`${PLANNED_DAY_RESULT}`)
+            .then((success) => {
+                const response = success.data as GetPlannedDayResultsResponse;
+                return response.dayResults ?? [];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
+    public static async getViaApi(id: number): Promise<PlannedDayResultModel> {
+        return await axiosInstance
+            .get(`${PLANNED_DAY_RESULT}${id}`)
+            .then((success) => {
+                const response = success.data as GetPlannedDayResultResponse;
+                return response.dayResult!;
+            })
+            .catch((error) => {
+                return error.response.data as PlannedDayResultModel;
+            });
+    }
+
+    public static async updateViaApi(plannedDayResult: PlannedDayResultModel) {
+        const body: UpdatePlannedDayRequest = {
+            plannedDayResult,
+        };
+
+        return await axiosInstance
+            .patch(`${PLANNED_DAY_RESULT}`, body)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    /*
+     * OLD LOGIC
+     */
+
     public static clone(dailyResult: DailyResultModel): DailyResultModel {
         let clone: DailyResultModel = {
             data: {
@@ -184,30 +227,6 @@ class DailyResultController {
         }
 
         return dailyResults;
-    }
-
-    public static async getAllViaApi(): Promise<PlannedDayResultModel[]> {
-        return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}`)
-            .then((success) => {
-                const response = success.data as GetPlannedDayResultsResponse;
-                return response.dayResults ?? [];
-            })
-            .catch((error) => {
-                return [];
-            });
-    }
-
-    public static async getViaApi(id: number): Promise<PlannedDayResultModel> {
-        return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}${id}`)
-            .then((success) => {
-                const response = success.data as GetPlannedDayResultResponse;
-                return response.dayResult!;
-            })
-            .catch((error) => {
-                return error.response.data as PlannedDayResultModel;
-            });
     }
 
     public static async getPaginatedFinished(lastDailyResult: QueryDocumentSnapshot | undefined | null, cutoffDate: Date): Promise<PaginatedDailyResults> {

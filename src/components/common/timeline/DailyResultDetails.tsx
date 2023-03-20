@@ -53,7 +53,9 @@ export const DailyResultDetails = () => {
     };
 
     const onEdit = () => {
-        //navigation.navigate('EditDailyResultDetails', { id: dailyResult.id });
+        if (plannedDayResult?.id) {
+            navigation.navigate('EditDailyResultDetails', { id: plannedDayResult.id });
+        }
     };
 
     const onDelete = () => {
@@ -98,7 +100,7 @@ export const DailyResultDetails = () => {
                 onDelete={onDelete}
             >
                 <View style={{ paddingLeft: 10 }}>
-                    <DailyResultBody dayResult={plannedDayResult} />
+                    <DailyResultBody plannedDayResult={plannedDayResult} />
                 </View>
             </PostDetails>
         </View>

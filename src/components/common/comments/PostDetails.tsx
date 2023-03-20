@@ -80,8 +80,6 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
     ];
 
     const userIsAuthor = currentUser?.id === author?.id;
-    console.log('currentUser:', currentUser);
-    console.log('author', author);
 
     return (
         <Screen>

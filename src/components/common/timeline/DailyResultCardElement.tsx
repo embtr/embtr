@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';

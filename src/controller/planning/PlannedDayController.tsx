@@ -203,28 +203,35 @@ class PlannedDayController {
             });
     }
 
-    public static async getViaApi(dayKey: string): Promise<GetPlannedDayResponse> {
+    public static async getViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
         const userId = await getUserIdFromToken();
 
         return await axiosInstance
             .get(`${PLANNED_DAY}${userId}/${dayKey}`)
             .then((success) => {
-                return success.data as GetPlannedDayResponse;
+                const result = success.data as GetPlannedDayResponse;
+                if (result.plannedDay) {
+                    return result.plannedDay;
+                }
+                return undefined;
             })
             .catch((error) => {
-                return error.response.data as GetPlannedDayResponse;
+                return undefined;
             });
     }
 
-    public static async getOrCreateViaApi(dayKey: string): Promise<PlannedDayModel> {
-        let result: GetPlannedDayResponse = await this.getViaApi(dayKey);
-        if (result.success && result.plannedDay) {
-            return result.plannedDay;
+    public static async getOrCreateViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
+        let plannedDay = await this.getViaApi(dayKey);
+        if (plannedDay) {
+            return plannedDay;
         }
 
         const createResult: CreatePlannedDayResponse = await this.createViaApi(dayKey);
-        result = await this.getViaApi(dayKey);
-        return result.plannedDay!;
+        if (!createResult.plannedDay) {
+            return createResult.plannedDay;
+        }
+
+        return undefined;
     }
     /*
      * OLD LOGIC

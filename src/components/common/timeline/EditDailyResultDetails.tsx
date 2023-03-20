@@ -3,12 +3,11 @@ import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navig
 import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
-import PlannedDayController, { getDateFromDayKey, PlannedDay, plannedDayIsComplete } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
-import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { isIosApp } from 'src/util/DeviceUtil';
@@ -17,7 +16,7 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
 import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
-import UserController from 'src/controller/user/UserController';
+import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -25,8 +24,7 @@ export const EditDailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'EditDailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
-    const [dailyResult, setDailyResult] = React.useState<DailyResultModel>();
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+    const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResultModel>();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
@@ -38,24 +36,15 @@ export const EditDailyResultDetails = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
-                const user = await UserController.get(dailyResult.uid);
-                const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
-                setPlannedDay(plannedDay);
+            const fetchPlannedDayResult = async () => {
+                const foundPlannedDayResult = await DailyResultController.getViaApi(route.params.id);
+                setPlannedDayResult(foundPlannedDayResult);
+
+                if (foundPlannedDayResult.description) {
+                    setUpdatedDescription(foundPlannedDayResult.description);
+                }
             };
-
-            DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
-                if (dailyResult.data.description) {
-                    setUpdatedDescription(dailyResult.data.description);
-                }
-
-                if (dailyResult.data.imageUrls) {
-                    setUpdatedImageUrls(dailyResult.data.imageUrls);
-                }
-
-                fetchPlannedDay(dailyResult);
-                setDailyResult(dailyResult);
-            });
+            fetchPlannedDayResult();
         }, [])
     );
 
@@ -79,6 +68,10 @@ export const EditDailyResultDetails = () => {
         setCarouselImages(newCarouselImages);
     }, [updatedImageUrls]);
 
+    if (!plannedDayResult) {
+        return <View />;
+    }
+
     const headerTextStyle = {
         fontSize: 16,
         fontFamily: 'Poppins_500Medium',
@@ -86,17 +79,13 @@ export const EditDailyResultDetails = () => {
         paddingLeft: TIMELINE_CARD_PADDING,
     } as TextStyle;
 
-    let completedCount = 0;
-    plannedDay?.plannedTasks.forEach((plannedTask) => {
-        if (plannedTask.status === 'COMPLETE') {
-            completedCount += 1;
-        }
-    });
-    const progress = plannedDay ? (completedCount / plannedDay.plannedTasks.length) * 100 : 100;
-    const dayOfWeek = plannedDay?.id ? getDayOfWeek(getDateFromDayKey(plannedDay?.id)) : undefined;
+    let dayOfWeek = '';
+    if (plannedDayResult.plannedDay?.createdAt) {
+        dayOfWeek = getDayOfWeek(plannedDayResult.plannedDay.createdAt);
+    }
 
     let plannedTaskViews: JSX.Element[] = [];
-    plannedDay?.plannedTasks.forEach((plannedTask) => {
+    plannedDayResult?.plannedDay?.plannedTasks?.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
@@ -134,15 +123,15 @@ export const EditDailyResultDetails = () => {
         setUpdatedImageUrls(imageUrls);
     };
 
-    if (!plannedDay || !dailyResult) {
-        return <View />;
-    }
+    const onSubmit = async () => {
+        const clonedPlannedDayResult = { ...plannedDayResult };
+        clonedPlannedDayResult.description = updatedDescription;
 
-    const onSubmit = () => {
-        let clonedDailyResult = DailyResultController.clone(dailyResult);
-        clonedDailyResult.data.description = updatedDescription;
-        clonedDailyResult.data.imageUrls = updatedImageUrls;
-        DailyResultController.update(clonedDailyResult);
+        //let clonedDailyResult = DailyResultController.clone(dailyResult);
+        //clonedDailyResult.data.description = updatedDescription;
+        //clonedDailyResult.data.imageUrls = updatedImageUrls;
+        //DailyResultController.update(clonedDailyResult);
+        await DailyResultController.updateViaApi(clonedPlannedDayResult);
         navigation.goBack();
     };
 
@@ -154,32 +143,29 @@ export const EditDailyResultDetails = () => {
             <ScrollView>
                 <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
                     <View style={{ paddingTop: 10 }}>
-                        {/* PROGRESS BAR */}
-                        <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                        {/* COMPLETED/ FAILED */}
+                        {dayOfWeek && (
+                            <View style={{ paddingTop: 5 }}>
+                                <Text style={headerTextStyle}>
+                                    {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
+                                    <Text style={{ color: colors.progress_bar_complete }}>'Complete!'</Text>
+                                </Text>
+                            </View>
+                        )}
+
+                        {/* TASKS */}
+
+                        <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 20 }}>
                             <Text
                                 onPress={() => {
                                     Keyboard.dismiss();
                                 }}
                                 style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
                             >
-                                Progress
+                                Tasks
                             </Text>
-                            <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                                <ProgressBar progress={progress} success={plannedDayIsComplete(plannedDay)} />
-                            </View>
+                            <View>{plannedTaskViews}</View>
                         </View>
-
-                        {/* COMPLETED/ FAILED */}
-                        {dayOfWeek && (
-                            <View style={{ paddingTop: 5 }}>
-                                <Text style={headerTextStyle}>
-                                    {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
-                                    <Text style={{ color: plannedDayIsComplete(plannedDay) ? colors.progress_bar_complete : colors.progress_bar_failed }}>
-                                        {plannedDayIsComplete(plannedDay) ? 'Complete!' : 'Failed!'}
-                                    </Text>
-                                </Text>
-                            </View>
-                        )}
 
                         {/* STORY */}
                         <View style={{ paddingTop: 20, alignItems: 'center' }}>
@@ -226,19 +212,6 @@ export const EditDailyResultDetails = () => {
                             <View>
                                 <CarouselCards images={carouselImages} />
                             </View>
-                        </View>
-
-                        {/* TASKS */}
-                        <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 20 }}>
-                            <Text
-                                onPress={() => {
-                                    Keyboard.dismiss();
-                                }}
-                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
-                            >
-                                Tasks
-                            </Text>
-                            <View>{plannedTaskViews}</View>
                         </View>
                     </View>
                 </KeyboardAvoidingView>

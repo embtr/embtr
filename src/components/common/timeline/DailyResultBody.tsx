@@ -8,11 +8,11 @@ import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
 
 interface Props {
-    dayResult: PlannedDayResultModel;
+    plannedDayResult: PlannedDayResultModel;
     navigateToDetails?: Function;
 }
 
-export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
+export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -23,7 +23,7 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
     } as TextStyle;
 
     let plannedTaskViews: JSX.Element[] = [];
-    dayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
+    plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
@@ -32,11 +32,11 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
     });
 
     let carouselImages: ImageCarouselImage[] = [];
-    const dayOfWeek = getDayOfWeek(dayResult.plannedDay?.date!);
+    const dayOfWeek = getDayOfWeek(plannedDayResult.plannedDay?.date!);
 
-    let totalTasks = dayResult.plannedDay?.plannedTasks?.length;
+    let totalTasks = plannedDayResult.plannedDay?.plannedTasks?.length;
     let completedCount = 0;
-    dayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
+    plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
         if (plannedTask.status === 'COMPLETE') {
             completedCount++;
         }
@@ -57,6 +57,7 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
             </View>
 
             <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
+                <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>{plannedDayResult.description}</Text>
                 <View style={{ paddingTop: 5 }}>
                     <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
                 </View>

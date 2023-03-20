@@ -59,7 +59,6 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
     });
 
     const navigateToDetails = () => {
-        console.log('navigateToDetails');
         if (!dayResult.data.dayResult.id) {
             return;
         }
@@ -82,7 +81,7 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                <DailyResultBody dayResult={dayResult.data.dayResult} navigateToDetails={navigateToDetails} />
+                <DailyResultBody plannedDayResult={dayResult.data.dayResult} navigateToDetails={navigateToDetails} />
 
                 {/**********/}
                 {/* FOOTER */}
