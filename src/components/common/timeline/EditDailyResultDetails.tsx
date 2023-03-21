@@ -34,19 +34,37 @@ export const EditDailyResultDetails = () => {
 
     const [carouselImages, setCarouselImages] = React.useState<ImageCarouselImage[]>([]);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            const fetchPlannedDayResult = async () => {
-                const foundPlannedDayResult = await DailyResultController.getViaApi(route.params.id);
-                setPlannedDayResult(foundPlannedDayResult);
+    React.useEffect(() => {
+        const fetchPlannedDayResult = async () => {
+            const foundPlannedDayResult = await DailyResultController.getViaApi(route.params.id);
+            setPlannedDayResult(foundPlannedDayResult);
 
-                if (foundPlannedDayResult.description) {
-                    setUpdatedDescription(foundPlannedDayResult.description);
-                }
-            };
-            fetchPlannedDayResult();
-        }, [])
-    );
+            if (foundPlannedDayResult.description) {
+                setUpdatedDescription(foundPlannedDayResult.description);
+            }
+
+            if (foundPlannedDayResult?.plannedDayResultImages) {
+                const images = foundPlannedDayResult.plannedDayResultImages.map((image) => image.url).filter(Boolean) as string[];
+                setUpdatedImageUrls(images);
+            }
+        };
+        fetchPlannedDayResult();
+    }, []);
+
+    const updateImages = (images: string[]) => {
+        let clonedList = [...updatedImageUrls];
+        clonedList = clonedList.concat(images);
+        setUpdatedImageUrls(clonedList);
+    };
+
+    const uploadImage = async () => {
+        setImagesUploading(true);
+        setImageUploadProgress('preparing photo upload');
+        const imageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
+        updateImages(imageUrls);
+        setImageUploadProgress('');
+        setImagesUploading(false);
+    };
 
     React.useEffect(() => {
         let newCarouselImages: ImageCarouselImage[] = [];
@@ -58,6 +76,7 @@ export const EditDailyResultDetails = () => {
                 onDelete: onDeleteImage,
             });
         });
+
         newCarouselImages.push({
             url: '',
             format: '',
@@ -97,21 +116,6 @@ export const EditDailyResultDetails = () => {
         setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
     };
 
-    const updateImages = (images: string[]) => {
-        let clonedList = [...updatedImageUrls];
-        clonedList = clonedList.concat(images);
-        setUpdatedImageUrls(clonedList);
-    };
-
-    const uploadImage = async () => {
-        setImagesUploading(true);
-        setImageUploadProgress('preparing photo upload');
-        const imageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
-        updateImages(imageUrls);
-        setImageUploadProgress('');
-        setImagesUploading(false);
-    };
-
     const onDeleteImage = (deletedImageUrl: string) => {
         let imageUrls: string[] = [];
         updatedImageUrls.forEach((imageUrl) => {
@@ -124,8 +128,11 @@ export const EditDailyResultDetails = () => {
     };
 
     const onSubmit = async () => {
-        const clonedPlannedDayResult = { ...plannedDayResult };
+        const clonedPlannedDayResult: PlannedDayResultModel = { ...plannedDayResult };
         clonedPlannedDayResult.description = updatedDescription;
+        clonedPlannedDayResult.plannedDayResultImages = updatedImageUrls.map((url) => {
+            return { url };
+        });
 
         //let clonedDailyResult = DailyResultController.clone(dailyResult);
         //clonedDailyResult.data.description = updatedDescription;

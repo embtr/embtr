@@ -2,7 +2,7 @@ import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
 import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
-import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayRequest } from 'resources/types/PlannedDayResultTypes';
+import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayResultRequest } from 'resources/types/PlannedDayResultTypes';
 import { GetPlannedDayResponse } from 'resources/types/PlannedDayTypes';
 import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
@@ -67,7 +67,7 @@ class DailyResultController {
     }
 
     public static async updateViaApi(plannedDayResult: PlannedDayResultModel) {
-        const body: UpdatePlannedDayRequest = {
+        const body: UpdatePlannedDayResultRequest = {
             plannedDayResult,
         };
 
