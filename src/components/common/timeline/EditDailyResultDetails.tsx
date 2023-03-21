@@ -48,6 +48,7 @@ export const EditDailyResultDetails = () => {
                 setUpdatedImageUrls(images);
             }
         };
+
         fetchPlannedDayResult();
     }, []);
 
