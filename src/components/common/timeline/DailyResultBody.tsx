@@ -3,7 +3,7 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { ImageCarouselImage } from '../images/ImageCarousel';
+import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 
@@ -32,6 +32,18 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
     });
 
     let carouselImages: ImageCarouselImage[] = [];
+    plannedDayResult.plannedDayResultImages?.forEach((plannedDayResultImage) => {
+        if (!plannedDayResultImage.url) {
+            return;
+        }
+
+        carouselImages.push({
+            url: plannedDayResultImage.url,
+            format: 'png',
+            type: 'image',
+        });
+    });
+
     const dayOfWeek = getDayOfWeek(plannedDayResult.plannedDay?.date!);
 
     let totalTasks = plannedDayResult.plannedDay?.plannedTasks?.length;
@@ -62,6 +74,12 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
                     <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
                 </View>
             </View>
+
+            {carouselImages.length > 0 && (
+                <View style={{ marginLeft: 10, marginRight: 10, overflow: 'hidden', paddingTop: 10, alignItems: 'center' }}>
+                    <CarouselCards images={carouselImages} />
+                </View>
+            )}
         </View>
     );
 };
