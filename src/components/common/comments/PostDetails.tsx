@@ -16,7 +16,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PostDetailsActionBar from './PostDetailsActionBar';
 import ScrollableTextInputBox from '../textbox/ScrollableTextInputBox';
-import { UserModel } from 'resources/models/UserModel';
+import { User as UserModel } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { formatDistance } from 'date-fns';
 
@@ -79,7 +79,10 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
         },
     ];
 
-    const userIsAuthor = currentUser?.id === author?.id;
+    const userIsAuthor = currentUser?.uid === author?.uid;
+    console.log('userIsAuthor', userIsAuthor);
+    console.log('currentUser', currentUser);
+    console.log('author', author);
 
     return (
         <Screen>

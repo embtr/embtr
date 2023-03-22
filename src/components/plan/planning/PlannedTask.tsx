@@ -1,5 +1,5 @@
 import { View, Text, ColorValue } from 'react-native';
-import { PlannedTaskModel } from 'resources/models/PlannedTaskModel';
+import { PlannedTask as PlannedTaskModel } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {

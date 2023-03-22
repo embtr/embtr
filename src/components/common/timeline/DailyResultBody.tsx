@@ -5,7 +5,7 @@ import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
-import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 
 interface Props {
     plannedDayResult: PlannedDayResultModel;

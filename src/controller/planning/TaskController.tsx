@@ -4,7 +4,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { TASK } from 'resources/endpoints';
-import { TaskModel as NewTaskModel } from 'resources/models/TaskModel';
+import { Task as NewTaskModel } from 'resources/schema';
 import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/TaskTypes';
 
 export interface TaskModel {

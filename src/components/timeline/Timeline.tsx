@@ -23,7 +23,7 @@ import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
 import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 import { GoalResultCard } from '../common/timeline/GoalResultCard';
-import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
 
 export const Timeline = () => {

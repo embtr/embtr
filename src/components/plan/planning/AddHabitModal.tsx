@@ -4,7 +4,7 @@ import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
 import { Banner } from 'src/components/common/Banner';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
 
 interface Props {
     visible: boolean;

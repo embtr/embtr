@@ -1,11 +1,10 @@
 import React from 'react';
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
-import PlannedDayController, { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
@@ -16,7 +15,7 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
 import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
-import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();

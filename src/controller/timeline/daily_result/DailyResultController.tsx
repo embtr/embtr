@@ -1,9 +1,8 @@
 import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
-import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayResultRequest } from 'resources/types/PlannedDayResultTypes';
-import { GetPlannedDayResponse } from 'resources/types/PlannedDayTypes';
 import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
@@ -47,7 +46,7 @@ class DailyResultController {
             .get(`${PLANNED_DAY_RESULT}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultsResponse;
-                return response.dayResults ?? [];
+                return response.plannedDayResults ?? [];
             })
             .catch((error) => {
                 return [];
@@ -59,7 +58,7 @@ class DailyResultController {
             .get(`${PLANNED_DAY_RESULT}${id}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultResponse;
-                return response.dayResult!;
+                return response.plannedDayResult!;
             })
             .catch((error) => {
                 return error.response.data as PlannedDayResultModel;

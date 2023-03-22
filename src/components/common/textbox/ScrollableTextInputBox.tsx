@@ -3,7 +3,7 @@ import { CommentsTextInput } from 'src/components/common/comments/CommentsTextIn
 import { KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { UserModel } from 'resources/models/UserModel';
+import { User as UserModel } from 'resources/schema';
 
 interface Props {
     submitComment: Function;

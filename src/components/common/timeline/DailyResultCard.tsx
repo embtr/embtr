@@ -12,7 +12,7 @@ import { DailyResultBody } from './DailyResultBody';
 import { DailyResultHeader } from './DailyResultHeader';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
-import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 

@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
-import { UserModel } from 'resources/models/UserModel';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox';
-import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { isIosApp } from 'src/util/DeviceUtil';

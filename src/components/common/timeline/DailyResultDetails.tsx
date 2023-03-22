@@ -11,7 +11,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import { Comment } from 'src/controller/timeline/TimelineController';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { PlannedDayResultModel } from 'resources/models/PlannedDayResultModel';
+import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();

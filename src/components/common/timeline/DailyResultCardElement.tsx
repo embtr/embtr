@@ -5,7 +5,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';
-import { PlannedTaskModel } from 'resources/models/PlannedTaskModel';
+import { PlannedTask as PlannedTaskModel } from 'resources/schema';
 
 interface Props {
     plannedTask: PlannedTaskModel;

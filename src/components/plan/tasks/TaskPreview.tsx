@@ -4,8 +4,8 @@ import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/consta
 import Toast from 'react-native-root-toast';
 import React from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
-import { TaskModel } from 'resources/models/TaskModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { Task as TaskModel } from 'resources/schema';
 import TaskController from 'src/controller/planning/TaskController';
 
 interface Props {
