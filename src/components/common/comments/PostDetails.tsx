@@ -16,7 +16,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PostDetailsActionBar from './PostDetailsActionBar';
 import ScrollableTextInputBox from '../textbox/ScrollableTextInputBox';
-import { User as UserModel } from 'resources/schema';
+import { PlannedDayResultComment, User as UserModel } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { formatDistance } from 'date-fns';
 
@@ -26,7 +26,7 @@ interface Props {
     children: any;
     added: Date;
     likes: Like[];
-    comments: Comment[];
+    comments: PlannedDayResultComment[];
     onLike: Function;
     submitComment: Function;
     deleteComment: Function;
@@ -80,9 +80,6 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
     ];
 
     const userIsAuthor = currentUser?.uid === author?.uid;
-    console.log('userIsAuthor', userIsAuthor);
-    console.log('currentUser', currentUser);
-    console.log('author', author);
 
     return (
         <Screen>
@@ -132,7 +129,7 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
                     {children}
 
                     <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}>
-                        <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
+                        <PostDetailsActionBar likes={likes} commentCount={comments.length} onLike={onLike} />
                     </View>
 
                     <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%' }}>

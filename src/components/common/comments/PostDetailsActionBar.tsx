@@ -13,11 +13,11 @@ import { wait } from 'src/util/GeneralUtility';
 
 interface Props {
     likes: Like[];
-    comments: Comment[];
+    commentCount: number;
     onLike: Function;
 }
 
-const PostDetailsActionBar = ({ likes, comments, onLike }: Props) => {
+const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
     const { colors } = useTheme();
 
     const isLiked = timelineEntryWasLikedBy(likes, getCurrentUid());
@@ -78,7 +78,7 @@ const PostDetailsActionBar = ({ likes, comments, onLike }: Props) => {
 
                 <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
                     <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
-                        {comments.length}
+                        {commentCount}
                     </Text>
                 </View>
             </View>

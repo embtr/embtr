@@ -4,19 +4,17 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { Alert, View } from 'react-native';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { getAuth } from 'firebase/auth';
 import { DailyResultBody } from './DailyResultBody';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import { Comment } from 'src/controller/timeline/TimelineController';
-import { useAppDispatch } from 'src/redux/Hooks';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { Timestamp } from 'firebase/firestore';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
-    const dispatch = useAppDispatch();
 
     const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResultModel | undefined>(undefined);
 
@@ -31,8 +29,11 @@ export const DailyResultDetails = () => {
         }, [])
     );
 
-    const submitComment = (text: string, taggedUsers: UserProfileModel[]) => {
-        const user = getAuth().currentUser;
+    const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
+        if (plannedDayResult?.id) {
+            await DailyResultController.addCommentViaApi(plannedDayResult.id, text);
+            fetchData();
+        }
 
         //DailyResultController.addComment(dailyResult.id, user.uid, text, () => {
         // send notification to post owner
@@ -92,7 +93,7 @@ export const DailyResultDetails = () => {
                 author={plannedDayResult!.plannedDay?.user!}
                 added={plannedDayResult!.plannedDay?.createdAt!}
                 likes={[]}
-                comments={[]}
+                comments={plannedDayResult.PlannedDayResultComments || []}
                 onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}

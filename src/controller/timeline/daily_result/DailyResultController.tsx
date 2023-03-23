@@ -2,7 +2,12 @@ import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
-import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayResultRequest } from 'resources/types/PlannedDayResultTypes';
+import {
+    CreatePlannedDayResultCommentRequest,
+    GetPlannedDayResultResponse,
+    GetPlannedDayResultsResponse,
+    UpdatePlannedDayResultRequest,
+} from 'resources/types/PlannedDayResultTypes';
 import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
@@ -72,6 +77,21 @@ class DailyResultController {
 
         return await axiosInstance
             .patch(`${PLANNED_DAY_RESULT}`, body)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async addCommentViaApi(id: number, comment: string) {
+        const request: CreatePlannedDayResultCommentRequest = {
+            comment,
+        };
+
+        return await axiosInstance
+            .post(`${PLANNED_DAY_RESULT}${id}/comment/`, request)
             .then((success) => {
                 return success.data;
             })

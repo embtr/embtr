@@ -3,10 +3,11 @@ import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComme
 import { Comment } from 'src/controller/timeline/TimelineController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import SwipeableDeleteCard from '../swipeable/SwipeableDeleteCard';
+import { PlannedDayResultComment } from 'resources/schema';
 
 interface Props {
     onDeleteComment?: Function;
-    comments: Comment[];
+    comments: PlannedDayResultComment[];
     limit?: number;
 }
 
@@ -19,28 +20,28 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
     }
 
     for (let i = 0; i < max; i++) {
-        const comment: Comment = comments[i];
+        const comment: PlannedDayResultComment = comments[i];
 
-        const isCurrentUsersComment = comment.uid === getCurrentUid();
+        const isCurrentUsersComment = comment.user?.uid === getCurrentUid();
 
         if (isCurrentUsersComment) {
             commentViews.push(
                 <SwipeableDeleteCard
-                    key={comment.comment + comment.uid + comment.timestamp.toString()}
+                    key={comment.id}
                     onDelete={() => {
                         if (onDeleteComment) {
                             onDeleteComment(comment);
                         }
                     }}
                 >
-                    <View key={comment.uid + comment.comment + comment.timestamp} style={{ marginBottom: 7.5, paddingTop: 15 }}>
+                    <View key={comment.id} style={{ marginBottom: 7.5, paddingTop: 15 }}>
                         <CommentBoxComment comment={comment} />
                     </View>
                 </SwipeableDeleteCard>
             );
         } else {
             commentViews.push(
-                <View key={comment.uid + comment.comment + comment.timestamp} style={{ marginBottom: 7.5, paddingTop: 15 }}>
+                <View key={comment.id} style={{ marginBottom: 7.5, paddingTop: 15 }}>
                     <CommentBoxComment comment={comment} />
                 </View>
             );
