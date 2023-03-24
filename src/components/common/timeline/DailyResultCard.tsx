@@ -28,22 +28,26 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
     const dispatch = useAppDispatch();
     const { colors } = useTheme();
 
-    const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>();
-    const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
+    const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>(plannedDayResult.data.dayResult);
+    const timelineCardRefreshRequests: number[] = useAppSelector(getTimelineCardRefreshRequests);
 
     React.useEffect(() => {
-        if (!plannedDayResult.data.dayResult.id) {
+        if (!updatedDayResult?.id) {
             return;
         }
 
         const getAsync = async () => {
-            if (timelineCardRefreshRequests.includes('' + plannedDayResult.data.dayResult.id)) {
-                const updatedDayResult = await DailyResultController.getViaApi(plannedDayResult.data.dayResult.id!);
-                if (updatedDayResult) {
-                    setUpdatedDayResult(updatedDayResult);
+            if (!updatedDayResult?.id) {
+                return;
+            }
+
+            if (timelineCardRefreshRequests.includes(updatedDayResult.id)) {
+                const refreshedDayResult = await DailyResultController.getViaApi(updatedDayResult.id!);
+                if (refreshedDayResult) {
+                    setUpdatedDayResult(refreshedDayResult);
                 }
                 //remove card from the refresh request list
-                dispatch(removeTimelineCardRefreshRequest(plannedDayResult.data.dayResult.id));
+                dispatch(removeTimelineCardRefreshRequest(refreshedDayResult.id));
             }
         };
 
@@ -52,7 +56,7 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
 
     let plannedTaskViews: JSX.Element[] = [];
 
-    plannedDayResult.data.dayResult.plannedDay?.plannedTasks!.forEach((plannedTask) => {
+    updatedDayResult.plannedDay?.plannedTasks!.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
@@ -61,20 +65,20 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
     });
 
     const navigateToDetails = () => {
-        if (!plannedDayResult.data.dayResult.id) {
+        if (!updatedDayResult.id) {
             return;
         }
 
         navigation.navigate('DailyResultDetails', {
-            id: plannedDayResult.data.dayResult.id,
+            id: updatedDayResult.id,
         });
     };
 
     const onLike = async () => {
-        if (!plannedDayResult.data.dayResult.id) {
+        if (!updatedDayResult.id) {
             return;
         }
-        await DailyResultController.addLikeViaApi(plannedDayResult.data.dayResult.id);
+        await DailyResultController.addLikeViaApi(updatedDayResult.id);
     };
 
     return (
@@ -83,20 +87,20 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <DailyResultHeader userProfileModel={userProfileModel} date={plannedDayResult.data.dayResult.plannedDay?.date!} />
+                <DailyResultHeader userProfileModel={userProfileModel} date={updatedDayResult.plannedDay?.date!} />
 
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                <DailyResultBody plannedDayResult={plannedDayResult.data.dayResult} navigateToDetails={navigateToDetails} />
+                <DailyResultBody plannedDayResult={updatedDayResult} navigateToDetails={navigateToDetails} />
 
                 {/**********/}
                 {/* FOOTER */}
                 {/**********/}
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
                     <PostDetailsActionBar
-                        likes={plannedDayResult.data.dayResult?.plannedDayResultLikes || []}
-                        commentCount={plannedDayResult.data.dayResult.plannedDayResultComments?.length ?? 0}
+                        likes={updatedDayResult?.plannedDayResultLikes || []}
+                        commentCount={updatedDayResult.plannedDayResultComments?.length ?? 0}
                         onLike={onLike}
                     />
                 </View>

@@ -24,7 +24,7 @@ export interface GlobalState {
     openMenu: Function;
     closeMenu: Function;
     selectedDayKey: string;
-    timelineCardRefreshRequests: string[];
+    timelineCardRefreshRequests: number[];
     currentTab: string;
 }
 
@@ -129,7 +129,7 @@ export const getSelectedDayKey = (state: RootState): string => {
     return state.globalState.selectedDayKey;
 };
 
-export const getTimelineCardRefreshRequests = (state: RootState): string[] => {
+export const getTimelineCardRefreshRequests = (state: RootState): number[] => {
     if (!state?.globalState.timelineCardRefreshRequests) {
         return INITIAL_STATE.timelineCardRefreshRequests;
     }

@@ -9,10 +9,13 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import { PlannedDayResultComment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const dispatch = useAppDispatch();
 
     const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResultModel | undefined>(undefined);
 
@@ -72,8 +75,9 @@ export const DailyResultDetails = () => {
             return;
         }
 
-        DailyResultController.addLikeViaApi(plannedDayResult!.id);
+        await DailyResultController.addLikeViaApi(plannedDayResult!.id);
         //dispatch(addTimelineCardRefreshRequest(dailyResult.id));
+        dispatch(addTimelineCardRefreshRequest(plannedDayResult.id));
         fetchData();
     };
 
