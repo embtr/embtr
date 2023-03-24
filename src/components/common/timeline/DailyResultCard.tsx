@@ -46,6 +46,8 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
                 dispatch(removeTimelineCardRefreshRequest(plannedDayResult.data.dayResult.id));
             }
         };
+
+        getAsync();
     }, [timelineCardRefreshRequests]);
 
     let plannedTaskViews: JSX.Element[] = [];
@@ -68,7 +70,12 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
         });
     };
 
-    const onLike = async () => {};
+    const onLike = async () => {
+        if (!plannedDayResult.data.dayResult.id) {
+            return;
+        }
+        await DailyResultController.addLikeViaApi(plannedDayResult.data.dayResult.id);
+    };
 
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>
@@ -87,7 +94,11 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
                 {/* FOOTER */}
                 {/**********/}
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
-                    <PostDetailsActionBar likes={[]} commentCount={plannedDayResult.data.dayResult.PlannedDayResultComments?.length ?? 0} onLike={onLike} />
+                    <PostDetailsActionBar
+                        likes={plannedDayResult.data.dayResult?.plannedDayResultLikes || []}
+                        commentCount={plannedDayResult.data.dayResult.plannedDayResultComments?.length ?? 0}
+                        onLike={onLike}
+                    />
                 </View>
             </View>
         </TouchableWithoutFeedback>

@@ -86,6 +86,17 @@ class DailyResultController {
             });
     }
 
+    public static async addLikeViaApi(id: number) {
+        return await axiosInstance
+            .post(`${PLANNED_DAY_RESULT}${id}/like/`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     public static async addCommentViaApi(id: number, comment: string) {
         const request: CreatePlannedDayResultCommentRequest = {
             comment,

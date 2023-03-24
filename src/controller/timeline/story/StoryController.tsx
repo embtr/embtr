@@ -1,5 +1,6 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
+import { PlannedDayResultLike } from 'resources/schema';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { Comment, Like, TimelinePostModel } from 'src/controller/timeline/TimelineController';
@@ -13,10 +14,10 @@ export interface StoryModel extends TimelinePostModel {
     };
 }
 
-export const timelineEntryWasLikedBy = (likes: Like[], uid: string): boolean => {
+export const timelineEntryWasLikedBy = (likes: PlannedDayResultLike[], uid: string): boolean => {
     let isLiked = false;
     likes.forEach((like) => {
-        if (like.uid === uid) {
+        if (like.user?.uid === uid) {
             isLiked = true;
             return;
         }

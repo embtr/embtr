@@ -16,7 +16,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PostDetailsActionBar from './PostDetailsActionBar';
 import ScrollableTextInputBox from '../textbox/ScrollableTextInputBox';
-import { PlannedDayResultComment, User as UserModel } from 'resources/schema';
+import { PlannedDayResultComment, PlannedDayResultLike, User as UserModel } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { formatDistance } from 'date-fns';
 
@@ -25,7 +25,7 @@ interface Props {
     author: UserModel;
     children: any;
     added: Date;
-    likes: Like[];
+    likes: PlannedDayResultLike[];
     comments: PlannedDayResultComment[];
     onLike: Function;
     submitComment: Function;

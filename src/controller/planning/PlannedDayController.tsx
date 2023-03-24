@@ -9,7 +9,7 @@ import PlannedTaskController, { PlannedTaskModel } from './PlannedTaskController
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PLANNED_DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { CreatePlannedDayRequest, CreatePlannedDayResponse, GetPlannedDayResponse } from 'resources/types/PlannedDayTypes';
 import { CreatePlannedDayResultRequest } from 'resources/types/PlannedDayResultTypes';
 

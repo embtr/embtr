@@ -10,9 +10,10 @@ import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryCont
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
+import { PlannedDayResultLike } from 'resources/schema';
 
 interface Props {
-    likes: Like[];
+    likes: PlannedDayResultLike[];
     commentCount: number;
     onLike: Function;
 }

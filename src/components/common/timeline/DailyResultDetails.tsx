@@ -8,9 +8,7 @@ import { DailyResultBody } from './DailyResultBody';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
-import { Comment } from 'src/controller/timeline/TimelineController';
 import { PlannedDayResultComment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
-import { Timestamp } from 'firebase/firestore';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
@@ -48,12 +46,6 @@ export const DailyResultDetails = () => {
     const deleteComment = async (comment: PlannedDayResultComment) => {
         await DailyResultController.deleteCommentViaApi(comment);
         fetchData();
-
-        //if (!dailyResult || !comment) {
-        //    return;
-        //}
-        //await DailyResultController.deleteComment(dailyResult, comment);
-        //DailyResultController.get(route.params.id, setDailyResult);
     };
 
     const onEdit = () => {
@@ -76,7 +68,11 @@ export const DailyResultDetails = () => {
     };
 
     const onLike = async () => {
-        //await DailyResultController.like(dailyResult, getCurrentUid());
+        if (!plannedDayResult?.id) {
+            return;
+        }
+
+        DailyResultController.addLikeViaApi(plannedDayResult!.id);
         //dispatch(addTimelineCardRefreshRequest(dailyResult.id));
         fetchData();
     };
@@ -95,8 +91,8 @@ export const DailyResultDetails = () => {
                 type={'Daily Result'}
                 author={plannedDayResult!.plannedDay?.user!}
                 added={plannedDayResult!.plannedDay?.createdAt!}
-                likes={[]}
-                comments={plannedDayResult.PlannedDayResultComments || []}
+                likes={plannedDayResult.plannedDayResultLikes || []}
+                comments={plannedDayResult.plannedDayResultComments || []}
                 onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}
