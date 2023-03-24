@@ -20,10 +20,10 @@ type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserP
 
 interface Props {
     userProfileModel: UserProfileModel;
-    dayResult: DayResultTimelinePost;
+    plannedDayResult: DayResultTimelinePost;
 }
 
-export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
+export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
     const dispatch = useAppDispatch();
     const { colors } = useTheme();
@@ -32,25 +32,25 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
     const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
 
     React.useEffect(() => {
-        if (!dayResult.data.dayResult.id) {
+        if (!plannedDayResult.data.dayResult.id) {
             return;
         }
 
         const getAsync = async () => {
-            if (timelineCardRefreshRequests.includes('' + dayResult.data.dayResult.id)) {
-                const updatedDayResult = await DailyResultController.getViaApi(dayResult.data.dayResult.id!);
+            if (timelineCardRefreshRequests.includes('' + plannedDayResult.data.dayResult.id)) {
+                const updatedDayResult = await DailyResultController.getViaApi(plannedDayResult.data.dayResult.id!);
                 if (updatedDayResult) {
                     setUpdatedDayResult(updatedDayResult);
                 }
                 //remove card from the refresh request list
-                dispatch(removeTimelineCardRefreshRequest(dayResult.data.dayResult.id));
+                dispatch(removeTimelineCardRefreshRequest(plannedDayResult.data.dayResult.id));
             }
         };
     }, [timelineCardRefreshRequests]);
 
     let plannedTaskViews: JSX.Element[] = [];
 
-    dayResult.data.dayResult.plannedDay?.plannedTasks!.forEach((plannedTask) => {
+    plannedDayResult.data.dayResult.plannedDay?.plannedTasks!.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
@@ -59,12 +59,12 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
     });
 
     const navigateToDetails = () => {
-        if (!dayResult.data.dayResult.id) {
+        if (!plannedDayResult.data.dayResult.id) {
             return;
         }
 
         navigation.navigate('DailyResultDetails', {
-            id: dayResult.data.dayResult.id,
+            id: plannedDayResult.data.dayResult.id,
         });
     };
 
@@ -76,18 +76,18 @@ export const DailyResultCard = ({ userProfileModel, dayResult }: Props) => {
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <DailyResultHeader userProfileModel={userProfileModel} date={dayResult.data.dayResult.plannedDay?.date!} />
+                <DailyResultHeader userProfileModel={userProfileModel} date={plannedDayResult.data.dayResult.plannedDay?.date!} />
 
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                <DailyResultBody plannedDayResult={dayResult.data.dayResult} navigateToDetails={navigateToDetails} />
+                <DailyResultBody plannedDayResult={plannedDayResult.data.dayResult} navigateToDetails={navigateToDetails} />
 
                 {/**********/}
                 {/* FOOTER */}
                 {/**********/}
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
-                    <PostDetailsActionBar likes={[]} comments={[]} onLike={onLike} />
+                    <PostDetailsActionBar likes={[]} commentCount={plannedDayResult.data.dayResult.PlannedDayResultComments?.length ?? 0} onLike={onLike} />
                 </View>
             </View>
         </TouchableWithoutFeedback>

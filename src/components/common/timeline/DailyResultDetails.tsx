@@ -9,7 +9,7 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import { Comment } from 'src/controller/timeline/TimelineController';
-import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { PlannedDayResultComment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
 
 export const DailyResultDetails = () => {
@@ -45,7 +45,10 @@ export const DailyResultDetails = () => {
         //});
     };
 
-    const deleteComment = async (comment: Comment) => {
+    const deleteComment = async (comment: PlannedDayResultComment) => {
+        await DailyResultController.deleteCommentViaApi(comment);
+        fetchData();
+
         //if (!dailyResult || !comment) {
         //    return;
         //}

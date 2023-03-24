@@ -180,7 +180,7 @@ export const Timeline = () => {
         if (profile) {
             return (
                 <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                    <DailyResultCard dayResult={timelineEntry as DayResultTimelinePost} userProfileModel={profile} />
+                    <DailyResultCard plannedDayResult={timelineEntry as DayResultTimelinePost} userProfileModel={profile} />
                 </View>
             );
         }
