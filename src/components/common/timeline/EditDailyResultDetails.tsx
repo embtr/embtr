@@ -15,7 +15,7 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
 import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
-import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { PlannedDayResultImage as PlannedDayResultImageModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -28,7 +28,7 @@ export const EditDailyResultDetails = () => {
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
 
-    const [updatedImageUrls, setUpdatedImageUrls] = React.useState<string[]>([]);
+    const [updatedImageUrls, setUpdatedImageUrls] = React.useState<PlannedDayResultImageModel[]>([]);
     const [updatedDescription, setUpdatedDescription] = React.useState<string>('');
 
     const [carouselImages, setCarouselImages] = React.useState<ImageCarouselImage[]>([]);
@@ -43,17 +43,19 @@ export const EditDailyResultDetails = () => {
             }
 
             if (foundPlannedDayResult?.plannedDayResultImages) {
-                const images = foundPlannedDayResult.plannedDayResultImages.map((image) => image.url).filter(Boolean) as string[];
-                setUpdatedImageUrls(images);
+                setUpdatedImageUrls(foundPlannedDayResult.plannedDayResultImages);
             }
         };
 
         fetchPlannedDayResult();
     }, []);
 
-    const updateImages = (images: string[]) => {
+    const addUploadedImages = (images: string[]) => {
         let clonedList = [...updatedImageUrls];
-        clonedList = clonedList.concat(images);
+        for (const image of images) {
+            clonedList.push({ url: image, active: true });
+        }
+
         setUpdatedImageUrls(clonedList);
     };
 
@@ -61,7 +63,7 @@ export const EditDailyResultDetails = () => {
         setImagesUploading(true);
         setImageUploadProgress('preparing photo upload');
         const imageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
-        updateImages(imageUrls);
+        addUploadedImages(imageUrls);
         setImageUploadProgress('');
         setImagesUploading(false);
     };
@@ -69,8 +71,12 @@ export const EditDailyResultDetails = () => {
     React.useEffect(() => {
         let newCarouselImages: ImageCarouselImage[] = [];
         updatedImageUrls.forEach((image) => {
+            if (!image.url || !image.active) {
+                return;
+            }
+
             newCarouselImages.push({
-                url: image,
+                url: image.url,
                 format: 'png',
                 type: 'image',
                 onDelete: onDeleteImage,
@@ -117,22 +123,27 @@ export const EditDailyResultDetails = () => {
     };
 
     const onDeleteImage = (deletedImageUrl: string) => {
-        let imageUrls: string[] = [];
-        updatedImageUrls.forEach((imageUrl) => {
-            if (imageUrl !== deletedImageUrl) {
-                imageUrls.push(imageUrl);
+        console.log('deleting!');
+        let updatedImages: PlannedDayResultImageModel[] = updatedImageUrls.map((image) => {
+            if (image.url === deletedImageUrl) {
+                console.log('deleting image: ', image.url);
+                image.active = false;
             }
+
+            return { ...image };
         });
 
-        setUpdatedImageUrls(imageUrls);
+        console.log('updated images: ', updatedImages);
+        setUpdatedImageUrls(updatedImages);
     };
 
     const onSubmit = async () => {
         const clonedPlannedDayResult: PlannedDayResultModel = { ...plannedDayResult };
         clonedPlannedDayResult.description = updatedDescription;
-        clonedPlannedDayResult.plannedDayResultImages = updatedImageUrls.map((url) => {
-            return { url };
-        });
+        //clonedPlannedDayResult.plannedDayResultImages = updatedImageUrls.map((url) => {
+        //    return { url };
+        //});
+        clonedPlannedDayResult.plannedDayResultImages = updatedImageUrls;
 
         //let clonedDailyResult = DailyResultController.clone(dailyResult);
         //clonedDailyResult.data.description = updatedDescription;
