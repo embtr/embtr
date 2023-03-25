@@ -19,8 +19,7 @@ import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import DailyResultController, { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
-import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
-import AccessLogController from 'src/controller/access_log/AccessLogController';
+import { getDateMinusDays } from 'src/util/DateUtility';
 import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 import { GoalResultCard } from '../common/timeline/GoalResultCard';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
@@ -63,7 +62,7 @@ export const Timeline = () => {
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
-        getDayResults();
+        getPlannedDayResults();
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
@@ -312,8 +311,10 @@ export const Timeline = () => {
         );
     };
 
-    const getDayResults = async () => {
+    const getPlannedDayResults = async () => {
+        console.log('abc');
         const dayResults = await DailyResultController.getAllViaApi();
+        console.log(dayResults);
         setDayResults(dayResults);
     };
 

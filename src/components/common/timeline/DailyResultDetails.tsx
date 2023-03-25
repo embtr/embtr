@@ -63,7 +63,9 @@ export const DailyResultDetails = () => {
             {
                 text: 'I am sure. Delete it.',
                 onPress: async () => {
-                    //DailyResultController.delete(dailyResult);
+                    const clone: PlannedDayResultModel = { ...plannedDayResult, active: false };
+                    await DailyResultController.updateViaApi(clone);
+                    setPlannedDayResult(clone);
                     navigation.goBack();
                 },
             },

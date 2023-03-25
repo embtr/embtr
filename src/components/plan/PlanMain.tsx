@@ -77,8 +77,8 @@ export const PlanMain = () => {
             name: 'Complete Day',
             onPress: async () => {
                 const plannedDay = await PlannedDayController.getViaApi(selectedDayKey);
-                if (plannedDay.plannedDay) {
-                    PlannedDayController.completeDayViaApi(plannedDay.plannedDay);
+                if (plannedDay) {
+                    PlannedDayController.completeDayViaApi(plannedDay);
                 }
 
                 closeMenu();
