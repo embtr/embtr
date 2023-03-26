@@ -1,7 +1,12 @@
 import { Timestamp } from 'firebase/firestore';
+import { NOTIFICATION } from 'resources/endpoints';
+import { Notification } from 'resources/schema';
+import { ClearNotificationsRequest, GetNotificationsResponse } from 'resources/types/NotificationTypes';
+import axiosInstance from 'src/axios/axios';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import NotificationDao from 'src/firebase/firestore/notification/NotificationDao';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { Notification as ApiNotificationModel } from 'resources/schema';
 
 export interface NotificationModel {
     id?: string;
@@ -30,7 +35,7 @@ export enum NotificationType {
     GOAL_LIKE,
 }
 
-export const getUnreadNotificationCount = (notifications: NotificationModel[]): number => {
+export const getUnreadNotificationCount = (notifications: ApiNotificationModel[]): number => {
     let count = 0;
     notifications.forEach((notification) => {
         if (!notification.read) {
@@ -42,6 +47,44 @@ export const getUnreadNotificationCount = (notifications: NotificationModel[]): 
 };
 
 class NotificationController {
+    public static async getNotificationsViaApi(): Promise<Notification[]> {
+        return await axiosInstance
+            .get(`${NOTIFICATION}`)
+            .then((success) => {
+                const response = success.data as GetNotificationsResponse;
+                return response.notifications ?? [];
+            })
+            .catch((error) => {
+                console.log(error);
+                return [];
+            });
+    }
+
+    public static async clearNotificationsViaApi(notifications: Notification[]) {
+        const notificationIds: number[] = [];
+        notifications.forEach((notification) => {
+            if (notification.id) {
+                notificationIds.push(notification.id);
+            }
+        });
+
+        const request: ClearNotificationsRequest = {
+            notificationIds,
+        };
+
+        return await axiosInstance
+            .post(`${NOTIFICATION}clear`, request)
+            .then((success) => {
+                console.log(success);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    /*
+     * OLD LOGIC
+     */
     public static getNotifications(uid: string, callback: Function) {
         let notifications: NotificationModel[] = [];
 

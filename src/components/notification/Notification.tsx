@@ -3,46 +3,34 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { NotificationModel } from 'src/controller/notification/NotificationController';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TouchableOpacity } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { useFonts, Poppins_600SemiBold, Poppins_400Regular, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { formatDistance } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
+import { Notification as NotificationModel } from 'resources/schema';
+import { CachedImage } from '../common/images/CachedImage';
 
 interface Props {
     notification: NotificationModel;
-    userProfile: UserProfileModel;
 }
 
-export const Notification = ({ notification, userProfile }: Props) => {
+export const Notification = ({ notification }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
-    let [fontsLoaded] = useFonts({
-        Poppins_600SemiBold,
-        Poppins_400Regular,
-        Poppins_500Medium,
-    });
+    const time = formatDistance(notification.createdAt ?? new Date(), new Date(), { addSuffix: true });
 
-    if (!fontsLoaded) {
-        return <View />;
-    }
-
-    const time = formatDistance(notification.added.toDate(), new Date(), { addSuffix: true });
-
-    const params = {
-        id: notification.target_uid,
-        uid: notification.uid,
-        source: 'timeline',
-    };
+    //const params = {
+    //    id: notification.target_uid,
+    //    uid: notification.uid,
+    //    source: 'timeline',
+    //};
 
     return (
         <TouchableOpacity
             onPress={() => {
-                navigation.navigate(notification.target_page as keyof TimelineTabScreens, { ...params });
+                //                navigation.navigate(notification.target_page as keyof TimelineTabScreens, { ...params });
             }}
         >
             <View style={{ width: '100%', alignContent: 'center', alignItems: 'center' }}>
@@ -57,13 +45,15 @@ export const Notification = ({ notification, userProfile }: Props) => {
                         }}
                     >
                         <View style={{ marginRight: 10 }}>
-                            <NavigatableUserImage userProfileModel={userProfile} size={35} />
+                            <CachedImage uri={notification.fromUser?.photoUrl!} style={{ width: 35, height: 35, borderRadius: 50 }} />
                         </View>
 
                         <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{userProfile?.name}</Text>
+                                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>
+                                        {notification.fromUser?.displayName}
+                                    </Text>
                                 </View>
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
                                     <Ionicons
