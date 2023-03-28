@@ -15,10 +15,10 @@ export interface User {
   plannedDayResultLikes?: PlannedDayResultLike[];
   recievedNotifications?: Notification[];
   sendNotifications?: Notification[];
-  pushNotificationTokens?: UserPushNotification[];
+  pushNotificationTokens?: PushNotificationToken[];
 }
 
-export interface UserPushNotification {
+export interface PushNotificationToken {
   id?: number;
   userId?: number;
   user?: User;

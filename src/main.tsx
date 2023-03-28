@@ -14,7 +14,7 @@ import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
-import { User, UserCredential, getAuth } from 'firebase/auth';
+import { User } from 'firebase/auth';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -39,7 +39,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                             UserPostDetails: {
                                 path: 'timeline/:id/comments',
                                 parse: {
-                                    id: (id) => id,
+                                    id: (id: string) => id,
                                 },
                                 //                                  stringify: {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
@@ -48,7 +48,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                             ChallengeDetails: {
                                 path: 'challenge/:id/comments',
                                 parse: {
-                                    id: (id) => id,
+                                    id: (id: string) => id,
                                 },
                                 //                                  stringify: {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
@@ -57,9 +57,9 @@ const linking: LinkingOptions<RootStackParamList> = {
                             GoalDetails: {
                                 path: 'goal/:uid/:id/comments',
                                 parse: {
-                                    id: (id) => id,
+                                    id: (id: string) => id,
                                     source: 'timeline',
-                                    uid: (uid) => uid,
+                                    uid: (uid: string) => uid,
                                 },
                                 //                                  stringify: {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
@@ -78,7 +78,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                             TaskDetails: {
                                 path: 'tasks/:id/details',
                                 parse: {
-                                    id: (id) => id,
+                                    id: (id: string) => id,
                                 },
                                 //                                  stringify: {
                                 //                                    id: (id) => id.replace(/^user-/, ''),
@@ -87,7 +87,7 @@ const linking: LinkingOptions<RootStackParamList> = {
                             CreateGoal: 'createGoal',
                             GoalDetails: {
                                 path: 'goals/:id',
-                                parse: { id: (id) => id },
+                                parse: { id: (id: string) => id },
                             },
                         },
                     },
@@ -118,7 +118,11 @@ export const Main = () => {
 
     React.useEffect(() => {
         const blockingLoad = async () => {
-            await createUserIfNew(user!);
+            if (!user) {
+                return;
+            }
+
+            await createUserIfNew(user);
 
             let currentUser = await UserController.getCurrentUser();
 

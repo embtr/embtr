@@ -5,8 +5,9 @@ import { WIDGETS } from 'src/util/constants';
 import { getAuth } from 'firebase/auth';
 import axiosInstance from 'src/axios/axios';
 import { CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest } from 'resources/types/AccountTypes';
-import { GetUserResponse } from 'resources/types/UserTypes';
+import { GetUserResponse, UpdateUserRequest } from 'resources/types/UserTypes';
 import { Response } from 'resources/types/RequestTypes';
+import { USER } from 'resources/endpoints';
 
 export interface UserModel {
     uid: string;
@@ -108,6 +109,17 @@ class UserController {
             })
             .catch((error) => {
                 getAuth().currentUser?.getIdToken(true);
+                return error.response.data;
+            });
+    }
+
+    public static async updateUserViaApi(request: UpdateUserRequest) {
+        return await axiosInstance
+            .patch(`${USER}`, request)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
                 return error.response.data;
             });
     }
