@@ -5,8 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TextInput, View } from 'react-native';
 import TaskController from 'src/controller/planning/TaskController';
 import { TaskPreview } from './TaskPreview';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
-import { TaskModel } from 'resources/models/TaskModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { Task as TaskModel } from 'resources/schema';
 
 interface Props {
     plannedDay: PlannedDayModel;

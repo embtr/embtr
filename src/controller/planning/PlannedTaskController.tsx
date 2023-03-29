@@ -9,9 +9,9 @@ import PlannedDayController, { PlannedDay, plannedTaskIsComplete } from './Plann
 import axiosInstance from 'src/axios/axios';
 import { PLANNED_DAY } from 'resources/endpoints';
 import { CreatePlannedTaskRequest, UpdatePlannedTaskRequest } from 'resources/types/PlannedTaskTypes';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
-import { PlannedTaskModel as NewPlannedTaskModel } from 'resources/models/PlannedTaskModel';
-import { TaskModel as NewTaskModel } from 'resources/models/TaskModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { PlannedTask as NewPlannedTaskModel } from 'resources/schema';
+import { Task as NewTaskModel } from 'resources/schema';
 
 export interface PlannedTaskModel {
     id?: string;

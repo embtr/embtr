@@ -1,20 +1,18 @@
 import { View, Text, TextStyle } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDateFromDayKey, PlannedDay, plannedDayIsComplete } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeek } from 'src/controller/planning/TaskController';
-import { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
-import { DayResultModel } from 'resources/models/DayResultModel';
+import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 
 interface Props {
-    dayResult: DayResultModel;
+    plannedDayResult: PlannedDayResultModel;
     navigateToDetails?: Function;
 }
 
-export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
+export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -24,10 +22,8 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
         paddingLeft: TIMELINE_CARD_PADDING,
     } as TextStyle;
 
-    let completedCount = 0;
-
     let plannedTaskViews: JSX.Element[] = [];
-    dayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
+    plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
@@ -36,26 +32,54 @@ export const DailyResultBody = ({ dayResult, navigateToDetails }: Props) => {
     });
 
     let carouselImages: ImageCarouselImage[] = [];
+    plannedDayResult.plannedDayResultImages?.forEach((plannedDayResultImage) => {
+        if (!plannedDayResultImage.url) {
+            return;
+        }
+
+        carouselImages.push({
+            url: plannedDayResultImage.url,
+            format: 'png',
+            type: 'image',
+        });
+    });
+
+    const dayOfWeek = getDayOfWeek(plannedDayResult.plannedDay?.date!);
+
+    let totalTasks = plannedDayResult.plannedDay?.plannedTasks?.length;
+    let completedCount = 0;
+    plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
+        if (plannedTask.status === 'COMPLETE') {
+            completedCount++;
+        }
+    });
+
+    const percentComplete = 100 * (completedCount / totalTasks!);
 
     return (
-        <View>
-            <View style={{ paddingTop: 10 }}>
-                <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                        <ProgressBar progress={80} success={true} />
-                    </View>
-                </View>
-
-                <View style={{ paddingTop: 5 }}>
-                    <Text style={headerTextStyle}>{'Tuesday'}</Text>
-                </View>
-
-                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                    <View style={{ paddingTop: 5 }}>
-                        <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
-                    </View>
+        <View style={{ paddingTop: 10 }}>
+            <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
+                    <ProgressBar progress={percentComplete} success={true} />
                 </View>
             </View>
+
+            <View style={{ paddingTop: 5 }}>
+                <Text style={headerTextStyle}>{dayOfWeek}</Text>
+            </View>
+
+            <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
+                <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>{plannedDayResult.description}</Text>
+                <View style={{ paddingTop: 5 }}>
+                    <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
+                </View>
+            </View>
+
+            {carouselImages.length > 0 && (
+                <View style={{ marginLeft: 10, marginRight: 10, overflow: 'hidden', paddingTop: 10, alignItems: 'center' }}>
+                    <CarouselCards images={carouselImages} />
+                </View>
+            )}
         </View>
     );
 };

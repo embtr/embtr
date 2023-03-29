@@ -1,6 +1,5 @@
-import { PlannedTaskModel } from 'resources/models/PlannedTaskModel';
+import { PlannedTask as PlannedTaskModel } from 'resources/schema';
 import { PlannableTask } from 'src/components/plan/PlannableTask';
-import { TaskModel } from 'src/controller/planning/TaskController';
 
 interface Props {
     plannedTask: PlannedTaskModel;

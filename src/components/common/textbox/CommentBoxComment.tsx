@@ -6,13 +6,13 @@ import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { formatDistance } from 'date-fns';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
-import { Comment } from 'src/controller/timeline/TimelineController';
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 import { COMMENT_ICON_SIZE } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
+import { PlannedDayResultComment } from 'resources/schema';
 
 interface Props {
-    comment: Comment;
+    comment: PlannedDayResultComment;
 }
 
 export const CommentBoxComment = ({ comment }: Props) => {
@@ -25,14 +25,17 @@ export const CommentBoxComment = ({ comment }: Props) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            if (comment && comment.uid) {
-                ProfileController.getProfile(comment.uid, setUserProfileModel);
+            if (comment && comment.user?.uid) {
+                ProfileController.getProfile(comment.user.uid, setUserProfileModel);
             }
-            UsernameTagTracker.dencodeTaggedUsers(comment.comment, colors, setDecodedComment);
-        }, [comment, comment.uid])
+
+            if (comment && comment.comment) {
+                UsernameTagTracker.dencodeTaggedUsers(comment.comment, colors, setDecodedComment);
+            }
+        }, [comment])
     );
 
-    const time = formatDistance(comment.timestamp.toDate(), new Date(), { addSuffix: true });
+    const time = formatDistance(comment.createdAt ?? new Date(), new Date(), { addSuffix: true });
     return (
         <View style={{ flexDirection: 'row' }}>
             <View style={{ flexDirection: 'row', marginRight: 10, marginLeft: 10, flex: 1 }}>

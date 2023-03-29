@@ -3,17 +3,12 @@ import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navig
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { Alert, View } from 'react-native';
-import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
-import PlannedDayController, { PlannedDay } from 'src/controller/planning/PlannedDayController';
-import { getAuth } from 'firebase/auth';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultBody } from './DailyResultBody';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
-import UserController from 'src/controller/user/UserController';
-import { Comment } from 'src/controller/timeline/TimelineController';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { PlannedDayResultComment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
@@ -22,8 +17,12 @@ export const DailyResultDetails = () => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
     const dispatch = useAppDispatch();
 
-    const [dailyResult, setDailyResult] = React.useState<DailyResultModel | undefined>(undefined);
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
+    const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResultModel | undefined>(undefined);
+
+    const fetchData = async () => {
+        const plannedDayResult = await DailyResultController.getViaApi(route.params.id);
+        setPlannedDayResult(plannedDayResult);
+    };
 
     useFocusEffect(
         React.useCallback(() => {
@@ -31,59 +30,31 @@ export const DailyResultDetails = () => {
         }, [])
     );
 
-    const fetchData = () => {
-        const fetchPlannedDay = async (dailyResult: DailyResultModel) => {
-            const user = await UserController.get(dailyResult.uid);
-            const plannedDay = await PlannedDayController.get(user, dailyResult.data.dayKey);
-            setPlannedDay(plannedDay);
-        };
-
-        DailyResultController.get(route.params.id, (dailyResult: DailyResultModel) => {
-            setDailyResult(dailyResult);
-            fetchPlannedDay(dailyResult);
-        });
-    };
-
-    const submitComment = (text: string, taggedUsers: UserProfileModel[]) => {
-        const user = getAuth().currentUser;
-
-        if (!user || !dailyResult || !dailyResult?.id || !plannedDay) {
-            return;
+    const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
+        if (plannedDayResult?.id) {
+            await DailyResultController.addCommentViaApi(plannedDayResult.id, text);
+            fetchData();
         }
 
-        DailyResultController.addComment(dailyResult.id, user.uid, text, () => {
-            // send notification to post owner
-            NotificationController.addNotification(user.uid, dailyResult.uid, NotificationType.DAILY_RESULT_COMMENT, dailyResult!.id!);
+        //DailyResultController.addComment(dailyResult.id, user.uid, text, () => {
+        // send notification to post owner
+        //    NotificationController.addNotification(user.uid, dailyResult.uid, NotificationType.DAILY_RESULT_COMMENT, dailyResult!.id!);
 
-            // send notification to tagged users
-            NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.DAILY_RESULT_TAG, route.params.id);
-            DailyResultController.get(route.params.id, setDailyResult);
-        });
+        // send notification to tagged users
+        //    NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.DAILY_RESULT_TAG, route.params.id);
+        //    DailyResultController.get(route.params.id, setDailyResult);
+        //});
     };
 
-    const deleteComment = async (comment: Comment) => {
-        if (!dailyResult || !comment) {
-            return;
-        }
-
-        await DailyResultController.deleteComment(dailyResult, comment);
-        DailyResultController.get(route.params.id, setDailyResult);
+    const deleteComment = async (comment: PlannedDayResultComment) => {
+        await DailyResultController.deleteCommentViaApi(comment);
+        fetchData();
     };
-
-    if (dailyResult === undefined || plannedDay === undefined) {
-        return (
-            <Screen>
-                <View></View>
-            </Screen>
-        );
-    }
 
     const onEdit = () => {
-        if (!dailyResult.id) {
-            return;
+        if (plannedDayResult?.id) {
+            navigation.navigate('EditDailyResultDetails', { id: plannedDayResult.id });
         }
-
-        navigation.navigate('EditDailyResultDetails', { id: dailyResult.id });
     };
 
     const onDelete = () => {
@@ -92,7 +63,9 @@ export const DailyResultDetails = () => {
             {
                 text: 'I am sure. Delete it.',
                 onPress: async () => {
-                    DailyResultController.delete(dailyResult);
+                    const clone: PlannedDayResultModel = { ...plannedDayResult, active: false };
+                    await DailyResultController.updateViaApi(clone);
+                    setPlannedDayResult(clone);
                     navigation.goBack();
                 },
             },
@@ -100,19 +73,32 @@ export const DailyResultDetails = () => {
     };
 
     const onLike = async () => {
-        await DailyResultController.like(dailyResult, getCurrentUid());
-        dispatch(addTimelineCardRefreshRequest(dailyResult.id));
+        if (!plannedDayResult?.id) {
+            return;
+        }
+
+        await DailyResultController.addLikeViaApi(plannedDayResult!.id);
+        //dispatch(addTimelineCardRefreshRequest(dailyResult.id));
+        dispatch(addTimelineCardRefreshRequest(plannedDayResult.id));
         fetchData();
     };
+
+    if (!plannedDayResult) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
 
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <PostDetails
                 type={'Daily Result'}
-                authorUid={dailyResult.uid}
-                added={dailyResult.added.toDate()}
-                likes={dailyResult?.public.likes ? dailyResult.public.likes : []}
-                comments={dailyResult?.public.comments ? dailyResult.public.comments : []}
+                author={plannedDayResult!.plannedDay?.user!}
+                added={plannedDayResult!.plannedDay?.createdAt!}
+                likes={plannedDayResult.plannedDayResultLikes || []}
+                comments={plannedDayResult.plannedDayResultComments || []}
                 onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}
@@ -120,7 +106,7 @@ export const DailyResultDetails = () => {
                 onDelete={onDelete}
             >
                 <View style={{ paddingLeft: 10 }}>
-                    <DailyResultBody dailyResult={dailyResult} plannedDay={plannedDay} />
+                    <DailyResultBody plannedDayResult={plannedDayResult} />
                 </View>
             </PostDetails>
         </View>

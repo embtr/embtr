@@ -45,6 +45,8 @@
       "eas": {
         "projectId": "06fe8c41-43dd-4736-bfaf-ed45cf068748"
       }
-    }
-  }
+    },
+    "sdkVersion": "47.0.0"
+  },
+  "name": "embtr"
 }

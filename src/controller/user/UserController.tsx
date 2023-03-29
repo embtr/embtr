@@ -5,8 +5,9 @@ import { WIDGETS } from 'src/util/constants';
 import { getAuth } from 'firebase/auth';
 import axiosInstance from 'src/axios/axios';
 import { CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest } from 'resources/types/AccountTypes';
-import { GetUserResponse } from 'resources/types/UserTypes';
+import { GetUserResponse, UpdateUserRequest } from 'resources/types/UserTypes';
 import { Response } from 'resources/types/RequestTypes';
+import { USER } from 'resources/endpoints';
 
 export interface UserModel {
     uid: string;
@@ -88,7 +89,7 @@ class UserController {
             });
     }
 
-    public static async getUser(uid: string): Promise<GetUserResponse> {
+    public static async getUserViaApi(uid: string): Promise<GetUserResponse> {
         return await axiosInstance
             .get(`/${USER_ENDPOINT}/${uid}`)
             .then((success) => {
@@ -112,8 +113,19 @@ class UserController {
             });
     }
 
+    public static async updateUserViaApi(request: UpdateUserRequest) {
+        return await axiosInstance
+            .patch(`${USER}`, request)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     public static async createUserIfNew(uid: string) {
-        const userResponse: GetUserResponse = await this.getUser(uid);
+        const userResponse: GetUserResponse = await this.getUserViaApi(uid);
         if (userResponse.success) {
             return;
         }
@@ -131,7 +143,7 @@ class UserController {
     }
 
     public static async getFromNewSystem(uid: string): Promise<UserModel | null> {
-        const userResponse: GetUserResponse = await this.getUser(uid);
+        const userResponse: GetUserResponse = await this.getUserViaApi(uid);
         if (userResponse.success && userResponse.user) {
             const user: UserModel = {
                 uid: userResponse.user.uid!,

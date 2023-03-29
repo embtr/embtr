@@ -6,7 +6,7 @@ import PlannedDayController, { getDayFromDayKey, getDayKey, getTodayKey } from '
 import { DayPicker } from 'src/components/plan/planning/DayPicker';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { PlannedTask } from './PlannedTask';
 import { PlanDay } from './PlanDay';
 

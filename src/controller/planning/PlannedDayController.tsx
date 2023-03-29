@@ -7,11 +7,11 @@ import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
 import { UserModel } from '../user/UserController';
 import PlannedTaskController, { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
-import { DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
+import { PLANNED_DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { CreatePlannedDayRequest, CreatePlannedDayResponse, GetPlannedDayResponse } from 'resources/types/PlannedDayTypes';
-import { CreateDayResultRequest } from 'resources/types/DayResultTypes';
+import { CreatePlannedDayResultRequest } from 'resources/types/PlannedDayResultTypes';
 
 export interface PlannedDay {
     id?: string;
@@ -174,12 +174,12 @@ export const createMetadata = () => {
 
 class PlannedDayController {
     public static async completeDayViaApi(plannedDay: PlannedDayModel): Promise<GetPlannedDayResponse> {
-        const body: CreateDayResultRequest = {
+        const body: CreatePlannedDayResultRequest = {
             plannedDayId: plannedDay.id ?? 0,
         };
 
         return await axiosInstance
-            .post(`${DAY_RESULT}`, body)
+            .post(`${PLANNED_DAY_RESULT}`, body)
             .then((success) => {
                 return success.data as GetPlannedDayResponse;
             })
@@ -203,28 +203,35 @@ class PlannedDayController {
             });
     }
 
-    public static async getViaApi(dayKey: string): Promise<GetPlannedDayResponse> {
+    public static async getViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
         const userId = await getUserIdFromToken();
 
         return await axiosInstance
             .get(`${PLANNED_DAY}${userId}/${dayKey}`)
             .then((success) => {
-                return success.data as GetPlannedDayResponse;
+                const result = success.data as GetPlannedDayResponse;
+                if (result.plannedDay) {
+                    return result.plannedDay;
+                }
+                return undefined;
             })
             .catch((error) => {
-                return error.response.data as GetPlannedDayResponse;
+                return undefined;
             });
     }
 
-    public static async getOrCreateViaApi(dayKey: string): Promise<PlannedDayModel> {
-        let result: GetPlannedDayResponse = await this.getViaApi(dayKey);
-        if (result.success && result.plannedDay) {
-            return result.plannedDay;
+    public static async getOrCreateViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
+        let plannedDay = await this.getViaApi(dayKey);
+        if (plannedDay) {
+            return plannedDay;
         }
 
         const createResult: CreatePlannedDayResponse = await this.createViaApi(dayKey);
-        result = await this.getViaApi(dayKey);
-        return result.plannedDay!;
+        if (!createResult.plannedDay) {
+            return createResult.plannedDay;
+        }
+
+        return undefined;
     }
     /*
      * OLD LOGIC

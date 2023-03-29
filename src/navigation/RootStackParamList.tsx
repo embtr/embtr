@@ -42,10 +42,10 @@ export type TimelineTabScreens = {
     Timeline: undefined;
     CreateUserPost: undefined;
     EditUserPostDetails: { id: string };
-    EditDailyResultDetails: { id: string };
+    EditDailyResultDetails: { id: number };
     UserPostDetails: { id: string };
     ChallengeDetails: { id: string };
-    DailyResultDetails: { id: string };
+    DailyResultDetails: { id: number };
     UserProfile: { id: string };
     Notifications: undefined;
     PillarDetails: { uid: string; id: string };

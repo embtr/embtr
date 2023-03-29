@@ -9,7 +9,6 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { Comment, Like } from 'src/controller/timeline/TimelineController';
-import React from 'react';
 
 interface Props {
     staticImage?: ImageSourcePropType;

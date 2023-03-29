@@ -5,13 +5,10 @@ import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { Comment, Like } from 'src/controller/timeline/TimelineController';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { useFocusEffect } from '@react-navigation/native';
-import ProfileController from 'src/controller/profile/ProfileController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { getAuth } from 'firebase/auth';
-import { formatDistance } from 'date-fns';
 import { HorizontalLine } from '../HorizontalLine';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from '../menu/EmbtrMenuCustom';
@@ -19,14 +16,17 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PostDetailsActionBar from './PostDetailsActionBar';
 import ScrollableTextInputBox from '../textbox/ScrollableTextInputBox';
+import { PlannedDayResultComment, PlannedDayResultLike, User as UserModel } from 'resources/schema';
+import UserController from 'src/controller/user/UserController';
+import { formatDistance } from 'date-fns';
 
 interface Props {
     type: string;
-    authorUid: string;
+    author: UserModel;
     children: any;
     added: Date;
-    likes: Like[];
-    comments: Comment[];
+    likes: PlannedDayResultLike[];
+    comments: PlannedDayResultComment[];
     onLike: Function;
     submitComment: Function;
     deleteComment: Function;
@@ -34,31 +34,28 @@ interface Props {
     onDelete?: Function;
 }
 
-export const PostDetails = ({ type, authorUid, children, added, likes, comments, onLike, submitComment, deleteComment, onEdit, onDelete }: Props) => {
+export const PostDetails = ({ type, author, children, added, likes, comments, onLike, submitComment, deleteComment, onEdit, onDelete }: Props) => {
     const { colors } = useTheme();
-
     const closeMenu = useAppSelector(getCloseMenu);
-
-    const [author, setAuthor] = React.useState<UserProfileModel>();
-    const [currentUserProfile, setCurrentUserProfile] = React.useState<UserProfileModel>();
+    const [currentUser, setCurrentUser] = React.useState<UserModel | undefined>(undefined);
 
     useFocusEffect(
         React.useCallback(() => {
-            ProfileController.getProfile(authorUid, setAuthor);
+            const fetchCurrentUser = async () => {
+                const uid = getAuth().currentUser?.uid;
+                if (uid) {
+                    const currentUserResponse = await UserController.getUserViaApi(uid);
+                    if (currentUserResponse.user) {
+                        setCurrentUser(currentUserResponse.user);
+                    }
+                }
+            };
+
+            fetchCurrentUser();
         }, [])
     );
 
-    useFocusEffect(
-        React.useCallback(() => {
-            const uid = getAuth().currentUser?.uid;
-
-            if (uid) {
-                ProfileController.getProfile(uid, setCurrentUserProfile);
-            }
-        }, [])
-    );
-
-    const daysRemaining = formatDistance(added, new Date(), { addSuffix: true });
+    const daysAgo = formatDistance(added, new Date(), { addSuffix: true });
 
     const menuItems: EmbtrMenuOption[] = [
         {
@@ -82,7 +79,7 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
         },
     ];
 
-    const userIsAuthor = currentUserProfile?.uid === author?.uid;
+    const userIsAuthor = currentUser?.uid === author?.uid;
 
     return (
         <Screen>
@@ -100,8 +97,9 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
             {userIsAuthor && <EmbtrMenuCustom />}
             <HorizontalLine />
 
-            {currentUserProfile && author && (
-                <ScrollableTextInputBox currentUser={currentUserProfile} postOwner={author} submitComment={submitComment}>
+            {currentUser && author && (
+                <ScrollableTextInputBox submitComment={submitComment}>
+                    {/* HEADER */}
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
                             <View>{author && <NavigatableUserImage userProfileModel={author} size={45} />}</View>
@@ -109,11 +107,11 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
                             <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
                                 <View style={{ flex: 1, flexDirection: 'row' }}>
                                     <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{author?.name}</Text>
+                                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{author.displayName}</Text>
                                     </View>
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
                                         <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
-                                            {daysRemaining}
+                                            {daysAgo}
                                         </Text>
                                     </View>
                                 </View>
@@ -131,7 +129,7 @@ export const PostDetails = ({ type, authorUid, children, added, likes, comments,
                     {children}
 
                     <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}>
-                        <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
+                        <PostDetailsActionBar likes={likes} commentCount={comments.length} onLike={onLike} />
                     </View>
 
                     <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%' }}>

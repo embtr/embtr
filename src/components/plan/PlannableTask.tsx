@@ -8,7 +8,7 @@ import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMen
 import { getCloseMenu, getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
-import { PlannedTaskModel } from 'resources/models/PlannedTaskModel';
+import { PlannedTask as PlannedTaskModel } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';

@@ -5,7 +5,8 @@ export const USER = "/user/";
 export const TASK = "/task/";
 export const PLANNED_DAY = "/planned-day/";
 export const PLANNED_TASK = "/planned-task/";
-export const DAY_RESULT = "/day-result/";
+export const PLANNED_DAY_RESULT = "/planned-day-result/";
+export const NOTIFICATION = "/notification/"
 
 export const getLocalizedEndpoint = (url: string) => {
   return url.substring(url.indexOf("/"));

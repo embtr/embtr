@@ -5,6 +5,8 @@ import { User } from 'firebase/auth';
 import EmbtrCloudApiController from 'src/controller/embtr_cloud/EmbtrCloudApiController';
 import { Linking } from 'react-native';
 import { isAndroidDevice, isPhysicalDevice } from 'src/util/DeviceUtil';
+import { darkColors } from 'src/theme/ColorThemes';
+import { UpdateUserRequest } from 'resources/types/UserTypes';
 
 class PushNotificationController {
     public static registerUpdatePostNotificationTokenListener() {
@@ -20,36 +22,46 @@ class PushNotificationController {
     }
 
     private static registerForPushNotificationsAsync = async () => {
-        const pushNotificationsEnabled = await this.pushNotificationsEnabled();
-        if (pushNotificationsEnabled) {
-            return;
-        }
-
-        const pushNotificationsManuallyDisabled = await this.pushNotificationsManuallyDisabled();
-        if (pushNotificationsManuallyDisabled === true) {
-            return;
-        }
-
         if (!isPhysicalDevice()) {
             return;
         }
+
+        //const pushNotificationsEnabled = await this.pushNotificationsEnabled();
+        //if (pushNotificationsEnabled) {
+        //    return;
+        //}
+
+        //const pushNotificationsManuallyDisabled = await this.pushNotificationsManuallyDisabled();
+        //if (pushNotificationsManuallyDisabled === true) {
+        //    return;
+        //}
 
         const requestPermissions = await Notifications.requestPermissionsAsync();
         if (!requestPermissions.canAskAgain) {
             return;
         }
 
-        const token = (await Notifications.getExpoPushTokenAsync()).data;
-        UserController.updatePostNotificationToken(token);
-
         if (isAndroidDevice()) {
             Notifications.setNotificationChannelAsync('default', {
                 name: 'default',
                 importance: Notifications.AndroidImportance.MAX,
                 vibrationPattern: [0, 250, 250, 250],
-                lightColor: '#FF231F7C',
+                lightColor: darkColors.primary_border,
             });
         }
+
+        const token = (await Notifications.getExpoPushTokenAsync()).data;
+
+        console.log('PushNotificationController.registerForPushNotificationsAsync: token: ' + token);
+        this.addPushNotificationTokenViaApi(token);
+    };
+
+    private static async addPushNotificationTokenViaApi(token: string) {
+        const updateUserRequest: UpdateUserRequest = {
+            pushNotificationTokens: [{ token }],
+        };
+
+        await UserController.updateUserViaApi(updateUserRequest);
     }
 
     private static async openNotificationsSettings() {
@@ -57,8 +69,7 @@ class PushNotificationController {
     }
 
     public static async pushNotificationsManuallyDisabled() {
-        const user: UserModel = await UserController.getCurrentUser();
-        return user.post_notification_token === null;
+        return false;
     }
 
     public static async pushNotificationsAllowedOnSystemLevel() {
@@ -68,17 +79,12 @@ class PushNotificationController {
 
     public static async pushNotificationsEnabled() {
         const permissions = await Notifications.getPermissionsAsync();
-        if (permissions.status !== "granted") {
-            return false;
-        }
-
-        const manuallyDisabled = await this.pushNotificationsManuallyDisabled();
-        return manuallyDisabled === false;
+        return permissions.status === 'granted';
     }
 
     public static async addPushNotificationAccess() {
         const answer = await Notifications.requestPermissionsAsync();
-        if (answer.status === "granted") {
+        if (answer.status === 'granted') {
             const token = await Notifications.getExpoPushTokenAsync();
             UserController.updatePostNotificationToken(token.data);
             return true;

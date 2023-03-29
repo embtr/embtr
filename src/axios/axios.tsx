@@ -41,6 +41,11 @@ function parseDates<T>(data: T): T {
         return data.map((item) => parseDates(item)) as any;
     } else if (typeof data === 'object' && data !== null) {
         for (const key in data) {
+            // do not convert these
+            if (key === 'dayKey') {
+                continue;
+            }
+
             if (typeof data[key] === 'string' && isDateString(data[key])) {
                 (data as any)[key] = new Date(data[key] as string) as any;
             } else {

@@ -1,18 +1,16 @@
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import React from 'react';
 import { CommentsTextInput } from 'src/components/common/comments/CommentsTextInput';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isIosApp } from 'src/util/DeviceUtil';
-import React from 'react';
+import { User as UserModel } from 'resources/schema';
 
 interface Props {
-    currentUser: UserProfileModel;
-    postOwner: UserProfileModel;
     submitComment: Function;
     children: any;
 }
 
-const ScrollableTextInputBox = ({ currentUser, postOwner, submitComment, children }: Props) => {
+const ScrollableTextInputBox = ({ submitComment, children }: Props) => {
     const scrollRef = React.useRef<ScrollView>(null);
 
     const onCommentCountChanged = (width: number, height: number) => {
@@ -25,7 +23,7 @@ const ScrollableTextInputBox = ({ currentUser, postOwner, submitComment, childre
                 {children}
             </ScrollView>
 
-            <CommentsTextInput currentUserProfile={currentUser} authorUserProfile={postOwner} submitComment={submitComment} />
+            <CommentsTextInput submitComment={submitComment} />
         </KeyboardAvoidingView>
     );
 };

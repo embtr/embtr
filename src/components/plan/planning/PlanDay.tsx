@@ -2,7 +2,7 @@ import React from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ScrollView, Text, View } from 'react-native';
-import { PlannedDayModel } from 'resources/models/PlannedDayModel';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { Screen } from 'src/components/common/Screen';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { useTheme } from 'src/components/theme/ThemeProvider';

@@ -5,25 +5,23 @@ import { Banner } from 'src/components/common/Banner';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import TimelineController, { PaginatedTimelinePosts, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
-import NotificationController, { getUnreadNotificationCount, NotificationModel } from 'src/controller/notification/NotificationController';
-import { getAuth } from 'firebase/auth';
+import NotificationController, { getUnreadNotificationCount } from 'src/controller/notification/NotificationController';
 import { CARD_SHADOW } from 'src/util/constants';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import DailyResultController, { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
-import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
-import AccessLogController from 'src/controller/access_log/AccessLogController';
+import { getDateMinusDays } from 'src/util/DateUtility';
 import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 import { GoalResultCard } from '../common/timeline/GoalResultCard';
-import { DayResultModel } from 'resources/models/DayResultModel';
+import { Notification as NotificationModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
 
 export const Timeline = () => {
@@ -48,7 +46,7 @@ export const Timeline = () => {
     const INITIAL_DAYS = 5;
 
     const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
-    const [dayResults, setDayResults] = React.useState<DayResultModel[]>([]);
+    const [dayResults, setDayResults] = React.useState<PlannedDayResultModel[]>([]);
     const [paginatedGoalResults, setPaginatedGoalResults] = React.useState<PaginatedGoalResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
     const [timelineProfiles, setTimelineProfiles] = React.useState<Map<string, UserProfileModel>>(new Map<string, UserProfileModel>());
@@ -63,7 +61,7 @@ export const Timeline = () => {
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
-        getDayResults();
+        getPlannedDayResults();
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
@@ -99,8 +97,9 @@ export const Timeline = () => {
         wait(500).then(() => setRefreshing(false));
     }, []);
 
-    const fetchNotifications = () => {
-        NotificationController.getNotifications(getAuth().currentUser!.uid, setNotifications);
+    const fetchNotifications = async () => {
+        const notifications = await NotificationController.getNotificationsViaApi();
+        setNotifications(notifications);
     };
 
     const fetchPostUsers = () => {
@@ -110,7 +109,7 @@ export const Timeline = () => {
         }
 
         if (dayResults.length > 0) {
-            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: DayResultModel) => {
+            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: PlannedDayResultModel) => {
                 const dayResultTimelinePost: DayResultTimelinePost = {
                     added: Timestamp.fromDate(dayResult.createdAt!),
                     modified: Timestamp.fromDate(dayResult.updatedAt!),
@@ -180,7 +179,7 @@ export const Timeline = () => {
         if (profile) {
             return (
                 <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                    <DailyResultCard dayResult={timelineEntry as DayResultTimelinePost} userProfileModel={profile} />
+                    <DailyResultCard plannedDayResult={timelineEntry as DayResultTimelinePost} userProfileModel={profile} />
                 </View>
             );
         }
@@ -227,7 +226,7 @@ export const Timeline = () => {
             timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
         }
 
-        const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: DayResultModel) => {
+        const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: PlannedDayResultModel) => {
             const dayResultTimelinePost: DayResultTimelinePost = {
                 added: Timestamp.fromDate(dayResult.createdAt!),
                 modified: Timestamp.fromDate(dayResult.updatedAt!),
@@ -312,7 +311,7 @@ export const Timeline = () => {
         );
     };
 
-    const getDayResults = async () => {
+    const getPlannedDayResults = async () => {
         const dayResults = await DailyResultController.getAllViaApi();
         setDayResults(dayResults);
     };

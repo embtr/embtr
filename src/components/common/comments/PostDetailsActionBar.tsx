@@ -10,14 +10,15 @@ import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryCont
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
+import { PlannedDayResultLike } from 'resources/schema';
 
 interface Props {
-    likes: Like[];
-    comments: Comment[];
+    likes: PlannedDayResultLike[];
+    commentCount: number;
     onLike: Function;
 }
 
-const PostDetailsActionBar = ({ likes, comments, onLike }: Props) => {
+const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
     const { colors } = useTheme();
 
     const isLiked = timelineEntryWasLikedBy(likes, getCurrentUid());
@@ -78,7 +79,7 @@ const PostDetailsActionBar = ({ likes, comments, onLike }: Props) => {
 
                 <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
                     <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
-                        {comments.length}
+                        {commentCount}
                     </Text>
                 </View>
             </View>
