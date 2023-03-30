@@ -91,13 +91,6 @@ export const DailyResultDetails = () => {
         );
     }
 
-    const commentObjs: Comment[] = [];
-    plannedDayResult.comments?.forEach((comment) => {
-        if (comment.comment) {
-            commentObjs.push(comment.comment);
-        }
-    });
-
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <PostDetails
@@ -105,7 +98,7 @@ export const DailyResultDetails = () => {
                 author={plannedDayResult!.plannedDay?.user!}
                 added={plannedDayResult!.plannedDay?.createdAt!}
                 likes={plannedDayResult.plannedDayResultLikes || []}
-                comments={commentObjs}
+                comments={plannedDayResult.comments || []}
                 onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}
