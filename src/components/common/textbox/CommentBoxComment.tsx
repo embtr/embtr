@@ -9,10 +9,10 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 import { COMMENT_ICON_SIZE } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { PlannedDayResultComment } from 'resources/schema';
+import { Comment } from 'resources/schema';
 
 interface Props {
-    comment: PlannedDayResultComment;
+    comment: Comment;
 }
 
 export const CommentBoxComment = ({ comment }: Props) => {

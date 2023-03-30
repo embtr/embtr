@@ -100,7 +100,7 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
                     <PostDetailsActionBar
                         likes={updatedDayResult?.plannedDayResultLikes || []}
-                        commentCount={updatedDayResult.plannedDayResultComments?.length ?? 0}
+                        commentCount={updatedDayResult.comments?.length ?? 0}
                         onLike={onLike}
                     />
                 </View>

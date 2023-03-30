@@ -1,10 +1,9 @@
 import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
-import { PlannedDayResultComment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { Comment as CommentModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import {
     CreatePlannedDayResultCommentRequest,
-    DeletePlannedDayResultCommentRequest,
     GetPlannedDayResultResponse,
     GetPlannedDayResultsResponse,
     UpdatePlannedDayResultRequest,
@@ -112,7 +111,7 @@ class DailyResultController {
             });
     }
 
-    public static async deleteCommentViaApi(comment: PlannedDayResultComment) {
+    public static async deleteCommentViaApi(comment: CommentModel) {
         return await axiosInstance
             .delete(`${PLANNED_DAY_RESULT}/comment/${comment.id}`)
             .then((success) => {

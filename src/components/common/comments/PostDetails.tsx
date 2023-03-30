@@ -4,7 +4,6 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
-import { Comment, Like } from 'src/controller/timeline/TimelineController';
 import { useFocusEffect } from '@react-navigation/native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
@@ -16,7 +15,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PostDetailsActionBar from './PostDetailsActionBar';
 import ScrollableTextInputBox from '../textbox/ScrollableTextInputBox';
-import { PlannedDayResultComment, PlannedDayResultLike, User as UserModel } from 'resources/schema';
+import { Comment, PlannedDayResultLike, User as UserModel } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { formatDistance } from 'date-fns';
 
@@ -26,7 +25,7 @@ interface Props {
     children: any;
     added: Date;
     likes: PlannedDayResultLike[];
-    comments: PlannedDayResultComment[];
+    comments: Comment[];
     onLike: Function;
     submitComment: Function;
     deleteComment: Function;
@@ -39,6 +38,7 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
     const closeMenu = useAppSelector(getCloseMenu);
     const [currentUser, setCurrentUser] = React.useState<UserModel | undefined>(undefined);
 
+    console.log(author);
     useFocusEffect(
         React.useCallback(() => {
             const fetchCurrentUser = async () => {

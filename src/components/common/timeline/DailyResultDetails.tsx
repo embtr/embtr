@@ -8,7 +8,7 @@ import { DailyResultBody } from './DailyResultBody';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
-import { PlannedDayResultComment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { Comment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
@@ -46,7 +46,7 @@ export const DailyResultDetails = () => {
         //});
     };
 
-    const deleteComment = async (comment: PlannedDayResultComment) => {
+    const deleteComment = async (comment: Comment) => {
         await DailyResultController.deleteCommentViaApi(comment);
         fetchData();
     };
@@ -91,6 +91,13 @@ export const DailyResultDetails = () => {
         );
     }
 
+    const commentObjs: Comment[] = [];
+    plannedDayResult.comments?.forEach((comment) => {
+        if (comment.comment) {
+            commentObjs.push(comment.comment);
+        }
+    });
+
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <PostDetails
@@ -98,7 +105,7 @@ export const DailyResultDetails = () => {
                 author={plannedDayResult!.plannedDay?.user!}
                 added={plannedDayResult!.plannedDay?.createdAt!}
                 likes={plannedDayResult.plannedDayResultLikes || []}
-                comments={plannedDayResult.plannedDayResultComments || []}
+                comments={commentObjs}
                 onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}

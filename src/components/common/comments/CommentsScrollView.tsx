@@ -1,13 +1,12 @@
 import { View } from 'react-native';
 import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComment';
-import { Comment } from 'src/controller/timeline/TimelineController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import SwipeableDeleteCard from '../swipeable/SwipeableDeleteCard';
-import { PlannedDayResultComment } from 'resources/schema';
+import { Comment as CommentModel } from 'resources/schema';
 
 interface Props {
     onDeleteComment?: Function;
-    comments: PlannedDayResultComment[];
+    comments: CommentModel[];
     limit?: number;
 }
 
@@ -20,7 +19,7 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
     }
 
     for (let i = 0; i < max; i++) {
-        const comment: PlannedDayResultComment = comments[i];
+        const comment: CommentModel = comments[i];
 
         const isCurrentUsersComment = comment.user?.uid === getCurrentUid();
 
