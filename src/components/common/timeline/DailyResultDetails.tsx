@@ -97,7 +97,7 @@ export const DailyResultDetails = () => {
                 type={'Daily Result'}
                 author={plannedDayResult!.plannedDay?.user!}
                 added={plannedDayResult!.plannedDay?.createdAt!}
-                likes={plannedDayResult.plannedDayResultLikes || []}
+                likes={plannedDayResult.likes || []}
                 comments={plannedDayResult.comments || []}
                 onLike={onLike}
                 submitComment={submitComment}

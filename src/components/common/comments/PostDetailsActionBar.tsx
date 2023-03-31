@@ -5,15 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
-import { Comment, Like } from 'src/controller/timeline/TimelineController';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
-import { PlannedDayResultLike } from 'resources/schema';
+import { Like } from 'resources/schema';
 
 interface Props {
-    likes: PlannedDayResultLike[];
+    likes: Like[];
     commentCount: number;
     onLike: Function;
 }
@@ -37,7 +36,6 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
                 animation.current?.reset();
             });
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            setHeartPressed(true);
             onLike();
         }
     };

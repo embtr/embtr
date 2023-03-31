@@ -31,27 +31,27 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
     const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>(plannedDayResult.data.dayResult);
     const timelineCardRefreshRequests: number[] = useAppSelector(getTimelineCardRefreshRequests);
 
-    React.useEffect(() => {
+    const refreshPlannedDayResult = async (): Promise<PlannedDayResultModel> => {
+        const refreshedPlannedDayResult: PlannedDayResultModel = await DailyResultController.getViaApi(updatedDayResult.id!);
+        if (refreshedPlannedDayResult) {
+            setUpdatedDayResult(refreshedPlannedDayResult);
+        }
+        return refreshedPlannedDayResult;
+    };
+
+    const refreshDayResultRequest = async () => {
         if (!updatedDayResult?.id) {
             return;
         }
+        if (timelineCardRefreshRequests.includes(updatedDayResult.id)) {
+            const refreshed: PlannedDayResultModel = await refreshPlannedDayResult();
+            //remove card from the refresh request list
+            dispatch(removeTimelineCardRefreshRequest(refreshed.id));
+        }
+    };
 
-        const getAsync = async () => {
-            if (!updatedDayResult?.id) {
-                return;
-            }
-
-            if (timelineCardRefreshRequests.includes(updatedDayResult.id)) {
-                const refreshedDayResult = await DailyResultController.getViaApi(updatedDayResult.id!);
-                if (refreshedDayResult) {
-                    setUpdatedDayResult(refreshedDayResult);
-                }
-                //remove card from the refresh request list
-                dispatch(removeTimelineCardRefreshRequest(refreshedDayResult.id));
-            }
-        };
-
-        getAsync();
+    React.useEffect(() => {
+        refreshDayResultRequest();
     }, [timelineCardRefreshRequests]);
 
     let plannedTaskViews: JSX.Element[] = [];
@@ -79,6 +79,7 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
             return;
         }
         await DailyResultController.addLikeViaApi(updatedDayResult.id);
+        refreshPlannedDayResult();
     };
 
     return (
@@ -98,11 +99,7 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
                 {/* FOOTER */}
                 {/**********/}
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
-                    <PostDetailsActionBar
-                        likes={updatedDayResult?.plannedDayResultLikes || []}
-                        commentCount={updatedDayResult.comments?.length ?? 0}
-                        onLike={onLike}
-                    />
+                    <PostDetailsActionBar likes={updatedDayResult?.likes || []} commentCount={updatedDayResult.comments?.length ?? 0} onLike={onLike} />
                 </View>
             </View>
         </TouchableWithoutFeedback>

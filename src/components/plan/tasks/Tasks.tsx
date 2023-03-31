@@ -36,7 +36,7 @@ export const Tasks = ({ plannedDay }: Props) => {
     for (let i = 0; i < tasks.length; i++) {
         const task = tasks[i];
         taskElements.push(
-            <View style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
+            <View key={task.id} style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
                 <TaskPreview plannedDay={plannedDay} task={task} />
             </View>
         );
