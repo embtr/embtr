@@ -33,6 +33,7 @@ export const DailyResultDetails = () => {
     const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
         if (plannedDayResult?.id) {
             await DailyResultController.addCommentViaApi(plannedDayResult.id, text);
+            dispatch(addTimelineCardRefreshRequest(plannedDayResult.id));
             fetchData();
         }
 
@@ -47,8 +48,11 @@ export const DailyResultDetails = () => {
     };
 
     const deleteComment = async (comment: Comment) => {
-        await DailyResultController.deleteCommentViaApi(comment);
-        fetchData();
+        if (plannedDayResult?.id) {
+            await DailyResultController.deleteCommentViaApi(comment);
+            dispatch(addTimelineCardRefreshRequest(plannedDayResult.id));
+            fetchData();
+        }
     };
 
     const onEdit = () => {
@@ -78,7 +82,6 @@ export const DailyResultDetails = () => {
         }
 
         await DailyResultController.addLikeViaApi(plannedDayResult!.id);
-        //dispatch(addTimelineCardRefreshRequest(dailyResult.id));
         dispatch(addTimelineCardRefreshRequest(plannedDayResult.id));
         fetchData();
     };
