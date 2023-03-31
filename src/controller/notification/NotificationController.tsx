@@ -75,10 +75,10 @@ class NotificationController {
         return await axiosInstance
             .post(`${NOTIFICATION}clear`, request)
             .then((success) => {
-                console.log(success);
+                //todo do something here
             })
             .catch((error) => {
-                console.log(error);
+                //
             });
     }
 

@@ -15,7 +15,7 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
 import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
-import { PlannedDayResultImage as PlannedDayResultImageModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { Image as ImageModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -28,7 +28,7 @@ export const EditDailyResultDetails = () => {
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
 
-    const [updatedImageUrls, setUpdatedImageUrls] = React.useState<PlannedDayResultImageModel[]>([]);
+    const [updatedImageUrls, setUpdatedImageUrls] = React.useState<ImageModel[]>([]);
     const [updatedDescription, setUpdatedDescription] = React.useState<string>('');
 
     const [carouselImages, setCarouselImages] = React.useState<ImageCarouselImage[]>([]);
@@ -42,8 +42,8 @@ export const EditDailyResultDetails = () => {
                 setUpdatedDescription(foundPlannedDayResult.description);
             }
 
-            if (foundPlannedDayResult?.plannedDayResultImages) {
-                setUpdatedImageUrls(foundPlannedDayResult.plannedDayResultImages);
+            if (foundPlannedDayResult?.images) {
+                setUpdatedImageUrls(foundPlannedDayResult.images);
             }
         };
 
@@ -123,17 +123,14 @@ export const EditDailyResultDetails = () => {
     };
 
     const onDeleteImage = (deletedImageUrl: string) => {
-        console.log('deleting!');
-        let updatedImages: PlannedDayResultImageModel[] = updatedImageUrls.map((image) => {
+        let updatedImages: ImageModel[] = updatedImageUrls.map((image) => {
             if (image.url === deletedImageUrl) {
-                console.log('deleting image: ', image.url);
                 image.active = false;
             }
 
             return { ...image };
         });
 
-        console.log('updated images: ', updatedImages);
         setUpdatedImageUrls(updatedImages);
     };
 
@@ -143,7 +140,7 @@ export const EditDailyResultDetails = () => {
         //clonedPlannedDayResult.plannedDayResultImages = updatedImageUrls.map((url) => {
         //    return { url };
         //});
-        clonedPlannedDayResult.plannedDayResultImages = updatedImageUrls;
+        clonedPlannedDayResult.images = updatedImageUrls;
 
         //let clonedDailyResult = DailyResultController.clone(dailyResult);
         //clonedDailyResult.data.description = updatedDescription;

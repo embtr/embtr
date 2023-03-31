@@ -32,7 +32,7 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
     });
 
     let carouselImages: ImageCarouselImage[] = [];
-    plannedDayResult.plannedDayResultImages?.forEach((plannedDayResultImage) => {
+    plannedDayResult.images?.forEach((plannedDayResultImage) => {
         if (!plannedDayResultImage.url) {
             return;
         }

@@ -11,11 +11,11 @@ export interface User {
   createdAt?: Date;
   updatedAt?: Date;
   plannedDays?: PlannedDay[];
-  plannedDayResultLikes?: PlannedDayResultLike[];
   recievedNotifications?: Notification[];
   sendNotifications?: Notification[];
   pushNotificationTokens?: PushNotificationToken[];
   comments?: Comment[];
+  Like?: Like[];
 }
 
 export interface PushNotificationToken {
@@ -47,7 +47,7 @@ export interface PlannedDay {
   createdAt?: Date;
   updatedAt?: Date;
   plannedTasks?: PlannedTask[];
-  plannedDayResult?: PlannedDayResult[];
+  plannedDayResults?: PlannedDayResult[];
 }
 
 export interface PlannedTask {
@@ -62,6 +62,15 @@ export interface PlannedTask {
   updatedAt?: Date;
 }
 
+export interface UserPost {
+  id?: number;
+  active?: boolean;
+  description?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  comments?: Comment[];
+}
+
 export interface PlannedDayResult {
   id?: number;
   plannedDayId?: number;
@@ -70,8 +79,8 @@ export interface PlannedDayResult {
   description?: string;
   createdAt?: Date;
   updatedAt?: Date;
-  plannedDayResultImages?: PlannedDayResultImage[];
-  plannedDayResultLikes?: PlannedDayResultLike[];
+  images?: Image[];
+  likes?: Like[];
   comments?: Comment[];
 }
 
@@ -83,28 +92,27 @@ export interface Comment {
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
-  PlannedDayResultComment?: PlannedDayResult[];
+  plannedDayResultComments?: PlannedDayResult[];
+  userPosts?: UserPost[];
 }
 
-export interface PlannedDayResultLike {
+export interface Like {
   id?: number;
-  plannedDayResultId?: number;
-  plannedDayResult?: PlannedDayResult;
   userId?: number;
   user?: User;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  plannedDayResults?: PlannedDayResult[];
 }
 
-export interface PlannedDayResultImage {
+export interface Image {
   id?: number;
-  plannedDayResultId?: number;
-  plannedDayResult?: PlannedDayResult;
   url?: string;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  plannedDayResults?: PlannedDayResult[];
 }
 
 export interface Notification {
