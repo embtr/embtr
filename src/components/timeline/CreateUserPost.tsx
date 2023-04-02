@@ -14,14 +14,9 @@ export const CreateUserPost = () => {
     const [body, setBody] = React.useState<string>('');
     const [imageUrls, setImageUrls] = React.useState<string[]>([]);
 
-    const submitStory = () => {
-        let readyToSubmit = true;
-
-        if (readyToSubmit) {
-            StoryController.addStory(title, body, imageUrls, () => {
-                navigation.navigate('Timeline');
-            });
-        }
+    const submitStory = async () => {
+        await StoryController.createViaApi(title, body, imageUrls);
+        navigation.navigate('Timeline');
     };
 
     const onImagesUploaded = (uploadedImageUrls: string[]) => {

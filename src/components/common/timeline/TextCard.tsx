@@ -1,6 +1,5 @@
 import { Text, TextStyle, View, Image, ImageSourcePropType } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Timestamp } from 'firebase/firestore';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
@@ -8,17 +7,17 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
-import { Comment, Like } from 'src/controller/timeline/TimelineController';
+import { Comment, Like, Image as ImageModel } from 'resources/schema';
 
 interface Props {
     staticImage?: ImageSourcePropType;
     userProfileModel?: UserProfileModel;
 
-    added: Timestamp;
+    added: Date;
     name: string;
     title: string;
     body: string;
-    images: string[];
+    images: ImageModel[];
 
     likes: Like[];
     onLike: Function;
@@ -51,22 +50,14 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
         onCommented();
     };
 
-    let isLiked = false;
-    likes.forEach((like) => {
-        if (like.uid === userProfileModel?.uid) {
-            isLiked = true;
-            return;
-        }
-    });
-
-    const datePretty = getDatePrettyWithTime(added.toDate());
+    const datePretty = getDatePrettyWithTime(added);
 
     let bodyWithNewLines = body;
 
     let carouselImages: ImageCarouselImage[] = [];
     images.forEach((image) => {
         carouselImages.push({
-            url: image,
+            url: image.url ?? '',
             format: 'png',
             type: 'image',
             onPress: navigateToDetails,
@@ -135,7 +126,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                 {/* FOOTER */}
                 {/**********/}
                 <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, zIndex: 1, paddingBottom: TIMELINE_CARD_PADDING }}>
-                    <PostDetailsActionBar likes={likes} comments={comments} onLike={onLike} />
+                    <PostDetailsActionBar likes={likes} commentCount={comments.length} onLike={onLike} />
                 </View>
             </View>
         </TouchableWithoutFeedback>

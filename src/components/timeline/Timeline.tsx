@@ -9,19 +9,19 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import TimelineController, { PaginatedTimelinePosts, TimelinePostModel } from 'src/controller/timeline/TimelineController';
+import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { EmbtrTextCard } from 'src/components/common/timeline/EmbtrTextCard';
 import { ChallengeModel1 } from 'src/controller/timeline/challenge/ChallengeController';
 import NotificationController, { getUnreadNotificationCount } from 'src/controller/notification/NotificationController';
 import { CARD_SHADOW } from 'src/util/constants';
-import { StoryModel } from 'src/controller/timeline/story/StoryController';
+import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
 import DailyResultController, { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays } from 'src/util/DateUtility';
 import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 import { GoalResultCard } from '../common/timeline/GoalResultCard';
-import { Notification as NotificationModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { Notification as NotificationModel, PlannedDayResult as PlannedDayResultModel, UserPost } from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
 
 export const Timeline = () => {
@@ -45,7 +45,7 @@ export const Timeline = () => {
 
     const INITIAL_DAYS = 5;
 
-    const [paginatedTimelinePosts, setPaginatedTimelinePosts] = React.useState<PaginatedTimelinePosts>();
+    const [userPosts, setUserPosts] = React.useState<UserPost[]>([]);
     const [dayResults, setDayResults] = React.useState<PlannedDayResultModel[]>([]);
     const [paginatedGoalResults, setPaginatedGoalResults] = React.useState<PaginatedGoalResults>();
     const [timelineViews, setTimelineViews] = React.useState<JSX.Element[]>([]);
@@ -57,7 +57,7 @@ export const Timeline = () => {
     const [forceRefreshTimestamp, setForceRefreshTimestamp] = React.useState(new Date());
 
     React.useEffect(() => {
-        addPageOfTimelinePosts();
+        getUserPosts();
     }, [lookbackDays, forceRefreshTimestamp]);
 
     React.useEffect(() => {
@@ -78,7 +78,7 @@ export const Timeline = () => {
 
     React.useEffect(() => {
         fetchPostUsers();
-    }, [paginatedTimelinePosts, dayResults, paginatedGoalResults]);
+    }, [userPosts, dayResults, paginatedGoalResults]);
 
     const getLookbackDate = () => {
         const lookbackDate = getDateMinusDays(new Date(), lookbackDays);
@@ -104,8 +104,29 @@ export const Timeline = () => {
 
     const fetchPostUsers = () => {
         let timelinePosts: TimelinePostModel[] = [];
-        if (paginatedTimelinePosts?.posts) {
-            timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
+
+        if (userPosts.length > 0) {
+            const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost: UserPost) => {
+                console.log('userPost', userPost);
+                const userPostTimelinePost: TimelinePostModel = {
+                    added: Timestamp.fromDate(userPost.createdAt!),
+                    modified: Timestamp.fromDate(userPost.updatedAt!),
+                    type: 'STORY',
+                    uid: userPost.user!.uid!,
+                    public: {
+                        comments: [],
+                        likes: [],
+                    },
+                    data: {
+                        userPost: userPost,
+                    },
+                    active: true,
+                };
+
+                return userPostTimelinePost;
+            });
+
+            timelinePosts = timelinePosts.concat(userPostTimelinePosts);
         }
 
         if (dayResults.length > 0) {
@@ -152,12 +173,12 @@ export const Timeline = () => {
         });
     };
 
-    const createStoryView = (timelineEntry: TimelinePostModel) => {
+    const createUserPostView = (timelineEntry: TimelinePostModel) => {
         const profile = timelineProfiles.get(timelineEntry.uid);
         if (profile) {
             return (
                 <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                    <UserTextCard userProfileModel={profile} story={timelineEntry as StoryModel} />
+                    <UserTextCard userProfileModel={profile} oldModel={timelineEntry as StoryModel} />
                 </View>
             );
         }
@@ -204,7 +225,7 @@ export const Timeline = () => {
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
         switch (timelineEntry.type) {
             case 'STORY':
-                return createStoryView(timelineEntry);
+                return createUserPostView(timelineEntry);
 
             case 'CHALLENGE':
                 return createChallengeView(timelineEntry);
@@ -222,9 +243,26 @@ export const Timeline = () => {
 
     const updateTimelineViews = () => {
         let timelinePosts: TimelinePostModel[] = [];
-        if (paginatedTimelinePosts?.posts) {
-            timelinePosts = timelinePosts.concat(paginatedTimelinePosts.posts);
-        }
+
+        const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost: UserPost) => {
+            const userPostTimelinePost: TimelinePostModel = {
+                added: Timestamp.fromDate(userPost.createdAt!),
+                modified: Timestamp.fromDate(userPost.updatedAt!),
+                type: 'STORY',
+                uid: userPost.user!.uid!,
+                public: {
+                    comments: [],
+                    likes: [],
+                },
+                data: {
+                    userPost: userPost,
+                },
+                active: true,
+            };
+
+            return userPostTimelinePost;
+        });
+        timelinePosts = timelinePosts.concat(userPostTimelinePosts);
 
         const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: PlannedDayResultModel) => {
             const dayResultTimelinePost: DayResultTimelinePost = {
@@ -286,29 +324,9 @@ export const Timeline = () => {
         return layoutMeasurement.height + contentOffset.y > contentSize.height - 15;
     };
 
-    const addPageOfTimelinePosts = () => {
-        let currentTimelinePosts: PaginatedTimelinePosts = {
-            posts: [],
-            lastTimelinePost: undefined,
-        };
-
-        if (paginatedTimelinePosts?.posts && lookbackDays !== INITIAL_DAYS) {
-            currentTimelinePosts.posts = [...paginatedTimelinePosts.posts];
-            currentTimelinePosts.lastTimelinePost = paginatedTimelinePosts?.lastTimelinePost;
-        }
-
-        TimelineController.getPaginatedTimelinePosts(
-            currentTimelinePosts?.lastTimelinePost,
-            getLookbackDate(),
-            (newPaginatedTimelinePosts: PaginatedTimelinePosts) => {
-                if (newPaginatedTimelinePosts.posts.length > 0) {
-                    currentTimelinePosts.posts = currentTimelinePosts.posts.concat(newPaginatedTimelinePosts.posts);
-                    currentTimelinePosts.lastTimelinePost = newPaginatedTimelinePosts.lastTimelinePost;
-                }
-
-                setPaginatedTimelinePosts(currentTimelinePosts);
-            }
-        );
+    const getUserPosts = async () => {
+        const userPosts = await StoryController.getAllViaApi();
+        setUserPosts(userPosts);
     };
 
     const getPlannedDayResults = async () => {

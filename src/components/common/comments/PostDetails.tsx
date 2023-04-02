@@ -15,13 +15,13 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PostDetailsActionBar from './PostDetailsActionBar';
 import ScrollableTextInputBox from '../textbox/ScrollableTextInputBox';
-import { Comment, Like, User as UserModel } from 'resources/schema';
+import { Comment, Like, User, User as UserModel } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { formatDistance } from 'date-fns';
 
 interface Props {
     type: string;
-    author: UserModel;
+    author: User;
     children: any;
     added: Date;
     likes: Like[];
@@ -38,7 +38,6 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
     const closeMenu = useAppSelector(getCloseMenu);
     const [currentUser, setCurrentUser] = React.useState<UserModel | undefined>(undefined);
 
-    console.log(author);
     useFocusEffect(
         React.useCallback(() => {
             const fetchCurrentUser = async () => {

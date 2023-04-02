@@ -2,11 +2,12 @@ import { View, Text, Linking } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import ParsedText from 'react-native-parsed-text';
+import { Image } from 'resources/schema';
 
 interface Props {
     title: string;
     post: string;
-    images: string[];
+    images: Image[];
 }
 
 export const UserPostBody = ({ title, post, images }: Props) => {
@@ -15,7 +16,7 @@ export const UserPostBody = ({ title, post, images }: Props) => {
     let carouselImages: ImageCarouselImage[] = [];
     images.forEach((image) => {
         carouselImages.push({
-            url: image,
+            url: image.url!,
             format: 'png',
             type: 'image',
         });

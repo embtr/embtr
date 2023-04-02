@@ -10,6 +10,7 @@ export interface User {
   bannerUrl?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  user?: UserPost[];
   plannedDays?: PlannedDay[];
   recievedNotifications?: Notification[];
   sendNotifications?: Notification[];
@@ -64,10 +65,15 @@ export interface PlannedTask {
 
 export interface UserPost {
   id?: number;
-  active?: boolean;
-  description?: string;
+  title?: string;
+  body?: string;
+  userId?: number;
+  user?: User;
   createdAt?: Date;
   updatedAt?: Date;
+  active?: boolean;
+  images?: Image[];
+  likes?: Like[];
   comments?: Comment[];
 }
 
@@ -104,6 +110,7 @@ export interface Like {
   createdAt?: Date;
   updatedAt?: Date;
   plannedDayResults?: PlannedDayResult[];
+  userPosts?: UserPost[];
 }
 
 export interface Image {
@@ -113,6 +120,7 @@ export interface Image {
   createdAt?: Date;
   updatedAt?: Date;
   plannedDayResults?: PlannedDayResult[];
+  userPosts?: UserPost[];
 }
 
 export interface Notification {

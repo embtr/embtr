@@ -43,7 +43,7 @@ export type TimelineTabScreens = {
     CreateUserPost: undefined;
     EditUserPostDetails: { id: string };
     EditDailyResultDetails: { id: number };
-    UserPostDetails: { id: string };
+    UserPostDetails: { id: number };
     ChallengeDetails: { id: string };
     DailyResultDetails: { id: number };
     UserProfile: { id: string };
@@ -60,7 +60,7 @@ export type ProfileTabScreens = {
     PillarDetails: { uid: string; id: string };
     EditUserProfile: undefined;
     GoalDetails: { uid: string; id: string; source: string };
-    UserPostDetails: { id: string };
+    UserPostDetails: { id: number };
 };
 
 export type RootStackParamList = {

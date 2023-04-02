@@ -1,65 +1,80 @@
+import React from 'react';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
-import { getAuth } from 'firebase/auth';
-import React from 'react';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab, getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
+import { UserPost } from 'resources/schema';
 
 interface Props {
     userProfileModel: UserProfileModel;
-    story: StoryModel;
+    oldModel: StoryModel;
 }
 
-export const UserTextCard = ({ userProfileModel, story }: Props) => {
+export const UserTextCard = ({ userProfileModel, oldModel }: Props) => {
     const currentTab = useAppSelector(getCurrentTab);
     const navigation = getNavigationHook(currentTab)();
 
-    const [updatedStory, setUpdatedStory] = React.useState<StoryModel>();
+    const [updatedStory, setUpdatedStory] = React.useState<UserPost>(oldModel.data.userPost);
 
-    const storyToUse = updatedStory ? updatedStory : story;
-    const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
+    const timelineCardRefreshRequests: number[] = useAppSelector(getTimelineCardRefreshRequests);
 
     const dispatch = useAppDispatch();
 
-    React.useEffect(() => {
-        if (!story.id) {
+    const fetch = async () => {
+        if (!updatedStory.id) {
             return;
         }
 
-        if (timelineCardRefreshRequests.includes(story.id)) {
-            StoryController.getStory(story.id, setUpdatedStory);
+        const refreshed = await StoryController.getViaApi(updatedStory.id);
+        if (!refreshed) {
+            return;
+        }
 
+        setUpdatedStory(refreshed);
+        return refreshed;
+    };
+
+    React.useEffect(() => {
+        if (!updatedStory.id) {
+            return;
+        }
+
+        if (timelineCardRefreshRequests.includes(updatedStory.id)) {
+            fetch();
             //remove card from the refresh request list
-            dispatch(removeTimelineCardRefreshRequest(story.id));
+            dispatch(removeTimelineCardRefreshRequest(updatedStory.id));
         }
     }, [timelineCardRefreshRequests]);
 
     const onLike = async () => {
-        if (!story.id) {
-            return;
-        }
-
-        await StoryController.likeStory(story, getAuth().currentUser!.uid);
-        StoryController.getStory(story.id, setUpdatedStory);
+        //if (!story.id) {
+        //    return;
+        //}
+        //    await StoryController.likeStory(story, getAuth().currentUser!.uid);
+        //    StoryController.getStory(story.id, setUpdatedStory);
     };
 
     const onCommented = () => {
+        if (!updatedStory.id) {
+            return;
+        }
+
         // @ts-ignore
-        navigation.navigate('UserPostDetails', { id: story?.id ? story.id : '' });
+        navigation.navigate('UserPostDetails', { id: updatedStory.id });
     };
 
     return (
         <TextCard
             userProfileModel={userProfileModel}
-            added={storyToUse.added}
-            name={userProfileModel.name!}
-            title={storyToUse.data.title}
-            body={storyToUse.data.story}
-            images={storyToUse.data.images ? storyToUse.data.images : []}
-            likes={storyToUse.public.likes ? storyToUse.public.likes : []}
-            comments={story.public.comments ? storyToUse.public.comments : []}
+            added={updatedStory.createdAt ?? new Date()}
+            name={updatedStory.user?.displayName ?? 'some random user'}
+            title={updatedStory.title ?? 'some title'}
+            body={updatedStory.body ?? 'some body'}
+            likes={updatedStory.likes ?? []}
+            comments={updatedStory.comments ?? []}
+            images={updatedStory.images ?? []}
             onLike={onLike}
             onCommented={onCommented}
         />
