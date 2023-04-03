@@ -6,38 +6,39 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { ProfileLevel } from './profile_component/ProfileLevel';
 import { CachedImage } from '../common/images/CachedImage';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { User } from 'resources/schema';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
 interface Props {
-    userProfileModel: UserProfileModel;
+    user: User;
     size: number;
     denyNavigation?: boolean;
 }
 
-export const NavigatableUserImage = ({ userProfileModel, size, denyNavigation }: Props) => {
+export const NavigatableUserImage = ({ user, size, denyNavigation }: Props) => {
     const navigation = useNavigation<userProfileScreenProp>();
     const toUserProfile = () => {
-        if (userProfileModel.uid === 'system') {
+        if (user.uid === 'system') {
             return;
         }
 
-        navigation.navigate('UserProfile', { id: userProfileModel?.uid ? userProfileModel.uid : '' });
+        navigation.navigate('UserProfile', { id: user?.uid ? user.uid : '' });
     };
 
-    return !userProfileModel.photoUrl ? (
+    return !user.photoUrl ? (
         <View />
     ) : denyNavigation ? (
         <View>
-            <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileModel.photoUrl }} />
+            <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: user.photoUrl }} />
         </View>
     ) : (
         <View>
             <TouchableWithoutFeedback onPress={toUserProfile}>
                 <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                    <CachedImage uri={userProfileModel.photoUrl} style={{ width: size, height: size, borderRadius: 50 }} />
+                    <CachedImage uri={user.photoUrl} style={{ width: size, height: size, borderRadius: 50 }} />
                     <View style={{ position: 'absolute', zIndex: 1, paddingBottom: 1, paddingRight: 1 }}>
-                        <ProfileLevel userProfileModel={userProfileModel} useSmall={true} />
+                        {/* <ProfileLevel userProfileModel={userProfileModel} useSmall={true} /> */}
                     </View>
                 </View>
             </TouchableWithoutFeedback>

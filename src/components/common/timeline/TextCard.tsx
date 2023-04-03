@@ -7,11 +7,11 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
-import { Comment, Like, Image as ImageModel } from 'resources/schema';
+import { Comment, Like, Image as ImageModel, User } from 'resources/schema';
 
 interface Props {
     staticImage?: ImageSourcePropType;
-    userProfileModel?: UserProfileModel;
+    user: User;
 
     added: Date;
     name: string;
@@ -30,7 +30,7 @@ interface Props {
     isAccepted?: boolean;
 }
 
-export const TextCard = ({ staticImage, userProfileModel, added, name, title, body, images, likes, onLike, comments, onCommented }: Props) => {
+export const TextCard = ({ user, staticImage, added, name, title, body, images, likes, onLike, comments, onCommented }: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -74,7 +74,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                     <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
                         <View>
                             {staticImage && <Image style={{ width: 45, height: 45 }} source={staticImage} />}
-                            {userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}
+                            {user && <NavigatableUserImage user={user} size={45} />}
                         </View>
 
                         <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
@@ -90,9 +90,7 @@ export const TextCard = ({ staticImage, userProfileModel, added, name, title, bo
                             </View>
 
                             <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                                <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>
-                                    {userProfileModel?.location}
-                                </Text>
+                                <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>{user.location}</Text>
                             </View>
                         </View>
                     </View>

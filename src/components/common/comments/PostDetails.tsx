@@ -101,7 +101,7 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
                     {/* HEADER */}
                     <View style={{ flexDirection: 'row' }}>
                         <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
-                            <View>{author && <NavigatableUserImage userProfileModel={author} size={45} />}</View>
+                            <View>{author && <NavigatableUserImage user={author} size={45} />}</View>
 
                             <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
                                 <View style={{ flex: 1, flexDirection: 'row' }}>

@@ -123,6 +123,17 @@ class StoryController {
             });
     }
 
+    public static async addLikeViaApi(id: number) {
+        return await axiosInstance
+            .post(`${USER_POST}${id}/like/`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     /*
      * OLD LOGIC
      */

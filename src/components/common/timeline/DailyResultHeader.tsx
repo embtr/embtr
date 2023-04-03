@@ -1,16 +1,16 @@
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { View, Text } from 'react-native';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDatePretty } from 'src/util/DateUtility';
+import { User } from 'resources/schema';
 
 interface Props {
-    userProfileModel: UserProfileModel;
+    user: User;
     date: Date;
 }
 
-export const DailyResultHeader = ({ userProfileModel, date }: Props) => {
+export const DailyResultHeader = ({ user, date }: Props) => {
     const { colors } = useTheme();
 
     const datePretty = getDatePretty(date);
@@ -18,12 +18,12 @@ export const DailyResultHeader = ({ userProfileModel, date }: Props) => {
     return (
         <View style={{ width: '100%', flexDirection: 'row' }}>
             <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
-                <View>{userProfileModel && <NavigatableUserImage userProfileModel={userProfileModel} size={45} />}</View>
+                <NavigatableUserImage user={user} size={45} />
 
                 <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
                     <View style={{ flex: 1, flexDirection: 'row' }}>
                         <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                            <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{userProfileModel.name}</Text>
+                            <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{user.displayName}</Text>
                         </View>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
                             <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
@@ -33,7 +33,7 @@ export const DailyResultHeader = ({ userProfileModel, date }: Props) => {
                     </View>
 
                     <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                        <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>{userProfileModel?.location}</Text>
+                        <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>{user?.location}</Text>
                     </View>
                 </View>
             </View>

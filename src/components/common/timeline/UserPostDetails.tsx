@@ -79,12 +79,13 @@ export const UserPostDetails = () => {
     const dispatch = useAppDispatch();
 
     const onLike = async () => {
-        //if (!) {
-        //    return;
-        //}
-        //        await StoryController.likeStory(storyModel, getAuth().currentUser!.uid);
-        //        dispatch(addTimelineCardRefreshRequest(storyModel.id));
-        //        StoryController.getStory(route.params.id, setStoryModel);
+        if (!userPost?.id) {
+            return;
+        }
+
+        await StoryController.addLikeViaApi(userPost.id);
+        dispatch(addTimelineCardRefreshRequest(userPost.id));
+        fetch();
     };
 
     if (!userPost) {

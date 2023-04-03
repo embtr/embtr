@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import DailyResultController, { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { View } from 'react-native';
@@ -19,11 +18,10 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
 interface Props {
-    userProfileModel: UserProfileModel;
     plannedDayResult: DayResultTimelinePost;
 }
 
-export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) => {
+export const DailyResultCard = ({ plannedDayResult }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
     const dispatch = useAppDispatch();
     const { colors } = useTheme();
@@ -82,13 +80,15 @@ export const DailyResultCard = ({ userProfileModel, plannedDayResult }: Props) =
         refreshPlannedDayResult();
     };
 
+    const user = plannedDayResult.data.dayResult.plannedDay!.user!;
+
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 10 }}>
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <DailyResultHeader userProfileModel={userProfileModel} date={updatedDayResult.plannedDay?.date!} />
+                <DailyResultHeader user={user} date={updatedDayResult.plannedDay?.date!} />
 
                 {/**********/}
                 {/*  BODY  */}

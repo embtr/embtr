@@ -8,11 +8,10 @@ import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import { UserPost } from 'resources/schema';
 
 interface Props {
-    userProfileModel: UserProfileModel;
     oldModel: StoryModel;
 }
 
-export const UserTextCard = ({ userProfileModel, oldModel }: Props) => {
+export const UserTextCard = ({ oldModel }: Props) => {
     const currentTab = useAppSelector(getCurrentTab);
     const navigation = getNavigationHook(currentTab)();
 
@@ -49,11 +48,12 @@ export const UserTextCard = ({ userProfileModel, oldModel }: Props) => {
     }, [timelineCardRefreshRequests]);
 
     const onLike = async () => {
-        //if (!story.id) {
-        //    return;
-        //}
-        //    await StoryController.likeStory(story, getAuth().currentUser!.uid);
-        //    StoryController.getStory(story.id, setUpdatedStory);
+        if (!updatedStory.id) {
+            return;
+        }
+
+        await StoryController.addLikeViaApi(updatedStory.id);
+        fetch();
     };
 
     const onCommented = () => {
@@ -67,7 +67,7 @@ export const UserTextCard = ({ userProfileModel, oldModel }: Props) => {
 
     return (
         <TextCard
-            userProfileModel={userProfileModel}
+            user={updatedStory.user ?? { displayName: 'some random user' }}
             added={updatedStory.createdAt ?? new Date()}
             name={updatedStory.user?.displayName ?? 'some random user'}
             title={updatedStory.title ?? 'some title'}
