@@ -5,8 +5,7 @@ import { getAuth } from 'firebase/auth';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import { Alert, View } from 'react-native';
+import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -36,23 +35,22 @@ export const UserPostDetails = () => {
 
     const userIsPostOwner = userPost?.user?.uid === getAuth().currentUser?.uid;
 
-    const submitComment = (text: string, taggedUsers: UserProfileModel[]) => {
-        const user = getAuth().currentUser;
-        //if (userPost.user?.id && user?.uid) {
-        //    StoryController.addComment(storyModel.id, user.uid, text, () => {
-        //        NotificationController.addNotification(user.uid, storyModel.uid, NotificationType.TIMELINE_COMMENT, route.params.id);
-        //        NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.TIMELINE_TAG, route.params.id);
-        //        StoryController.getStory(route.params.id, setStoryModel);
-        //    });
-        //}
+    const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
+        if (!userPost?.id) {
+            return;
+        }
+
+        await StoryController.addCommentViaApi(userPost.id, text);
+        fetch();
     };
 
     const deleteComment = async (comment: Comment) => {
-        //if (!storyModel || !comment) {
-        //    return;
-        //}
-        //        await StoryController.deleteComment(storyModel, comment);
-        //        StoryController.getStory(route.params.id, setStoryModel);
+        if (!userPost?.id) {
+            return;
+        }
+
+        await StoryController.deleteCommentViaApi(comment);
+        fetch();
     };
 
     const navigateToEdit = () => {

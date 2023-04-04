@@ -1,7 +1,8 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { USER_POST } from 'resources/endpoints';
-import { Like as LikeModel, UserPost } from 'resources/schema';
+import { Like as LikeModel, UserPost, Comment as CommentModel } from 'resources/schema';
+import { CreateCommentRequest } from 'resources/types/GeneralTypes';
 import { CreateUserPostRequest, CreateUserPostResponse, GetAllUserPostResponse, GetUserPostResponse } from 'resources/types/UserPostTypes';
 import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
@@ -126,6 +127,32 @@ class StoryController {
     public static async addLikeViaApi(id: number) {
         return await axiosInstance
             .post(`${USER_POST}${id}/like/`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async addCommentViaApi(id: number, comment: string) {
+        const request: CreateCommentRequest = {
+            comment,
+        };
+
+        return await axiosInstance
+            .post(`${USER_POST}${id}/comment/`, request)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async deleteCommentViaApi(comment: CommentModel) {
+        return await axiosInstance
+            .delete(`${USER_POST}/comment/${comment.id}`)
             .then((success) => {
                 return success.data;
             })

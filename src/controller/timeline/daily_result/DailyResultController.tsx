@@ -2,12 +2,8 @@ import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
 import { Comment as CommentModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
-import {
-    CreatePlannedDayResultCommentRequest,
-    GetPlannedDayResultResponse,
-    GetPlannedDayResultsResponse,
-    UpdatePlannedDayResultRequest,
-} from 'resources/types/PlannedDayResultTypes';
+import { CreateCommentRequest } from 'resources/types/GeneralTypes';
+import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayResultRequest } from 'resources/types/PlannedDayResultTypes';
 import axiosInstance from 'src/axios/axios';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
@@ -97,7 +93,7 @@ class DailyResultController {
     }
 
     public static async addCommentViaApi(id: number, comment: string) {
-        const request: CreatePlannedDayResultCommentRequest = {
+        const request: CreateCommentRequest = {
             comment,
         };
 
