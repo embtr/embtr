@@ -54,9 +54,15 @@ export const UserPostDetails = () => {
     };
 
     const navigateToEdit = () => {
-        //if (userIsPostOwner && storyModel?.id) {
-        //    navigation.navigate('EditUserPostDetails', { id: storyModel.id });
-        //}
+        if (!userPost?.id) {
+            return;
+        }
+
+        if (!userIsPostOwner) {
+            return;
+        }
+
+        navigation.navigate('EditUserPostDetails', { id: userPost.id });
     };
 
     const deletePost = () => {

@@ -10,13 +10,14 @@ import StoryController from 'src/controller/timeline/story/StoryController';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
 import { POPPINS_REGULAR } from 'src/util/constants';
+import { Image } from 'resources/schema';
 
 interface Props {
     title: string;
     setTitle: Function;
     body: string;
     setBody: Function;
-    images: string[];
+    images: Image[];
     onImagesUploaded: Function;
     onDeleteImage?: Function;
     onSubmit?: Function;
@@ -61,7 +62,7 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
     let carouselImages: ImageCarouselImage[] = [];
     images.forEach((image) => {
         carouselImages.push({
-            url: image,
+            url: image.url ?? '',
             format: 'png',
             type: 'image',
             onDelete: onDeleteImage,

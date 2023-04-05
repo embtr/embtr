@@ -1,8 +1,14 @@
 import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { USER_POST } from 'resources/endpoints';
-import { Like as LikeModel, UserPost, Comment as CommentModel } from 'resources/schema';
-import { CreateUserPostRequest, CreateUserPostResponse, GetAllUserPostResponse, GetUserPostResponse } from 'resources/types/requests/UserPostTypes';
+import { Like as LikeModel, UserPost, Comment as CommentModel, Image } from 'resources/schema';
+import {
+    CreateUserPostRequest,
+    CreateUserPostResponse,
+    GetAllUserPostResponse,
+    GetUserPostResponse,
+    UpdateUserPostRequest,
+} from 'resources/types/requests/UserPostTypes';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import axiosInstance from 'src/axios/axios';
 import { LikeController } from 'src/controller/api/general/LikeController';
@@ -118,6 +124,22 @@ class StoryController {
 
         return await axiosInstance
             .post(`${USER_POST}`, request)
+            .then((success) => {
+                const response: CreateUserPostResponse = success.data;
+                return response.userPost;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async updateViaApi(userPost: UserPost) {
+        const request: UpdateUserPostRequest = {
+            userPost,
+        };
+
+        return await axiosInstance
+            .patch(`${USER_POST}`, request)
             .then((success) => {
                 const response: CreateUserPostResponse = success.data;
                 return response.userPost;
