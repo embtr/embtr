@@ -8,7 +8,7 @@ import { GoalModel } from './GoalController';
 import PlannedDayController, { PlannedDay, plannedTaskIsComplete } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { PLANNED_DAY } from 'resources/endpoints';
-import { CreatePlannedTaskRequest, UpdatePlannedTaskRequest } from 'resources/types/PlannedTaskTypes';
+import { CreatePlannedTaskRequest, UpdatePlannedTaskRequest } from 'resources/types/requests/PlannedTaskTypes';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { PlannedTask as NewPlannedTaskModel } from 'resources/schema';
 import { Task as NewTaskModel } from 'resources/schema';

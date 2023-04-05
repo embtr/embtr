@@ -1,7 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 import { NOTIFICATION } from 'resources/endpoints';
 import { Notification } from 'resources/schema';
-import { ClearNotificationsRequest, GetNotificationsResponse } from 'resources/types/NotificationTypes';
+import { ClearNotificationsRequest, GetNotificationsResponse } from 'resources/types/requests/NotificationTypes';
 import axiosInstance from 'src/axios/axios';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import NotificationDao from 'src/firebase/firestore/notification/NotificationDao';

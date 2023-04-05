@@ -1,7 +1,7 @@
 import { ImagePickerResult } from 'expo-image-picker';
 import { User } from 'firebase/auth';
 import { USER } from 'resources/endpoints';
-import { UpdateUserRequest } from 'resources/types/UserTypes';
+import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
 import axiosInstance from 'src/axios/axios';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 import ProfileDao, { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';

@@ -2,9 +2,11 @@ import { getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore';
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
 import { Comment as CommentModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
-import { CreateCommentRequest } from 'resources/types/GeneralTypes';
-import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayResultRequest } from 'resources/types/PlannedDayResultTypes';
+import { CreateCommentRequest } from 'resources/types/requests/GeneralTypes';
+import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayResultRequest } from 'resources/types/requests/PlannedDayResultTypes';
+import { Interactable } from 'resources/types/interactable/Interactable';
 import axiosInstance from 'src/axios/axios';
+import { LikeController } from 'src/controller/api/general/LikeController';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import PlannedDayController, {
@@ -17,6 +19,7 @@ import PlannedDayController, {
 import { Comment, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import { UserModel } from 'src/controller/user/UserController';
 import DailyResultDao from 'src/firebase/firestore/daily_result/DailyResultDao';
+import { CommentController } from 'src/controller/api/general/CommentController';
 
 export interface DailyResultModel extends TimelinePostModel {
     data: {
@@ -82,40 +85,15 @@ class DailyResultController {
     }
 
     public static async addLikeViaApi(id: number) {
-        return await axiosInstance
-            .post(`${PLANNED_DAY_RESULT}${id}/like/`)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+        return await LikeController.add(Interactable.PLANNED_DAY_RESULT, id);
     }
 
     public static async addCommentViaApi(id: number, comment: string) {
-        const request: CreateCommentRequest = {
-            comment,
-        };
-
-        return await axiosInstance
-            .post(`${PLANNED_DAY_RESULT}${id}/comment/`, request)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+        return await CommentController.add(Interactable.PLANNED_DAY_RESULT, id, comment);
     }
 
     public static async deleteCommentViaApi(comment: CommentModel) {
-        return await axiosInstance
-            .delete(`${PLANNED_DAY_RESULT}/comment/${comment.id}`)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+        return await CommentController.delete(Interactable.PLANNED_DAY_RESULT, comment);
     }
 
     /*

@@ -6,7 +6,7 @@ import EmbtrCloudApiController from 'src/controller/embtr_cloud/EmbtrCloudApiCon
 import { Linking } from 'react-native';
 import { isAndroidDevice, isPhysicalDevice } from 'src/util/DeviceUtil';
 import { darkColors } from 'src/theme/ColorThemes';
-import { UpdateUserRequest } from 'resources/types/UserTypes';
+import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
 
 class PushNotificationController {
     public static registerUpdatePostNotificationTokenListener() {

@@ -4,9 +4,9 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { WIDGETS } from 'src/util/constants';
 import { getAuth } from 'firebase/auth';
 import axiosInstance from 'src/axios/axios';
-import { CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest } from 'resources/types/AccountTypes';
-import { GetUserResponse, UpdateUserRequest } from 'resources/types/UserTypes';
-import { Response } from 'resources/types/RequestTypes';
+import { CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest } from 'resources/types/requests/AccountTypes';
+import { GetUserResponse, UpdateUserRequest } from 'resources/types/requests/UserTypes';
+import { Response } from 'resources/types/requests/RequestTypes';
 import { USER } from 'resources/endpoints';
 
 export interface UserModel {

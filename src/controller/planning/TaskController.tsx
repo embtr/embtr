@@ -5,7 +5,7 @@ import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { TASK } from 'resources/endpoints';
 import { Task as NewTaskModel } from 'resources/schema';
-import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/TaskTypes';
+import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/requests/TaskTypes';
 
 export interface TaskModel {
     id?: string;

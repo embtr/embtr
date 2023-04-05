@@ -2,13 +2,16 @@ import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { USER_POST } from 'resources/endpoints';
 import { Like as LikeModel, UserPost, Comment as CommentModel } from 'resources/schema';
-import { CreateCommentRequest } from 'resources/types/GeneralTypes';
-import { CreateUserPostRequest, CreateUserPostResponse, GetAllUserPostResponse, GetUserPostResponse } from 'resources/types/UserPostTypes';
+import { CreateUserPostRequest, CreateUserPostResponse, GetAllUserPostResponse, GetUserPostResponse } from 'resources/types/requests/UserPostTypes';
+import { Interactable } from 'resources/types/interactable/Interactable';
 import axiosInstance from 'src/axios/axios';
+import { LikeController } from 'src/controller/api/general/LikeController';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
 import { Comment, TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import StoryDao from 'src/firebase/firestore/story/StoryDao';
+import { CreateCommentRequest } from 'resources/types/requests/GeneralTypes';
+import { CommentController } from 'src/controller/api/general/CommentController';
 
 export interface StoryModel extends TimelinePostModel {
     data: {
@@ -125,40 +128,15 @@ class StoryController {
     }
 
     public static async addLikeViaApi(id: number) {
-        return await axiosInstance
-            .post(`${USER_POST}${id}/like/`)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+        return await LikeController.add(Interactable.USER_POST, id);
     }
 
     public static async addCommentViaApi(id: number, comment: string) {
-        const request: CreateCommentRequest = {
-            comment,
-        };
-
-        return await axiosInstance
-            .post(`${USER_POST}${id}/comment/`, request)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+        return await CommentController.add(Interactable.USER_POST, id, comment);
     }
 
     public static async deleteCommentViaApi(comment: CommentModel) {
-        return await axiosInstance
-            .delete(`${USER_POST}/comment/${comment.id}`)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+        return await CommentController.delete(Interactable.USER_POST, comment);
     }
 
     /*
