@@ -206,8 +206,6 @@ export const Timeline = () => {
 
     const timelineViews = createTimelineViews();
 
-    console.log('rerender');
-
     return (
         <Screen>
             <Banner

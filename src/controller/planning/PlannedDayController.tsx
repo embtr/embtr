@@ -129,7 +129,7 @@ export const getTomorrowKey = () => {
 };
 
 export const getDayFromDayKey = (dayKey: string) => {
-    return parseInt(dayKey.substring(2, 4));
+    return parseInt(dayKey.substring(8, 10));
 };
 
 export const getDateFromDayKey = (dayKey: string) => {
@@ -227,7 +227,7 @@ class PlannedDayController {
         }
 
         const createResult: CreatePlannedDayResponse = await this.createViaApi(dayKey);
-        if (!createResult.plannedDay) {
+        if (createResult.plannedDay) {
             return createResult.plannedDay;
         }
 

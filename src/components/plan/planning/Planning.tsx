@@ -59,13 +59,6 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
                 {plannedDay && <PlanDay plannedDay={plannedDay} onTaskUpdated={refreshPlannedToday} onOpenHabitsModal={openSelectTaskModal} />}
-                {/* useCalendarView ? (
-                    <CalendarView plannedToday={plannedToday} onTaskUpdated={updateTask} />
-                ) : plannedToday ? (
-                    <PlanDay plannedDay={plannedToday} onTaskUpdated={updateTask} onOpenHabitsModal={openSelectTaskModal} />
-                ) : (
-                    <View />
-                )*/}
             </View>
         </Screen>
     );
