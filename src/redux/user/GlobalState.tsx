@@ -12,7 +12,6 @@ const INITIAL_STATE: GlobalState = {
     openMenu: () => {},
     closeMenu: () => {},
     selectedDayKey: 'invalid',
-    timelineCardRefreshRequests: [],
     currentTab: TABS.TIMELINE,
 };
 
@@ -24,7 +23,6 @@ export interface GlobalState {
     openMenu: Function;
     closeMenu: Function;
     selectedDayKey: string;
-    timelineCardRefreshRequests: number[];
     currentTab: string;
 }
 
@@ -54,18 +52,6 @@ export const GlobalState = createSlice({
         },
         setSelectedDayKey(state, action) {
             state.selectedDayKey = action.payload;
-        },
-        addTimelineCardRefreshRequest(state, action) {
-            let updatedTimelineCardRefreshRequests = state.timelineCardRefreshRequests;
-            if (!updatedTimelineCardRefreshRequests) {
-                updatedTimelineCardRefreshRequests = [];
-            }
-
-            updatedTimelineCardRefreshRequests = updatedTimelineCardRefreshRequests.concat(action.payload);
-            state.timelineCardRefreshRequests = updatedTimelineCardRefreshRequests;
-        },
-        removeTimelineCardRefreshRequest(state, action) {
-            state.timelineCardRefreshRequests = state.timelineCardRefreshRequests.filter((item) => item !== action.payload);
         },
         setCurrentTab(state, action) {
             state.currentTab = action.payload;
@@ -129,14 +115,6 @@ export const getSelectedDayKey = (state: RootState): string => {
     return state.globalState.selectedDayKey;
 };
 
-export const getTimelineCardRefreshRequests = (state: RootState): number[] => {
-    if (!state?.globalState.timelineCardRefreshRequests) {
-        return INITIAL_STATE.timelineCardRefreshRequests;
-    }
-
-    return state.globalState.timelineCardRefreshRequests;
-};
-
 export const getCurrentTab = (state: RootState) => {
     if (!state?.globalState.currentTab) {
         return INITIAL_STATE.currentTab;
@@ -145,16 +123,6 @@ export const getCurrentTab = (state: RootState) => {
     return state.globalState.currentTab;
 };
 
-export const {
-    setAccessLevel,
-    setUserProfileUrl,
-    setCurrentUser,
-    setMenuOptions,
-    setOpenMenu,
-    setCloseMenu,
-    setSelectedDayKey,
-    addTimelineCardRefreshRequest,
-    removeTimelineCardRefreshRequest,
-    setCurrentTab,
-} = GlobalState.actions;
+export const { setAccessLevel, setUserProfileUrl, setCurrentUser, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey, setCurrentTab } =
+    GlobalState.actions;
 export default GlobalState.reducer;

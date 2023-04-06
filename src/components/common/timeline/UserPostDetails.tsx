@@ -5,13 +5,11 @@ import { getAuth } from 'firebase/auth';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment } from 'src/controller/timeline/TimelineController';
-import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
-import { useAppDispatch } from 'src/redux/Hooks';
 import { UserPost } from 'resources/schema';
 
 export const UserPostDetails = () => {
@@ -66,21 +64,25 @@ export const UserPostDetails = () => {
     };
 
     const deletePost = () => {
-        //if (userIsPostOwner && storyModel) {
-        //    Alert.alert('Delete Post', 'Are you sure you want to delete this post? This cannot be undone.', [
-        //        { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-        //        {
-        //            text: 'I am sure. Delete it.',
-        //            onPress: async () => {
-        //                await StoryController.delete(storyModel);
-        //                navigation.navigate('Timeline');
-        //            },
-        //        },
-        //    ]);
-        //}
-    };
+        if (!userPost?.id) {
+            return;
+        }
 
-    const dispatch = useAppDispatch();
+        if (!userIsPostOwner) {
+            return;
+        }
+
+        Alert.alert('Delete Post', 'Are you sure you want to delete this post? This cannot be undone.', [
+            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+            {
+                text: 'I am sure. Delete it.',
+                onPress: async () => {
+                    await StoryController.deleteViaApi(userPost);
+                    navigation.navigate('Timeline');
+                },
+            },
+        ]);
+    };
 
     const onLike = async () => {
         if (!userPost?.id) {
@@ -88,7 +90,6 @@ export const UserPostDetails = () => {
         }
 
         await StoryController.addLikeViaApi(userPost.id);
-        dispatch(addTimelineCardRefreshRequest(userPost.id));
         fetch();
     };
 

@@ -14,7 +14,7 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { GoalDetailAttribute } from 'src/components/plan/goals/GoalDetailAttribute';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { addTimelineCardRefreshRequest, getCloseMenu } from 'src/redux/user/GlobalState';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { format, formatDistance } from 'date-fns';
 import { FAKE_PILLAR, PillarModel } from 'src/model/PillarModel';
 import PillarController from 'src/controller/pillar/PillarController';
@@ -174,7 +174,6 @@ export const GoalDetails = () => {
     const progressPercent = getProgressPercent(goal);
 
     const onLike = () => {
-        dispatch(addTimelineCardRefreshRequest(goal.id));
         GoalController.addLike(goal, getCurrentUid());
     };
 

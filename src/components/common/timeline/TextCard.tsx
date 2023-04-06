@@ -1,7 +1,6 @@
 import { Text, TextStyle, View, Image, ImageSourcePropType } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';

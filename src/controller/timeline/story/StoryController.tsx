@@ -133,6 +133,11 @@ class StoryController {
             });
     }
 
+    public static async deleteViaApi(userPost: UserPost) {
+        userPost.active = false;
+        return this.updateViaApi(userPost);
+    }
+
     public static async updateViaApi(userPost: UserPost) {
         const request: UpdateUserPostRequest = {
             userPost,

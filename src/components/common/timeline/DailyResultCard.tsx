@@ -9,8 +9,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 import { DailyResultHeader } from './DailyResultHeader';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getTimelineCardRefreshRequests, removeTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { useAppDispatch } from 'src/redux/Hooks';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -27,7 +26,6 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
     const { colors } = useTheme();
 
     const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>(plannedDayResult.data.dayResult);
-    const timelineCardRefreshRequests: number[] = useAppSelector(getTimelineCardRefreshRequests);
 
     const refreshPlannedDayResult = async (): Promise<PlannedDayResultModel> => {
         const refreshedPlannedDayResult: PlannedDayResultModel = await DailyResultController.getViaApi(updatedDayResult.id!);
@@ -36,21 +34,6 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
         }
         return refreshedPlannedDayResult;
     };
-
-    const refreshDayResultRequest = async () => {
-        if (!updatedDayResult?.id) {
-            return;
-        }
-        if (timelineCardRefreshRequests.includes(updatedDayResult.id)) {
-            const refreshed: PlannedDayResultModel = await refreshPlannedDayResult();
-            //remove card from the refresh request list
-            dispatch(removeTimelineCardRefreshRequest(refreshed.id));
-        }
-    };
-
-    React.useEffect(() => {
-        refreshDayResultRequest();
-    }, [timelineCardRefreshRequests]);
 
     let plannedTaskViews: JSX.Element[] = [];
 

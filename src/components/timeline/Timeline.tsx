@@ -16,6 +16,7 @@ import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard'
 import { wait } from 'src/util/GeneralUtility';
 import { Notification as NotificationModel, PlannedDayResult as PlannedDayResultModel, UserPost } from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
+import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 
 export const Timeline = () => {
     const { colors } = useTheme();
@@ -90,7 +91,6 @@ export const Timeline = () => {
             });
 
             timelinePosts = timelinePosts.concat(userPostTimelinePosts);
-            console.log('timelinePosts', timelinePosts.length);
         }
 
         if (dayResults.length > 0) {
@@ -151,15 +151,16 @@ export const Timeline = () => {
             views.push(view);
         });
 
-        console.log('views', views.length);
         return views;
     };
 
     const createUserPostView = (timelineEntry: TimelinePostModel) => {
         const model = timelineEntry as StoryModel;
 
+        const key = ModelKeyGenerator.generateUserPostKey(model.data.userPost);
+
         return (
-            <View key={model.data.userPost.id} style={[card, CARD_SHADOW]}>
+            <View key={key} style={[card, CARD_SHADOW]}>
                 <UserTextCard oldModel={model} />
             </View>
         );
@@ -168,8 +169,9 @@ export const Timeline = () => {
     const createDailyResultView = (timelineEntry: TimelinePostModel) => {
         const model = timelineEntry as DayResultTimelinePost;
 
+        const key = ModelKeyGenerator.generatePlannedDayResultKey(model.data.dayResult);
         return (
-            <View key={model.data.dayResult.id} style={[card, CARD_SHADOW]}>
+            <View key={key} style={[card, CARD_SHADOW]}>
                 <DailyResultCard plannedDayResult={model} />
             </View>
         );
@@ -195,7 +197,6 @@ export const Timeline = () => {
     };
 
     const getUserPosts = async () => {
-        console.log('getting user posts');
         const userPosts = await StoryController.getAllViaApi();
         setUserPosts(userPosts);
     };
