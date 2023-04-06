@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Keyboard, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, ActivityIndicator } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useFonts, Poppins_600SemiBold, Poppins_400Regular } from '@expo-google-fonts/poppins';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import StoryController from 'src/controller/timeline/story/StoryController';
@@ -36,15 +35,6 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
     const setB = (b: string) => {
         setBody(b);
     };
-
-    let [fontsLoaded] = useFonts({
-        Poppins_600SemiBold,
-        Poppins_400Regular,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
-    }
 
     const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
         setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
@@ -202,21 +192,6 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                             <CarouselCards images={carouselImages} />
                         </View>
                     </View>
-
-                    {onSubmit && (
-                        <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                            <View style={{ width: '95%' }}>
-                                <EmbtrButton
-                                    buttonText={'Submit'}
-                                    callback={() => {
-                                        if (title.length > 0) {
-                                            onSubmit();
-                                        }
-                                    }}
-                                />
-                            </View>
-                        </View>
-                    )}
                 </KeyboardAvoidingView>
             </View>
         </ScrollView>

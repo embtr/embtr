@@ -126,23 +126,11 @@ export const Timeline = () => {
 
         const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
             let postADate = postA.added.toDate();
-            if (postA.type === 'DAILY_RESULT') {
-                const dayResult = postA as DayResultTimelinePost;
-                postADate = dayResult.data.dayResult.plannedDay!.date!;
-            } else {
-                postADate = postA.added.toDate();
-            }
-
             let postBDate = postB.added.toDate();
-            if (postB.type === 'DAILY_RESULT') {
-                const dayResult = postB as DayResultTimelinePost;
-                postBDate = dayResult.data.dayResult.plannedDay!.date!;
-            } else {
-                postBDate = postB.added.toDate();
-            }
 
             return postBDate.getTime() - postADate.getTime();
         };
+
         timelinePosts.sort((a, b) => handleSort(a, b));
 
         let views: JSX.Element[] = [];
@@ -217,6 +205,8 @@ export const Timeline = () => {
     };
 
     const timelineViews = createTimelineViews();
+
+    console.log('rerender');
 
     return (
         <Screen>

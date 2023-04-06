@@ -25,15 +25,21 @@ export const CreateUserPost = () => {
         setImageUrls(copiedUrls);
     };
 
+    const images = imageUrls.map((image) => {
+        return {
+            url: image,
+        };
+    });
+
     return (
         <Screen>
-            <Banner name="Share A Story" leftIcon={'arrow-back'} leftRoute="BACK" />
+            <Banner name="Share A Story" rightOnClick={submitStory} rightText="submit" leftIcon={'arrow-back'} leftRoute="BACK" />
             <CreateEditUserPostBase
                 title={title}
                 setTitle={setTitle}
                 body={body}
                 setBody={setBody}
-                images={imageUrls}
+                images={images}
                 onSubmit={submitStory}
                 onImagesUploaded={onImagesUploaded}
             />
