@@ -6,20 +6,12 @@ import TimelineController, { PaginatedTimelinePosts, TimelinePostModel } from 's
 import { CARD_SHADOW } from 'src/util/constants';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import DailyResultController, { DailyResultModel, PaginatedDailyResults } from 'src/controller/timeline/daily_result/DailyResultController';
-import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
 import { wait } from 'src/util/GeneralUtility';
 import { getDateMinusDays, getDaysOld } from 'src/util/DateUtility';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
-import { UserModel } from 'src/controller/user/UserController';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { Timestamp } from 'firebase/firestore';
-import GoalResultController, { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
-import { GoalResultCard } from 'src/components/common/timeline/GoalResultCard';
+import { GoalResultModel, PaginatedGoalResults } from 'src/controller/timeline/goals/GoalResultController';
 
 interface Props {
-    user: UserModel;
-    userProfile: UserProfileModel;
     refreshedTimestamp: Date;
 }
 
@@ -28,7 +20,7 @@ const getDefaultCutoffDate = () => {
     return date;
 };
 
-export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Props) => {
+export const ActivityTabRoute = ({ refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
 
     const card = {
@@ -83,42 +75,22 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
         wait(500).then(() => setRefreshing(false));
     }, []);
 
-    const fetchPaginatedTimelinePostsForUser = () => {
-        TimelineController.getPaginatedTimelinePostsForUser(user, undefined, timelinePostCutoffDate, setPaginatedTimelinePosts);
-    };
+    const fetchPaginatedTimelinePostsForUser = () => {};
 
-    const fetchPaginatedDailyResultsForUser = async () => {
-        const results = await DailyResultController.getPaginatedFinishedForUser(user, undefined, dailyRestultCutoffDate);
-        setPaginatedDailyResults(results);
-    };
+    const fetchPaginatedDailyResultsForUser = async () => {};
 
-    const fetchPaginatedGoalResultsForUser = async () => {
-        const results = await GoalResultController.getPaginatedForUser(user, undefined, goalResultCutoffDate);
-        setPaginatedGoalResults(results);
-    };
+    const fetchPaginatedGoalResultsForUser = async () => {};
 
     const createStoryView = (timelineEntry: TimelinePostModel) => {
         return (
             <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                <UserTextCard userProfileModel={userProfile} story={timelineEntry as StoryModel} />
+                <UserTextCard oldModel={timelineEntry as StoryModel} />
             </View>
         );
     };
 
     const createDailyResultView = (timelineEntry: TimelinePostModel) => {
-        return (
-            <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                <DailyResultCard dailyResult={timelineEntry as DailyResultModel} userProfileModel={userProfile} />
-            </View>
-        );
-    };
-
-    const createGoalResultView = (timelineEntry: TimelinePostModel) => {
-        return (
-            <View key={timelineEntry.id} style={[card, CARD_SHADOW]}>
-                <GoalResultCard goalResult={timelineEntry as GoalResultModel} userProfileModel={userProfile} />
-            </View>
-        );
+        return <View key={timelineEntry.id} style={[card, CARD_SHADOW]}></View>;
     };
 
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
@@ -128,9 +100,6 @@ export const ActivityTabRoute = ({ user, userProfile, refreshedTimestamp }: Prop
 
             case 'DAILY_RESULT':
                 return createDailyResultView(timelineEntry);
-
-            case 'GOAL_RESULT':
-                return createGoalResultView(timelineEntry);
 
             default:
                 return <View />;

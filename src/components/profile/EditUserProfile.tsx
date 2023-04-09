@@ -8,23 +8,23 @@ import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import ProfileController from 'src/controller/profile/ProfileController';
-import { getAuth } from 'firebase/auth';
 import { ScrollView } from 'react-native-gesture-handler';
 import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 import { Ionicons } from '@expo/vector-icons';
 import { BannerInfoModal } from 'src/components/profile/profile_component/BannerInfoModal';
 import { CachedImage } from '../common/images/CachedImage';
 import { getRandomInt } from 'src/util/GeneralUtility';
+import { User } from 'resources/schema';
+import UserController from 'src/controller/user/UserController';
+import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
 
 export const EditUserProfile = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<ProfileTabScreens>>();
 
-    const [userProfile, setUserProfile] = React.useState<UserProfileModel | undefined>();
-
+    const [user, setUser] = React.useState<User>();
     const [photoUrl, setPhotoUrl] = React.useState('');
     const [bannerUrl, setBannerUrl] = React.useState('');
     const [username, setUsername] = React.useState('');
@@ -67,23 +67,33 @@ export const EditUserProfile = () => {
         }, [bioPlaceholder])
     );
 
+    const fetch = async () => {
+        const currentUser = await UserController.getNewCurrentUser();
+        if (!currentUser.user) {
+            return;
+        }
+
+        setUser(currentUser.user);
+    };
+
     useFocusEffect(
         React.useCallback(() => {
-            const uid = getAuth().currentUser?.uid;
-            if (uid) {
-                ProfileController.getProfile(uid, (userProfile: UserProfileModel) => {
-                    setUserProfile(userProfile);
-
-                    if (userProfile?.photoUrl) setPhotoUrl(userProfile.photoUrl);
-                    if (userProfile?.bannerUrl) setBannerUrl(userProfile.bannerUrl);
-                    if (userProfile?.username) setUsername(userProfile.username);
-                    if (userProfile?.name) setDisplayName(userProfile.name);
-                    if (userProfile?.location) setLocation(userProfile.location);
-                    if (userProfile?.bio) setBio(userProfile.bio);
-                });
-            }
+            fetch();
         }, [])
     );
+
+    React.useEffect(() => {
+        if (!user) {
+            return;
+        }
+
+        setPhotoUrl(user.photoUrl ?? '');
+        setBannerUrl(user.bannerUrl ?? '');
+        setUsername(user.username ?? '');
+        setDisplayName(user.displayName ?? '');
+        setLocation(user.location ?? '');
+        setBio(user.bio ?? '');
+    }, [user]);
 
     const uploadProfilePhoto = async () => {
         setImageUploading(true);
@@ -123,6 +133,25 @@ export const EditUserProfile = () => {
                 </View>
             );
         }
+    };
+
+    const saveProfile = async () => {
+        if (!user) {
+            return;
+        }
+
+        const updatedUser: UpdateUserRequest = {
+            ...user,
+            photoUrl,
+            bannerUrl,
+            username,
+            displayName,
+            location,
+            bio,
+        };
+
+        await UserController.updateUserViaApi(updatedUser);
+        navigation.navigate('Profile');
     };
 
     return (
@@ -337,21 +366,7 @@ export const EditUserProfile = () => {
                                 <EmbtrButton
                                     buttonText={'Update Profile'}
                                     callback={() => {
-                                        if (userProfile) {
-                                            userProfile.username = username;
-                                            userProfile.name = displayName;
-                                            userProfile.location = location;
-                                            userProfile.bio = bio;
-                                            if (photoUrl) {
-                                                userProfile.photoUrl = photoUrl;
-                                            }
-                                            if (bannerUrl) {
-                                                userProfile.bannerUrl = bannerUrl;
-                                            }
-                                            ProfileController.updateProfileViaApi(userProfile);
-                                            ProfileController.updateProfile(userProfile);
-                                        }
-                                        navigation.navigate('Profile');
+                                        saveProfile();
                                     }}
                                 />
                             </View>

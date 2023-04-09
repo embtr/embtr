@@ -1,15 +1,15 @@
 import { View } from 'react-native';
+import { User } from 'resources/schema';
 import { TodaysTasksWidget } from 'src/components/widgets/TodaysTasksWidget';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
-    plannedDay: PlannedDay;
+    user: User;
 }
 
-export const TodayTabRoute = ({ plannedDay }: Props) => {
+export const TodayTabRoute = ({ user }: Props) => {
     return (
-        <View>
-            <View style={{ width: '100%' }}>{<TodaysTasksWidget plannedDay={plannedDay} />}</View>
+        <View style={{ width: '100%' }}>
+            <TodaysTasksWidget user={user} />
         </View>
     );
 };

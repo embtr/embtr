@@ -18,30 +18,22 @@ import { getCloseMenu, getCurrentUser } from 'src/redux/user/GlobalState';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import {
     DAILY_HISTORY_WIDGET,
-    PILLARS_WIDGET,
     QUOTE_OF_THE_DAY_WIDGET,
     TIME_LEFT_IN_DAY_WIDGET,
     TODAYS_NOTES_WIDGET,
     TODAYS_PHOTOS_WIDGET,
     TODAYS_TASKS_WIDGET,
-    UPCOMING_GOALS_WIDGET,
     WIDGETS,
 } from 'src/util/constants';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
-import { UpcomingGoalsWidget } from '../widgets/upcoming_goals/UpcomingGoalsWidget';
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import { WigglableView } from '../common/animated_view/WigglableView';
 import { DeletableView } from '../common/animated_view/DeletableView';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import GoalController, { GoalModel } from 'src/controller/planning/GoalController';
-import { PillarsWidget } from '../widgets/pillars/PillarsWidget';
-import { PillarModel } from 'src/model/PillarModel';
-import PillarController from 'src/controller/pillar/PillarController';
 import PlannedTaskController, { clonePlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
-import AccessLogController from 'src/controller/access_log/AccessLogController';
 import { RefreshControl } from 'react-native-gesture-handler';
+import { User } from 'resources/schema';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -51,9 +43,7 @@ export const Today = () => {
     const [user, setUser] = React.useState<UserModel>();
     const [widgets, setWidgets] = React.useState<string[]>([]);
     const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
-    const [goals, setGoals] = React.useState<GoalModel[]>([]);
-    const [pillars, setPillars] = React.useState<PillarModel[]>([]);
-    const [userId, setUserId] = React.useState<number>();
+    const [newCurrentUser, setNewCurrentUser] = React.useState<User>();
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
@@ -73,35 +63,19 @@ export const Today = () => {
         fetchDailyResult();
     }, [plannedDay]);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchUser();
-        }, [])
-    );
+    const fetchNewCurrentUser = async () => {
+        const newCurrentUser = await UserController.getNewCurrentUser();
+        if (!newCurrentUser.user) {
+            return;
+        }
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchGoals();
-        }, [])
-    );
+        setNewCurrentUser(newCurrentUser.user);
+    };
 
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchPillars();
-        }, [])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchCurrentUserId();
-        }, [])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
-            AccessLogController.addTodayPageAccesLog();
-        }, [])
-    );
+    React.useEffect(() => {
+        fetchUser();
+        fetchNewCurrentUser();
+    }, []);
 
     const currentUser = useAppSelector(getCurrentUser);
 
@@ -140,23 +114,6 @@ export const Today = () => {
             setWidgets(user.today_widgets);
         }
         setUser(user);
-    };
-
-    const fetchGoals = () => {
-        GoalController.getGoals(getCurrentUid(), (goals: GoalModel[]) => {
-            goals = goals.reverse();
-            setGoals(goals);
-        });
-    };
-
-    const fetchPillars = async () => {
-        const pillars = await PillarController.getPillars(currentUser);
-        setPillars(pillars);
-    };
-
-    const fetchCurrentUserId = async () => {
-        const userId = await UserController.getCurrentUserId();
-        setUserId(userId);
     };
 
     const addSpacerToWidgets = (widgets: string[]) => {
@@ -292,7 +249,7 @@ export const Today = () => {
                     )}
 
                     {/* TODAY'S TASKS WIDGET */}
-                    {item === TODAYS_TASKS_WIDGET && plannedDay && dailyResult && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
+                    {item === TODAYS_TASKS_WIDGET && plannedDay && dailyResult && newCurrentUser && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
                         <WigglableView key={TODAYS_TASKS_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
@@ -300,7 +257,7 @@ export const Today = () => {
                                     removeWidget(TODAYS_TASKS_WIDGET);
                                 }}
                             >
-                                <TodaysTasksWidget plannedDay={plannedDay} togglePlannedTask={togglePlannedTaskStatus} />
+                                <TodaysTasksWidget user={newCurrentUser} />
                             </DeletableView>
                         </WigglableView>
                     )}
@@ -333,22 +290,8 @@ export const Today = () => {
                         </WigglableView>
                     )}
 
-                    {/* UPCOMING GOALS WIDGET */}
-                    {item === UPCOMING_GOALS_WIDGET && refreshedTimestamp && user.today_widgets?.includes(UPCOMING_GOALS_WIDGET) && (
-                        <WigglableView key={UPCOMING_GOALS_WIDGET} wiggle={isConfiguringWidgets}>
-                            <DeletableView
-                                visible={isConfiguringWidgets}
-                                onPress={() => {
-                                    removeWidget(UPCOMING_GOALS_WIDGET);
-                                }}
-                            >
-                                <UpcomingGoalsWidget user={user} goals={goals} />
-                            </DeletableView>
-                        </WigglableView>
-                    )}
-
                     {/* DAILY HISTORY WIDGET */}
-                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && user.today_widgets?.includes(DAILY_HISTORY_WIDGET) && userId && (
+                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && user.today_widgets?.includes(DAILY_HISTORY_WIDGET) && newCurrentUser?.id && (
                         <WigglableView key={DAILY_HISTORY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
@@ -356,24 +299,11 @@ export const Today = () => {
                                     removeWidget(DAILY_HISTORY_WIDGET);
                                 }}
                             >
-                                <DailyHistoryWidget userId={userId} />
+                                <DailyHistoryWidget userId={newCurrentUser.id} />
                             </DeletableView>
                         </WigglableView>
                     )}
 
-                    {/* PILLARS WIDGET */}
-                    {item === PILLARS_WIDGET && refreshedTimestamp && user.today_widgets?.includes(PILLARS_WIDGET) && (
-                        <WigglableView key={PILLARS_WIDGET} wiggle={isConfiguringWidgets}>
-                            <DeletableView
-                                visible={isConfiguringWidgets}
-                                onPress={() => {
-                                    removeWidget(PILLARS_WIDGET);
-                                }}
-                            >
-                                <PillarsWidget user={user} pillars={pillars} />
-                            </DeletableView>
-                        </WigglableView>
-                    )}
                     {item === 'SPACER' && <View key={'SPACER'} style={{ height: 45, width: '100%' }} />}
                 </TouchableOpacity>
             </ScaleDecorator>

@@ -10,7 +10,6 @@ import { Screen } from '../Screen';
 import { Banner } from '../Banner';
 import ScrollableTextInputBox from './ScrollableTextInputBox';
 import { Comment } from 'src/controller/timeline/TimelineController';
-import { Timestamp } from 'firebase/firestore';
 
 const ViewAllComments = () => {
     const route = useRoute<RouteProp<PlanTabScreens, 'ViewAllComments'>>();

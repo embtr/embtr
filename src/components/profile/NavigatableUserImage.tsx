@@ -1,9 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Image } from 'react-native';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { ProfileLevel } from './profile_component/ProfileLevel';
 import { CachedImage } from '../common/images/CachedImage';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { User } from 'resources/schema';

@@ -10,9 +10,10 @@ import Animated, { Easing, SharedValue, useAnimatedStyle, withTiming } from 'rea
 import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
+import { User } from 'resources/schema';
 
 interface Props {
-    userProfileModel: UserProfileModel;
+    user: User;
     onFollowUser: Function;
     onUnfollowUser: Function;
     followerCount: number;
@@ -23,7 +24,7 @@ interface Props {
 }
 
 export const ProfileHeader = ({
-    userProfileModel,
+    user,
     onFollowUser,
     onUnfollowUser,
     followerCount,
@@ -35,8 +36,7 @@ export const ProfileHeader = ({
     const { colors } = useTheme();
     const [initialHeaderContentsHeight, setInitialHeaderContentsHeight] = React.useState<number>(0);
 
-    const shouldDisplayFollowButton =
-        getAuth().currentUser!.uid !== undefined && userProfileModel !== undefined && userProfileModel.uid !== getAuth().currentUser!.uid;
+    const shouldDisplayFollowButton = false;
 
     const animatedHeaderContentsStyle = useAnimatedStyle(() => {
         return {
@@ -103,8 +103,8 @@ export const ProfileHeader = ({
                 <Animated.View style={[animatedHeaderStyle, { alignItems: 'center', justifyContent: 'flex-end', paddingTop: 10 }]}>
                     {/* BANNER */}
                     <Animated.View style={[animatedBannerStyle, { alignItems: 'center', justifyContent: 'center' }]}>
-                        {userProfileModel.bannerUrl ? (
-                            <CachedImage style={{ width: '100%', height: '100%', borderRadius: 15 }} uri={userProfileModel.bannerUrl} />
+                        {user.bannerUrl ? (
+                            <CachedImage style={{ width: '100%', height: '100%', borderRadius: 15 }} uri={user.bannerUrl} />
                         ) : (
                             <Image source={DEFAULT} style={{ width: '100%', height: '100%', maxHeight: 135, borderRadius: 15 }} />
                         )}
@@ -118,11 +118,9 @@ export const ProfileHeader = ({
                                 { alignItems: 'flex-end', justifyContent: 'flex-end', borderColor: colors.background, borderRadius: 1000 },
                             ]}
                         >
-                            {userProfileModel.photoUrl && (
-                                <CachedImage style={{ width: '100%', height: '100%', borderRadius: 1000 }} uri={userProfileModel.photoUrl} />
-                            )}
+                            {user.photoUrl && <CachedImage style={{ width: '100%', height: '100%', borderRadius: 1000 }} uri={user.photoUrl} />}
                             <View style={{ position: 'absolute', zIndex: 1, paddingBottom: 3, paddingRight: 3 }}>
-                                <ProfileLevel userProfileModel={userProfileModel} />
+                                <ProfileLevel user={user} />
                             </View>
                         </Animated.View>
                     </View>
@@ -142,7 +140,7 @@ export const ProfileHeader = ({
 
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
                         <View style={{ width: 41 }} />
-                        <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text }}>{userProfileModel.name}</Text>
+                        <Text style={{ fontSize: 18, fontFamily: 'Poppins_600SemiBold', color: colors.profile_name_text }}>{user.displayName}</Text>
                         <View style={{ width: 3 }} />
                         <UserProfileProBadge />
                     </View>
@@ -152,9 +150,7 @@ export const ProfileHeader = ({
                             <TouchableOpacity
                                 onPress={() => {
                                     if (isFollowingUser) {
-                                        onUnfollowUser(userProfileModel.uid);
                                     } else {
-                                        onFollowUser(userProfileModel.uid);
                                     }
                                 }}
                             >
@@ -178,8 +174,8 @@ export const ProfileHeader = ({
                         )}
                     </View>
                 </View>
-                <Text style={{ fontSize: 10, fontFamily: 'Poppins_500Medium', color: colors.profile_bio_text }}>{userProfileModel?.location}</Text>
-                <Text style={{ fontSize: 12, fontFamily: 'Poppins_500Medium', color: colors.profile_bio_text, paddingTop: 3 }}>{userProfileModel?.bio}</Text>
+                <Text style={{ fontSize: 10, fontFamily: 'Poppins_500Medium', color: colors.profile_bio_text }}>{user.location}</Text>
+                <Text style={{ fontSize: 12, fontFamily: 'Poppins_500Medium', color: colors.profile_bio_text, paddingTop: 3 }}>{user.bio}</Text>
 
                 {/* FOLLOWERS/ FOLLOWING */}
                 <View style={{ paddingBottom: 10 }}>

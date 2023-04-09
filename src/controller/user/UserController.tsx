@@ -124,10 +124,6 @@ class UserController {
             });
     }
 
-    /*
-     * ============= OLD SYSTEM LOGIC ==============
-     */
-
     public static async createUserIfNew(uid: string) {
         const userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
         if (userResponse.success) {
@@ -135,7 +131,20 @@ class UserController {
         }
 
         await this.createUser();
+        const updateUserRequest: UpdateUserRequest = {
+            username: 'new user',
+            displayName: 'new user',
+            bio: 'welcome to embtr!',
+            location: 'earth',
+            photoUrl:
+                'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
+        };
+        await UserController.updateUserViaApi(updateUserRequest);
     }
+
+    /*
+     * ============= OLD SYSTEM LOGIC ==============
+     */
 
     public static async get(uid: string) {
         const user = await this.getFromNewSystem(uid);
@@ -217,11 +226,15 @@ class UserController {
         const currentUser = getAuth().currentUser;
         const idToken = await currentUser?.getIdTokenResult();
         if (idToken) {
-            console.log(idToken.claims);
             return idToken.claims.userId;
         }
 
         return undefined;
+    }
+
+    public static async getNewCurrentUser() {
+        const uid = getCurrentUid();
+        return await this.getUserByUidViaApi(uid);
     }
 }
 

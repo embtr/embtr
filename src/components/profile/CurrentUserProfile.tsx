@@ -1,52 +1,28 @@
 import * as React from 'react';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import ProfileController from 'src/controller/profile/ProfileController';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
 import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
-import { useFocusEffect } from '@react-navigation/native';
-import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { getAuth } from 'firebase/auth';
 import { useSharedValue } from 'react-native-reanimated';
 import { ScrollChangeEvent } from 'src/util/constants';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentUser } from 'src/redux/user/GlobalState';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const CurrentUserProfile = () => {
-    const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
-    const [followerCount, setFollowerCount] = React.useState<number>(0);
-    const [followingCount, setFollowingCount] = React.useState<number>(0);
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [user, setUser] = React.useState<User>();
 
     // used for profile header scroll animation
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
-    const currentUser = useAppSelector(getCurrentUser);
-    React.useEffect(() => {
-        fetchUserProfile();
-        fetchUser();
-        fetchPlannedDay();
-    }, []);
-
     useFocusEffect(
         React.useCallback(() => {
-            if (!userProfileModel?.uid) {
-                return;
-            }
-
-            FollowerController.getFollowCounts(userProfileModel.uid, (followCounts: FollowCounts) => {
-                setFollowerCount(followCounts.follower_count);
-                setFollowingCount(followCounts.following_count);
-            });
-        }, [userProfileModel])
+            fetchUser();
+        }, [])
     );
 
     const fetchUser = async () => {
@@ -59,24 +35,8 @@ export const CurrentUserProfile = () => {
         setUser(user.user);
     };
 
-    const fetchUserProfile = () => {
-        const userId = getAuth().currentUser?.uid;
-        if (userId) {
-            ProfileController.getProfile(userId, (profile: UserProfileModel) => {
-                setUserProfileModel(profile);
-            });
-        }
-    };
-
-    const fetchPlannedDay = async () => {
-        const plannedDay = await PlannedDayController.getOrCreate(currentUser, getTodayKey());
-        setPlannedDay(plannedDay);
-    };
-
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        fetchUserProfile();
-        fetchPlannedDay();
         wait(500).then(() => {
             setRefreshing(false);
             setRefreshedTimestamp(new Date());
@@ -110,30 +70,29 @@ export const CurrentUserProfile = () => {
         animatedBannerScale.value = 1;
     };
 
+    if (!user) {
+        return null;
+    }
+
     return (
         <Screen>
             <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
             <EmbtrMenuCustom />
-            {userProfileModel && (
-                <ProfileHeader
-                    animatedHeaderContentsScale={animatedHeaderContentsScale}
-                    animatedBannerScale={animatedBannerScale}
-                    userProfileModel={userProfileModel}
-                    onFollowUser={() => {}}
-                    onUnfollowUser={() => {}}
-                    followerCount={followerCount}
-                    followingCount={followingCount}
-                    isFollowingUser={false}
-                />
-            )}
-            {plannedDay && userProfileModel && user && (
+            <ProfileHeader
+                user={user}
+                animatedHeaderContentsScale={animatedHeaderContentsScale}
+                animatedBannerScale={animatedBannerScale}
+                onFollowUser={() => {}}
+                onUnfollowUser={() => {}}
+                followerCount={0}
+                followingCount={0}
+                isFollowingUser={false}
+            />
+            {user && (
                 <ProfileBody
-                    plannedDay={plannedDay}
                     onRefresh={onRefresh}
                     isRefreshing={refreshing}
                     newUser={user}
-                    user={currentUser}
-                    userProfileModel={userProfileModel}
                     refreshedTimestamp={refreshedTimestamp}
                     onShouldExpand={shouldExpand}
                 />

@@ -15,6 +15,7 @@ import PushNotificationController from 'src/controller/notification/PushNotifica
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
+import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],

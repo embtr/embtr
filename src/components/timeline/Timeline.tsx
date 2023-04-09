@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { NativeScrollEvent, RefreshControl, ScrollView, View } from 'react-native';
+import { NativeScrollEvent, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
@@ -234,7 +234,12 @@ export const Timeline = () => {
                 style={{ backgroundColor: colors.background }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
-                <View style={{ flex: 1 }}>{timelineViews}</View>
+                {timelineViews.length > 0 && <View style={{ flex: 1 }}>{timelineViews}</View>}
+                {timelineViews.length == 0 && (
+                    <View style={{ flex: 1, paddingTop: 50, alignItems: 'center' }}>
+                        <Text>looks like there's nothing to show.</Text>
+                    </View>
+                )}
             </ScrollView>
         </Screen>
     );

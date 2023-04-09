@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { Banner } from 'src/components/common/Banner';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
 import { Screen } from 'src/components/common/Screen';
 import { RouteProp, useRoute } from '@react-navigation/native';
@@ -17,17 +15,16 @@ import { useSharedValue } from 'react-native-reanimated';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { User } from 'resources/schema';
+import React from 'react';
+import { Banner } from '../common/Banner';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
 
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [refreshing, setRefreshing] = React.useState(false);
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
-    const [user, setUser] = React.useState<UserModel>();
     const [newUser, setNewUser] = React.useState<User>();
-    const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
     const [isFollowingUser, setIsFollowingUser] = React.useState(false);
 
     const [followerCount, setFollowerCount] = React.useState<number>(0);
@@ -40,10 +37,6 @@ export const UserProfile = () => {
         fetchInitial();
     }, [route.params.id]);
 
-    React.useEffect(() => {
-        fetchPlannedDay();
-    }, [user]);
-
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
         fetchInitial();
@@ -54,41 +47,12 @@ export const UserProfile = () => {
     }, []);
 
     const fetchInitial = () => {
-        fetchUser();
         fetchNewUser();
-        fetchProfileData();
-        fetchFollowCounts();
-    };
-
-    const fetchUser = async () => {
-        const user = await UserController.get(route.params.id);
-        setUser(user);
     };
 
     const fetchNewUser = async () => {
         const newUser = await UserController.getUserByUidViaApi(route.params.id);
         setNewUser(newUser.user);
-    };
-
-    const fetchProfileData = () => {
-        ProfileController.getProfile(route.params.id, setUserProfileModel);
-        FollowerController.isFollowingUser(getCurrentUid(), route.params.id, setIsFollowingUser);
-    };
-
-    const fetchFollowCounts = () => {
-        FollowerController.getFollowCounts(route.params.id, (followCounts: FollowCounts) => {
-            setFollowerCount(followCounts.follower_count);
-            setFollowingCount(followCounts.following_count);
-        });
-    };
-
-    const fetchPlannedDay = async () => {
-        if (!user) {
-            return;
-        }
-
-        const plannedDay = await PlannedDayController.getOrCreate(user, getTodayKey());
-        setPlannedDay(plannedDay);
     };
 
     const onFollowUser = (uid: string) => {
@@ -135,11 +99,11 @@ export const UserProfile = () => {
             <Banner name="User Profile" leftIcon={'arrow-back'} leftRoute="BACK" />
             <EmbtrMenuCustom />
 
-            {userProfileModel && (
+            {newUser && (
                 <ProfileHeader
+                    user={newUser}
                     animatedBannerScale={animatedBannerScale}
                     animatedHeaderContentsScale={animatedHeaderContentsScale}
-                    userProfileModel={userProfileModel}
                     onFollowUser={onFollowUser}
                     onUnfollowUser={onUnfollowUser}
                     followerCount={followerCount}
@@ -147,14 +111,11 @@ export const UserProfile = () => {
                     isFollowingUser={isFollowingUser}
                 />
             )}
-            {plannedDay && user && userProfileModel && newUser && (
+            {newUser && (
                 <ProfileBody
-                    plannedDay={plannedDay}
                     isRefreshing={refreshing}
                     onRefresh={onRefresh}
                     newUser={newUser}
-                    user={user}
-                    userProfileModel={userProfileModel}
                     refreshedTimestamp={refreshedTimestamp}
                     onShouldExpand={shouldExpand}
                 />

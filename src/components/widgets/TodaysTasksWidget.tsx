@@ -1,7 +1,6 @@
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -10,23 +9,46 @@ import { EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { DailyResultCardElement } from '../common/timeline/DailyResultCardElement';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
+import { PlannedDay, User } from 'resources/schema';
+import React from 'react';
+import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
-    plannedDay: PlannedDay;
-    togglePlannedTask?: Function;
+    user: User;
 }
 
-export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
+export const TodaysTasksWidget = ({ user }: Props) => {
+    console.log(user);
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
     const closeMenu = useAppSelector(getCloseMenu);
 
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+
+    const fetch = async () => {
+        if (!user.id) {
+            return;
+        }
+
+        const todayKey = getTodayKey();
+        const plannedDay = await PlannedDayController.getViaApi(user.id, todayKey);
+        console.log(user);
+        console.log(plannedDay);
+        setPlannedDay(plannedDay);
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetch();
+        }, [])
+    );
+
     let plannedTaskViews: JSX.Element[] = [];
-    plannedDay?.plannedTasks.forEach((plannedTask) => {
+    plannedDay?.plannedTasks?.forEach((plannedTask) => {
         plannedTaskViews.push(
             <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
-                <DailyResultCardElement plannedTask={plannedTask} onPress={togglePlannedTask} />
+                <DailyResultCardElement plannedTask={plannedTask} onPress={() => {}} />
             </View>
         );
     });
@@ -40,7 +62,7 @@ export const TodaysTasksWidget = ({ plannedDay, togglePlannedTask }: Props) => {
         },
     });
 
-    const isGuest = togglePlannedTask === undefined;
+    const isGuest = true;
 
     return (
         <WidgetBase menuOptions={!isGuest ? menuOptions : undefined}>

@@ -204,9 +204,12 @@ class PlannedDayController {
             });
     }
 
-    public static async getViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
+    public static async getForCurrentUserViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
         const userId = await getUserIdFromToken();
+        return await this.getViaApi(userId, dayKey);
+    }
 
+    public static async getViaApi(userId: number, dayKey: string): Promise<PlannedDayModel | undefined> {
         return await axiosInstance
             .get(`${PLANNED_DAY}${userId}/${dayKey}`)
             .then((success) => {
@@ -222,7 +225,7 @@ class PlannedDayController {
     }
 
     public static async getOrCreateViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
-        let plannedDay = await this.getViaApi(dayKey);
+        let plannedDay = await this.getForCurrentUserViaApi(dayKey);
         if (plannedDay) {
             return plannedDay;
         }
