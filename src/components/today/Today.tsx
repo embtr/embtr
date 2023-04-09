@@ -51,9 +51,9 @@ export const Today = () => {
     const [user, setUser] = React.useState<UserModel>();
     const [widgets, setWidgets] = React.useState<string[]>([]);
     const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
-    const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
     const [pillars, setPillars] = React.useState<PillarModel[]>([]);
+    const [userId, setUserId] = React.useState<number>();
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
 
@@ -81,12 +81,6 @@ export const Today = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            fetchDailyResultHistory();
-        }, [])
-    );
-
-    useFocusEffect(
-        React.useCallback(() => {
             fetchGoals();
         }, [])
     );
@@ -94,6 +88,12 @@ export const Today = () => {
     useFocusEffect(
         React.useCallback(() => {
             fetchPillars();
+        }, [])
+    );
+
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchCurrentUserId();
         }, [])
     );
 
@@ -149,14 +149,14 @@ export const Today = () => {
         });
     };
 
-    const fetchDailyResultHistory = async () => {
-        const history = await DailyResultController.getDailyResultHistory(getCurrentUid());
-        setHistory(history);
-    };
-
     const fetchPillars = async () => {
         const pillars = await PillarController.getPillars(currentUser);
         setPillars(pillars);
+    };
+
+    const fetchCurrentUserId = async () => {
+        const userId = await UserController.getCurrentUserId();
+        setUserId(userId);
     };
 
     const addSpacerToWidgets = (widgets: string[]) => {
@@ -348,7 +348,7 @@ export const Today = () => {
                     )}
 
                     {/* DAILY HISTORY WIDGET */}
-                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && user.today_widgets?.includes(DAILY_HISTORY_WIDGET) && (
+                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && user.today_widgets?.includes(DAILY_HISTORY_WIDGET) && userId && (
                         <WigglableView key={DAILY_HISTORY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView
                                 visible={isConfiguringWidgets}
@@ -356,7 +356,7 @@ export const Today = () => {
                                     removeWidget(DAILY_HISTORY_WIDGET);
                                 }}
                             >
-                                <DailyHistoryWidget history={history} />
+                                <DailyHistoryWidget userId={userId} />
                             </DeletableView>
                         </WigglableView>
                     )}

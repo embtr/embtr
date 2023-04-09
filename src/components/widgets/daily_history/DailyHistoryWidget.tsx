@@ -1,18 +1,45 @@
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 import { Text, View } from 'react-native';
+import { User } from 'resources/schema';
+import { DayResult } from 'resources/types/widget/DailyHistory';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
+import { DailyHistoryController } from 'src/controller/daily_history/DailyHistoryController';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
-    history: string[];
+    userId: number;
 }
 
-export const DailyHistoryWidget = ({ history }: Props) => {
+export const DailyHistoryWidget = ({ userId }: Props) => {
     const { colors } = useTheme();
     const diameter = 9;
     const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
+
+    const [history, setHistory] = React.useState<DayResult[]>([]);
+
+    const fetch = async () => {
+        if (!userId) {
+            return;
+        }
+
+        const dailyHistory = await DailyHistoryController.get(userId);
+        setHistory(dailyHistory.history);
+    };
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setHistory([]);
+            fetch();
+        }, [userId])
+    );
+
+    if (!history) {
+        return <View />;
+    }
 
     const isSuccess = (s: string) => {
         return 'COMPLETE' === s;
@@ -28,13 +55,9 @@ export const DailyHistoryWidget = ({ history }: Props) => {
 
         views.push(
             <View
-                key={historyElement + i}
+                key={historyElement.dayKey + historyElement.complete + i}
                 style={{
-                    backgroundColor: isSuccess(historyElement)
-                        ? colors.progress_bar_complete
-                        : isFailed(historyElement)
-                        ? colors.progress_bar_failed
-                        : colors.progress_bar_color,
+                    backgroundColor: historyElement.complete ? colors.progress_bar_complete : colors.progress_bar_color,
                     height: diameter,
                     width: diameter,
                     borderRadius: 2.7,
@@ -47,14 +70,14 @@ export const DailyHistoryWidget = ({ history }: Props) => {
 
     let streak = 0;
     for (let i = history.length - 1; i >= 0; i--) {
-        if (!isSuccess(history[i])) {
+        if (!history[i].complete) {
             break;
         }
 
         streak++;
     }
 
-    const yesterday = getYesterday();
+    const today = new Date();
 
     const twoWeeksAgo = getYesterday();
     twoWeeksAgo.setDate(getYesterday().getDate() - 15);
@@ -62,7 +85,7 @@ export const DailyHistoryWidget = ({ history }: Props) => {
     const fourWeeksAgo = getYesterday();
     fourWeeksAgo.setDate(getYesterday().getDate() - 30);
 
-    const yesterdayFormatted = getMonthDayFormatted(yesterday);
+    const yesterdayFormatted = getMonthDayFormatted(today);
     const twoWeeksAgoFormatted = getMonthDayFormatted(twoWeeksAgo);
     const fourWeeksAgoFormatted = getMonthDayFormatted(fourWeeksAgo);
 

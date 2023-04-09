@@ -6,7 +6,7 @@ export class LikeController {
     public static async add(interactable: Interactable, id: number) {
         const endpoint = getInteractableEndpoint(interactable);
 
-        return await axiosInstance
+        return axiosInstance
             .post(`${endpoint}${id}/like/`)
             .then((success) => {
                 return success.data;

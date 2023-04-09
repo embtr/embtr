@@ -101,7 +101,8 @@ export const getDayKey = (day: number) => {
 };
 
 export const getTodayKey = () => {
-    return getKey(new Date().getDate());
+    const todayKey = getKey(new Date().getDate());
+    return todayKey;
 };
 
 export const getPreviousDayKey = (dayKey: string) => {

@@ -208,6 +208,17 @@ class UserController {
     public static async updatePostNotificationToken(token: string | null) {
         await UserDao.updateField('post_notification_token', token);
     }
+
+    public static async getCurrentUserId() {
+        const currentUser = getAuth().currentUser;
+        const idToken = await currentUser?.getIdTokenResult();
+        if (idToken) {
+            console.log(idToken.claims);
+            return idToken.claims.userId;
+        }
+
+        return undefined;
+    }
 }
 
 export default UserController;
