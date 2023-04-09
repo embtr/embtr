@@ -16,6 +16,7 @@ import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { PlannedDay } from 'src/controller/planning/PlannedDayController';
 import AccessLogController from 'src/controller/access_log/AccessLogController';
+import { User } from 'resources/schema';
 
 /*
  * Avoid rerenders
@@ -25,13 +26,14 @@ interface Props {
     plannedDay: PlannedDay;
     user: UserModel;
     userProfileModel: UserProfileModel;
+    newUser: User;
     onRefresh: Function;
     isRefreshing: boolean;
     refreshedTimestamp: Date;
     onShouldExpand: Function;
 }
 
-export const ProfileBody = ({ plannedDay, user, userProfileModel, onRefresh, isRefreshing, refreshedTimestamp, onShouldExpand }: Props) => {
+export const ProfileBody = ({ plannedDay, user, userProfileModel, newUser, onRefresh, isRefreshing, refreshedTimestamp, onShouldExpand }: Props) => {
     const { colors } = useTheme();
     const [history, setHistory] = React.useState<string[]>([]);
     const [goals, setGoals] = React.useState<GoalModel[]>([]);
@@ -89,7 +91,7 @@ export const ProfileBody = ({ plannedDay, user, userProfileModel, onRefresh, isR
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
                     >
-                        <ProfileTabRoute user={user} userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
+                        <ProfileTabRoute newUser={newUser} user={user} userProfileModel={userProfileModel} history={history} goals={goals} pillars={pillars} />
                     </ScrollView>
                 );
 

@@ -43,7 +43,7 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
             const fetchCurrentUser = async () => {
                 const uid = getAuth().currentUser?.uid;
                 if (uid) {
-                    const currentUserResponse = await UserController.getUserViaApi(uid);
+                    const currentUserResponse = await UserController.getUserByUidViaApi(uid);
                     if (currentUserResponse.user) {
                         setCurrentUser(currentUserResponse.user);
                     }

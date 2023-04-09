@@ -15,6 +15,8 @@ import { ScrollChangeEvent } from 'src/util/constants';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { User } from 'resources/schema';
+import UserController from 'src/controller/user/UserController';
 
 export const CurrentUserProfile = () => {
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
@@ -23,13 +25,14 @@ export const CurrentUserProfile = () => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+    const [user, setUser] = React.useState<User>();
 
     // used for profile header scroll animation
     const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
     const currentUser = useAppSelector(getCurrentUser);
-
     React.useEffect(() => {
         fetchUserProfile();
+        fetchUser();
         fetchPlannedDay();
     }, []);
 
@@ -45,6 +48,16 @@ export const CurrentUserProfile = () => {
             });
         }, [userProfileModel])
     );
+
+    const fetchUser = async () => {
+        const uid = getAuth().currentUser?.uid;
+        if (!uid) {
+            return;
+        }
+
+        const user = await UserController.getUserByUidViaApi(uid);
+        setUser(user.user);
+    };
 
     const fetchUserProfile = () => {
         const userId = getAuth().currentUser?.uid;
@@ -113,11 +126,12 @@ export const CurrentUserProfile = () => {
                     isFollowingUser={false}
                 />
             )}
-            {plannedDay && userProfileModel && (
+            {plannedDay && userProfileModel && user && (
                 <ProfileBody
                     plannedDay={plannedDay}
                     onRefresh={onRefresh}
                     isRefreshing={refreshing}
+                    newUser={user}
                     user={currentUser}
                     userProfileModel={userProfileModel}
                     refreshedTimestamp={refreshedTimestamp}

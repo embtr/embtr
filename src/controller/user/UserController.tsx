@@ -89,7 +89,7 @@ class UserController {
             });
     }
 
-    public static async getUserViaApi(uid: string): Promise<GetUserResponse> {
+    public static async getUserByUidViaApi(uid: string): Promise<GetUserResponse> {
         return await axiosInstance
             .get(`/${USER_ENDPOINT}/${uid}`)
             .then((success) => {
@@ -124,8 +124,12 @@ class UserController {
             });
     }
 
+    /*
+     * ============= OLD SYSTEM LOGIC ==============
+     */
+
     public static async createUserIfNew(uid: string) {
-        const userResponse: GetUserResponse = await this.getUserViaApi(uid);
+        const userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
         if (userResponse.success) {
             return;
         }
@@ -143,7 +147,7 @@ class UserController {
     }
 
     public static async getFromNewSystem(uid: string): Promise<UserModel | null> {
-        const userResponse: GetUserResponse = await this.getUserViaApi(uid);
+        const userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
         if (userResponse.success && userResponse.user) {
             const user: UserModel = {
                 uid: userResponse.user.uid!,

@@ -16,6 +16,7 @@ import { ScrollChangeEvent } from 'src/util/constants';
 import { useSharedValue } from 'react-native-reanimated';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { User } from 'resources/schema';
 
 export const UserProfile = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
@@ -25,6 +26,7 @@ export const UserProfile = () => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
     const [user, setUser] = React.useState<UserModel>();
+    const [newUser, setNewUser] = React.useState<User>();
     const [userProfileModel, setUserProfileModel] = React.useState<UserProfileModel | undefined>(undefined);
     const [isFollowingUser, setIsFollowingUser] = React.useState(false);
 
@@ -53,6 +55,7 @@ export const UserProfile = () => {
 
     const fetchInitial = () => {
         fetchUser();
+        fetchNewUser();
         fetchProfileData();
         fetchFollowCounts();
     };
@@ -60,6 +63,11 @@ export const UserProfile = () => {
     const fetchUser = async () => {
         const user = await UserController.get(route.params.id);
         setUser(user);
+    };
+
+    const fetchNewUser = async () => {
+        const newUser = await UserController.getUserByUidViaApi(route.params.id);
+        setNewUser(newUser.user);
     };
 
     const fetchProfileData = () => {
@@ -139,11 +147,12 @@ export const UserProfile = () => {
                     isFollowingUser={isFollowingUser}
                 />
             )}
-            {plannedDay && user && userProfileModel && (
+            {plannedDay && user && userProfileModel && newUser && (
                 <ProfileBody
                     plannedDay={plannedDay}
                     isRefreshing={refreshing}
                     onRefresh={onRefresh}
+                    newUser={newUser}
                     user={user}
                     userProfileModel={userProfileModel}
                     refreshedTimestamp={refreshedTimestamp}
