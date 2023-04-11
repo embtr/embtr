@@ -7,7 +7,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TimelinePostModel } from 'src/controller/timeline/TimelineController';
 import NotificationController, { getUnreadNotificationCount } from 'src/controller/notification/NotificationController';
 import { CARD_SHADOW } from 'src/util/constants';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
@@ -17,6 +16,7 @@ import { wait } from 'src/util/GeneralUtility';
 import { Notification as NotificationModel, PlannedDayResult as PlannedDayResultModel, UserPost } from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
+import { TimelinePostModel } from 'src/model/OldModels';
 
 export const Timeline = () => {
     const { colors } = useTheme();
