@@ -1,7 +1,7 @@
 import { Dimensions, View, Text } from 'react-native';
 import { ImageCarouselImage } from './ImageCarousel';
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { CachedImage } from './CachedImage';
 
 interface Props {

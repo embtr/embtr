@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';

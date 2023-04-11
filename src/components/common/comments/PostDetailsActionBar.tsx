@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';

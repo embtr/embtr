@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TodayTab } from 'src/navigation/RootStackParamList';

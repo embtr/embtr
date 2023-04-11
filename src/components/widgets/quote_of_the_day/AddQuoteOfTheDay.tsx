@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Keyboard, KeyboardAvoidingView, ScrollView, Text, View } from 'react-native';
-import { TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TextInput, TouchableWithoutFeedback } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';

@@ -3,7 +3,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { Comment, Like, Image as ImageModel, User } from 'resources/schema';

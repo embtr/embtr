@@ -2,7 +2,7 @@ import { Image, LayoutChangeEvent, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
 import { UserProfileProBadge } from 'src/components/profile/profile_component/badge/UserProfileProBadge';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import Animated, { Easing, SharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import DEFAULT from 'assets/banner.png';

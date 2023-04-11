@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Image } from 'react-native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { CachedImage } from '../common/images/CachedImage';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 import { User } from 'resources/schema';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;

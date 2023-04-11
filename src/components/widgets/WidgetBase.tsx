@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { CARD_SHADOW } from 'src/util/constants';

@@ -12,7 +12,7 @@ import { DailyResultHeader } from './DailyResultHeader';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 

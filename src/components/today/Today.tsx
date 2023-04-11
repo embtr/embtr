@@ -12,30 +12,20 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
-import UserController, { UserModel } from 'src/controller/user/UserController';
-import {
-    DAILY_HISTORY_WIDGET,
-    QUOTE_OF_THE_DAY_WIDGET,
-    TIME_LEFT_IN_DAY_WIDGET,
-    TODAYS_NOTES_WIDGET,
-    TODAYS_PHOTOS_WIDGET,
-    TODAYS_TASKS_WIDGET,
-    WIDGETS,
-} from 'src/util/constants';
+import { DAILY_HISTORY_WIDGET, QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import { WigglableView } from '../common/animated_view/WigglableView';
 import { DeletableView } from '../common/animated_view/DeletableView';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
-import PlannedTaskController, { clonePlannedTaskModel, PlannedTaskModel } from 'src/controller/planning/PlannedTaskController';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { User } from 'resources/schema';
+import UserController from 'src/controller/user/UserController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [refreshing, setRefreshing] = React.useState(false);
-    const [user, setUser] = React.useState<UserModel>();
     const [widgets, setWidgets] = React.useState<string[]>([]);
     const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
     const [newCurrentUser, setNewCurrentUser] = React.useState<User>();
@@ -110,7 +100,7 @@ export const Today = () => {
         },
     ];
 
-    if (!user) {
+    if (!newCurrentUser) {
         return (
             <Screen>
                 <View />
@@ -119,13 +109,9 @@ export const Today = () => {
     }
 
     const updateWidgetOrdering = () => {
-        if (!user) {
+        if (!newCurrentUser) {
             return;
         }
-
-        let clonedUser = UserController.clone(user);
-        clonedUser.today_widgets = widgets;
-        setUser(clonedUser);
     };
 
     const renderItem = ({ item, drag }: RenderItemParams<string>) => {
@@ -133,7 +119,7 @@ export const Today = () => {
             <ScaleDecorator>
                 <TouchableOpacity onLongPress={drag} disabled={!isConfiguringWidgets || item == 'SPACER'}>
                     {/* Today Countdown */}
-                    {item === TIME_LEFT_IN_DAY_WIDGET && user.today_widgets?.includes(TIME_LEFT_IN_DAY_WIDGET) && (
+                    {item === TIME_LEFT_IN_DAY_WIDGET && (
                         <WigglableView key={TIME_LEFT_IN_DAY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
                                 <TodaysCountdownWidget />
@@ -142,7 +128,7 @@ export const Today = () => {
                     )}
 
                     {/* QUOTE OF THE DAY WIDGET */}
-                    {item === QUOTE_OF_THE_DAY_WIDGET && user.today_widgets?.includes(QUOTE_OF_THE_DAY_WIDGET) && refreshedTimestamp && (
+                    {item === QUOTE_OF_THE_DAY_WIDGET && refreshedTimestamp && (
                         <WigglableView key={QUOTE_OF_THE_DAY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
                                 <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp} />
@@ -151,7 +137,7 @@ export const Today = () => {
                     )}
 
                     {/* TODAY'S TASKS WIDGET */}
-                    {item === TODAYS_TASKS_WIDGET && newCurrentUser && user.today_widgets?.includes(TODAYS_TASKS_WIDGET) && (
+                    {item === TODAYS_TASKS_WIDGET && newCurrentUser && (
                         <WigglableView key={TODAYS_TASKS_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
                                 <TodaysTasksWidget user={newCurrentUser} />
@@ -160,7 +146,7 @@ export const Today = () => {
                     )}
 
                     {/* TODAY'S NOTES WIDGET */}
-                    {item === TODAYS_NOTES_WIDGET && user.today_widgets?.includes(TODAYS_NOTES_WIDGET) && (
+                    {item === TODAYS_NOTES_WIDGET && (
                         <WigglableView key={TODAYS_NOTES_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
                                 <TodaysNotesWidget />
@@ -169,7 +155,7 @@ export const Today = () => {
                     )}
 
                     {/* DAILY HISTORY WIDGET */}
-                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && user.today_widgets?.includes(DAILY_HISTORY_WIDGET) && newCurrentUser?.id && (
+                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && newCurrentUser?.id && (
                         <WigglableView key={DAILY_HISTORY_WIDGET} wiggle={isConfiguringWidgets}>
                             <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
                                 <DailyHistoryWidget userId={newCurrentUser.id} />
@@ -205,7 +191,7 @@ export const Today = () => {
                 <DraggableFlatList
                     style={{ height: '100%', marginBottom: 100 }}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                    data={addSpacerToWidgets(widgets)}
+                    data={addSpacerToWidgets(WIDGETS)}
                     onDragEnd={({ data }) => {
                         updateWidgetsWithoutSpacer(data);
                     }}
