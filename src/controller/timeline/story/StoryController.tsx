@@ -83,6 +83,18 @@ export const createStory = (uid: string, title: string, story: string, images: s
 };
 
 class StoryController {
+    public static async getAllForUser(userId: number): Promise<UserPost[]> {
+        return await axiosInstance
+            .get(`/user/${userId}/posts`)
+            .then((success) => {
+                const response = success.data as GetAllUserPostResponse;
+                return response.userPosts ?? [];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
     public static async getAllViaApi(): Promise<UserPost[]> {
         return await axiosInstance
             .get(`${USER_POST}`)

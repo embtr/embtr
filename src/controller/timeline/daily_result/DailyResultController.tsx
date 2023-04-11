@@ -28,6 +28,18 @@ export interface DayResultTimelinePost extends TimelinePostModel {
 }
 
 class DailyResultController {
+    public static async getAllForUser(userId: number): Promise<PlannedDayResultModel[]> {
+        return await axiosInstance
+            .get(`/user/${userId}/day-results`)
+            .then((success) => {
+                const response = success.data as GetPlannedDayResultsResponse;
+                return response.plannedDayResults ?? [];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
     public static async getAllViaApi(): Promise<PlannedDayResultModel[]> {
         return await axiosInstance
             .get(`${PLANNED_DAY_RESULT}`)

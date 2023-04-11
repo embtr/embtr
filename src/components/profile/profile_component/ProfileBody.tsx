@@ -8,6 +8,7 @@ import { ScrollChangeEvent } from 'src/util/constants';
 import { ProfileTabRoute } from './profile_tabs/ProfileTabRoute';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { User } from 'resources/schema';
+import { UserActivityTabRoute } from './profile_tabs/UserActivityTabRoute';
 
 /*
  * Avoid rerenders
@@ -94,7 +95,9 @@ export const ProfileBody = ({ newUser, onRefresh, isRefreshing, refreshedTimesta
                         onScroll={({ nativeEvent }) => {
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
-                    ></ScrollView>
+                    >
+                        <UserActivityTabRoute user={newUser} />
+                    </ScrollView>
                 );
         }
 
