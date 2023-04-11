@@ -15,11 +15,9 @@ export default function App() {
                 <Provider store={Store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeProvider>
-                            <HoldMenuProvider>
-                                <RootSiblingParent>
-                                    <Main />
-                                </RootSiblingParent>
-                            </HoldMenuProvider>
+                            <RootSiblingParent>
+                                <Main />
+                            </RootSiblingParent>
                         </ThemeProvider>
                     </PersistGate>
                 </Provider>

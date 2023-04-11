@@ -2,18 +2,13 @@ import { ProfileHeader } from 'src/components/profile/profile_component/ProfileH
 import { Screen } from 'src/components/common/Screen';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import FollowerController, { FollowCounts } from 'src/controller/follower/FollowerController';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import ProfileController from 'src/controller/profile/ProfileController';
 import { getAuth } from 'firebase/auth';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { ProfileBody } from './profile_component/ProfileBody';
 import { ScrollChangeEvent } from 'src/util/constants';
 import { useSharedValue } from 'react-native-reanimated';
-import UserController, { UserModel } from 'src/controller/user/UserController';
-import PlannedDayController, { getTodayKey, PlannedDay } from 'src/controller/planning/PlannedDayController';
+import UserController from 'src/controller/user/UserController';
 import { User } from 'resources/schema';
 import React from 'react';
 import { Banner } from '../common/Banner';
@@ -58,13 +53,11 @@ export const UserProfile = () => {
     const onFollowUser = (uid: string) => {
         setIsFollowingUser(true);
         setFollowerCount(followerCount + 1);
-        FollowerController.followUser(getAuth().currentUser!.uid, uid, () => {});
     };
 
     const onUnfollowUser = (uid: string) => {
         setIsFollowingUser(false);
         setFollowerCount(followerCount - 1);
-        FollowerController.unfollowUser(getAuth().currentUser!.uid, uid, () => {});
     };
 
     const shouldExpand = (e: ScrollChangeEvent) => {

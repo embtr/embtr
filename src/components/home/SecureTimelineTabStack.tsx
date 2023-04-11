@@ -6,12 +6,8 @@ import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
 import { Notifications } from 'src/components/notification/Notifications';
 import { DailyResultDetails } from 'src/components/common/timeline/DailyResultDetails';
 import { UserPostDetails } from 'src/components/common/timeline/UserPostDetails';
-import { ChallengeDetails } from '../common/timeline/ChallengeDetails';
 import { EditUserPostDetails } from '../timeline/EditUserPostDetails';
 import { EditDailyResultDetails } from '../common/timeline/EditDailyResultDetails';
-import { PillarDetails } from '../profile/profile_component/pillar/PillarDetails';
-import { GoalDetails } from '../plan/goals/GoalDetails';
-import ViewAllComments from '../common/textbox/ViewAllComments';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,12 +21,8 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="EditUserPostDetails" component={EditUserPostDetails} />
             <Stack.Screen name="EditDailyResultDetails" component={EditDailyResultDetails} />
             <Stack.Screen name="UserPostDetails" component={UserPostDetails} />
-            <Stack.Screen name="ChallengeDetails" component={ChallengeDetails} />
             <Stack.Screen name="DailyResultDetails" component={DailyResultDetails} />
             <Stack.Screen name="Notifications" component={Notifications} />
-            <Stack.Screen name="PillarDetails" component={PillarDetails} />
-            <Stack.Screen name="GoalDetails" component={GoalDetails} />
-            <Stack.Screen name="ViewAllComments" component={ViewAllComments} />
         </Stack.Navigator>
     );
 };

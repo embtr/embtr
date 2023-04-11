@@ -1,21 +1,18 @@
 import React from 'react';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
-import { setCurrentUser } from 'src/redux/user/GlobalState';
-import { getCurrentUserUid, registerAuthStateListener } from 'src/session/CurrentUserProvider';
+import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
-import ProfileController from 'src/controller/profile/ProfileController';
 import { Screen } from 'src/components/common/Screen';
-import { useAppDispatch } from 'src/redux/Hooks';
 import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
-import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
+import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -106,7 +103,7 @@ export const Main = () => {
     const [user, setUser] = React.useState<User | undefined>(undefined);
     const [loaded, setLoaded] = React.useState<boolean>(false);
 
-    const dispatch = useAppDispatch();
+    getFirebaseConnection('', '');
 
     LogBox.ignoreAllLogs();
     registerAuthStateListener(setUser);
@@ -124,22 +121,12 @@ export const Main = () => {
             }
 
             await createUserIfNew(user);
-
-            let currentUser = await UserController.getCurrentUser();
-
-            ProfileController.registerInitialProfileUpdateListener();
             PushNotificationController.registerUpdatePostNotificationTokenListener();
-
-            currentUser = await UserController.getCurrentUser();
-            dispatch(setCurrentUser(currentUser));
 
             setLoaded(true);
         };
-        if (isLoggedIn()) {
-            blockingLoad();
-        } else {
-            dispatch(setCurrentUser(undefined));
-        }
+
+        blockingLoad();
     }, [user]);
 
     const isLoggedIn = () => {

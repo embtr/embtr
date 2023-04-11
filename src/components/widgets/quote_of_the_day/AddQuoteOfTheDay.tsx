@@ -5,8 +5,7 @@ import { TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handle
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import QuoteOfTheDayController, { QuoteOfTheDayModel } from 'src/controller/widgets/quote_of_the_day/QuoteOfTheDayController';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR } from 'src/util/constants';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
@@ -20,8 +19,6 @@ export const AddQuoteOfTheDay = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab, 'PlanDay'>>();
 
     const save = async () => {
-        const quoteModel: QuoteOfTheDayModel = QuoteOfTheDayController.create(quote, author);
-        await QuoteOfTheDayController.save(quoteModel);
         navigation.goBack();
     };
 

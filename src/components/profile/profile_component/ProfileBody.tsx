@@ -5,9 +5,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TodayTabRoute } from 'src/components/profile/profile_component/profile_tabs/TodayTabRoute';
 import { Screen } from 'src/components/common/Screen';
 import { ScrollChangeEvent } from 'src/util/constants';
-import { UserModel } from 'src/controller/user/UserController';
 import { ProfileTabRoute } from './profile_tabs/ProfileTabRoute';
-import { ActivityTabRoute } from './profile_tabs/ActivityTabRoute';
 import { RefreshControl } from 'react-native-gesture-handler';
 import { User } from 'resources/schema';
 
@@ -96,9 +94,7 @@ export const ProfileBody = ({ newUser, onRefresh, isRefreshing, refreshedTimesta
                         onScroll={({ nativeEvent }) => {
                             onShouldExpand(shouldExpand(nativeEvent));
                         }}
-                    >
-                        <ActivityTabRoute refreshedTimestamp={refreshedTimestamp} />
-                    </ScrollView>
+                    ></ScrollView>
                 );
         }
 

@@ -8,7 +8,6 @@ import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
-import ProfileController from 'src/controller/profile/ProfileController';
 import { ScrollView } from 'react-native-gesture-handler';
 import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 import { Ionicons } from '@expo/vector-icons';
@@ -98,7 +97,7 @@ export const EditUserProfile = () => {
     const uploadProfilePhoto = async () => {
         setImageUploading(true);
         setPhotoUrl('');
-        const url = await ProfileController.uploadProfilePhoto();
+        const url = await UserController.uploadProfilePhoto();
         if (url) {
             setPhotoUrl(url);
         }
@@ -107,7 +106,7 @@ export const EditUserProfile = () => {
 
     const uploadProfileBanner = async () => {
         setImageUploading(true);
-        const url = await ProfileController.uploadProfileBanner();
+        const url = await UserController.uploadProfileBanner();
         setBannerUrl('');
         if (url) {
             setBannerUrl(url);

@@ -1,7 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { About } from 'src/static/About';
-import { ReleaseNotes } from 'src/static/ReleaseNotes';
 import { Dashboard } from 'src/components/home/Dashboard';
 import { Logout } from 'src/components/logout/Logout';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
@@ -15,7 +14,6 @@ export const SecureMainStack = () => {
             <Stack.Screen name="Loading" component={LoadingPage} />
             <Stack.Screen name="Logout" component={Logout} />
             <Stack.Screen name="About" component={About} />
-            <Stack.Screen name="ReleaseNotes" component={ReleaseNotes} />
         </Stack.Navigator>
     );
 };

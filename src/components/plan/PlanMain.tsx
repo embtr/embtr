@@ -7,9 +7,7 @@ import { Banner } from 'src/components/common/Banner';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PlanTabScreens } from 'src/navigation/RootStackParamList';
-import { PlanPreviews } from './PlanPreviews';
 import { Planning } from './planning/Planning';
-import { Tasks } from './tasks/Tasks';
 import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -44,12 +42,6 @@ export const PlanMain = () => {
                         useCalendarView={useCalendarView}
                     />
                 );
-
-            case 'habits':
-                return <PlanPreviews />;
-
-            case 'tasks':
-                return <Tasks />;
         }
 
         return <View />;
@@ -57,11 +49,7 @@ export const PlanMain = () => {
 
     const [index, setIndex] = React.useState(0);
 
-    const [routes] = React.useState([
-        { key: 'planning', title: 'Schedule' },
-        { key: 'habits', title: 'Plan' },
-        { key: 'tasks', title: 'Tasks' },
-    ]);
+    const [routes] = React.useState([{ key: 'planning', title: 'Schedule' }]);
 
     const navigateToTomorrowCreateTask = () => {
         setShowAddTaskModal(true);

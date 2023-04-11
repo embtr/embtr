@@ -1,24 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { FAKE_USER, UserModel } from 'src/controller/user/UserController';
 import { TABS } from 'src/components/home/Dashboard';
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: 'invalid',
     userProfileUrl: '',
-    currentUser: FAKE_USER,
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
     openMenu: () => {},
     closeMenu: () => {},
     selectedDayKey: 'invalid',
-    currentTab: TABS.TIMELINE,
+    currentTab: '',
 };
 
 export interface GlobalState {
     accessLevel: string;
     userProfileUrl: string;
-    currentUser: UserModel;
     menuOptions: EmbtrMenuOptions;
     openMenu: Function;
     closeMenu: Function;
@@ -37,9 +34,6 @@ export const GlobalState = createSlice({
         },
         setUserProfileUrl(state, action) {
             state.userProfileUrl = action.payload;
-        },
-        setCurrentUser(state, action) {
-            state.currentUser = action.payload;
         },
         setMenuOptions(state, action) {
             state.menuOptions = action.payload;
@@ -73,14 +67,6 @@ export const getUserProfileUrl = (state: RootState): string => {
     }
 
     return state.globalState.userProfileUrl;
-};
-
-export const getCurrentUser = (state: RootState): UserModel => {
-    if (!state?.globalState?.currentUser) {
-        return INITIAL_STATE.currentUser;
-    }
-
-    return state.globalState.currentUser;
 };
 
 export const getMenuOptions = (state: RootState): EmbtrMenuOptions => {
@@ -123,6 +109,5 @@ export const getCurrentTab = (state: RootState) => {
     return state.globalState.currentTab;
 };
 
-export const { setAccessLevel, setUserProfileUrl, setCurrentUser, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey, setCurrentTab } =
-    GlobalState.actions;
+export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey, setCurrentTab } = GlobalState.actions;
 export default GlobalState.reducer;

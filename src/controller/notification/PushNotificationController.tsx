@@ -2,7 +2,6 @@ import * as Notifications from 'expo-notifications';
 import UserController, { UserModel } from 'src/controller/user/UserController';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { User } from 'firebase/auth';
-import EmbtrCloudApiController from 'src/controller/embtr_cloud/EmbtrCloudApiController';
 import { Linking } from 'react-native';
 import { isAndroidDevice, isPhysicalDevice } from 'src/util/DeviceUtil';
 import { darkColors } from 'src/theme/ColorThemes';
@@ -15,10 +14,6 @@ class PushNotificationController {
                 this.registerForPushNotificationsAsync();
             }
         });
-    }
-
-    public static sendPostNotificationApiRequest(notificationId: string) {
-        EmbtrCloudApiController.sendPostNotificationApiRequest(notificationId);
     }
 
     private static registerForPushNotificationsAsync = async () => {
@@ -86,7 +81,7 @@ class PushNotificationController {
         const answer = await Notifications.requestPermissionsAsync();
         if (answer.status === 'granted') {
             const token = await Notifications.getExpoPushTokenAsync();
-            UserController.updatePostNotificationToken(token.data);
+            //UserController.updatePostNotificationToken(token.data);
             return true;
         } else {
             this.openNotificationsSettings();
@@ -95,7 +90,7 @@ class PushNotificationController {
     }
 
     public static async removePushNotificationAccess() {
-        await UserController.updatePostNotificationToken(null);
+        //await UserController.updatePostNotificationToken(null);
     }
 }
 

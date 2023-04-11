@@ -1,11 +1,10 @@
-import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
-import TaskDao from 'src/firebase/firestore/planning/TaskDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { TASK } from 'resources/endpoints';
 import { Task as NewTaskModel } from 'resources/schema';
 import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/requests/TaskTypes';
+import { Timestamp } from 'firebase/firestore';
 
 export interface TaskModel {
     id?: string;
@@ -115,104 +114,6 @@ class TaskController {
             })
             .catch((error) => {
                 return [];
-            });
-    }
-
-    /*
-     * OLD LOGIC BELOW ~~~~~
-     */
-    public static clone(task: TaskModel) {
-        const clone: TaskModel = {
-            id: task.id,
-            uid: task.uid,
-            added: task.added,
-            modified: task.modified,
-            name: task.name,
-            description: task.description,
-            goalId: task.goalId,
-            active: task.active,
-        };
-
-        if (task.id) {
-            clone.id = task.id;
-        }
-
-        return clone;
-    }
-
-    public static createTask(task: TaskModel, callback: Function) {
-        const result = TaskDao.createTask(task);
-        result.then(() => {
-            callback();
-        });
-    }
-
-    public static async update(task: TaskModel) {
-        task.modified = Timestamp.now();
-        await TaskDao.update(task);
-    }
-
-    public static async archiveTask(task: TaskModel, callback: Function) {
-        task.active = false;
-        await TaskDao.update(task);
-        callback();
-    }
-
-    public static async getHabitAsync(id: string) {
-        const uid = getCurrentUid();
-        const result = await TaskDao.getTask(uid, id);
-
-        const habit = this.getHabitFromData(result);
-        return habit;
-    }
-
-    public static getHabit(id: string, callback: Function) {
-        const uid = getCurrentUid();
-        const result = TaskDao.getTask(uid, id);
-        result
-            .then((document) => {
-                const task = this.getHabitFromData(document);
-                callback(task);
-            })
-            .catch(() => {
-                callback(undefined);
-            });
-    }
-
-    private static getHabitFromData(data: DocumentSnapshot<DocumentData>): TaskModel {
-        let habit: TaskModel = data.data() as TaskModel;
-        habit.id = data.id;
-
-        if (!habit.active) {
-            habit.active = true;
-        }
-
-        return habit;
-    }
-
-    static getTasks(uid: string, callback: Function) {
-        const result = TaskDao.getTasks(uid);
-
-        let tasks: TaskModel[] = [];
-        result
-            .then((documents) => {
-                documents.docs.forEach((document) => {
-                    let task: TaskModel = document.data() as TaskModel;
-
-                    if (task.active === false) {
-                        return;
-                    }
-
-                    task.id = document.id;
-                    tasks.push(task);
-                });
-            })
-            .then(() => {
-                tasks.sort((a, b) => (a.name > b.name ? 1 : -1)).reverse();
-                callback(tasks);
-            })
-            .catch(() => {
-                callback([]);
             });
     }
 }

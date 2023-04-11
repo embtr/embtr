@@ -1,15 +1,10 @@
 import React from 'react';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { useFocusEffect } from '@react-navigation/native';
 import { ScrollView, Text, View } from 'react-native';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { Screen } from 'src/components/common/Screen';
 import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import AccessLogController from 'src/controller/access_log/AccessLogController';
-import { GoalModel } from 'src/controller/planning/GoalController';
-import { PillarModel } from 'src/model/PillarModel';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -19,18 +14,7 @@ interface Props {
 
 export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props) => {
     const { colors } = useTheme();
-    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
-
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
-
-    const [goals, setGoals] = React.useState<GoalModel[]>([]);
-    const [pillars, setPillars] = React.useState<PillarModel[]>([]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            AccessLogController.addPlanningListPageAccesLog();
-        }, [])
-    );
 
     useFocusEffect(
         React.useCallback(() => {
@@ -72,19 +56,6 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, onOpenHabitsModal }: Props)
                                         create a task
                                     </Text>
                                 </View>
-                                {goals.length > 0 && (
-                                    <View style={{ paddingLeft: 5 }}>
-                                        <Text
-                                            onPress={() => {
-                                                onOpenHabitsModal();
-                                            }}
-                                            style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
-                                        >
-                                            {' '}
-                                            select habits
-                                        </Text>
-                                    </View>
-                                )}
                             </View>
                         </View>
                     )}

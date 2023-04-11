@@ -1,7 +1,7 @@
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { UserProfileModel } from 'src/model/OldModels';
 
 class UserSearchResultObject {
-    public parentSearch? : UserSearchResultObject;
+    public parentSearch?: UserSearchResultObject;
     public results?: UserProfileModel[];
     public query?: string;
 }

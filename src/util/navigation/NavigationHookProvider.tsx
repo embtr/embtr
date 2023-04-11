@@ -1,8 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MainTabScreens, PlanTabScreens, TimelineTabScreens, TodayTab, ProfileTabScreens } from 'src/navigation/RootStackParamList';
-import { Store, RootState } from 'src/redux/store';
-import { getCurrentTab } from 'src/redux/user/GlobalState';
+import { PlanTabScreens, TimelineTabScreens, TodayTab, ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { TABS } from 'src/components/home/Dashboard';
 
 export const getNavigationHook = (currentTab: string) => {

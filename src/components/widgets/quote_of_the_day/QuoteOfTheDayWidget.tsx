@@ -5,9 +5,6 @@ import { Text, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { EmbtrMenuOption } from 'src/components/common/menu/EmbtrMenuOption';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import ProfileController from 'src/controller/profile/ProfileController';
-import QuoteOfTheDayController, { QuoteOfTheDayModel } from 'src/controller/widgets/quote_of_the_day/QuoteOfTheDayController';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -16,6 +13,7 @@ import { WidgetBase } from '../WidgetBase';
 import { Ionicons } from '@expo/vector-icons';
 import { getAuth } from 'firebase/auth';
 import * as Haptics from 'expo-haptics';
+import { QuoteOfTheDayModel } from 'src/model/OldModels';
 
 interface Props {
     refreshedTimestamp: Date;
@@ -25,7 +23,6 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
 
     const [quoteOfTheDay, setQuoteOfTheDay] = React.useState<QuoteOfTheDayModel>();
-    const [addedBy, setAddedBy] = React.useState<UserProfileModel>();
 
     const navigation = useNavigation<StackNavigationProp<TodayTab, 'AddQuoteOfTheDay'>>();
     const closeMenu = useAppSelector(getCloseMenu);
@@ -34,11 +31,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
         fetch();
     }, [refreshedTimestamp]);
 
-    const fetch = async () => {
-        const quote: QuoteOfTheDayModel = await QuoteOfTheDayController.getCurrentQuoteOfTheDay();
-        setQuoteOfTheDay(quote);
-        ProfileController.getProfile(quote.uid, setAddedBy);
-    };
+    const fetch = async () => {};
 
     let menuOptions: EmbtrMenuOption[] = [];
     menuOptions.push({
@@ -57,9 +50,6 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
         }
 
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        const clone = QuoteOfTheDayController.clone(quoteOfTheDay);
-        const updatedQuote = await QuoteOfTheDayController.addLike(clone);
-        setQuoteOfTheDay(updatedQuote);
     };
 
     const navigateToUserProfile = () => {
@@ -104,9 +94,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
                         <Text
                             style={{ color: colors.tab_selected, fontFamily: POPPINS_REGULAR, paddingTop: 15, fontSize: 10, textAlign: 'right' }}
                             onPress={navigateToUserProfile}
-                        >
-                            {addedBy?.name}
-                        </Text>
+                        ></Text>
                     </Text>
                 </View>
             </View>

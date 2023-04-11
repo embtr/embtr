@@ -14,10 +14,8 @@ import axiosInstance from 'src/axios/axios';
 import { LikeController } from 'src/controller/api/general/LikeController';
 import ImageController from 'src/controller/image/ImageController';
 import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
-import { Comment, TimelinePostModel } from 'src/controller/timeline/TimelineController';
-import StoryDao from 'src/firebase/firestore/story/StoryDao';
-import { CreateCommentRequest } from 'resources/types/requests/GeneralTypes';
 import { CommentController } from 'src/controller/api/general/CommentController';
+import { TimelinePostModel } from 'src/model/OldModels';
 
 export interface StoryModel extends TimelinePostModel {
     data: {
@@ -164,97 +162,6 @@ class StoryController {
 
     public static async deleteCommentViaApi(comment: CommentModel) {
         return await CommentController.delete(Interactable.USER_POST, comment);
-    }
-
-    /*
-     * OLD LOGIC
-     */
-    public static addStory(title: string, story: string, images: string[], callback: Function) {
-        const uid = getAuth().currentUser?.uid;
-        if (!uid) {
-            return;
-        }
-
-        const storyModel = createStory(uid, title, story, images);
-        StoryDao.addStory(storyModel, callback);
-    }
-
-    public static getStories(callback: Function) {
-        const result = StoryDao.getStories();
-
-        let stories: StoryModel[] = [];
-        result
-            .then((response) => {
-                response.docs.forEach((doc) => {
-                    let story: StoryModel = doc.data() as StoryModel;
-                    story.id = doc.id;
-                    stories.push(story);
-                });
-            })
-            .then(() => {
-                callback(stories);
-            });
-    }
-
-    public static getStory(id: string, callback: Function) {
-        const result = StoryDao.getStory(id);
-        result.then((doc) => {
-            if (!doc || !doc.exists()) {
-                callback(undefined);
-            } else {
-                let story: StoryModel = doc.data() as StoryModel;
-                story.id = doc.id;
-                if (!story.data.images) {
-                    story.data.images = [];
-                }
-                story.public.comments = story.public.comments.sort((a, b) => (a.timestamp! > b.timestamp! ? 1 : -1));
-                callback(story);
-            }
-        });
-    }
-
-    public static async delete(story: StoryModel) {
-        story.active = false;
-        await this.update(story);
-    }
-
-    public static async update(story: StoryModel) {
-        story.modified = Timestamp.now();
-        await StoryDao.update(story);
-    }
-
-    public static async likeStory(story: StoryModel, userUid: string) {
-        if (!story.id) {
-            return;
-        }
-
-        await StoryDao.likeStory(story.id, userUid);
-        NotificationController.addNotification(userUid, story.uid, NotificationType.TIMELINE_LIKE, story.id);
-    }
-
-    public static addComment(id: string, uid: string, commentText: string, callback: Function) {
-        StoryDao.addComment(id, uid, commentText).then(() => {
-            callback();
-        });
-    }
-
-    public static async deleteComment(story: StoryModel, commentToDelete: Comment) {
-        const comments: Comment[] = [];
-
-        story.public.comments.forEach((comment) => {
-            if (
-                comment.uid === commentToDelete.uid &&
-                comment.comment === comment.comment &&
-                comment.timestamp.toString() === commentToDelete.timestamp.toString()
-            ) {
-                return;
-            }
-
-            comments.push(comment);
-        });
-
-        story.public.comments = comments;
-        await this.update(story);
     }
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {

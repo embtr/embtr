@@ -1,11 +1,8 @@
 import { Timestamp } from 'firebase/firestore';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import PlannedDayDao from 'src/firebase/firestore/planning/PlannedDayDao';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
 import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
-import { UserModel } from '../user/UserController';
-import PlannedTaskController, { PlannedTaskModel } from './PlannedTaskController';
+import { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PLANNED_DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
@@ -236,70 +233,6 @@ class PlannedDayController {
         }
 
         return undefined;
-    }
-    /*
-     * OLD LOGIC
-     */
-    public static async getOrCreate(user: UserModel, dayKey: string) {
-        let plannedDay = await this.get(user, dayKey);
-        if (!plannedDay) {
-            plannedDay = await this.create(createPlannedDayModel(user.uid, dayKey));
-        }
-
-        return plannedDay;
-    }
-
-    public static async get(user: UserModel, dayKey: string) {
-        const plannedDay = await this.getByDayKey(user.uid, dayKey);
-
-        if (plannedDay) {
-            const plannedTasks = await PlannedTaskController.getAllInPlannedDay(plannedDay);
-            plannedDay.plannedTasks = plannedTasks;
-        }
-
-        return plannedDay;
-    }
-
-    public static async create(plannedDay: PlannedDay) {
-        plannedDay.metadata = createMetadata();
-        const result = await PlannedDayDao.create(plannedDay);
-
-        plannedDay.id = result.id;
-
-        const plannedTasks = await PlannedTaskController.getAllInPlannedDay(plannedDay);
-        plannedDay.plannedTasks = plannedTasks;
-
-        return plannedDay;
-    }
-
-    public static delete(id: string, callback: Function) {
-        PlannedDayDao.delete(id, callback);
-    }
-
-    public static async refreshDailyResult(user: UserModel, dayKey: string) {
-        const plannedDay = await this.get(user, dayKey);
-        if (!plannedDay) {
-            return;
-        }
-
-        const dailyResult = await DailyResultController.getOrCreate(plannedDay);
-        if (!dailyResult) {
-            return;
-        }
-
-        DailyResultController.refresh(user, dailyResult);
-    }
-
-    private static async getByDayKey(uid: string, dayKey: string) {
-        const result = await PlannedDayDao.getByDayKey(uid, dayKey);
-        if (result.empty) {
-            return undefined;
-        }
-
-        const plannedDay: PlannedDay = result.docs[0].data() as PlannedDay;
-        plannedDay.id = result.docs[0].id;
-
-        return plannedDay;
     }
 }
 

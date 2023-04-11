@@ -1,18 +1,14 @@
 import { Text, View } from 'react-native';
-import { PlannedDay } from 'src/controller/planning/PlannedDayController';
+import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { getDayOfWeekFromDayKey } from 'src/controller/planning/TaskController';
 import { Countdown } from '../common/time/Countdown';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 
-interface Props {
-    plannedDay: PlannedDay;
-}
-
-export const TodaysCountdownWidget = ({ plannedDay }: Props) => {
+export const TodaysCountdownWidget = () => {
     const { colors } = useTheme();
 
-    const day = getDayOfWeekFromDayKey(plannedDay.dayKey);
+    const day = getDayOfWeekFromDayKey(getTodayKey());
     const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
 
     return (

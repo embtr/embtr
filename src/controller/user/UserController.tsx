@@ -1,13 +1,14 @@
-import { DocumentData, DocumentSnapshot, Timestamp } from 'firebase/firestore';
-import UserDao from 'src/firebase/firestore/user/UserDao';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { WIDGETS } from 'src/util/constants';
+import { Timestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import axiosInstance from 'src/axios/axios';
 import { CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest } from 'resources/types/requests/AccountTypes';
 import { GetUserResponse, UpdateUserRequest } from 'resources/types/requests/UserTypes';
 import { Response } from 'resources/types/requests/RequestTypes';
 import { USER } from 'resources/endpoints';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { ImagePickerResult } from 'expo-image-picker';
+import { pickImage } from 'src/util/ImagePickerUtil';
+import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
 
 export interface UserModel {
     uid: string;
@@ -142,99 +143,36 @@ class UserController {
         await UserController.updateUserViaApi(updateUserRequest);
     }
 
-    /*
-     * ============= OLD SYSTEM LOGIC ==============
-     */
-
-    public static async get(uid: string) {
-        const user = await this.getFromNewSystem(uid);
-        if (user) {
-            return user;
-        }
-
-        return await this.getFromOldSystem(uid);
-    }
-
-    public static async getFromNewSystem(uid: string): Promise<UserModel | null> {
-        const userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
-        if (userResponse.success && userResponse.user) {
-            const user: UserModel = {
-                uid: userResponse.user.uid!,
-                email: userResponse.user.email!,
-                access_level: '',
-                post_notification_token: '',
-                today_widgets: WIDGETS,
-                timestamp: Timestamp.now(),
-            };
-
-            return user;
-        }
-
-        return null;
-    }
-
     private static async forceRefreshIdToken() {
         await getAuth().currentUser?.getIdToken(true);
-    }
-
-    /*
-     * ============= OLD SYSTEM LOGIC ==============
-     */
-
-    public static async update(user: UserModel) {
-        await UserDao.update(user);
-    }
-
-    public static async getFromOldSystem(uid: string): Promise<UserModel | null> {
-        const userData = await UserDao.get(uid);
-        const user: UserModel = this.getUserFromData(userData);
-
-        return user;
-    }
-
-    private static getUserFromData(data: DocumentSnapshot<DocumentData>): UserModel {
-        const user: UserModel = data.data() as UserModel;
-        user.uid = data.id;
-
-        if (!user.today_widgets) {
-            user.today_widgets = WIDGETS;
-        }
-
-        return user;
-    }
-
-    public static async getAll() {
-        const results = await UserDao.getAll();
-        const users: UserModel[] = [];
-        results.forEach((result) => {
-            let user: UserModel = this.getUserFromData(result);
-            users.push(user);
-        });
-
-        return users;
-    }
-
-    public static async getCurrentUser() {
-        return await this.get(getCurrentUid());
-    }
-
-    public static async updatePostNotificationToken(token: string | null) {
-        await UserDao.updateField('post_notification_token', token);
-    }
-
-    public static async getCurrentUserId() {
-        const currentUser = getAuth().currentUser;
-        const idToken = await currentUser?.getIdTokenResult();
-        if (idToken) {
-            return idToken.claims.userId;
-        }
-
-        return undefined;
     }
 
     public static async getNewCurrentUser() {
         const uid = getCurrentUid();
         return await this.getUserByUidViaApi(uid);
+    }
+    public static async uploadProfilePhoto(): Promise<string | undefined> {
+        const result: ImagePickerResult = await pickImage();
+
+        if (result && !result.canceled && result.assets.length > 0) {
+            const selectedImage = result.assets[0];
+            const uploadUrl = await uploadImage(selectedImage, 'profiles/');
+            return uploadUrl;
+        }
+
+        return undefined;
+    }
+
+    public static async uploadProfileBanner(): Promise<string | undefined> {
+        const result: ImagePickerResult = await pickImage();
+
+        if (result && !result.canceled && result.assets.length > 0) {
+            const selectedImage = result.assets[0];
+            const uploadUrl = await uploadImage(selectedImage, 'profiles/');
+            return uploadUrl;
+        }
+
+        return undefined;
     }
 }
 

@@ -1,21 +1,17 @@
 import * as React from 'react';
-import { ScrollView, TextInput, View, ViewStyle } from 'react-native';
+import { ScrollView, TextInput, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserSearchResults } from 'src/components/profile/search/UserSearchResults';
 import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
-import FollowerController from 'src/controller/follower/FollowerController';
 import { useFocusEffect } from '@react-navigation/native';
-import { UserSearchUtility } from 'src/util/user/UserSearchUtility';
-import { getAuth } from 'firebase/auth';
 import { CARD_SHADOW, USER_SEARCH_WIDTH } from 'src/util/constants';
 
 export const UserSearch = () => {
     const { colors } = useTheme();
 
-    const [userSearchUtility, setUserSearchUtility] = React.useState<UserSearchUtility | undefined>(undefined);
     const [searchText, setSearchText] = React.useState('');
 
     const [searchResults, setSearchResults] = React.useState<UserSearchResultObject | undefined>(undefined);
@@ -23,9 +19,6 @@ export const UserSearch = () => {
 
     const onSearchChange = (text: string) => {
         setSearchText(text);
-        if (userSearchUtility) {
-            userSearchUtility.updateSearch(text, setSearchResults);
-        }
     };
 
     const onFollowUser = (uid: string) => {
@@ -45,19 +38,9 @@ export const UserSearch = () => {
         }
     };
 
-    React.useEffect(() => {
-        setUserSearchUtility(new UserSearchUtility());
-    }, []);
+    React.useEffect(() => {}, []);
 
-    React.useEffect(() => {
-        onSearchChange('');
-    }, [userSearchUtility]);
-
-    useFocusEffect(
-        React.useCallback(() => {
-            FollowerController.getFollowing(getAuth().currentUser!.uid, setFollowingUids);
-        }, [])
-    );
+    useFocusEffect(React.useCallback(() => {}, []));
 
     return (
         <Screen>
