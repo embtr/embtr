@@ -1,5 +1,5 @@
 import { Animated, Text, TouchableOpacity, View } from 'react-native';
-import { Swipeable } from 'react-native-gesture-handler';
+import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 interface Props {
@@ -33,7 +33,11 @@ const SwipeableDeleteCard = ({ children, onDelete }: Props) => {
         );
     };
 
-    return <Swipeable renderRightActions={renderRightActions}>{children}</Swipeable>;
+    return (
+        <GestureHandlerRootView>
+            <Swipeable renderRightActions={renderRightActions}>{children}</Swipeable>
+        </GestureHandlerRootView>
+    );
 };
 
 export default SwipeableDeleteCard;
