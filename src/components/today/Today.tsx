@@ -1,27 +1,27 @@
 import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { wait } from 'src/util/GeneralUtility';
-import { Banner } from '../common/Banner';
-import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
-import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
-import { Screen } from '../common/Screen';
-import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
-import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
-import { StackNavigationProp } from '@react-navigation/stack';
+import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
+import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
+import { User } from 'resources/schema';
+import UserController from 'src/controller/user/UserController';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
+import { wait } from 'src/util/GeneralUtility';
 import { DAILY_HISTORY_WIDGET, QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
-import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
-import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
-import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
-import { WigglableView } from '../common/animated_view/WigglableView';
+import { Banner } from '../common/Banner';
+import { Screen } from '../common/Screen';
 import { DeletableView } from '../common/animated_view/DeletableView';
+import { WigglableView } from '../common/animated_view/WigglableView';
+import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
+import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
+import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
+import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
+import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
-import { RefreshControl } from 'react-native-gesture-handler';
-import { User } from 'resources/schema';
-import UserController from 'src/controller/user/UserController';
+import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -188,16 +188,18 @@ export const Today = () => {
                     menuOptions={!isConfiguringWidgets ? createEmbtrMenuOptions(menuOptions) : undefined}
                 />
 
-                <DraggableFlatList
-                    style={{ height: '100%', marginBottom: 100 }}
-                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                    data={addSpacerToWidgets(WIDGETS)}
-                    onDragEnd={({ data }) => {
-                        updateWidgetsWithoutSpacer(data);
-                    }}
-                    keyExtractor={(item) => item}
-                    renderItem={renderItem}
-                />
+                <GestureHandlerRootView>
+                    <DraggableFlatList
+                        style={{ height: '100%', marginBottom: 100 }}
+                        refreshControl={<RefreshControl enabled={!isConfiguringWidgets} refreshing={refreshing} onRefresh={onRefresh} />}
+                        data={addSpacerToWidgets(WIDGETS)}
+                        onDragEnd={({ data }) => {
+                            updateWidgetsWithoutSpacer(data);
+                        }}
+                        keyExtractor={(item) => item}
+                        renderItem={renderItem}
+                    />
+                </GestureHandlerRootView>
             </View>
         </Screen>
     );
