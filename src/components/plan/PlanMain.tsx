@@ -11,7 +11,7 @@ import { Planning } from './planning/Planning';
 import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
-import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, { getDayKey, getTodayKey } from 'src/controller/planning/PlannedDayController';
 
 /*
  * Avoid rerenders
@@ -21,10 +21,14 @@ import PlannedDayController from 'src/controller/planning/PlannedDayController';
 export const PlanMain = () => {
     const { colors } = useTheme();
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
-    const [useCalendarView, setUseCalendarView] = React.useState<boolean>(false);
-    const [selectedDayKey, setSelectedDayKey] = React.useState<string>('');
+    const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
+
+    const onDayChanged = (day: number) => {
+        const newDayKey = getDayKey(day);
+        setSelectedDayKey(newDayKey);
+    };
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
@@ -38,8 +42,9 @@ export const PlanMain = () => {
                         openSelectTaskModal={() => {
                             setShowAddTaskModal(true);
                         }}
-                        onDayChange={setSelectedDayKey}
-                        useCalendarView={useCalendarView}
+                        onDayChange={onDayChanged}
+                        selectedDayKey={selectedDayKey}
+                        useCalendarView={false}
                     />
                 );
         }

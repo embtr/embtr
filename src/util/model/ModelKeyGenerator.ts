@@ -1,11 +1,19 @@
-import { PlannedDayResult, UserPost } from 'resources/schema';
+import { PlannedDayResult, PlannedTask, UserPost } from 'resources/schema';
 
 export class ModelKeyGenerator {
     public static generatePlannedDayResultKey(plannedDayResult: PlannedDayResult): string {
+        let tasksKey = '';
+        if (plannedDayResult.plannedDay?.plannedTasks) {
+            for (const plannedTask of plannedDayResult.plannedDay.plannedTasks) {
+                tasksKey += ModelKeyGenerator.generatePlannedTaskKey(plannedTask);
+            }
+        }
+
         return `${plannedDayResult.id}
         ${plannedDayResult.description}
         ${plannedDayResult.likes?.length}
-        ${plannedDayResult.comments?.length}}`;
+        ${plannedDayResult.comments?.length}
+        ${tasksKey}`;
     }
 
     public static generateUserPostKey(userPost: UserPost): string {
@@ -14,5 +22,9 @@ export class ModelKeyGenerator {
         ${userPost.body}
         ${userPost.likes?.length}
         ${userPost.comments?.length}}`;
+    }
+
+    public static generatePlannedTaskKey(plannedTask: PlannedTask): string {
+        return `${plannedTask.id}${plannedTask.updatedAt?.toISOString()}`;
     }
 }

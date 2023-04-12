@@ -13,6 +13,7 @@ import { useAppDispatch } from 'src/redux/Hooks';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { TouchableWithoutFeedback } from 'react-native';
+import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -38,8 +39,9 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
     let plannedTaskViews: JSX.Element[] = [];
 
     updatedDayResult.plannedDay?.plannedTasks!.forEach((plannedTask) => {
+        const key = ModelKeyGenerator.generatePlannedTaskKey(plannedTask);
         plannedTaskViews.push(
-            <View style={{ paddingBottom: 5 }}>
+            <View key={key} style={{ paddingBottom: 5 }}>
                 <DailyResultCardElement plannedTask={plannedTask} />
             </View>
         );

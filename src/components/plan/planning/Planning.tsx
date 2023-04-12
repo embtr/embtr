@@ -16,23 +16,17 @@ interface Props {
     dismissSelectTaskModal: Function;
     onDayChange: Function;
     useCalendarView: boolean;
+    selectedDayKey: string;
 }
 
-export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSelectTaskModal, onDayChange, useCalendarView }: Props) => {
+export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSelectTaskModal, onDayChange, selectedDayKey }: Props) => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDayModel>();
-    const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
     useFocusEffect(
         React.useCallback(() => {
             refreshPlannedToday();
         }, [selectedDayKey])
     );
-
-    const onDayChanged = (day: number) => {
-        const newDayKey = getDayKey(day);
-        setSelectedDayKey(newDayKey);
-        onDayChange(newDayKey);
-    };
 
     const refreshPlannedToday = async () => {
         const result = await PlannedDayController.getOrCreateViaApi(selectedDayKey);
@@ -56,7 +50,7 @@ export const Planning = ({ showSelectTaskModal, openSelectTaskModal, dismissSele
 
             <View style={{ flex: 1 }}>
                 <View style={{ paddingTop: 20, paddingBottom: 25 }}>
-                    <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
+                    <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChange} />
                 </View>
                 {plannedDay && <PlanDay plannedDay={plannedDay} onTaskUpdated={refreshPlannedToday} onOpenHabitsModal={openSelectTaskModal} />}
             </View>
