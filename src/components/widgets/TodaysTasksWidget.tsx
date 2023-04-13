@@ -18,7 +18,6 @@ interface Props {
 }
 
 export const TodaysTasksWidget = ({ user }: Props) => {
-    console.log(user);
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
@@ -33,8 +32,6 @@ export const TodaysTasksWidget = ({ user }: Props) => {
 
         const todayKey = getTodayKey();
         const plannedDay = await PlannedDayController.getViaApi(user.id, todayKey);
-        console.log(user);
-        console.log(plannedDay);
         setPlannedDay(plannedDay);
     };
 

@@ -31,19 +31,6 @@ const ACCOUNT_ENDPOINT = 'account';
 const USER_ENDPOINT = 'user';
 
 class UserController {
-    public static clone(user: UserModel) {
-        const clone: UserModel = {
-            uid: user.uid,
-            access_level: user.access_level,
-            email: user.email,
-            post_notification_token: user.post_notification_token,
-            today_widgets: user.today_widgets,
-            timestamp: user.timestamp,
-        };
-
-        return clone;
-    }
-
     public static async createAccount(email: string, password: string): Promise<Response> {
         const body: CreateAccountRequest = {
             email,
@@ -147,7 +134,7 @@ class UserController {
         await getAuth().currentUser?.getIdToken(true);
     }
 
-    public static async getNewCurrentUser() {
+    public static async getCurrentUser() {
         const uid = getCurrentUid();
         return await this.getUserByUidViaApi(uid);
     }

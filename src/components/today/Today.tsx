@@ -1,16 +1,15 @@
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
-import { User } from 'resources/schema';
+import { User, Widget, WidgetType } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { wait } from 'src/util/GeneralUtility';
-import { DAILY_HISTORY_WIDGET, QUOTE_OF_THE_DAY_WIDGET, TIME_LEFT_IN_DAY_WIDGET, TODAYS_NOTES_WIDGET, TODAYS_TASKS_WIDGET, WIDGETS } from 'src/util/constants';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
 import { DeletableView } from '../common/animated_view/DeletableView';
@@ -22,27 +21,45 @@ import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
+import { WidgetController } from 'src/controller/widget/WidgetController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [refreshing, setRefreshing] = React.useState(false);
-    const [widgets, setWidgets] = React.useState<string[]>([]);
+    const [widgets, setWidgets] = React.useState<Widget[]>([]);
     const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
-    const [newCurrentUser, setNewCurrentUser] = React.useState<User>();
+    const [user, setUser] = React.useState<User>();
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
+
+    const fetch = async () => {
+        let widgets = await WidgetController.get();
+        //sort by order
+        widgets.sort((a, b) => {
+            return (a.order ?? 0) - (b.order ?? 0);
+        });
+        if (widgets.length === 0) {
+            widgets = WidgetController.getDefaults();
+        }
+
+        setWidgets(widgets);
+    };
+
+    React.useEffect(() => {
+        fetch();
+    }, []);
 
     React.useEffect(() => {
         setRefreshedTimestamp(new Date());
     }, []);
 
     const fetchNewCurrentUser = async () => {
-        const newCurrentUser = await UserController.getNewCurrentUser();
+        const newCurrentUser = await UserController.getCurrentUser();
         if (!newCurrentUser.user) {
             return;
         }
 
-        setNewCurrentUser(newCurrentUser.user);
+        setUser(newCurrentUser.user);
     };
 
     React.useEffect(() => {
@@ -59,23 +76,14 @@ export const Today = () => {
         });
     }, []);
 
-    const addSpacerToWidgets = (widgets: string[]) => {
+    const removeWidget = (widget: Widget) => {
         let clone = [...widgets];
-        clone.push('SPACER');
-
-        return clone;
-    };
-
-    const updateWidgetsWithoutSpacer = (newWidgets: string[]) => {
-        let cleansedWidgets: string[] = [];
-
-        for (const widget of newWidgets) {
-            if ('SPACER' !== widget) {
-                cleansedWidgets.push(widget);
-            }
+        const index = clone.indexOf(widget);
+        if (index > -1) {
+            clone.splice(index, 1);
         }
 
-        setWidgets(cleansedWidgets);
+        setWidgets(clone);
     };
 
     const closeMenu = useAppSelector(getCloseMenu);
@@ -100,7 +108,7 @@ export const Today = () => {
         },
     ];
 
-    if (!newCurrentUser) {
+    if (!user) {
         return (
             <Screen>
                 <View />
@@ -108,62 +116,50 @@ export const Today = () => {
         );
     }
 
-    const updateWidgetOrdering = () => {
-        if (!newCurrentUser) {
+    const updateWidgetOrdering = async () => {
+        if (!user) {
             return;
         }
+
+        await WidgetController.update(widgets);
+        await fetch();
     };
 
-    const renderItem = ({ item, drag }: RenderItemParams<string>) => {
+    const getWidgetFromType = (type: WidgetType) => {
+        switch (type) {
+            case WidgetType.TIME_LEFT_IN_DAY:
+                return <TodaysCountdownWidget />;
+
+            case WidgetType.TODAYS_TASKS:
+                return <TodaysTasksWidget user={user} />;
+
+            case WidgetType.TODAYS_NOTES:
+                return <TodaysNotesWidget />;
+
+            case WidgetType.QUOTE_OF_THE_DAY:
+                return <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />;
+
+            case WidgetType.DAILY_HISTORY:
+                return <DailyHistoryWidget userId={user.id!} />;
+        }
+
+        return <View />;
+    };
+
+    const renderItem = ({ item, drag }: RenderItemParams<Widget>) => {
         return (
             <ScaleDecorator>
-                <TouchableOpacity onLongPress={drag} disabled={!isConfiguringWidgets || item == 'SPACER'}>
-                    {/* Today Countdown */}
-                    {item === TIME_LEFT_IN_DAY_WIDGET && (
-                        <WigglableView key={TIME_LEFT_IN_DAY_WIDGET} wiggle={isConfiguringWidgets}>
-                            <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
-                                <TodaysCountdownWidget />
-                            </DeletableView>
-                        </WigglableView>
-                    )}
-
-                    {/* QUOTE OF THE DAY WIDGET */}
-                    {item === QUOTE_OF_THE_DAY_WIDGET && refreshedTimestamp && (
-                        <WigglableView key={QUOTE_OF_THE_DAY_WIDGET} wiggle={isConfiguringWidgets}>
-                            <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
-                                <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp} />
-                            </DeletableView>
-                        </WigglableView>
-                    )}
-
-                    {/* TODAY'S TASKS WIDGET */}
-                    {item === TODAYS_TASKS_WIDGET && newCurrentUser && (
-                        <WigglableView key={TODAYS_TASKS_WIDGET} wiggle={isConfiguringWidgets}>
-                            <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
-                                <TodaysTasksWidget user={newCurrentUser} />
-                            </DeletableView>
-                        </WigglableView>
-                    )}
-
-                    {/* TODAY'S NOTES WIDGET */}
-                    {item === TODAYS_NOTES_WIDGET && (
-                        <WigglableView key={TODAYS_NOTES_WIDGET} wiggle={isConfiguringWidgets}>
-                            <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
-                                <TodaysNotesWidget />
-                            </DeletableView>
-                        </WigglableView>
-                    )}
-
-                    {/* DAILY HISTORY WIDGET */}
-                    {item === DAILY_HISTORY_WIDGET && refreshedTimestamp && newCurrentUser?.id && (
-                        <WigglableView key={DAILY_HISTORY_WIDGET} wiggle={isConfiguringWidgets}>
-                            <DeletableView visible={isConfiguringWidgets} onPress={() => {}}>
-                                <DailyHistoryWidget userId={newCurrentUser.id} />
-                            </DeletableView>
-                        </WigglableView>
-                    )}
-
-                    {item === 'SPACER' && <View key={'SPACER'} style={{ height: 45, width: '100%' }} />}
+                <TouchableOpacity onLongPress={drag} disabled={!isConfiguringWidgets}>
+                    <WigglableView key={item.type} wiggle={isConfiguringWidgets}>
+                        <DeletableView
+                            visible={isConfiguringWidgets}
+                            onPress={() => {
+                                removeWidget(item);
+                            }}
+                        >
+                            {getWidgetFromType(item.type!)}
+                        </DeletableView>
+                    </WigglableView>
                 </TouchableOpacity>
             </ScaleDecorator>
         );
@@ -192,11 +188,11 @@ export const Today = () => {
                     <DraggableFlatList
                         style={{ height: '100%', marginBottom: 100 }}
                         refreshControl={<RefreshControl enabled={!isConfiguringWidgets} refreshing={refreshing} onRefresh={onRefresh} />}
-                        data={addSpacerToWidgets(WIDGETS)}
+                        data={widgets}
                         onDragEnd={({ data }) => {
-                            updateWidgetsWithoutSpacer(data);
+                            setWidgets(data);
                         }}
-                        keyExtractor={(item) => item}
+                        keyExtractor={(item) => item.type!}
                         renderItem={renderItem}
                     />
                 </GestureHandlerRootView>

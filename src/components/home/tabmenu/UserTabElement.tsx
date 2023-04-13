@@ -17,7 +17,7 @@ export const UserTabElement = ({ size }: Props) => {
     const [currentUser, setCurrentUser] = React.useState<User>();
 
     const fetch = async () => {
-        const currentUser = await UserController.getNewCurrentUser();
+        const currentUser = await UserController.getCurrentUser();
         if (currentUser.user) setCurrentUser(currentUser.user);
     };
 

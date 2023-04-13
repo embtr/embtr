@@ -2,22 +2,25 @@ import { TextInput, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import React from 'react';
-import UserController, { UserModel } from 'src/controller/user/UserController';
+import UserController from 'src/controller/user/UserController';
 import { Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW, WIDGETS } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getWidgets } from './WidgetMarketplaceProvider';
+import { User } from 'resources/schema';
 
 export const WidgetMarketplace = () => {
-    const [user, setUser] = React.useState<UserModel>();
+    const [user, setUser] = React.useState<User>();
     const { colors } = useTheme();
     const [searchText, setSearchText] = React.useState<string>('');
 
     React.useEffect(() => {
         const fetch = async () => {
             const user = await UserController.getCurrentUser();
-            setUser(user);
+            if (user.user) {
+                setUser(user.user);
+            }
         };
 
         fetch();
@@ -31,27 +34,9 @@ export const WidgetMarketplace = () => {
         if (!user) {
             return;
         }
-
-        let enabledWidgets: string[] = [];
-        WIDGETS.forEach((widget) => {
-            if (widget === name) {
-                if (enabled) {
-                    enabledWidgets.push(name);
-                }
-            } else if (user.today_widgets?.includes(widget)) {
-                enabledWidgets.push(widget);
-            }
-        });
-
-        let clonedUser = UserController.clone(user);
-        clonedUser.today_widgets = enabledWidgets;
-        UserController.update(clonedUser);
-        setUser(clonedUser);
     };
 
-    const isEnabled = (name: string) => {
-        return user?.today_widgets?.includes(name) === true;
-    };
+    const isEnabled = (name: string) => {};
 
     let widgetViews: JSX.Element[] = getWidgets(searchText, isEnabled, onToggle);
 

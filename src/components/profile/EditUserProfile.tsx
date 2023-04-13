@@ -67,7 +67,7 @@ export const EditUserProfile = () => {
     );
 
     const fetch = async () => {
-        const currentUser = await UserController.getNewCurrentUser();
+        const currentUser = await UserController.getCurrentUser();
         if (!currentUser.user) {
             return;
         }

@@ -5,10 +5,9 @@ import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { Alert, View } from 'react-native';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultBody } from './DailyResultBody';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
-import { Comment, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { Comment, PlannedDayResult as PlannedDayResultModel, User } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
 
 export const DailyResultDetails = () => {
@@ -29,7 +28,7 @@ export const DailyResultDetails = () => {
         }, [])
     );
 
-    const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
+    const submitComment = async (text: string, taggedUsers: User[]) => {
         if (plannedDayResult?.id) {
             await DailyResultController.addCommentViaApi(plannedDayResult.id, text);
             fetchData();
