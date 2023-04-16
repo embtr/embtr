@@ -1,44 +1,103 @@
+import React from 'react';
 import { TextInput, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import React from 'react';
 import UserController from 'src/controller/user/UserController';
 import { Ionicons } from '@expo/vector-icons';
-import { CARD_SHADOW, WIDGETS } from 'src/util/constants';
+import { CARD_SHADOW } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getWidgets } from './WidgetMarketplaceProvider';
-import { User } from 'resources/schema';
+import { User, Widget, WidgetType } from 'resources/schema';
+import { WidgetMarketplaceToggle } from './WidgetMarketplaceToggle';
+import { WidgetController } from 'src/controller/widget/WidgetController';
 
 export const WidgetMarketplace = () => {
-    const [user, setUser] = React.useState<User>();
     const { colors } = useTheme();
+
+    const [user, setUser] = React.useState<User>();
+    const [userWidgets, setUserWidgets] = React.useState<Widget[]>([]);
     const [searchText, setSearchText] = React.useState<string>('');
 
-    React.useEffect(() => {
-        const fetch = async () => {
-            const user = await UserController.getCurrentUser();
-            if (user.user) {
-                setUser(user.user);
-            }
-        };
-
-        fetch();
-    }, []);
-
-    const onSearchChange = (text: string) => {
-        setSearchText(text);
-    };
-
-    const onToggle = (name: string, enabled: boolean) => {
-        if (!user) {
-            return;
+    const fetchUser = async () => {
+        const user = await UserController.getCurrentUser();
+        if (user.user) {
+            setUser(user.user);
         }
     };
 
-    const isEnabled = (name: string) => {};
+    const fetchUserWidgets = async () => {
+        const userWidgets = await WidgetController.get();
+        setUserWidgets(userWidgets);
+    };
 
-    let widgetViews: JSX.Element[] = getWidgets(searchText, isEnabled, onToggle);
+    React.useEffect(() => {
+        fetchUser();
+        fetchUserWidgets();
+    }, []);
+
+    const onAddWidget = async (type: string) => {
+        const widgetType: WidgetType = WidgetType[type as keyof typeof WidgetType];
+        const widget: Widget = {
+            type: widgetType,
+            order: userWidgets.length,
+        };
+
+        const clone = [...userWidgets];
+        clone.push(widget);
+        await WidgetController.update(clone);
+
+        fetchUserWidgets();
+    };
+
+    const getWidgetView = (widgetType: string, name: string, description: string, isEnabled: boolean, onToggle: Function) => {
+        return (
+            <View key={name} style={{ paddingTop: 5, width: '100%' }}>
+                <WidgetMarketplaceToggle
+                    name={name}
+                    description={description}
+                    isEnabled={isEnabled}
+                    onToggle={() => {
+                        onToggle(widgetType);
+                    }}
+                />
+            </View>
+        );
+    };
+
+    const getCleanWidgetName = (type: string) => {
+        const typeName = type.toString();
+        const widgetName = typeName
+            .toLowerCase()
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+
+        return widgetName;
+    };
+
+    const widgetMatchesFilter = (widgetName: string) => {
+        return searchText === '' || widgetName.toLowerCase().includes(searchText.toLowerCase());
+    };
+
+    const getWidgetsToDisplay = () => {
+        let widgetViews: JSX.Element[] = [];
+        for (const type in WidgetType) {
+            const widgetName = getCleanWidgetName(type);
+            if (!widgetMatchesFilter(widgetName)) {
+                continue;
+            }
+
+            const widget = userWidgets.find((w) => w.type === type);
+            if (widget) {
+                widgetViews.push(getWidgetView(type, widgetName, 'this is a desc', true, onAddWidget));
+            } else {
+                widgetViews.push(getWidgetView(type, widgetName, 'this is a desc', false, onAddWidget));
+            }
+        }
+
+        return widgetViews;
+    };
+
+    const widgetViews = getWidgetsToDisplay();
 
     return (
         <Screen>
@@ -83,7 +142,7 @@ export const WidgetMarketplace = () => {
                                 fontFamily: 'Poppins_400Regular',
                                 paddingLeft: 15,
                             }}
-                            onChangeText={onSearchChange}
+                            onChangeText={setSearchText}
                             value={searchText}
                             placeholderTextColor={colors.search_preview}
                             placeholder={'Search'}

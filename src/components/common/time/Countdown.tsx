@@ -1,49 +1,37 @@
 import React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
 import { Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const Countdown = () => {
     const { colors } = useTheme();
-
     const [date, setDate] = React.useState(new Date());
-    const [hours, setHours] = React.useState(24 - new Date().getHours());
-    const [minutes, setMinutes] = React.useState(60 - new Date().getMinutes());
-    const [seconds, setSeconds] = React.useState(60 - new Date().getSeconds());
 
-    useFocusEffect(
-        React.useCallback(() => {
-            setTimeout(() => {
-                setDate(new Date());
-            }, 900);
-        }, [date, seconds, minutes, hours])
-    );
+    React.useEffect(() => {
+        const timerId = setInterval(() => {
+            setDate(new Date());
+        }, 1000);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            setTimeout(() => {
-                setSeconds(60 - date.getSeconds() - 1);
-                setMinutes(60 - date.getMinutes());
-                setHours(24 - date.getHours());
-            }, 900);
-        }, [date])
-    );
+        return () => {
+            clearInterval(timerId);
+        };
+    }, []);
 
-    let secondsString = '' + seconds;
-    if (secondsString.length === 1) {
-        secondsString = '0' + secondsString;
-    }
+    const timeLeft = React.useCallback(() => {
+        const hours = 23 - date.getHours();
+        const minutes = 59 - date.getMinutes();
+        const seconds = 59 - date.getSeconds();
+        return { hours, minutes, seconds };
+    }, [date]);
 
-    let minutesString = '' + minutes;
-    if (minutesString.length == 1) {
-        minutesString = '0' + minutes;
-    }
+    const padZero = (value: number) => {
+        return value.toString().padStart(2, '0');
+    };
 
-    let hoursString = '' + hours;
+    const { hours, minutes, seconds } = React.useMemo(() => timeLeft(), [timeLeft]);
 
     return (
         <Text style={{ color: colors.text, fontSize: 12, paddingTop: 2 }}>
-            {hoursString}h {minutesString}m {secondsString}s
+            {padZero(hours)}h {padZero(minutes)}m {padZero(seconds)}s
         </Text>
     );
 };

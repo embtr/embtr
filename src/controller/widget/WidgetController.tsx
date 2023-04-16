@@ -1,7 +1,6 @@
 import { Widget, WidgetType } from 'resources/schema';
 import { UpdateWidgetsRequest } from 'resources/types/requests/WidgetTypes';
 import axiosInstance from 'src/axios/axios';
-import { WIDGET_LIKE_ICON_SIZE } from 'src/util/constants';
 
 export class WidgetController {
     public static async get(): Promise<Widget[]> {

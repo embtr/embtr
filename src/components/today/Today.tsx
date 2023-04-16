@@ -1,11 +1,12 @@
-import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { User, Widget, WidgetType } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
+import { WidgetController } from 'src/controller/widget/WidgetController';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -21,7 +22,6 @@ import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
-import { WidgetController } from 'src/controller/widget/WidgetController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -34,10 +34,10 @@ export const Today = () => {
 
     const fetch = async () => {
         let widgets = await WidgetController.get();
-        //sort by order
         widgets.sort((a, b) => {
             return (a.order ?? 0) - (b.order ?? 0);
         });
+
         if (widgets.length === 0) {
             widgets = WidgetController.getDefaults();
         }
@@ -45,9 +45,11 @@ export const Today = () => {
         setWidgets(widgets);
     };
 
-    React.useEffect(() => {
-        fetch();
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            fetch();
+        }, [])
+    );
 
     React.useEffect(() => {
         setRefreshedTimestamp(new Date());
@@ -77,11 +79,9 @@ export const Today = () => {
     }, []);
 
     const removeWidget = (widget: Widget) => {
-        let clone = [...widgets];
+        const clone = [...widgets];
         const index = clone.indexOf(widget);
-        if (index > -1) {
-            clone.splice(index, 1);
-        }
+        clone[index].active = false;
 
         setWidgets(clone);
     };
@@ -117,12 +117,22 @@ export const Today = () => {
     }
 
     const updateWidgetOrdering = async () => {
-        if (!user) {
-            return;
+        const orderedWidgets = reorderWidgets(widgets);
+        await WidgetController.update(orderedWidgets);
+        await fetch();
+    };
+
+    const reorderWidgets = (data: Widget[]) => {
+        for (let i = 0; i < data.length; i++) {
+            data[i].order = i;
         }
 
-        await WidgetController.update(widgets);
-        await fetch();
+        //sort data by order
+        data.sort((a, b) => {
+            return (a.order ?? 0) - (b.order ?? 0);
+        });
+
+        return data;
     };
 
     const getWidgetFromType = (type: WidgetType) => {
@@ -147,6 +157,10 @@ export const Today = () => {
     };
 
     const renderItem = ({ item, drag }: RenderItemParams<Widget>) => {
+        if (item.active === false) {
+            return <View />;
+        }
+
         return (
             <ScaleDecorator>
                 <TouchableOpacity onLongPress={drag} disabled={!isConfiguringWidgets}>
