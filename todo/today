@@ -1,0 +1,116 @@
+Tue Apr 18
+
+We are building a habit building app! embtr.com
+
+###################################################
+
+KEY:
+! <- Current Task
+x <- Finished Task
+
+TODAY:
+[ ] write test to prove upsert on create planned day result
+[ ] reload profile images on all pages after uploading new (invalidate cached photo?)
+[ ] push notification on like says "commented on your post"
+[ ] deleting completed task doesn't get reflected on user history widget
+[ ] hardcode default user image to database
+
+
+BACKLOG:
+[ ] fix landing page screenshots - low battery mode it pathetic
+[ ] tagging users
+[ ] QOTD Widget
+[ ] add the wheel wills quote
+[ ] clean or remove follow user
+[ ] User Profile Today
+[ ] Upgrade Expo
+[ ] Clean up push notification token storage process
+[ ] implement like comment
+[ ] migrate to hermes js engine
+[ ] debugger in frontend
+[ ] show that a day is "complete" on Planning Page
+[ ] stop adding notifications from the same user
+[ ] change google login to have google approved button graphics
+[ ] account settings page - email, password, deactive, delete (</3)
+[ ] save user settings (i.e. dark mode)
+[ ] kick habits 
+[ ] Habit Health 
+
+TODO TO RELEASE TO PUBLIC
+[ ] privacy policy - https://app-privacy-policy-generator.firebaseapp.com/
+[ ] license agreement
+[ ] terms of service
+
+BUGS:
+
+
+TODO: 
+- better understand event loop
+
+
+
+Core Features (why would a user come back tomorrow?)
+[ ] Achievements  - ex. completed every task this week, completed 1000 tasks
+[ ] Level System  - ex. over time you level up
+[ ] Challenges    - challenge yourself, a close group or the entire community to xyz (i.e. workout everyday for a month)
+[ ] Habit System  - earn. maintain habit status of a given task by completing the task by some defined interval (ie 21 days in a row)
+
+
+
+
+COMMANDS:
+!discord
+!embtr
+!project
+
+facilitates service discovery on a local network via the mDNS/DNS-SD protocol suite. This enables you to plug your laptop or ...
+REMINDERS:
+https://itch.io/jam/learn-you-a-game-jam
+echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+
+
+
+
+endpoints:
+accounts - CRUD
+user - CRUD
+tasks - CRUD
+planned_day - CRUD
+planned_day_result - CRUD
+user-post - CRUD
+notification - CRUD
+
+notification:
+  current:
+    (GET)  /notification/
+    (POST) /notification/clear
+
+  proposed:
+    (GET)  /user/:userId/notifications
+    (POST) /user/:userId/notifications/clear
+
+user-post
+  current:
+    (POST) /user-post/
+    (GET)  /user-post/
+    (GET)  /user-post/:id
+    (PTCH) /user-post/
+    (POST) /user-post/:id/like
+    (POST) /user-post/:id/comment
+    (DLTE) /user-post/comment/:id
+    (GET)  /user-post/:userId/all
+    (GET)  /user-post/all/:userId
+
+  proposed:
+    (GET)  /user/:userId/posts
+
+planned-day-result
+  current:
+    /planned-day-result/:userId/:dayKey
+
+  proposed:
+    /user/:userId/planned-day-result/:dayKey
+
+
+

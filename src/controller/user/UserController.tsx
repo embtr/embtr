@@ -115,19 +115,11 @@ class UserController {
     public static async createUserIfNew(uid: string) {
         const userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
         if (userResponse.success) {
-            return;
+            return true;
         }
 
-        await this.createUser();
-        const updateUserRequest: UpdateUserRequest = {
-            username: 'new user',
-            displayName: 'new user',
-            bio: 'welcome to embtr!',
-            location: 'earth',
-            photoUrl:
-                'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
-        };
-        await UserController.updateUserViaApi(updateUserRequest);
+        const result = await this.createUser();
+        return result.success;
     }
 
     private static async forceRefreshIdToken() {
