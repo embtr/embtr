@@ -101,7 +101,7 @@ const linking: LinkingOptions<RootStackParamList> = {
 
 export const Main = () => {
     const [user, setUser] = React.useState<User | undefined>(undefined);
-    const [loaded, setLoaded] = React.useState<boolean>(false);
+    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean>(false);
 
     getFirebaseConnection('', '');
 
@@ -109,9 +109,13 @@ export const Main = () => {
     registerAuthStateListener(setUser);
 
     const createUserIfNew = async (user: User) => {
-        if (user.uid && user.email) {
-            await UserController.createUserIfNew(user.uid);
+        if (!user.uid || !user.email) {
+            return false;
         }
+
+        const successfulLogin = await UserController.createUserIfNew(user.uid);
+        console.log('successful login: ' + successfulLogin);
+        return successfulLogin;
     };
 
     React.useEffect(() => {
@@ -120,21 +124,17 @@ export const Main = () => {
                 return;
             }
 
-            await createUserIfNew(user);
-            PushNotificationController.registerUpdatePostNotificationTokenListener();
+            const result = await createUserIfNew(user);
+            //PushNotificationController.registerUpdatePostNotificationTokenListener();
 
-            setLoaded(true);
+            setUserIsLoggedIn(result);
         };
 
         blockingLoad();
     }, [user]);
 
-    const isLoggedIn = () => {
-        return user;
-    };
-
     const isEmailVerified = () => {
-        return isLoggedIn() && user?.emailVerified;
+        return user?.emailVerified;
     };
 
     let [fontsLoaded] = useFonts({
@@ -152,11 +152,14 @@ export const Main = () => {
         );
     }
 
+    console.log('Main.tsx: userIsLoggedIn: ' + userIsLoggedIn + ', isEmailVerified: ' + isEmailVerified());
+
     return (
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
-                    {isEmailVerified() ? loaded ? <SecureMainStack /> : <LoadingPage /> : <InsecureMainStack />}
+                    {isEmailVerified() && userIsLoggedIn && <SecureMainStack />}
+                    {(!isEmailVerified() || !userIsLoggedIn) && <InsecureMainStack />}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>
