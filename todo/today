@@ -1,4 +1,4 @@
-Tue Apr 18
+Wed Apr 19
 
 We are building a habit building app! embtr.com
 
@@ -14,6 +14,7 @@ TODAY:
 [ ] push notification on like says "commented on your post"
 [ ] deleting completed task doesn't get reflected on user history widget
 [ ] hardcode default user image to database
+[ ] add dog treat twitch reward
 
 
 BACKLOG:

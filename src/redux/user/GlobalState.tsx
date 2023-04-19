@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { TABS } from 'src/components/home/Dashboard';
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: 'invalid',
@@ -11,6 +10,8 @@ const INITIAL_STATE: GlobalState = {
     closeMenu: () => {},
     selectedDayKey: 'invalid',
     currentTab: '',
+    userProfileImage:
+        'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
 };
 
 export interface GlobalState {
@@ -21,6 +22,7 @@ export interface GlobalState {
     closeMenu: Function;
     selectedDayKey: string;
     currentTab: string;
+    userProfileImage: string;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -49,6 +51,9 @@ export const GlobalState = createSlice({
         },
         setCurrentTab(state, action) {
             state.currentTab = action.payload;
+        },
+        setUserProfileImage(state, action) {
+            state.userProfileImage = action.payload;
         },
     },
 });
@@ -109,5 +114,14 @@ export const getCurrentTab = (state: RootState) => {
     return state.globalState.currentTab;
 };
 
-export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey, setCurrentTab } = GlobalState.actions;
+export const getUserProfileImage = (state: RootState) => {
+    if (!state?.globalState.userProfileImage) {
+        return INITIAL_STATE.userProfileImage;
+    }
+
+    return state.globalState.userProfileImage;
+};
+
+export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey, setCurrentTab, setUserProfileImage } =
+    GlobalState.actions;
 export default GlobalState.reducer;

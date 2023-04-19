@@ -1,12 +1,7 @@
-import React from 'react';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Text, View, Image } from 'react-native';
-import { getAuth } from 'firebase/auth';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
-import { useFocusEffect } from '@react-navigation/native';
-import ProfileController from 'src/controller/profile/ProfileController';
-import { User } from 'resources/schema';
-import UserController from 'src/controller/user/UserController';
+import { View, Image } from 'react-native';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getUserProfileImage } from 'src/redux/user/GlobalState';
 
 interface Props {
     size: number;
@@ -14,18 +9,8 @@ interface Props {
 
 export const UserTabElement = ({ size }: Props) => {
     const { colors } = useTheme();
-    const [currentUser, setCurrentUser] = React.useState<User>();
 
-    const fetch = async () => {
-        const currentUser = await UserController.getCurrentUser();
-        if (currentUser.user) setCurrentUser(currentUser.user);
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            fetch();
-        }, [])
-    );
+    const userProfileImage = useAppSelector(getUserProfileImage);
 
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
@@ -39,7 +24,7 @@ export const UserTabElement = ({ size }: Props) => {
                     justifyContent: 'center',
                 }}
             >
-                {currentUser && <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: currentUser.photoUrl }} />}
+                <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileImage }} />
             </View>
         </View>
     );

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { NativeScrollEvent, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
@@ -166,7 +166,7 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
             {timelineViews.length > 0 && <View style={{ flex: 1 }}>{timelineViews}</View>}
             {timelineViews.length == 0 && (
                 <View style={{ flex: 1, paddingTop: 50, alignItems: 'center' }}>
-                    <Text>looks like there's nothing to show.</Text>
+                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>looks like there's nothing to show.</Text>
                 </View>
             )}
         </ScrollView>

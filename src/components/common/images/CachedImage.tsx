@@ -21,7 +21,7 @@ export const CachedImage = ({ uri, style }: Props) => {
     useFocusEffect(
         React.useCallback(() => {
             getCachedImage(uri);
-        }, [])
+        }, [uri])
     );
 
     if (!localUrl) {
