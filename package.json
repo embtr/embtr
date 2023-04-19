@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.2",
+    "@expo-google-fonts/roboto": "^0.2.3",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-community/datetimepicker": "6.5.2",
     "@react-native-community/masked-view": "^0.1.11",
@@ -29,6 +30,8 @@
     "crypto-js": "^4.1.1",
     "date-fns": "^2.28.0",
     "expo": "^47.0.9",
+    "expo-auth-session": "~3.8.0",
+    "expo-blur": "~12.0.1",
     "expo-device": "~5.0.0",
     "expo-font": "~11.0.1",
     "expo-haptics": "~12.0.1",
@@ -69,9 +72,7 @@
     "react-navigation": "^4.4.4",
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.0.2",
-    "redux-persist": "^6.0.0",
-    "expo-blur": "~12.0.1",
-    "expo-auth-session": "~3.8.0"
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

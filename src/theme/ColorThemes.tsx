@@ -78,6 +78,9 @@ export const lightColors = {
     link: '#5ba2dc',
 
     trophy_icon: '#FFC100',
+
+    google_login_background: '#FFFFFF',
+    google_login_text: '#757575',
 };
 
 // Dark theme colors
@@ -160,4 +163,7 @@ export const darkColors = {
     link: '#5ba2dc',
 
     trophy_icon: '#FFC100',
+
+    google_login_background: '#4285F4',
+    google_login_text: '#FFFFFF',
 };

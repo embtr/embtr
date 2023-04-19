@@ -19,7 +19,7 @@ export const EmbtrButton = ({ image, icon, buttonText, height, callback, color }
         backgroundColor: color ?? colors.push_button_background,
         height: height ? height : 45,
         width: '100%',
-        borderRadius: 10,
+        borderRadius: 4,
         alignItems: 'center',
         justifyContent: 'center',
     } as ViewStyle;

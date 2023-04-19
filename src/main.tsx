@@ -8,6 +8,7 @@ import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
+import { Roboto_500Medium } from '@expo-google-fonts/roboto';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
@@ -149,6 +150,7 @@ export const Main = () => {
         Poppins_400Regular,
         Poppins_500Medium,
         Poppins_600SemiBold,
+        Roboto_500Medium,
     });
 
     if (!fontsLoaded) {
