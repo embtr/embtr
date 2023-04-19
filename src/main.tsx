@@ -8,11 +8,13 @@ import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
-import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
+import { setUserProfileImage } from 'src/redux/user/GlobalState';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { User as UserModel } from 'resources/schema';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -103,19 +105,23 @@ export const Main = () => {
     const [user, setUser] = React.useState<User | undefined>(undefined);
     const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean>(false);
 
+    const dispatch = useAppDispatch();
     getFirebaseConnection('', '');
 
     LogBox.ignoreAllLogs();
     registerAuthStateListener(setUser);
+
+    const resetGlobalState = (user: UserModel) => {
+        dispatch(setUserProfileImage(user.photoUrl));
+    };
 
     const createUserIfNew = async (user: User) => {
         if (!user.uid || !user.email) {
             return false;
         }
 
-        const successfulLogin = await UserController.createUserIfNew(user.uid);
-        console.log('successful login: ' + successfulLogin);
-        return successfulLogin;
+        const loggedInUser = await UserController.loginUser(user.uid);
+        return loggedInUser;
     };
 
     React.useEffect(() => {
@@ -124,10 +130,11 @@ export const Main = () => {
                 return;
             }
 
-            const result = await createUserIfNew(user);
-            //PushNotificationController.registerUpdatePostNotificationTokenListener();
-
-            setUserIsLoggedIn(result);
+            const loggedInUser = await createUserIfNew(user);
+            if (loggedInUser) {
+                resetGlobalState(loggedInUser);
+            }
+            setUserIsLoggedIn(loggedInUser !== undefined);
         };
 
         blockingLoad();

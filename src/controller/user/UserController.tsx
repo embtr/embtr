@@ -9,6 +9,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { ImagePickerResult } from 'expo-image-picker';
 import { pickImage } from 'src/util/ImagePickerUtil';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
+import { User } from 'resources/schema';
 
 export interface UserModel {
     uid: string;
@@ -112,14 +113,21 @@ class UserController {
             });
     }
 
-    public static async createUserIfNew(uid: string) {
-        const userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
-        if (userResponse.success) {
-            return true;
+    public static async loginUser(uid: string): Promise<User | undefined> {
+        let userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
+        if (userResponse.success && userResponse.user) {
+            return userResponse.user;
         }
 
         const result = await this.createUser();
-        return result.success;
+        if (result.success) {
+            userResponse = await this.getUserByUidViaApi(uid);
+            if (userResponse.success && userResponse.user) {
+                return userResponse.user;
+            }
+        }
+
+        return undefined;
     }
 
     private static async forceRefreshIdToken() {

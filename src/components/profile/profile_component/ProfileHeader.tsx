@@ -21,16 +21,7 @@ interface Props {
     animatedBannerScale: SharedValue<number>;
 }
 
-export const ProfileHeader = ({
-    user,
-    onFollowUser,
-    onUnfollowUser,
-    followerCount,
-    followingCount,
-    isFollowingUser,
-    animatedHeaderContentsScale,
-    animatedBannerScale,
-}: Props) => {
+export const ProfileHeader = ({ user, followerCount, followingCount, isFollowingUser, animatedHeaderContentsScale, animatedBannerScale }: Props) => {
     const { colors } = useTheme();
     const [initialHeaderContentsHeight, setInitialHeaderContentsHeight] = React.useState<number>(0);
 

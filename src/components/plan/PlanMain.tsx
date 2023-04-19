@@ -30,32 +30,6 @@ export const PlanMain = () => {
         setSelectedDayKey(newDayKey);
     };
 
-    const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
-        switch (props.route.key) {
-            case 'planning':
-                return (
-                    <Planning
-                        showSelectTaskModal={showAddTaskModal}
-                        dismissSelectTaskModal={() => {
-                            setShowAddTaskModal(false);
-                        }}
-                        openSelectTaskModal={() => {
-                            setShowAddTaskModal(true);
-                        }}
-                        onDayChange={onDayChanged}
-                        selectedDayKey={selectedDayKey}
-                        useCalendarView={false}
-                    />
-                );
-        }
-
-        return <View />;
-    };
-
-    const [index, setIndex] = React.useState(0);
-
-    const [routes] = React.useState([{ key: 'planning', title: 'Schedule' }]);
-
     const navigateToTomorrowCreateTask = () => {
         setShowAddTaskModal(true);
     };
@@ -84,40 +58,24 @@ export const PlanMain = () => {
             <View style={{ height: '100%' }}>
                 <Banner
                     name={'Planning'}
-                    leftIcon={index === 0 ? 'add' : undefined}
+                    leftIcon={'add'}
                     leftRoute={'CreateTask'}
-                    leftOnClick={index === 0 ? navigateToTomorrowCreateTask : navigateToTasksCreateTask}
+                    leftOnClick={navigateToTomorrowCreateTask}
                     rightIcon={'ellipsis-horizontal'}
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
 
-                <TabView
-                    navigationState={{ index, routes }}
-                    renderScene={renderScene}
-                    onIndexChange={setIndex}
-                    renderTabBar={(props) => (
-                        <TabBar
-                            {...props}
-                            indicatorStyle={{ height: 4, borderRadius: 15, backgroundColor: colors.planning_horizontal_indicator }}
-                            renderLabel={({ focused, route }) => {
-                                return (
-                                    <Text style={{ color: colors.planning_focused_text, fontFamily: 'Poppins_600SemiBold', opacity: focused ? 1.0 : 0.35 }}>
-                                        {route.title}
-                                    </Text>
-                                );
-                            }}
-                            style={{
-                                backgroundColor: colors.background,
-                                width: '94%',
-                                marginLeft: '3%',
-                                shadowOffset: { height: 0, width: 0 },
-                                shadowColor: 'transparent',
-                                shadowOpacity: 0,
-                                elevation: 0,
-                            }}
-                            indicatorContainerStyle={{ backgroundColor: colors.scroll_tab_background, height: 4, marginTop: 43, borderRadius: 15 }}
-                        />
-                    )}
+                <Planning
+                    showSelectTaskModal={showAddTaskModal}
+                    dismissSelectTaskModal={() => {
+                        setShowAddTaskModal(false);
+                    }}
+                    openSelectTaskModal={() => {
+                        setShowAddTaskModal(true);
+                    }}
+                    onDayChange={onDayChanged}
+                    selectedDayKey={selectedDayKey}
+                    useCalendarView={false}
                 />
             </View>
         </Screen>

@@ -1,3 +1,7 @@
+April 18
+[ ] reload profile images on all pages after uploading new (invalidate cached photo?)
+[ ] hardcode default user image to database
+
 April 17
 [x] catching server crashes
 [x] overall app QA before alpha alpha

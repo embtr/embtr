@@ -11,6 +11,7 @@ import { ScrollChangeEvent } from 'src/util/constants';
 import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { useFocusEffect } from '@react-navigation/native';
+import { View } from 'react-native';
 
 export const CurrentUserProfile = () => {
     const [refreshing, setRefreshing] = React.useState(false);
@@ -71,7 +72,11 @@ export const CurrentUserProfile = () => {
     };
 
     if (!user) {
-        return null;
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
     }
 
     return (
