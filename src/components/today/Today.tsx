@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { User, Widget, WidgetType } from 'resources/schema';
@@ -181,35 +181,37 @@ export const Today = () => {
 
     return (
         <Screen>
-            <EmbtrMenuCustom />
-            <View style={{ height: '100%', width: '100%' }}>
-                <Banner
-                    name="Today"
-                    rightText={isConfiguringWidgets ? 'done' : undefined}
-                    rightOnClick={
-                        isConfiguringWidgets
-                            ? () => {
-                                  updateWidgetOrdering();
-                                  setIsConfiguringWidgets(false);
-                              }
-                            : undefined
-                    }
-                    rightIcon={!isConfiguringWidgets ? 'ellipsis-horizontal' : undefined}
-                    menuOptions={!isConfiguringWidgets ? createEmbtrMenuOptions(menuOptions) : undefined}
-                />
-
-                <GestureHandlerRootView>
-                    <DraggableFlatList
-                        style={{ height: '100%', marginBottom: 100 }}
-                        refreshControl={<RefreshControl enabled={!isConfiguringWidgets} refreshing={refreshing} onRefresh={onRefresh} />}
-                        data={widgets}
-                        onDragEnd={({ data }) => {
-                            setWidgets(data);
-                        }}
-                        keyExtractor={(item) => item.type!}
-                        renderItem={renderItem}
+            <View style={{ flex: 1 }}>
+                <EmbtrMenuCustom />
+                <View style={{ height: '100%', width: '100%' }}>
+                    <Banner
+                        name="Today"
+                        rightText={isConfiguringWidgets ? 'done' : undefined}
+                        rightOnClick={
+                            isConfiguringWidgets
+                                ? () => {
+                                      updateWidgetOrdering();
+                                      setIsConfiguringWidgets(false);
+                                  }
+                                : undefined
+                        }
+                        rightIcon={!isConfiguringWidgets ? 'ellipsis-horizontal' : undefined}
+                        menuOptions={!isConfiguringWidgets ? createEmbtrMenuOptions(menuOptions) : undefined}
                     />
-                </GestureHandlerRootView>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                        <DraggableFlatList
+                            style={{ height: '100%', marginBottom: 100 }}
+                            data={widgets}
+                            onDragEnd={({ data }) => {
+                                setWidgets(data);
+                            }}
+                            keyExtractor={(item) => item.type!}
+                            renderItem={renderItem}
+                            // Add this prop to handle refresh
+                            refreshControl={<RefreshControl enabled={!isConfiguringWidgets} refreshing={refreshing} onRefresh={onRefresh} />}
+                        />
+                    </GestureHandlerRootView>
+                </View>
             </View>
         </Screen>
     );
