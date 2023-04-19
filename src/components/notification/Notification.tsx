@@ -8,7 +8,7 @@ import { TouchableOpacity } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { formatDistance } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
-import { Notification as NotificationModel } from 'resources/schema';
+import { Notification as NotificationModel, NotificationTargetPage } from 'resources/schema';
 import { CachedImage } from '../common/images/CachedImage';
 
 interface Props {
@@ -21,16 +21,27 @@ export const Notification = ({ notification }: Props) => {
 
     const time = formatDistance(notification.createdAt ?? new Date(), new Date(), { addSuffix: true });
 
-    //const params = {
-    //    id: notification.target_uid,
-    //    uid: notification.uid,
-    //    source: 'timeline',
-    //};
+    const params = {
+        id: notification.targetId,
+        uid: notification.fromUser?.uid,
+        source: 'timeline',
+    };
+
+    const getTargetPage = (target: NotificationTargetPage) => {
+        return 'DailyResultDetails';
+    };
 
     return (
         <TouchableOpacity
             onPress={() => {
-                //                navigation.navigate(notification.target_page as keyof TimelineTabScreens, { ...params });
+                console.log(notification);
+                if (!notification.targetPage) {
+                    return;
+                }
+
+                const target = getTargetPage(notification.targetPage);
+
+                navigation.navigate(target as keyof TimelineTabScreens, { ...params });
             }}
         >
             <View style={{ width: '100%', alignContent: 'center', alignItems: 'center' }}>

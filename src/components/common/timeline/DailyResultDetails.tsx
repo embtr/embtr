@@ -8,18 +8,28 @@ import { DailyResultBody } from './DailyResultBody';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import { Comment, PlannedDayResult as PlannedDayResultModel, User } from 'resources/schema';
-import { useAppDispatch } from 'src/redux/Hooks';
+import Toast from 'react-native-root-toast';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
-    const dispatch = useAppDispatch();
 
     const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResultModel | undefined>(undefined);
+    const { setScheme, isDark } = useTheme();
 
     const fetchData = async () => {
         const plannedDayResult = await DailyResultController.getViaApi(route.params.id);
-        setPlannedDayResult(plannedDayResult);
+        if (plannedDayResult) {
+            setPlannedDayResult(plannedDayResult);
+        } else {
+            Toast.show('Post no longer exists!', {
+                duration: Toast.durations.LONG,
+                containerStyle: { backgroundColor: isDark ? 'white' : 'black', marginBottom: 80 },
+                textStyle: { color: isDark ? 'black' : 'white' },
+            });
+            navigation.goBack();
+        }
     };
 
     useFocusEffect(

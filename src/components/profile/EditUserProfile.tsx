@@ -18,7 +18,6 @@ import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
 import { setUserProfileImage } from 'src/redux/user/GlobalState';
-import { ProfileTab } from '../navigation/ProfileTab';
 import { useAppDispatch } from 'src/redux/Hooks';
 
 export const EditUserProfile = () => {

@@ -52,7 +52,7 @@ class DailyResultController {
             });
     }
 
-    public static async getViaApi(id: number): Promise<PlannedDayResultModel> {
+    public static async getViaApi(id: number): Promise<PlannedDayResultModel | undefined> {
         return await axiosInstance
             .get(`${PLANNED_DAY_RESULT}${id}`)
             .then((success) => {
@@ -60,7 +60,7 @@ class DailyResultController {
                 return response.plannedDayResult!;
             })
             .catch((error) => {
-                return error.response.data as PlannedDayResultModel;
+                return undefined;
             });
     }
 
