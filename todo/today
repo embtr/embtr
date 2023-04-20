@@ -1,12 +1,13 @@
-Wed Apr 19
+Thr Apr 20
 
 We are building a habit building app! embtr.com
 
 ###################################################
 
 TODAY:
-[x] clear global state on login
-[x] cannot scroll on today page
+[x] alpha deployment! (waiting on release to propigate)
+
+[ ] separate dev/ staging/ prod accounts
 [ ] clear notifications on exit
 [ ] navigation isn't working from notifications
 
@@ -42,6 +43,7 @@ BACKLOG:
 [ ] Habit Health 
 [ ] migrate to hermes js engine
 [ ] user activity details navigates to timeline
+[ ] fix shadows on android
 
 
 TODO TO RELEASE TO PUBLIC

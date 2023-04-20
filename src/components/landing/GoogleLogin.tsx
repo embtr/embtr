@@ -49,7 +49,7 @@ export const GoogleLogin = ({ onPress }: Props) => {
             <Text
                 style={{
                     marginLeft: 16,
-                    fontSize: 16,
+                    fontSize: 14,
                     color: colors.google_login_text,
                     fontFamily: 'Roboto_500Medium',
                     flex: 3,

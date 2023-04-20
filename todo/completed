@@ -1,6 +1,11 @@
+April 19
+
+[x] clear global state on login
+[x] cannot scroll on today page
+
 April 18
-[ ] reload profile images on all pages after uploading new (invalidate cached photo?)
-[ ] hardcode default user image to database
+[x] reload profile images on all pages after uploading new (invalidate cached photo?)
+[x] hardcode default user image to database
 
 April 17
 [x] catching server crashes

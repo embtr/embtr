@@ -24,12 +24,9 @@ export const Timeline = () => {
         React.useCallback(() => {
             getUserPosts();
             getPlannedDayResults();
+            fetchNotifications();
         }, [forceRefreshTimestamp])
     );
-
-    React.useEffect(() => {
-        fetchNotifications();
-    }, []);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
