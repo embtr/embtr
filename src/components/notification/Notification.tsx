@@ -3,7 +3,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { TouchableOpacity } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { formatDistance } from 'date-fns';

@@ -3,15 +3,16 @@
   "version": "0.0.241",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject",
-    "predeploy": "expo build:web",
+    "start": "npx expo start",
+    "android": "npx expo start --android",
+    "ios": "npx expo start --ios",
+    "web": "npx expo start --web",
+    "eject": "npx expo eject",
+    "predeploy": "npx expo build:web",
     "deploy-hosting": "npm run predeploy && firebase deploy --only hosting"
   },
   "dependencies": {
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@expo-google-fonts/poppins": "^0.2.2",
     "@expo-google-fonts/roboto": "^0.2.3",
     "@react-native-async-storage/async-storage": "~1.17.3",

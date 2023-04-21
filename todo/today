@@ -1,25 +1,32 @@
-Thr Apr 20
+Fri Apr 21
 
 We are building a habit building app! embtr.com
 
 ###################################################
 
 TODAY:
-[x] alpha deployment! (waiting on release to propigate)
+[x] deploy web cors issue
+[ ] don't overwrite photo if user backs out instead of save
+[ ] auto re-login on new account so user doesn't get kicked out
 
+[x] adding new users to beta
 [ ] separate dev/ staging/ prod accounts
-[ ] clear notifications on exit
 [ ] navigation isn't working from notifications
 
 [ ] write test to prove upsert on create planned day result
 [ ] push notification on like says "commented on your post"
 [ ] deleting completed task doesn't get reflected on user history widget
 [ ] Fix Google Login Button
+[ ] Prevent password reset more than one time in 60 seconds
+
+
+PROD BUGS:
 
 
 STREAM TODO: 
 [ ] add dog treat twitch reward
 [ ] Fix OBS Transitions
+[ ] add !ads text
 
 
 BACKLOG:

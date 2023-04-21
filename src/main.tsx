@@ -121,7 +121,7 @@ export const Main = () => {
             return false;
         }
 
-        const loggedInUser = await UserController.loginUser(user.uid);
+        const loggedInUser = await UserController.loginUser();
         return loggedInUser;
     };
 
@@ -160,8 +160,6 @@ export const Main = () => {
             </Screen>
         );
     }
-
-    console.log('Main.tsx: userIsLoggedIn: ' + userIsLoggedIn + ', isEmailVerified: ' + isEmailVerified());
 
     return (
         <Screen>

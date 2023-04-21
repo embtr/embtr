@@ -78,6 +78,17 @@ class UserController {
             });
     }
 
+    public static async getCurrentUser() {
+        return await axiosInstance
+            .get(`/${USER_ENDPOINT}`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     public static async getUserByUidViaApi(uid: string): Promise<GetUserResponse> {
         return await axiosInstance
             .get(`/${USER_ENDPOINT}/${uid}`)
@@ -113,15 +124,17 @@ class UserController {
             });
     }
 
-    public static async loginUser(uid: string): Promise<User | undefined> {
-        let userResponse: GetUserResponse = await this.getUserByUidViaApi(uid);
+    public static async loginUser(): Promise<User | undefined> {
+        let userResponse: GetUserResponse = await this.getCurrentUser();
         if (userResponse.success && userResponse.user) {
             return userResponse.user;
         }
 
         const result = await this.createUser();
         if (result.success) {
-            userResponse = await this.getUserByUidViaApi(uid);
+            await this.forceRefreshIdToken();
+
+            userResponse = await this.getCurrentUser();
             if (userResponse.success && userResponse.user) {
                 return userResponse.user;
             }
@@ -131,13 +144,9 @@ class UserController {
     }
 
     private static async forceRefreshIdToken() {
-        await getAuth().currentUser?.getIdToken(true);
+        const refreshedTOken = await getAuth().currentUser?.getIdToken(true);
     }
 
-    public static async getCurrentUser() {
-        const uid = getCurrentUid();
-        return await this.getUserByUidViaApi(uid);
-    }
     public static async uploadProfilePhoto(): Promise<string | undefined> {
         const result: ImagePickerResult = await pickImage();
 

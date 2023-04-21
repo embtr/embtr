@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.response.status === 401) {
+        if (error.response.status === 401 && error.response.internalCode === 1) {
             getAuth().signOut();
         }
         return Promise.reject(error);
