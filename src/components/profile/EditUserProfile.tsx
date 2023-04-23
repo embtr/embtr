@@ -100,7 +100,6 @@ export const EditUserProfile = () => {
 
     const uploadProfilePhoto = async () => {
         setImageUploading(true);
-        setPhotoUrl('');
         const url = await UserController.uploadProfilePhoto();
         if (url) {
             setPhotoUrl(url);
@@ -111,7 +110,6 @@ export const EditUserProfile = () => {
     const uploadProfileBanner = async () => {
         setImageUploading(true);
         const url = await UserController.uploadProfileBanner();
-        setBannerUrl('');
         if (url) {
             setBannerUrl(url);
         }
@@ -161,7 +159,7 @@ export const EditUserProfile = () => {
 
     return (
         <Screen>
-            <Banner name={'Edit Profile'} leftIcon={'arrow-back'} leftRoute={'BACK'} />
+            <Banner name={'Edit Profile'} leftText="cancel" leftRoute={'BACK'} rightText="save" rightOnClick={saveProfile} />
 
             {_maybeRenderUploadingOverlay()}
             <BannerInfoModal visible={showBannerInfoModal} dismiss={hideBannerInfoModal} />
@@ -358,24 +356,9 @@ export const EditUserProfile = () => {
 
                         <View
                             style={{
-                                zIndex: -1,
-                                flex: 1,
-                                alignItems: 'center',
-                                justifyContent: 'flex-end',
-                                alignSelf: 'stretch',
-                                margin: 5,
-                                paddingBottom: 15,
+                                height: 15,
                             }}
-                        >
-                            <View style={{ width: '95%' }}>
-                                <EmbtrButton
-                                    buttonText={'Update Profile'}
-                                    callback={() => {
-                                        saveProfile();
-                                    }}
-                                />
-                            </View>
-                        </View>
+                        />
                     </KeyboardAvoidingView>
                 </View>
             </ScrollView>
