@@ -11,7 +11,10 @@ import { Planning } from './planning/Planning';
 import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
-import PlannedDayController, { getDayKey, getTodayKey } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController, {
+    getDayKey,
+    getTodayKey,
+} from 'src/controller/planning/PlannedDayController';
 
 /*
  * Avoid rerenders
@@ -43,7 +46,9 @@ export const PlanMain = () => {
         {
             name: 'Complete Day',
             onPress: async () => {
-                const plannedDay = await PlannedDayController.getForCurrentUserViaApi(selectedDayKey);
+                const plannedDay = await PlannedDayController.getForCurrentUserViaApi(
+                    selectedDayKey
+                );
                 if (plannedDay) {
                     PlannedDayController.completeDayViaApi(plannedDay);
                 }
@@ -67,6 +72,7 @@ export const PlanMain = () => {
 
                 <Planning
                     showSelectTaskModal={showAddTaskModal}
+                    setShowSelectTaskModal={setShowAddTaskModal}
                     dismissSelectTaskModal={() => {
                         setShowAddTaskModal(false);
                     }}

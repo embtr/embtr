@@ -2,6 +2,7 @@ import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View, Image, StyleProp, ImageStyle } from 'react-native';
 import CacheManager from 'src/controller/image/ImageCacheController';
+import { isMobileBrowser } from 'src/util/DeviceUtil';
 
 interface Props {
     uri: string;
@@ -9,6 +10,10 @@ interface Props {
 }
 
 export const CachedImage = ({ uri, style }: Props) => {
+    if (isMobileBrowser()) {
+        return <Image source={{ uri }} style={style} />;
+    }
+
     const [localUrl, setLocalUrl] = React.useState('');
 
     const getCachedImage = async (url: string) => {

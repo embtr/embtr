@@ -7,7 +7,11 @@ import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PLANNED_DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
-import { CreatePlannedDayRequest, CreatePlannedDayResponse, GetPlannedDayResponse } from 'resources/types/requests/PlannedDayTypes';
+import {
+    CreatePlannedDayRequest,
+    CreatePlannedDayResponse,
+    GetPlannedDayResponse,
+} from 'resources/types/requests/PlannedDayTypes';
 import { CreatePlannedDayResultRequest } from 'resources/types/requests/PlannedDayResultTypes';
 
 export interface PlannedDay {
@@ -71,7 +75,11 @@ export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean 
     return !plannedTaskIsComplete(plannedTask) && !plannedTaskIsFailed(plannedTask);
 };
 
-export const createPlannedTaskByPlannedTask = (plannedTask: PlannedTaskModel, startMinute: number, duration: number) => {
+export const createPlannedTaskByPlannedTask = (
+    plannedTask: PlannedTaskModel,
+    startMinute: number,
+    duration: number
+) => {
     const newPlannedTask: PlannedTaskModel = {
         ...plannedTask,
     };
@@ -171,7 +179,9 @@ export const createMetadata = () => {
 };
 
 class PlannedDayController {
-    public static async completeDayViaApi(plannedDay: PlannedDayModel): Promise<GetPlannedDayResponse> {
+    public static async completeDayViaApi(
+        plannedDay: PlannedDayModel
+    ): Promise<GetPlannedDayResponse> {
         const body: CreatePlannedDayResultRequest = {
             plannedDayId: plannedDay.id ?? 0,
         };
@@ -201,12 +211,17 @@ class PlannedDayController {
             });
     }
 
-    public static async getForCurrentUserViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
+    public static async getForCurrentUserViaApi(
+        dayKey: string
+    ): Promise<PlannedDayModel | undefined> {
         const userId = await getUserIdFromToken();
         return await this.getViaApi(userId, dayKey);
     }
 
-    public static async getViaApi(userId: number, dayKey: string): Promise<PlannedDayModel | undefined> {
+    public static async getViaApi(
+        userId: number,
+        dayKey: string
+    ): Promise<PlannedDayModel | undefined> {
         return await axiosInstance
             .get(`${PLANNED_DAY}${userId}/${dayKey}`)
             .then((success) => {

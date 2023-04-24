@@ -2,20 +2,12 @@ import * as React from 'react';
 import { Text, TextStyle, Image, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
 import { POPPINS_REGULAR } from 'src/util/constants';
-import { EmbtrButton } from '../common/button/EmbtrButton';
 import { LoginModal } from '../login/LoginModal';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
 import { RegisterModal } from '../login/RegisterModal';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
-import { DesktopLandingPage } from './DesktopLandingPage';
 
-export const LandingPage = () => {
-    if (isDesktopBrowser()) {
-        return <DesktopLandingPage />;
-    }
-
+export const DesktopLandingPage = () => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -78,20 +70,6 @@ export const LandingPage = () => {
                         </View>
 
                         <View style={{ flex: 2, alignItems: 'center' }}>
-                            <View style={{ width: 300 }}>
-                                <FirebaseAuthenticate buttonText="Login With Google" />
-                            </View>
-
-                            <View style={{ width: 300, paddingTop: 6 }}>
-                                <EmbtrButton
-                                    color={'#e300ef'}
-                                    buttonText="Login With Email"
-                                    callback={() => {
-                                        setDisplayLoginModal(true);
-                                    }}
-                                />
-                            </View>
-
                             <Text
                                 style={{
                                     color: colors.text,
@@ -100,17 +78,8 @@ export const LandingPage = () => {
                                     paddingTop: 20,
                                 }}
                             >
-                                New to embtr? Sign up.
+                                Desktop browsers are not currently supported. Mobile browsers are!
                             </Text>
-                            <View style={{ width: 300, paddingTop: 6 }}>
-                                <EmbtrButton
-                                    color="#b50017"
-                                    buttonText="Register With Email"
-                                    callback={() => {
-                                        setDisplayRegisterModal(true);
-                                    }}
-                                />
-                            </View>
                         </View>
                     </View>
                 </View>
