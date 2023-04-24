@@ -23,10 +23,26 @@ export const RegisterModalBody = ({ confirm }: Props) => {
     const [error, setError] = React.useState<string>('');
 
     return (
-        <View style={{ width: 300, height: getWindowHeight() / 3, backgroundColor: colors.modal_background, borderRadius: 7, justifyContent: 'space-around' }}>
+        <View
+            style={{
+                width: 300,
+                height: getWindowHeight() / 3,
+                backgroundColor: colors.modal_background,
+                borderRadius: 7,
+                justifyContent: 'space-around',
+            }}
+        >
             <View style={{ flex: 1, alignItems: 'center', paddingTop: 10 }}>
                 <View>
-                    <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.text }}>Sign Up For Embtr</Text>
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontFamily: 'Poppins_500Medium',
+                            color: colors.text,
+                        }}
+                    >
+                        Sign Up For Embtr
+                    </Text>
                 </View>
                 <View style={{ paddingTop: 10 }}>
                     <Text
@@ -57,8 +73,18 @@ export const RegisterModalBody = ({ confirm }: Props) => {
             </View>
 
             <View style={{ width: '100%', flex: 2 }}>
-                <View style={{ width: '100%', alignItems: 'center', paddingTop: 10, paddingBottom: error ? 0 : 10, paddingLeft: 2, paddingRight: 2 }}>
+                <View
+                    style={{
+                        width: '100%',
+                        alignItems: 'center',
+                        paddingTop: 10,
+                        paddingBottom: error ? 0 : 10,
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                    }}
+                >
                     <TextInput
+                        autoCapitalize="none"
                         textAlignVertical="top"
                         style={{
                             width: '95%',
@@ -82,14 +108,43 @@ export const RegisterModalBody = ({ confirm }: Props) => {
 
                 {error && (
                     <View style={{ width: '100%', flexDirection: 'row', paddingTop: 5 }}>
-                        <Text style={{ flex: 1, paddingLeft: 20, color: colors.error, fontSize: 12, fontFamily: POPPINS_SEMI_BOLD }}>{error}</Text>
+                        <Text
+                            style={{
+                                flex: 1,
+                                paddingLeft: 20,
+                                color: colors.error,
+                                fontSize: 12,
+                                fontFamily: POPPINS_SEMI_BOLD,
+                            }}
+                        >
+                            {error}
+                        </Text>
                         {error.includes('in use') && (
-                            <Text style={{ flex: 1, paddingLeft: 20, color: colors.link, fontSize: 12, fontFamily: POPPINS_SEMI_BOLD }}>reset password</Text>
+                            <Text
+                                style={{
+                                    flex: 1,
+                                    paddingLeft: 20,
+                                    color: colors.link,
+                                    fontSize: 12,
+                                    fontFamily: POPPINS_SEMI_BOLD,
+                                }}
+                            >
+                                reset password
+                            </Text>
                         )}
                     </View>
                 )}
 
-                <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2, paddingTop: error ? 5 : 0 }}>
+                <View
+                    style={{
+                        width: '100%',
+                        alignItems: 'center',
+                        paddingBottom: 10,
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                        paddingTop: error ? 5 : 0,
+                    }}
+                >
                     <TextInput
                         textAlignVertical="top"
                         style={{
@@ -112,7 +167,15 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                         secureTextEntry
                     />
                 </View>
-                <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
+                <View
+                    style={{
+                        width: '100%',
+                        alignItems: 'center',
+                        paddingBottom: 10,
+                        paddingLeft: 2,
+                        paddingRight: 2,
+                    }}
+                >
                     <TextInput
                         textAlignVertical="top"
                         style={{
@@ -143,7 +206,10 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                     title="Sign Up"
                     onPress={() => {
                         const handleSignUp = async () => {
-                            const result: Response = await UserController.createAccount(email, password);
+                            const result: Response = await UserController.createAccount(
+                                email,
+                                password
+                            );
                             switch (result.internalCode) {
                                 case Code.SUCCESS:
                                     setError('');

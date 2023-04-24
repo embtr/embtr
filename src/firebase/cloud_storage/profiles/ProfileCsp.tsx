@@ -32,7 +32,10 @@ export const uploadImages = async (
     return uploadUrls;
 };
 
-export const uploadImage = async (pickerResult: ImagePicker.ImagePickerAsset, bucket: string): Promise<string> => {
+export const uploadImage = async (
+    pickerResult: ImagePicker.ImagePickerAsset,
+    bucket: string
+): Promise<string> => {
     if (!pickerResult) {
         return '';
     }
@@ -51,9 +54,12 @@ export const uploadImage = async (pickerResult: ImagePicker.ImagePickerAsset, bu
     };
 
     const res = await uploadBytesResumable(fileRef, blob, metadata);
+    console.log(res);
 
     // We're done with the blob, close and release it
-    blob.close();
+    if (typeof blob.close === 'function') {
+        blob.close();
+    }
 
     return await getDownloadURL(fileRef);
 };

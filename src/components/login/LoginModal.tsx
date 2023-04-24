@@ -96,7 +96,7 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                 setStatus('verification email sent!');
                 break;
 
-            case Code.SEND_VERIFICATION_EMAIL_TOO_MANY_ATTEMPTS:
+            case Code.SEND_ACCOUNT_VERIFICATION_EMAIL_TOO_MANY_ATTEMPTS:
                 setError('email recently sent, try again soon.');
                 break;
 
@@ -132,7 +132,15 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                 >
                     <View style={{ alignItems: 'center', flex: 1, width: '100%' }}>
                         <View style={{ flex: 1, width: '100%' }}>
-                            <Text style={{ fontSize: 14, fontFamily: 'Poppins_500Medium', color: colors.text, paddingTop: 15, textAlign: 'center' }}>
+                            <Text
+                                style={{
+                                    fontSize: 14,
+                                    fontFamily: 'Poppins_500Medium',
+                                    color: colors.text,
+                                    paddingTop: 15,
+                                    textAlign: 'center',
+                                }}
+                            >
                                 Embtr Login
                             </Text>
                         </View>
@@ -157,6 +165,7 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                             >
                                 <TextInput
                                     textAlignVertical="top"
+                                    autoCapitalize="none"
                                     style={{
                                         width: '95%',
                                         fontFamily: 'Poppins_400Regular',
@@ -207,8 +216,17 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                                 </View>
                             )}
 
-                            <View style={{ width: '100%', alignItems: 'center', paddingBottom: 10, paddingLeft: 2, paddingRight: 2 }}>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    alignItems: 'center',
+                                    paddingBottom: 10,
+                                    paddingLeft: 2,
+                                    paddingRight: 2,
+                                }}
+                            >
                                 <TextInput
+                                    autoCapitalize="none"
                                     textAlignVertical="top"
                                     style={{
                                         width: '95%',
@@ -231,9 +249,15 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                                 />
                             </View>
 
-                            <View style={{ width: '100%', paddingBottom: 10, flexDirection: 'row' }}>
+                            <View
+                                style={{ width: '100%', paddingBottom: 10, flexDirection: 'row' }}
+                            >
                                 <Text
-                                    style={{ color: colors.link, fontFamily: POPPINS_REGULAR, paddingLeft: 5 }}
+                                    style={{
+                                        color: colors.link,
+                                        fontFamily: POPPINS_REGULAR,
+                                        paddingLeft: 5,
+                                    }}
                                     onPress={() => {
                                         handleForgotPassword();
                                     }}
@@ -242,7 +266,13 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                                 </Text>
                                 {needsEmailVerfied && (
                                     <Text
-                                        style={{ flex: 1, color: colors.link, fontFamily: POPPINS_REGULAR, textAlign: 'right', paddingRight: 5 }}
+                                        style={{
+                                            flex: 1,
+                                            color: colors.link,
+                                            fontFamily: POPPINS_REGULAR,
+                                            textAlign: 'right',
+                                            paddingRight: 5,
+                                        }}
                                         onPress={() => {
                                             sendVerficationEmail();
                                         }}
