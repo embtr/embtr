@@ -6,8 +6,12 @@ import { POPPINS_REGULAR } from 'src/util/constants';
 import { LoginModal } from '../login/LoginModal';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
 import { RegisterModal } from '../login/RegisterModal';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-export const DesktopLandingPage = () => {
+interface Props {
+    continueToLogin: Function;
+}
+export const DesktopLandingPage = ({ continueToLogin }: Props) => {
     const { colors } = useTheme();
 
     const textStyle = {
@@ -69,7 +73,14 @@ export const DesktopLandingPage = () => {
                             <Text style={textStyle}>Together.</Text>
                         </View>
 
-                        <View style={{ flex: 2, alignItems: 'center' }}>
+                        <View
+                            style={{
+                                flex: 2,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flexDirection: 'row',
+                            }}
+                        >
                             <Text
                                 style={{
                                     color: colors.text,
@@ -78,8 +89,24 @@ export const DesktopLandingPage = () => {
                                     paddingTop: 20,
                                 }}
                             >
-                                Desktop browsers are not currently supported. Mobile browsers are!
+                                Desktop browsers are not currently supported. Mobile browsers are!{' '}
                             </Text>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    continueToLogin();
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: colors.link,
+                                        textAlign: 'center',
+                                        fontFamily: POPPINS_REGULAR,
+                                        paddingTop: 20,
+                                    }}
+                                >
+                                    continue anyway.
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>

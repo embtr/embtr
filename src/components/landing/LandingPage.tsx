@@ -12,10 +12,6 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { DesktopLandingPage } from './DesktopLandingPage';
 
 export const LandingPage = () => {
-    if (isDesktopBrowser()) {
-        return <DesktopLandingPage />;
-    }
-
     const { colors } = useTheme();
 
     const textStyle = {
@@ -27,6 +23,7 @@ export const LandingPage = () => {
 
     const [displayLoginModal, setDisplayLoginModal] = React.useState(false);
     const [displayRegisterModal, setDisplayRegisterModal] = React.useState(false);
+    const [continueToDesktopBrowserLogin, setContinueToDesktopBrowserLogin] = React.useState(false);
 
     const onLoginModalCancel = () => {
         setDisplayLoginModal(false);
@@ -35,6 +32,16 @@ export const LandingPage = () => {
     const onLoginModalConfirm = () => {
         setDisplayLoginModal(false);
     };
+
+    if (isDesktopBrowser() && !continueToDesktopBrowserLogin) {
+        return (
+            <DesktopLandingPage
+                continueToLogin={() => {
+                    setContinueToDesktopBrowserLogin(true);
+                }}
+            />
+        );
+    }
 
     return (
         <Screen>
