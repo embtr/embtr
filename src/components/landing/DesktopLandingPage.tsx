@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Text, TextStyle, Image, View } from 'react-native';
+import { Text, TextStyle, Image, View, TouchableOpacity } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { LoginModal } from '../login/LoginModal';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
 import { RegisterModal } from '../login/RegisterModal';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     continueToLogin: Function;

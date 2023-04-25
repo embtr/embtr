@@ -2,7 +2,11 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import {
+    TIMELINE_CARD_ICON_COUNT_SIZE,
+    TIMELINE_CARD_ICON_SIZE,
+    TIMELINE_CARD_PADDING,
+} from 'src/util/constants';
 import { TouchableOpacity } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
@@ -10,6 +14,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
 import { Like } from 'resources/schema';
+import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
 
 interface Props {
     likes: Like[];
@@ -31,11 +36,13 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
 
     const onHeartPressed = () => {
         if (!heartPressed) {
-            animation.current?.play();
-            wait(1000).then(() => {
-                animation.current?.reset();
-            });
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            if (!(isMobileBrowser() || isDesktopBrowser())) {
+                animation.current?.play();
+                wait(1000).then(() => {
+                    animation.current?.reset();
+                });
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }
             onLike();
         }
     };
@@ -43,7 +50,17 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
     return (
         <View style={{ flexDirection: 'row' }}>
             <View style={{ height: 0, width: 0, position: 'relative' }}>
-                <View style={{ position: 'absolute', zIndex: -1, width: 200, height: 200, left: -144, top: -27, transform: [{ scaleX: -1 }] }}>
+                <View
+                    style={{
+                        position: 'absolute',
+                        zIndex: -1,
+                        width: 200,
+                        height: 200,
+                        left: -144,
+                        top: -27,
+                        transform: [{ scaleX: -1 }],
+                    }}
+                >
                     <LottieView
                         autoPlay={false}
                         ref={animation}
@@ -66,17 +83,33 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
                 </TouchableOpacity>
 
                 <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
-                    <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
+                    <Text
+                        style={{
+                            color: colors.timeline_card_footer,
+                            fontSize: TIMELINE_CARD_ICON_COUNT_SIZE,
+                            fontFamily: 'Poppins_500Medium',
+                        }}
+                    >
                         {likes.length}
                     </Text>
                 </View>
 
                 <View style={{ borderColor: colors.text, paddingLeft: 20 }}>
-                    <Ionicons name={'chatbox-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} />
+                    <Ionicons
+                        name={'chatbox-outline'}
+                        size={TIMELINE_CARD_ICON_SIZE}
+                        color={colors.timeline_card_footer}
+                    />
                 </View>
 
                 <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
-                    <Text style={{ color: colors.timeline_card_footer, fontSize: TIMELINE_CARD_ICON_COUNT_SIZE, fontFamily: 'Poppins_500Medium' }}>
+                    <Text
+                        style={{
+                            color: colors.timeline_card_footer,
+                            fontSize: TIMELINE_CARD_ICON_COUNT_SIZE,
+                            fontFamily: 'Poppins_500Medium',
+                        }}
+                    >
                         {commentCount}
                     </Text>
                 </View>
@@ -89,7 +122,11 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
                         alert("I don't work yet :(");
                     }}
                 >
-                    <Ionicons name={'share-outline'} size={TIMELINE_CARD_ICON_SIZE} color={colors.timeline_card_footer} />
+                    <Ionicons
+                        name={'share-outline'}
+                        size={TIMELINE_CARD_ICON_SIZE}
+                        color={colors.timeline_card_footer}
+                    />
                 </TouchableOpacity>
             </View>
         </View>
