@@ -1,8 +1,16 @@
 import { Timestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import axiosInstance from 'src/axios/axios';
-import { CreateAccountRequest, ForgotAccountPasswordRequest, VerifyAccountEmailRequest } from 'resources/types/requests/AccountTypes';
-import { GetUserResponse, UpdateUserRequest } from 'resources/types/requests/UserTypes';
+import {
+    CreateAccountRequest,
+    ForgotAccountPasswordRequest,
+    VerifyAccountEmailRequest,
+} from 'resources/types/requests/AccountTypes';
+import {
+    GetUserResponse,
+    GetUsersResponse,
+    UpdateUserRequest,
+} from 'resources/types/requests/UserTypes';
 import { Response } from 'resources/types/requests/RequestTypes';
 import { USER } from 'resources/endpoints';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
@@ -118,6 +126,18 @@ class UserController {
             .patch(`${USER}`, request)
             .then((success) => {
                 return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async search(query: string) {
+        return await axiosInstance
+            .get(`/${USER_ENDPOINT}/search`, { params: { query } })
+            .then((success) => {
+                const usersResponse: GetUsersResponse = success.data;
+                return usersResponse.users;
             })
             .catch((error) => {
                 return error.response.data;

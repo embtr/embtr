@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { NativeScrollEvent, RefreshControl, ScrollView, Text, View } from 'react-native';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -31,47 +30,51 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
         let timelinePosts: TimelinePostModel[] = [];
 
         if (userPosts.length > 0) {
-            const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost: UserPost) => {
-                const userPostTimelinePost: TimelinePostModel = {
-                    added: Timestamp.fromDate(userPost.createdAt!),
-                    modified: Timestamp.fromDate(userPost.updatedAt!),
-                    type: 'STORY',
-                    uid: userPost.user!.uid!,
-                    public: {
-                        comments: [],
-                        likes: [],
-                    },
-                    data: {
-                        userPost: userPost,
-                    },
-                    active: true,
-                };
+            const userPostTimelinePosts: TimelinePostModel[] = userPosts.map(
+                (userPost: UserPost) => {
+                    const userPostTimelinePost: TimelinePostModel = {
+                        added: Timestamp.fromDate(userPost.createdAt!),
+                        modified: Timestamp.fromDate(userPost.updatedAt!),
+                        type: 'STORY',
+                        uid: userPost.user!.uid!,
+                        public: {
+                            comments: [],
+                            likes: [],
+                        },
+                        data: {
+                            userPost: userPost,
+                        },
+                        active: true,
+                    };
 
-                return userPostTimelinePost;
-            });
+                    return userPostTimelinePost;
+                }
+            );
 
             timelinePosts = timelinePosts.concat(userPostTimelinePosts);
         }
 
         if (dayResults.length > 0) {
-            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map((dayResult: PlannedDayResultModel) => {
-                const dayResultTimelinePost: DayResultTimelinePost = {
-                    added: Timestamp.fromDate(dayResult.createdAt!),
-                    modified: Timestamp.fromDate(dayResult.updatedAt!),
-                    type: 'DAILY_RESULT',
-                    uid: dayResult.plannedDay!.user!.uid!,
-                    public: {
-                        comments: [],
-                        likes: [],
-                    },
-                    data: {
-                        dayResult: dayResult,
-                    },
-                    active: true,
-                };
+            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map(
+                (dayResult: PlannedDayResultModel) => {
+                    const dayResultTimelinePost: DayResultTimelinePost = {
+                        added: Timestamp.fromDate(dayResult.createdAt!),
+                        modified: Timestamp.fromDate(dayResult.updatedAt!),
+                        type: 'DAILY_RESULT',
+                        uid: dayResult.plannedDay!.user!.uid!,
+                        public: {
+                            comments: [],
+                            likes: [],
+                        },
+                        data: {
+                            dayResult: dayResult,
+                        },
+                        active: true,
+                    };
 
-                return dayResultTimelinePost;
-            });
+                    return dayResultTimelinePost;
+                }
+            );
 
             timelinePosts = timelinePosts.concat(dayResultTimelinePosts);
 
@@ -138,7 +141,11 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
         }
     };
 
-    const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent) => {
+    const isCloseToBottom = ({
+        layoutMeasurement,
+        contentOffset,
+        contentSize,
+    }: NativeScrollEvent) => {
         return layoutMeasurement.height + contentOffset.y > contentSize.height - 15;
     };
 
@@ -166,7 +173,9 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
             {timelineViews.length > 0 && <View style={{ flex: 1 }}>{timelineViews}</View>}
             {timelineViews.length == 0 && (
                 <View style={{ flex: 1, paddingTop: 50, alignItems: 'center' }}>
-                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>looks like there's nothing to show.</Text>
+                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>
+                        looks like there's nothing to show.
+                    </Text>
                 </View>
             )}
         </ScrollView>

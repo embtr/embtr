@@ -4,43 +4,34 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { UserSearchResults } from 'src/components/profile/search/UserSearchResults';
-import UserSearchResultObject from 'src/firebase/firestore/user/UserSearchResultObject';
-import { useFocusEffect } from '@react-navigation/native';
 import { CARD_SHADOW, USER_SEARCH_WIDTH } from 'src/util/constants';
+import { User } from 'resources/schema';
+import UserController from 'src/controller/user/UserController';
+import { UserSearchResult } from './UserSearchResult';
+import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 
 export const UserSearch = () => {
     const { colors } = useTheme();
 
     const [searchText, setSearchText] = React.useState('');
+    const [users, setUsers] = React.useState<User[]>([]);
 
-    const [searchResults, setSearchResults] = React.useState<UserSearchResultObject | undefined>(undefined);
-    const [followingUids, setFollowingUids] = React.useState<string[]>([]);
-
-    const onSearchChange = (text: string) => {
+    const onSearchChange = async (text: string) => {
         setSearchText(text);
+
+        const newUsers = await UserController.search(text);
+        setUsers(newUsers);
     };
 
-    const onFollowUser = (uid: string) => {
-        let followingUidsCopy = followingUids.slice(0);
-        followingUidsCopy.push(uid);
-        setFollowingUids(followingUidsCopy);
-    };
-
-    const onUnfollowUser = (uid: string) => {
-        let followingUidsCopy = followingUids.slice(0);
-        for (var i = followingUidsCopy.length - 1; i >= 0; i--) {
-            if (followingUidsCopy[i] === uid) {
-                followingUidsCopy.splice(i, 1);
-                setFollowingUids(followingUidsCopy);
-                return;
-            }
-        }
-    };
-
-    React.useEffect(() => {}, []);
-
-    useFocusEffect(React.useCallback(() => {}, []));
+    const userViews: JSX.Element[] = [];
+    for (const user of users) {
+        const key = ModelKeyGenerator.generateUserKey(user);
+        userViews.push(
+            <View style={{ paddingTop: 5, width: '100%' }} key={key}>
+                <UserSearchResult user={user} />
+            </View>
+        );
+    }
 
     return (
         <Screen>
@@ -94,18 +85,7 @@ export const UserSearch = () => {
                         />
                     </View>
 
-                    <View style={{ paddingTop: 10, width: '100%' }}>
-                        {searchResults?.results ? (
-                            <UserSearchResults
-                                followingUids={followingUids}
-                                onFollowUser={onFollowUser}
-                                onUnfollowUser={onUnfollowUser}
-                                searchResults={searchResults.results!}
-                            />
-                        ) : (
-                            <UserSearchResults followingUids={followingUids} onFollowUser={onFollowUser} onUnfollowUser={onUnfollowUser} searchResults={[]} />
-                        )}
-                    </View>
+                    <View style={{ paddingTop: 10, width: '100%' }}>{userViews}</View>
                 </View>
             </ScrollView>
         </Screen>

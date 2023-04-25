@@ -1,4 +1,4 @@
-import { PlannedDayResult, PlannedTask, UserPost } from 'resources/schema';
+import { PlannedDayResult, PlannedTask, User, UserPost } from 'resources/schema';
 
 export class ModelKeyGenerator {
     public static generatePlannedDayResultKey(plannedDayResult: PlannedDayResult): string {
@@ -26,5 +26,9 @@ export class ModelKeyGenerator {
 
     public static generatePlannedTaskKey(plannedTask: PlannedTask): string {
         return `${plannedTask.id}${plannedTask.updatedAt?.toISOString()}`;
+    }
+
+    public static generateUserKey(user: User): string {
+        return `${user.id}${user.displayName}`;
     }
 }
