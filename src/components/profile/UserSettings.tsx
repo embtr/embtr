@@ -10,6 +10,7 @@ import { SettingsButtonElement } from 'src/components/settings/SettingsButtonEle
 import { SettingsVersion } from 'src/components/settings/SettingsVersion';
 import { EditProfileSettingsButton } from 'src/components/settings/EditProfileSettingsButton';
 import { SettingsFeedback } from 'src/components/settings/SettingsFeedback';
+import UserController from 'src/controller/user/UserController';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
@@ -39,9 +40,9 @@ export const UserSettings = () => {
                     <SettingsButtonElement
                         text={'Sign Out'}
                         icon={'exit-outline'}
-                        onPress={() => {
-                            getAuth().signOut();
-                            dispatch(setAccessLevel('invalid'));
+                        onPress={async () => {
+                            await UserController.refreshToken();
+                            await getAuth().signOut();
                         }}
                     />
                 </View>

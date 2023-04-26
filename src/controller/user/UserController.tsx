@@ -144,6 +144,17 @@ class UserController {
             });
     }
 
+    public static async refreshToken() {
+        return await axiosInstance
+            .post(`/${ACCOUNT_ENDPOINT}/refresh_token`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     public static async loginUser(): Promise<User | undefined> {
         let userResponse: GetUserResponse = await this.getCurrentUser();
         if (userResponse.success && userResponse.user) {

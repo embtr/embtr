@@ -19,8 +19,8 @@ interface Props {
 export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
-    const [email, setEmail] = React.useState<string>('test@embtr.com');
-    const [password, setPassword] = React.useState<string>('password');
+    const [email, setEmail] = React.useState<string>('');
+    const [password, setPassword] = React.useState<string>('');
     const [needsEmailVerfied, setNeedsEmailVerified] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>('');
     const [status, setStatus] = React.useState<string>('');
