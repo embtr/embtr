@@ -6,13 +6,14 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import Animated from 'react-native-reanimated';
 import { TABS } from 'src/components/home/Dashboard';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
+import { isAndroidDevice } from 'src/util/DeviceUtil';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
 
     const style = StyleSheet.create({
         tabContainer: {
-            height: 70,
+            paddingBottom: isAndroidDevice() ? 0 : 25,
             shadowOffset: {
                 width: 0,
                 height: -1,
@@ -75,7 +76,12 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
         }
 
         elements.push(
-            <TouchableOpacity accessibilityRole="button" onPress={onPress} style={{ flex: 1 }} key={index}>
+            <TouchableOpacity
+                accessibilityRole="button"
+                onPress={onPress}
+                style={{ flex: 1 }}
+                key={index}
+            >
                 {element}
             </TouchableOpacity>
         );
