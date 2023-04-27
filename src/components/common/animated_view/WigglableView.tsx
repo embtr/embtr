@@ -31,11 +31,26 @@ export const WigglableView = ({ wiggle, children }: Props) => {
         let newRand = getRandomInt(45, 50);
         Animated.sequence([
             // start rotation in one direction (only half the time is needed)
-            Animated.timing(animatedValue, { toValue: newRand, duration: newRand, easing: Easing.linear, useNativeDriver: true }),
+            Animated.timing(animatedValue, {
+                toValue: newRand,
+                duration: newRand,
+                easing: Easing.linear,
+                useNativeDriver: true,
+            }),
             // rotate in other direction, to minimum value (= twice the duration of above)
-            Animated.timing(animatedValue, { toValue: newRand * 2 * -1, duration: newRand * 2, easing: Easing.linear, useNativeDriver: true }),
+            Animated.timing(animatedValue, {
+                toValue: newRand * 2 * -1,
+                duration: newRand * 2,
+                easing: Easing.linear,
+                useNativeDriver: true,
+            }),
             // return to begin position
-            Animated.timing(animatedValue, { toValue: 0.0, duration: newRand, easing: Easing.linear, useNativeDriver: true }),
+            Animated.timing(animatedValue, {
+                toValue: 0.0,
+                duration: newRand,
+                easing: Easing.linear,
+                useNativeDriver: true,
+            }),
         ]).start((o) => {
             if (o.finished) {
                 startAnimation();

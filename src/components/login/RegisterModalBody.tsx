@@ -193,8 +193,8 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                         }}
                         placeholder={'repeat password'}
                         placeholderTextColor={colors.secondary_text}
-                        onChangeText={setPassword}
-                        value={password}
+                        onChangeText={setPasswordConfirmation}
+                        value={passwordConfirmation}
                         secureTextEntry
                     />
                 </View>

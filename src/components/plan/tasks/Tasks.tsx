@@ -45,7 +45,10 @@ export const Tasks = ({ plannedDay }: Props) => {
         if (!tasks.find((task) => task.title?.toLowerCase() === searchText.toLowerCase())) {
             taskElements.push(
                 <View style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
-                    <TaskPreview plannedDay={plannedDay} task={{ id: undefined, title: searchText, description: '' }} />
+                    <TaskPreview
+                        plannedDay={plannedDay}
+                        task={{ id: undefined, title: searchText, description: '' }}
+                    />
                 </View>
             );
         }
@@ -91,6 +94,7 @@ export const Tasks = ({ plannedDay }: Props) => {
                             fontFamily: 'Poppins_400Regular',
                             paddingTop: 2,
                             paddingLeft: 15,
+                            paddingRight: 45,
                         }}
                         onChangeText={onSearchChange}
                         value={searchText}
@@ -101,7 +105,10 @@ export const Tasks = ({ plannedDay }: Props) => {
                 </View>
             </View>
 
-            <ScrollView keyboardShouldPersistTaps={'handled'} style={{ width: '100%', height: '100%' }}>
+            <ScrollView
+                keyboardShouldPersistTaps={'handled'}
+                style={{ width: '100%', height: '100%' }}
+            >
                 <View style={{ paddingTop: 10, width: '100%' }}>{taskElements}</View>
             </ScrollView>
         </View>

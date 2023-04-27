@@ -39,7 +39,7 @@ export const getDatePretty = (date: Date): string => {
 };
 
 export const getTimePretty = (date: Date): string => {
-    return format(date, 'h:m aaa');
+    return format(date, 'h:mm aaa');
 };
 
 export const getDatePrettyWithTime = (date: Date): string => {

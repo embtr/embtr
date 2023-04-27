@@ -1,11 +1,12 @@
 import { View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
+import { getOpenMenu, getShowCardShadow, setMenuOptions } from 'src/redux/user/GlobalState';
 import { CARD_SHADOW } from 'src/util/constants';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
+import { isAndroidDevice } from 'src/util/DeviceUtil';
 
 interface Props {
     children: any;
@@ -17,6 +18,7 @@ export const WidgetBase = ({ children, menuOptions }: Props) => {
 
     const dispatch = useAppDispatch();
     const openMenu = useAppSelector(getOpenMenu);
+    const useCardShadow = isAndroidDevice() && useAppSelector(getShowCardShadow);
 
     const updateMenuOptions = () => {
         if (menuOptions) {
@@ -25,18 +27,18 @@ export const WidgetBase = ({ children, menuOptions }: Props) => {
     };
 
     return (
-        <View style={{ paddingLeft: 5, paddingRight: 5, paddingTop: 5 }}>
+        <View style={{ paddingLeft: 5, paddingRight: 5 }}>
             <View
                 style={[
                     {
-                        borderRadius: 15,
+                        borderRadius: 10,
                         backgroundColor: colors.timeline_card_background,
                         paddingTop: 5,
                         paddingBottom: 8,
                         paddingLeft: 8,
                         paddingRight: 8,
                     },
-                    CARD_SHADOW,
+                    useCardShadow ? CARD_SHADOW : {},
                 ]}
             >
                 {menuOptions && (
@@ -58,7 +60,11 @@ export const WidgetBase = ({ children, menuOptions }: Props) => {
                             }}
                         >
                             <View style={{ paddingTop: 0 }}>
-                                <Ionicons name={'ellipsis-horizontal-circle'} size={15} color={colors.text} />
+                                <Ionicons
+                                    name={'ellipsis-horizontal-circle'}
+                                    size={15}
+                                    color={colors.text}
+                                />
                             </View>
                         </TouchableWithoutFeedback>
                     </View>

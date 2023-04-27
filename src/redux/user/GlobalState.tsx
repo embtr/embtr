@@ -12,6 +12,7 @@ const INITIAL_STATE: GlobalState = {
     currentTab: '',
     userProfileImage:
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
+    showCardShadow: true,
 };
 
 export interface GlobalState {
@@ -23,6 +24,7 @@ export interface GlobalState {
     selectedDayKey: string;
     currentTab: string;
     userProfileImage: string;
+    showCardShadow: boolean;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -54,6 +56,10 @@ export const GlobalState = createSlice({
         },
         setUserProfileImage(state, action) {
             state.userProfileImage = action.payload;
+        },
+        setShowCardShadow(state, action) {
+            console.log('settting shadow to', action.payload);
+            state.showCardShadow = action.payload;
         },
     },
 });
@@ -122,6 +128,23 @@ export const getUserProfileImage = (state: RootState) => {
     return state.globalState.userProfileImage;
 };
 
-export const { setAccessLevel, setUserProfileUrl, setMenuOptions, setOpenMenu, setCloseMenu, setSelectedDayKey, setCurrentTab, setUserProfileImage } =
-    GlobalState.actions;
+export const getShowCardShadow = (state: RootState) => {
+    if (!state?.globalState.showCardShadow === undefined) {
+        return INITIAL_STATE.showCardShadow;
+    }
+
+    return state.globalState.showCardShadow;
+};
+
+export const {
+    setAccessLevel,
+    setUserProfileUrl,
+    setMenuOptions,
+    setOpenMenu,
+    setCloseMenu,
+    setSelectedDayKey,
+    setCurrentTab,
+    setUserProfileImage,
+    setShowCardShadow,
+} = GlobalState.actions;
 export default GlobalState.reducer;

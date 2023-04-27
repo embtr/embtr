@@ -14,10 +14,15 @@ export const CALENDAR_TIME_INDICATOR_DOT_SIZE = 20;
 export const CALENDAR_TIME_HEIGHT = 15;
 
 export const CARD_SHADOW = {
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+        width: 0,
+        height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
 };
 
 //SyMBOLS
@@ -38,7 +43,8 @@ export const POPPINS_SEMI_BOLD = 'Poppins_600SemiBold';
 
 //WIDGETS
 export const TIME_LEFT_IN_DAY_WIDGET = 'Time Left In Day';
-export const TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION = 'A snapshot of how much time remains in the day.';
+export const TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION =
+    'A snapshot of how much time remains in the day.';
 
 export const QUOTE_OF_THE_DAY_WIDGET = 'Quote Of The Day';
 export const QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION = 'One quote a day - sourced by the community!';
@@ -56,7 +62,8 @@ export const UPCOMING_GOALS_WIDGET = 'Upcoming Goals';
 export const UPCOMING_GOALS_WIDGET_DESCRIPTION = 'A simple view of all of your upcoming goals.';
 
 export const DAILY_HISTORY_WIDGET = 'Daily History';
-export const DAILY_HISTORY_WIDGET_DESCRIPTION = 'A 50,000 ft. look at your daily results over the last 30 days.';
+export const DAILY_HISTORY_WIDGET_DESCRIPTION =
+    'A 50,000 ft. look at your daily results over the last 30 days.';
 
 export const PILLARS_WIDGET = 'Pillars Widget';
 export const PILLARS_WIDGET_DESCRIPTION = 'A snapshot of what you hold most important.';
@@ -65,7 +72,7 @@ export const PILLARS_WIDGET_DESCRIPTION = 'A snapshot of what you hold most impo
 export const COMPLETE = 'COMPLETE';
 export const INCOMPLETE = 'INCOMPLETE';
 export const FAILED = 'FAILED';
-export const DELETED = 'DELETED'
+export const DELETED = 'DELETED';
 
 export const WIDGETS = [
     TIME_LEFT_IN_DAY_WIDGET,
@@ -83,5 +90,5 @@ export const WIDGET_LIKE_ICON_SIZE = 20;
 export enum ScrollChangeEvent {
     BEYOND_TOP,
     AT_TOP,
-    BELOW_TOP
+    BELOW_TOP,
 }

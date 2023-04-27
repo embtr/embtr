@@ -1,7 +1,7 @@
 import { Text, TextStyle, View, Image, ImageSourcePropType } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CARD_SHADOW, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { TouchableWithoutFeedback } from 'react-native';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
@@ -29,7 +29,19 @@ interface Props {
     isAccepted?: boolean;
 }
 
-export const TextCard = ({ user, staticImage, added, name, title, body, images, likes, onLike, comments, onCommented }: Props) => {
+export const TextCard = ({
+    user,
+    staticImage,
+    added,
+    name,
+    title,
+    body,
+    images,
+    likes,
+    onLike,
+    comments,
+    onCommented,
+}: Props) => {
     const { colors } = useTheme();
 
     const headerTextStyle = {
@@ -65,31 +77,77 @@ export const TextCard = ({ user, staticImage, added, name, title, body, images, 
 
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>
-            <View style={{ backgroundColor: colors.timeline_card_background, borderRadius: 10 }}>
+            <View
+                style={[
+                    {
+                        backgroundColor: colors.timeline_card_background,
+                        borderRadius: 10,
+                    },
+                    CARD_SHADOW,
+                ]}
+            >
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
                 <View style={{ width: '100%', flexDirection: 'row' }}>
-                    <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            paddingTop: TIMELINE_CARD_PADDING,
+                            paddingLeft: TIMELINE_CARD_PADDING,
+                        }}
+                    >
                         <View>
-                            {staticImage && <Image style={{ width: 45, height: 45 }} source={staticImage} />}
+                            {staticImage && (
+                                <Image style={{ width: 45, height: 45 }} source={staticImage} />
+                            )}
                             {user && <NavigatableUserImage user={user} size={45} />}
                         </View>
 
                         <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
                             <View style={{ flex: 1, flexDirection: 'row' }}>
                                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                                    <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{name}</Text>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Poppins_600SemiBold',
+                                            color: colors.timeline_card_header,
+                                        }}
+                                    >
+                                        {name}
+                                    </Text>
                                 </View>
-                                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
-                                    <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
+                                <View
+                                    style={{
+                                        flex: 2,
+                                        justifyContent: 'center',
+                                        alignItems: 'flex-end',
+                                        paddingRight: TIMELINE_CARD_PADDING,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Poppins_400Regular',
+                                            fontSize: 12,
+                                            opacity: 0.75,
+                                            color: colors.timeline_card_header,
+                                        }}
+                                    >
                                         {datePretty}
                                     </Text>
                                 </View>
                             </View>
 
                             <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                                <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>{user.location}</Text>
+                                <Text
+                                    style={{
+                                        fontFamily: 'Poppins_400Regular',
+                                        fontSize: 10,
+                                        color: colors.timeline_card_header,
+                                    }}
+                                >
+                                    {user.location}
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -103,8 +161,16 @@ export const TextCard = ({ user, staticImage, added, name, title, body, images, 
                         <Text style={headerTextStyle}>{title}</Text>
                     </View>
 
-                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
-                        <Text style={[bodyTextStyle, { textAlign: 'left' }]}>{bodyWithNewLines}</Text>
+                    <View
+                        style={{
+                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingRight: TIMELINE_CARD_PADDING,
+                            paddingTop: 10,
+                        }}
+                    >
+                        <Text style={[bodyTextStyle, { textAlign: 'left' }]}>
+                            {bodyWithNewLines}
+                        </Text>
                         {/* <Text style={[bodyTextStyle, { color: "gray", fontSize: 12, textAlign: "right", marginTop: 5, marginRight: 10 }]}>{"view more..."}</Text> */}
                     </View>
                 </View>
@@ -114,7 +180,13 @@ export const TextCard = ({ user, staticImage, added, name, title, body, images, 
                 {/**********/}
 
                 {carouselImages.length > 0 && (
-                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 10 }}>
+                    <View
+                        style={{
+                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingRight: TIMELINE_CARD_PADDING,
+                            paddingTop: 10,
+                        }}
+                    >
                         <CarouselCards images={carouselImages} />
                     </View>
                 )}
@@ -122,8 +194,19 @@ export const TextCard = ({ user, staticImage, added, name, title, body, images, 
                 {/**********/}
                 {/* FOOTER */}
                 {/**********/}
-                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, zIndex: 1, paddingBottom: TIMELINE_CARD_PADDING }}>
-                    <PostDetailsActionBar likes={likes} commentCount={comments.length} onLike={onLike} />
+                <View
+                    style={{
+                        paddingLeft: TIMELINE_CARD_PADDING,
+                        paddingTop: 10,
+                        zIndex: 1,
+                        paddingBottom: TIMELINE_CARD_PADDING,
+                    }}
+                >
+                    <PostDetailsActionBar
+                        likes={likes}
+                        commentCount={comments.length}
+                        onLike={onLike}
+                    />
                 </View>
             </View>
         </TouchableWithoutFeedback>

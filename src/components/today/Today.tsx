@@ -2,14 +2,17 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
 import { ScrollView, TouchableOpacity, View } from 'react-native';
-import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist';
+import DraggableFlatList, {
+    RenderItemParams,
+    ScaleDecorator,
+} from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { User, Widget, WidgetType } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { WidgetController } from 'src/controller/widget/WidgetController';
 import { TodayTab } from 'src/navigation/RootStackParamList';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu, setShowCardShadow } from 'src/redux/user/GlobalState';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
@@ -31,6 +34,7 @@ export const Today = () => {
     const [user, setUser] = React.useState<User>();
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
+    const dispatch = useAppDispatch();
 
     const fetch = async () => {
         let widgets = await WidgetController.get();
@@ -100,8 +104,10 @@ export const Today = () => {
             onPress: () => {
                 if (!isConfiguringWidgets) {
                     setIsConfiguringWidgets(true);
+                    dispatch(setShowCardShadow(false));
                 } else {
                     setIsConfiguringWidgets(false);
+                    dispatch(setShowCardShadow(true));
                 }
                 closeMenu();
             },
@@ -138,19 +144,38 @@ export const Today = () => {
     const getWidgetFromType = (type: WidgetType) => {
         switch (type) {
             case WidgetType.TIME_LEFT_IN_DAY:
-                return <TodaysCountdownWidget />;
+                return (
+                    <View style={{ paddingBottom: 5 }}>
+                        <TodaysCountdownWidget />
+                    </View>
+                );
 
             case WidgetType.TODAYS_TASKS:
-                return <TodaysTasksWidget user={user} />;
-
+                return (
+                    <View style={{ paddingBottom: 5 }}>
+                        <TodaysTasksWidget user={user} />
+                    </View>
+                );
             case WidgetType.TODAYS_NOTES:
-                return <TodaysNotesWidget />;
+                return (
+                    <View style={{ paddingBottom: 5 }}>
+                        <TodaysNotesWidget />
+                    </View>
+                );
 
             case WidgetType.QUOTE_OF_THE_DAY:
-                return <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />;
+                return (
+                    <View style={{ paddingBottom: 5 }}>
+                        <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
+                    </View>
+                );
 
             case WidgetType.DAILY_HISTORY:
-                return <DailyHistoryWidget userId={user.id!} />;
+                return (
+                    <View style={{ paddingBottom: 5 }}>
+                        <DailyHistoryWidget userId={user.id!} />
+                    </View>
+                );
         }
 
         return <View />;
@@ -192,15 +217,17 @@ export const Today = () => {
                                 ? () => {
                                       updateWidgetOrdering();
                                       setIsConfiguringWidgets(false);
+                                      dispatch(setShowCardShadow(true));
                                   }
                                 : undefined
                         }
                         rightIcon={!isConfiguringWidgets ? 'ellipsis-horizontal' : undefined}
-                        menuOptions={!isConfiguringWidgets ? createEmbtrMenuOptions(menuOptions) : undefined}
+                        menuOptions={
+                            !isConfiguringWidgets ? createEmbtrMenuOptions(menuOptions) : undefined
+                        }
                     />
                     <GestureHandlerRootView style={{ flex: 1 }}>
                         <DraggableFlatList
-                            style={{ height: '100%', marginBottom: 100 }}
                             data={widgets}
                             onDragEnd={({ data }) => {
                                 setWidgets(data);
@@ -208,7 +235,13 @@ export const Today = () => {
                             keyExtractor={(item) => item.type!}
                             renderItem={renderItem}
                             // Add this prop to handle refresh
-                            refreshControl={<RefreshControl enabled={!isConfiguringWidgets} refreshing={refreshing} onRefresh={onRefresh} />}
+                            refreshControl={
+                                <RefreshControl
+                                    enabled={!isConfiguringWidgets}
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            }
                         />
                     </GestureHandlerRootView>
                 </View>

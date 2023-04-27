@@ -111,7 +111,7 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
         const key = ModelKeyGenerator.generateUserPostKey(model.data.userPost);
 
         return (
-            <View key={key} style={[card, CARD_SHADOW]}>
+            <View key={key} style={[card]}>
                 <UserTextCard oldModel={model} />
             </View>
         );
@@ -122,7 +122,7 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
 
         const key = ModelKeyGenerator.generatePlannedDayResultKey(model.data.dayResult);
         return (
-            <View key={key} style={[card, CARD_SHADOW]}>
+            <View key={key} style={[card]}>
                 <DailyResultCard plannedDayResult={model} />
             </View>
         );
@@ -172,7 +172,7 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
         >
             {timelineViews.length > 0 && <View style={{ flex: 1 }}>{timelineViews}</View>}
             {timelineViews.length == 0 && (
-                <View style={{ flex: 1, paddingTop: 50, alignItems: 'center' }}>
+                <View style={{ flex: 1, paddingTop: 50, paddingBottom: 50, alignItems: 'center' }}>
                     <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>
                         looks like there's nothing to show.
                     </Text>

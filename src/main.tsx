@@ -9,7 +9,13 @@ import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
 import { LogBox, View } from 'react-native';
 import { Roboto_500Medium } from '@expo-google-fonts/roboto';
-import { useFonts, Poppins_400Regular, Poppins_400Regular_Italic, Poppins_500Medium, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import {
+    useFonts,
+    Poppins_400Regular,
+    Poppins_400Regular_Italic,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+} from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
@@ -103,8 +109,8 @@ const linking: LinkingOptions<RootStackParamList> = {
 };
 
 export const Main = () => {
-    const [user, setUser] = React.useState<User | undefined>(undefined);
-    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean>(false);
+    const [user, setUser] = React.useState<User | undefined | null>(undefined);
+    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | undefined>(undefined);
 
     const dispatch = useAppDispatch();
     getFirebaseConnection('', '');
@@ -153,20 +159,13 @@ export const Main = () => {
         Roboto_500Medium,
     });
 
-    if (!fontsLoaded) {
-        return (
-            <Screen>
-                <View />
-            </Screen>
-        );
-    }
-
     return (
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
-                    {isEmailVerified() && userIsLoggedIn && <SecureMainStack />}
-                    {(!isEmailVerified() || !userIsLoggedIn) && <InsecureMainStack />}
+                    {user === undefined && <LoadingPage />}
+                    {user === null && <InsecureMainStack />}
+                    {user !== undefined && user !== null && <SecureMainStack />}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

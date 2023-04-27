@@ -24,7 +24,7 @@ export const getDayOfWeekFromDayKey = (dayKey: string) => {
 };
 
 export const getDayOfWeek = (date: Date) => {
-    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
     const dayNumber = date.getDay();
     const dayOfWeek = days[dayNumber];
