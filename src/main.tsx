@@ -147,10 +147,6 @@ export const Main = () => {
         blockingLoad();
     }, [user]);
 
-    const isEmailVerified = () => {
-        return user?.emailVerified;
-    };
-
     let [fontsLoaded] = useFonts({
         Poppins_400Regular_Italic,
         Poppins_400Regular,

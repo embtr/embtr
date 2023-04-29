@@ -94,7 +94,6 @@ export const Tasks = ({ plannedDay }: Props) => {
                             fontFamily: 'Poppins_400Regular',
                             paddingTop: 2,
                             paddingLeft: 15,
-                            paddingRight: 45,
                         }}
                         onChangeText={onSearchChange}
                         value={searchText}
