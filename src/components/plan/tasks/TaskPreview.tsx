@@ -33,7 +33,7 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
 
     const toggleExpand = () => {
         Animated.timing(heightValue, {
-            toValue: isExpanded ? 0 : 55, // Set the target height value to 0 or the height you want to expand to
+            toValue: isExpanded ? 0 : 75, // Set the target height value to 0 or the height you want to expand to
             duration: 100, // Set the duration of the animation
             useNativeDriver: false, // Make sure to set useNativeDriver to false for layout animations
         }).start();
@@ -99,7 +99,7 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                     <Ionicons
                                         name={selectedHabit.iconName as IoniconName}
                                         size={30}
-                                        color={'white'}
+                                        color={colors.text}
                                     />
                                 )}
                             </View>
@@ -152,7 +152,7 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                             : 'chevron-forward-outline'
                                     }
                                     size={20}
-                                    color={'white'}
+                                    color={colors.secondary_text}
                                 />
                             </View>
                         </View>
@@ -160,6 +160,16 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                 </TouchableOpacity>
 
                 <Animated.View style={{ height: heightValue }}>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            paddingLeft: 5,
+                            fontFamily: POPPINS_SEMI_BOLD,
+                            fontSize: 12,
+                        }}
+                    >
+                        Select a Habit
+                    </Text>
                     <HabitScrollSelector habits={habits} onHabitSelected={onHabitSelected} />
                 </Animated.View>
             </View>

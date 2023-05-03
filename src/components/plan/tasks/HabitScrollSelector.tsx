@@ -24,7 +24,7 @@ export const HabitScrollSelector = ({ habits, onHabitSelected }: Props) => {
 
         const Item = (
             <View style={{ paddingLeft: 5, paddingRight: 5, alignItems: 'center' }}>
-                <Text style={{ color, fontSize: 12, fontFamily: POPPINS_REGULAR }}>
+                <Text style={{ color, fontSize: 10, fontFamily: POPPINS_REGULAR }}>
                     {habit.title}
                 </Text>
                 <Ionicons name={habit.iconName as IoniconName} size={30} color={color} />

@@ -125,7 +125,9 @@ export const Tasks = ({ plannedDay }: Props) => {
                 keyboardShouldPersistTaps={'handled'}
                 style={{ width: '100%', height: '100%' }}
             >
-                <View style={{ paddingTop: 10, width: '100%' }}>{taskElements}</View>
+                <View style={{ paddingTop: 10, width: '100%', paddingBottom: 15 }}>
+                    {taskElements}
+                </View>
             </ScrollView>
         </View>
     );

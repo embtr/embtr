@@ -111,8 +111,6 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     };
 
-    console.log('plannedTask', plannedTask);
-
     return (
         <View style={{ width: '97%' }}>
             <TouchableOpacity onPress={onShortPress} onLongPress={onLongPress}>
@@ -170,7 +168,7 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
                                             >
                                                 <Ionicons
                                                     name={plannedTask.habit.iconName as IoniconName}
-                                                    size={16}
+                                                    size={17}
                                                     color={colors.tab_selected}
                                                 />
                                             </View>
