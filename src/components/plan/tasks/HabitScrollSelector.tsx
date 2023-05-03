@@ -1,58 +1,60 @@
-import { FlatList, View, Text } from 'react-native';
+import { FlatList, View, Text, TouchableOpacity, ListRenderItemInfo } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import { IoniconName, POPPINS_REGULAR } from 'src/util/constants';
+import { Habit } from 'resources/schema';
 
 /*
  * https://github.com/Shopify/flash-list
  */
 
-type ioniconNames = keyof typeof Ionicons.glyphMap;
+interface Props {
+    habits: Habit[];
+    onHabitSelected: Function;
+}
 
-type ItemData = {
-    source: string;
-    icon: ioniconNames;
-    name: string;
-    id: number;
-};
+export const HabitScrollSelector = ({ habits, onHabitSelected }: Props) => {
+    const { colors } = useTheme();
 
-const DATA: ItemData[] = [
-    {
-        source: 'ionicons',
-        icon: 'water-outline',
-        name: 'Hydration',
-        id: 1,
-    },
-    {
-        source: 'ionicons',
-        icon: 'book-outline',
-        name: 'Reading',
-        id: 2,
-    },
-    {
-        source: 'ionicons',
-        icon: 'fitness-outline',
-        name: 'Fitness',
-        id: 3,
-    },
-];
+    const [selected, setSelected] = React.useState<number>();
 
-const Item = ({ source, icon, name }: ItemData) => (
-    <View style={{ paddingLeft: 5, paddingRight: 5, alignItems: 'center' }}>
-        <Text style={{ color: 'white', fontSize: 12 }}>{name}</Text>
-        <Ionicons name={icon} size={30} color="white" />
-    </View>
-);
+    const createItem = (habit: Habit) => {
+        const color = selected === habit.id ? colors.tab_selected : colors.text;
 
-export const HabitScrollSelector = () => {
-    const renderItem = ({ item }: { item: ItemData }) => (
-        <Item source={item.source} icon={item.icon} name={item.name} id={item.id} />
-    );
+        const Item = (
+            <View style={{ paddingLeft: 5, paddingRight: 5, alignItems: 'center' }}>
+                <Text style={{ color, fontSize: 12, fontFamily: POPPINS_REGULAR }}>
+                    {habit.title}
+                </Text>
+                <Ionicons name={habit.iconName as IoniconName} size={30} color={color} />
+            </View>
+        );
+
+        return Item;
+    };
+
+    const onChangeHabit = (habit: Habit) => {
+        setSelected(habit.id);
+        onHabitSelected(habit);
+    };
+
+    const renderItem = ({ item }: ListRenderItemInfo<Habit>) => {
+        return (
+            <TouchableOpacity onPress={() => onChangeHabit(item)}>
+                {createItem(item)}
+            </TouchableOpacity>
+        );
+    };
+
     return (
         <View style={{ flex: 1 }}>
-            <FlatList<ItemData>
-                horizontal
-                data={DATA}
+            <FlatList
+                data={habits}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id!.toString()}
             />
         </View>
     );

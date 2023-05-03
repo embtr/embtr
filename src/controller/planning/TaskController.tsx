@@ -2,7 +2,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { TASK } from 'resources/endpoints';
-import { Task as NewTaskModel } from 'resources/schema';
+import { Habit, Task as NewTaskModel, Task } from 'resources/schema';
 import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/requests/TaskTypes';
 import { Timestamp } from 'firebase/firestore';
 
@@ -107,13 +107,35 @@ class TaskController {
     }
 
     public static async search(query: string): Promise<NewTaskModel[]> {
+        const startTime = Date.now();
         return await axiosInstance
             .get(`${TASK}`, { params: { q: query } })
             .then((success) => {
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                console.log(`Task search took ${responseTime} milliseconds`);
                 return success.data.tasks;
             })
             .catch((error) => {
+                const endTime = Date.now();
+                const responseTime = endTime - startTime;
+                console.log(`Task search took ${responseTime} milliseconds`);
                 return [];
+            });
+    }
+
+    public static async updateHabitPreference(task: Task, habit: Habit) {
+        const request = {
+            habitId: habit.id,
+        };
+
+        return await axiosInstance
+            .put(`/task/${task.id}/habit-preference`, request)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
             });
     }
 }

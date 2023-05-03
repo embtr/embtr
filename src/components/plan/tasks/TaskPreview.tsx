@@ -1,11 +1,10 @@
 import { View, Text, TouchableOpacity, Animated } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { CARD_SHADOW, IoniconName, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import Toast from 'react-native-root-toast';
-import React from 'react';
+import React, { useEffect } from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
-import { PlannedDay as PlannedDayModel } from 'resources/schema';
-import { Task as TaskModel } from 'resources/schema';
+import { Habit, PlannedDay as PlannedDayModel, Task } from 'resources/schema';
 import TaskController from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { HabitScrollSelector } from './HabitScrollSelector';
@@ -14,16 +13,23 @@ import { HabitScrollSelector } from './HabitScrollSelector';
 
 interface Props {
     plannedDay: PlannedDayModel;
-    task: TaskModel;
-    index: number;
+    task: Task;
+    habits: Habit[];
 }
 
-export const TaskPreview = ({ plannedDay, task, index }: Props) => {
+export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
     const { colors } = useTheme();
 
     const [add, setAdded] = React.useState(false);
     const [isExpanded, setIsExpanded] = React.useState(false);
+    const [selectedHabit, setSelectedHabit] = React.useState<Habit>();
     const heightValue = React.useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        if (task?.taskHabitPreference?.length) {
+            setSelectedHabit(task.taskHabitPreference[0].habit!);
+        }
+    }, []);
 
     const toggleExpand = () => {
         Animated.timing(heightValue, {
@@ -35,6 +41,11 @@ export const TaskPreview = ({ plannedDay, task, index }: Props) => {
         setIsExpanded(!isExpanded);
     };
 
+    const onHabitSelected = async (habit: Habit) => {
+        setSelectedHabit(habit);
+        TaskController.updateHabitPreference(task, habit);
+    };
+
     return (
         <View style={{ width: '97%' }}>
             <View
@@ -43,80 +54,113 @@ export const TaskPreview = ({ plannedDay, task, index }: Props) => {
                     CARD_SHADOW,
                 ]}
             >
-                <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
-                    <View style={{ flex: 1, paddingLeft: 10 }}>
-                        <Text
-                            style={{
-                                color: colors.goal_primary_font,
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 14,
-                            }}
-                        >
-                            {task.title}
-                        </Text>
-                        <Text
-                            style={{
-                                color: colors.goal_secondary_font,
-                                opacity: 0.9,
-                                fontFamily: POPPINS_REGULAR,
-                                fontSize: 10,
-                            }}
-                        >
-                            {task.description}
-                        </Text>
-                    </View>
+                <TouchableOpacity onPress={toggleExpand}>
+                    <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
+                        <View style={{ flex: 1, paddingLeft: 10 }}>
+                            <Text
+                                style={{
+                                    color: colors.goal_primary_font,
+                                    fontFamily: POPPINS_SEMI_BOLD,
+                                    fontSize: 14,
+                                }}
+                            >
+                                {task.title}
+                            </Text>
+                            <Text
+                                style={{
+                                    color: colors.goal_secondary_font,
+                                    opacity: 0.9,
+                                    fontFamily: POPPINS_REGULAR,
+                                    fontSize: 10,
+                                }}
+                            >
+                                {task.description}
+                            </Text>
+                        </View>
 
-                    <View
-                        style={{
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                            flex: 1,
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={toggleExpand}
+                        <View
                             style={{
-                                height: 30,
-                                borderRadius: 5,
-                                alignItems: 'flex-end',
-                                justifyContent: 'center',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center',
+                                flexDirection: 'row',
+                                flex: 1,
                             }}
                         >
-                            <Ionicons name="chevron-down-outline" size={30} color={'white'} />
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            onPress={async () => {
-                                let taskToAdd = task;
+                            <View
+                                style={{
+                                    height: 30,
+                                    borderRadius: 5,
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'center',
+                                    paddingRight: 10,
+                                }}
+                            >
+                                {selectedHabit?.iconName && (
+                                    <Ionicons
+                                        name={selectedHabit.iconName as IoniconName}
+                                        size={30}
+                                        color={'white'}
+                                    />
+                                )}
+                            </View>
+                            <TouchableOpacity
+                                onPress={async () => {
+                                    let taskToAdd = task;
 
-                                if (!task.id) {
-                                    taskToAdd = await TaskController.createViaApi(task.title!);
-                                }
-                                PlannedTaskController.addTaskViaApi(plannedDay, taskToAdd);
-                                setAdded(!add);
-                                Toast.show('task added!', {
-                                    duration: Toast.durations.LONG,
-                                });
-                            }}
-                            style={{
-                                height: 30,
-                                borderRadius: 5,
-                                alignItems: 'flex-end',
-                                justifyContent: 'center',
-                                paddingRight: 10,
-                                paddingLeft: 10,
-                            }}
-                        >
-                            <Ionicons
-                                name="md-add-circle-outline"
-                                size={30}
-                                color={add ? 'green' : colors.toggle_background_selected}
-                            />
-                        </TouchableOpacity>
+                                    if (!task.id) {
+                                        taskToAdd = await TaskController.createViaApi(task.title!);
+                                    }
+
+                                    PlannedTaskController.addTaskViaApi(
+                                        plannedDay,
+                                        taskToAdd,
+                                        selectedHabit
+                                    );
+                                    setAdded(!add);
+
+                                    Toast.show('task added!', {
+                                        duration: Toast.durations.LONG,
+                                    });
+                                }}
+                                style={{
+                                    height: 30,
+                                    borderRadius: 5,
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'center',
+                                    paddingRight: 20,
+                                }}
+                            >
+                                <Ionicons
+                                    name="md-add-circle-outline"
+                                    size={30}
+                                    color={add ? 'green' : colors.toggle_background_selected}
+                                />
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    height: 30,
+                                    borderRadius: 5,
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'center',
+                                    paddingRight: 10,
+                                }}
+                            >
+                                <Ionicons
+                                    name={
+                                        isExpanded
+                                            ? 'chevron-down-outline'
+                                            : 'chevron-forward-outline'
+                                    }
+                                    size={20}
+                                    color={'white'}
+                                />
+                            </View>
+                        </View>
                     </View>
-                </View>
+                </TouchableOpacity>
+
                 <Animated.View style={{ height: heightValue }}>
-                    <HabitScrollSelector />
+                    <HabitScrollSelector habits={habits} onHabitSelected={onHabitSelected} />
                 </Animated.View>
             </View>
         </View>

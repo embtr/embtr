@@ -3,8 +3,11 @@ import { TaskModel } from 'src/controller/planning/TaskController';
 import { plannedTaskIsComplete } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { PLANNED_DAY } from 'resources/endpoints';
-import { CreatePlannedTaskRequest, UpdatePlannedTaskRequest } from 'resources/types/requests/PlannedTaskTypes';
-import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import {
+    CreatePlannedTaskRequest,
+    UpdatePlannedTaskRequest,
+} from 'resources/types/requests/PlannedTaskTypes';
+import { Habit, PlannedDay as PlannedDayModel } from 'resources/schema';
 import { PlannedTask as NewPlannedTaskModel } from 'resources/schema';
 import { Task as NewTaskModel } from 'resources/schema';
 
@@ -75,7 +78,11 @@ export const getLongestStreak = (plannedTasks: PlannedTaskModel[]): number => {
 };
 
 class PlannedTaskController {
-    public static async addTaskViaApi(plannedDay: PlannedDayModel, task: NewTaskModel) {
+    public static async addTaskViaApi(
+        plannedDay: PlannedDayModel,
+        task: NewTaskModel,
+        habit?: Habit
+    ) {
         if (!plannedDay.id || !task.id) {
             return;
         }
@@ -83,6 +90,7 @@ class PlannedTaskController {
         const request: CreatePlannedTaskRequest = {
             plannedDayId: plannedDay.id,
             taskId: task.id,
+            habitId: habit?.id,
         };
 
         return await axiosInstance

@@ -5,8 +5,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TextInput, View } from 'react-native';
 import TaskController from 'src/controller/planning/TaskController';
 import { TaskPreview } from './TaskPreview';
-import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { Habit, PlannedDay as PlannedDayModel } from 'resources/schema';
 import { Task as TaskModel } from 'resources/schema';
+import { HabitController } from 'src/controller/habit/HabitController';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -17,6 +18,16 @@ export const Tasks = ({ plannedDay }: Props) => {
 
     const [searchText, setSearchText] = React.useState('');
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
+    const [habits, setHabits] = React.useState<Habit[]>([]);
+
+    const fetchHabits = async () => {
+        const results: Habit[] = await HabitController.getHabits();
+        setHabits(results);
+    };
+
+    React.useEffect(() => {
+        fetchHabits();
+    }, []);
 
     const onSearchChange = (text: string) => {
         setSearchText(text);
@@ -32,12 +43,13 @@ export const Tasks = ({ plannedDay }: Props) => {
         setTasks(results);
     };
 
+    const startTime = Date.now();
     const taskElements: JSX.Element[] = [];
     for (let i = 0; i < tasks.length; i++) {
         const task = tasks[i];
         taskElements.push(
             <View key={task.id} style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
-                <TaskPreview plannedDay={plannedDay} task={task} />
+                <TaskPreview plannedDay={plannedDay} task={task} habits={habits} />
             </View>
         );
     }
@@ -48,11 +60,16 @@ export const Tasks = ({ plannedDay }: Props) => {
                     <TaskPreview
                         plannedDay={plannedDay}
                         task={{ id: undefined, title: searchText, description: '' }}
+                        habits={habits}
                     />
                 </View>
             );
         }
     }
+
+    const endTime = Date.now();
+    console.log('TaskPreview render time: ' + (endTime - startTime) + 'ms');
+    console.log('TaskPreview render count: ' + tasks.length);
 
     return (
         <View style={{ flex: 1 }}>

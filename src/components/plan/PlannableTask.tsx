@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW } from 'src/util/constants';
+import { CARD_SHADOW, IoniconName } from 'src/util/constants';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
@@ -111,10 +111,22 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     };
 
+    console.log('plannedTask', plannedTask);
+
     return (
         <View style={{ width: '97%' }}>
             <TouchableOpacity onPress={onShortPress} onLongPress={onLongPress}>
-                <View style={[{ backgroundColor: isEnabled ? colors.button_background : colors.tomorrow_unselected, borderRadius: 15 }, CARD_SHADOW]}>
+                <View
+                    style={[
+                        {
+                            backgroundColor: isEnabled
+                                ? colors.button_background
+                                : colors.tomorrow_unselected,
+                            borderRadius: 15,
+                        },
+                        CARD_SHADOW,
+                    ]}
+                >
                     <View style={{ borderRadius: 15, flexDirection: 'row', overflow: 'hidden' }}>
                         <View
                             style={{
@@ -142,16 +154,6 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
                                         >
                                             {plannedTask?.task?.title}
                                         </Text>
-                                        <Text
-                                            style={{
-                                                color: colors.tab_selected,
-                                                fontFamily: 'Poppins_400Regular',
-                                                fontSize: 9,
-                                                paddingStart: 5,
-                                            }}
-                                        >
-                                            {/*plannedTask?.routine.id ? 'habit' : ''*/}
-                                        </Text>
                                     </View>
                                     <View
                                         style={{
@@ -162,6 +164,17 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
                                             paddingRight: 10,
                                         }}
                                     >
+                                        {plannedTask.habit && (
+                                            <View
+                                                style={{ paddingRight: 10, flexDirection: 'row' }}
+                                            >
+                                                <Ionicons
+                                                    name={plannedTask.habit.iconName as IoniconName}
+                                                    size={16}
+                                                    color={colors.tab_selected}
+                                                />
+                                            </View>
+                                        )}
                                         <View>
                                             {plannedTask?.status === 'COMPLETE' ? (
                                                 <TaskCompleteSymbol small={true} />
@@ -180,29 +193,101 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
                             </View>
 
                             <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 2 }}>
-                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
-                                    <Ionicons name={'time'} size={12} color={colors.goal_secondary_font} />
-                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingLeft: 10,
+                                    }}
+                                >
+                                    <Ionicons
+                                        name={'time'}
+                                        size={12}
+                                        color={colors.goal_secondary_font}
+                                    />
+                                    <Text
+                                        style={{
+                                            paddingLeft: 5,
+                                            color: colors.goal_secondary_font,
+                                            fontFamily: 'Poppins_400Regular',
+                                            fontSize: 10,
+                                        }}
+                                    >
                                         filler 1
                                     </Text>
                                 </View>
 
-                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
-                                    <MaterialCommunityIcons name="timer" size={12} color={colors.goal_secondary_font} />
-                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingLeft: 10,
+                                    }}
+                                >
+                                    <MaterialCommunityIcons
+                                        name="timer"
+                                        size={12}
+                                        color={colors.goal_secondary_font}
+                                    />
+                                    <Text
+                                        style={{
+                                            paddingLeft: 5,
+                                            color: colors.goal_secondary_font,
+                                            fontFamily: 'Poppins_400Regular',
+                                            fontSize: 10,
+                                        }}
+                                    >
                                         filler 2
                                     </Text>
                                 </View>
-                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
-                                    <Ionicons name={'stats-chart-outline'} size={12} color={colors.goal_secondary_font} />
-                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingLeft: 10,
+                                    }}
+                                >
+                                    <Ionicons
+                                        name={'stats-chart-outline'}
+                                        size={12}
+                                        color={colors.goal_secondary_font}
+                                    />
+                                    <Text
+                                        style={{
+                                            paddingLeft: 5,
+                                            color: colors.goal_secondary_font,
+                                            fontFamily: 'Poppins_400Regular',
+                                            fontSize: 10,
+                                        }}
+                                    >
                                         filler 3
                                     </Text>
                                 </View>
 
-                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 10 }}>
-                                    <MaterialCommunityIcons name="pillar" size={12} color={colors.goal_secondary_font} />
-                                    <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 10 }}>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingLeft: 10,
+                                    }}
+                                >
+                                    <MaterialCommunityIcons
+                                        name="pillar"
+                                        size={12}
+                                        color={colors.goal_secondary_font}
+                                    />
+                                    <Text
+                                        style={{
+                                            paddingLeft: 5,
+                                            color: colors.goal_secondary_font,
+                                            fontFamily: 'Poppins_400Regular',
+                                            fontSize: 10,
+                                        }}
+                                    >
                                         filler 4
                                     </Text>
                                 </View>
