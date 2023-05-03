@@ -18,7 +18,13 @@ export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
     };
 
     return (
-        <Modal visible={visible} animationType={'slide'}>
+        <Modal
+            visible={visible}
+            animationType={'slide'}
+            onRequestClose={() => {
+                dismiss();
+            }}
+        >
             <RootSiblingParent>
                 <Screen>
                     <SafeAreaView forceInset={{ bottom: 'never' }}>
