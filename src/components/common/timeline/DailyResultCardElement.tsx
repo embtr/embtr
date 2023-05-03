@@ -6,6 +6,8 @@ import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';
 import { PlannedTask as PlannedTaskModel } from 'resources/schema';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { IoniconName } from 'src/util/constants';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -42,19 +44,50 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                         }
                     }}
                 >
-                    {status === 'FAILED' ? <TaskFailedSymbol /> : status === 'COMPLETE' ? <TaskCompleteSymbol /> : <TaskInProgressSymbol />}
+                    {status === 'FAILED' ? (
+                        <TaskFailedSymbol />
+                    ) : status === 'COMPLETE' ? (
+                        <TaskCompleteSymbol />
+                    ) : (
+                        <TaskInProgressSymbol />
+                    )}
                 </TouchableWithoutFeedback>
 
-                {/*
-                old impl used to have have a second line for the task description
-
                 <View style={{ paddingLeft: 5 }}>
-                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{plannedTask.task?.title}</Text>
-                    <Text style={{ color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 9 }}></Text>
-                </View>*/}
-
-                <View style={{ paddingLeft: 5 }}>
-                    <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 12 }}>{plannedTask.task?.title}</Text>
+                    <Text
+                        style={{
+                            color: colors.goal_primary_font,
+                            fontFamily: 'Poppins_600SemiBold',
+                            fontSize: 12,
+                            lineHeight: 14,
+                        }}
+                    >
+                        {plannedTask.task?.title}
+                    </Text>
+                    {plannedTask.habit && (
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignContent: 'center',
+                            }}
+                        >
+                            <Ionicons
+                                name={plannedTask.habit?.iconName as IoniconName}
+                                size={12}
+                                color={colors.tab_selected}
+                            />
+                            <Text
+                                style={{
+                                    paddingLeft: 5,
+                                    color: colors.tab_selected,
+                                    fontSize: 10,
+                                    lineHeight: 12,
+                                }}
+                            >
+                                {plannedTask.habit.title}
+                            </Text>
+                        </View>
+                    )}
                 </View>
             </View>
         </View>
