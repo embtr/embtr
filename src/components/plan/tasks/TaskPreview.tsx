@@ -8,6 +8,7 @@ import { Habit, PlannedDay as PlannedDayModel, Task } from 'resources/schema';
 import TaskController from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { HabitScrollSelector } from './HabitScrollSelector';
+import { HabitIcon } from '../habit/HabitIcon';
 
 /* Pog I was here - Cherkim */
 
@@ -33,7 +34,7 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
 
     const toggleExpand = () => {
         Animated.timing(heightValue, {
-            toValue: isExpanded ? 0 : 75, // Set the target height value to 0 or the height you want to expand to
+            toValue: isExpanded ? 0 : 80, // Set the target height value to 0 or the height you want to expand to
             duration: 100, // Set the duration of the animation
             useNativeDriver: false, // Make sure to set useNativeDriver to false for layout animations
         }).start();
@@ -96,8 +97,8 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                 }}
                             >
                                 {selectedHabit?.iconName && (
-                                    <Ionicons
-                                        name={selectedHabit.iconName as IoniconName}
+                                    <HabitIcon
+                                        habit={selectedHabit}
                                         size={30}
                                         color={colors.text}
                                     />

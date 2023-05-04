@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export const USER_SEARCH_WIDTH = '95%';
 export const SETTINGS_MENU_ITEM_WIDTH = '95%';
@@ -96,3 +96,4 @@ export enum ScrollChangeEvent {
 }
 
 export type IoniconName = keyof typeof Ionicons.glyphMap;
+export type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
