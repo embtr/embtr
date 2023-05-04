@@ -15,6 +15,7 @@ import PlannedDayController, {
     getDayKey,
     getTodayKey,
 } from 'src/controller/planning/PlannedDayController';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
 /*
  * Avoid rerenders
@@ -49,7 +50,12 @@ export const PlanMain = () => {
                 const plannedDay = await PlannedDayController.getForCurrentUserViaApi(
                     selectedDayKey
                 );
-                if (plannedDay) {
+
+                if (plannedDay?.plannedDayResults?.length ?? 0 > 0) {
+                    const plannedDayResult = plannedDay!.plannedDayResults![0];
+                    plannedDayResult.active = true;
+                    DailyResultController.updateViaApi(plannedDayResult);
+                } else if (plannedDay) {
                     PlannedDayController.completeDayViaApi(plannedDay);
                 }
 
