@@ -61,9 +61,11 @@ export const HabitScrollSelector = ({ habits, onHabitSelected }: Props) => {
         const color = selected === habit.id ? colors.tab_selected : colors.text;
 
         const Item = (
-            <View style={{ paddingLeft: 5, paddingRight: 5, alignItems: 'center' }}>
-                <HabitIcon habit={habit} size={30} color={color} />
-                {getText(habit, color)}
+            <View style={{ paddingLeft: 5, paddingRight: 5, alignItems: 'center', height: 40 }}>
+                <View style={{ height: 33 }}>
+                    <HabitIcon habit={habit} size={30} color={color} />
+                </View>
+                <View style={{ alignItems: 'center' }}>{getText(habit, color)}</View>
             </View>
         );
 
