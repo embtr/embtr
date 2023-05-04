@@ -51,7 +51,7 @@ export const PlanMain = () => {
                     selectedDayKey
                 );
 
-                if (plannedDay?.plannedDayResults?.length ?? 0 > 0) {
+                if (plannedDay?.plannedDayResults?.length) {
                     const plannedDayResult = plannedDay!.plannedDayResults![0];
                     plannedDayResult.active = true;
                     DailyResultController.updateViaApi(plannedDayResult);

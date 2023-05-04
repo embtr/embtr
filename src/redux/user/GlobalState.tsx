@@ -58,7 +58,6 @@ export const GlobalState = createSlice({
             state.userProfileImage = action.payload;
         },
         setShowCardShadow(state, action) {
-            console.log('settting shadow to', action.payload);
             state.showCardShadow = action.payload;
         },
     },

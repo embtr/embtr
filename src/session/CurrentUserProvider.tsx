@@ -2,7 +2,6 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 export const registerAuthStateListener = (callback: Function) => {
     onAuthStateChanged(getAuth(), (user) => {
-        console.log('AUTH STATE DETECTED: ', user);
         callback(user);
     });
 };

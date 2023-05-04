@@ -22,6 +22,8 @@ import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import { setUserProfileImage } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { User as UserModel } from 'resources/schema';
+import NotificationController from './controller/notification/NotificationController';
+import PushNotificationController from './controller/notification/PushNotificationController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -117,6 +119,7 @@ export const Main = () => {
 
     LogBox.ignoreAllLogs();
     registerAuthStateListener(setUser);
+    PushNotificationController.registerUpdatePostNotificationTokenListener();
 
     const resetGlobalState = (user: UserModel) => {
         dispatch(setUserProfileImage(user.photoUrl));

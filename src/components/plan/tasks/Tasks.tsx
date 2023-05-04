@@ -67,10 +67,6 @@ export const Tasks = ({ plannedDay }: Props) => {
         }
     }
 
-    const endTime = Date.now();
-    console.log('TaskPreview render time: ' + (endTime - startTime) + 'ms');
-    console.log('TaskPreview render count: ' + tasks.length);
-
     return (
         <View style={{ flex: 1 }}>
             <View style={{ alignItems: 'center', paddingTop: 20 }}>

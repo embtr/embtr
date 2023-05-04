@@ -113,13 +113,11 @@ class TaskController {
             .then((success) => {
                 const endTime = Date.now();
                 const responseTime = endTime - startTime;
-                console.log(`Task search took ${responseTime} milliseconds`);
                 return success.data.tasks;
             })
             .catch((error) => {
                 const endTime = Date.now();
                 const responseTime = endTime - startTime;
-                console.log(`Task search took ${responseTime} milliseconds`);
                 return [];
             });
     }
