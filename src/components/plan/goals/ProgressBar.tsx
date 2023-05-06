@@ -1,6 +1,5 @@
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 
 interface Props {
     progress: number;
@@ -10,15 +9,10 @@ interface Props {
 export const ProgressBar = ({ progress, success }: Props) => {
     const { colors } = useTheme();
 
-    let [fontsLoaded] = useFonts({
-        Poppins_500Medium,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
+    let percentRemaining = progress === Number.POSITIVE_INFINITY ? 100 : Math.round(progress);
+    if (isNaN(percentRemaining)) {
+        percentRemaining = 100;
     }
-
-    const percentRemaining = progress === Number.POSITIVE_INFINITY ? 100 : Math.round(progress);
 
     const percentProgess = '' + percentRemaining + '%';
 
@@ -29,7 +23,10 @@ export const ProgressBar = ({ progress, success }: Props) => {
                     style={{
                         height: 6,
                         width: percentProgess,
-                        backgroundColor: success === false ? colors.progress_bar_failed : colors.progress_bar_complete,
+                        backgroundColor:
+                            success === false
+                                ? colors.progress_bar_failed
+                                : colors.progress_bar_complete,
                         borderRadius: 10,
                     }}
                 ></View>
@@ -41,7 +38,10 @@ export const ProgressBar = ({ progress, success }: Props) => {
                         fontFamily: 'Poppins_500Medium',
                         fontSize: 11,
                         textAlign: 'center',
-                        color: success === false ? colors.progress_bar_failed : colors.progress_bar_complete,
+                        color:
+                            success === false
+                                ? colors.progress_bar_failed
+                                : colors.progress_bar_complete,
                     }}
                 >
                     {' '}

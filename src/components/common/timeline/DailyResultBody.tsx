@@ -1,7 +1,7 @@
 import { View, Text, TextStyle } from 'react-native';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDayOfWeek } from 'src/controller/planning/TaskController';
+import { getUTCDayOfWeek } from 'src/controller/planning/TaskController';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
@@ -44,7 +44,8 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
         });
     });
 
-    const dayOfWeek = getDayOfWeek(plannedDayResult.plannedDay?.date!);
+    const dayOfWeek = getUTCDayOfWeek(plannedDayResult.plannedDay?.date!);
+    console.log(plannedDayResult.plannedDay?.date!, dayOfWeek);
 
     let totalTasks = plannedDayResult.plannedDay?.plannedTasks?.length;
     let completedCount = 0;
@@ -68,15 +69,31 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
                 <Text style={headerTextStyle}>{dayOfWeek}</Text>
             </View>
 
-            <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 5 }}>
-                <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>{plannedDayResult.description}</Text>
+            <View
+                style={{
+                    paddingLeft: TIMELINE_CARD_PADDING,
+                    paddingRight: TIMELINE_CARD_PADDING,
+                    paddingTop: 5,
+                }}
+            >
+                <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>
+                    {plannedDayResult.description}
+                </Text>
                 <View style={{ paddingTop: 5 }}>
                     <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
                 </View>
             </View>
 
             {carouselImages.length > 0 && (
-                <View style={{ marginLeft: 10, marginRight: 10, overflow: 'hidden', paddingTop: 10, alignItems: 'center' }}>
+                <View
+                    style={{
+                        marginLeft: 10,
+                        marginRight: 10,
+                        overflow: 'hidden',
+                        paddingTop: 10,
+                        alignItems: 'center',
+                    }}
+                >
                     <CarouselCards images={carouselImages} />
                 </View>
             )}

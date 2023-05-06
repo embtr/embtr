@@ -5,7 +5,7 @@ import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, ScrollView } fro
 import { TextInput } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
-import { getDayOfWeek } from 'src/controller/planning/TaskController';
+import { getUTCDayOfWeek } from 'src/controller/planning/TaskController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
@@ -106,7 +106,7 @@ export const EditDailyResultDetails = () => {
 
     let dayOfWeek = '';
     if (plannedDayResult.plannedDay?.createdAt) {
-        dayOfWeek = getDayOfWeek(plannedDayResult.plannedDay.createdAt);
+        dayOfWeek = getUTCDayOfWeek(plannedDayResult.plannedDay.createdAt);
     }
 
     let plannedTaskViews: JSX.Element[] = [];
@@ -119,7 +119,9 @@ export const EditDailyResultDetails = () => {
     });
 
     const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
-        setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
+        setImageUploadProgress(
+            'uploading image ' + progressReport.completed + ' of ' + progressReport.total
+        );
     };
 
     const onDeleteImage = (deletedImageUrl: string) => {
@@ -154,28 +156,52 @@ export const EditDailyResultDetails = () => {
         <Screen>
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
 
-            <Banner name="Edit Daily Result" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={onSubmit} />
+            <Banner
+                name="Edit Daily Result"
+                leftText={'Cancel'}
+                leftRoute="BACK"
+                rightText={'Save'}
+                rightOnClick={onSubmit}
+            />
             <ScrollView>
-                <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
+                <KeyboardAvoidingView
+                    style={{ height: '100%' }}
+                    keyboardVerticalOffset={isIosApp() ? -10 : 111}
+                    behavior={isIosApp() ? 'padding' : 'height'}
+                >
                     <View style={{ paddingTop: 10 }}>
                         {/* COMPLETED/ FAILED */}
                         {dayOfWeek && (
                             <View style={{ paddingTop: 5 }}>
                                 <Text style={headerTextStyle}>
-                                    {dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1)}{' '}
-                                    <Text style={{ color: colors.progress_bar_complete }}>'Complete!'</Text>
+                                    {dayOfWeek.substring(0, 1).toUpperCase() +
+                                        dayOfWeek.substring(1)}{' '}
+                                    <Text style={{ color: colors.progress_bar_complete }}>
+                                        'Complete!'
+                                    </Text>
                                 </Text>
                             </View>
                         )}
 
                         {/* TASKS */}
 
-                        <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingRight: TIMELINE_CARD_PADDING, paddingTop: 20 }}>
+                        <View
+                            style={{
+                                paddingLeft: TIMELINE_CARD_PADDING,
+                                paddingRight: TIMELINE_CARD_PADDING,
+                                paddingTop: 20,
+                            }}
+                        >
                             <Text
                                 onPress={() => {
                                     Keyboard.dismiss();
                                 }}
-                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                                style={{
+                                    color: colors.text,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                }}
                             >
                                 Tasks
                             </Text>
@@ -188,7 +214,12 @@ export const EditDailyResultDetails = () => {
                                 onPress={() => {
                                     Keyboard.dismiss();
                                 }}
-                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                                style={{
+                                    color: colors.text,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                }}
                             >
                                 Description
                             </Text>
@@ -220,7 +251,12 @@ export const EditDailyResultDetails = () => {
                                 onPress={() => {
                                     Keyboard.dismiss();
                                 }}
-                                style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                                style={{
+                                    color: colors.text,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                }}
                             >
                                 Photos
                             </Text>

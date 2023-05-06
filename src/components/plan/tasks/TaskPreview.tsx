@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, Animated } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, IoniconName, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import Toast from 'react-native-root-toast';
 import React, { useEffect } from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
@@ -148,9 +148,7 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                             >
                                 <Ionicons
                                     name={
-                                        isExpanded
-                                            ? 'chevron-down-outline'
-                                            : 'chevron-forward-outline'
+                                        isExpanded ? 'chevron-up-outline' : 'chevron-down-outline'
                                     }
                                     size={20}
                                     color={colors.secondary_text}
@@ -171,7 +169,11 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                     >
                         Select a Habit
                     </Text>
-                    <HabitScrollSelector habits={habits} onHabitSelected={onHabitSelected} />
+                    <HabitScrollSelector
+                        habits={habits}
+                        initialHabit={selectedHabit}
+                        onHabitSelected={onHabitSelected}
+                    />
                 </Animated.View>
             </View>
         </View>

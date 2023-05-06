@@ -17,17 +17,25 @@ export interface TaskModel {
     active: boolean;
 }
 
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
 export const getDayOfWeekFromDayKey = (dayKey: string) => {
     const date = getDateFromDayKey(dayKey);
-    const dayOfWeek = getDayOfWeek(date);
+    const dayOfWeek = getUTCDayOfWeek(date);
     return dayOfWeek;
 };
 
-export const getDayOfWeek = (date: Date) => {
-    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-
+export const getLocalDayOfWeek = (date: Date) => {
     const dayNumber = date.getDay();
     const dayOfWeek = days[dayNumber];
+
+    return dayOfWeek;
+};
+
+export const getUTCDayOfWeek = (date: Date) => {
+    const dayNumber = date.getUTCDay();
+    const dayOfWeek = days[dayNumber];
+
     return dayOfWeek;
 };
 
@@ -122,9 +130,20 @@ class TaskController {
             });
     }
 
-    public static async updateHabitPreference(task: Task, habit: Habit) {
+    public static async getRecent(): Promise<NewTaskModel[]> {
+        return await axiosInstance
+            .get(`${TASK}recent`)
+            .then((success) => {
+                return success.data.tasks;
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
+    public static async updateHabitPreference(task: Task, habit: Habit | undefined) {
         const request = {
-            habitId: habit.id,
+            habitId: habit?.id,
         };
 
         return await axiosInstance

@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { getDayOfWeek } from 'src/controller/planning/TaskController';
+import { getLocalDayOfWeek } from 'src/controller/planning/TaskController';
 import { Countdown } from '../common/time/Countdown';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
@@ -8,7 +8,7 @@ export const TodaysCountdownWidget = () => {
     const { colors } = useTheme();
 
     const date = new Date();
-    const day = getDayOfWeek(date);
+    const day = getLocalDayOfWeek(date);
     const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
 
     return (

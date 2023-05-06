@@ -11,13 +11,20 @@ import { HabitIcon } from '../habit/HabitIcon';
 
 interface Props {
     habits: Habit[];
+    initialHabit?: Habit;
     onHabitSelected: Function;
 }
 
-export const HabitScrollSelector = ({ habits, onHabitSelected }: Props) => {
+export const HabitScrollSelector = ({ habits, initialHabit, onHabitSelected }: Props) => {
     const { colors } = useTheme();
 
-    const [selected, setSelected] = React.useState<number>();
+    const [selected, setSelected] = React.useState<number | undefined>();
+
+    React.useEffect(() => {
+        if (initialHabit) {
+            setSelected(initialHabit.id);
+        }
+    }, [initialHabit]);
 
     const getText = (habit: Habit, color: string) => {
         if (!habit.title) {
@@ -33,7 +40,7 @@ export const HabitScrollSelector = ({ habits, onHabitSelected }: Props) => {
                         lineHeight: 10,
                         color,
                         fontSize: 10,
-                        fontFamily: 'POPPINS_REGULAR',
+                        fontFamily: POPPINS_REGULAR,
                     }}
                 >
                     {token}
@@ -48,7 +55,7 @@ export const HabitScrollSelector = ({ habits, onHabitSelected }: Props) => {
                         lineHeight: 10,
                         color,
                         fontSize: 10,
-                        fontFamily: 'POPPINS_REGULAR',
+                        fontFamily: POPPINS_REGULAR,
                     }}
                 >
                     {' '}
@@ -73,8 +80,14 @@ export const HabitScrollSelector = ({ habits, onHabitSelected }: Props) => {
     };
 
     const onChangeHabit = (habit: Habit) => {
-        setSelected(habit.id);
-        onHabitSelected(habit);
+        console.log('onChangeHabit', habit.id, selected);
+        if (selected === habit.id) {
+            setSelected(undefined);
+            onHabitSelected(undefined);
+        } else {
+            setSelected(habit.id);
+            onHabitSelected(habit);
+        }
     };
 
     const renderItem = ({ item }: ListRenderItemInfo<Habit>) => {
