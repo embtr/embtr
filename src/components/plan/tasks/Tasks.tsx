@@ -152,18 +152,20 @@ export const Tasks = ({ plannedDay }: Props) => {
 
                 {taskElements.length === 0 && (
                     <View>
-                        <View>
-                            <Text
-                                style={{
-                                    color: colors.secondary_text,
-                                    paddingLeft: 5,
-                                    paddingBottom: 5,
-                                }}
-                            >
-                                Recent Tasks
-                            </Text>
-                            <View style={{ alignItems: 'center' }}>{recentTaskElements}</View>
-                        </View>
+                        {recentTaskElements.length > 0 && (
+                            <View>
+                                <Text
+                                    style={{
+                                        color: colors.secondary_text,
+                                        paddingLeft: 5,
+                                        paddingBottom: 5,
+                                    }}
+                                >
+                                    Recent Tasks
+                                </Text>
+                                <View style={{ alignItems: 'center' }}>{recentTaskElements}</View>
+                            </View>
+                        )}
 
                         <View style={{ paddingTop: 15 }}>
                             <Text
