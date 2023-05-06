@@ -1,8 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { Metadata } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { MetadataController } from 'src/controller/metadata/MetadataController';
+import { MetadataController, MetadataKey } from 'src/controller/metadata/MetadataController';
 import { CARD_SHADOW, SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
 
 interface Props {
@@ -15,11 +14,10 @@ export const SettingsTextElement = ({ text, secondaryText }: Props) => {
     const [isLatest, setIsLatest] = React.useState<boolean>(true);
 
     const fetch = async () => {
-        const allMetadata: Metadata[] = await MetadataController.getMetadata();
-        for (const metadata of allMetadata) {
-            if (metadata.key === 'VERSION') {
-                setIsLatest(metadata.value === secondaryText);
-            }
+        const version = await MetadataController.getMetadata(MetadataKey.VERSION);
+
+        if (version) {
+            setIsLatest(version === secondaryText);
         }
     };
 

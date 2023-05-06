@@ -5,6 +5,7 @@ import { TASK } from 'resources/endpoints';
 import { Habit, Task as NewTaskModel, Task } from 'resources/schema';
 import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/requests/TaskTypes';
 import { Timestamp } from 'firebase/firestore';
+import { MetadataController, MetadataKey } from '../metadata/MetadataController';
 
 export interface TaskModel {
     id?: string;
@@ -133,6 +134,17 @@ class TaskController {
     public static async getRecent(): Promise<NewTaskModel[]> {
         return await axiosInstance
             .get(`${TASK}recent`)
+            .then((success) => {
+                return success.data.tasks;
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
+    public static async getRecommended(): Promise<NewTaskModel[]> {
+        return await axiosInstance
+            .get(`${TASK}recommended`)
             .then((success) => {
                 return success.data.tasks;
             })

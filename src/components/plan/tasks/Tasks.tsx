@@ -19,6 +19,7 @@ export const Tasks = ({ plannedDay }: Props) => {
     const [searchText, setSearchText] = React.useState('');
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
     const [recentTasks, setRecentTasks] = React.useState<TaskModel[]>([]);
+    const [recommendedTasks, setRecommendedTasks] = React.useState<TaskModel[]>([]);
     const [habits, setHabits] = React.useState<Habit[]>([]);
 
     const fetchHabits = async () => {
@@ -31,9 +32,15 @@ export const Tasks = ({ plannedDay }: Props) => {
         setRecentTasks(results);
     };
 
+    const fetchRecommendedTasks = async () => {
+        const results: TaskModel[] = await TaskController.getRecommended();
+        setRecommendedTasks(results);
+    };
+
     React.useEffect(() => {
         fetchHabits();
         fetchRecentTasks();
+        fetchRecommendedTasks();
     }, []);
 
     const onSearchChange = (text: string) => {
@@ -82,6 +89,21 @@ export const Tasks = ({ plannedDay }: Props) => {
         for (let i = 0; i < recentTasks.length; i++) {
             const task = recentTasks[i];
             recentTaskElements.push(
+                <View
+                    key={task.id}
+                    style={{ width: '100%', paddingBottom: 5, alignItems: 'center' }}
+                >
+                    <TaskPreview plannedDay={plannedDay} task={task} habits={habits} />
+                </View>
+            );
+        }
+    }
+
+    const recommendedTaskElements: JSX.Element[] = [];
+    if (taskElements.length === 0) {
+        for (let i = 0; i < recommendedTasks.length; i++) {
+            const task = recommendedTasks[i];
+            recommendedTaskElements.push(
                 <View
                     key={task.id}
                     style={{ width: '100%', paddingBottom: 5, alignItems: 'center' }}
@@ -167,46 +189,22 @@ export const Tasks = ({ plannedDay }: Props) => {
                             </View>
                         )}
 
-                        <View style={{ paddingTop: 15 }}>
-                            <Text
-                                style={{
-                                    color: colors.secondary_text,
-                                    paddingLeft: 5,
-                                    paddingBottom: 5,
-                                }}
-                            >
-                                Recomended Tasks
-                            </Text>
-                            <View style={{ alignItems: 'center' }}>
-                                <TaskPreview
-                                    plannedDay={plannedDay}
-                                    task={{ id: undefined, title: 'Read a book', description: '' }}
-                                    habits={habits}
-                                />
-                                <View style={{ height: 5 }} />
-                                <TaskPreview
-                                    plannedDay={plannedDay}
-                                    task={{ id: undefined, title: 'Write a book', description: '' }}
-                                    habits={habits}
-                                />
-                                <View style={{ height: 5 }} />
-                                <TaskPreview
-                                    plannedDay={plannedDay}
-                                    task={{
-                                        id: undefined,
-                                        title: 'Go for a walk',
-                                        description: '',
+                        {recommendedTasks.length > 0 && (
+                            <View style={{ paddingTop: 15 }}>
+                                <Text
+                                    style={{
+                                        color: colors.secondary_text,
+                                        paddingLeft: 5,
+                                        paddingBottom: 5,
                                     }}
-                                    habits={habits}
-                                />
-                                <View style={{ height: 5 }} />
-                                <TaskPreview
-                                    plannedDay={plannedDay}
-                                    task={{ id: undefined, title: 'Drink water', description: '' }}
-                                    habits={habits}
-                                />
+                                >
+                                    Recommended Tasks
+                                </Text>
+                                <View style={{ alignItems: 'center' }}>
+                                    {recommendedTaskElements}
+                                </View>
                             </View>
-                        </View>
+                        )}
                     </View>
                 )}
             </ScrollView>
