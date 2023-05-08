@@ -8,6 +8,7 @@ import { TaskPreview } from './TaskPreview';
 import { Habit, PlannedDay as PlannedDayModel } from 'resources/schema';
 import { Task as TaskModel } from 'resources/schema';
 import { HabitController } from 'src/controller/habit/HabitController';
+import { getRandomInt } from 'src/util/GeneralUtility';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -21,6 +22,17 @@ export const Tasks = ({ plannedDay }: Props) => {
     const [recentTasks, setRecentTasks] = React.useState<TaskModel[]>([]);
     const [recommendedTasks, setRecommendedTasks] = React.useState<TaskModel[]>([]);
     const [habits, setHabits] = React.useState<Habit[]>([]);
+
+    const placeholderOptions: string[] = [
+        'Call a friend',
+        'Meal prep',
+        'Do the dishes',
+        'Medidate before bed',
+        'Review weekly finances',
+    ];
+    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(
+        placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]
+    );
 
     const fetchHabits = async () => {
         const results: Habit[] = await HabitController.getHabits();
@@ -158,7 +170,7 @@ export const Tasks = ({ plannedDay }: Props) => {
                         onChangeText={onSearchChange}
                         value={searchText}
                         placeholderTextColor={colors.search_preview}
-                        placeholder={'search for tasks...'}
+                        placeholder={bioPlaceholder}
                         autoCapitalize="none"
                     />
                 </View>

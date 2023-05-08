@@ -4,9 +4,10 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 interface Props {
     progress: number;
     success?: boolean;
+    showPercent?: boolean;
 }
 
-export const ProgressBar = ({ progress, success }: Props) => {
+export const ProgressBar = ({ progress, success, showPercent }: Props) => {
     const { colors } = useTheme();
 
     let percentRemaining = progress === Number.POSITIVE_INFINITY ? 100 : Math.round(progress);
@@ -32,22 +33,24 @@ export const ProgressBar = ({ progress, success }: Props) => {
                 ></View>
             </View>
 
-            <View style={{ flex: 1 }}>
-                <Text
-                    style={{
-                        fontFamily: 'Poppins_500Medium',
-                        fontSize: 11,
-                        textAlign: 'center',
-                        color:
-                            success === false
-                                ? colors.progress_bar_failed
-                                : colors.progress_bar_complete,
-                    }}
-                >
-                    {' '}
-                    {percentProgess}{' '}
-                </Text>
-            </View>
+            {showPercent && (
+                <View style={{ flex: 1 }}>
+                    <Text
+                        style={{
+                            fontFamily: 'Poppins_500Medium',
+                            fontSize: 11,
+                            textAlign: 'center',
+                            color:
+                                success === false
+                                    ? colors.progress_bar_failed
+                                    : colors.progress_bar_complete,
+                        }}
+                    >
+                        {' '}
+                        {percentProgess}{' '}
+                    </Text>
+                </View>
+            )}
         </View>
     );
 };

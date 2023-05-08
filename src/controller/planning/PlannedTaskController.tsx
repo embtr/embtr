@@ -1,15 +1,14 @@
 import { Timestamp } from 'firebase/firestore';
 import { TaskModel } from 'src/controller/planning/TaskController';
-import { plannedTaskIsComplete } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { PLANNED_DAY } from 'resources/endpoints';
 import {
     CreatePlannedTaskRequest,
     UpdatePlannedTaskRequest,
 } from 'resources/types/requests/PlannedTaskTypes';
-import { Habit, PlannedDay as PlannedDayModel } from 'resources/schema';
-import { PlannedTask as NewPlannedTaskModel } from 'resources/schema';
-import { Task as NewTaskModel } from 'resources/schema';
+import { Habit, PlannedDay } from 'resources/schema';
+import { PlannedTask } from 'resources/schema';
+import { Task } from 'resources/schema';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -25,64 +24,8 @@ export interface PlannedTaskModel {
     modified: Timestamp;
 }
 
-export const clonePlannedTaskModel = (plannedTask: PlannedTaskModel) => {
-    const clonedPlannedTask: PlannedTaskModel = {
-        id: plannedTask.id,
-        uid: plannedTask.uid,
-        dayKey: plannedTask.dayKey,
-        routine: plannedTask.routine,
-        status: plannedTask.status,
-        startMinute: plannedTask.startMinute,
-        duration: plannedTask.duration,
-        added: plannedTask.added,
-        modified: plannedTask.modified,
-    };
-
-    if (plannedTask.goalId) {
-        clonedPlannedTask.goalId = plannedTask.goalId;
-    }
-
-    if (plannedTask.pillarId) {
-        clonedPlannedTask.pillarId = plannedTask.pillarId;
-    }
-
-    if (!clonedPlannedTask.status) {
-        clonedPlannedTask.status = 'INCOMPLETE';
-    }
-
-    return clonedPlannedTask;
-};
-
-export const getPlannedTaskGoalId = (plannedTask: PlannedTaskModel) => {
-    if ('' === plannedTask.goalId) {
-        return undefined;
-    }
-
-    return plannedTask.goalId ? plannedTask.goalId : plannedTask.routine.goalId;
-};
-
-export const getLongestStreak = (plannedTasks: PlannedTaskModel[]): number => {
-    let currentLength = 0;
-    let longestLength = 0;
-
-    for (const plannedTask of plannedTasks.sort((a, b) => (a.dayKey > b.dayKey ? 1 : -1))) {
-        if (plannedTaskIsComplete(plannedTask)) {
-            currentLength++;
-            longestLength = Math.max(longestLength, currentLength);
-        } else {
-            currentLength = 0;
-        }
-    }
-
-    return longestLength;
-};
-
 class PlannedTaskController {
-    public static async addTaskViaApi(
-        plannedDay: PlannedDayModel,
-        task: NewTaskModel,
-        habit?: Habit
-    ) {
+    public static async addTaskViaApi(plannedDay: PlannedDay, task: Task, habit?: Habit) {
         if (!plannedDay.id || !task.id) {
             return;
         }
@@ -103,7 +46,70 @@ class PlannedTaskController {
             });
     }
 
-    public static async updateViaApi(plannedTask: NewPlannedTaskModel) {
+    public static async incrementCount(plannedTask: PlannedTask) {
+        plannedTask.count = Math.max(0, (plannedTask.count ?? 0) + 1);
+        return await this.update(plannedTask);
+    }
+
+    public static async decrementCount(plannedTask: PlannedTask) {
+        plannedTask.count = Math.max(0, (plannedTask.count ?? 0) - 1);
+        plannedTask.completedCount = Math.min(
+            plannedTask.count ?? 0,
+            plannedTask.completedCount ?? 0
+        );
+
+        return await this.update(plannedTask);
+    }
+
+    public static async incrementCompletedCount(plannedTask: PlannedTask) {
+        plannedTask.completedCount = Math.max(0, (plannedTask.completedCount ?? 0) + 1);
+        plannedTask.completedCount = Math.min(
+            plannedTask.count ?? 0,
+            plannedTask.completedCount ?? 0
+        );
+
+        return await this.update(plannedTask);
+    }
+
+    public static async decrementCompletedCount(plannedTask: PlannedTask) {
+        plannedTask.completedCount = Math.max(0, (plannedTask.completedCount ?? 0) - 1);
+        return await this.update(plannedTask);
+    }
+
+    public static async complete(plannedTask: PlannedTask) {
+        plannedTask.completedCount = plannedTask.count ?? 0;
+        return await this.update(plannedTask);
+    }
+
+    public static async reset(plannedTask: PlannedTask) {
+        plannedTask.completedCount = 0;
+        plannedTask.status = 'INCOMPLETE';
+
+        return await this.update(plannedTask);
+    }
+
+    public static async fail(plannedTask: PlannedTask) {
+        plannedTask.status = 'FAILED';
+        return await this.update(plannedTask);
+    }
+
+    public static async delete(plannedTask: PlannedTask) {
+        plannedTask.count = 0;
+        return await this.update(plannedTask);
+    }
+
+    public static async get(plannedDayId: string) {
+        return await axiosInstance
+            .get(`${PLANNED_DAY}planned-task/${plannedDayId}`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    private static async update(plannedTask: PlannedTask) {
         const request: UpdatePlannedTaskRequest = {
             plannedTask,
         };

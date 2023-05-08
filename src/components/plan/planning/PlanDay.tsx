@@ -3,8 +3,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { ScrollView, Text, View } from 'react-native';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { Screen } from 'src/components/common/Screen';
-import { PlanningTask } from 'src/components/plan/planning/PlanningTask';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { PlannableTask } from '../PlannableTask';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -27,10 +27,10 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, setShowSelectTaskModal }: P
                         key={plannedTask.id + '_locked'}
                         style={{ paddingBottom: 5, alignItems: 'center' }}
                     >
-                        <PlanningTask
+                        <PlannableTask
                             plannedTask={plannedTask}
-                            isChecked={true}
-                            onUpdate={onTaskUpdated}
+                            isEnabled={true}
+                            onUpdateTask={onTaskUpdated}
                         />
                     </View>
                 );

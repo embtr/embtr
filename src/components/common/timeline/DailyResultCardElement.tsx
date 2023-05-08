@@ -6,8 +6,8 @@ import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';
 import { PlannedTask as PlannedTaskModel } from 'resources/schema';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { IoniconName } from 'src/util/constants';
+import { POPPINS_REGULAR } from 'src/util/constants';
+import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -17,6 +17,11 @@ interface Props {
 export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     const { colors } = useTheme();
     const [temporaryStatus, setTemporaryStatus] = React.useState('');
+
+    const totalCount = plannedTask?.count ?? 1;
+    const completedCount = plannedTask?.completedCount ?? 0;
+    const taskIsComplete = completedCount === totalCount;
+    const taskIsFailed = plannedTask.status === 'FAILED';
 
     let status = plannedTask.status;
     if (temporaryStatus) {
@@ -31,63 +36,69 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         setTemporaryStatus('');
     }
 
-    let durationString = '';
-
     return (
-        <View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableWithoutFeedback
-                    disabled={!onPress}
-                    onPress={() => {
-                        if (onPress) {
-                            onPress(plannedTask, status, setTemporaryStatus);
-                        }
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableWithoutFeedback
+                disabled={!onPress}
+                onPress={() => {
+                    if (onPress) {
+                        onPress(plannedTask, status, setTemporaryStatus);
+                    }
+                }}
+            >
+                {taskIsFailed || !taskIsComplete ? <TaskFailedSymbol /> : <TaskCompleteSymbol />}
+            </TouchableWithoutFeedback>
+
+            <View style={{ flex: 1 }}>
+                <Text
+                    style={{
+                        color: colors.goal_primary_font,
+                        fontFamily: 'Poppins_600SemiBold',
+                        fontSize: 12,
+                        lineHeight: 14,
+                        paddingLeft: 5,
                     }}
                 >
-                    {status === 'FAILED' ? (
-                        <TaskFailedSymbol />
-                    ) : status === 'COMPLETE' ? (
-                        <TaskCompleteSymbol />
-                    ) : (
-                        <TaskInProgressSymbol />
-                    )}
-                </TouchableWithoutFeedback>
+                    {plannedTask.task?.title}
+                </Text>
 
-                <View style={{ paddingLeft: 5 }}>
-                    <Text
+                <View style={{ flexDirection: 'row', width: '100%' }}>
+                    <View
                         style={{
-                            color: colors.goal_primary_font,
-                            fontFamily: 'Poppins_600SemiBold',
-                            fontSize: 12,
-                            lineHeight: 14,
+                            flex: 1,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            paddingLeft: 5,
                         }}
                     >
-                        {plannedTask.task?.title}
-                    </Text>
-                    {plannedTask.habit && (
-                        <View
+                        <ProgressBar
+                            progress={(completedCount / totalCount) * 100}
+                            success={taskIsComplete}
+                            showPercent={false}
+                        />
+                    </View>
+
+                    <View
+                        style={{
+                            flex: 3,
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            paddingLeft: 10,
+                        }}
+                    >
+                        <Text
                             style={{
-                                flexDirection: 'row',
-                                alignContent: 'center',
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 10,
                             }}
                         >
-                            <Ionicons
-                                name={plannedTask.habit?.iconName as IoniconName}
-                                size={12}
-                                color={colors.tab_selected}
-                            />
-                            <Text
-                                style={{
-                                    paddingLeft: 5,
-                                    color: colors.tab_selected,
-                                    fontSize: 10,
-                                    lineHeight: 12,
-                                }}
-                            >
-                                {plannedTask.habit.title}
-                            </Text>
-                        </View>
-                    )}
+                            {completedCount}
+                            {'/'}
+                            {totalCount}
+                            {' complete'}
+                        </Text>
+                    </View>
                 </View>
             </View>
         </View>

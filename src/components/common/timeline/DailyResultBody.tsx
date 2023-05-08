@@ -55,19 +55,9 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
         }
     });
 
-    const percentComplete = 100 * (completedCount / totalTasks!);
-
     return (
         <View style={{ paddingTop: 10 }}>
-            <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ width: '94%', alignItems: 'center', justifyContent: 'center' }}>
-                    <ProgressBar progress={percentComplete} success={true} />
-                </View>
-            </View>
-
-            <View style={{ paddingTop: 5 }}>
-                <Text style={headerTextStyle}>{dayOfWeek}</Text>
-            </View>
+            <Text style={headerTextStyle}>{dayOfWeek}</Text>
 
             <View
                 style={{
@@ -76,12 +66,13 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
                     paddingTop: 5,
                 }}
             >
-                <Text style={[{ textAlign: 'left', paddingTop: 5, color: colors.text }]}>
-                    {plannedDayResult.description}
-                </Text>
-                <View style={{ paddingTop: 5 }}>
-                    <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
-                </View>
+                {plannedDayResult.description && (
+                    <Text style={[{ textAlign: 'left', paddingBottom: 10, color: colors.text }]}>
+                        {plannedDayResult.description}
+                    </Text>
+                )}
+
+                <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
             </View>
 
             {carouselImages.length > 0 && (

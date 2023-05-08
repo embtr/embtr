@@ -4,7 +4,7 @@ import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/consta
 import Toast from 'react-native-root-toast';
 import React, { useEffect } from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
-import { Habit, PlannedDay as PlannedDayModel, Task } from 'resources/schema';
+import { Habit, PlannedDay as PlannedDayModel, PlannedTask, Task } from 'resources/schema';
 import TaskController from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { HabitScrollSelector } from './HabitScrollSelector';
@@ -21,16 +21,23 @@ interface Props {
 export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
     const { colors } = useTheme();
 
-    const [add, setAdded] = React.useState(false);
     const [isExpanded, setIsExpanded] = React.useState(false);
     const [selectedHabit, setSelectedHabit] = React.useState<Habit>();
     const heightValue = React.useRef(new Animated.Value(0)).current;
+    const [plannedTaskFromDatabase, setPlannedTaskFromDatabase] = React.useState<PlannedTask>();
 
     useEffect(() => {
         if (task?.taskHabitPreference?.length) {
             setSelectedHabit(task.taskHabitPreference[0].habit!);
         }
     }, []);
+
+    const plannedTaskFromPlannedDay = plannedDay.plannedTasks?.find(
+        (plannedTask) => plannedTask.task?.id === task.id
+    );
+
+    const plannedTask = plannedTaskFromDatabase || plannedTaskFromPlannedDay;
+    const taskCount = plannedTask?.count || 0;
 
     const toggleExpand = () => {
         Animated.timing(heightValue, {
@@ -93,7 +100,7 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                     borderRadius: 5,
                                     alignItems: 'flex-end',
                                     justifyContent: 'center',
-                                    paddingRight: 10,
+                                    paddingRight: 5,
                                 }}
                             >
                                 {selectedHabit?.iconName && (
@@ -104,6 +111,74 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                     />
                                 )}
                             </View>
+
+                            {taskCount > 0 && (
+                                <View style={{ flexDirection: 'row' }}>
+                                    {/*
+                                     * PLANNED TASK COUNT
+                                     */}
+                                    <View
+                                        style={{
+                                            height: 30,
+                                            borderRadius: 5,
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center',
+                                            paddingRight: 5,
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: colors.text,
+                                                fontFamily: POPPINS_REGULAR,
+                                                fontSize: 18,
+                                            }}
+                                        >
+                                            x{taskCount}
+                                        </Text>
+                                    </View>
+
+                                    {/*
+                                     *  REMOVE PLANNED TASK
+                                     */}
+                                    <TouchableOpacity
+                                        onPress={async () => {
+                                            if (!plannedTask) {
+                                                return;
+                                            }
+
+                                            const updatedPlannedTask =
+                                                await PlannedTaskController.decrementCount(
+                                                    plannedTask
+                                                );
+
+                                            setPlannedTaskFromDatabase(
+                                                updatedPlannedTask.plannedTask
+                                            );
+
+                                            Toast.show('task removed!', {
+                                                duration: Toast.durations.LONG,
+                                            });
+                                        }}
+                                        style={{
+                                            height: 30,
+                                            borderRadius: 5,
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center',
+                                            paddingRight: 5,
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name="md-remove-circle-outline"
+                                            size={30}
+                                            color={colors.toggle_background_selected}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+
+                            {/*
+                             * ADD PLANNED TASK
+                             */}
                             <TouchableOpacity
                                 onPress={async () => {
                                     let taskToAdd = task;
@@ -112,12 +187,19 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                         taskToAdd = await TaskController.createViaApi(task.title!);
                                     }
 
-                                    PlannedTaskController.addTaskViaApi(
-                                        plannedDay,
-                                        taskToAdd,
-                                        selectedHabit
-                                    );
-                                    setAdded(!add);
+                                    if (!plannedTask) {
+                                        const updatedPlannedTask =
+                                            await PlannedTaskController.addTaskViaApi(
+                                                plannedDay,
+                                                taskToAdd,
+                                                selectedHabit
+                                            );
+                                        setPlannedTaskFromDatabase(updatedPlannedTask.plannedTask);
+                                    } else {
+                                        const updatedPlannedTask =
+                                            await PlannedTaskController.incrementCount(plannedTask);
+                                        setPlannedTaskFromDatabase(updatedPlannedTask.plannedTask);
+                                    }
 
                                     Toast.show('task added!', {
                                         duration: Toast.durations.LONG,
@@ -131,12 +213,9 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                     paddingRight: 20,
                                 }}
                             >
-                                <Ionicons
-                                    name="md-add-circle-outline"
-                                    size={30}
-                                    color={add ? 'green' : colors.toggle_background_selected}
-                                />
+                                <Ionicons name="md-add-circle-outline" size={30} color={'green'} />
                             </TouchableOpacity>
+
                             <View
                                 style={{
                                     height: 30,

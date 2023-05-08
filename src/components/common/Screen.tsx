@@ -1,7 +1,7 @@
-import React from 'react';
 import { View, StatusBar } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import * as NavigationBar from 'expo-navigation-bar';
+import { isAndroidDevice } from 'src/util/DeviceUtil';
 
 export const Screen = (props: { children: any }) => {
     const { children } = props;
@@ -9,7 +9,9 @@ export const Screen = (props: { children: any }) => {
     // Using the custom hook we made to pull the theme colors
     const { colors, isDark } = useTheme();
 
-    NavigationBar.setBackgroundColorAsync(colors.tab_bar_menu);
+    if (isAndroidDevice()) {
+        NavigationBar.setBackgroundColorAsync(colors.tab_bar_menu);
+    }
 
     return (
         <>
