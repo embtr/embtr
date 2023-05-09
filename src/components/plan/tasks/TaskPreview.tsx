@@ -146,6 +146,8 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                                 return;
                                             }
 
+                                            plannedTask.habit = selectedHabit;
+                                            plannedTask.habitId = selectedHabit?.id;
                                             const updatedPlannedTask =
                                                 await PlannedTaskController.decrementCount(
                                                     plannedTask
@@ -196,6 +198,8 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                             );
                                         setPlannedTaskFromDatabase(updatedPlannedTask.plannedTask);
                                     } else {
+                                        plannedTask.habit = selectedHabit;
+                                        plannedTask.habitId = selectedHabit?.id;
                                         const updatedPlannedTask =
                                             await PlannedTaskController.incrementCount(plannedTask);
                                         setPlannedTaskFromDatabase(updatedPlannedTask.plannedTask);
