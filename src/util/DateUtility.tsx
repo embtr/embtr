@@ -27,14 +27,6 @@ export const formatDate = (date: Date): string => {
 export const getDatePretty = (date: Date): string => {
     const daysOld = getDaysOld(date, new Date());
 
-    if (daysOld == 0) {
-        return 'Today';
-    }
-
-    if (daysOld == 1) {
-        return 'Yesterday';
-    }
-
     return format(date, 'MMMM dd, yyyy');
 };
 

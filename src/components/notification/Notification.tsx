@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TouchableOpacity } from 'react-native';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { formatDistance } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import { Notification as NotificationModel, NotificationTargetPage } from 'resources/schema';
@@ -40,14 +40,11 @@ export const Notification = ({ notification }: Props) => {
     return (
         <TouchableOpacity
             onPress={() => {
-                console.log(notification);
                 if (!notification.targetPage) {
                     return;
                 }
 
                 const target = getTargetPage(notification.targetPage);
-                console.log(target);
-                console.log(params);
                 navigation.navigate(target as keyof TimelineTabScreens, { ...params });
             }}
         >
@@ -80,7 +77,7 @@ export const Notification = ({ notification }: Props) => {
                                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                                     <Text
                                         style={{
-                                            fontFamily: 'Poppins_600SemiBold',
+                                            fontFamily: POPPINS_SEMI_BOLD,
                                             color: colors.timeline_card_header,
                                         }}
                                     >

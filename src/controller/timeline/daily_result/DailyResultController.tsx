@@ -1,6 +1,13 @@
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
-import { Comment as CommentModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
-import { GetPlannedDayResultResponse, GetPlannedDayResultsResponse, UpdatePlannedDayResultRequest } from 'resources/types/requests/PlannedDayResultTypes';
+import {
+    Comment as CommentModel,
+    PlannedDayResult as PlannedDayResultModel,
+} from 'resources/schema';
+import {
+    GetPlannedDayResultResponse,
+    GetPlannedDayResultsResponse,
+    UpdatePlannedDayResultRequest,
+} from 'resources/types/requests/PlannedDayResultTypes';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import axiosInstance from 'src/axios/axios';
 import { LikeController } from 'src/controller/api/general/LikeController';
@@ -40,9 +47,23 @@ class DailyResultController {
             });
     }
 
-    public static async getAllViaApi(): Promise<PlannedDayResultModel[]> {
+    public static async getAllViaApi(
+        upperBound: Date,
+        lowerBound: Date
+    ): Promise<PlannedDayResultModel[]> {
+        const upperBoundDate = new Date(upperBound).toISOString();
+        const lowerBoundDate = new Date(lowerBound).toISOString();
+
+        const middleTime = new Date().getTime();
+        console.log('middleTime', middleTime);
+
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}`)
+            .get(`${PLANNED_DAY_RESULT}`, {
+                params: {
+                    upperBound: upperBoundDate,
+                    lowerBound: lowerBoundDate,
+                },
+            })
             .then((success) => {
                 const response = success.data as GetPlannedDayResultsResponse;
                 return response.plannedDayResults ?? [];
@@ -96,7 +117,10 @@ class DailyResultController {
      */
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
-        const imgUrls: string[] = await ImageController.pickAndUploadImages('daily_results', imageUploadProgess);
+        const imgUrls: string[] = await ImageController.pickAndUploadImages(
+            'daily_results',
+            imageUploadProgess
+        );
         return imgUrls;
     }
 }

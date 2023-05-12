@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -74,13 +74,13 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
             </View>
 
             <View style={{ flexDirection: 'row', flex: 1 }}>
-                <TouchableOpacity onPress={heartPressed ? undefined : onHeartPressed}>
+                <Pressable onPress={heartPressed ? undefined : onHeartPressed}>
                     <Ionicons
                         name={heartPressed ? 'heart' : 'heart-outline'}
                         size={TIMELINE_CARD_ICON_SIZE}
                         color={heartPressed ? 'red' : colors.timeline_card_footer}
                     />
-                </TouchableOpacity>
+                </Pressable>
 
                 <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
                     <Text
@@ -116,7 +116,7 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
             </View>
 
             <View style={{ flex: 1 }}>
-                <TouchableOpacity
+                <Pressable
                     style={{ alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}
                     onPress={() => {
                         alert("I don't work yet :(");
@@ -127,7 +127,7 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
                         size={TIMELINE_CARD_ICON_SIZE}
                         color={colors.timeline_card_footer}
                     />
-                </TouchableOpacity>
+                </Pressable>
             </View>
         </View>
     );

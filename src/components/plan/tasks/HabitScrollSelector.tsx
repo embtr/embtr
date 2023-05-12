@@ -80,7 +80,6 @@ export const HabitScrollSelector = ({ habits, initialHabit, onHabitSelected }: P
     };
 
     const onChangeHabit = (habit: Habit) => {
-        console.log('onChangeHabit', habit.id, selected);
         if (selected === habit.id) {
             setSelected(undefined);
             onHabitSelected(undefined);

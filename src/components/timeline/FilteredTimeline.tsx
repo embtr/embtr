@@ -1,4 +1,4 @@
-import { NativeScrollEvent, RefreshControl, ScrollView, Text, View } from 'react-native';
+import { FlatList, RefreshControl, View } from 'react-native';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
@@ -15,9 +15,16 @@ interface Props {
     dayResults: PlannedDayResultModel[];
     refreshing: boolean;
     onRefresh: Function;
+    loadMore: Function;
 }
 
-export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh }: Props) => {
+export const FilteredTimeline = ({
+    userPosts,
+    dayResults,
+    refreshing,
+    onRefresh,
+    loadMore,
+}: Props) => {
     const { colors } = useTheme();
     const card = {
         width: '100%',
@@ -27,61 +34,37 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
     };
 
     const createTimelineModels = (): TimelinePostModel[] => {
-        let timelinePosts: TimelinePostModel[] = [];
+        const userPostTimelinePosts = userPosts.map((userPost) => ({
+            added: Timestamp.fromDate(userPost.createdAt!),
+            modified: Timestamp.fromDate(userPost.updatedAt!),
+            type: 'STORY',
+            uid: userPost.user!.uid!,
+            public: {
+                comments: [],
+                likes: [],
+            },
+            data: {
+                userPost,
+            },
+            active: true,
+        }));
 
-        if (userPosts.length > 0) {
-            const userPostTimelinePosts: TimelinePostModel[] = userPosts.map(
-                (userPost: UserPost) => {
-                    const userPostTimelinePost: TimelinePostModel = {
-                        added: Timestamp.fromDate(userPost.createdAt!),
-                        modified: Timestamp.fromDate(userPost.updatedAt!),
-                        type: 'STORY',
-                        uid: userPost.user!.uid!,
-                        public: {
-                            comments: [],
-                            likes: [],
-                        },
-                        data: {
-                            userPost: userPost,
-                        },
-                        active: true,
-                    };
+        const dayResultTimelinePosts = dayResults.map((dayResult) => ({
+            added: Timestamp.fromDate(dayResult.createdAt!),
+            modified: Timestamp.fromDate(dayResult.updatedAt!),
+            type: 'DAILY_RESULT',
+            uid: dayResult.plannedDay!.user!.uid!,
+            public: {
+                comments: [],
+                likes: [],
+            },
+            data: {
+                dayResult,
+            },
+            active: true,
+        }));
 
-                    return userPostTimelinePost;
-                }
-            );
-
-            timelinePosts = timelinePosts.concat(userPostTimelinePosts);
-        }
-
-        if (dayResults.length > 0) {
-            const dayResultTimelinePosts: DayResultTimelinePost[] = dayResults.map(
-                (dayResult: PlannedDayResultModel) => {
-                    const dayResultTimelinePost: DayResultTimelinePost = {
-                        added: Timestamp.fromDate(dayResult.createdAt!),
-                        modified: Timestamp.fromDate(dayResult.updatedAt!),
-                        type: 'DAILY_RESULT',
-                        uid: dayResult.plannedDay!.user!.uid!,
-                        public: {
-                            comments: [],
-                            likes: [],
-                        },
-                        data: {
-                            dayResult: dayResult,
-                        },
-                        active: true,
-                    };
-
-                    return dayResultTimelinePost;
-                }
-            );
-
-            timelinePosts = timelinePosts.concat(dayResultTimelinePosts);
-
-            return timelinePosts;
-        }
-
-        return timelinePosts;
+        return [...userPostTimelinePosts, ...dayResultTimelinePosts];
     };
 
     const createTimelineViews = () => {
@@ -96,13 +79,7 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
 
         timelinePosts.sort((a, b) => handleSort(a, b));
 
-        let views: JSX.Element[] = [];
-        timelinePosts.forEach((timelineEntry) => {
-            const view: JSX.Element = createTimelineView(timelineEntry);
-            views.push(view);
-        });
-
-        return views;
+        return timelinePosts;
     };
 
     const createUserPostView = (timelineEntry: TimelinePostModel) => {
@@ -141,24 +118,17 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
         }
     };
 
-    const isCloseToBottom = ({
-        layoutMeasurement,
-        contentOffset,
-        contentSize,
-    }: NativeScrollEvent) => {
-        return layoutMeasurement.height + contentOffset.y > contentSize.height - 15;
-    };
+    const data = createTimelineViews();
 
-    const timelineViews = createTimelineViews();
+    console.log(userPosts.length, dayResults.length, userPosts.length + dayResults.length);
+    console.log('data', data.length);
 
     return (
-        <ScrollView
+        <FlatList
             overScrollMode="always"
-            onScroll={({ nativeEvent }) => {
-                if (isCloseToBottom(nativeEvent)) {
-                }
-            }}
-            scrollEventThrottle={8}
+            data={data}
+            keyExtractor={(item, index) => `timeline_${index}`}
+            renderItem={({ item }) => createTimelineView(item)}
             keyboardShouldPersistTaps={'handled'}
             style={{ backgroundColor: colors.background }}
             refreshControl={
@@ -169,15 +139,10 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, onRefresh 
                     }}
                 />
             }
-        >
-            {timelineViews.length > 0 && <View style={{ flex: 1 }}>{timelineViews}</View>}
-            {timelineViews.length == 0 && (
-                <View style={{ flex: 1, paddingTop: 50, paddingBottom: 50, alignItems: 'center' }}>
-                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR }}>
-                        looks like there's nothing to show.
-                    </Text>
-                </View>
-            )}
-        </ScrollView>
+            onEndReachedThreshold={0.5}
+            onEndReached={() => {
+                loadMore();
+            }}
+        />
     );
 };

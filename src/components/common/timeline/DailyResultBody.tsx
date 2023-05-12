@@ -45,7 +45,6 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
     });
 
     const dayOfWeek = getUTCDayOfWeek(plannedDayResult.plannedDay?.date!);
-    console.log(plannedDayResult.plannedDay?.date!, dayOfWeek);
 
     let totalTasks = plannedDayResult.plannedDay?.plannedTasks?.length;
     let completedCount = 0;

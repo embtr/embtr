@@ -4,7 +4,9 @@ import { Banner } from 'src/components/common/Banner';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import NotificationController, { getUnreadNotificationCount } from 'src/controller/notification/NotificationController';
+import NotificationController, {
+    getUnreadNotificationCount,
+} from 'src/controller/notification/NotificationController';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { wait } from 'src/util/GeneralUtility';
@@ -19,11 +21,28 @@ export const Timeline = () => {
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [forceRefreshTimestamp, setForceRefreshTimestamp] = React.useState(new Date());
+    const [isLoadingMoreDailyResults, setIsLoadingMoreDailyResults] = React.useState(false);
+    const [isLoadingMoreUserPosts, setIsLoadingMoreUserPosts] = React.useState(false);
+
+    const getDatePlusDays = (date: Date, days: number) => {
+        date.setDate(date.getDate() + days);
+        return date;
+    };
+
+    const getDateMinusDays = (date: Date, days: number) => {
+        date.setDate(date.getDate() - days);
+        return date;
+    };
+
+    const [bounds, setBounds] = React.useState<{ upperBound: Date; lowerBound: Date }>({
+        upperBound: getDatePlusDays(new Date(), 0),
+        lowerBound: getDateMinusDays(new Date(), 2),
+    });
 
     useFocusEffect(
         React.useCallback(() => {
-            getUserPosts();
             getPlannedDayResults();
+            getUserPosts();
             fetchNotifications();
         }, [forceRefreshTimestamp])
     );
@@ -47,13 +66,39 @@ export const Timeline = () => {
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
     const getUserPosts = async () => {
-        const userPosts = await StoryController.getAllViaApi();
+        const userPosts = await StoryController.getAllViaApi(bounds.upperBound, bounds.lowerBound);
         setUserPosts(userPosts);
     };
 
     const getPlannedDayResults = async () => {
-        const dayResults = await DailyResultController.getAllViaApi();
+        const dayResults = await DailyResultController.getAllViaApi(
+            bounds.upperBound,
+            bounds.lowerBound
+        );
         setDayResults(dayResults);
+    };
+
+    const loadMore = () => {
+        if (isLoadingMoreDailyResults || isLoadingMoreUserPosts) {
+            return;
+        }
+
+        setIsLoadingMoreDailyResults(true);
+        setIsLoadingMoreUserPosts(true);
+        const newUpperBound = getDateMinusDays(bounds.upperBound, 2);
+        const newLowerBound = getDateMinusDays(bounds.lowerBound, 2);
+
+        DailyResultController.getAllViaApi(newUpperBound, newLowerBound).then((results) => {
+            setDayResults([...dayResults, ...results]);
+            setIsLoadingMoreDailyResults(false);
+        });
+
+        StoryController.getAllViaApi(newUpperBound, newLowerBound).then((results) => {
+            setUserPosts([...userPosts, ...results]);
+            setIsLoadingMoreUserPosts(false);
+        });
+
+        setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
     };
 
     return (
@@ -71,7 +116,13 @@ export const Timeline = () => {
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount}
             />
-            <FilteredTimeline userPosts={userPosts} dayResults={dayResults} refreshing={refreshing} onRefresh={onRefresh} />
+            <FilteredTimeline
+                userPosts={userPosts}
+                dayResults={dayResults}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                loadMore={loadMore}
+            />
         </Screen>
     );
 };

@@ -13,7 +13,9 @@ import { Interactable } from 'resources/types/interactable/Interactable';
 import axiosInstance from 'src/axios/axios';
 import { LikeController } from 'src/controller/api/general/LikeController';
 import ImageController from 'src/controller/image/ImageController';
-import NotificationController, { NotificationType } from 'src/controller/notification/NotificationController';
+import NotificationController, {
+    NotificationType,
+} from 'src/controller/notification/NotificationController';
 import { CommentController } from 'src/controller/api/general/CommentController';
 import { TimelinePostModel } from 'src/model/OldModels';
 
@@ -61,7 +63,12 @@ export const copyStory = (story: StoryModel): StoryModel => {
     return newStory;
 };
 
-export const createStory = (uid: string, title: string, story: string, images: string[]): StoryModel => {
+export const createStory = (
+    uid: string,
+    title: string,
+    story: string,
+    images: string[]
+): StoryModel => {
     return {
         id: '',
         added: Timestamp.now(),
@@ -95,9 +102,14 @@ class StoryController {
             });
     }
 
-    public static async getAllViaApi(): Promise<UserPost[]> {
+    public static async getAllViaApi(upperBound: Date, lowerBound: Date): Promise<UserPost[]> {
         return await axiosInstance
-            .get(`${USER_POST}`)
+            .get(`${USER_POST}`, {
+                params: {
+                    upperBound: upperBound.toISOString(),
+                    lowerBound: lowerBound.toISOString(),
+                },
+            })
             .then((success) => {
                 const response = success.data as GetAllUserPostResponse;
                 return response.userPosts ?? [];
@@ -177,7 +189,10 @@ class StoryController {
     }
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
-        const imgUrls: string[] = await ImageController.pickAndUploadImages('user_posts', imageUploadProgess);
+        const imgUrls: string[] = await ImageController.pickAndUploadImages(
+            'user_posts',
+            imageUploadProgess
+        );
         return imgUrls;
     }
 }

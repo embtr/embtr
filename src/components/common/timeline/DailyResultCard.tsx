@@ -81,7 +81,7 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <DailyResultHeader user={user} date={updatedDayResult.plannedDay?.date!} />
+                <DailyResultHeader user={user} date={updatedDayResult.createdAt!} />
 
                 {/**********/}
                 {/*  BODY  */}

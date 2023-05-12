@@ -49,5 +49,13 @@ export const UserActivityTabRoute = ({ user }: Props) => {
         setDayResults(dayResults);
     };
 
-    return <FilteredTimeline userPosts={userPosts} dayResults={dayResults} refreshing={refreshing} onRefresh={onRefresh} />;
+    return (
+        <FilteredTimeline
+            userPosts={userPosts}
+            dayResults={dayResults}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            loadMore={() => {}}
+        />
+    );
 };
