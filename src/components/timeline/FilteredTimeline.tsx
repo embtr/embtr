@@ -15,17 +15,10 @@ interface Props {
     userPosts: UserPost[];
     dayResults: PlannedDayResultModel[];
     refreshing: boolean;
-    onRefresh: Function;
     loadMore: Function;
 }
 
-export const FilteredTimeline = ({
-    userPosts,
-    dayResults,
-    refreshing,
-    onRefresh,
-    loadMore,
-}: Props) => {
+export const FilteredTimeline = ({ userPosts, dayResults, refreshing, loadMore }: Props) => {
     const { colors } = useTheme();
     const card = {
         width: '100%',
@@ -133,15 +126,14 @@ export const FilteredTimeline = ({
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={() => {
-                        onRefresh();
+                        loadMore(true);
                     }}
                 />
             }
             onEndReachedThreshold={0.5}
             onEndReached={() => {
-                loadMore();
+                loadMore(false);
             }}
-            onEndReachedThreshold={0.5}
             ListFooterComponent={
                 <ActivityIndicator
                     size="large"

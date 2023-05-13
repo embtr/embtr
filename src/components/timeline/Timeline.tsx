@@ -8,9 +8,9 @@ import NotificationController, {
     getUnreadNotificationCount,
 } from 'src/controller/notification/NotificationController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { wait } from 'src/util/GeneralUtility';
 import { Notification as NotificationModel, PlannedDayResult, UserPost } from 'resources/schema';
 import { FilteredTimeline } from './FilteredTimeline';
+import StoryController from 'src/controller/timeline/story/StoryController';
 
 export const Timeline = () => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
@@ -19,12 +19,6 @@ export const Timeline = () => {
     const [dayResults, setDayResults] = React.useState<PlannedDayResult[]>([]);
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
-    const [forceRefreshTimestamp, setForceRefreshTimestamp] = React.useState(new Date());
-
-    const getDatePlusDays = (date: Date, days: number) => {
-        date.setDate(date.getDate() + days);
-        return date;
-    };
 
     const getDateMinusDays = (date: Date, days: number) => {
         date.setDate(date.getDate() - days);
@@ -32,27 +26,16 @@ export const Timeline = () => {
     };
 
     const [bounds, setBounds] = React.useState<{ upperBound: Date; lowerBound: Date }>({
-        upperBound: getDatePlusDays(new Date(), 0),
+        upperBound: getDateMinusDays(new Date(), 0),
         lowerBound: getDateMinusDays(new Date(), 2),
     });
 
     useFocusEffect(
         React.useCallback(() => {
-            loadMore();
+            loadMore(false);
             fetchNotifications();
-        }, [forceRefreshTimestamp])
+        }, [])
     );
-
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-
-        //this will trigger a reset on all dependents
-        setForceRefreshTimestamp(new Date());
-
-        setNotifications([]);
-        fetchNotifications();
-        wait(500).then(() => setRefreshing(false));
-    }, []);
 
     const fetchNotifications = async () => {
         const notifications = await NotificationController.getNotificationsViaApi();
@@ -61,18 +44,31 @@ export const Timeline = () => {
 
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
-    const loadMore = (): Promise<void> => {
-        const dailyResultsPromise = DailyResultController.getAllViaApi(
-            bounds.upperBound,
-            bounds.lowerBound
-        );
+    const loadMore = (refresh: boolean): Promise<void> => {
+        if (refresh) {
+            setRefreshing(true);
+        }
 
-        const combinedPromise = Promise.all([dailyResultsPromise]).then(([newDayResults]) => {
-            setDayResults([...dayResults, ...newDayResults]);
-            const newUpperBound = getDateMinusDays(bounds.upperBound, 2);
-            const newLowerBound = getDateMinusDays(bounds.lowerBound, 2);
-            setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
-        });
+        const upperBound = refresh ? new Date() : bounds.upperBound;
+        const lowerBound = refresh ? getDateMinusDays(new Date(), 2) : bounds.lowerBound;
+
+        const dailyResultsPromise = DailyResultController.getAllViaApi(upperBound, lowerBound);
+        const userPostsPromise = StoryController.getAllViaApi(upperBound, lowerBound);
+
+        const combinedPromise = Promise.all([dailyResultsPromise, userPostsPromise]).then(
+            ([newDayResults, newUserPosts]) => {
+                setDayResults(!refresh ? [...dayResults, ...newDayResults] : newDayResults);
+                setUserPosts(!refresh ? [...userPosts, ...newUserPosts] : newUserPosts);
+
+                const newUpperBound = getDateMinusDays(upperBound, 2);
+                const newLowerBound = getDateMinusDays(lowerBound, 2);
+                setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
+
+                if (refresh) {
+                    setRefreshing(false);
+                }
+            }
+        );
 
         return combinedPromise;
     };
@@ -96,7 +92,6 @@ export const Timeline = () => {
                 userPosts={userPosts}
                 dayResults={dayResults}
                 refreshing={refreshing}
-                onRefresh={onRefresh}
                 loadMore={loadMore}
             />
         </Screen>
