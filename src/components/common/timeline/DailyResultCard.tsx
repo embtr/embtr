@@ -22,7 +22,7 @@ interface Props {
     plannedDayResult: DayResultTimelinePost;
 }
 
-export const DailyResultCard = ({ plannedDayResult }: Props) => {
+export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
     const { colors } = useTheme();
 
@@ -110,4 +110,4 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
             </View>
         </TouchableWithoutFeedback>
     );
-};
+});

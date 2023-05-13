@@ -7,7 +7,6 @@ import {
     TIMELINE_CARD_ICON_SIZE,
     TIMELINE_CARD_PADDING,
 } from 'src/util/constants';
-import { TouchableOpacity } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { timelineEntryWasLikedBy } from 'src/controller/timeline/story/StoryController';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
@@ -28,7 +27,7 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
     const isLiked = timelineEntryWasLikedBy(likes, getCurrentUid());
     const [heartPressed, setHeartPressed] = React.useState(isLiked);
 
-    const animation = React.useRef(null);
+    const animation = React.useRef<LottieView>(null);
 
     React.useEffect(() => {
         setHeartPressed(isLiked);

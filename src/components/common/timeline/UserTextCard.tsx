@@ -10,7 +10,7 @@ interface Props {
     oldModel: StoryModel;
 }
 
-export const UserTextCard = ({ oldModel }: Props) => {
+export const UserTextCard = React.memo(({ oldModel }: Props) => {
     const currentTab = useAppSelector(getCurrentTab);
     const navigation = getNavigationHook(currentTab)();
 
@@ -62,4 +62,4 @@ export const UserTextCard = ({ oldModel }: Props) => {
             onCommented={onCommented}
         />
     );
-};
+});

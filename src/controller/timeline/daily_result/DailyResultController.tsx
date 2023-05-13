@@ -54,9 +54,6 @@ class DailyResultController {
         const upperBoundDate = new Date(upperBound).toISOString();
         const lowerBoundDate = new Date(lowerBound).toISOString();
 
-        const middleTime = new Date().getTime();
-        console.log('middleTime', middleTime);
-
         return await axiosInstance
             .get(`${PLANNED_DAY_RESULT}`, {
                 params: {

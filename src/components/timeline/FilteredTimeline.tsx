@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
@@ -9,6 +9,7 @@ import { PlannedDayResult as PlannedDayResultModel, UserPost } from 'resources/s
 import { Timestamp } from 'firebase/firestore';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 import { TimelinePostModel } from 'src/model/OldModels';
+import React from 'react';
 
 interface Props {
     userPosts: UserPost[];
@@ -120,9 +121,6 @@ export const FilteredTimeline = ({
 
     const data = createTimelineViews();
 
-    console.log(userPosts.length, dayResults.length, userPosts.length + dayResults.length);
-    console.log('data', data.length);
-
     return (
         <FlatList
             overScrollMode="always"
@@ -143,6 +141,14 @@ export const FilteredTimeline = ({
             onEndReached={() => {
                 loadMore();
             }}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={
+                <ActivityIndicator
+                    size="large"
+                    color={colors.secondary_text}
+                    style={{ marginVertical: 20 }}
+                />
+            }
         />
     );
 };

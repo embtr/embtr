@@ -7,7 +7,6 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import NotificationController, {
     getUnreadNotificationCount,
 } from 'src/controller/notification/NotificationController';
-import StoryController from 'src/controller/timeline/story/StoryController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { wait } from 'src/util/GeneralUtility';
 import { Notification as NotificationModel, PlannedDayResult, UserPost } from 'resources/schema';
@@ -21,8 +20,6 @@ export const Timeline = () => {
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const [forceRefreshTimestamp, setForceRefreshTimestamp] = React.useState(new Date());
-    const [isLoadingMoreDailyResults, setIsLoadingMoreDailyResults] = React.useState(false);
-    const [isLoadingMoreUserPosts, setIsLoadingMoreUserPosts] = React.useState(false);
 
     const getDatePlusDays = (date: Date, days: number) => {
         date.setDate(date.getDate() + days);
@@ -41,8 +38,7 @@ export const Timeline = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            getPlannedDayResults();
-            getUserPosts();
+            loadMore();
             fetchNotifications();
         }, [forceRefreshTimestamp])
     );
@@ -65,40 +61,20 @@ export const Timeline = () => {
 
     const unreadNotificationCount = getUnreadNotificationCount(notifications);
 
-    const getUserPosts = async () => {
-        const userPosts = await StoryController.getAllViaApi(bounds.upperBound, bounds.lowerBound);
-        setUserPosts(userPosts);
-    };
-
-    const getPlannedDayResults = async () => {
-        const dayResults = await DailyResultController.getAllViaApi(
+    const loadMore = (): Promise<void> => {
+        const dailyResultsPromise = DailyResultController.getAllViaApi(
             bounds.upperBound,
             bounds.lowerBound
         );
-        setDayResults(dayResults);
-    };
 
-    const loadMore = () => {
-        if (isLoadingMoreDailyResults || isLoadingMoreUserPosts) {
-            return;
-        }
-
-        setIsLoadingMoreDailyResults(true);
-        setIsLoadingMoreUserPosts(true);
-        const newUpperBound = getDateMinusDays(bounds.upperBound, 2);
-        const newLowerBound = getDateMinusDays(bounds.lowerBound, 2);
-
-        DailyResultController.getAllViaApi(newUpperBound, newLowerBound).then((results) => {
-            setDayResults([...dayResults, ...results]);
-            setIsLoadingMoreDailyResults(false);
+        const combinedPromise = Promise.all([dailyResultsPromise]).then(([newDayResults]) => {
+            setDayResults([...dayResults, ...newDayResults]);
+            const newUpperBound = getDateMinusDays(bounds.upperBound, 2);
+            const newLowerBound = getDateMinusDays(bounds.lowerBound, 2);
+            setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
         });
 
-        StoryController.getAllViaApi(newUpperBound, newLowerBound).then((results) => {
-            setUserPosts([...userPosts, ...results]);
-            setIsLoadingMoreUserPosts(false);
-        });
-
-        setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
+        return combinedPromise;
     };
 
     return (
