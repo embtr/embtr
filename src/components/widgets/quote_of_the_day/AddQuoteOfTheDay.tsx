@@ -9,6 +9,7 @@ import { POPPINS_REGULAR } from 'src/util/constants';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
+import { QuoteOfTheDayController } from 'src/controller/widget/quote_of_the_day/QuoteOfTheDayController';
 
 export const AddQuoteOfTheDay = () => {
     const { colors } = useTheme();
@@ -19,14 +20,25 @@ export const AddQuoteOfTheDay = () => {
     const navigation = useNavigation<StackNavigationProp<TodayTab, 'PlanDay'>>();
 
     const save = async () => {
+        await QuoteOfTheDayController.create(quote, author);
         navigation.goBack();
     };
 
     return (
         <Screen>
-            <Banner name="Add New Quote" leftText="back" leftRoute="BACK" rightText="save" rightOnClick={save} />
+            <Banner
+                name="Add New Quote"
+                leftText="back"
+                leftRoute="BACK"
+                rightText="save"
+                rightOnClick={save}
+            />
             <ScrollView style={{ width: '100%', height: '100%' }}>
-                <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
+                <KeyboardAvoidingView
+                    style={{ height: '100%' }}
+                    keyboardVerticalOffset={isIosApp() ? -10 : 111}
+                    behavior={isIosApp() ? 'padding' : 'height'}
+                >
                     <TouchableWithoutFeedback
                         style={{ height: '100%', alignItems: 'center' }}
                         onPress={() => {
@@ -35,17 +47,34 @@ export const AddQuoteOfTheDay = () => {
                     >
                         <View style={{ width: '95%', paddingLeft: 5, paddingTop: 20 }}>
                             <View>
-                                <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text, fontSize: 12, paddingTop: 5 }}>
-                                    The Quote Of The Day is a community supplied quote pool where one quote is selected per day as the Quote Of The Day.
+                                <Text
+                                    style={{
+                                        fontFamily: POPPINS_REGULAR,
+                                        color: colors.text,
+                                        fontSize: 12,
+                                        paddingTop: 5,
+                                    }}
+                                >
+                                    The Quote Of The Day is a community supplied quote pool where
+                                    one quote is selected per day as the Quote Of The Day.
                                 </Text>
-                                <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text, fontSize: 12, paddingTop: 10 }}>
+                                <Text
+                                    style={{
+                                        fontFamily: POPPINS_REGULAR,
+                                        color: colors.text,
+                                        fontSize: 12,
+                                        paddingTop: 10,
+                                    }}
+                                >
                                     Add a new quote to join in on the fun - you might be next!
                                 </Text>
                             </View>
                             <View style={{ height: 30, width: '100%' }} />
 
                             <View style={{ width: '100%' }}>
-                                <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text }}>Quote</Text>
+                                <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text }}>
+                                    Quote
+                                </Text>
                                 <TextInput
                                     textAlignVertical="top"
                                     style={{
@@ -70,7 +99,9 @@ export const AddQuoteOfTheDay = () => {
                             </View>
 
                             <View style={{ width: '100%', paddingTop: 10 }}>
-                                <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text }}>Author</Text>
+                                <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text }}>
+                                    Author
+                                </Text>
                                 <TextInput
                                     style={{
                                         marginTop: 3,

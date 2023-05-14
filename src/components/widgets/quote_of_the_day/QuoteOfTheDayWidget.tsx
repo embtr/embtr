@@ -22,6 +22,7 @@ import { QuoteOfTheDayController } from 'src/controller/widget/quote_of_the_day/
 import { LikeController } from 'src/controller/api/general/LikeController';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import { set } from 'lodash';
 
 interface Props {
     refreshedTimestamp: Date;
@@ -32,6 +33,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
 
     const [quoteOfTheDay, setQuoteOfTheDay] = React.useState<QuoteOfTheDay>();
     const [isLiked, setIsLiked] = React.useState<boolean>(false);
+    const [likeCount, setLikeCount] = React.useState<number>(0);
 
     const navigation = useNavigation<StackNavigationProp<TodayTab, 'AddQuoteOfTheDay'>>();
     const closeMenu = useAppSelector(getCloseMenu);
@@ -48,6 +50,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
         const quoteOfTheDay = await QuoteOfTheDayController.get();
         if (quoteOfTheDay) {
             setQuoteOfTheDay(quoteOfTheDay);
+            setLikeCount(quoteOfTheDay.likes?.length || 0);
         }
     };
 
@@ -59,6 +62,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
 
         const isLiked = quoteOfTheDay?.likes?.some((like) => like?.userId === currentUserId);
         setIsLiked(isLiked);
+        setLikeCount(likeCount + 1);
     };
 
     let menuOptions: EmbtrMenuOption[] = [];
@@ -77,6 +81,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
 
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         LikeController.add(Interactable.QUOTE_OF_THE_DAY, quoteOfTheDay.id);
+        setIsLiked(true);
     };
 
     const navigateToUserProfile = () => {
