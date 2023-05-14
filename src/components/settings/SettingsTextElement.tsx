@@ -2,28 +2,16 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { MetadataController, MetadataKey } from 'src/controller/metadata/MetadataController';
-import { CARD_SHADOW, SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_MEDIUM, SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
 
 interface Props {
     text: string;
-    secondaryText: any;
+    secondaryText: string;
+    thirdaryText: string;
 }
 
-export const SettingsTextElement = ({ text, secondaryText }: Props) => {
+export const SettingsTextElement = ({ text, secondaryText, thirdaryText }: Props) => {
     const { colors } = useTheme();
-    const [isLatest, setIsLatest] = React.useState<boolean>(true);
-
-    const fetch = async () => {
-        const version = await MetadataController.getMetadata(MetadataKey.VERSION);
-
-        if (version) {
-            setIsLatest(version === secondaryText);
-        }
-    };
-
-    React.useEffect(() => {
-        fetch();
-    }, []);
 
     return (
         <View
@@ -54,7 +42,7 @@ export const SettingsTextElement = ({ text, secondaryText }: Props) => {
 
             <View
                 style={{
-                    flex: 1,
+                    flex: 2,
                     alignItems: 'flex-end',
                     justifyContent: 'center',
                     paddingRight: 30,
@@ -63,13 +51,13 @@ export const SettingsTextElement = ({ text, secondaryText }: Props) => {
                 <Text
                     style={{
                         color: colors.secondary_text,
-                        fontFamily: 'Poppins_500Medium',
+                        fontFamily: POPPINS_MEDIUM,
                         fontSize: 15,
                         alignItems: 'flex-start',
                         paddingLeft: 30,
                     }}
                 >
-                    {!isLatest && (
+                    {thirdaryText && (
                         <Text
                             style={{
                                 color: 'red',
@@ -77,9 +65,11 @@ export const SettingsTextElement = ({ text, secondaryText }: Props) => {
                                 fontSize: 15,
                                 alignItems: 'flex-start',
                                 paddingLeft: 30,
+                                flex: 2,
                             }}
                         >
-                            {'out of date '}
+                            {thirdaryText}
+                            {'  '}
                         </Text>
                     )}
 

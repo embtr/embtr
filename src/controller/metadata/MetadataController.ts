@@ -14,11 +14,15 @@ export class MetadataController {
             .get('/metadata/')
             .then((success) => {
                 const response = success.data as GetAllMetadataResonse;
-                response.metadata.forEach((metadata) => {
+                for (const metadata of response.metadata) {
+                    console.log(metadata);
+                    console.log(key);
                     if (metadata.key === key) {
-                        return metadata;
+                        return metadata.value;
                     }
-                });
+                }
+
+                return undefined;
             })
             .catch((error) => {
                 console.log(error);
