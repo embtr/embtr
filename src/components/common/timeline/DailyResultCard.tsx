@@ -15,6 +15,11 @@ import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { TouchableWithoutFeedback } from 'react-native';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import {
+    getTimelineCardRefreshRequests,
+    removeTimelineCardRefreshRequest,
+} from 'src/redux/user/GlobalState';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -25,6 +30,8 @@ interface Props {
 export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
     const { colors } = useTheme();
+    const dispatch = useAppDispatch();
+    const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
 
     const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>(
         plannedDayResult.data.dayResult
@@ -67,6 +74,20 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
         await DailyResultController.addLikeViaApi(updatedDayResult.id);
         refreshPlannedDayResult();
     };
+
+    React.useEffect(() => {
+        if (!updatedDayResult.id) {
+            return;
+        }
+
+        const key = 'RESULT_' + updatedDayResult.id;
+
+        if (timelineCardRefreshRequests.includes(key)) {
+            refreshPlannedDayResult();
+            //remove card from the refresh request list
+            dispatch(removeTimelineCardRefreshRequest(key));
+        }
+    }, [timelineCardRefreshRequests]);
 
     const user = plannedDayResult.data.dayResult.plannedDay!.user!;
 

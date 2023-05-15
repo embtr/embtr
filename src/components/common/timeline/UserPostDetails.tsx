@@ -4,13 +4,14 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import StoryController from 'src/controller/timeline/story/StoryController';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
 import { Alert, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Comment } from 'src/controller/timeline/TimelineController';
-import { UserPost } from 'resources/schema';
+import { Comment, UserPost } from 'resources/schema';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { UserProfileModel } from 'src/model/OldModels';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
@@ -39,6 +40,7 @@ export const UserPostDetails = () => {
         }
 
         await StoryController.addCommentViaApi(userPost.id, text);
+        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.id));
         fetch();
     };
 
@@ -48,6 +50,7 @@ export const UserPostDetails = () => {
         }
 
         await StoryController.deleteCommentViaApi(comment);
+        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.id));
         fetch();
     };
 
@@ -72,17 +75,23 @@ export const UserPostDetails = () => {
             return;
         }
 
-        Alert.alert('Delete Post', 'Are you sure you want to delete this post? This cannot be undone.', [
-            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-            {
-                text: 'I am sure. Delete it.',
-                onPress: async () => {
-                    await StoryController.deleteViaApi(userPost);
-                    navigation.navigate('Timeline');
+        Alert.alert(
+            'Delete Post',
+            'Are you sure you want to delete this post? This cannot be undone.',
+            [
+                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+                {
+                    text: 'I am sure. Delete it.',
+                    onPress: async () => {
+                        await StoryController.deleteViaApi(userPost);
+                        navigation.navigate('Timeline');
+                    },
                 },
-            },
-        ]);
+            ]
+        );
     };
+
+    const dispatch = useAppDispatch();
 
     const onLike = async () => {
         if (!userPost?.id) {
@@ -90,6 +99,7 @@ export const UserPostDetails = () => {
         }
 
         await StoryController.addLikeViaApi(userPost.id);
+        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.id));
         fetch();
     };
 
@@ -111,7 +121,11 @@ export const UserPostDetails = () => {
                 onEdit={navigateToEdit}
                 onDelete={deletePost}
             >
-                <UserPostBody title={userPost.title ?? ''} post={userPost.body ?? ''} images={userPost.images ?? []} />
+                <UserPostBody
+                    title={userPost.title ?? ''}
+                    post={userPost.body ?? ''}
+                    images={userPost.images ?? []}
+                />
             </PostDetails>
         </View>
     );

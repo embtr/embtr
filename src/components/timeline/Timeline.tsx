@@ -30,12 +30,10 @@ export const Timeline = () => {
         lowerBound: getDateMinusDays(new Date(), 2),
     });
 
-    useFocusEffect(
-        React.useCallback(() => {
-            loadMore(false);
-            fetchNotifications();
-        }, [])
-    );
+    React.useEffect(() => {
+        loadMore(false);
+        fetchNotifications();
+    }, []);
 
     const fetchNotifications = async () => {
         const notifications = await NotificationController.getNotificationsViaApi();

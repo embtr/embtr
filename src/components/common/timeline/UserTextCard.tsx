@@ -1,8 +1,12 @@
 import React from 'react';
 import { TextCard } from 'src/components/common/timeline/TextCard';
 import StoryController, { StoryModel } from 'src/controller/timeline/story/StoryController';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentTab } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import {
+    getCurrentTab,
+    getTimelineCardRefreshRequests,
+    removeTimelineCardRefreshRequest,
+} from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import { UserPost } from 'resources/schema';
 
@@ -15,6 +19,8 @@ export const UserTextCard = React.memo(({ oldModel }: Props) => {
     const navigation = getNavigationHook(currentTab)();
 
     const [updatedStory, setUpdatedStory] = React.useState<UserPost>(oldModel.data.userPost);
+    const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
+    const dispatch = useAppDispatch();
 
     const fetch = async () => {
         if (!updatedStory.id) {
@@ -29,6 +35,20 @@ export const UserTextCard = React.memo(({ oldModel }: Props) => {
         setUpdatedStory(refreshed);
         return refreshed;
     };
+
+    React.useEffect(() => {
+        if (!updatedStory.id) {
+            return;
+        }
+
+        const key = 'POST_' + updatedStory.id;
+
+        if (timelineCardRefreshRequests.includes(key)) {
+            fetch();
+            //remove card from the refresh request list
+            dispatch(removeTimelineCardRefreshRequest(key));
+        }
+    }, [timelineCardRefreshRequests]);
 
     const onLike = async () => {
         if (!updatedStory.id) {

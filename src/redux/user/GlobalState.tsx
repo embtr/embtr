@@ -13,6 +13,7 @@ const INITIAL_STATE: GlobalState = {
     userProfileImage:
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
     showCardShadow: true,
+    cardRefreshRequests: [],
 };
 
 export interface GlobalState {
@@ -25,6 +26,7 @@ export interface GlobalState {
     currentTab: string;
     userProfileImage: string;
     showCardShadow: boolean;
+    cardRefreshRequests: string[];
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -59,6 +61,22 @@ export const GlobalState = createSlice({
         },
         setShowCardShadow(state, action) {
             state.showCardShadow = action.payload;
+        },
+        addTimelineCardRefreshRequest(state, action) {
+            let updatedTimelineCardRefreshRequests = state.cardRefreshRequests;
+            if (!updatedTimelineCardRefreshRequests) {
+                updatedTimelineCardRefreshRequests = [];
+            }
+
+            updatedTimelineCardRefreshRequests = updatedTimelineCardRefreshRequests.concat(
+                action.payload
+            );
+            state.cardRefreshRequests = updatedTimelineCardRefreshRequests;
+        },
+        removeTimelineCardRefreshRequest(state, action) {
+            state.cardRefreshRequests = state.cardRefreshRequests.filter(
+                (item) => item !== action.payload
+            );
         },
     },
 });
@@ -135,6 +153,14 @@ export const getShowCardShadow = (state: RootState) => {
     return state.globalState.showCardShadow;
 };
 
+export const getTimelineCardRefreshRequests = (state: RootState): string[] => {
+    if (!state?.globalState.cardRefreshRequests) {
+        return INITIAL_STATE.cardRefreshRequests;
+    }
+
+    return state.globalState.cardRefreshRequests;
+};
+
 export const {
     setAccessLevel,
     setUserProfileUrl,
@@ -145,5 +171,7 @@ export const {
     setCurrentTab,
     setUserProfileImage,
     setShowCardShadow,
+    addTimelineCardRefreshRequest,
+    removeTimelineCardRefreshRequest,
 } = GlobalState.actions;
 export default GlobalState.reducer;

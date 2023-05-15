@@ -10,13 +10,19 @@ import { Screen } from '../Screen';
 import { Comment, PlannedDayResult as PlannedDayResultModel, User } from 'resources/schema';
 import Toast from 'react-native-root-toast';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
-    const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResultModel | undefined>(undefined);
+    const [plannedDayResult, setPlannedDayResult] = React.useState<
+        PlannedDayResultModel | undefined
+    >(undefined);
     const { setScheme, isDark } = useTheme();
+
+    const dispatch = useAppDispatch();
 
     const fetchData = async () => {
         const plannedDayResult = await DailyResultController.getViaApi(route.params.id);
@@ -41,6 +47,7 @@ export const DailyResultDetails = () => {
     const submitComment = async (text: string, taggedUsers: User[]) => {
         if (plannedDayResult?.id) {
             await DailyResultController.addCommentViaApi(plannedDayResult.id, text);
+            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
             fetchData();
         }
 
@@ -57,6 +64,7 @@ export const DailyResultDetails = () => {
     const deleteComment = async (comment: Comment) => {
         if (plannedDayResult?.id) {
             await DailyResultController.deleteCommentViaApi(comment);
+            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
             fetchData();
         }
     };
@@ -68,18 +76,22 @@ export const DailyResultDetails = () => {
     };
 
     const onDelete = () => {
-        Alert.alert('Delete Daily Result', 'Are you sure you want to delete this Daily Result? Any future modifications to this day will restore it..', [
-            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
-            {
-                text: 'I am sure. Delete it.',
-                onPress: async () => {
-                    const clone: PlannedDayResultModel = { ...plannedDayResult, active: false };
-                    await DailyResultController.updateViaApi(clone);
-                    setPlannedDayResult(clone);
-                    navigation.goBack();
+        Alert.alert(
+            'Delete Daily Result',
+            'Are you sure you want to delete this Daily Result? Any future modifications to this day will restore it..',
+            [
+                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+                {
+                    text: 'I am sure. Delete it.',
+                    onPress: async () => {
+                        const clone: PlannedDayResultModel = { ...plannedDayResult, active: false };
+                        await DailyResultController.updateViaApi(clone);
+                        setPlannedDayResult(clone);
+                        navigation.goBack();
+                    },
                 },
-            },
-        ]);
+            ]
+        );
     };
 
     const onLike = async () => {
@@ -88,6 +100,7 @@ export const DailyResultDetails = () => {
         }
 
         await DailyResultController.addLikeViaApi(plannedDayResult!.id);
+        dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
         fetchData();
     };
 

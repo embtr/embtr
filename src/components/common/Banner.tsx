@@ -92,11 +92,19 @@ export const Banner = ({
     }
 
     const leftOnPress = () => {
-        leftOnClick ? leftOnClick() : leftRoute === 'BACK' ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList);
+        leftOnClick
+            ? leftOnClick()
+            : leftRoute === 'BACK'
+            ? navigation.goBack()
+            : navigation.navigate(leftRoute as keyof RootStackParamList);
     };
 
     const rightOnPress = () => {
-        rightOnClick ? rightOnClick() : rightRoute === 'BACK' ? navigation.goBack() : navigation.navigate(leftRoute as keyof RootStackParamList);
+        rightOnClick
+            ? rightOnClick()
+            : rightRoute === 'BACK'
+            ? navigation.goBack()
+            : navigation.navigate(leftRoute as keyof RootStackParamList);
     };
 
     return (
@@ -105,10 +113,30 @@ export const Banner = ({
                 <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 10, paddingTop: 5 }}>
                     {/* LEFT ICON */}
                     {leftIcon ? (
-                        <Ionicons name={leftIcon} size={iconSize} color={colors.text} onPress={leftOnPress} />
+                        <Ionicons
+                            name={leftIcon}
+                            size={iconSize}
+                            color={colors.text}
+                            onPress={leftOnPress}
+                        />
                     ) : leftText ? (
-                        <View style={{ paddingLeft: 10, paddingRight: 10, alignItems: 'center', justifyContent: 'center' }}>
-                            <Text onPress={leftOnPress} style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: colors.link, fontSize: 16 }}>
+                        <View
+                            style={{
+                                paddingLeft: 10,
+                                paddingRight: 10,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Text
+                                onPress={leftOnPress}
+                                style={{
+                                    textAlign: 'center',
+                                    fontFamily: 'Poppins_400Regular',
+                                    color: colors.link,
+                                    fontSize: 16,
+                                }}
+                            >
                                 {leftText}
                             </Text>
                         </View>
@@ -133,10 +161,29 @@ export const Banner = ({
                 </View>
 
                 <View style={{ flex: 2, justifyContent: 'center' }}>
-                    <Text style={[textStyle, { textAlign: 'center', fontFamily: 'Poppins_600SemiBold', fontSize: bannerSize }]}>{name}</Text>
+                    <Text
+                        style={[
+                            textStyle,
+                            {
+                                textAlign: 'center',
+                                fontFamily: 'Poppins_600SemiBold',
+                                fontSize: bannerSize,
+                            },
+                        ]}
+                    >
+                        {name}
+                    </Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', flex: 1, paddingRight: 10, justifyContent: 'flex-end', paddingTop: 5 }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                        paddingRight: 10,
+                        justifyContent: 'flex-end',
+                        paddingTop: 5,
+                    }}
+                >
                     {/* INNER RIGHT ICON */}
                     {innerRightIcon && (
                         <Ionicons
@@ -154,26 +201,58 @@ export const Banner = ({
                     {rightIcon && (
                         <View style={{ alignItems: 'flex-end' }}>
                             {rightIconNotificationCount ? (
-                                <View style={{ paddingRight: 1, paddingTop: 0, zIndex: 1, position: 'absolute' }}>
-                                    <View style={{ backgroundColor: colors.notification_dot, borderRadius: 50, width: 9, height: 9 }} />
+                                <View
+                                    style={{
+                                        paddingRight: 1,
+                                        paddingTop: 0,
+                                        zIndex: 1,
+                                        position: 'absolute',
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            backgroundColor: colors.notification_dot,
+                                            borderRadius: 50,
+                                            width: 9,
+                                            height: 9,
+                                        }}
+                                    />
                                 </View>
                             ) : (
                                 <></>
                             )}
 
-                            <Ionicons name={rightIcon} size={iconSize} color={colors.text} onPress={handleRightClick} />
+                            <Ionicons
+                                name={rightIcon}
+                                size={iconSize}
+                                color={colors.text}
+                                onPress={handleRightClick}
+                            />
                         </View>
                     )}
 
                     {/* RIGHT ICON */}
                     {rightText && (
                         <View style={{ alignItems: 'flex-end', flex: 1 }}>
-                            <View style={{ paddingLeft: 10, paddingRight: 10, alignItems: 'center', flex: 1, justifyContent: 'center' }}>
+                            <View
+                                style={{
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                    alignItems: 'center',
+                                    flex: 1,
+                                    justifyContent: 'center',
+                                }}
+                            >
                                 <Text
                                     onPress={() => {
                                         rightOnPress();
                                     }}
-                                    style={{ textAlign: 'center', fontFamily: 'Poppins_400Regular', color: colors.link, fontSize: 16 }}
+                                    style={{
+                                        textAlign: 'center',
+                                        fontFamily: 'Poppins_400Regular',
+                                        color: colors.link,
+                                        fontSize: 16,
+                                    }}
                                 >
                                     {rightText}
                                 </Text>
