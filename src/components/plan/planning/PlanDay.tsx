@@ -5,6 +5,10 @@ import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
+import { all } from 'axios';
+import { set } from 'lodash';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getOpenMenu } from 'src/redux/user/GlobalState';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -15,13 +19,26 @@ interface Props {
 export const PlanDay = ({ plannedDay, onTaskUpdated, setShowSelectTaskModal }: Props) => {
     const { colors } = useTheme();
     const [taskViews, setTaskViews] = React.useState<JSX.Element[]>([]);
+    const [allTasksAreComplete, setAllTasksAreComplete] = React.useState<boolean>(false);
+
+    const openMenu = useAppSelector(getOpenMenu);
 
     useFocusEffect(
         React.useCallback(() => {
             let taskViews: JSX.Element[] = [];
+            let allTasksAreComplete = true;
 
             // get all current planned tasks
             plannedDay?.plannedTasks?.forEach((plannedTask) => {
+                if (
+                    !(
+                        plannedTask.count === plannedTask.completedCount &&
+                        (plannedTask.count ?? 0) > 0 &&
+                        plannedTask.status !== 'FAILED'
+                    )
+                ) {
+                    allTasksAreComplete = false;
+                }
                 taskViews.push(
                     <View
                         key={plannedTask.id + '_locked'}
@@ -37,6 +54,7 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, setShowSelectTaskModal }: P
             });
 
             setTaskViews(taskViews);
+            setAllTasksAreComplete(allTasksAreComplete);
         }, [plannedDay])
     );
 
@@ -53,6 +71,42 @@ export const PlanDay = ({ plannedDay, onTaskUpdated, setShowSelectTaskModal }: P
                                 width: '100%',
                             }}
                         >
+                            {allTasksAreComplete && (
+                                <View
+                                    style={{
+                                        marginBottom: 20,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderWidth: 1,
+                                        borderColor: colors.secondary_text,
+                                        borderRadius: 5,
+                                        width: '97%',
+                                        paddingTop: 5,
+                                        paddingBottom: 5,
+                                        marginLeft: '1.5%',
+                                    }}
+                                >
+                                    <Text style={{ color: colors.secondary_text }}>
+                                        All of your tasks are complete! Congratulations!
+                                    </Text>
+                                    <View style={{ flexDirection: 'row', paddingTop: 4 }}>
+                                        <View style={{ paddingRight: 5 }}>
+                                            <Text
+                                                onPress={() => {
+                                                    openMenu();
+                                                }}
+                                                style={{
+                                                    color: colors.tab_selected,
+                                                    fontFamily: 'Poppins_400Regular',
+                                                }}
+                                            >
+                                                {' '}
+                                                Complete Day
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            )}
                             <View style={{ alignItems: 'center' }}>{taskViews}</View>
                         </ScrollView>
                     ) : (

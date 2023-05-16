@@ -8,6 +8,7 @@ import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';
 import { PlannedTask as PlannedTaskModel } from 'resources/schema';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
+import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -22,6 +23,17 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     const completedCount = plannedTask?.completedCount ?? 0;
     const taskIsComplete = completedCount === totalCount;
     const taskIsFailed = plannedTask.status === 'FAILED';
+
+    let icon: JSX.Element = <TaskFailedSymbol />;
+    if (taskIsComplete) {
+        icon = <TaskCompleteSymbol />;
+    } else if (
+        plannedTask.plannedDay?.dayKey === getTodayKey() &&
+        !taskIsComplete &&
+        !taskIsFailed
+    ) {
+        icon = <TaskInProgressSymbol />;
+    }
 
     let status = plannedTask.status;
     if (temporaryStatus) {
@@ -46,7 +58,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                     }
                 }}
             >
-                {taskIsFailed || !taskIsComplete ? <TaskFailedSymbol /> : <TaskCompleteSymbol />}
+                {icon}
             </TouchableWithoutFeedback>
 
             <View style={{ flex: 1 }}>

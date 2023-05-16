@@ -188,7 +188,7 @@ export const Today = () => {
 
         return (
             <ScaleDecorator>
-                <TouchableOpacity onLongPress={drag} disabled={!isConfiguringWidgets}>
+                <TouchableOpacity onPressIn={drag} disabled={!isConfiguringWidgets}>
                     <WigglableView key={item.type} wiggle={isConfiguringWidgets}>
                         <DeletableView
                             visible={isConfiguringWidgets}

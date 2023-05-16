@@ -16,6 +16,8 @@ import PlannedDayController, {
     getTodayKey,
 } from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import LottieView from 'lottie-react-native';
+import { wait } from 'src/util/GeneralUtility';
 
 /*
  * Avoid rerenders
@@ -32,6 +34,11 @@ export const PlanMain = () => {
     const onDayChanged = (day: number) => {
         const newDayKey = getDayKey(day);
         setSelectedDayKey(newDayKey);
+    };
+
+    const animation = React.useRef<LottieView>(null);
+    const onConfetti = () => {
+        animation.current?.play();
     };
 
     const navigateToTomorrowCreateTask = () => {
@@ -59,6 +66,7 @@ export const PlanMain = () => {
                     PlannedDayController.completeDayViaApi(plannedDay);
                 }
 
+                onConfetti();
                 closeMenu();
             },
         },
@@ -76,6 +84,26 @@ export const PlanMain = () => {
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
 
+                <View
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        zIndex: 1,
+                        position: 'absolute',
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                    }}
+                    pointerEvents="none"
+                >
+                    <LottieView
+                        autoPlay={false}
+                        loop={false}
+                        ref={animation}
+                        style={{ width: '140%', justifyContent: 'center' }}
+                        source={require('../../../resources/lottie-confetti.json')}
+                    />
+                </View>
                 <Planning
                     showSelectTaskModal={showAddTaskModal}
                     setShowSelectTaskModal={setShowAddTaskModal}

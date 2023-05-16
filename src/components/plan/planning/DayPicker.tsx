@@ -19,7 +19,11 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
     const currentDate = new Date();
-    let dateElements = Array.from(Array(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() + 1).keys());
+    let dateElements = Array.from(
+        Array(
+            new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() + 1
+        ).keys()
+    );
     dateElements.shift();
 
     const [selected, setSelected] = React.useState<number>(day - 1);
@@ -50,17 +54,31 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
                     textAlign: 'center',
                     fontSize: 16,
                     fontFamily: 'Poppins_400Regular',
-                    color: selected === index ? colors.today_calendar_picker_selected : colors.today_calendar_picker_unselected,
+                    color:
+                        selected === index
+                            ? colors.today_calendar_picker_selected
+                            : colors.today_calendar_picker_unselected,
                 }}
             >
-                {days[new Date(currentDate.getFullYear(), currentDate.getMonth(), index % 7).getDay()]}
+                {
+                    days[
+                        new Date(
+                            currentDate.getFullYear(),
+                            currentDate.getMonth(),
+                            index % 7
+                        ).getDay()
+                    ]
+                }
             </Text>
             <Text
                 style={{
                     textAlign: 'center',
                     fontSize: 18,
                     fontFamily: 'Poppins_600SemiBold',
-                    color: selected === index ? colors.today_calendar_picker_selected : colors.today_calendar_picker_unselected,
+                    color:
+                        selected === index
+                            ? colors.today_calendar_picker_selected
+                            : colors.today_calendar_picker_unselected,
                 }}
             >
                 {item}
@@ -70,7 +88,10 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
                     marginTop: 2,
                     width: '75%',
                     height: 2,
-                    backgroundColor: selected === index ? colors.today_calendar_picker_selected : colors.background,
+                    backgroundColor:
+                        selected === index
+                            ? colors.today_calendar_picker_selected
+                            : colors.background,
                 }}
             />
         </View>

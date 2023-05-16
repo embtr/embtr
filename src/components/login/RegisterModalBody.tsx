@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Button, Text } from 'react-native';
+import { View, Button, Text, ActivityIndicator } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextInput } from 'react-native-gesture-handler';
@@ -21,28 +21,38 @@ export const RegisterModalBody = ({ confirm }: Props) => {
     const [password, setPassword] = React.useState<string>('');
     const [passwordConfirmation, setPasswordConfirmation] = React.useState<string>('');
     const [error, setError] = React.useState<string>('');
+    const [isCreatingAccount, setIsCreatingAccount] = React.useState<boolean>(false);
 
     return (
         <View
             style={{
                 width: 300,
-                height: getWindowHeight() / 3,
+                height: getWindowHeight() / 3 + 25,
                 backgroundColor: colors.modal_background,
                 borderRadius: 7,
                 justifyContent: 'space-around',
             }}
         >
             <View style={{ flex: 1, alignItems: 'center', paddingTop: 10 }}>
-                <View>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ flex: 1 }} />
                     <Text
                         style={{
+                            textAlign: 'center',
                             fontSize: 14,
+                            flex: 3,
                             fontFamily: 'Poppins_500Medium',
                             color: colors.text,
                         }}
                     >
                         Sign Up For Embtr
                     </Text>
+                    <ActivityIndicator
+                        animating={isCreatingAccount}
+                        size="small"
+                        color={colors.secondary_text}
+                        style={{ flex: 1 }}
+                    />
                 </View>
                 <View style={{ paddingTop: 10 }}>
                     <Text
@@ -203,9 +213,11 @@ export const RegisterModalBody = ({ confirm }: Props) => {
             <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                 <HorizontalLine />
                 <Button
+                    disabled={isCreatingAccount}
                     title="Sign Up"
                     onPress={() => {
                         const handleSignUp = async () => {
+                            setIsCreatingAccount(true);
                             const result: Response = await UserController.createAccount(
                                 email,
                                 password
@@ -227,6 +239,8 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                                 case Code.CREATE_ACCOUNT_INVALID_PASSWORD:
                                     setError('password is invalid');
                             }
+
+                            setIsCreatingAccount(false);
                         };
 
                         handleSignUp();

@@ -37,7 +37,7 @@ export const HabitScrollSelector = ({ habits, initialHabit, onHabitSelected }: P
                 <Text
                     key={token}
                     style={{
-                        lineHeight: 10,
+                        lineHeight: 11,
                         color,
                         fontSize: 10,
                         fontFamily: POPPINS_REGULAR,
@@ -52,7 +52,7 @@ export const HabitScrollSelector = ({ habits, initialHabit, onHabitSelected }: P
                 <Text
                     key={'space_placeholder'}
                     style={{
-                        lineHeight: 10,
+                        lineHeight: 11,
                         color,
                         fontSize: 10,
                         fontFamily: POPPINS_REGULAR,

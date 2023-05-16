@@ -35,7 +35,7 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
         }
 
         let menuOptions: EmbtrMenuOption[] = [];
-        if (!taskIsComplete && !taskIsFailed) {
+        if (!taskIsComplete && !taskIsFailed && (plannedTask.count ?? 0) > 1) {
             menuOptions.push({
                 name: 'Complete One',
                 onPress: async () => {
