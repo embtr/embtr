@@ -1,12 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
-import { useTheme } from 'src/components/theme/ThemeProvider';
-import { SceneRendererProps, TabView, TabBar } from 'react-native-tab-view';
 import { Banner } from 'src/components/common/Banner';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 import { Planning } from './planning/Planning';
 import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
 import { useAppSelector } from 'src/redux/Hooks';
@@ -17,7 +12,6 @@ import PlannedDayController, {
 } from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import LottieView from 'lottie-react-native';
-import { wait } from 'src/util/GeneralUtility';
 
 /*
  * Avoid rerenders
@@ -25,11 +19,8 @@ import { wait } from 'src/util/GeneralUtility';
  */
 
 export const PlanMain = () => {
-    const { colors } = useTheme();
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
-
-    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
 
     const onDayChanged = (day: number) => {
         const newDayKey = getDayKey(day);
@@ -45,8 +36,18 @@ export const PlanMain = () => {
         setShowAddTaskModal(true);
     };
 
-    const navigateToTasksCreateTask = () => {
-        navigation.navigate('CreateEditHabit', { id: undefined });
+    const completeDay = async () => {
+        const plannedDay = await PlannedDayController.getForCurrentUserViaApi(selectedDayKey);
+
+        if (plannedDay?.plannedDayResults?.length) {
+            const plannedDayResult = plannedDay!.plannedDayResults![0];
+            plannedDayResult.active = true;
+            await DailyResultController.updateViaApi(plannedDayResult);
+        } else if (plannedDay) {
+            await PlannedDayController.completeDayViaApi(plannedDay);
+        }
+
+        onConfetti();
     };
 
     const closeMenu = useAppSelector(getCloseMenu);
@@ -54,19 +55,7 @@ export const PlanMain = () => {
         {
             name: 'Complete Day',
             onPress: async () => {
-                const plannedDay = await PlannedDayController.getForCurrentUserViaApi(
-                    selectedDayKey
-                );
-
-                if (plannedDay?.plannedDayResults?.length) {
-                    const plannedDayResult = plannedDay!.plannedDayResults![0];
-                    plannedDayResult.active = true;
-                    DailyResultController.updateViaApi(plannedDayResult);
-                } else if (plannedDay) {
-                    PlannedDayController.completeDayViaApi(plannedDay);
-                }
-
-                onConfetti();
+                completeDay();
                 closeMenu();
             },
         },
@@ -116,6 +105,7 @@ export const PlanMain = () => {
                     onDayChange={onDayChanged}
                     selectedDayKey={selectedDayKey}
                     useCalendarView={false}
+                    onCompleteDay={completeDay}
                 />
             </View>
         </Screen>

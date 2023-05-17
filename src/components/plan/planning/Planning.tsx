@@ -1,11 +1,9 @@
 import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { Button, View } from 'react-native';
+import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import PlannedDayController, {
     getDayFromDayKey,
-    getDayKey,
-    getTodayKey,
 } from 'src/controller/planning/PlannedDayController';
 import { DayPicker } from 'src/components/plan/planning/DayPicker';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
@@ -22,6 +20,7 @@ interface Props {
     onDayChange: Function;
     useCalendarView: boolean;
     selectedDayKey: string;
+    onCompleteDay: Function;
 }
 
 export const Planning = ({
@@ -31,6 +30,7 @@ export const Planning = ({
     dismissSelectTaskModal,
     onDayChange,
     selectedDayKey,
+    onCompleteDay,
 }: Props) => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDayModel>();
 
@@ -48,6 +48,11 @@ export const Planning = ({
     const onDismissSelectTaskModal = () => {
         refreshPlannedToday();
         dismissSelectTaskModal();
+    };
+
+    const onCompleteDayInterceptor = async () => {
+        await onCompleteDay();
+        refreshPlannedToday();
     };
 
     let taskViews: JSX.Element[] = [];
@@ -75,6 +80,7 @@ export const Planning = ({
                         plannedDay={plannedDay}
                         onTaskUpdated={refreshPlannedToday}
                         setShowSelectTaskModal={setShowSelectTaskModal}
+                        onCompleteDay={onCompleteDayInterceptor}
                     />
                 )}
             </View>

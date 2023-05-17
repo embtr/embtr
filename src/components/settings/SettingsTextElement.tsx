@@ -1,7 +1,5 @@
-import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { MetadataController, MetadataKey } from 'src/controller/metadata/MetadataController';
 import { CARD_SHADOW, POPPINS_MEDIUM, SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
 
 interface Props {

@@ -10,6 +10,10 @@ export const getCurrentUid = () => {
     return getAuth().currentUser!.uid;
 };
 
+export const getCurrentEmail = () => {
+    return getAuth().currentUser?.email;
+};
+
 export const getCurrentUserUid = (callback: Function) => {
     const user: User | null = getAuth().currentUser;
     if (user) {
