@@ -1,5 +1,13 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Modal, Button, Text, Keyboard } from 'react-native';
+import {
+    View,
+    TouchableOpacity,
+    Modal,
+    Button,
+    Text,
+    Keyboard,
+    ActivityIndicator,
+} from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextInput } from 'react-native-gesture-handler';
@@ -24,6 +32,7 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
     const [needsEmailVerfied, setNeedsEmailVerified] = React.useState<boolean>(false);
     const [error, setError] = React.useState<string>('');
     const [status, setStatus] = React.useState<string>('');
+    const [isLoggingIn, setIsLoggingIn] = React.useState<boolean>(false);
 
     const [keyboardOpen, setKeyboardOpen] = React.useState(false);
 
@@ -131,7 +140,30 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                     }}
                 >
                     <View style={{ alignItems: 'center', flex: 1, width: '100%' }}>
-                        <View style={{ flex: 1, width: '100%' }}>
+                        <View
+                            style={{
+                                alignItems: 'flex-end',
+                                width: '100%',
+                                marginTop: 5,
+                                marginRight: 5,
+                                zIndex: 1,
+                                position: 'absolute',
+                            }}
+                        >
+                            <ActivityIndicator
+                                animating={isLoggingIn}
+                                size="small"
+                                color={colors.secondary_text}
+                            />
+                        </View>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                width: '100%',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
                             <Text
                                 style={{
                                     fontSize: 14,
@@ -289,9 +321,11 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                                 title="Login"
                                 onPress={() => {
                                     const auth = getAuth();
+                                    setIsLoggingIn(true);
                                     signInWithEmailAndPassword(auth, email, password)
                                         .then((userCredential) => {
                                             resetFields();
+                                            setIsLoggingIn(false);
 
                                             if (!userCredential.user.emailVerified) {
                                                 setError('please verify your email address');
@@ -305,6 +339,7 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
                                             const errorCode = error.code;
                                             handleLoginError(errorCode);
                                             setNeedsEmailVerified(false);
+                                            setIsLoggingIn(false);
                                         });
                                 }}
                             />

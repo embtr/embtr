@@ -33,26 +33,42 @@ export const RegisterModalBody = ({ confirm }: Props) => {
                 justifyContent: 'space-around',
             }}
         >
-            <View style={{ flex: 1, alignItems: 'center', paddingTop: 10 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }} />
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            fontSize: 14,
-                            flex: 3,
-                            fontFamily: 'Poppins_500Medium',
-                            color: colors.text,
-                        }}
-                    >
-                        Sign Up For Embtr
-                    </Text>
+            <View style={{ flex: 1, alignItems: 'center' }}>
+                <View
+                    style={{
+                        alignItems: 'flex-end',
+                        width: '100%',
+                        marginTop: 5,
+                        marginRight: 5,
+                        zIndex: 1,
+                        position: 'absolute',
+                    }}
+                >
                     <ActivityIndicator
                         animating={isCreatingAccount}
                         size="small"
                         color={colors.secondary_text}
-                        style={{ flex: 1 }}
                     />
+                </View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        width: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: 14,
+                            fontFamily: 'Poppins_500Medium',
+                            color: colors.text,
+                            paddingTop: 15,
+                            textAlign: 'center',
+                        }}
+                    >
+                        Embtr Login
+                    </Text>
                 </View>
                 <View style={{ paddingTop: 10 }}>
                     <Text
