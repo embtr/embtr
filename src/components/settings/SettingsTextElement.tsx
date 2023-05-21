@@ -24,7 +24,8 @@ export const SettingsTextElement = ({ text, secondaryText, thirdaryText }: Props
                 CARD_SHADOW,
             ]}
         >
-            <View style={{ flex: 1, justifyContent: 'center' }}>
+            {/* KEY */}
+            <View style={{ justifyContent: 'center' }}>
                 <Text
                     style={{
                         color: colors.button_text,
@@ -38,21 +39,25 @@ export const SettingsTextElement = ({ text, secondaryText, thirdaryText }: Props
                 </Text>
             </View>
 
+            {/* VALUE */}
             <View
                 style={{
-                    flex: 2,
+                    flex: 1,
                     alignItems: 'flex-end',
                     justifyContent: 'center',
                     paddingRight: 30,
                 }}
             >
                 <Text
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
                     style={{
                         color: colors.secondary_text,
                         fontFamily: POPPINS_MEDIUM,
                         fontSize: 15,
-                        alignItems: 'flex-start',
                         paddingLeft: 30,
+                        width: '100%',
+                        textAlign: 'right',
                     }}
                 >
                     {thirdaryText && (
