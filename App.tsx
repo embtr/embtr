@@ -17,6 +17,7 @@ export default function App() {
                         <ThemeProvider>
                             <RootSiblingParent>
                                 <Main />
+                                {/*My name is the DevDad and im going to buy a quest so i can do VR biking with goose .... now this is documented i must do this.....*/}
                             </RootSiblingParent>
                         </ThemeProvider>
                     </PersistGate>

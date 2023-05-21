@@ -16,10 +16,9 @@ import { ProgressBar } from './goals/ProgressBar';
 interface Props {
     plannedTask: PlannedTaskModel;
     onUpdateTask: Function;
-    isEnabled: boolean;
 }
 
-export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) => {
+export const PlannableTask = ({ plannedTask, onUpdateTask }: Props) => {
     const { colors } = useTheme();
 
     const dispatch = useAppDispatch();
@@ -50,7 +49,6 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
             menuOptions.push({
                 name: 'Complete Task',
                 onPress: async () => {
-                    alert('PRESSED');
                     closeMenu();
                     await PlannedTaskController.complete(plannedTask);
                     onUpdateTask();
@@ -93,14 +91,16 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
 
-    const onShortPress = () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        updateMenuOptions();
-        openMenu();
+    const onShortPress = async () => {
+        await PlannedTaskController.incrementCompletedCount(plannedTask);
+        onUpdateTask();
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     };
 
     const onLongPress = () => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        updateMenuOptions();
+        openMenu();
     };
 
     return (
@@ -113,13 +113,13 @@ export const PlannableTask = ({ plannedTask, onUpdateTask, isEnabled }: Props) =
                 style={[
                     {
                         backgroundColor: colors.button_background,
-                        borderRadius: 15,
+                        borderRadius: 5,
                         width: '100%',
                     },
                     CARD_SHADOW,
                 ]}
             >
-                <View style={{ borderRadius: 15, flexDirection: 'row', overflow: 'hidden' }}>
+                <View style={{ borderRadius: 5, flexDirection: 'row', overflow: 'hidden' }}>
                     <View
                         style={{
                             width: '2%',

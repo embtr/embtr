@@ -62,18 +62,17 @@ class PlannedTaskController {
     }
 
     public static async incrementCompletedCount(plannedTask: PlannedTask) {
-        plannedTask.completedCount = Math.max(0, (plannedTask.completedCount ?? 0) + 1);
-        plannedTask.completedCount = Math.min(
-            plannedTask.count ?? 0,
-            plannedTask.completedCount ?? 0
-        );
+        const clone = { ...plannedTask };
+        clone.completedCount = Math.max(0, (clone.completedCount ?? 0) + 1);
+        clone.completedCount = Math.min(clone.count ?? 0, clone.completedCount ?? 0);
 
-        return await this.update(plannedTask);
+        return await this.update(clone);
     }
 
     public static async decrementCompletedCount(plannedTask: PlannedTask) {
-        plannedTask.completedCount = Math.max(0, (plannedTask.completedCount ?? 0) - 1);
-        return await this.update(plannedTask);
+        const clone = { ...plannedTask };
+        clone.completedCount = Math.max(0, (clone.completedCount ?? 0) - 1);
+        return await this.update(clone);
     }
 
     public static async complete(plannedTask: PlannedTask) {
@@ -82,10 +81,11 @@ class PlannedTaskController {
     }
 
     public static async reset(plannedTask: PlannedTask) {
-        plannedTask.completedCount = 0;
-        plannedTask.status = 'INCOMPLETE';
+        const clone = { ...plannedTask };
+        clone.completedCount = 0;
+        clone.status = 'INCOMPLETE';
 
-        return await this.update(plannedTask);
+        return await this.update(clone);
     }
 
     public static async fail(plannedTask: PlannedTask) {

@@ -35,6 +35,7 @@ export type PlanTabScreens = {
     PillarDetails: { uid: string; id: string };
     RoutineDetails: { id: string };
     ViewAllComments: { uid: string; goalId: string };
+    DailyResultDetails: { id: number };
 };
 
 export type TimelineTabScreens = {

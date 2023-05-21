@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
-import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { PlannedDay as PlannedDayModel, PlannedDayResult } from 'resources/schema';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
+import { POPPINS_REGULAR } from 'src/util/constants';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { PlanTabScreens } from 'src/navigation/RootStackParamList';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -20,6 +23,7 @@ export const PlanDay = ({
     onCompleteDay,
 }: Props) => {
     const { colors } = useTheme();
+    const navigation = useNavigation<StackNavigationProp<PlanTabScreens, 'DailyResultDetails'>>();
     const [taskViews, setTaskViews] = useState<JSX.Element[]>([]);
     const [allTasksAreComplete, setAllTasksAreComplete] = useState<boolean>(false);
 
@@ -47,11 +51,7 @@ export const PlanDay = ({
                         width: '97%',
                     }}
                 >
-                    <PlannableTask
-                        plannedTask={plannedTask}
-                        isEnabled={true}
-                        onUpdateTask={onTaskUpdated}
-                    />
+                    <PlannableTask plannedTask={plannedTask} onUpdateTask={onTaskUpdated} />
                 </View>
             );
         });
@@ -60,7 +60,25 @@ export const PlanDay = ({
         setAllTasksAreComplete(allTasksAreComplete);
     }, [plannedDay]);
 
-    const dayIsComplete = plannedDay.plannedDayResults && plannedDay.plannedDayResults[0].active;
+    let dayIsComplete = false;
+    const plannedDayResult: PlannedDayResult | undefined = plannedDay.plannedDayResults?.[0];
+    if (plannedDayResult) {
+        dayIsComplete = plannedDayResult.active ?? false;
+    }
+
+    const navigateToDetails = () => {
+        if (!plannedDay?.plannedDayResults?.length) {
+            return;
+        }
+
+        if (!plannedDay.plannedDayResults[0].id) {
+            return;
+        }
+
+        navigation.navigate('DailyResultDetails', {
+            id: plannedDay.plannedDayResults[0].id,
+        });
+    };
 
     return (
         <Screen>
@@ -74,62 +92,58 @@ export const PlanDay = ({
                             width: '100%',
                         }}
                     >
-                        {allTasksAreComplete &&
-                            (!dayIsComplete ? (
-                                <View
-                                    style={{
-                                        marginBottom: 20,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        borderWidth: 1,
-                                        borderColor: colors.secondary_text,
-                                        borderRadius: 5,
-                                        width: '97%',
-                                        paddingTop: 5,
-                                        paddingBottom: 5,
-                                        marginLeft: '1.5%',
-                                    }}
-                                >
-                                    <Text style={{ color: colors.secondary_text }}>
-                                        Congratulations, all of your tasks are complete!
-                                    </Text>
-                                    <View style={{ flexDirection: 'row', paddingTop: 4 }}>
-                                        <View style={{ paddingRight: 5 }}>
-                                            <Text
-                                                onPress={() => {
-                                                    onCompleteDay();
-                                                }}
-                                                style={{
-                                                    color: colors.tab_selected,
-                                                    fontFamily: 'Poppins_400Regular',
-                                                }}
-                                            >
-                                                {' '}
-                                                Complete Day
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            ) : (
-                                <View
-                                    style={{
-                                        marginBottom: 20,
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        borderWidth: 1,
-                                        borderColor: colors.progress_bar_complete,
-                                        borderRadius: 5,
-                                        width: '97%',
-                                        paddingTop: 15,
-                                        paddingBottom: 15,
-                                        marginLeft: '1.5%',
-                                    }}
-                                >
-                                    <Text style={{ color: colors.secondary_text }}>
-                                        Day Complete!
+                        <View
+                            style={{
+                                marginBottom: 20,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderWidth: 1,
+                                borderColor: colors.secondary_text,
+                                borderRadius: 5,
+                                width: '97%',
+                                paddingTop: 5,
+                                paddingBottom: 5,
+                                marginLeft: '1.5%',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    zIndex: 1,
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 0,
+                                    paddingRight: 5,
+                                    paddingLeft: 5,
+                                    fontFamily: POPPINS_REGULAR,
+                                    fontSize: 10,
+                                    color: colors.secondary_text,
+                                }}
+                            >
+                                hide
+                            </Text>
+                            <Text style={{ color: colors.secondary_text }}>
+                                {allTasksAreComplete
+                                    ? 'Congratulations, you have completed your day!'
+                                    : 'Finished with your day?'}
+                            </Text>
+                            <View style={{ flexDirection: 'row', paddingTop: 4 }}>
+                                <View style={{ paddingRight: 5 }}>
+                                    <Text
+                                        onPress={() => {
+                                            dayIsComplete ? navigateToDetails() : onCompleteDay();
+                                        }}
+                                        style={{
+                                            color: colors.tab_selected,
+                                            fontFamily: 'Poppins_400Regular',
+                                        }}
+                                    >
+                                        {' '}
+                                        {dayIsComplete ? 'View Shared Results' : 'Share Results'}
                                     </Text>
                                 </View>
-                            ))}
+                            </View>
+                        </View>
+
                         <View
                             style={{
                                 alignItems: 'center',

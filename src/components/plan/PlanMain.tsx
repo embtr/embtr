@@ -12,6 +12,7 @@ import PlannedDayController, {
 } from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import LottieView from 'lottie-react-native';
+import { PlannedDay } from 'resources/schema';
 
 /*
  * Avoid rerenders
@@ -20,7 +21,17 @@ import LottieView from 'lottie-react-native';
 
 export const PlanMain = () => {
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
+
+    const fetchPlannedDay = async () => {
+        const plannedDay = await PlannedDayController.getForCurrentUserViaApi(selectedDayKey);
+        setPlannedDay(plannedDay);
+    };
+
+    React.useEffect(() => {
+        fetchPlannedDay();
+    }, [selectedDayKey]);
 
     const onDayChanged = (day: number) => {
         const newDayKey = getDayKey(day);
@@ -37,8 +48,6 @@ export const PlanMain = () => {
     };
 
     const completeDay = async () => {
-        const plannedDay = await PlannedDayController.getForCurrentUserViaApi(selectedDayKey);
-
         if (plannedDay?.plannedDayResults?.length) {
             const plannedDayResult = plannedDay!.plannedDayResults![0];
             plannedDayResult.active = true;
@@ -46,14 +55,12 @@ export const PlanMain = () => {
         } else if (plannedDay) {
             await PlannedDayController.completeDayViaApi(plannedDay);
         }
-
-        onConfetti();
     };
 
     const closeMenu = useAppSelector(getCloseMenu);
     const menuItems: EmbtrMenuOption[] = [
         {
-            name: 'Complete Day',
+            name: 'Share Results',
             onPress: async () => {
                 completeDay();
                 closeMenu();
@@ -99,13 +106,11 @@ export const PlanMain = () => {
                     dismissSelectTaskModal={() => {
                         setShowAddTaskModal(false);
                     }}
-                    openSelectTaskModal={() => {
-                        setShowAddTaskModal(true);
-                    }}
                     onDayChange={onDayChanged}
                     selectedDayKey={selectedDayKey}
                     useCalendarView={false}
                     onCompleteDay={completeDay}
+                    onAllTasksComplete={onConfetti}
                 />
             </View>
         </Screen>

@@ -8,29 +8,29 @@ import PlannedDayController, {
 import { DayPicker } from 'src/components/plan/planning/DayPicker';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
-import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { PlannedDay, PlannedDay as PlannedDayModel } from 'resources/schema';
 import { PlannedTask } from './PlannedTask';
 import { PlanDay } from './PlanDay';
 
 interface Props {
     showSelectTaskModal: boolean;
     setShowSelectTaskModal: Function;
-    openSelectTaskModal: Function;
     dismissSelectTaskModal: Function;
     onDayChange: Function;
     useCalendarView: boolean;
     selectedDayKey: string;
     onCompleteDay: Function;
+    onAllTasksComplete: Function;
 }
 
 export const Planning = ({
     showSelectTaskModal,
     setShowSelectTaskModal,
-    openSelectTaskModal,
     dismissSelectTaskModal,
     onDayChange,
     selectedDayKey,
     onCompleteDay,
+    onAllTasksComplete,
 }: Props) => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDayModel>();
 
@@ -40,8 +40,33 @@ export const Planning = ({
         }, [selectedDayKey])
     );
 
+    const allTasksAreComplete = (plannedDay: PlannedDay) => {
+        let allTasksAreComplete = true;
+        plannedDay?.plannedTasks?.forEach((plannedTask) => {
+            if (
+                !(
+                    plannedTask.count === plannedTask.completedCount &&
+                    (plannedTask.count ?? 0) > 0 &&
+                    plannedTask.status !== 'FAILED'
+                )
+            ) {
+                allTasksAreComplete = false;
+                return;
+            }
+        });
+
+        return allTasksAreComplete;
+    };
+
     const refreshPlannedToday = async () => {
+        const allTasksAreCompleteBefore = plannedDay && allTasksAreComplete(plannedDay);
         const result = await PlannedDayController.getOrCreateViaApi(selectedDayKey);
+        const allTasksAreCompleteAfter = result && allTasksAreComplete(result);
+
+        if (!allTasksAreCompleteBefore && allTasksAreCompleteAfter) {
+            onAllTasksComplete();
+        }
+
         setPlannedDay(result);
     };
 

@@ -22,11 +22,21 @@ interface Props {
     onShouldExpand: Function;
 }
 
-export const ProfileBody = ({ newUser, onRefresh, isRefreshing, refreshedTimestamp, onShouldExpand }: Props) => {
+export const ProfileBody = ({
+    newUser,
+    onRefresh,
+    isRefreshing,
+    refreshedTimestamp,
+    onShouldExpand,
+}: Props) => {
     const { colors } = useTheme();
     const [index, setIndex] = React.useState(0);
 
-    const shouldExpand = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): ScrollChangeEvent => {
+    const shouldExpand = ({
+        layoutMeasurement,
+        contentOffset,
+        contentSize,
+    }: NativeScrollEvent): ScrollChangeEvent => {
         if (contentOffset.y < 0) {
             return ScrollChangeEvent.BEYOND_TOP;
         }
@@ -124,10 +134,20 @@ export const ProfileBody = ({ newUser, onRefresh, isRefreshing, refreshedTimesta
                     renderTabBar={(props) => (
                         <TabBar
                             {...props}
-                            indicatorStyle={{ height: 4, borderRadius: 15, backgroundColor: colors.planning_horizontal_indicator }}
+                            indicatorStyle={{
+                                height: 4,
+                                borderRadius: 15,
+                                backgroundColor: colors.planning_horizontal_indicator,
+                            }}
                             renderLabel={({ focused, route }) => {
                                 return (
-                                    <Text style={{ color: colors.planning_focused_text, fontFamily: 'Poppins_600SemiBold', opacity: focused ? 1.0 : 0.35 }}>
+                                    <Text
+                                        style={{
+                                            color: colors.planning_focused_text,
+                                            fontFamily: 'Poppins_600SemiBold',
+                                            opacity: focused ? 1.0 : 0.35,
+                                        }}
+                                    >
                                         {route.title}
                                     </Text>
                                 );
@@ -141,7 +161,12 @@ export const ProfileBody = ({ newUser, onRefresh, isRefreshing, refreshedTimesta
                                 shadowOpacity: 0,
                                 elevation: 0,
                             }}
-                            indicatorContainerStyle={{ backgroundColor: colors.scroll_tab_background, height: 4, marginTop: 43, borderRadius: 15 }}
+                            indicatorContainerStyle={{
+                                backgroundColor: colors.scroll_tab_background,
+                                height: 4,
+                                marginTop: 43,
+                                borderRadius: 15,
+                            }}
                         />
                     )}
                 />
