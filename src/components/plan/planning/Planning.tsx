@@ -54,7 +54,6 @@ export const Planning = ({
                     plannedTask.status !== 'FAILED'
                 )
             ) {
-                console.log('planned task is not complete', plannedTask);
                 allTasksAreComplete = false;
                 return;
             }

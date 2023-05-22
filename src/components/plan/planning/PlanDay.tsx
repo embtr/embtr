@@ -83,7 +83,6 @@ export const PlanDay = ({
         });
     };
 
-    console.log('hideRecommendationRequested', hideRecommendationRequested);
     const hideRecommendation =
         hideRecommendationRequested ||
         (plannedDay.hiddenPlannedDayResultRecommendations?.length &&

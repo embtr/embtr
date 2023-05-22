@@ -7,7 +7,7 @@ import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
-import { LogBox, View } from 'react-native';
+import { LogBox } from 'react-native';
 import { Roboto_500Medium } from '@expo-google-fonts/roboto';
 import {
     useFonts,
@@ -22,8 +22,12 @@ import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import { setUserProfileImage } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { User as UserModel } from 'resources/schema';
-import NotificationController from './controller/notification/NotificationController';
 import PushNotificationController from './controller/notification/PushNotificationController';
+import { ModalContainingComponent } from './components/common/modal/ModalContainingComponent';
+import { NewVersionModal } from './components/main/NewVersionModal';
+import { MetadataController, MetadataKey } from './controller/metadata/MetadataController';
+import Constants from 'expo-constants';
+import { UpdateUtility } from './util/updates/UpdateUtility';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -113,6 +117,16 @@ const linking: LinkingOptions<RootStackParamList> = {
 export const Main = () => {
     const [user, setUser] = React.useState<User | undefined | null>(undefined);
     const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | undefined>(undefined);
+    const [showUpdateAvailableModal, setShowUpdateAvailableModal] = React.useState(false);
+
+    const checkForUpdates = async () => {
+        const currentVersion = Constants!.manifest!.version!;
+        const latestVersion =
+            (await MetadataController.getMetadata(MetadataKey.VERSION)) ?? currentVersion;
+
+        let updateAvailable = UpdateUtility.updateIsAvailable(currentVersion, latestVersion);
+        setShowUpdateAvailableModal(updateAvailable);
+    };
 
     const dispatch = useAppDispatch();
     getFirebaseConnection('', '');
@@ -135,6 +149,8 @@ export const Main = () => {
     };
 
     React.useEffect(() => {
+        checkForUpdates();
+
         const blockingLoad = async () => {
             if (!user) {
                 return;
@@ -162,6 +178,13 @@ export const Main = () => {
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
+                    <ModalContainingComponent modalVisible={showUpdateAvailableModal} />
+                    <NewVersionModal
+                        visible={showUpdateAvailableModal}
+                        onDismiss={() => {
+                            setShowUpdateAvailableModal(false);
+                        }}
+                    />
                     {user === undefined && <LoadingPage />}
                     {user === null && <InsecureMainStack />}
                     {user !== undefined && user !== null && <SecureMainStack />}

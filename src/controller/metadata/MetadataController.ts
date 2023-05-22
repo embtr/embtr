@@ -15,8 +15,6 @@ export class MetadataController {
             .then((success) => {
                 const response = success.data as GetAllMetadataResonse;
                 for (const metadata of response.metadata) {
-                    console.log(metadata);
-                    console.log(key);
                     if (metadata.key === key) {
                         return metadata.value;
                     }
@@ -25,7 +23,6 @@ export class MetadataController {
                 return undefined;
             })
             .catch((error) => {
-                console.log(error);
                 return undefined;
             });
     }
