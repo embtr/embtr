@@ -40,7 +40,11 @@ export const Planning = ({
         }, [selectedDayKey])
     );
 
-    const allTasksAreComplete = (plannedDay: PlannedDay) => {
+    const allTasksAreComplete = (plannedDay?: PlannedDay) => {
+        if (plannedDay?.plannedTasks === undefined || plannedDay.plannedTasks.length === 0) {
+            return true;
+        }
+
         let allTasksAreComplete = true;
         plannedDay?.plannedTasks?.forEach((plannedTask) => {
             if (
@@ -50,6 +54,7 @@ export const Planning = ({
                     plannedTask.status !== 'FAILED'
                 )
             ) {
+                console.log('planned task is not complete', plannedTask);
                 allTasksAreComplete = false;
                 return;
             }
@@ -59,9 +64,14 @@ export const Planning = ({
     };
 
     const refreshPlannedToday = async () => {
-        const allTasksAreCompleteBefore = plannedDay && allTasksAreComplete(plannedDay);
         const result = await PlannedDayController.getOrCreateViaApi(selectedDayKey);
-        const allTasksAreCompleteAfter = result && allTasksAreComplete(result);
+        setPlannedDay(result);
+    };
+
+    const onTaskUpdated = async () => {
+        const allTasksAreCompleteBefore = allTasksAreComplete(plannedDay);
+        const result = await PlannedDayController.getOrCreateViaApi(selectedDayKey);
+        const allTasksAreCompleteAfter = allTasksAreComplete(result);
 
         if (!allTasksAreCompleteBefore && allTasksAreCompleteAfter) {
             onAllTasksComplete();
@@ -103,7 +113,7 @@ export const Planning = ({
                 {plannedDay && (
                     <PlanDay
                         plannedDay={plannedDay}
-                        onTaskUpdated={refreshPlannedToday}
+                        onTaskUpdated={onTaskUpdated}
                         setShowSelectTaskModal={setShowSelectTaskModal}
                         onCompleteDay={onCompleteDayInterceptor}
                     />
