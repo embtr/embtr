@@ -109,6 +109,17 @@ class DailyResultController {
         return await CommentController.delete(Interactable.PLANNED_DAY_RESULT, comment);
     }
 
+    public static async hideCreateRecommendation(dayKey: string) {
+        return await axiosInstance
+            .post(`/planned-day-result/${dayKey}/hide-recommendation`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     /*
      * OLD LOGIC
      */
