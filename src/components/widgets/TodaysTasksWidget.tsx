@@ -102,7 +102,7 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
             )}
 
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
-                Today's Tasks
+                Today's Activities
             </Text>
             <PlanDay
                 plannedDay={plannedDay}

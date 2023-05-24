@@ -188,7 +188,7 @@ export const PlanDay = ({
                     }}
                 >
                     <Text style={{ color: colors.secondary_text }}>
-                        You have no tasks planned. Let's change that!
+                        You have no activities planned. Let's change that!
                     </Text>
                     <View style={{ flexDirection: 'row', paddingTop: 4 }}>
                         <View style={{ paddingRight: 5 }}>
@@ -202,7 +202,7 @@ export const PlanDay = ({
                                 }}
                             >
                                 {' '}
-                                create a task
+                                add activities
                             </Text>
                         </View>
                     </View>

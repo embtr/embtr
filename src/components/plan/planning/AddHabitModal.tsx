@@ -28,7 +28,7 @@ export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
             <RootSiblingParent>
                 <Screen>
                     <SafeAreaView forceInset={{ bottom: 'never' }}>
-                        <Banner name="Add Tasks" leftText="close" leftOnClick={closeModal} />
+                        <Banner name="Add Activities" leftText="close" leftOnClick={closeModal} />
                         <Tasks plannedDay={plannedDay} />
                     </SafeAreaView>
                 </Screen>
