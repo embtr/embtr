@@ -123,7 +123,6 @@ export const PlannableTask = ({ plannedTask, onUpdateTask }: Props) => {
                     <View
                         style={{
                             width: '2%',
-                            height: '100%',
                             backgroundColor:
                                 totalCount === completedCount
                                     ? colors.progress_bar_complete
@@ -133,9 +132,9 @@ export const PlannableTask = ({ plannedTask, onUpdateTask }: Props) => {
                         }}
                     />
 
-                    <View style={{ width: '98%', paddingTop: 5, paddingBottom: 5 }}>
+                    <View style={{ width: '98%' }}>
                         <View style={{ paddingLeft: 10 }}>
-                            <View style={{ flexDirection: 'row', flex: 1 }}>
+                            <View style={{ flexDirection: 'row' }}>
                                 <View
                                     style={{
                                         flex: 1,

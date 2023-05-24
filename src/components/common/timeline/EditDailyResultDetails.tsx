@@ -38,7 +38,7 @@ export const EditDailyResultDetails = () => {
             const foundPlannedDayResult = await DailyResultController.getViaApi(route.params.id);
             setPlannedDayResult(foundPlannedDayResult);
 
-            if (foundPlannedDayResult.description) {
+            if (foundPlannedDayResult?.description) {
                 setUpdatedDescription(foundPlannedDayResult.description);
             }
 
@@ -105,8 +105,8 @@ export const EditDailyResultDetails = () => {
     } as TextStyle;
 
     let dayOfWeek = '';
-    if (plannedDayResult.plannedDay?.createdAt) {
-        dayOfWeek = getUTCDayOfWeek(plannedDayResult.plannedDay.createdAt);
+    if (plannedDayResult.plannedDay?.date) {
+        dayOfWeek = getUTCDayOfWeek(plannedDayResult.plannedDay.date);
     }
 
     let plannedTaskViews: JSX.Element[] = [];
@@ -176,9 +176,6 @@ export const EditDailyResultDetails = () => {
                                 <Text style={headerTextStyle}>
                                     {dayOfWeek.substring(0, 1).toUpperCase() +
                                         dayOfWeek.substring(1)}{' '}
-                                    <Text style={{ color: colors.progress_bar_complete }}>
-                                        'Complete!'
-                                    </Text>
                                 </Text>
                             </View>
                         )}

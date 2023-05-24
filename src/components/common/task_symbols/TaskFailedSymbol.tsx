@@ -29,7 +29,6 @@ export const TaskFailedSymbol = ({ small }: Props) => {
     return (
         <View
             style={{
-                backgroundColor: colors.timeline_card_background,
                 width: borderSize,
                 height: borderSize,
                 borderColor: color,
@@ -40,7 +39,9 @@ export const TaskFailedSymbol = ({ small }: Props) => {
             }}
         >
             <View style={{}}>
-                <Text style={{ color: color, fontSize: fontSize, fontFamily: POPPINS_SEMI_BOLD }}>X</Text>
+                <Text style={{ color: color, fontSize: fontSize, fontFamily: POPPINS_SEMI_BOLD }}>
+                    X
+                </Text>
             </View>
         </View>
     );

@@ -14,6 +14,7 @@ const INITIAL_STATE: GlobalState = {
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
     showCardShadow: true,
     cardRefreshRequests: [],
+    fireConfetti: () => {},
 };
 
 export interface GlobalState {
@@ -27,6 +28,7 @@ export interface GlobalState {
     userProfileImage: string;
     showCardShadow: boolean;
     cardRefreshRequests: string[];
+    fireConfetti: Function;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -77,6 +79,9 @@ export const GlobalState = createSlice({
             state.cardRefreshRequests = state.cardRefreshRequests.filter(
                 (item) => item !== action.payload
             );
+        },
+        setFireConfetti(state, action) {
+            state.fireConfetti = action.payload;
         },
     },
 });
@@ -161,6 +166,14 @@ export const getTimelineCardRefreshRequests = (state: RootState): string[] => {
     return state.globalState.cardRefreshRequests;
 };
 
+export const getFireConfetti = (state: RootState): Function => {
+    if (!state?.globalState.fireConfetti) {
+        return INITIAL_STATE.fireConfetti;
+    }
+
+    return state.globalState.fireConfetti;
+};
+
 export const {
     setAccessLevel,
     setUserProfileUrl,
@@ -173,5 +186,6 @@ export const {
     setShowCardShadow,
     addTimelineCardRefreshRequest,
     removeTimelineCardRefreshRequest,
+    setFireConfetti,
 } = GlobalState.actions;
 export default GlobalState.reducer;

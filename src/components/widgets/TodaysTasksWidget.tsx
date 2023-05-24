@@ -3,15 +3,16 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu } from 'src/redux/user/GlobalState';
+import { getCloseMenu, getFireConfetti } from 'src/redux/user/GlobalState';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
-import { DailyResultCardElement } from '../common/timeline/DailyResultCardElement';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { PlannedDay, User } from 'resources/schema';
 import React from 'react';
 import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
+import { PlanDay } from '../plan/planning/PlanDay';
+import { PlanningService } from 'src/util/planning/PlanningService';
 
 interface Props {
     user: User;
@@ -22,6 +23,7 @@ export const TodaysTasksWidget = ({ user }: Props) => {
 
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
     const closeMenu = useAppSelector(getCloseMenu);
+    const fireConfetti = useAppSelector(getFireConfetti);
 
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
 
@@ -41,14 +43,23 @@ export const TodaysTasksWidget = ({ user }: Props) => {
         }, [])
     );
 
-    let plannedTaskViews: JSX.Element[] = [];
-    plannedDay?.plannedTasks?.forEach((plannedTask) => {
-        plannedTaskViews.push(
-            <View key={plannedTask.id} style={{ paddingBottom: 5 }}>
-                <DailyResultCardElement plannedTask={plannedTask} onPress={() => {}} />
-            </View>
-        );
-    });
+    const onSharePlannedDayResults = async () => {
+        if (plannedDay) {
+            await PlanningService.sharePlannedDayResults(plannedDay!);
+        }
+
+        fetch();
+    };
+
+    const onTaskUpdated = async () => {
+        if (!plannedDay) {
+            return;
+        }
+
+        const result = await PlanningService.onTaskUpdated(plannedDay, fireConfetti);
+
+        setPlannedDay(result);
+    };
 
     let menuOptions: EmbtrMenuOption[] = [];
     menuOptions.push({
@@ -59,35 +70,21 @@ export const TodaysTasksWidget = ({ user }: Props) => {
         },
     });
 
-    const isGuest = true;
+    if (!plannedDay) {
+        return <View />;
+    }
 
     return (
-        <WidgetBase menuOptions={!isGuest ? menuOptions : undefined}>
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Today's Tasks</Text>
-            {plannedTaskViews.length > 0 && <View style={{ paddingLeft: 10, paddingTop: 15 }}>{plannedTaskViews}</View>}
-            {plannedTaskViews.length === 0 && (
-                <View style={{ paddingTop: 5 }}>
-                    {isGuest ? (
-                        <Text style={{ color: colors.text }}>
-                            It appears that today is a <Text style={{ color: colors.tab_selected }}>rest day</Text>.
-                        </Text>
-                    ) : (
-                        <Text style={{ color: colors.text }}>
-                            you have an empty plate -{' '}
-                            <Text
-                                onPress={() => {
-                                    if (plannedDay?.id) {
-                                        navigation.navigate('PlanTab', { screen: 'PlanMain' });
-                                    }
-                                }}
-                                style={{ color: colors.tab_selected, fontFamily: 'Poppins_400Regular' }}
-                            >
-                                plan your day
-                            </Text>
-                        </Text>
-                    )}
-                </View>
-            )}
+        <WidgetBase menuOptions={menuOptions}>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+                Today's Tasks
+            </Text>
+            <PlanDay
+                plannedDay={plannedDay}
+                onTaskUpdated={onTaskUpdated}
+                setShowSelectTaskModal={() => {}}
+                onSharePlannedDayResults={onSharePlannedDayResults}
+            />
         </WidgetBase>
     );
 };

@@ -10,9 +10,8 @@ import PlannedDayController, {
     getDayKey,
     getTodayKey,
 } from 'src/controller/planning/PlannedDayController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import LottieView from 'lottie-react-native';
 import { PlannedDay } from 'resources/schema';
+import { PlanningService } from 'src/util/planning/PlanningService';
 
 /*
  * Avoid rerenders
@@ -23,6 +22,7 @@ export const PlanMain = () => {
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
+    const [refreshTimestamp, setRefreshTimestamp] = React.useState(new Date());
 
     const fetchPlannedDay = async () => {
         const plannedDay = await PlannedDayController.getForCurrentUserViaApi(selectedDayKey);
@@ -38,23 +38,8 @@ export const PlanMain = () => {
         setSelectedDayKey(newDayKey);
     };
 
-    const animation = React.useRef<LottieView>(null);
-    const onConfetti = () => {
-        animation.current?.play();
-    };
-
     const navigateToTomorrowCreateTask = () => {
         setShowAddTaskModal(true);
-    };
-
-    const completeDay = async () => {
-        if (plannedDay?.plannedDayResults?.length) {
-            const plannedDayResult = plannedDay!.plannedDayResults![0];
-            plannedDayResult.active = true;
-            await DailyResultController.updateViaApi(plannedDayResult);
-        } else if (plannedDay) {
-            await PlannedDayController.completeDayViaApi(plannedDay);
-        }
     };
 
     const closeMenu = useAppSelector(getCloseMenu);
@@ -62,7 +47,10 @@ export const PlanMain = () => {
         {
             name: 'Share Results',
             onPress: async () => {
-                completeDay();
+                if (plannedDay) {
+                    PlanningService.sharePlannedDayResults(plannedDay!);
+                }
+
                 closeMenu();
             },
         },
@@ -80,26 +68,6 @@ export const PlanMain = () => {
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
 
-                <View
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        zIndex: 1,
-                        position: 'absolute',
-                        justifyContent: 'center',
-                        alignContent: 'center',
-                        alignItems: 'center',
-                    }}
-                    pointerEvents="none"
-                >
-                    <LottieView
-                        autoPlay={false}
-                        loop={false}
-                        ref={animation}
-                        style={{ width: '140%', justifyContent: 'center' }}
-                        source={require('../../../resources/lottie-confetti.json')}
-                    />
-                </View>
                 <Planning
                     showSelectTaskModal={showAddTaskModal}
                     setShowSelectTaskModal={setShowAddTaskModal}
@@ -109,8 +77,6 @@ export const PlanMain = () => {
                     onDayChange={onDayChanged}
                     selectedDayKey={selectedDayKey}
                     useCalendarView={false}
-                    onCompleteDay={completeDay}
-                    onAllTasksComplete={onConfetti}
                 />
             </View>
         </Screen>

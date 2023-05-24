@@ -25,6 +25,7 @@ import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
+import { ConfettiView } from '../common/animated_view/ConfettiView';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -208,6 +209,8 @@ export const Today = () => {
         <Screen>
             <View style={{ flex: 1 }}>
                 <EmbtrMenuCustom />
+                <ConfettiView />
+
                 <View style={{ height: '100%', width: '100%' }}>
                     <Banner
                         name="Today"

@@ -28,6 +28,7 @@ import { NewVersionModal } from './components/main/NewVersionModal';
 import { MetadataController, MetadataKey } from './controller/metadata/MetadataController';
 import Constants from 'expo-constants';
 import { UpdateUtility } from './util/updates/UpdateUtility';
+import { ConfettiView } from './components/common/animated_view/ConfettiView';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -179,6 +180,7 @@ export const Main = () => {
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
                     <ModalContainingComponent modalVisible={showUpdateAvailableModal} />
+                    <ConfettiView />
                     <NewVersionModal
                         visible={showUpdateAvailableModal}
                         onDismiss={() => {

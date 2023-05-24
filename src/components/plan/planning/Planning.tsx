@@ -8,9 +8,12 @@ import PlannedDayController, {
 import { DayPicker } from 'src/components/plan/planning/DayPicker';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
-import { PlannedDay, PlannedDay as PlannedDayModel } from 'resources/schema';
+import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { PlannedTask } from './PlannedTask';
 import { PlanDay } from './PlanDay';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getFireConfetti } from 'src/redux/user/GlobalState';
+import { PlanningService } from 'src/util/planning/PlanningService';
 
 interface Props {
     showSelectTaskModal: boolean;
@@ -19,8 +22,6 @@ interface Props {
     onDayChange: Function;
     useCalendarView: boolean;
     selectedDayKey: string;
-    onCompleteDay: Function;
-    onAllTasksComplete: Function;
 }
 
 export const Planning = ({
@@ -29,8 +30,6 @@ export const Planning = ({
     dismissSelectTaskModal,
     onDayChange,
     selectedDayKey,
-    onCompleteDay,
-    onAllTasksComplete,
 }: Props) => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDayModel>();
 
@@ -40,27 +39,7 @@ export const Planning = ({
         }, [selectedDayKey])
     );
 
-    const allTasksAreComplete = (plannedDay?: PlannedDay) => {
-        if (plannedDay?.plannedTasks === undefined || plannedDay.plannedTasks.length === 0) {
-            return true;
-        }
-
-        let allTasksAreComplete = true;
-        plannedDay?.plannedTasks?.forEach((plannedTask) => {
-            if (
-                !(
-                    plannedTask.count === plannedTask.completedCount &&
-                    (plannedTask.count ?? 0) > 0 &&
-                    plannedTask.status !== 'FAILED'
-                )
-            ) {
-                allTasksAreComplete = false;
-                return;
-            }
-        });
-
-        return allTasksAreComplete;
-    };
+    const fireConfetti = useAppSelector(getFireConfetti);
 
     const refreshPlannedToday = async () => {
         const result = await PlannedDayController.getOrCreateViaApi(selectedDayKey);
@@ -68,14 +47,11 @@ export const Planning = ({
     };
 
     const onTaskUpdated = async () => {
-        const allTasksAreCompleteBefore = allTasksAreComplete(plannedDay);
-        const result = await PlannedDayController.getOrCreateViaApi(selectedDayKey);
-        const allTasksAreCompleteAfter = allTasksAreComplete(result);
-
-        if (!allTasksAreCompleteBefore && allTasksAreCompleteAfter) {
-            onAllTasksComplete();
+        if (!plannedDay) {
+            return;
         }
 
+        const result = await PlanningService.onTaskUpdated(plannedDay, fireConfetti);
         setPlannedDay(result);
     };
 
@@ -84,8 +60,11 @@ export const Planning = ({
         dismissSelectTaskModal();
     };
 
-    const onCompleteDayInterceptor = async () => {
-        await onCompleteDay();
+    const onSharePlannedDayResults = async () => {
+        if (plannedDay) {
+            await PlanningService.sharePlannedDayResults(plannedDay!);
+        }
+
         refreshPlannedToday();
     };
 
@@ -114,7 +93,7 @@ export const Planning = ({
                         plannedDay={plannedDay}
                         onTaskUpdated={onTaskUpdated}
                         setShowSelectTaskModal={setShowSelectTaskModal}
-                        onCompleteDay={onCompleteDayInterceptor}
+                        onSharePlannedDayResults={onSharePlannedDayResults}
                     />
                 )}
             </View>

@@ -57,7 +57,9 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
             <View
                 key={historyElement.dayKey + historyElement.complete + i}
                 style={{
-                    backgroundColor: historyElement.complete ? colors.progress_bar_complete : colors.progress_bar_color,
+                    backgroundColor: historyElement.complete
+                        ? colors.progress_bar_complete
+                        : colors.progress_bar_color,
                     height: diameter,
                     width: diameter,
                     borderRadius: 2.7,
@@ -91,28 +93,98 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
 
     return (
         <WidgetBase>
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Daily History</Text>
-
-            <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, fontSize: 12, paddingTop: 5 }}>
-                current streak:
-                <Text style={{ color: colors.tab_selected, fontFamily: POPPINS_REGULAR, fontSize: 12, paddingTop: 5 }}>
-                    {' '}
-                    {streak} {streak == 1 ? 'day' : 'days'}
-                </Text>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+                Daily History
             </Text>
+
+            <View style={{ width: '100%', flexDirection: 'row' }}>
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        color: colors.text,
+                        flex: 1,
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 12,
+                        paddingTop: 5,
+                    }}
+                >
+                    current streak:
+                    <Text
+                        style={{
+                            color: colors.tab_selected,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 12,
+                            paddingTop: 5,
+                        }}
+                    >
+                        {' '}
+                        {streak} {streak == 1 ? 'day' : 'days'}
+                    </Text>
+                </Text>
+
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        flex: 1,
+                        color: colors.text,
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 12,
+                        paddingTop: 5,
+                    }}
+                >
+                    longest streak:
+                    <Text
+                        style={{
+                            color: colors.tab_selected,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 12,
+                            paddingTop: 5,
+                        }}
+                    >
+                        {' '}
+                        {streak} {streak == 1 ? 'day' : 'days'}
+                    </Text>
+                </Text>
+            </View>
 
             <View style={{ flexDirection: 'row', paddingTop: 5 }}>{views}</View>
 
             <View style={{ flexDirection: 'row', paddingTop: 1 }}>
                 <View style={{ flex: 1, paddingTop: 2 }}>
-                    <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR, fontSize: 8 }}> {fourWeeksAgoFormatted}</Text>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 8,
+                        }}
+                    >
+                        {' '}
+                        {fourWeeksAgoFormatted}
+                    </Text>
                 </View>
 
                 <View style={{ flex: 1, paddingTop: 2, alignItems: 'center' }}>
-                    <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR, fontSize: 8 }}> {twoWeeksAgoFormatted}</Text>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 8,
+                        }}
+                    >
+                        {' '}
+                        {twoWeeksAgoFormatted}
+                    </Text>
                 </View>
                 <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                    <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR, fontSize: 8 }}>{yesterdayFormatted} </Text>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 8,
+                        }}
+                    >
+                        {yesterdayFormatted}{' '}
+                    </Text>
                 </View>
             </View>
         </WidgetBase>

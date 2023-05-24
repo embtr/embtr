@@ -28,7 +28,6 @@ export const TaskInProgressSymbol = ({ small }: Props) => {
     return (
         <View
             style={{
-                backgroundColor: colors.timeline_card_background,
                 width: borderSize,
                 height: borderSize,
                 borderColor: color,
@@ -39,7 +38,9 @@ export const TaskInProgressSymbol = ({ small }: Props) => {
             }}
         >
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <Text style={{ color: color, fontSize: fontSize, fontFamily: POPPINS_SEMI_BOLD }}>~</Text>
+                <Text style={{ color: color, fontSize: fontSize, fontFamily: POPPINS_SEMI_BOLD }}>
+                    ~
+                </Text>
             </View>
         </View>
     );
