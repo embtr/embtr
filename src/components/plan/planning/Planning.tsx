@@ -94,6 +94,7 @@ export const Planning = ({
                         onTaskUpdated={onTaskUpdated}
                         setShowSelectTaskModal={setShowSelectTaskModal}
                         onSharePlannedDayResults={onSharePlannedDayResults}
+                        showCreatePlannedDayResultsRecommendation={true}
                     />
                 )}
             </View>

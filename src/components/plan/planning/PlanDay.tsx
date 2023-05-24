@@ -14,6 +14,7 @@ interface Props {
     onTaskUpdated: Function;
     setShowSelectTaskModal: Function;
     onSharePlannedDayResults: Function;
+    showCreatePlannedDayResultsRecommendation?: boolean;
 }
 
 export const PlanDay = ({
@@ -21,6 +22,7 @@ export const PlanDay = ({
     onTaskUpdated,
     setShowSelectTaskModal,
     onSharePlannedDayResults,
+    showCreatePlannedDayResultsRecommendation,
 }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens, 'DailyResultDetails'>>();
@@ -97,7 +99,7 @@ export const PlanDay = ({
                         width: '100%',
                     }}
                 >
-                    {!hideRecommendation && (
+                    {!hideRecommendation && showCreatePlannedDayResultsRecommendation && (
                         <View
                             style={{
                                 marginBottom: 20,

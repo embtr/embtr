@@ -22,7 +22,7 @@ import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
-import { TodaysTasksWidget } from '../widgets/TodaysTasksWidget';
+import { TodaysTasksWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { ConfettiView } from '../common/animated_view/ConfettiView';
@@ -154,7 +154,7 @@ export const Today = () => {
             case WidgetType.TODAYS_TASKS:
                 return (
                     <View style={{ paddingBottom: 5 }}>
-                        <TodaysTasksWidget user={user} />
+                        <TodaysTasksWidget user={user} source={WidgetSource.TODAY} />
                     </View>
                 );
             case WidgetType.TODAYS_NOTES:

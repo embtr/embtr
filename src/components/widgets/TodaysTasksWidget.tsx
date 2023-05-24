@@ -14,11 +14,17 @@ import PlannedDayController, { getTodayKey } from 'src/controller/planning/Plann
 import { PlanDay } from '../plan/planning/PlanDay';
 import { PlanningService } from 'src/util/planning/PlanningService';
 
-interface Props {
-    user: User;
+export enum WidgetSource {
+    TODAY,
+    PROFILE,
 }
 
-export const TodaysTasksWidget = ({ user }: Props) => {
+interface Props {
+    user: User;
+    source: WidgetSource;
+}
+
+export const TodaysTasksWidget = ({ user, source }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
@@ -84,6 +90,7 @@ export const TodaysTasksWidget = ({ user }: Props) => {
                 onTaskUpdated={onTaskUpdated}
                 setShowSelectTaskModal={() => {}}
                 onSharePlannedDayResults={onSharePlannedDayResults}
+                showCreatePlannedDayResultsRecommendation={source !== WidgetSource.PROFILE}
             />
         </WidgetBase>
     );
