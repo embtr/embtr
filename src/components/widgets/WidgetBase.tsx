@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getShowCardShadow, setMenuOptions } from 'src/redux/user/GlobalState';
-import { CARD_SHADOW } from 'src/util/constants';
+import { CARD_SHADOW, IoniconName } from 'src/util/constants';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
@@ -11,9 +11,11 @@ import { isAndroidDevice } from 'src/util/DeviceUtil';
 interface Props {
     children: any;
     menuOptions?: EmbtrMenuOption[];
+    symbol?: IoniconName;
+    onPressSymbol?: Function;
 }
 
-export const WidgetBase = ({ children, menuOptions }: Props) => {
+export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Props) => {
     const { colors } = useTheme();
 
     const dispatch = useAppDispatch();
@@ -55,13 +57,23 @@ export const WidgetBase = ({ children, menuOptions }: Props) => {
                         <TouchableWithoutFeedback
                             style={{ padding: 4, paddingLeft: 7, paddingBottom: 7 }}
                             onPress={() => {
-                                updateMenuOptions();
-                                openMenu();
+                                if (onPressSymbol) {
+                                    onPressSymbol();
+                                } else {
+                                    updateMenuOptions();
+                                    openMenu();
+                                }
                             }}
                         >
-                            <View style={{ paddingTop: 0 }}>
+                            <View
+                                style={{
+                                    paddingTop: 3,
+                                    paddingRight: 3,
+                                    flexDirection: 'row',
+                                }}
+                            >
                                 <Ionicons
-                                    name={'ellipsis-horizontal-circle'}
+                                    name={symbol ?? 'ellipsis-horizontal'}
                                     size={15}
                                     color={colors.text}
                                 />

@@ -65,14 +65,10 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
         setLikeCount(likeCount + 1);
     };
 
-    let menuOptions: EmbtrMenuOption[] = [];
-    menuOptions.push({
-        name: 'Add Quote',
-        onPress: () => {
-            navigation.navigate('AddQuoteOfTheDay');
-            closeMenu();
-        },
-    });
+    const onAdd = () => {
+        navigation.navigate('AddQuoteOfTheDay');
+        closeMenu();
+    };
 
     const onLike = async () => {
         if (isLiked || !quoteOfTheDay?.id) {
@@ -93,7 +89,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
     };
 
     return (
-        <WidgetBase menuOptions={menuOptions}>
+        <WidgetBase menuOptions={[]} onPressSymbol={onAdd} symbol="add-outline">
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                 Quote Of The Day
             </Text>

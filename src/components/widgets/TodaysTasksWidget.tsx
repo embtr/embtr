@@ -13,6 +13,7 @@ import React from 'react';
 import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { PlanDay } from '../plan/planning/PlanDay';
 import { PlanningService } from 'src/util/planning/PlanningService';
+import { AddHabitModal } from '../plan/planning/AddHabitModal';
 
 export enum WidgetSource {
     TODAY,
@@ -32,6 +33,7 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
     const fireConfetti = useAppSelector(getFireConfetti);
 
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
+    const [showAddTaskModal, setShowSelectTaskModal] = React.useState(false);
 
     const fetch = async () => {
         if (!user.id) {
@@ -81,14 +83,31 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
     }
 
     return (
-        <WidgetBase menuOptions={menuOptions}>
+        <WidgetBase
+            menuOptions={menuOptions}
+            symbol="add-outline"
+            onPressSymbol={() => {
+                setShowSelectTaskModal(true);
+            }}
+        >
+            {plannedDay?.id && (
+                <AddHabitModal
+                    visible={showAddTaskModal}
+                    plannedDay={plannedDay}
+                    dismiss={() => {
+                        fetch();
+                        setShowSelectTaskModal(false);
+                    }}
+                />
+            )}
+
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                 Today's Tasks
             </Text>
             <PlanDay
                 plannedDay={plannedDay}
                 onTaskUpdated={onTaskUpdated}
-                setShowSelectTaskModal={() => {}}
+                setShowSelectTaskModal={setShowSelectTaskModal}
                 onSharePlannedDayResults={onSharePlannedDayResults}
                 showCreatePlannedDayResultsRecommendation={source !== WidgetSource.PROFILE}
             />
