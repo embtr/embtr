@@ -78,9 +78,7 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
         },
     });
 
-    if (!plannedDay) {
-        return <View />;
-    }
+    console.log(plannedDay);
 
     return (
         <WidgetBase
@@ -104,13 +102,20 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                 Today's Activities
             </Text>
-            <PlanDay
-                plannedDay={plannedDay}
-                onTaskUpdated={onTaskUpdated}
-                setShowSelectTaskModal={setShowSelectTaskModal}
-                onSharePlannedDayResults={onSharePlannedDayResults}
-                showCreatePlannedDayResultsRecommendation={source !== WidgetSource.PROFILE}
-            />
+            {plannedDay ? (
+                <PlanDay
+                    plannedDay={plannedDay}
+                    onTaskUpdated={onTaskUpdated}
+                    setShowSelectTaskModal={setShowSelectTaskModal}
+                    onSharePlannedDayResults={onSharePlannedDayResults}
+                    showCreatePlannedDayResultsRecommendation={source !== WidgetSource.PROFILE}
+                />
+            ) : (
+                <View style={{ paddingTop: 10, flexDirection: 'row' }}>
+                    <Text style={{ color: colors.text }}>It looks like today is a </Text>
+                    <Text style={{ color: colors.tab_selected }}>rest day.</Text>
+                </View>
+            )}
         </WidgetBase>
     );
 };

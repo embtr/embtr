@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
 import DraggableFlatList, {
     RenderItemParams,
     ScaleDecorator,
@@ -27,6 +27,9 @@ import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget'
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { ConfettiView } from '../common/animated_view/ConfettiView';
 import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../theme/ThemeProvider';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -37,6 +40,8 @@ export const Today = () => {
 
     const navigation = useNavigation<StackNavigationProp<TodayTab>>();
     const dispatch = useAppDispatch();
+
+    const { colors } = useTheme();
 
     const fetch = async () => {
         let widgets = await WidgetController.get();
@@ -198,16 +203,44 @@ export const Today = () => {
         return (
             <ScaleDecorator>
                 <TouchableOpacity onPressIn={drag} disabled={!isConfiguringWidgets}>
-                    <WigglableView key={item.type} wiggle={isConfiguringWidgets}>
-                        <DeletableView
-                            visible={isConfiguringWidgets}
-                            onPress={() => {
-                                removeWidget(item);
-                            }}
-                        >
+                    <DeletableView
+                        visible={isConfiguringWidgets}
+                        onPress={() => {
+                            removeWidget(item);
+                        }}
+                    >
+                        <View>
+                            {isConfiguringWidgets && (
+                                <View
+                                    style={{
+                                        zIndex: 1,
+                                        position: 'absolute',
+                                        alignSelf: 'flex-end',
+                                        right: 50,
+                                        top: 3,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: colors.secondary_text,
+                                            fontSize: 12,
+                                            fontFamily: POPPINS_REGULAR,
+                                        }}
+                                    >
+                                        reorder
+                                    </Text>
+                                    <Ionicons
+                                        name={'reorder-four-outline'}
+                                        size={20}
+                                        color={colors.secondary_text}
+                                    />
+                                </View>
+                            )}
                             {getWidgetFromType(item.type!)}
-                        </DeletableView>
-                    </WigglableView>
+                        </View>
+                    </DeletableView>
                 </TouchableOpacity>
             </ScaleDecorator>
         );

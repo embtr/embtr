@@ -1,8 +1,6 @@
 import { Image, LayoutChangeEvent, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
-import { UserProfileProBadge } from 'src/components/profile/profile_component/badge/UserProfileProBadge';
-import { TouchableOpacity } from 'react-native';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import Animated, {
     Easing,
@@ -36,8 +34,6 @@ export const ProfileHeader = ({
 }: Props) => {
     const { colors } = useTheme();
     const [initialHeaderContentsHeight, setInitialHeaderContentsHeight] = React.useState<number>(0);
-
-    const shouldDisplayFollowButton = false;
 
     const animatedHeaderContentsStyle = useAnimatedStyle(() => {
         return {

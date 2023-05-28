@@ -43,7 +43,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
         return index * tabWidth + (tabWidth / 2 - 12.5);
     };
 
-    const [translateValue] = React.useState(new Animated.Value(calculateDotLocation(0)));
+    const [translateValue] = React.useState(new Animated.Value(calculateDotLocation(1)));
 
     let elements: JSX.Element[] = [];
     state.routes.forEach((route, index) => {

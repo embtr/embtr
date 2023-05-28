@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { View } from 'react-native';
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
@@ -26,6 +25,7 @@ export const Dashboard = () => {
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>
             <Tab.Navigator
+                initialRouteName={TABS.TODAY}
                 sceneContainerStyle={{ backgroundColor: 'green' }}
                 tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
                 screenOptions={() => ({
@@ -42,9 +42,20 @@ export const Dashboard = () => {
                             dispatch(setCurrentTab(TABS.TIMELINE));
 
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Timeline') {
+                            if (
+                                currentlyInFocus &&
+                                route &&
+                                route.state &&
+                                route.state.routes.length >= 1 &&
+                                route.state.routes[0]['name'] !== 'Timeline'
+                            ) {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Timeline' }] }));
+                                navigation.dispatch(
+                                    CommonActions.reset({
+                                        index: 0,
+                                        routes: [{ name: 'Timeline' }],
+                                    })
+                                );
                             }
                         },
                     })}
@@ -58,9 +69,17 @@ export const Dashboard = () => {
                             dispatch(setCurrentTab(TABS.TODAY));
 
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Today') {
+                            if (
+                                currentlyInFocus &&
+                                route &&
+                                route.state &&
+                                route.state.routes.length >= 1 &&
+                                route.state.routes[0]['name'] !== 'Today'
+                            ) {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] }));
+                                navigation.dispatch(
+                                    CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] })
+                                );
                             }
                         },
                     })}
@@ -74,9 +93,20 @@ export const Dashboard = () => {
                             dispatch(setCurrentTab(TABS.PLAN));
 
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'PlanMain') {
+                            if (
+                                currentlyInFocus &&
+                                route &&
+                                route.state &&
+                                route.state.routes.length >= 1 &&
+                                route.state.routes[0]['name'] !== 'PlanMain'
+                            ) {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'PlanMain' }] }));
+                                navigation.dispatch(
+                                    CommonActions.reset({
+                                        index: 0,
+                                        routes: [{ name: 'PlanMain' }],
+                                    })
+                                );
                             }
                         },
                     })}
@@ -90,9 +120,17 @@ export const Dashboard = () => {
                             dispatch(setCurrentTab(TABS.USER_PROFILE));
 
                             const currentlyInFocus = navigation.isFocused();
-                            if (currentlyInFocus && route && route.state && route.state.routes.length >= 1 && route.state.routes[0]['name'] !== 'Profile') {
+                            if (
+                                currentlyInFocus &&
+                                route &&
+                                route.state &&
+                                route.state.routes.length >= 1 &&
+                                route.state.routes[0]['name'] !== 'Profile'
+                            ) {
                                 e.preventDefault();
-                                navigation.dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }] }));
+                                navigation.dispatch(
+                                    CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }] })
+                                );
                             }
                         },
                     })}
