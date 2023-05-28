@@ -26,6 +26,7 @@ import { TodaysTasksWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { ConfettiView } from '../common/animated_view/ConfettiView';
+import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -175,6 +176,13 @@ export const Today = () => {
                 return (
                     <View style={{ paddingBottom: 5 }}>
                         <DailyHistoryWidget userId={user.id!} />
+                    </View>
+                );
+
+            case WidgetType.HABIT_JOURNEY:
+                return (
+                    <View style={{ paddingBottom: 5 }}>
+                        <HabitJourneyWidget user={user} refreshedTimestamp={refreshedTimestamp!} />
                     </View>
                 );
         }

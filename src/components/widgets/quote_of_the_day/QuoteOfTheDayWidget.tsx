@@ -22,7 +22,6 @@ import { QuoteOfTheDayController } from 'src/controller/widget/quote_of_the_day/
 import { LikeController } from 'src/controller/api/general/LikeController';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
-import { set } from 'lodash';
 
 interface Props {
     refreshedTimestamp: Date;

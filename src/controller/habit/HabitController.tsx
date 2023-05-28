@@ -1,4 +1,5 @@
 import { Habit } from 'resources/schema';
+import { GetHabitJourneyResponse } from 'resources/types/requests/HabitTypes';
 import axiosInstance from 'src/axios/axios';
 
 export class HabitController {
@@ -10,6 +11,18 @@ export class HabitController {
             })
             .catch((error) => {
                 return [];
+            });
+    }
+
+    public static async getHabitJourneys(userId: number) {
+        return await axiosInstance
+            .get(`/user/${userId}/habit-journey`)
+            .then((success) => {
+                const body: GetHabitJourneyResponse = success.data;
+                return body.habitJourneys;
+            })
+            .catch((error) => {
+                return undefined;
             });
     }
 }
