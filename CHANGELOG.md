@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.263](https://github.com/beerent/embtr/compare/v0.0.262...v0.0.263) (2023-05-31)
+
 ### [0.0.262](https://github.com/beerent/embtr/compare/v0.0.261...v0.0.262) (2023-05-28)
 
 ### [0.0.261](https://github.com/beerent/embtr/compare/v0.0.260...v0.0.261) (2023-05-24)
