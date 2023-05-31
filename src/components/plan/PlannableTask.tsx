@@ -12,6 +12,7 @@ import PlannedTaskController from 'src/controller/planning/PlannedTaskController
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
 import { ProgressBar } from './goals/ProgressBar';
+import { HabitIcon } from './habit/HabitIcon';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -163,8 +164,8 @@ export const PlannableTask = ({ plannedTask, onUpdateTask }: Props) => {
                                 >
                                     {plannedTask.habit && (
                                         <View style={{ paddingRight: 10, flexDirection: 'row' }}>
-                                            <Ionicons
-                                                name={plannedTask.habit.iconName as IoniconName}
+                                            <HabitIcon
+                                                habit={plannedTask.habit}
                                                 size={17}
                                                 color={colors.tab_selected}
                                             />

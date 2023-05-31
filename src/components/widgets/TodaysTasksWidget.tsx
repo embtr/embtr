@@ -78,8 +78,6 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
         },
     });
 
-    console.log(plannedDay);
-
     return (
         <WidgetBase
             menuOptions={menuOptions}

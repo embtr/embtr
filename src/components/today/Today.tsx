@@ -151,45 +151,21 @@ export const Today = () => {
     const getWidgetFromType = (type: WidgetType) => {
         switch (type) {
             case WidgetType.TIME_LEFT_IN_DAY:
-                return (
-                    <View style={{ paddingBottom: 5 }}>
-                        <TodaysCountdownWidget />
-                    </View>
-                );
+                return <TodaysCountdownWidget />;
 
             case WidgetType.TODAYS_TASKS:
-                return (
-                    <View style={{ paddingBottom: 5 }}>
-                        <TodaysTasksWidget user={user} source={WidgetSource.TODAY} />
-                    </View>
-                );
+                return <TodaysTasksWidget user={user} source={WidgetSource.TODAY} />;
             case WidgetType.TODAYS_NOTES:
-                return (
-                    <View style={{ paddingBottom: 5 }}>
-                        <TodaysNotesWidget />
-                    </View>
-                );
+                return <TodaysNotesWidget />;
 
             case WidgetType.QUOTE_OF_THE_DAY:
-                return (
-                    <View style={{ paddingBottom: 5 }}>
-                        <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
-                    </View>
-                );
+                return <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />;
 
             case WidgetType.DAILY_HISTORY:
-                return (
-                    <View style={{ paddingBottom: 5 }}>
-                        <DailyHistoryWidget userId={user.id!} />
-                    </View>
-                );
+                return <DailyHistoryWidget userId={user.id!} />;
 
             case WidgetType.HABIT_JOURNEY:
-                return (
-                    <View style={{ paddingBottom: 5 }}>
-                        <HabitJourneyWidget user={user} refreshedTimestamp={refreshedTimestamp!} />
-                    </View>
-                );
+                return <HabitJourneyWidget user={user} refreshedTimestamp={refreshedTimestamp!} />;
         }
 
         return <View />;
@@ -238,7 +214,9 @@ export const Today = () => {
                                     />
                                 </View>
                             )}
-                            {getWidgetFromType(item.type!)}
+                            <View style={{ paddingBottom: 10 }}>
+                                {getWidgetFromType(item.type!)}
+                            </View>
                         </View>
                     </DeletableView>
                 </TouchableOpacity>
@@ -276,6 +254,7 @@ export const Today = () => {
                             onDragEnd={({ data }) => {
                                 setWidgets(data);
                             }}
+                            showsVerticalScrollIndicator={false}
                             keyExtractor={(item) => item.type!}
                             renderItem={renderItem}
                             // Add this prop to handle refresh

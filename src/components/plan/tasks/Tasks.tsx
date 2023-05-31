@@ -34,6 +34,22 @@ export const Tasks = ({ plannedDay }: Props) => {
         placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]
     );
 
+    React.useEffect(() => {
+        if (searchText === '') {
+            setTasks([]);
+        }
+
+        const debounceTimer = setTimeout(() => {
+            if (searchText !== '') {
+                fetchTasks(searchText);
+            }
+        }, 250);
+
+        return () => {
+            clearTimeout(debounceTimer);
+        };
+    }, [searchText]);
+
     const fetchHabits = async () => {
         const results: Habit[] = await HabitController.getHabits();
         setHabits(results);
@@ -57,11 +73,6 @@ export const Tasks = ({ plannedDay }: Props) => {
 
     const onSearchChange = (text: string) => {
         setSearchText(text);
-        if (text !== '') {
-            fetchTasks(text);
-        } else {
-            setTasks([]);
-        }
     };
 
     const fetchTasks = async (text: string) => {
@@ -167,10 +178,10 @@ export const Tasks = ({ plannedDay }: Props) => {
                             paddingTop: 2,
                             paddingLeft: 15,
                         }}
-                        onChangeText={onSearchChange}
+                        onChangeText={setSearchText}
                         value={searchText}
                         placeholderTextColor={colors.search_preview}
-                        placeholder={bioPlaceholder}
+                        placeholder={'add an activity...'}
                         autoCapitalize="none"
                     />
                 </View>
