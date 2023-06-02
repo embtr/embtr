@@ -74,7 +74,7 @@ export const Planning = ({
     }
 
     return (
-        <Screen>
+        <View>
             <EmbtrMenuCustom />
             {plannedDay?.id && (
                 <AddHabitModal
@@ -85,9 +85,10 @@ export const Planning = ({
             )}
 
             <View style={{ flex: 1 }}>
-                <View style={{ paddingTop: 20, paddingBottom: 25 }}>
+                <View style={{ paddingBottom: 25 }}>
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChange} />
                 </View>
+
                 {plannedDay && (
                     <PlanDay
                         plannedDay={plannedDay}
@@ -98,6 +99,6 @@ export const Planning = ({
                     />
                 )}
             </View>
-        </Screen>
+        </View>
     );
 };

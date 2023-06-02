@@ -153,8 +153,8 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                         }}
                     >
                         {' '}
-                        - Consecutive at or above this threshold will increase your habit level.
-                        Seasons below will decrease your level.
+                        - Earn 4 or more Habit Points in a season to level up your habit! Anything
+                        less will level you down; consistency is key!
                     </Text>
                 </Text>
             </View>

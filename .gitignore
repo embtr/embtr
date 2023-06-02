@@ -14,3 +14,11 @@ web-build/
 .DS_Store
 *.cache
 node_modules/react-native-reanimated/src/reanimated1/core/AnimatedValue.js
+
+.idea/embtr.iml
+
+.idea/modules.xml
+
+.idea/prettier.xml
+
+.idea/vcs.xml

@@ -1,10 +1,7 @@
-import React from 'react';
-import { Dimensions } from 'react-native';
-import { View, Text } from 'react-native';
-import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
-import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Ionicons } from '@expo/vector-icons';
-import { getDayKey, getTodayKey } from 'src/controller/planning/PlannedDayController';
+import React, { useRef } from 'react';
+import { TouchableOpacity, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { DayPickerElement } from './DayPickerElement';
 
 interface Props {
     day: number;
@@ -12,101 +9,45 @@ interface Props {
 }
 
 export const DayPicker = ({ day, onDayChanged }: Props) => {
-    const { colors } = useTheme();
-
-    const itemWidth = Dimensions.get('window').width / 7;
-
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
     const currentDate = new Date();
-    let dateElements = Array.from(
+    const dateElements = Array.from(
         Array(
             new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() + 1
         ).keys()
-    );
-    dateElements.shift();
+    ).slice(1);
 
+    const flatListRef = useRef<FlatList>(null);
     const [selected, setSelected] = React.useState<number>(day - 1);
 
     const onSelectionChange = (day: number) => {
         setSelected(day);
         onDayChanged(day + 1);
+        scrollToSelected(day);
     };
 
-    const renderItem = (item: any, index: any) => (
-        <View style={{ width: itemWidth, alignItems: 'center' }}>
-            <View style={{ alignItems: 'center' }}>
-                <Ionicons
-                    name={'sunny'}
-                    size={10}
-                    color={
-                        getDayKey(index + 1) === getTodayKey()
-                            ? selected === index
-                                ? colors.today_calendar_picker_selected
-                                : colors.today_calendar_picker_unselected
-                            : colors.background
-                    }
-                />
-            </View>
+    const scrollToSelected = (day: number) => {
+        flatListRef.current?.scrollToIndex({
+            index: day,
+            animated: true,
+            viewPosition: 0.5, // Centers the selected item
+        });
+    };
 
-            <Text
-                style={{
-                    textAlign: 'center',
-                    fontSize: 16,
-                    fontFamily: 'Poppins_400Regular',
-                    color:
-                        selected === index
-                            ? colors.today_calendar_picker_selected
-                            : colors.today_calendar_picker_unselected,
-                }}
-            >
-                {
-                    days[
-                        new Date(
-                            currentDate.getFullYear(),
-                            currentDate.getMonth(),
-                            index % 7
-                        ).getDay()
-                    ]
-                }
-            </Text>
-            <Text
-                style={{
-                    textAlign: 'center',
-                    fontSize: 18,
-                    fontFamily: 'Poppins_600SemiBold',
-                    color:
-                        selected === index
-                            ? colors.today_calendar_picker_selected
-                            : colors.today_calendar_picker_unselected,
-                }}
-            >
-                {item}
-            </Text>
-            <View
-                style={{
-                    marginTop: 2,
-                    width: '75%',
-                    height: 2,
-                    backgroundColor:
-                        selected === index
-                            ? colors.today_calendar_picker_selected
-                            : colors.background,
-                }}
-            />
-        </View>
+    const renderItem = ({ item, index }: { item: number; index: number }) => (
+        <TouchableOpacity onPress={() => onSelectionChange(index)}>
+            <DayPickerElement item={item} index={index} isSelected={index === selected} />
+        </TouchableOpacity>
     );
 
     return (
         <View>
-            <HorizontalPicker
-                animatedScrollToDefaultIndex={true}
-                defaultIndex={day - 1}
-                snapTimeout={1000}
+            <FlatList
+                ref={flatListRef}
                 data={dateElements}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.toString()}
                 renderItem={renderItem}
-                itemWidth={itemWidth}
-                onChange={onSelectionChange}
             />
         </View>
     );

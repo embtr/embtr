@@ -4,11 +4,14 @@ import { WidgetBase } from '../WidgetBase';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { HabitJourneys } from 'resources/types/habit/Habit';
 import React from 'react';
-import { User } from 'resources/schema';
+import { PlannedDay, User } from 'resources/schema';
 import { HabitController } from 'src/controller/habit/HabitController';
 import { HabitJourneyElement2 } from './HabitJourneyElement2';
 import { HabitJourneyElement3 } from './HabitJourneyElement3';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
+import { getWindowWidth } from 'src/util/GeneralUtility';
+import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
+import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 
 interface Props {
     user: User;
@@ -18,7 +21,15 @@ interface Props {
 export const HabitJourneyWidget = ({ user, refreshedTimestamp }: Props) => {
     const { colors } = useTheme();
 
+    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [habitJourneys, setHabitJourneys] = React.useState<HabitJourneys>();
+    const [selectedView, setSelectedView] = React.useState(1);
+    const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
+
+    const fetchPlannedDay = async () => {
+        const plannedDay = await PlannedDayController.getOrCreateViaApi(getTodayKey());
+        setPlannedDay(plannedDay);
+    };
 
     const fetch = async () => {
         if (!user.id) {
@@ -34,12 +45,16 @@ export const HabitJourneyWidget = ({ user, refreshedTimestamp }: Props) => {
 
     React.useEffect(() => {
         fetch();
+        fetchPlannedDay();
     }, [refreshedTimestamp]);
-
-    const [selectedView, setSelectedView] = React.useState(0);
 
     const handleViewPress = (index: number) => {
         setSelectedView(index);
+    };
+
+    const onDismissSelectTaskModal = () => {
+        fetchPlannedDay();
+        setShowAddTaskModal(false);
     };
 
     const habitLabelElements: JSX.Element[] = [];
@@ -107,6 +122,14 @@ export const HabitJourneyWidget = ({ user, refreshedTimestamp }: Props) => {
 
     return (
         <WidgetBase>
+            {plannedDay && (
+                <AddHabitModal
+                    visible={showAddTaskModal}
+                    plannedDay={plannedDay}
+                    dismiss={onDismissSelectTaskModal}
+                />
+            )}
+
             <View>
                 <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                     Habit Journey
@@ -125,6 +148,32 @@ export const HabitJourneyWidget = ({ user, refreshedTimestamp }: Props) => {
                 <View style={{ paddingTop: 15 }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                         {habitLabelElements}
+
+                        {habitLabelElements.length === 0 && (
+                            <Text
+                                style={{
+                                    width: getWindowWidth(),
+                                    color: colors.text,
+                                    fontFamily: POPPINS_REGULAR,
+                                }}
+                            >
+                                You currently have not worked towards building any habits. Head on
+                                over to the
+                                <Text
+                                    onPress={() => {
+                                        setShowAddTaskModal(true);
+                                    }}
+                                    style={{
+                                        color: colors.tab_selected,
+                                        fontFamily: 'Poppins_400Regular',
+                                    }}
+                                >
+                                    {' '}
+                                    add activities{' '}
+                                </Text>
+                                page and map some habits to your tasks to get started!
+                            </Text>
+                        )}
                     </ScrollView>
                 </View>
 

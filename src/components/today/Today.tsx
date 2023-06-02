@@ -30,6 +30,7 @@ import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget'
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { POPPINS_REGULAR } from 'src/util/constants';
+import { PlanningWidget } from '../widgets/PlanningWidget';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -155,6 +156,7 @@ export const Today = () => {
 
             case WidgetType.TODAYS_TASKS:
                 return <TodaysTasksWidget user={user} source={WidgetSource.TODAY} />;
+
             case WidgetType.TODAYS_NOTES:
                 return <TodaysNotesWidget />;
 
@@ -166,6 +168,9 @@ export const Today = () => {
 
             case WidgetType.HABIT_JOURNEY:
                 return <HabitJourneyWidget user={user} refreshedTimestamp={refreshedTimestamp!} />;
+
+            case WidgetType.PLANNING:
+                return <PlanningWidget />;
         }
 
         return <View />;

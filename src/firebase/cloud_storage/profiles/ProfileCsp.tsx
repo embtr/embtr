@@ -54,7 +54,6 @@ export const uploadImage = async (
     };
 
     const res = await uploadBytesResumable(fileRef, blob, metadata);
-    console.log(res);
 
     // We're done with the blob, close and release it
     if (typeof blob.close === 'function') {
