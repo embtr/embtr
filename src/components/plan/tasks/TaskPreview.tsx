@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { HabitScrollSelector } from './HabitScrollSelector';
 import { HabitIcon } from '../habit/HabitIcon';
 import { TextInput } from 'react-native-gesture-handler';
+import { SetUnitModal } from 'src/components/units/SetUnitModal';
 
 /* Pog I was here - Cherkim */
 
@@ -138,303 +139,319 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
     );
 
     return (
-        <View style={{ width: '97%' }}>
-            <View
-                style={[
-                    { backgroundColor: colors.timeline_card_background, borderRadius: 9 },
-                    CARD_SHADOW,
-                ]}
-            >
-                <TouchableOpacity onPress={toggleExpand}>
-                    <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
-                        <View style={{ flex: 1, paddingLeft: 10 }}>
-                            <Text
-                                style={{
-                                    color: colors.goal_primary_font,
-                                    fontFamily: POPPINS_SEMI_BOLD,
-                                    fontSize: 14,
-                                }}
-                            >
-                                {task.title}
-                            </Text>
-                            <Text
-                                style={{
-                                    color: colors.goal_secondary_font,
-                                    opacity: 0.9,
-                                    fontFamily: POPPINS_REGULAR,
-                                    fontSize: 10,
-                                }}
-                            >
-                                {task.description}
-                            </Text>
-                        </View>
-
-                        <View
-                            style={{
-                                justifyContent: 'flex-end',
-                                alignItems: 'center',
-                                flexDirection: 'row',
-                                flex: 1,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    height: 30,
-                                    borderRadius: 5,
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'center',
-                                    paddingRight: 5,
-                                }}
-                            >
-                                {selectedHabit?.iconName && (
-                                    <HabitIcon
-                                        habit={selectedHabit}
-                                        size={30}
-                                        color={colors.text}
-                                    />
-                                )}
+        <View style={{ width: '100%' }}>
+            <SetUnitModal
+                visible={showSetUnitModal}
+                confirm={(selected: UnitType) => {
+                    setShowSetUnitModal(false);
+                    setSelectedUnit(selected);
+                }}
+                dismiss={() => {
+                    setShowSetUnitModal(false);
+                }}
+            />
+            <View style={{ width: '97%' }}>
+                <View
+                    style={[
+                        { backgroundColor: colors.timeline_card_background, borderRadius: 9 },
+                        CARD_SHADOW,
+                    ]}
+                >
+                    <TouchableOpacity onPress={toggleExpand}>
+                        <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 5 }}>
+                            <View style={{ flex: 1, paddingLeft: 10 }}>
+                                <Text
+                                    style={{
+                                        color: colors.goal_primary_font,
+                                        fontFamily: POPPINS_SEMI_BOLD,
+                                        fontSize: 14,
+                                    }}
+                                >
+                                    {task.title}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: colors.goal_secondary_font,
+                                        opacity: 0.9,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 10,
+                                    }}
+                                >
+                                    {task.description}
+                                </Text>
                             </View>
 
-                            {taskCount > 0 && (
-                                <View style={{ flexDirection: 'row' }}>
-                                    {/*
-                                     * PLANNED TASK COUNT
-                                     */}
-                                    <View
-                                        style={{
-                                            height: 30,
-                                            borderRadius: 5,
-                                            alignItems: 'flex-end',
-                                            justifyContent: 'center',
-                                            paddingRight: 5,
-                                        }}
-                                    >
-                                        <Text
+                            <View
+                                style={{
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center',
+                                    flexDirection: 'row',
+                                    flex: 1,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        height: 30,
+                                        borderRadius: 5,
+                                        alignItems: 'flex-end',
+                                        justifyContent: 'center',
+                                        paddingRight: 5,
+                                    }}
+                                >
+                                    {selectedHabit?.iconName && (
+                                        <HabitIcon
+                                            habit={selectedHabit}
+                                            size={30}
+                                            color={colors.text}
+                                        />
+                                    )}
+                                </View>
+
+                                {taskCount > 0 && (
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {/*
+                                         * PLANNED TASK COUNT
+                                         */}
+                                        <View
                                             style={{
-                                                color: colors.text,
-                                                fontFamily: POPPINS_REGULAR,
-                                                fontSize: 18,
+                                                height: 30,
+                                                borderRadius: 5,
+                                                alignItems: 'flex-end',
+                                                justifyContent: 'center',
+                                                paddingRight: 5,
                                             }}
                                         >
-                                            x{taskCount}
-                                        </Text>
-                                    </View>
+                                            <Text
+                                                style={{
+                                                    color: colors.text,
+                                                    fontFamily: POPPINS_REGULAR,
+                                                    fontSize: 18,
+                                                }}
+                                            >
+                                                x{taskCount}
+                                            </Text>
+                                        </View>
 
-                                    {/*
-                                     *  REMOVE PLANNED TASK
-                                     */}
-                                    <TouchableOpacity
-                                        onPress={async () => {
-                                            if (!plannedTask) {
-                                                return;
-                                            }
+                                        {/*
+                                         *  REMOVE PLANNED TASK
+                                         */}
+                                        <TouchableOpacity
+                                            onPress={async () => {
+                                                if (!plannedTask) {
+                                                    return;
+                                                }
 
-                                            plannedTask.habit = selectedHabit;
-                                            plannedTask.habitId = selectedHabit?.id;
-                                            const updatedPlannedTask =
-                                                await PlannedTaskController.decrementCount(
-                                                    plannedTask
+                                                plannedTask.habit = selectedHabit;
+                                                plannedTask.habitId = selectedHabit?.id;
+                                                const updatedPlannedTask =
+                                                    await PlannedTaskController.decrementCount(
+                                                        plannedTask
+                                                    );
+
+                                                setPlannedTaskFromDatabase(
+                                                    updatedPlannedTask.plannedTask
                                                 );
 
-                                            setPlannedTaskFromDatabase(
-                                                updatedPlannedTask.plannedTask
-                                            );
+                                                Toast.show('task removed!', {
+                                                    duration: Toast.durations.LONG,
+                                                });
+                                            }}
+                                            style={{
+                                                height: 30,
+                                                borderRadius: 5,
+                                                alignItems: 'flex-end',
+                                                justifyContent: 'center',
+                                                paddingRight: 5,
+                                            }}
+                                        >
+                                            <Ionicons
+                                                name="md-remove-circle-outline"
+                                                size={30}
+                                                color={colors.toggle_background_selected}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
 
-                                            Toast.show('task removed!', {
-                                                duration: Toast.durations.LONG,
-                                            });
-                                        }}
-                                        style={{
-                                            height: 30,
-                                            borderRadius: 5,
-                                            alignItems: 'flex-end',
-                                            justifyContent: 'center',
-                                            paddingRight: 5,
-                                        }}
-                                    >
-                                        <Ionicons
-                                            name="md-remove-circle-outline"
-                                            size={30}
-                                            color={colors.toggle_background_selected}
-                                        />
-                                    </TouchableOpacity>
+                                {/*
+                                 * ADD PLANNED TASK
+                                 */}
+                                <View style={{ paddingLeft: 10 }}>{!isExpanded && addButton}</View>
+
+                                <View
+                                    style={{
+                                        height: 30,
+                                        borderRadius: 5,
+                                        alignItems: 'flex-end',
+                                        justifyContent: 'center',
+                                        paddingLeft: 5,
+                                        paddingRight: 10,
+                                    }}
+                                >
+                                    <Ionicons
+                                        name={
+                                            isExpanded
+                                                ? 'chevron-up-outline'
+                                                : 'chevron-down-outline'
+                                        }
+                                        size={20}
+                                        color={colors.secondary_text}
+                                    />
                                 </View>
-                            )}
-
-                            {/*
-                             * ADD PLANNED TASK
-                             */}
-                            <View style={{ paddingLeft: 10 }}>{!isExpanded && addButton}</View>
-
-                            <View
-                                style={{
-                                    height: 30,
-                                    borderRadius: 5,
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'center',
-                                    paddingLeft: 5,
-                                    paddingRight: 10,
-                                }}
-                            >
-                                <Ionicons
-                                    name={
-                                        isExpanded ? 'chevron-up-outline' : 'chevron-down-outline'
-                                    }
-                                    size={20}
-                                    color={colors.secondary_text}
-                                />
                             </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
+                    </TouchableOpacity>
 
-                <Animated.View style={{ height: heightValue }}>
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            paddingLeft: 5,
-                            fontFamily: POPPINS_SEMI_BOLD,
-                            fontSize: 12,
-                        }}
-                    >
-                        Select a Habit
-                    </Text>
-                    <View>
-                        <HabitScrollSelector
-                            habits={habits}
-                            initialHabit={selectedHabit}
-                            onHabitSelected={onHabitSelected}
-                        />
-                    </View>
-
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            paddingTop: 5,
-                            paddingLeft: 5,
-                            fontFamily: POPPINS_SEMI_BOLD,
-                            fontSize: 12,
-                        }}
-                    >
-                        Details
-                    </Text>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            paddingTop: 5,
-                        }}
-                    >
-                        <View
+                    <Animated.View style={{ height: heightValue }}>
+                        <Text
                             style={{
-                                alignItems: 'center',
-                                flex: 1,
-                                paddingLeft: 10,
-                                flexDirection: 'row',
+                                color: colors.secondary_text,
+                                paddingLeft: 5,
+                                fontFamily: POPPINS_SEMI_BOLD,
+                                fontSize: 12,
                             }}
                         >
-                            <Text
-                                onPress={() => {
-                                    setShowSetUnitModal(true);
-                                }}
+                            Select a Habit
+                        </Text>
+                        <View>
+                            <HabitScrollSelector
+                                habits={habits}
+                                initialHabit={selectedHabit}
+                                onHabitSelected={onHabitSelected}
+                            />
+                        </View>
+
+                        <Text
+                            style={{
+                                color: colors.secondary_text,
+                                paddingTop: 5,
+                                paddingLeft: 5,
+                                fontFamily: POPPINS_SEMI_BOLD,
+                                fontSize: 12,
+                            }}
+                        >
+                            Details
+                        </Text>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                paddingTop: 5,
+                            }}
+                        >
+                            <View
                                 style={{
-                                    color: colors.text,
-                                    fontFamily: POPPINS_MEDIUM,
+                                    alignItems: 'center',
+                                    flex: 1,
+                                    paddingLeft: 10,
+                                    flexDirection: 'row',
                                 }}
                             >
-                                Quantity
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                flex: 1,
-                                paddingRight: 10,
-                                flexDirection: 'row',
-                                justifyContent: 'flex-end',
-                            }}
-                        >
-                            {isExpanded && (
-                                <TextInput
-                                    keyboardType="numeric"
-                                    style={{
-                                        textAlign: 'right',
-                                        borderWidth: 1,
-                                        borderColor: colors.secondary_text,
-                                        borderRadius: 5,
-                                        fontFamily: 'Poppins_400Regular',
-                                        color: colors.text,
-                                        paddingTop: 6,
-                                        paddingBottom: 6,
-                                        paddingLeft: 25,
-                                        paddingRight: 5,
-                                        width: '60%',
-                                    }}
-                                    placeholder={'how many?'}
-                                    placeholderTextColor={colors.secondary_text}
-                                    autoCorrect={true}
-                                    onChangeText={(text) => {
-                                        setEnteredQuantity(parseInt(text));
-                                    }}
-                                    value={enteredQuantity?.toString()}
-                                />
-                            )}
-                        </View>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                        <View
-                            style={{
-                                alignItems: 'center',
-                                flex: 1,
-                                paddingLeft: 10,
-                                flexDirection: 'row',
-                            }}
-                        >
-                            <Text
-                                onPress={() => {
-                                    setShowSetUnitModal(true);
-                                }}
-                                style={{
-                                    color: colors.text,
-                                    fontFamily: POPPINS_MEDIUM,
-                                }}
-                            >
-                                Units
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                justifyContent: 'flex-end',
-                                flex: 1,
-                                paddingRight: 10,
-                                flexDirection: 'row',
-                            }}
-                        >
-                            {isExpanded && (
                                 <Text
                                     onPress={() => {
                                         setShowSetUnitModal(true);
                                     }}
                                     style={{
-                                        textAlign: 'right',
-                                        borderWidth: 1,
-                                        borderColor: colors.secondary_text,
-                                        borderRadius: 5,
-                                        fontFamily: 'Poppins_400Regular',
-                                        color: selectedUnit ? colors.text : colors.secondary_text,
-                                        paddingTop: 8,
-                                        paddingBottom: 4,
-                                        paddingLeft: 25,
-                                        paddingRight: 5,
-                                        width: '60%',
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
                                     }}
                                 >
-                                    {capitalizedUnitValue}
+                                    Quantity
                                 </Text>
-                            )}
+                            </View>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    paddingRight: 10,
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
+                                {isExpanded && (
+                                    <TextInput
+                                        keyboardType="numeric"
+                                        style={{
+                                            textAlign: 'right',
+                                            borderWidth: 1,
+                                            borderColor: colors.secondary_text,
+                                            borderRadius: 5,
+                                            fontFamily: 'Poppins_400Regular',
+                                            color: colors.text,
+                                            paddingTop: 6,
+                                            paddingBottom: 6,
+                                            paddingLeft: 25,
+                                            paddingRight: 5,
+                                            width: '60%',
+                                        }}
+                                        placeholder={'how many?'}
+                                        placeholderTextColor={colors.secondary_text}
+                                        autoCorrect={true}
+                                        onChangeText={(text) => {
+                                            setEnteredQuantity(parseInt(text));
+                                        }}
+                                        value={enteredQuantity?.toString()}
+                                    />
+                                )}
+                            </View>
                         </View>
-                    </View>
+                        <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    flex: 1,
+                                    paddingLeft: 10,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                <Text
+                                    onPress={() => {
+                                        setShowSetUnitModal(true);
+                                    }}
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
+                                    }}
+                                >
+                                    Units
+                                </Text>
+                            </View>
+                            <View
+                                style={{
+                                    justifyContent: 'flex-end',
+                                    flex: 1,
+                                    paddingRight: 10,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                {isExpanded && (
+                                    <Text
+                                        onPress={() => {
+                                            setShowSetUnitModal(true);
+                                        }}
+                                        style={{
+                                            textAlign: 'right',
+                                            borderWidth: 1,
+                                            borderColor: colors.secondary_text,
+                                            borderRadius: 5,
+                                            fontFamily: 'Poppins_400Regular',
+                                            color: selectedUnit
+                                                ? colors.text
+                                                : colors.secondary_text,
+                                            paddingTop: 8,
+                                            paddingBottom: 4,
+                                            paddingLeft: 25,
+                                            paddingRight: 5,
+                                            width: '60%',
+                                        }}
+                                    >
+                                        {capitalizedUnitValue}
+                                    </Text>
+                                )}
+                            </View>
+                        </View>
 
-                    <View style={{ paddingTop: 10 }}>{isExpanded && addButton}</View>
-                </Animated.View>
+                        <View style={{ paddingTop: 10 }}>{isExpanded && addButton}</View>
+                    </Animated.View>
+                </View>
             </View>
         </View>
     );
