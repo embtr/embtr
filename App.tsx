@@ -5,7 +5,6 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, Store } from './src/redux/store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { HoldMenuProvider } from 'react-native-hold-menu';
 import { RootSiblingParent } from 'react-native-root-siblings';
 
 export default function App() {

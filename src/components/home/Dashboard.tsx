@@ -9,6 +9,7 @@ import { PlanTab } from 'src/components/plan/PlanTab';
 import { TabBar } from 'src/components/home/tabmenu/TabBar';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
+import { ChallengeTab } from 'src/components/challenge/ChallengeTab';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,6 +18,7 @@ export const TABS = {
     TIMELINE: 'TimelineTab',
     TODAY: 'TodayTab',
     PLAN: 'PlanTab',
+    CHALLENGE: 'ChallengeTab',
 };
 
 export const Dashboard = () => {
@@ -87,10 +89,10 @@ export const Dashboard = () => {
                 />
 
                 <Tab.Screen
-                    name={TABS.PLAN}
+                    name={TABS.CHALLENGE}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
-                            dispatch(setCurrentTab(TABS.PLAN));
+                            dispatch(setCurrentTab(TABS.CHALLENGE));
 
                             const currentlyInFocus = navigation.isFocused();
                             if (
@@ -110,7 +112,7 @@ export const Dashboard = () => {
                             }
                         },
                     })}
-                    component={PlanTab}
+                    component={ChallengeTab}
                 />
 
                 <Tab.Screen

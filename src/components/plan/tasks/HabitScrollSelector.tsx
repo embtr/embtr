@@ -68,7 +68,7 @@ export const HabitScrollSelector = ({ habits, initialHabit, onHabitSelected }: P
         const color = selected === habit.id ? colors.tab_selected : colors.text;
 
         const Item = (
-            <View style={{ paddingLeft: 5, paddingRight: 5, alignItems: 'center', height: 40 }}>
+            <View style={{ paddingLeft: 5, paddingRight: 5, alignItems: 'center', height: 60 }}>
                 <View style={{ height: 33 }}>
                     <HabitIcon habit={habit} size={30} color={color} />
                 </View>
@@ -98,14 +98,12 @@ export const HabitScrollSelector = ({ habits, initialHabit, onHabitSelected }: P
     };
 
     return (
-        <View style={{ flex: 1 }}>
-            <FlatList
-                data={habits}
-                renderItem={renderItem}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id!.toString()}
-            />
-        </View>
+        <FlatList
+            data={habits}
+            renderItem={renderItem}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item) => item.id!.toString()}
+        />
     );
 };

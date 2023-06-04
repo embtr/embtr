@@ -20,6 +20,7 @@ export interface User {
   widgets?: Widget[];
   taskHabitPreference?: TaskHabitPreference[];
   quoteOfTheDay?: QuoteOfTheDay[];
+  Challenge?: Challenge[];
 }
 
 export interface PushNotificationToken {
@@ -218,6 +219,16 @@ export interface Season {
   updatedAt?: Date;
 }
 
+export interface Challenge {
+  id?: number;
+  name?: string;
+  creator?: User;
+  creatorId?: number;
+  active?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
 export enum NotificationTargetPage {
   INVALID = 'INVALID',
   GOAL_DETAILS = 'GOAL_DETAILS',
@@ -237,4 +248,13 @@ export enum WidgetType {
   DAILY_HISTORY = 'DAILY_HISTORY',
   HABIT_JOURNEY = 'HABIT_JOURNEY',
   PLANNING = 'PLANNING',
+}
+
+export enum UnitType {
+  POUNDS = 'POUNDS',
+  KILOGRAMS = 'KILOGRAMS',
+  OUNCES = 'OUNCES',
+  LITERS = 'LITERS',
+  REPS = 'REPS',
+  TIMES = 'TIMES',
 }
