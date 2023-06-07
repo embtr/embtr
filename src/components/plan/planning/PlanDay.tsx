@@ -11,7 +11,6 @@ import DailyResultController from 'src/controller/timeline/daily_result/DailyRes
 
 interface Props {
     plannedDay: PlannedDayModel;
-    onTaskUpdated: Function;
     setShowSelectTaskModal: Function;
     onSharePlannedDayResults: Function;
     showCreatePlannedDayResultsRecommendation?: boolean;
@@ -19,7 +18,6 @@ interface Props {
 
 export const PlanDay = ({
     plannedDay,
-    onTaskUpdated,
     setShowSelectTaskModal,
     onSharePlannedDayResults,
     showCreatePlannedDayResultsRecommendation,
@@ -36,25 +34,19 @@ export const PlanDay = ({
 
         // get all current planned tasks
         plannedDay?.plannedTasks?.forEach((plannedTask) => {
-            if (
-                !(
-                    plannedTask.count === plannedTask.completedCount &&
-                    (plannedTask.count ?? 0) > 0 &&
-                    plannedTask.status !== 'FAILED'
-                )
-            ) {
+            if (!(plannedTask.status !== 'FAILED')) {
                 allTasksAreComplete = false;
             }
             taskViews.push(
                 <View
-                    key={plannedTask.id + '_locked'}
+                    key={plannedTask.id}
                     style={{
                         paddingBottom: 5,
                         alignItems: 'center',
                         width: '97%',
                     }}
                 >
-                    <PlannableTask plannedTask={plannedTask} onUpdateTask={onTaskUpdated} />
+                    <PlannableTask initialPlannedTask={plannedTask} />
                 </View>
             );
         });

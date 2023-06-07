@@ -4,10 +4,11 @@ import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Picker } from '@react-native-picker/picker';
 import { POPPINS_REGULAR } from 'src/util/constants';
-import { UnitType } from 'resources/schema';
+import { Unit } from 'resources/schema';
+import { UnitController } from 'src/controller/unit/UnitController';
 
 interface Props {
-    defaultUnit?: UnitType;
+    defaultUnit?: Unit;
     visible: boolean;
     confirm: Function;
     dismiss: Function;
@@ -16,7 +17,23 @@ interface Props {
 export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
-    const [selectedUnit, setSelectedUnit] = React.useState<UnitType | undefined>(defaultUnit);
+    const [units, setUnits] = React.useState<Unit[]>([]);
+    const [selectedUnit, setSelectedUnit] = React.useState<Unit | undefined>(defaultUnit);
+
+    const fetchUnits = async () => {
+        const units = await UnitController.getAll();
+        setUnits(units);
+    };
+
+    React.useEffect(() => {
+        fetchUnits();
+    }, []);
+
+    let displayUnit = '';
+    if (selectedUnit?.unit) {
+        const selectedUnitValue = selectedUnit.unit.toString().toLowerCase();
+        displayUnit = selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1) + 's';
+    }
 
     return (
         <Modal visible={visible} transparent={true} animationType={'fade'}>
@@ -83,26 +100,31 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
                                         <View style={{ flex: 1 }}>
                                             <Picker
                                                 placeholder="of what?"
-                                                selectedValue={selectedUnit}
                                                 itemStyle={{
                                                     fontFamily: POPPINS_REGULAR,
                                                     color: colors.text,
                                                 }}
-                                                onValueChange={(itemValue, itemIndex) =>
-                                                    setSelectedUnit(itemValue)
-                                                }
+                                                selectedValue={selectedUnit} // Set the selectedValue prop to the selectedUnit state
+                                                onValueChange={(itemValue, itemIndex) => {
+                                                    setSelectedUnit(itemValue); // Set the selectedUnit state using units[itemIndex]
+                                                }}
                                             >
-                                                {Object.values(UnitType).map((unit) => {
-                                                    const selectedUnitValue = unit
+                                                {units.map((unit) => {
+                                                    if (!unit.unit) return null;
+
+                                                    const selectedUnitValue = unit.unit
                                                         .toString()
                                                         .toLowerCase();
                                                     const capitalizedUnitValue =
                                                         selectedUnitValue.charAt(0).toUpperCase() +
-                                                        selectedUnitValue.slice(1);
+                                                        selectedUnitValue.slice(1) +
+                                                        's';
+
                                                     return (
                                                         <Picker.Item
                                                             label={capitalizedUnitValue}
-                                                            value={unit}
+                                                            value={unit} // Set the value prop to the unit object
+                                                            key={unit.id}
                                                         />
                                                     );
                                                 })}

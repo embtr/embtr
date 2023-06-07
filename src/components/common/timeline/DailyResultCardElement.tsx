@@ -19,9 +19,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     const { colors } = useTheme();
     const [temporaryStatus, setTemporaryStatus] = React.useState('');
 
-    const totalCount = plannedTask?.count ?? 1;
-    const completedCount = plannedTask?.completedCount ?? 0;
-    const taskIsComplete = completedCount === totalCount;
+    const taskIsComplete = false;
     const taskIsFailed = plannedTask.status === 'FAILED';
 
     let icon: JSX.Element = <TaskFailedSymbol />;
@@ -84,7 +82,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                         }}
                     >
                         <ProgressBar
-                            progress={(completedCount / totalCount) * 100}
+                            progress={0.4 * 100}
                             success={taskIsComplete}
                             showPercent={false}
                         />
@@ -105,10 +103,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                                 fontSize: 10,
                             }}
                         >
-                            {completedCount}
-                            {'/'}
-                            {totalCount}
-                            {' complete'}
+                            {'todo complete'}
                         </Text>
                     </View>
                 </View>

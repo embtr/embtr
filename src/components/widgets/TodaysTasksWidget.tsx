@@ -59,16 +59,6 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
         fetch();
     };
 
-    const onTaskUpdated = async () => {
-        if (!plannedDay) {
-            return;
-        }
-
-        const result = await PlanningService.onTaskUpdated(plannedDay, fireConfetti);
-
-        setPlannedDay(result);
-    };
-
     let menuOptions: EmbtrMenuOption[] = [];
     menuOptions.push({
         name: 'Edit',
@@ -103,7 +93,6 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
             {plannedDay ? (
                 <PlanDay
                     plannedDay={plannedDay}
-                    onTaskUpdated={onTaskUpdated}
                     setShowSelectTaskModal={setShowSelectTaskModal}
                     onSharePlannedDayResults={onSharePlannedDayResults}
                     showCreatePlannedDayResultsRecommendation={source !== WidgetSource.PROFILE}

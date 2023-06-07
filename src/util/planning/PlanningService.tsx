@@ -31,18 +31,17 @@ export class PlanningService {
 
     private static allTasksAreComplete(plannedDay?: PlannedDay) {
         if (plannedDay?.plannedTasks === undefined || plannedDay.plannedTasks.length === 0) {
-            return true;
+            return false;
         }
 
         let allTasksAreComplete = true;
         plannedDay?.plannedTasks?.forEach((plannedTask) => {
-            if (
-                !(
-                    plannedTask.count === plannedTask.completedCount &&
-                    (plannedTask.count ?? 0) > 0 &&
-                    plannedTask.status !== 'FAILED'
-                )
-            ) {
+            if (!(plannedTask.status !== 'FAILED')) {
+                allTasksAreComplete = false;
+                return;
+            }
+
+            if (plannedTask.quantity !== plannedTask.completedQuantity) {
                 allTasksAreComplete = false;
                 return;
             }

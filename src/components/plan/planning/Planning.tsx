@@ -46,15 +46,6 @@ export const Planning = ({
         setPlannedDay(result);
     };
 
-    const onTaskUpdated = async () => {
-        if (!plannedDay) {
-            return;
-        }
-
-        const result = await PlanningService.onTaskUpdated(plannedDay, fireConfetti);
-        setPlannedDay(result);
-    };
-
     const onDismissSelectTaskModal = () => {
         refreshPlannedToday();
         dismissSelectTaskModal();
@@ -92,7 +83,6 @@ export const Planning = ({
                 {plannedDay && (
                     <PlanDay
                         plannedDay={plannedDay}
-                        onTaskUpdated={onTaskUpdated}
                         setShowSelectTaskModal={setShowSelectTaskModal}
                         onSharePlannedDayResults={onSharePlannedDayResults}
                         showCreatePlannedDayResultsRecommendation={true}

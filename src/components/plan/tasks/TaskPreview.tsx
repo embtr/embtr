@@ -9,13 +9,7 @@ import {
 import Toast from 'react-native-root-toast';
 import React, { useEffect } from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
-import {
-    Habit,
-    PlannedDay as PlannedDayModel,
-    PlannedTask,
-    Task,
-    UnitType,
-} from 'resources/schema';
+import { Habit, PlannedDay as PlannedDayModel, PlannedTask, Task, Unit } from 'resources/schema';
 import TaskController from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { HabitScrollSelector } from './HabitScrollSelector';
@@ -37,14 +31,16 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
     const [isExpanded, setIsExpanded] = React.useState(false);
     const [selectedHabit, setSelectedHabit] = React.useState<Habit>();
     const [enteredQuantity, setEnteredQuantity] = React.useState<number>();
-    const [selectedUnit, setSelectedUnit] = React.useState<UnitType>();
+    const [selectedUnit, setSelectedUnit] = React.useState<Unit>();
     const [plannedTaskFromDatabase, setPlannedTaskFromDatabase] = React.useState<PlannedTask>();
     const [showSetUnitModal, setShowSetUnitModal] = React.useState<boolean>(false);
 
     const heightValue = React.useRef(new Animated.Value(0)).current;
-    const selectedUnitValue = selectedUnit ? selectedUnit.toString().toLowerCase() : 'Of What?';
+    const selectedUnitValue = selectedUnit?.unit
+        ? selectedUnit.unit.toString().toLowerCase()
+        : 'Of What?';
     const capitalizedUnitValue =
-        selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1);
+        selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1) + 's';
 
     useEffect(() => {
         if (task?.taskHabitPreference?.length) {
@@ -57,7 +53,6 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
     );
 
     const plannedTask = plannedTaskFromDatabase || plannedTaskFromPlannedDay;
-    const taskCount = plannedTask?.count || 0;
 
     const toggleExpand = () => {
         Animated.timing(heightValue, {
@@ -90,21 +85,14 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                         taskToAdd = await TaskController.createViaApi(task.title!);
                     }
 
-                    if (!plannedTask) {
-                        const updatedPlannedTask = await PlannedTaskController.addTaskViaApi(
-                            plannedDay,
-                            taskToAdd,
-                            selectedHabit
-                        );
-                        setPlannedTaskFromDatabase(updatedPlannedTask.plannedTask);
-                    } else {
-                        plannedTask.habit = selectedHabit;
-                        plannedTask.habitId = selectedHabit?.id;
-                        const updatedPlannedTask = await PlannedTaskController.incrementCount(
-                            plannedTask
-                        );
-                        setPlannedTaskFromDatabase(updatedPlannedTask.plannedTask);
-                    }
+                    const created = await PlannedTaskController.addTaskViaApi(
+                        plannedDay,
+                        taskToAdd,
+                        selectedHabit,
+                        selectedUnit,
+                        enteredQuantity
+                    );
+                    setPlannedTaskFromDatabase(created.plannedTask);
 
                     Toast.show('task added!', {
                         duration: Toast.durations.LONG,
@@ -139,10 +127,10 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
     );
 
     return (
-        <View style={{ width: '100%' }}>
+        <View style={{ width: '100%', alignItems: 'center' }}>
             <SetUnitModal
                 visible={showSetUnitModal}
-                confirm={(selected: UnitType) => {
+                confirm={(selected: Unit) => {
                     setShowSetUnitModal(false);
                     setSelectedUnit(selected);
                 }}
@@ -206,72 +194,6 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                         />
                                     )}
                                 </View>
-
-                                {taskCount > 0 && (
-                                    <View style={{ flexDirection: 'row' }}>
-                                        {/*
-                                         * PLANNED TASK COUNT
-                                         */}
-                                        <View
-                                            style={{
-                                                height: 30,
-                                                borderRadius: 5,
-                                                alignItems: 'flex-end',
-                                                justifyContent: 'center',
-                                                paddingRight: 5,
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: colors.text,
-                                                    fontFamily: POPPINS_REGULAR,
-                                                    fontSize: 18,
-                                                }}
-                                            >
-                                                x{taskCount}
-                                            </Text>
-                                        </View>
-
-                                        {/*
-                                         *  REMOVE PLANNED TASK
-                                         */}
-                                        <TouchableOpacity
-                                            onPress={async () => {
-                                                if (!plannedTask) {
-                                                    return;
-                                                }
-
-                                                plannedTask.habit = selectedHabit;
-                                                plannedTask.habitId = selectedHabit?.id;
-                                                const updatedPlannedTask =
-                                                    await PlannedTaskController.decrementCount(
-                                                        plannedTask
-                                                    );
-
-                                                setPlannedTaskFromDatabase(
-                                                    updatedPlannedTask.plannedTask
-                                                );
-
-                                                Toast.show('task removed!', {
-                                                    duration: Toast.durations.LONG,
-                                                });
-                                            }}
-                                            style={{
-                                                height: 30,
-                                                borderRadius: 5,
-                                                alignItems: 'flex-end',
-                                                justifyContent: 'center',
-                                                paddingRight: 5,
-                                            }}
-                                        >
-                                            <Ionicons
-                                                name="md-remove-circle-outline"
-                                                size={30}
-                                                color={colors.toggle_background_selected}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                )}
 
                                 {/*
                                  * ADD PLANNED TASK

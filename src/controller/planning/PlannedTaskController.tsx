@@ -5,8 +5,9 @@ import { PLANNED_DAY } from 'resources/endpoints';
 import {
     CreatePlannedTaskRequest,
     UpdatePlannedTaskRequest,
+    UpdatePlannedTaskResponse,
 } from 'resources/types/requests/PlannedTaskTypes';
-import { Habit, PlannedDay } from 'resources/schema';
+import { Habit, PlannedDay, Unit } from 'resources/schema';
 import { PlannedTask } from 'resources/schema';
 import { Task } from 'resources/schema';
 
@@ -25,7 +26,13 @@ export interface PlannedTaskModel {
 }
 
 class PlannedTaskController {
-    public static async addTaskViaApi(plannedDay: PlannedDay, task: Task, habit?: Habit) {
+    public static async addTaskViaApi(
+        plannedDay: PlannedDay,
+        task: Task,
+        habit?: Habit,
+        unit?: Unit,
+        quantity?: number
+    ) {
         if (!plannedDay.id || !task.id) {
             return;
         }
@@ -34,6 +41,8 @@ class PlannedTaskController {
             plannedDayId: plannedDay.id,
             taskId: task.id,
             habitId: habit?.id,
+            unitId: unit?.id,
+            quantity,
         };
 
         return await axiosInstance
@@ -46,43 +55,12 @@ class PlannedTaskController {
             });
     }
 
-    public static async incrementCount(plannedTask: PlannedTask) {
-        plannedTask.count = Math.max(0, (plannedTask.count ?? 0) + 1);
-        return await this.update(plannedTask);
-    }
-
-    public static async decrementCount(plannedTask: PlannedTask) {
-        plannedTask.count = Math.max(0, (plannedTask.count ?? 0) - 1);
-        plannedTask.completedCount = Math.min(
-            plannedTask.count ?? 0,
-            plannedTask.completedCount ?? 0
-        );
-
-        return await this.update(plannedTask);
-    }
-
-    public static async incrementCompletedCount(plannedTask: PlannedTask) {
-        const clone = { ...plannedTask };
-        clone.completedCount = Math.max(0, (clone.completedCount ?? 0) + 1);
-        clone.completedCount = Math.min(clone.count ?? 0, clone.completedCount ?? 0);
-
-        return await this.update(clone);
-    }
-
-    public static async decrementCompletedCount(plannedTask: PlannedTask) {
-        const clone = { ...plannedTask };
-        clone.completedCount = Math.max(0, (clone.completedCount ?? 0) - 1);
-        return await this.update(clone);
-    }
-
     public static async complete(plannedTask: PlannedTask) {
-        plannedTask.completedCount = plannedTask.count ?? 0;
         return await this.update(plannedTask);
     }
 
     public static async reset(plannedTask: PlannedTask) {
         const clone = { ...plannedTask };
-        clone.completedCount = 0;
         clone.status = 'INCOMPLETE';
 
         return await this.update(clone);
@@ -94,13 +72,14 @@ class PlannedTaskController {
     }
 
     public static async delete(plannedTask: PlannedTask) {
-        plannedTask.count = 0;
-        return await this.update(plannedTask);
+        const clone = { ...plannedTask };
+        clone.active = false;
+        return await this.update(clone);
     }
 
-    public static async get(plannedDayId: string) {
+    public static async get(plannedTaskId: number) {
         return await axiosInstance
-            .get(`${PLANNED_DAY}planned-task/${plannedDayId}`)
+            .get(`${PLANNED_DAY}planned-task/${plannedTaskId}`)
             .then((success) => {
                 return success.data;
             })
@@ -109,7 +88,7 @@ class PlannedTaskController {
             });
     }
 
-    private static async update(plannedTask: PlannedTask) {
+    public static async update(plannedTask: PlannedTask) {
         const request: UpdatePlannedTaskRequest = {
             plannedTask,
         };
@@ -117,10 +96,11 @@ class PlannedTaskController {
         return await axiosInstance
             .patch(`${PLANNED_DAY}planned-task/`, request)
             .then((success) => {
-                return success.data;
+                const updatedPlannedTask: UpdatePlannedTaskResponse = success.data;
+                return updatedPlannedTask.plannedTask;
             })
             .catch((error) => {
-                return error.response.data;
+                return undefined;
             });
     }
 }

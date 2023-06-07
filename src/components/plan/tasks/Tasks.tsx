@@ -114,7 +114,10 @@ export const Tasks = ({ plannedDay }: Props) => {
             recentTaskElements.push(
                 <View
                     key={task.id}
-                    style={{ width: '100%', paddingBottom: 5, alignItems: 'center' }}
+                    style={{
+                        paddingBottom: 5,
+                        width: '100%',
+                    }}
                 >
                     <TaskPreview plannedDay={plannedDay} task={task} habits={habits} />
                 </View>
@@ -208,7 +211,14 @@ export const Tasks = ({ plannedDay }: Props) => {
                                 >
                                     Recent Tasks
                                 </Text>
-                                <View style={{ alignItems: 'center' }}>{recentTaskElements}</View>
+                                <View
+                                    style={{
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    {recentTaskElements}
+                                </View>
                             </View>
                         )}
 

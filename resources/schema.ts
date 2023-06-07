@@ -65,9 +65,12 @@ export interface PlannedTask {
   task?: Task;
   habitId?: number;
   habit?: Habit;
-  count?: number;
-  completedCount?: number;
+  unitId?: number;
+  unit?: Unit;
+  quantity?: number;
+  completedQuantity?: number;
   status?: string;
+  active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -229,6 +232,16 @@ export interface Challenge {
   updatedAt?: Date;
 }
 
+export interface Unit {
+  id?: number;
+  unit?: string;
+  stepSize?: number;
+  active?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  PlannedTask?: PlannedTask[];
+}
+
 export enum NotificationTargetPage {
   INVALID = 'INVALID',
   GOAL_DETAILS = 'GOAL_DETAILS',
@@ -248,13 +261,4 @@ export enum WidgetType {
   DAILY_HISTORY = 'DAILY_HISTORY',
   HABIT_JOURNEY = 'HABIT_JOURNEY',
   PLANNING = 'PLANNING',
-}
-
-export enum UnitType {
-  POUNDS = 'POUNDS',
-  KILOGRAMS = 'KILOGRAMS',
-  OUNCES = 'OUNCES',
-  LITERS = 'LITERS',
-  REPS = 'REPS',
-  TIMES = 'TIMES',
 }
