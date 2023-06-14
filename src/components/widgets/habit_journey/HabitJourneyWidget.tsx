@@ -6,19 +6,22 @@ import { HabitJourneys } from 'resources/types/habit/Habit';
 import React from 'react';
 import { PlannedDay, User } from 'resources/schema';
 import { HabitController } from 'src/controller/habit/HabitController';
-import { HabitJourneyElement2 } from './HabitJourneyElement2';
 import { HabitJourneyElement3 } from './HabitJourneyElement3';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import {
+    getRefreshActivitiesTimestamp,
+    setRefreshActivitiesTimestamp,
+} from 'src/redux/user/GlobalState';
 
 interface Props {
     user: User;
-    refreshedTimestamp: Date;
 }
 
-export const HabitJourneyWidget = ({ user, refreshedTimestamp }: Props) => {
+export const HabitJourneyWidget = ({ user }: Props) => {
     const { colors } = useTheme();
 
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
@@ -30,6 +33,8 @@ export const HabitJourneyWidget = ({ user, refreshedTimestamp }: Props) => {
         const plannedDay = await PlannedDayController.getOrCreateViaApi(getTodayKey());
         setPlannedDay(plannedDay);
     };
+
+    const activitiesUpdated = useAppSelector(getRefreshActivitiesTimestamp);
 
     const fetch = async () => {
         if (!user.id) {
@@ -46,7 +51,7 @@ export const HabitJourneyWidget = ({ user, refreshedTimestamp }: Props) => {
     React.useEffect(() => {
         fetch();
         fetchPlannedDay();
-    }, [refreshedTimestamp]);
+    }, [activitiesUpdated]);
 
     const handleViewPress = (index: number) => {
         setSelectedView(index);

@@ -3,7 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, getFireConfetti } from 'src/redux/user/GlobalState';
+import { getCloseMenu, getRefreshActivitiesTimestamp } from 'src/redux/user/GlobalState';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';
@@ -25,15 +25,16 @@ interface Props {
     source: WidgetSource;
 }
 
-export const TodaysTasksWidget = ({ user, source }: Props) => {
+export const TodaysActivitiesWidget = ({ user, source }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
     const closeMenu = useAppSelector(getCloseMenu);
-    const fireConfetti = useAppSelector(getFireConfetti);
 
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [showAddTaskModal, setShowSelectTaskModal] = React.useState(false);
+
+    const activitiesUpdated = useAppSelector(getRefreshActivitiesTimestamp);
 
     const fetch = async () => {
         if (!user.id) {
@@ -50,6 +51,10 @@ export const TodaysTasksWidget = ({ user, source }: Props) => {
             fetch();
         }, [])
     );
+
+    React.useEffect(() => {
+        fetch();
+    }, [activitiesUpdated]);
 
     const onSharePlannedDayResults = async () => {
         if (plannedDay) {

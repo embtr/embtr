@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { ScrollView } from 'react-native-gesture-handler';
-import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
@@ -19,10 +18,17 @@ interface Props {
     images: Image[];
     onImagesUploaded: Function;
     onDeleteImage?: Function;
-    onSubmit?: Function;
 }
 
-export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images, onImagesUploaded, onDeleteImage, onSubmit }: Props) => {
+export const CreateEditUserPostBase = ({
+    title,
+    setTitle,
+    body,
+    setBody,
+    images,
+    onImagesUploaded,
+    onDeleteImage,
+}: Props) => {
     const { colors } = useTheme();
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
@@ -37,7 +43,9 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
     };
 
     const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
-        setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
+        setImageUploadProgress(
+            'uploading image ' + progressReport.completed + ' of ' + progressReport.total
+        );
     };
 
     const uploadImage = async () => {
@@ -70,14 +78,24 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
 
             <View style={{ height: '100%', width: '100%' }}>
-                <KeyboardAvoidingView style={{ height: '100%' }} keyboardVerticalOffset={isIosApp() ? -10 : 111} behavior={isIosApp() ? 'padding' : 'height'}>
+                <KeyboardAvoidingView
+                    style={{ height: '100%' }}
+                    keyboardVerticalOffset={isIosApp() ? -10 : 111}
+                    behavior={isIosApp() ? 'padding' : 'height'}
+                >
                     {/* TOP SUMMARY */}
                     <View style={{ paddingTop: 5 }}>
                         <Text
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.text, fontFamily: 'Poppins_600SemiBold', fontSize: 17, paddingTop: 10, paddingLeft: 15 }}
+                            style={{
+                                color: colors.text,
+                                fontFamily: 'Poppins_600SemiBold',
+                                fontSize: 17,
+                                paddingTop: 10,
+                                paddingLeft: 15,
+                            }}
                         >
                             Something on your mind?
                         </Text>
@@ -94,8 +112,8 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                                 paddingRight: 15,
                             }}
                         >
-                            The journey to being better than you were yesterday is filled with many highs and lows. Someone out there needs to read what you're
-                            thinking.
+                            The journey to being better than you were yesterday is filled with many
+                            highs and lows. Someone out there needs to read what you're thinking.
                         </Text>
                     </View>
 
@@ -106,7 +124,12 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                                 onPress={() => {
                                     Keyboard.dismiss();
                                 }}
-                                style={{ color: colors.text, paddingTop: 15, paddingLeft: 5, fontFamily: POPPINS_REGULAR }}
+                                style={{
+                                    color: colors.text,
+                                    paddingTop: 15,
+                                    paddingLeft: 5,
+                                    fontFamily: POPPINS_REGULAR,
+                                }}
                             >
                                 Title
                             </Text>
@@ -152,7 +175,12 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                            style={{
+                                color: colors.text,
+                                paddingLeft: 5,
+                                width: '95%',
+                                paddingBottom: 10,
+                            }}
                         >
                             Story
                         </Text>
@@ -184,7 +212,12 @@ export const CreateEditUserPostBase = ({ title, setTitle, body, setBody, images,
                             onPress={() => {
                                 Keyboard.dismiss();
                             }}
-                            style={{ color: colors.text, paddingLeft: 5, width: '95%', paddingBottom: 10 }}
+                            style={{
+                                color: colors.text,
+                                paddingLeft: 5,
+                                width: '95%',
+                                paddingBottom: 10,
+                            }}
                         >
                             Photos
                         </Text>

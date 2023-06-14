@@ -1,7 +1,7 @@
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { ScrollView, TouchableOpacity, View, Text } from 'react-native';
+import { TouchableOpacity, View, Text } from 'react-native';
 import DraggableFlatList, {
     RenderItemParams,
     ScaleDecorator,
@@ -17,12 +17,11 @@ import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
 import { DeletableView } from '../common/animated_view/DeletableView';
-import { WigglableView } from '../common/animated_view/WigglableView';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
-import { TodaysTasksWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
+import { TodaysActivitiesWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { ConfettiView } from '../common/animated_view/ConfettiView';
@@ -80,13 +79,18 @@ export const Today = () => {
         fetchNewCurrentUser();
     }, []);
 
+    const refresh = () => {
+        console.log('refreshing A');
+        setRefreshedTimestamp(new Date());
+    };
+
     // may want to just directly call both to guarentee
     // upon refresh that we have all new data
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
+        refresh();
         wait(500).then(() => {
             setRefreshing(false);
-            setRefreshedTimestamp(new Date());
         });
     }, []);
 
@@ -155,7 +159,7 @@ export const Today = () => {
                 return <TodaysCountdownWidget />;
 
             case WidgetType.TODAYS_TASKS:
-                return <TodaysTasksWidget user={user} source={WidgetSource.TODAY} />;
+                return <TodaysActivitiesWidget user={user} source={WidgetSource.TODAY} />;
 
             case WidgetType.TODAYS_NOTES:
                 return <TodaysNotesWidget />;
@@ -167,7 +171,7 @@ export const Today = () => {
                 return <DailyHistoryWidget userId={user.id!} />;
 
             case WidgetType.HABIT_JOURNEY:
-                return <HabitJourneyWidget user={user} refreshedTimestamp={refreshedTimestamp!} />;
+                return <HabitJourneyWidget user={user} />;
 
             case WidgetType.PLANNING:
                 return <PlanningWidget />;

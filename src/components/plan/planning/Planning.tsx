@@ -1,7 +1,6 @@
 import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { View } from 'react-native';
-import { Screen } from 'src/components/common/Screen';
 import PlannedDayController, {
     getDayFromDayKey,
 } from 'src/controller/planning/PlannedDayController';
@@ -11,9 +10,9 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { PlannedTask } from './PlannedTask';
 import { PlanDay } from './PlanDay';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getFireConfetti } from 'src/redux/user/GlobalState';
 import { PlanningService } from 'src/util/planning/PlanningService';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getRefreshActivitiesTimestamp } from 'src/redux/user/GlobalState';
 
 interface Props {
     showSelectTaskModal: boolean;
@@ -33,13 +32,16 @@ export const Planning = ({
 }: Props) => {
     const [plannedDay, setPlannedDay] = React.useState<PlannedDayModel>();
 
+    const activitiesUpdated = useAppSelector(getRefreshActivitiesTimestamp);
+    React.useEffect(() => {
+        refreshPlannedToday();
+    }, [activitiesUpdated]);
+
     useFocusEffect(
         React.useCallback(() => {
             refreshPlannedToday();
         }, [selectedDayKey])
     );
-
-    const fireConfetti = useAppSelector(getFireConfetti);
 
     const refreshPlannedToday = async () => {
         const result = await PlannedDayController.getOrCreateViaApi(selectedDayKey);

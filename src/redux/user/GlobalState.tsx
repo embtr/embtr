@@ -15,6 +15,7 @@ const INITIAL_STATE: GlobalState = {
     showCardShadow: true,
     cardRefreshRequests: [],
     fireConfetti: () => {},
+    refreshActivitiesTimestamp: new Date(),
 };
 
 export interface GlobalState {
@@ -29,6 +30,7 @@ export interface GlobalState {
     showCardShadow: boolean;
     cardRefreshRequests: string[];
     fireConfetti: Function;
+    refreshActivitiesTimestamp: Date;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -82,6 +84,9 @@ export const GlobalState = createSlice({
         },
         setFireConfetti(state, action) {
             state.fireConfetti = action.payload;
+        },
+        setRefreshActivitiesTimestamp(state) {
+            state.refreshActivitiesTimestamp = new Date();
         },
     },
 });
@@ -174,6 +179,14 @@ export const getFireConfetti = (state: RootState): Function => {
     return state.globalState.fireConfetti;
 };
 
+export const getRefreshActivitiesTimestamp = (state: RootState): Date => {
+    if (!state?.globalState.refreshActivitiesTimestamp) {
+        return INITIAL_STATE.refreshActivitiesTimestamp;
+    }
+
+    return state.globalState.refreshActivitiesTimestamp;
+};
+
 export const {
     setAccessLevel,
     setUserProfileUrl,
@@ -187,5 +200,6 @@ export const {
     addTimelineCardRefreshRequest,
     removeTimelineCardRefreshRequest,
     setFireConfetti,
+    setRefreshActivitiesTimestamp,
 } = GlobalState.actions;
 export default GlobalState.reducer;

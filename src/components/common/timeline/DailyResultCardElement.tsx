@@ -9,6 +9,7 @@ import { PlannedTask as PlannedTaskModel } from 'resources/schema';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { getTodayKey } from 'src/controller/planning/PlannedDayController';
+import { UnitUtility } from 'src/util/UnitUtility';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -21,6 +22,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
 
     const taskIsFailed = plannedTask.status === 'FAILED';
 
+    const unit = plannedTask.unit;
     const quantity = plannedTask.quantity;
     const completedQuantity = plannedTask.completedQuantity;
 
@@ -30,6 +32,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         progress = completedQuantity / quantity;
         taskIsComplete = quantity === completedQuantity;
     }
+
     let icon: JSX.Element = <TaskFailedSymbol />;
     if (taskIsComplete) {
         icon = <TaskCompleteSymbol />;
@@ -111,7 +114,9 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                                 fontSize: 10,
                             }}
                         >
-                            {'todo complete'}
+                            {`${completedQuantity} / ${quantity} ${
+                                unit ? UnitUtility.getReadableUnit(unit) : ''
+                            }`}
                         </Text>
                     </View>
                 </View>

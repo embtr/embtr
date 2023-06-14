@@ -5,6 +5,8 @@ import SafeAreaView from 'react-native-safe-area-view';
 import { Banner } from 'src/components/common/Banner';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { setRefreshActivitiesTimestamp } from 'src/redux/user/GlobalState';
 
 interface Props {
     visible: boolean;
@@ -13,7 +15,10 @@ interface Props {
 }
 
 export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
+    const dispatch = useAppDispatch();
+
     const closeModal = () => {
+        dispatch(setRefreshActivitiesTimestamp());
         dismiss();
     };
 
@@ -22,7 +27,7 @@ export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
             visible={visible}
             animationType={'slide'}
             onRequestClose={() => {
-                dismiss();
+                closeModal();
             }}
         >
             <RootSiblingParent>

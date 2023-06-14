@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
@@ -9,6 +9,7 @@ import {
     getFireConfetti,
     getOpenMenu,
     setMenuOptions,
+    setRefreshActivitiesTimestamp,
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
@@ -29,34 +30,36 @@ interface Props {
 export const PlannableTask = ({ initialPlannedTask }: Props) => {
     const { colors } = useTheme();
 
-    const [currentPlannedTask, setCurrentPlannedTask] =
-        React.useState<PlannedTaskModel>(initialPlannedTask);
     const [showUpdatePlannedTaskModal, setShowUpdatePlannedTaskModal] =
         React.useState<boolean>(false);
+    const [completedQuantity, setCompletedQuantity] = React.useState<number>(
+        initialPlannedTask.completedQuantity ?? 0
+    );
+
+    React.useEffect(() => {
+        setCompletedQuantity(initialPlannedTask.completedQuantity ?? 0);
+    }, [initialPlannedTask.completedQuantity]);
 
     const dispatch = useAppDispatch();
 
     const taskIsComplete = false; // TODO
-    const taskIsFailed = currentPlannedTask.status === 'FAILED';
+    const taskIsFailed = initialPlannedTask.status === 'FAILED';
 
     const fireConfetti = useAppSelector(getFireConfetti);
 
     const updatePlannedTaskCompletedQuantity = async (quantity: number) => {
-        const clone = { ...currentPlannedTask };
+        const clone = { ...initialPlannedTask };
         clone.completedQuantity = quantity;
         const updatedPlannedTask = await PlannedTaskController.update(clone);
 
-        if (updatedPlannedTask) {
-            if (currentPlannedTask.plannedDay) {
-                await PlanningService.onTaskUpdated(currentPlannedTask.plannedDay, fireConfetti);
-            }
-
-            setCurrentPlannedTask(updatedPlannedTask);
+        if (updatedPlannedTask?.plannedDay) {
+            await PlanningService.onTaskUpdated(initialPlannedTask.plannedDay!, fireConfetti);
+            dispatch(setRefreshActivitiesTimestamp());
         }
     };
 
     const updateMenuOptions = () => {
-        if (!currentPlannedTask) {
+        if (!initialPlannedTask) {
             return;
         }
 
@@ -67,11 +70,11 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                 onPress: async () => {
                     closeMenu();
                     const updatedPlannedTask = await PlannedTaskController.complete(
-                        currentPlannedTask
+                        initialPlannedTask
                     );
 
                     if (updatedPlannedTask) {
-                        setCurrentPlannedTask(updatedPlannedTask);
+                        dispatch(setRefreshActivitiesTimestamp());
                     }
                 },
             });
@@ -81,10 +84,9 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
             name: 'Reset task',
             onPress: async () => {
                 closeMenu();
-                const updatedPlannedTask = await PlannedTaskController.reset(currentPlannedTask);
-
+                const updatedPlannedTask = await PlannedTaskController.reset(initialPlannedTask);
                 if (updatedPlannedTask) {
-                    setCurrentPlannedTask(updatedPlannedTask);
+                    dispatch(setRefreshActivitiesTimestamp());
                 }
             },
         });
@@ -94,9 +96,9 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                 name: 'Mark task as failed',
                 onPress: async () => {
                     closeMenu();
-                    const updatedPlannedTask = await PlannedTaskController.fail(currentPlannedTask);
+                    const updatedPlannedTask = await PlannedTaskController.fail(initialPlannedTask);
                     if (updatedPlannedTask) {
-                        setCurrentPlannedTask(updatedPlannedTask);
+                        dispatch(setRefreshActivitiesTimestamp());
                     }
                 },
             });
@@ -106,9 +108,9 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
             name: 'Delete',
             onPress: async () => {
                 closeMenu();
-                const updatedPlannedTask = await PlannedTaskController.delete(currentPlannedTask);
+                const updatedPlannedTask = await PlannedTaskController.delete(initialPlannedTask);
                 if (updatedPlannedTask) {
-                    setCurrentPlannedTask(updatedPlannedTask);
+                    dispatch(setRefreshActivitiesTimestamp());
                 }
             },
             destructive: true,
@@ -130,25 +132,24 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
         openMenu();
     };
 
-    const getPercentageComplete = (plannedTask: PlannedTask) => {
-        if (plannedTask.quantity) {
-            const { completedQuantity, quantity } = plannedTask;
-            const result = ((completedQuantity ?? 0) / quantity) * 100;
-
-            return result;
+    const getPercentageComplete = () => {
+        if (initialPlannedTask.quantity) {
+            return ((completedQuantity ?? 0) / initialPlannedTask.quantity) * 100;
         }
 
-        return plannedTask.status === 'COMPLETE' ? 100 : 0;
+        return initialPlannedTask.status === 'COMPLETE' ? 100 : 0;
     };
 
     return (
         <View>
             <UpdatePlannedTaskModal
-                plannedTask={currentPlannedTask}
+                plannedTask={initialPlannedTask}
                 visible={showUpdatePlannedTaskModal}
-                confirm={(updatedValue: number) => {
-                    updatePlannedTaskCompletedQuantity(updatedValue);
+                confirm={async (updatedValue: number) => {
                     setShowUpdatePlannedTaskModal(false);
+                    setCompletedQuantity(updatedValue);
+                    await updatePlannedTaskCompletedQuantity(updatedValue);
+                    dispatch(setRefreshActivitiesTimestamp());
                 }}
                 dismiss={() => {
                     setShowUpdatePlannedTaskModal(false);
@@ -174,10 +175,9 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                             style={{
                                 width: '2%',
                                 backgroundColor:
-                                    currentPlannedTask.quantity ===
-                                    currentPlannedTask.completedQuantity
+                                    initialPlannedTask.quantity === completedQuantity
                                         ? colors.progress_bar_complete
-                                        : currentPlannedTask?.status === 'FAILED'
+                                        : initialPlannedTask?.status === 'FAILED'
                                         ? colors.progress_bar_failed
                                         : 'gray',
                             }}
@@ -200,7 +200,7 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                                                 fontSize: 14,
                                             }}
                                         >
-                                            {currentPlannedTask?.task?.title}
+                                            {initialPlannedTask?.task?.title}
                                         </Text>
                                     </View>
                                     <View
@@ -212,22 +212,21 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                                             paddingRight: 10,
                                         }}
                                     >
-                                        {currentPlannedTask.habit && (
+                                        {initialPlannedTask.habit && (
                                             <View
                                                 style={{ paddingRight: 10, flexDirection: 'row' }}
                                             >
                                                 <HabitIcon
-                                                    habit={currentPlannedTask.habit}
+                                                    habit={initialPlannedTask.habit}
                                                     size={17}
                                                     color={colors.tab_selected}
                                                 />
                                             </View>
                                         )}
                                         <View>
-                                            {currentPlannedTask.quantity ===
-                                            currentPlannedTask.completedQuantity ? (
+                                            {initialPlannedTask.quantity === completedQuantity ? (
                                                 <TaskCompleteSymbol small={true} />
-                                            ) : currentPlannedTask?.status === 'FAILED' ? (
+                                            ) : initialPlannedTask?.status === 'FAILED' ? (
                                                 <TaskFailedSymbol small={true} />
                                             ) : (
                                                 <TaskInProgressSymbol small={true} />
@@ -247,7 +246,7 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                                     }}
                                 >
                                     <ProgressBar
-                                        progress={getPercentageComplete(currentPlannedTask)}
+                                        progress={getPercentageComplete()}
                                         success={!taskIsFailed}
                                         showPercent={false}
                                     />
@@ -268,12 +267,10 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                                             fontSize: 10,
                                         }}
                                     >
-                                        {`${currentPlannedTask.completedQuantity} / ${
-                                            currentPlannedTask.quantity
-                                        } ${
-                                            currentPlannedTask.unit
+                                        {`${completedQuantity} / ${initialPlannedTask.quantity} ${
+                                            initialPlannedTask.unit
                                                 ? UnitUtility.getReadableUnit(
-                                                      currentPlannedTask.unit
+                                                      initialPlannedTask.unit
                                                   )
                                                 : ''
                                         }`}
