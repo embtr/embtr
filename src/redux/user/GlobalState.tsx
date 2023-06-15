@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
+import { PlannedDay } from 'resources/schema';
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: 'invalid',
@@ -15,7 +16,8 @@ const INITIAL_STATE: GlobalState = {
     showCardShadow: true,
     cardRefreshRequests: [],
     fireConfetti: () => {},
-    refreshActivitiesTimestamp: new Date(),
+    todaysPlannedDay: {},
+    currentlySelectedPlannedDay: {},
 };
 
 export interface GlobalState {
@@ -30,7 +32,8 @@ export interface GlobalState {
     showCardShadow: boolean;
     cardRefreshRequests: string[];
     fireConfetti: Function;
-    refreshActivitiesTimestamp: Date;
+    todaysPlannedDay: PlannedDay;
+    currentlySelectedPlannedDay: PlannedDay;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -85,8 +88,19 @@ export const GlobalState = createSlice({
         setFireConfetti(state, action) {
             state.fireConfetti = action.payload;
         },
-        setRefreshActivitiesTimestamp(state) {
-            state.refreshActivitiesTimestamp = new Date();
+        setTodaysPlannedDay(state, action) {
+            state.todaysPlannedDay = action.payload;
+
+            if (state.currentlySelectedPlannedDay?.dayKey === state.todaysPlannedDay?.dayKey) {
+                state.currentlySelectedPlannedDay = action.payload;
+            }
+        },
+        setCurrentlySelectedPlannedDay(state, action) {
+            state.currentlySelectedPlannedDay = action.payload;
+
+            if (state.currentlySelectedPlannedDay?.dayKey === state.todaysPlannedDay?.dayKey) {
+                state.todaysPlannedDay = action.payload;
+            }
         },
     },
 });
@@ -179,12 +193,20 @@ export const getFireConfetti = (state: RootState): Function => {
     return state.globalState.fireConfetti;
 };
 
-export const getRefreshActivitiesTimestamp = (state: RootState): Date => {
-    if (!state?.globalState.refreshActivitiesTimestamp) {
-        return INITIAL_STATE.refreshActivitiesTimestamp;
+export const getTodaysPlannedDay = (state: RootState): PlannedDay => {
+    if (!state?.globalState.todaysPlannedDay) {
+        return INITIAL_STATE.todaysPlannedDay;
     }
 
-    return state.globalState.refreshActivitiesTimestamp;
+    return state.globalState.todaysPlannedDay;
+};
+
+export const getCurrentlySelectedPlannedDay = (state: RootState): PlannedDay => {
+    if (!state?.globalState.currentlySelectedPlannedDay) {
+        return INITIAL_STATE.currentlySelectedPlannedDay;
+    }
+
+    return state.globalState.currentlySelectedPlannedDay;
 };
 
 export const {
@@ -200,6 +222,7 @@ export const {
     addTimelineCardRefreshRequest,
     removeTimelineCardRefreshRequest,
     setFireConfetti,
-    setRefreshActivitiesTimestamp,
+    setTodaysPlannedDay,
+    setCurrentlySelectedPlannedDay,
 } = GlobalState.actions;
 export default GlobalState.reducer;

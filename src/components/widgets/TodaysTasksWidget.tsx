@@ -2,8 +2,8 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
 import { MainTabScreens } from 'src/navigation/RootStackParamList';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, getRefreshActivitiesTimestamp } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu, getTodaysPlannedDay, setTodaysPlannedDay } from 'src/redux/user/GlobalState';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';
@@ -27,14 +27,17 @@ interface Props {
 
 export const TodaysActivitiesWidget = ({ user, source }: Props) => {
     const { colors } = useTheme();
-
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
-    const closeMenu = useAppSelector(getCloseMenu);
 
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [showAddTaskModal, setShowSelectTaskModal] = React.useState(false);
 
-    const activitiesUpdated = useAppSelector(getRefreshActivitiesTimestamp);
+    const dispatch = useAppDispatch();
+    const todaysPlannedDay = useAppSelector(getTodaysPlannedDay);
+    const closeMenu = useAppSelector(getCloseMenu);
+
+    const updateTodaysPlannedDay = (plannedDay: PlannedDay) => {
+        dispatch(setTodaysPlannedDay(plannedDay));
+    };
 
     const fetch = async () => {
         if (!user.id) {
@@ -43,7 +46,9 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
 
         const todayKey = getTodayKey();
         const plannedDay = await PlannedDayController.getViaApi(user.id, todayKey);
-        setPlannedDay(plannedDay);
+        if (plannedDay) {
+            updateTodaysPlannedDay(plannedDay);
+        }
     };
 
     useFocusEffect(
@@ -52,13 +57,9 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
         }, [])
     );
 
-    React.useEffect(() => {
-        fetch();
-    }, [activitiesUpdated]);
-
     const onSharePlannedDayResults = async () => {
-        if (plannedDay) {
-            await PlanningService.sharePlannedDayResults(plannedDay!);
+        if (todaysPlannedDay) {
+            await PlanningService.sharePlannedDayResults(todaysPlannedDay);
         }
 
         fetch();
@@ -81,10 +82,10 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
                 setShowSelectTaskModal(true);
             }}
         >
-            {plannedDay?.id && (
+            {todaysPlannedDay?.id && (
                 <AddHabitModal
                     visible={showAddTaskModal}
-                    plannedDay={plannedDay}
+                    plannedDay={todaysPlannedDay}
                     dismiss={() => {
                         fetch();
                         setShowSelectTaskModal(false);
@@ -95,9 +96,10 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                 Today's Activities
             </Text>
-            {plannedDay ? (
+            {todaysPlannedDay ? (
                 <PlanDay
-                    plannedDay={plannedDay}
+                    plannedDay={todaysPlannedDay}
+                    onPlannedDayUpdated={updateTodaysPlannedDay}
                     setShowSelectTaskModal={setShowSelectTaskModal}
                     onSharePlannedDayResults={onSharePlannedDayResults}
                     showCreatePlannedDayResultsRecommendation={source !== WidgetSource.PROFILE}

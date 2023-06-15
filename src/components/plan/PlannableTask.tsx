@@ -9,11 +9,10 @@ import {
     getFireConfetti,
     getOpenMenu,
     setMenuOptions,
-    setRefreshActivitiesTimestamp,
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
-import { PlannedTask, PlannedTask as PlannedTaskModel } from 'resources/schema';
+import { PlannedTask as PlannedTaskModel } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
@@ -25,9 +24,10 @@ import { PlanningService } from 'src/util/planning/PlanningService';
 
 interface Props {
     initialPlannedTask: PlannedTaskModel;
+    onPlannedTaskUpdated: Function;
 }
 
-export const PlannableTask = ({ initialPlannedTask }: Props) => {
+export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Props) => {
     const { colors } = useTheme();
 
     const [showUpdatePlannedTaskModal, setShowUpdatePlannedTaskModal] =
@@ -42,7 +42,7 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
 
     const dispatch = useAppDispatch();
 
-    const taskIsComplete = false; // TODO
+    const taskIsComplete = false;
     const taskIsFailed = initialPlannedTask.status === 'FAILED';
 
     const fireConfetti = useAppSelector(getFireConfetti);
@@ -53,8 +53,8 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
         const updatedPlannedTask = await PlannedTaskController.update(clone);
 
         if (updatedPlannedTask?.plannedDay) {
+            onPlannedTaskUpdated(clone);
             await PlanningService.onTaskUpdated(initialPlannedTask.plannedDay!, fireConfetti);
-            dispatch(setRefreshActivitiesTimestamp());
         }
     };
 
@@ -72,10 +72,6 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                     const updatedPlannedTask = await PlannedTaskController.complete(
                         initialPlannedTask
                     );
-
-                    if (updatedPlannedTask) {
-                        dispatch(setRefreshActivitiesTimestamp());
-                    }
                 },
             });
         }
@@ -84,10 +80,12 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
             name: 'Reset task',
             onPress: async () => {
                 closeMenu();
-                const updatedPlannedTask = await PlannedTaskController.reset(initialPlannedTask);
-                if (updatedPlannedTask) {
-                    dispatch(setRefreshActivitiesTimestamp());
-                }
+
+                const clone = { ...initialPlannedTask };
+                clone.status = 'INCOMPLETE';
+                onPlannedTaskUpdated(clone);
+
+                await PlannedTaskController.update(clone);
             },
         });
 
@@ -96,10 +94,12 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                 name: 'Mark task as failed',
                 onPress: async () => {
                     closeMenu();
-                    const updatedPlannedTask = await PlannedTaskController.fail(initialPlannedTask);
-                    if (updatedPlannedTask) {
-                        dispatch(setRefreshActivitiesTimestamp());
-                    }
+
+                    const clone = { ...initialPlannedTask };
+                    clone.status = 'FAILED';
+                    onPlannedTaskUpdated(clone);
+
+                    await PlannedTaskController.update(clone);
                 },
             });
         }
@@ -108,10 +108,12 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
             name: 'Delete',
             onPress: async () => {
                 closeMenu();
-                const updatedPlannedTask = await PlannedTaskController.delete(initialPlannedTask);
-                if (updatedPlannedTask) {
-                    dispatch(setRefreshActivitiesTimestamp());
-                }
+
+                const clone = { ...initialPlannedTask };
+                clone.active = false;
+                onPlannedTaskUpdated(clone);
+
+                await PlannedTaskController.update(clone);
             },
             destructive: true,
         });
@@ -149,7 +151,6 @@ export const PlannableTask = ({ initialPlannedTask }: Props) => {
                     setShowUpdatePlannedTaskModal(false);
                     setCompletedQuantity(updatedValue);
                     await updatePlannedTaskCompletedQuantity(updatedValue);
-                    dispatch(setRefreshActivitiesTimestamp());
                 }}
                 dismiss={() => {
                     setShowUpdatePlannedTaskModal(false);

@@ -1,21 +1,17 @@
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from '../WidgetBase';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { HabitJourneys } from 'resources/types/habit/Habit';
 import React from 'react';
-import { PlannedDay, User } from 'resources/schema';
+import { User } from 'resources/schema';
 import { HabitController } from 'src/controller/habit/HabitController';
 import { HabitJourneyElement3 } from './HabitJourneyElement3';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { getWindowWidth } from 'src/util/GeneralUtility';
-import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import {
-    getRefreshActivitiesTimestamp,
-    setRefreshActivitiesTimestamp,
-} from 'src/redux/user/GlobalState';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getTodaysPlannedDay } from 'src/redux/user/GlobalState';
 
 interface Props {
     user: User;
@@ -24,17 +20,11 @@ interface Props {
 export const HabitJourneyWidget = ({ user }: Props) => {
     const { colors } = useTheme();
 
-    const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [habitJourneys, setHabitJourneys] = React.useState<HabitJourneys>();
     const [selectedView, setSelectedView] = React.useState(1);
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
 
-    const fetchPlannedDay = async () => {
-        const plannedDay = await PlannedDayController.getOrCreateViaApi(getTodayKey());
-        setPlannedDay(plannedDay);
-    };
-
-    const activitiesUpdated = useAppSelector(getRefreshActivitiesTimestamp);
+    const plannedDay = useAppSelector(getTodaysPlannedDay);
 
     const fetch = async () => {
         if (!user.id) {
@@ -50,15 +40,13 @@ export const HabitJourneyWidget = ({ user }: Props) => {
 
     React.useEffect(() => {
         fetch();
-        fetchPlannedDay();
-    }, [activitiesUpdated]);
+    }, [plannedDay]);
 
     const handleViewPress = (index: number) => {
         setSelectedView(index);
     };
 
     const onDismissSelectTaskModal = () => {
-        fetchPlannedDay();
         setShowAddTaskModal(false);
     };
 

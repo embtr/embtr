@@ -3,19 +3,12 @@ import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import React from 'react';
-import { getTodayKey, getDayKey } from 'src/controller/planning/PlannedDayController';
 import { Planning } from '../plan/planning/Planning';
 
 export const PlanningWidget = () => {
     const { colors } = useTheme();
 
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
-    const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
-
-    const onDayChanged = (day: number) => {
-        const newDayKey = getDayKey(day);
-        setSelectedDayKey(newDayKey);
-    };
 
     return (
         <WidgetBase
@@ -37,8 +30,6 @@ export const PlanningWidget = () => {
                         dismissSelectTaskModal={() => {
                             setShowAddTaskModal(false);
                         }}
-                        onDayChange={onDayChanged}
-                        selectedDayKey={selectedDayKey}
                         useCalendarView={false}
                     />
                 </View>

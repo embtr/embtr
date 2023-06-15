@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { PlannedDay as PlannedDayModel, PlannedDayResult } from 'resources/schema';
+import { PlannedDay as PlannedDayModel, PlannedDayResult, PlannedTask } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
 import { POPPINS_REGULAR } from 'src/util/constants';
@@ -11,6 +11,7 @@ import DailyResultController from 'src/controller/timeline/daily_result/DailyRes
 
 interface Props {
     plannedDay: PlannedDayModel;
+    onPlannedDayUpdated: Function;
     setShowSelectTaskModal: Function;
     onSharePlannedDayResults: Function;
     showCreatePlannedDayResultsRecommendation?: boolean;
@@ -21,45 +22,55 @@ export const PlanDay = ({
     setShowSelectTaskModal,
     onSharePlannedDayResults,
     showCreatePlannedDayResultsRecommendation,
+    onPlannedDayUpdated,
 }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<PlanTabScreens, 'DailyResultDetails'>>();
-    const [taskViews, setTaskViews] = useState<JSX.Element[]>([]);
-    const [allTasksAreComplete, setAllTasksAreComplete] = useState<boolean>(false);
     const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
 
-    useEffect(() => {
-        let taskViews: JSX.Element[] = [];
-        let allTasksAreComplete = true;
+    const onPlannedTaskUpdated = (plannedTask: PlannedTask) => {
+        const clonedPlannedDay = { ...plannedDay };
 
-        // get all current planned tasks
-        plannedDay?.plannedTasks?.forEach((plannedTask) => {
-            if (plannedTask.status === 'FAILED') {
-                allTasksAreComplete = false;
+        clonedPlannedDay.plannedTasks = clonedPlannedDay.plannedTasks?.map((task) => {
+            if (task.id === plannedTask.id) {
+                return plannedTask;
             }
 
-            if (plannedTask.completedQuantity !== plannedTask.quantity) {
-                allTasksAreComplete = false;
-            }
-
-            taskViews.push(
-                <View
-                    key={plannedTask.id}
-                    style={{
-                        paddingBottom: 5,
-                        alignItems: 'center',
-                        width: '97%',
-                    }}
-                >
-                    <PlannableTask initialPlannedTask={plannedTask} />
-                </View>
-            );
+            return task;
         });
 
-        setTaskViews(taskViews);
-        setAllTasksAreComplete(allTasksAreComplete);
-        setHideRecommendationRequested(false);
-    }, [plannedDay]);
+        onPlannedDayUpdated(clonedPlannedDay);
+    };
+
+    let taskViews: JSX.Element[] = [];
+    let allTasksAreComplete = true;
+
+    // get all current planned tasks
+    plannedDay?.plannedTasks?.forEach((plannedTask) => {
+        if (plannedTask.status === 'FAILED') {
+            allTasksAreComplete = false;
+        }
+
+        if (plannedTask.completedQuantity !== plannedTask.quantity) {
+            allTasksAreComplete = false;
+        }
+
+        taskViews.push(
+            <View
+                key={plannedTask.id}
+                style={{
+                    paddingBottom: 5,
+                    alignItems: 'center',
+                    width: '97%',
+                }}
+            >
+                <PlannableTask
+                    initialPlannedTask={plannedTask}
+                    onPlannedTaskUpdated={onPlannedTaskUpdated}
+                />
+            </View>
+        );
+    });
 
     let dayIsComplete = false;
     const plannedDayResult: PlannedDayResult | undefined = plannedDay.plannedDayResults?.[0];
