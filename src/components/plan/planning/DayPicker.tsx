@@ -48,6 +48,7 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.toString()}
                 renderItem={renderItem}
+                initialScrollIndex={selected - 4}
             />
         </View>
     );

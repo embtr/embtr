@@ -19,7 +19,9 @@ interface Props {
 export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
-    const [selectedValue, setSelectedValue] = React.useState<number>(0);
+    const [selectedValue, setSelectedValue] = React.useState<number>(
+        plannedTask.completedQuantity ?? 0
+    );
     const [isExpanded, setIsExpanded] = React.useState(false);
 
     const initialHeight = 230;

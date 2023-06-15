@@ -13,7 +13,7 @@ interface Props {
 export const DayPickerElement = ({ item, index, isSelected }: Props) => {
     const { colors } = useTheme();
 
-    const itemWidth = Dimensions.get('window').width / 10;
+    const itemWidth = Dimensions.get('window').width / 9.5;
 
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 

@@ -74,7 +74,7 @@ export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Pro
                             >
                                 <Ionicons
                                     name={symbol ?? 'ellipsis-horizontal'}
-                                    size={15}
+                                    size={20}
                                     color={colors.text}
                                 />
                             </View>

@@ -34,9 +34,14 @@ export const PlanDay = ({
 
         // get all current planned tasks
         plannedDay?.plannedTasks?.forEach((plannedTask) => {
-            if (!(plannedTask.status !== 'FAILED')) {
+            if (plannedTask.status === 'FAILED') {
                 allTasksAreComplete = false;
             }
+
+            if (plannedTask.completedQuantity !== plannedTask.quantity) {
+                allTasksAreComplete = false;
+            }
+
             taskViews.push(
                 <View
                     key={plannedTask.id}
