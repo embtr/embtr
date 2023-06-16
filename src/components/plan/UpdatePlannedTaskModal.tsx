@@ -19,6 +19,15 @@ interface Props {
 export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
+    React.useEffect(() => {
+        setSelectedValue(plannedTask.completedQuantity ?? 0);
+    }, [plannedTask]);
+
+    const onDismissWrapper = () => {
+        setSelectedValue(plannedTask.completedQuantity ?? 0);
+        dismiss();
+    };
+
     const [selectedValue, setSelectedValue] = React.useState<number>(
         plannedTask.completedQuantity ?? 0
     );
@@ -42,7 +51,7 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
         <Modal visible={visible} transparent={true} animationType={'fade'}>
             <Pressable
                 onPress={() => {
-                    dismiss();
+                    onDismissWrapper();
                 }}
                 style={{
                     height: '100%',
@@ -166,7 +175,7 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                dismiss();
+                                                onDismissWrapper();
                                             }}
                                         >
                                             <EvilIcons

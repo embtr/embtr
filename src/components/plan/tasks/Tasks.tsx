@@ -27,7 +27,7 @@ export const Tasks = ({ plannedDay }: Props) => {
         'Call a friend',
         'Meal prep',
         'Do the dishes',
-        'Medidate before bed',
+        'Mediate before bed',
         'Review weekly finances',
     ];
     const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(

@@ -1,4 +1,4 @@
-import { Modal } from 'react-native';
+import { Modal, View } from 'react-native';
 import { Tasks } from '../tasks/Tasks';
 import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
@@ -29,12 +29,18 @@ export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
             }}
         >
             <RootSiblingParent>
-                <Screen>
-                    <SafeAreaView forceInset={{ bottom: 'never' }}>
-                        <Banner name="Add Activities" leftText="close" leftOnClick={closeModal} />
-                        <Tasks plannedDay={plannedDay} />
-                    </SafeAreaView>
-                </Screen>
+                <SafeAreaView forceInset={{ bottom: 'never' }}>
+                    <View style={{ height: '100%', width: '100%' }}>
+                        <Screen>
+                            <Banner
+                                name="Add Activities"
+                                leftText="close"
+                                leftOnClick={closeModal}
+                            />
+                            <Tasks plannedDay={plannedDay} />
+                        </Screen>
+                    </View>
+                </SafeAreaView>
             </RootSiblingParent>
         </Modal>
     );

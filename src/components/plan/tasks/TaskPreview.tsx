@@ -16,6 +16,8 @@ import { HabitScrollSelector } from './HabitScrollSelector';
 import { HabitIcon } from '../habit/HabitIcon';
 import { TextInput } from 'react-native-gesture-handler';
 import { SetUnitModal } from 'src/components/units/SetUnitModal';
+import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
+import { isAndroidDevice } from 'src/util/DeviceUtil';
 
 /* Pog I was here - Cherkim */
 
@@ -39,8 +41,9 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
     const selectedUnitValue = selectedUnit?.unit
         ? selectedUnit.unit.toString().toLowerCase()
         : 'Of What?';
-    const capitalizedUnitValue =
-        selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1) + 's';
+    let capitalizedUnitValue =
+        selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1);
+    capitalizedUnitValue += capitalizedUnitValue === 'Of What?' ? '' : 's';
 
     useEffect(() => {
         if (task?.taskHabitPreference?.length) {
@@ -128,16 +131,29 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
 
     return (
         <View style={{ width: '100%', alignItems: 'center' }}>
-            <SetUnitModal
-                visible={showSetUnitModal}
-                confirm={(selected: Unit) => {
-                    setShowSetUnitModal(false);
-                    setSelectedUnit(selected);
-                }}
-                dismiss={() => {
-                    setShowSetUnitModal(false);
-                }}
-            />
+            {isAndroidDevice() ? (
+                <AndroidUnitPicker
+                    visible={showSetUnitModal}
+                    confirm={(selected: Unit) => {
+                        setShowSetUnitModal(false);
+                        setSelectedUnit(selected);
+                    }}
+                    dismiss={() => {
+                        setShowSetUnitModal(false);
+                    }}
+                />
+            ) : (
+                <SetUnitModal
+                    visible={showSetUnitModal}
+                    confirm={(selected: Unit) => {
+                        setShowSetUnitModal(false);
+                        setSelectedUnit(selected);
+                    }}
+                    dismiss={() => {
+                        setShowSetUnitModal(false);
+                    }}
+                />
+            )}
             <View style={{ width: '97%' }}>
                 <View
                     style={[
@@ -225,153 +241,153 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                     </TouchableOpacity>
 
                     <Animated.View style={{ height: heightValue }}>
-                        <Text
-                            style={{
-                                color: colors.secondary_text,
-                                paddingLeft: 5,
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 12,
-                            }}
-                        >
-                            Select a Habit
-                        </Text>
-                        <View>
-                            <HabitScrollSelector
-                                habits={habits}
-                                initialHabit={selectedHabit}
-                                onHabitSelected={onHabitSelected}
-                            />
-                        </View>
-
-                        <Text
-                            style={{
-                                color: colors.secondary_text,
-                                paddingTop: 5,
-                                paddingLeft: 5,
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 12,
-                            }}
-                        >
-                            Details
-                        </Text>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                paddingTop: 5,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    alignItems: 'center',
-                                    flex: 1,
-                                    paddingLeft: 10,
-                                    flexDirection: 'row',
-                                }}
-                            >
+                        {isExpanded && (
+                            <View>
                                 <Text
-                                    onPress={() => {
-                                        setShowSetUnitModal(true);
-                                    }}
                                     style={{
-                                        color: colors.text,
-                                        fontFamily: POPPINS_MEDIUM,
+                                        color: colors.secondary_text,
+                                        paddingLeft: 5,
+                                        fontFamily: POPPINS_SEMI_BOLD,
+                                        fontSize: 12,
                                     }}
                                 >
-                                    Quantity
+                                    Select a Habit
                                 </Text>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    paddingRight: 10,
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                }}
-                            >
-                                {isExpanded && (
-                                    <TextInput
-                                        keyboardType="numeric"
-                                        style={{
-                                            textAlign: 'right',
-                                            borderWidth: 1,
-                                            borderColor: colors.secondary_text,
-                                            borderRadius: 5,
-                                            fontFamily: 'Poppins_400Regular',
-                                            color: colors.text,
-                                            paddingTop: 6,
-                                            paddingBottom: 6,
-                                            paddingLeft: 25,
-                                            paddingRight: 5,
-                                            width: '60%',
-                                        }}
-                                        placeholder={'how many?'}
-                                        placeholderTextColor={colors.secondary_text}
-                                        autoCorrect={true}
-                                        onChangeText={(text) => {
-                                            setEnteredQuantity(parseInt(text));
-                                        }}
-                                        value={enteredQuantity?.toString()}
+                                <View>
+                                    <HabitScrollSelector
+                                        habits={habits}
+                                        initialHabit={selectedHabit}
+                                        onHabitSelected={onHabitSelected}
                                     />
-                                )}
-                            </View>
-                        </View>
-                        <View style={{ flexDirection: 'row', paddingTop: 10 }}>
-                            <View
-                                style={{
-                                    alignItems: 'center',
-                                    flex: 1,
-                                    paddingLeft: 10,
-                                    flexDirection: 'row',
-                                }}
-                            >
+                                </View>
+
                                 <Text
-                                    onPress={() => {
-                                        setShowSetUnitModal(true);
-                                    }}
                                     style={{
-                                        color: colors.text,
-                                        fontFamily: POPPINS_MEDIUM,
+                                        color: colors.secondary_text,
+                                        paddingTop: 5,
+                                        paddingLeft: 5,
+                                        fontFamily: POPPINS_SEMI_BOLD,
+                                        fontSize: 12,
                                     }}
                                 >
-                                    Units
+                                    Details
                                 </Text>
-                            </View>
-                            <View
-                                style={{
-                                    justifyContent: 'flex-end',
-                                    flex: 1,
-                                    paddingRight: 10,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                {isExpanded && (
-                                    <Text
-                                        onPress={() => {
-                                            setShowSetUnitModal(true);
-                                        }}
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        paddingTop: 5,
+                                    }}
+                                >
+                                    <View
                                         style={{
-                                            textAlign: 'right',
-                                            borderWidth: 1,
-                                            borderColor: colors.secondary_text,
-                                            borderRadius: 5,
-                                            fontFamily: 'Poppins_400Regular',
-                                            color: selectedUnit
-                                                ? colors.text
-                                                : colors.secondary_text,
-                                            paddingTop: 8,
-                                            paddingBottom: 4,
-                                            paddingLeft: 25,
-                                            paddingRight: 5,
-                                            width: '60%',
+                                            alignItems: 'center',
+                                            flex: 1,
+                                            paddingLeft: 10,
+                                            flexDirection: 'row',
                                         }}
                                     >
-                                        {capitalizedUnitValue}
-                                    </Text>
-                                )}
-                            </View>
-                        </View>
+                                        <Text
+                                            onPress={() => {
+                                                setShowSetUnitModal(true);
+                                            }}
+                                            style={{
+                                                color: colors.text,
+                                                fontFamily: POPPINS_MEDIUM,
+                                            }}
+                                        >
+                                            Quantity
+                                        </Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            paddingRight: 10,
+                                            flexDirection: 'row',
+                                            justifyContent: 'flex-end',
+                                        }}
+                                    >
+                                        <TextInput
+                                            keyboardType="numeric"
+                                            style={{
+                                                textAlign: 'right',
+                                                borderWidth: 1,
+                                                borderColor: colors.secondary_text,
+                                                borderRadius: 5,
+                                                fontFamily: 'Poppins_400Regular',
+                                                color: colors.text,
+                                                paddingTop: 6,
+                                                paddingBottom: 6,
+                                                paddingLeft: 25,
+                                                paddingRight: 5,
+                                                width: '60%',
+                                            }}
+                                            placeholder={'how many?'}
+                                            placeholderTextColor={colors.secondary_text}
+                                            autoCorrect={true}
+                                            onChangeText={(text) => {
+                                                setEnteredQuantity(parseInt(text));
+                                            }}
+                                            value={enteredQuantity?.toString()}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+                                    <View
+                                        style={{
+                                            alignItems: 'center',
+                                            flex: 1,
+                                            paddingLeft: 10,
+                                            flexDirection: 'row',
+                                        }}
+                                    >
+                                        <Text
+                                            onPress={() => {
+                                                setShowSetUnitModal(true);
+                                            }}
+                                            style={{
+                                                color: colors.text,
+                                                fontFamily: POPPINS_MEDIUM,
+                                            }}
+                                        >
+                                            Units
+                                        </Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            justifyContent: 'flex-end',
+                                            flex: 1,
+                                            paddingRight: 10,
+                                            flexDirection: 'row',
+                                        }}
+                                    >
+                                        <Text
+                                            onPress={() => {
+                                                setShowSetUnitModal(true);
+                                            }}
+                                            style={{
+                                                textAlign: 'right',
+                                                borderWidth: 1,
+                                                borderColor: colors.secondary_text,
+                                                borderRadius: 5,
+                                                fontFamily: 'Poppins_400Regular',
+                                                color: selectedUnit
+                                                    ? colors.text
+                                                    : colors.secondary_text,
+                                                paddingTop: 8,
+                                                paddingBottom: 4,
+                                                paddingLeft: 25,
+                                                paddingRight: 5,
+                                                width: '60%',
+                                            }}
+                                        >
+                                            {capitalizedUnitValue}
+                                        </Text>
+                                    </View>
+                                </View>
 
-                        <View style={{ paddingTop: 10 }}>{isExpanded && addButton}</View>
+                                <View style={{ paddingTop: 10 }}>{isExpanded && addButton}</View>
+                            </View>
+                        )}
                     </Animated.View>
                 </View>
             </View>

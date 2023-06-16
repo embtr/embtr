@@ -11,7 +11,7 @@ import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getTodaysPlannedDay } from 'src/redux/user/GlobalState';
+import { getCurrentlySelectedPlannedDay, getTodaysPlannedDay } from 'src/redux/user/GlobalState';
 
 interface Props {
     user: User;
@@ -24,7 +24,8 @@ export const HabitJourneyWidget = ({ user }: Props) => {
     const [selectedView, setSelectedView] = React.useState(1);
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
 
-    const plannedDay = useAppSelector(getTodaysPlannedDay);
+    const todaysPlannedDay = useAppSelector(getTodaysPlannedDay);
+    const selectedPlannedDay = useAppSelector(getCurrentlySelectedPlannedDay);
 
     const fetch = async () => {
         if (!user.id) {
@@ -40,7 +41,7 @@ export const HabitJourneyWidget = ({ user }: Props) => {
 
     React.useEffect(() => {
         fetch();
-    }, [plannedDay]);
+    }, [todaysPlannedDay, selectedPlannedDay]);
 
     const handleViewPress = (index: number) => {
         setSelectedView(index);
@@ -115,10 +116,10 @@ export const HabitJourneyWidget = ({ user }: Props) => {
 
     return (
         <WidgetBase>
-            {plannedDay && (
+            {todaysPlannedDay && (
                 <AddHabitModal
                     visible={showAddTaskModal}
-                    plannedDay={plannedDay}
+                    plannedDay={todaysPlannedDay}
                     dismiss={onDismissSelectTaskModal}
                 />
             )}

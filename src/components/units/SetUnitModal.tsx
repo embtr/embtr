@@ -29,11 +29,19 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
         fetchUnits();
     }, []);
 
+    React.useEffect(() => {
+        if (visible) {
+            pickerRef.current?.focus();
+        }
+    }, [visible]);
+
     let displayUnit = '';
     if (selectedUnit?.unit) {
         const selectedUnitValue = selectedUnit.unit.toString().toLowerCase();
         displayUnit = selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1) + 's';
     }
+
+    const pickerRef = React.useRef<Picker<Unit>>(null); // Create a ref for the Picker component
 
     return (
         <Modal visible={visible} transparent={true} animationType={'fade'}>
@@ -99,6 +107,7 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         <View style={{ flex: 1 }}>
                                             <Picker
+                                                ref={pickerRef} // Set the ref to the Picker component
                                                 placeholder="of what?"
                                                 itemStyle={{
                                                     fontFamily: POPPINS_REGULAR,
@@ -106,7 +115,7 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
                                                 }}
                                                 selectedValue={selectedUnit} // Set the selectedValue prop to the selectedUnit state
                                                 onValueChange={(itemValue, itemIndex) => {
-                                                    setSelectedUnit(itemValue); // Set the selectedUnit state using units[itemIndex]
+                                                    confirm(itemValue);
                                                 }}
                                             >
                                                 {units.map((unit) => {

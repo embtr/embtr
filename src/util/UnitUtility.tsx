@@ -6,6 +6,10 @@ export class UnitUtility {
             return '';
         }
 
+        if (unit.unit === 'DEFAULT') {
+            return '';
+        }
+
         const unitValue = unit.unit.toString().toLowerCase();
         return unitValue.charAt(0).toUpperCase() + unitValue.slice(1) + 's';
     }

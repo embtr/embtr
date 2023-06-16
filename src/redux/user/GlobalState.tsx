@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { PlannedDay } from 'resources/schema';
+import { Habit, PlannedDay } from 'resources/schema';
 
 const INITIAL_STATE: GlobalState = {
     accessLevel: 'invalid',
@@ -18,6 +18,7 @@ const INITIAL_STATE: GlobalState = {
     fireConfetti: () => {},
     todaysPlannedDay: {},
     currentlySelectedPlannedDay: {},
+    habits: [],
 };
 
 export interface GlobalState {
@@ -34,6 +35,7 @@ export interface GlobalState {
     fireConfetti: Function;
     todaysPlannedDay: PlannedDay;
     currentlySelectedPlannedDay: PlannedDay;
+    habits: Habit[];
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -101,6 +103,9 @@ export const GlobalState = createSlice({
             if (state.currentlySelectedPlannedDay?.dayKey === state.todaysPlannedDay?.dayKey) {
                 state.todaysPlannedDay = action.payload;
             }
+        },
+        setHabits(state, action) {
+            state.habits = action.payload;
         },
     },
 });
@@ -209,6 +214,14 @@ export const getCurrentlySelectedPlannedDay = (state: RootState): PlannedDay => 
     return state.globalState.currentlySelectedPlannedDay;
 };
 
+export const getHabits = (state: RootState): Habit[] => {
+    if (!state?.globalState.habits) {
+        return INITIAL_STATE.habits;
+    }
+
+    return state.globalState.habits;
+};
+
 export const {
     setAccessLevel,
     setUserProfileUrl,
@@ -224,5 +237,6 @@ export const {
     setFireConfetti,
     setTodaysPlannedDay,
     setCurrentlySelectedPlannedDay,
+    setHabits,
 } = GlobalState.actions;
 export default GlobalState.reducer;

@@ -12,11 +12,7 @@ import UserController from 'src/controller/user/UserController';
 import { WidgetController } from 'src/controller/widget/WidgetController';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import {
-    getCloseMenu,
-    setRefreshActivitiesTimestamp,
-    setShowCardShadow,
-} from 'src/redux/user/GlobalState';
+import { getCloseMenu, setShowCardShadow } from 'src/redux/user/GlobalState';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
@@ -85,7 +81,6 @@ export const Today = () => {
 
     const refresh = () => {
         setRefreshedTimestamp(new Date());
-        dispatch(setRefreshActivitiesTimestamp());
     };
 
     // may want to just directly call both to guarentee
