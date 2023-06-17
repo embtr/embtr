@@ -6,6 +6,8 @@ import { Picker } from '@react-native-picker/picker';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { Unit } from 'resources/schema';
 import { UnitController } from 'src/controller/unit/UnitController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getOpenMenu, getUnits } from 'src/redux/user/GlobalState';
 
 interface Props {
     defaultUnit?: Unit;
@@ -19,19 +21,9 @@ interface Props {
 export const AndroidUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
-    const [units, setUnits] = React.useState<Unit[]>([]);
     const [selectedUnit, setSelectedUnit] = React.useState<Unit | undefined>(defaultUnit);
 
-    const fetchUnits = async () => {
-        const units = await UnitController.getAll();
-        setUnits(units);
-    };
-
-    React.useEffect(() => {
-        if (visible) {
-            fetchUnits();
-        }
-    }, []);
+    const units = useAppSelector(getUnits);
 
     React.useEffect(() => {
         if (visible) {

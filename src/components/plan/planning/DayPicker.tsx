@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { DayPickerElement } from './DayPickerElement';
+import { Dimensions } from 'react-native';
 
 interface Props {
     day: number;
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export const DayPicker = ({ day, onDayChanged }: Props) => {
+    const itemWidth = Dimensions.get('window').width / 9.5;
+
     const currentDate = new Date();
     const dateElements = Array.from(
         Array(
@@ -33,8 +36,10 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
         });
     };
 
+    console.log('selected:', selected);
+
     const renderItem = ({ item, index }: { item: number; index: number }) => (
-        <TouchableOpacity onPress={() => onSelectionChange(index)}>
+        <TouchableOpacity style={{ width: itemWidth }} onPress={() => onSelectionChange(index)}>
             <DayPickerElement item={item} index={index} isSelected={index === selected} />
         </TouchableOpacity>
     );
@@ -49,6 +54,11 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
                 keyExtractor={(item) => item.toString()}
                 renderItem={renderItem}
                 initialScrollIndex={selected - 4}
+                getItemLayout={(data, index) => ({
+                    length: itemWidth,
+                    offset: itemWidth * index,
+                    index,
+                })}
             />
         </View>
     );

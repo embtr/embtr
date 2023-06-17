@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { DailyHistoryWidget } from 'src/components/widgets/daily_history/DailyHistoryWidget';
 import { User } from 'resources/schema';
-import { TodaysTasksWidget, WidgetSource } from 'src/components/widgets/TodaysTasksWidget';
+import { TodaysActivitiesWidget, WidgetSource } from 'src/components/widgets/TodaysTasksWidget';
 import { HabitJourneyWidget } from 'src/components/widgets/habit_journey/HabitJourneyWidget';
 
 interface Props {
@@ -19,10 +19,10 @@ export const ProfileTabRoute = ({ newUser }: Props) => {
                 )}
             </View>
             <View style={{ paddingTop: 6 }}>
-                <TodaysTasksWidget user={newUser} source={WidgetSource.PROFILE} />
+                <TodaysActivitiesWidget user={newUser} source={WidgetSource.PROFILE} />
             </View>
             <View style={{ paddingTop: 6 }}>
-                <HabitJourneyWidget user={newUser} refreshedTimestamp={new Date()} />
+                <HabitJourneyWidget user={newUser} />
             </View>
         </View>
     );

@@ -26,7 +26,7 @@ export const DayPickerElement = ({ item, index, isSelected }: Props) => {
     dateElements.shift();
 
     return (
-        <View style={{ width: itemWidth, alignItems: 'center' }}>
+        <View style={{ alignItems: 'center' }}>
             <View style={{ alignItems: 'center' }}>
                 <Ionicons
                     name={'sunny'}

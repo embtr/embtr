@@ -1,11 +1,11 @@
 import { Modal, View } from 'react-native';
 import { Tasks } from '../tasks/Tasks';
-import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
 import { Banner } from 'src/components/common/Banner';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
     visible: boolean;
@@ -14,6 +14,8 @@ interface Props {
 }
 
 export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
+    const { colors } = useTheme();
+
     const dispatch = useAppDispatch();
 
     const closeModal = () => {
@@ -29,16 +31,13 @@ export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
             }}
         >
             <RootSiblingParent>
-                <SafeAreaView forceInset={{ bottom: 'never' }}>
+                <SafeAreaView
+                    style={{ backgroundColor: colors.background }}
+                    forceInset={{ bottom: 'never' }}
+                >
                     <View style={{ height: '100%', width: '100%' }}>
-                        <Screen>
-                            <Banner
-                                name="Add Activities"
-                                leftText="close"
-                                leftOnClick={closeModal}
-                            />
-                            <Tasks plannedDay={plannedDay} />
-                        </Screen>
+                        <Banner name="Add Activities" leftText="close" leftOnClick={closeModal} />
+                        <Tasks plannedDay={plannedDay} />
                     </View>
                 </SafeAreaView>
             </RootSiblingParent>

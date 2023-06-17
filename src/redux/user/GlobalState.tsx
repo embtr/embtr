@@ -1,15 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { Habit, PlannedDay } from 'resources/schema';
+import { Habit, PlannedDay, Unit } from 'resources/schema';
 
 const INITIAL_STATE: GlobalState = {
-    accessLevel: 'invalid',
-    userProfileUrl: '',
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
     openMenu: () => {},
     closeMenu: () => {},
-    selectedDayKey: 'invalid',
     currentTab: '',
     userProfileImage:
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
@@ -18,16 +15,14 @@ const INITIAL_STATE: GlobalState = {
     fireConfetti: () => {},
     todaysPlannedDay: {},
     currentlySelectedPlannedDay: {},
+    units: [],
     habits: [],
 };
 
 export interface GlobalState {
-    accessLevel: string;
-    userProfileUrl: string;
     menuOptions: EmbtrMenuOptions;
     openMenu: Function;
     closeMenu: Function;
-    selectedDayKey: string;
     currentTab: string;
     userProfileImage: string;
     showCardShadow: boolean;
@@ -35,6 +30,7 @@ export interface GlobalState {
     fireConfetti: Function;
     todaysPlannedDay: PlannedDay;
     currentlySelectedPlannedDay: PlannedDay;
+    units: Unit[];
     habits: Habit[];
 }
 
@@ -44,12 +40,6 @@ export const GlobalState = createSlice({
     name: 'globalState',
     initialState,
     reducers: {
-        setAccessLevel(state, action) {
-            state.accessLevel = action.payload;
-        },
-        setUserProfileUrl(state, action) {
-            state.userProfileUrl = action.payload;
-        },
         setMenuOptions(state, action) {
             state.menuOptions = action.payload;
         },
@@ -58,9 +48,6 @@ export const GlobalState = createSlice({
         },
         setCloseMenu(state, action) {
             state.closeMenu = action.payload;
-        },
-        setSelectedDayKey(state, action) {
-            state.selectedDayKey = action.payload;
         },
         setCurrentTab(state, action) {
             state.currentTab = action.payload;
@@ -104,27 +91,14 @@ export const GlobalState = createSlice({
                 state.todaysPlannedDay = action.payload;
             }
         },
+        setUnits(state, action) {
+            state.units = action.payload;
+        },
         setHabits(state, action) {
             state.habits = action.payload;
         },
     },
 });
-
-export const getAccessLevel = (state: RootState): string => {
-    if (!state?.globalState?.accessLevel) {
-        return INITIAL_STATE.accessLevel;
-    }
-
-    return state.globalState.accessLevel;
-};
-
-export const getUserProfileUrl = (state: RootState): string => {
-    if (!state?.globalState?.userProfileUrl) {
-        return INITIAL_STATE.userProfileUrl;
-    }
-
-    return state.globalState.userProfileUrl;
-};
 
 export const getMenuOptions = (state: RootState): EmbtrMenuOptions => {
     if (!state?.globalState?.menuOptions) {
@@ -148,14 +122,6 @@ export const getCloseMenu = (state: RootState): Function => {
     }
 
     return state.globalState.closeMenu;
-};
-
-export const getSelectedDayKey = (state: RootState): string => {
-    if (!state?.globalState?.selectedDayKey) {
-        return INITIAL_STATE.selectedDayKey;
-    }
-
-    return state.globalState.selectedDayKey;
 };
 
 export const getCurrentTab = (state: RootState) => {
@@ -214,6 +180,14 @@ export const getCurrentlySelectedPlannedDay = (state: RootState): PlannedDay => 
     return state.globalState.currentlySelectedPlannedDay;
 };
 
+export const getUnits = (state: RootState): Unit[] => {
+    if (!state?.globalState.units) {
+        return INITIAL_STATE.units;
+    }
+
+    return state.globalState.units;
+};
+
 export const getHabits = (state: RootState): Habit[] => {
     if (!state?.globalState.habits) {
         return INITIAL_STATE.habits;
@@ -223,12 +197,9 @@ export const getHabits = (state: RootState): Habit[] => {
 };
 
 export const {
-    setAccessLevel,
-    setUserProfileUrl,
     setMenuOptions,
     setOpenMenu,
     setCloseMenu,
-    setSelectedDayKey,
     setCurrentTab,
     setUserProfileImage,
     setShowCardShadow,
@@ -237,6 +208,7 @@ export const {
     setFireConfetti,
     setTodaysPlannedDay,
     setCurrentlySelectedPlannedDay,
+    setUnits,
     setHabits,
 } = GlobalState.actions;
 export default GlobalState.reducer;

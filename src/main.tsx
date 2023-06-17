@@ -19,7 +19,7 @@ import {
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
-import { setUserProfileImage } from 'src/redux/user/GlobalState';
+import { setUnits, setUserProfileImage } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { User as UserModel } from 'resources/schema';
 import PushNotificationController from './controller/notification/PushNotificationController';
@@ -29,6 +29,7 @@ import { MetadataController, MetadataKey } from './controller/metadata/MetadataC
 import Constants from 'expo-constants';
 import { UpdateUtility } from './util/updates/UpdateUtility';
 import { ConfettiView } from './components/common/animated_view/ConfettiView';
+import { UnitController } from 'src/controller/unit/UnitController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -129,6 +130,11 @@ export const Main = () => {
         setShowUpdateAvailableModal(updateAvailable);
     };
 
+    const loadUnits = async () => {
+        const units = await UnitController.getAll();
+        dispatch(setUnits(units));
+    };
+
     const dispatch = useAppDispatch();
     getFirebaseConnection('', '');
 
@@ -161,6 +167,8 @@ export const Main = () => {
             if (loggedInUser) {
                 resetGlobalState(loggedInUser);
             }
+
+            await loadUnits();
             setUserIsLoggedIn(loggedInUser !== undefined);
         };
 
