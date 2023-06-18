@@ -36,8 +36,6 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
         });
     };
 
-    console.log('selected:', selected);
-
     const renderItem = ({ item, index }: { item: number; index: number }) => (
         <TouchableOpacity style={{ width: itemWidth }} onPress={() => onSelectionChange(index)}>
             <DayPickerElement item={item} index={index} isSelected={index === selected} />

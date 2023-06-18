@@ -51,13 +51,10 @@ export const ProfileBody = ({ newUser, setHeight }: Props) => {
 
         if (pageLoaded) {
             if (index === 0) {
-                console.log('setting profile height', profileHeight);
                 setHeight(profileHeight);
             } else if (index === 1) {
-                console.log('setting today height', todayHeight);
                 setHeight(todayHeight);
             } else if (index === 2) {
-                console.log('setting activity height', activityHeight);
                 setHeight(activityHeight);
             }
         }
@@ -71,7 +68,6 @@ export const ProfileBody = ({ newUser, setHeight }: Props) => {
 
     const handleTabLayout = (event: any) => {
         const { height } = event.nativeEvent.layout;
-        console.log(height);
     };
 
     return (
