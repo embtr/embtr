@@ -47,6 +47,10 @@ export const PlanDay = ({
 
     // get all current planned tasks
     plannedDay?.plannedTasks?.forEach((plannedTask) => {
+        if (!plannedTask.active) {
+            return;
+        }
+
         if (plannedTask.status === 'FAILED') {
             allTasksAreComplete = false;
         }

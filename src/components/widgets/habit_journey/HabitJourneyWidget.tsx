@@ -37,6 +37,7 @@ export const HabitJourneyWidget = ({ user }: Props) => {
             return;
         }
         setHabitJourneys(results);
+        setSelectedView(results.elements[0].habit.id!);
     };
 
     React.useEffect(() => {

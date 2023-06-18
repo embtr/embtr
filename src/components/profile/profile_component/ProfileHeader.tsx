@@ -1,302 +1,146 @@
 import { Image, LayoutChangeEvent, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { ProfileLevel } from 'src/components/profile/profile_component/ProfileLevel';
 import { CachedImage } from 'src/components/common/images/CachedImage';
-import Animated, {
-    Easing,
-    SharedValue,
-    useAnimatedStyle,
-    withTiming,
-} from 'react-native-reanimated';
 import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 import { User } from 'resources/schema';
+import { HorizontalLine } from 'src/components/common/HorizontalLine';
 
 interface Props {
     user: User;
-    onFollowUser: Function;
-    onUnfollowUser: Function;
-    followerCount: number;
-    followingCount: number;
-    isFollowingUser: boolean;
-    animatedHeaderContentsScale: SharedValue<number>;
-    animatedBannerScale: SharedValue<number>;
+    setHeight: Function;
 }
 
-export const ProfileHeader = ({
-    user,
-    followerCount,
-    followingCount,
-    isFollowingUser,
-    animatedHeaderContentsScale,
-    animatedBannerScale,
-}: Props) => {
+export const ProfileHeader = ({ user, setHeight }: Props) => {
     const { colors } = useTheme();
     const [initialHeaderContentsHeight, setInitialHeaderContentsHeight] = React.useState<number>(0);
 
-    const animatedHeaderContentsStyle = useAnimatedStyle(() => {
-        return {
-            height: withTiming(initialHeaderContentsHeight * animatedHeaderContentsScale.value, {
-                duration: 200,
-                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-            }),
-        };
-    });
-
     const width = getWindowWidth() * 0.95;
     const height = width * 0.33;
-    const animatedBannerStyle = useAnimatedStyle(() => {
-        return {
-            height: withTiming(height * animatedBannerScale.value, {
-                duration: 200,
-                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-            }),
-            width: withTiming(width * animatedBannerScale.value, {
-                duration: 200,
-                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-            }),
-        };
-    });
-
-    const animatedHeaderStyle = useAnimatedStyle(() => {
-        return {
-            paddingBottom: withTiming(
-                animatedHeaderContentsScale.value === 0
-                    ? (height * animatedBannerScale.value * 1.2 -
-                          height * animatedBannerScale.value) /
-                          2
-                    : height * animatedBannerScale.value * 0.75 * 0.33,
-                {
-                    duration: 200,
-                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-                }
-            ),
-        };
-    });
-
-    const animatedProfileImageStyle = useAnimatedStyle(() => {
-        return {
-            height: withTiming(
-                height *
-                    animatedBannerScale.value *
-                    (animatedHeaderContentsScale.value === 1 ? 0.75 : 1.2),
-                {
-                    duration: 200,
-                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-                }
-            ),
-            width: withTiming(
-                height *
-                    animatedBannerScale.value *
-                    (animatedHeaderContentsScale.value === 1 ? 0.75 : 1.2),
-                {
-                    duration: 200,
-                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-                }
-            ),
-            borderWidth: withTiming(animatedHeaderContentsScale.value === 1 ? 0 : 3, {
-                duration: 200,
-                easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-            }),
-        };
-    });
+    const PROFILE_PHOTO_OVERLAP = 65;
 
     const storeInitialHeaderContentsHeight = (event: LayoutChangeEvent) => {
         setInitialHeaderContentsHeight(event.nativeEvent.layout.height);
     };
 
     return (
-        <View>
-            <View style={{ alignItems: 'center' }}>
-                <Animated.View
-                    style={[
-                        animatedHeaderStyle,
-                        { alignItems: 'center', justifyContent: 'flex-end', paddingTop: 10 },
-                    ]}
-                >
-                    {/* BANNER */}
-                    <Animated.View
-                        style={[
-                            animatedBannerStyle,
-                            { alignItems: 'center', justifyContent: 'center' },
-                        ]}
-                    >
-                        {user.bannerUrl ? (
-                            <CachedImage
-                                style={{ width: '100%', height: '100%', borderRadius: 15 }}
-                                uri={user.bannerUrl}
-                            />
-                        ) : (
-                            <Image
-                                source={DEFAULT}
-                                style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    maxHeight: 135,
-                                    borderRadius: 15,
-                                }}
-                            />
-                        )}
-                    </Animated.View>
-
-                    {/* PROFILE PHOTO */}
-                    <View
-                        style={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            alignItems: 'center',
-                            justifyContent: 'flex-end',
-                        }}
-                    >
-                        <Animated.View
-                            style={[
-                                animatedProfileImageStyle,
-                                {
-                                    alignItems: 'flex-end',
-                                    justifyContent: 'flex-end',
-                                    borderColor: colors.background,
-                                    borderRadius: 1000,
-                                },
-                            ]}
-                        >
-                            {user.photoUrl && (
-                                <CachedImage
-                                    style={{ width: '100%', height: '100%', borderRadius: 1000 }}
-                                    uri={user.photoUrl}
-                                />
-                            )}
-                            <View
-                                style={{
-                                    position: 'absolute',
-                                    zIndex: 1,
-                                    paddingBottom: 3,
-                                    paddingRight: 3,
-                                }}
-                            >
-                                <ProfileLevel user={user} />
-                            </View>
-                        </Animated.View>
-                    </View>
-                </Animated.View>
-            </View>
-
-            {/* PROFILE CONTENT */}
-            <Animated.View
-                onLayout={
-                    initialHeaderContentsHeight === 0 ? storeInitialHeaderContentsHeight : undefined
-                }
+        <View
+            onLayout={(e) => {
+                setHeight(e.nativeEvent.layout.height);
+            }}
+            style={{
+                paddingLeft: 10,
+                paddingRight: 10,
+                paddingTop: 10,
+                marginBottom: PROFILE_PHOTO_OVERLAP * -1,
+            }}
+        >
+            {/* BANNER */}
+            <View
                 style={[
-                    initialHeaderContentsHeight !== 0 ? animatedHeaderContentsStyle : undefined,
-                    { overflow: 'hidden', width: '100%', alignItems: 'center' },
+                    {
+                        height: height,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    },
                 ]}
             >
-                <View style={{ flexDirection: 'row', flex: 1 }}>
-                    <View
+                {user.bannerUrl ? (
+                    <CachedImage
+                        style={{ width: '100%', height: '100%', borderRadius: 15 }}
+                        uri={user.bannerUrl}
+                    />
+                ) : (
+                    <Image
+                        source={DEFAULT}
                         style={{
-                            flex: 1,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
+                            width: '100%',
+                            height: '100%',
+                            maxHeight: 135,
+                            borderRadius: 15,
                         }}
-                    >
-                        <Text
-                            style={{
-                                fontSize: 18,
-                                fontFamily: 'Poppins_600SemiBold',
-                                color: colors.profile_name_text,
-                            }}
-                        >
-                            {user.displayName}
-                        </Text>
-                    </View>
-                </View>
-                <Text
-                    style={{
-                        fontSize: 10,
-                        fontFamily: 'Poppins_500Medium',
-                        color: colors.profile_bio_text,
-                    }}
-                >
-                    {user.location}
-                </Text>
-                <Text
-                    style={{
-                        fontSize: 12,
-                        fontFamily: 'Poppins_500Medium',
-                        color: colors.profile_bio_text,
-                        paddingTop: 3,
-                    }}
-                >
-                    {user.bio}
-                </Text>
+                    />
+                )}
+            </View>
 
-                {/* FOLLOWERS/ FOLLOWING */}
-                <View style={{ paddingBottom: 10 }}>
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            paddingTop: 10,
-                            backgroundColor: colors.background,
-                        }}
-                    >
-                        {/* FOLLOWERS */}
+            {/* PROFILE PHOTO */}
+
+            <View
+                style={{
+                    alignItems: 'center',
+                    bottom: PROFILE_PHOTO_OVERLAP,
+                }}
+            >
+                <View
+                    style={{
+                        height: height * 0.75,
+                        width: height * 0.75,
+                    }}
+                >
+                    {user.photoUrl && (
+                        <CachedImage
+                            style={{ width: '100%', height: '100%', borderRadius: 1000 }}
+                            uri={user.photoUrl}
+                        />
+                    )}
+                </View>
+                <View
+                    onLayout={
+                        initialHeaderContentsHeight === 0
+                            ? storeInitialHeaderContentsHeight
+                            : undefined
+                    }
+                    style={[{ overflow: 'hidden', width: '100%', alignItems: 'center' }]}
+                >
+                    <View style={{ flexDirection: 'row', flex: 1 }}>
                         <View
                             style={{
-                                paddingLeft: 15,
-                                paddingRight: 15,
-                                paddingTop: 10,
-                                paddingBottom: 10,
-                                backgroundColor: colors.profile_following_background,
-                                borderRadius: 10,
-                                marginRight: 15,
+                                flex: 1,
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                borderWidth: 1.5,
-                                borderColor: colors.profile_following_border,
+                                flexDirection: 'row',
                             }}
                         >
                             <Text
                                 style={{
-                                    fontSize: 14,
-                                    fontFamily: 'Poppins_500Medium',
-                                    color: colors.profile_following_text,
+                                    fontSize: 18,
+                                    fontFamily: 'Poppins_600SemiBold',
+                                    color: colors.profile_name_text,
                                 }}
                             >
-                                {followerCount} Followers
-                            </Text>
-                        </View>
-
-                        {/* FOLLOWING */}
-                        <View
-                            style={{
-                                paddingLeft: 15,
-                                paddingRight: 15,
-                                paddingTop: 10,
-                                paddingBottom: 10,
-                                backgroundColor: colors.profile_following_background,
-                                borderRadius: 10,
-                                marginLeft: 15,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                borderWidth: 1.5,
-                                borderColor: colors.profile_following_border,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    fontFamily: 'Poppins_500Medium',
-                                    color: colors.profile_following_text,
-                                }}
-                            >
-                                {followingCount} Following
+                                {user.displayName}
                             </Text>
                         </View>
                     </View>
+                    <Text
+                        style={{
+                            fontSize: 10,
+                            fontFamily: 'Poppins_500Medium',
+                            color: colors.profile_bio_text,
+                        }}
+                    >
+                        {user.location}
+                    </Text>
+
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            fontFamily: 'Poppins_500Medium',
+                            color: colors.profile_bio_text,
+                            paddingTop: 3,
+                        }}
+                    >
+                        {user.bio}
+                    </Text>
                 </View>
-            </Animated.View>
+
+                <View style={{ paddingTop: 5, width: '100%' }}>
+                    <HorizontalLine />
+                </View>
+            </View>
+
+            <View style={{ height: 10 }} />
         </View>
     );
 };

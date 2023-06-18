@@ -18,7 +18,9 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
     const { colors } = useTheme();
 
     const [units, setUnits] = React.useState<Unit[]>([]);
-    const [selectedUnit, setSelectedUnit] = React.useState<Unit | undefined>(defaultUnit);
+    const [selectedUnitId, setSelectedUnitId] = React.useState<number | undefined>(defaultUnit?.id);
+
+    const selectedUnit = units.find((unit) => unit.id === selectedUnitId);
 
     const fetchUnits = async () => {
         const units = await UnitController.getAll();
@@ -41,7 +43,7 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
         displayUnit = selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1) + 's';
     }
 
-    const pickerRef = React.useRef<Picker<Unit>>(null); // Create a ref for the Picker component
+    const pickerRef = React.useRef<Picker<number>>(null); // Create a ref for the Picker component
 
     return (
         <Modal visible={visible} transparent={true} animationType={'fade'}>
@@ -113,9 +115,9 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
                                                     fontFamily: POPPINS_REGULAR,
                                                     color: colors.text,
                                                 }}
-                                                selectedValue={selectedUnit} // Set the selectedValue prop to the selectedUnit state
+                                                selectedValue={selectedUnit?.id ?? 0} // Set the selectedValue prop to the selectedUnit state
                                                 onValueChange={(itemValue, itemIndex) => {
-                                                    confirm(itemValue);
+                                                    setSelectedUnitId(itemValue);
                                                 }}
                                             >
                                                 {units.map((unit) => {
@@ -132,7 +134,7 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
                                                     return (
                                                         <Picker.Item
                                                             label={capitalizedUnitValue}
-                                                            value={unit} // Set the value prop to the unit object
+                                                            value={unit!.id!} // Set the value prop to a unique identifier for the unit
                                                             key={unit.id}
                                                         />
                                                     );

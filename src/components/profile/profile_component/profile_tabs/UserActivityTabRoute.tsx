@@ -5,12 +5,15 @@ import DailyResultController from 'src/controller/timeline/daily_result/DailyRes
 import { wait } from 'src/util/GeneralUtility';
 import { PlannedDayResult, User, UserPost } from 'resources/schema';
 import { FilteredTimeline } from 'src/components/timeline/FilteredTimeline';
+import { View } from 'react-native';
+import { UserProfileTimeline } from 'src/components/timeline/UserProfileTimeline';
 
 interface Props {
     user: User;
+    setHeight: Function;
 }
 
-export const UserActivityTabRoute = ({ user }: Props) => {
+export const UserActivityTabRoute = ({ user, setHeight }: Props) => {
     const [userPosts, setUserPosts] = React.useState<UserPost[]>([]);
     const [dayResults, setDayResults] = React.useState<PlannedDayResult[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
@@ -50,12 +53,20 @@ export const UserActivityTabRoute = ({ user }: Props) => {
     };
 
     return (
-        <FilteredTimeline
-            userPosts={userPosts}
-            dayResults={dayResults}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            loadMore={() => {}}
-        />
+        <View
+            onLayout={(e) => {
+                setHeight(e.nativeEvent.layout.height);
+            }}
+        >
+            <View style={{backgroundColor: "purple", width: "100%", height: 1200, borderWidth: 3, borderColor: "red"}} />
+            {/*
+            <UserProfileTimeline
+                userPosts={userPosts}
+                dayResults={dayResults}
+                refreshing={refreshing}
+                loadMore={() => {}}
+            />
+            */}
+        </View>
     );
 };

@@ -7,19 +7,20 @@ import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { getAuth } from 'firebase/auth';
 import { useSharedValue } from 'react-native-reanimated';
-import { ScrollChangeEvent } from 'src/util/constants';
 import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { useFocusEffect } from '@react-navigation/native';
-import { View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { SingleScrollUserBody } from 'src/components/profile/profile_component/single_scroll/SingleScrollUserBody';
 
 export const CurrentUserProfile = () => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [user, setUser] = React.useState<User>();
+    const [bodyHeight, setBodyHeight] = React.useState<number>(10000);
+    const [headerHeight, setHeaderHeight] = React.useState<number>(1000);
 
     // used for profile header scroll animation
-    const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
     useFocusEffect(
         React.useCallback(() => {
             fetchUser();
@@ -44,20 +45,6 @@ export const CurrentUserProfile = () => {
         });
     }, []);
 
-    const shouldExpand = (e: ScrollChangeEvent) => {
-        if (e === ScrollChangeEvent.BEYOND_TOP) {
-            if (!isExpanded) {
-                setIsExpanded(true);
-                growHeader();
-            }
-        } else if (e === ScrollChangeEvent.BELOW_TOP) {
-            if (isExpanded) {
-                setIsExpanded(false);
-                shrinkHeader();
-            }
-        }
-    };
-
     const animatedHeaderContentsScale = useSharedValue(1);
     const animatedBannerScale = useSharedValue(1);
 
@@ -79,29 +66,49 @@ export const CurrentUserProfile = () => {
         );
     }
 
+    const setBodyHeightWrapper = (n: number) => {
+        if (n > 30) {
+            setBodyHeight(n);
+        }
+    };
+
+    const setHeaderHeightWrapper = (n: number) => {
+        if (n > 30) {
+            setHeaderHeight(n);
+        }
+    };
+
+    if (!user) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
+
     return (
         <Screen>
             <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
             <EmbtrMenuCustom />
-            <ProfileHeader
-                user={user}
-                animatedHeaderContentsScale={animatedHeaderContentsScale}
-                animatedBannerScale={animatedBannerScale}
-                onFollowUser={() => {}}
-                onUnfollowUser={() => {}}
-                followerCount={0}
-                followingCount={0}
-                isFollowingUser={false}
-            />
-            {user && (
-                <ProfileBody
-                    onRefresh={onRefresh}
-                    isRefreshing={refreshing}
-                    newUser={user}
-                    refreshedTimestamp={refreshedTimestamp}
-                    onShouldExpand={shouldExpand}
+            <ScrollView>
+                <ProfileHeader
+                    user={user}
+                    onFollowUser={() => {}}
+                    onUnfollowUser={() => {}}
+                    followerCount={0}
+                    followingCount={0}
+                    isFollowingUser={false}
+                    setHeight={setHeaderHeightWrapper}
                 />
-            )}
+
+                {/* moving away from the tabs for now  */}
+
+                {/*
+                    <ProfileBody newUser={user} setHeight={setBodyHeightWrapper} />
+                    */}
+
+                <SingleScrollUserBody user={user} setHeight={setBodyHeight} />
+            </ScrollView>
         </Screen>
     );
 };
