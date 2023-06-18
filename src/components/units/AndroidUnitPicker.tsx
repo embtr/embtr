@@ -1,13 +1,11 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Modal, Button, Text } from 'react-native';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Picker } from '@react-native-picker/picker';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { Unit } from 'resources/schema';
-import { UnitController } from 'src/controller/unit/UnitController';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getOpenMenu, getUnits } from 'src/redux/user/GlobalState';
+import { getUnits } from 'src/redux/user/GlobalState';
 
 interface Props {
     defaultUnit?: Unit;
@@ -31,6 +29,10 @@ export const AndroidUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Pr
         }
     }, [visible]);
 
+    React.useEffect(() => {
+        confirm(selectedUnit);
+    }, [selectedUnit]);
+
     let displayUnit = '';
     if (selectedUnit?.unit) {
         const selectedUnitValue = selectedUnit.unit.toString().toLowerCase();
@@ -53,7 +55,7 @@ export const AndroidUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Pr
                 }}
                 selectedValue={selectedUnit} // Set the selectedValue prop to the selectedUnit state
                 onValueChange={(itemValue, itemIndex) => {
-                    confirm(itemValue);
+                    setSelectedUnit(itemValue);
                 }}
             >
                 {units.map((unit) => {
