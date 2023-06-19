@@ -57,6 +57,25 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         setTemporaryStatus('');
     }
 
+    let stats = `${completedQuantity} / ${quantity}`;
+    if (taskIsComplete) {
+        stats = `${completedQuantity}`;
+    }
+
+    let units = '';
+    if (unit) {
+        units = UnitUtility.getReadableUnit(
+            unit,
+            completedQuantity === quantity ? completedQuantity ?? 0 : 0
+        );
+    }
+
+    if (!units) {
+        units = 'Completed';
+    }
+
+    const statText = `${stats} ${units}`;
+
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <TouchableWithoutFeedback
@@ -114,9 +133,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                                 fontSize: 10,
                             }}
                         >
-                            {`${completedQuantity} / ${quantity} ${
-                                unit ? UnitUtility.getReadableUnit(unit) : ''
-                            }`}
+                            {statText}
                         </Text>
                     </View>
                 </View>
