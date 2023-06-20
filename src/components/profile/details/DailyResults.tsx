@@ -8,8 +8,9 @@ import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { PlannedDayResult, UserPost } from 'resources/schema';
 import { wait } from 'src/util/GeneralUtility';
 import { UserProfileTimeline } from 'src/components/timeline/UserProfileTimeline';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
-export const UserPosts = () => {
+export const DailyResults = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPosts'>>();
     const userId = route.params.userId;
 
@@ -20,8 +21,7 @@ export const UserPosts = () => {
 
     useFocusEffect(
         React.useCallback(() => {
-            getUserPosts();
-            //getPlannedDayResults();
+            getPlannedDayResults();
         }, [forceRefreshTimestamp])
     );
 
@@ -38,9 +38,14 @@ export const UserPosts = () => {
         setUserPosts(userPosts);
     };
 
+    const getPlannedDayResults = async () => {
+        const dayResults = await DailyResultController.getAllForUser(userId);
+        setDayResults(dayResults);
+    };
+
     return (
         <Screen>
-            <Banner name="User Posts" leftText="back" leftRoute="BACK" />
+            <Banner name="Daily Results" leftText="back" leftRoute="BACK" />
 
             <ScrollView>
                 <UserProfileTimeline
@@ -49,7 +54,7 @@ export const UserPosts = () => {
                     refreshing={refreshing}
                     loadMore={() => {}}
                 />
-                {userPosts.length === 0 && (
+                {dayResults.length === 0 && (
                     <ActivityIndicator color="#fff" animating size="large" />
                 )}
                 <View style={{ height: 10 }} />

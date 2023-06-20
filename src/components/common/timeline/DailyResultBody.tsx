@@ -6,6 +6,7 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { getDatePretty } from 'src/util/DateUtility';
 
 interface Props {
     plannedDayResult: PlannedDayResultModel;
@@ -56,8 +57,6 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
 
     return (
         <View style={{ paddingTop: 10 }}>
-            <Text style={headerTextStyle}>{dayOfWeek}</Text>
-
             <View
                 style={{
                     paddingLeft: TIMELINE_CARD_PADDING,

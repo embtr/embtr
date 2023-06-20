@@ -10,13 +10,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
 
 interface Props {
     userId: number;
 }
 
-export const UserActivityWidget = ({ userId }: Props) => {
+export const UserPostsWidget = ({ userId }: Props) => {
     const { colors } = useTheme();
 
     const currentTab = useAppSelector(getCurrentTab);

@@ -53,6 +53,7 @@ export type TimelineTabScreens = {
     ViewAllComments: { uid: string; goalId: string };
     GoalDetails: { uid: string; id: string; source: string };
     UserPosts: { userId: number };
+    DailyResults: { userId: number };
 };
 
 export type ProfileTabScreens = {
@@ -64,6 +65,7 @@ export type ProfileTabScreens = {
     GoalDetails: { uid: string; id: string; source: string };
     UserPostDetails: { id: number };
     UserPosts: { userId: number };
+    DailyResults: { userId: number };
 };
 
 export type RootStackParamList = {
