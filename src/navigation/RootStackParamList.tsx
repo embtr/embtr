@@ -52,6 +52,7 @@ export type TimelineTabScreens = {
     PillarDetails: { uid: string; id: string };
     ViewAllComments: { uid: string; goalId: string };
     GoalDetails: { uid: string; id: string; source: string };
+    UserPosts: { userId: number };
 };
 
 export type ProfileTabScreens = {
@@ -62,6 +63,7 @@ export type ProfileTabScreens = {
     EditUserProfile: undefined;
     GoalDetails: { uid: string; id: string; source: string };
     UserPostDetails: { id: number };
+    UserPosts: { userId: number };
 };
 
 export type RootStackParamList = {

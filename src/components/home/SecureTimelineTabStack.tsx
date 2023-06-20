@@ -8,6 +8,7 @@ import { DailyResultDetails } from 'src/components/common/timeline/DailyResultDe
 import { UserPostDetails } from 'src/components/common/timeline/UserPostDetails';
 import { EditUserPostDetails } from '../timeline/EditUserPostDetails';
 import { EditDailyResultDetails } from '../common/timeline/EditDailyResultDetails';
+import { UserPosts } from 'src/components/profile/details/UserPosts';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="UserPostDetails" component={UserPostDetails} />
             <Stack.Screen name="DailyResultDetails" component={DailyResultDetails} />
             <Stack.Screen name="Notifications" component={Notifications} />
+            <Stack.Screen name="UserPosts" component={UserPosts} />
         </Stack.Navigator>
     );
 };

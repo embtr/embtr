@@ -148,7 +148,7 @@ export const CreateEditUserPostBase = ({
                                         fontSize: 10,
                                     }}
                                 >
-                                    title cannot be blank
+                                    cannot be blank
                                 </Text>
                             )}
                         </View>
