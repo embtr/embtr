@@ -81,7 +81,6 @@ export const Timeline = () => {
                 innerLeftOnClick={() => {
                     navigation.navigate('CreateUserPost');
                 }}
-                innerRightIcon={'globe-outline'}
                 rightIcon={'notifications-outline'}
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount}

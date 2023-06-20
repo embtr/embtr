@@ -119,7 +119,7 @@ export const UserActivityWidget = ({ userId }: Props) => {
                 {postElements.length === 0 && (
                     <View>
                         {
-                            <Text style={{ color: colors.text, paddingLeft: 5 }}>
+                            <Text style={{ color: colors.secondary_text, paddingLeft: 5 }}>
                                 no recent posts...
                             </Text>
                         }

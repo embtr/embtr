@@ -21,6 +21,8 @@ import { HabitIcon } from './habit/HabitIcon';
 import { UpdatePlannedTaskModal } from 'src/components/plan/UpdatePlannedTaskModal';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { PlanningService } from 'src/util/planning/PlanningService';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 
 interface Props {
     initialPlannedTask: PlannedTaskModel;
@@ -35,6 +37,15 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
     const [completedQuantity, setCompletedQuantity] = React.useState<number>(
         initialPlannedTask.completedQuantity ?? 0
     );
+    const [userId, setUserId] = React.useState<number | undefined>(undefined);
+    React.useEffect(() => {
+        const fetch = async () => {
+            const userId = await getUserIdFromToken();
+            setUserId(userId ?? 0);
+        };
+
+        fetch();
+    }, [initialPlannedTask]);
 
     React.useEffect(() => {
         setCompletedQuantity(initialPlannedTask.completedQuantity ?? 0);
@@ -124,11 +135,19 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
     const closeMenu = useAppSelector(getCloseMenu);
 
     const onShortPress = async () => {
+        if (initialPlannedTask.plannedDay?.userId !== userId) {
+            return;
+        }
+
         setShowUpdatePlannedTaskModal(true);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     };
 
     const onLongPress = () => {
+        if (initialPlannedTask.plannedDay?.userId !== userId) {
+            return;
+        }
+
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
         updateMenuOptions();
         openMenu();

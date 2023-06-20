@@ -14,6 +14,8 @@ import PlannedDayController, { getTodayKey } from 'src/controller/planning/Plann
 import { PlanDay } from '../plan/planning/PlanDay';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { AddHabitModal } from '../plan/planning/AddHabitModal';
+import { getAuth } from 'firebase/auth';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export enum WidgetSource {
     TODAY,
@@ -30,13 +32,19 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
 
     const [showAddTaskModal, setShowSelectTaskModal] = React.useState(false);
+    const [guestPlannedDay, setGuestPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
 
     const dispatch = useAppDispatch();
-    const todaysPlannedDay = useAppSelector(getTodaysPlannedDay);
+    const todaysPlannedDay =
+        user.uid === getCurrentUid() ? useAppSelector(getTodaysPlannedDay) : guestPlannedDay;
     const closeMenu = useAppSelector(getCloseMenu);
 
     const updateTodaysPlannedDay = (plannedDay: PlannedDay) => {
-        dispatch(setTodaysPlannedDay(plannedDay));
+        if (user.uid === getCurrentUid()) {
+            dispatch(setTodaysPlannedDay(plannedDay));
+        } else {
+            setGuestPlannedDay(plannedDay);
+        }
     };
 
     const fetch = async () => {
