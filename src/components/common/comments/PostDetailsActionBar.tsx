@@ -26,6 +26,7 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
 
     const isLiked = timelineEntryWasLikedBy(likes, getCurrentUid());
     const [heartPressed, setHeartPressed] = React.useState(isLiked);
+    const [isAnimating, setIsAnimating] = React.useState(false);
 
     const animation = React.useRef<LottieView>(null);
 
@@ -37,8 +38,10 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
         if (!heartPressed) {
             if (!(isMobileBrowser() || isDesktopBrowser())) {
                 animation.current?.play();
+                setIsAnimating(true);
                 wait(1000).then(() => {
                     animation.current?.reset();
+                    setIsAnimating(false);
                 });
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             }
@@ -74,11 +77,14 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
 
             <View style={{ flexDirection: 'row', flex: 1 }}>
                 <Pressable onPress={heartPressed ? undefined : onHeartPressed}>
-                    <Ionicons
-                        name={heartPressed ? 'heart' : 'heart-outline'}
-                        size={TIMELINE_CARD_ICON_SIZE}
-                        color={heartPressed ? 'red' : colors.timeline_card_footer}
-                    />
+                    <View style={{ width: TIMELINE_CARD_ICON_SIZE }}>
+                        <Ionicons
+                            style={{ display: isAnimating ? 'none' : undefined }}
+                            name={heartPressed ? 'heart' : 'heart-outline'}
+                            size={TIMELINE_CARD_ICON_SIZE}
+                            color={heartPressed ? 'red' : colors.timeline_card_footer}
+                        />
+                    </View>
                 </Pressable>
 
                 <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
