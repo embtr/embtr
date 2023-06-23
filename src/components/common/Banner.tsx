@@ -8,6 +8,7 @@ import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 interface Props {
     name: string;
@@ -166,7 +167,7 @@ export const Banner = ({
                             textStyle,
                             {
                                 textAlign: 'center',
-                                fontFamily: 'Poppins_600SemiBold',
+                                fontFamily: POPPINS_MEDIUM,
                                 fontSize: bannerSize,
                             },
                         ]}
