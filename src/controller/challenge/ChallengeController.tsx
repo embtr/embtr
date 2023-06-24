@@ -25,4 +25,15 @@ export class ChallengeController {
                 return false;
             });
     }
+
+    public static async like(challengeId: number) {
+        return axiosInstance
+            .post(`/challenge/${challengeId}/like`)
+            .then((success) => {
+                return true;
+            })
+            .catch((error) => {
+                return false;
+            });
+    }
 }

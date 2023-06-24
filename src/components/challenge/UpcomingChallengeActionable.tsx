@@ -6,8 +6,10 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 interface Props {
     icon: IoniconName;
     count: number;
+    onPress?: Function;
 }
-export const UpcomingChallengeActionable = ({ icon, count }: Props) => {
+
+export const UpcomingChallengeActionable = ({ icon, count, onPress }: Props) => {
     const { colors } = useTheme();
     return (
         <View
@@ -26,7 +28,18 @@ export const UpcomingChallengeActionable = ({ icon, count }: Props) => {
                     left: 9,
                 }}
             >
-                <Ionicons name={icon} size={30} color={colors.secondary_text} />
+                <Ionicons
+                    name={icon}
+                    size={30}
+                    color={colors.secondary_text}
+                    onPress={() => {
+                        if (!onPress) {
+                            return;
+                        }
+
+                        onPress();
+                    }}
+                />
 
                 <Text
                     style={{

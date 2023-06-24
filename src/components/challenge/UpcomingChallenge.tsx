@@ -1,5 +1,5 @@
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { shouldUseNarrowView } from 'src/util/GeneralUtility';
@@ -9,7 +9,6 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { Challenge } from 'resources/schema';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 
 interface Props {
     challenge: Challenge;
@@ -140,8 +139,23 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         icon={'people-outline'}
                         count={challenge.challengeParticipants?.length ?? 0}
                     />
-                    <UpcomingChallengeActionable icon={'heart-outline'} count={4} />
-                    <UpcomingChallengeActionable icon={'chatbox-outline'} count={6} />
+
+                    <UpcomingChallengeActionable
+                        icon={'heart-outline'}
+                        count={challenge.likes?.length ?? 0}
+                        onPress={() => {
+                            if (!challenge.id) {
+                                return;
+                            }
+
+                            ChallengeController.like(challenge.id);
+                        }}
+                    />
+
+                    <UpcomingChallengeActionable
+                        icon={'chatbox-outline'}
+                        count={challenge.comments?.length ?? 0}
+                    />
                 </View>
 
                 <View
