@@ -58,6 +58,7 @@ export const AndroidUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Pr
                     setSelectedUnit(itemValue);
                 }}
             >
+                <Picker.Item label="None" value={undefined} />
                 {units.map((unit) => {
                     if (!unit.unit) return null;
 

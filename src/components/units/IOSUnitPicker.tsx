@@ -14,7 +14,7 @@ interface Props {
     dismiss: Function;
 }
 
-export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) => {
+export const IOSUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
 
     const [units, setUnits] = React.useState<Unit[]>([]);
@@ -120,6 +120,7 @@ export const SetUnitModal = ({ defaultUnit, visible, confirm, dismiss }: Props) 
                                                     setSelectedUnitId(itemValue);
                                                 }}
                                             >
+                                                <Picker.Item label="None" value={undefined} />
                                                 {units.map((unit) => {
                                                     if (!unit.unit) return null;
 

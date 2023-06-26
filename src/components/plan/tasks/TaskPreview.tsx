@@ -15,7 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { HabitScrollSelector } from './HabitScrollSelector';
 import { HabitIcon } from '../habit/HabitIcon';
 import { TextInput } from 'react-native-gesture-handler';
-import { SetUnitModal } from 'src/components/units/SetUnitModal';
+import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
 import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 
@@ -143,7 +143,7 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                     }}
                 />
             ) : (
-                <SetUnitModal
+                <IOSUnitPicker
                     visible={showSetUnitModal}
                     confirm={(selected: Unit) => {
                         setShowSetUnitModal(false);

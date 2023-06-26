@@ -64,8 +64,8 @@ export const ChallengeMain = () => {
     };
 
     const [routes] = React.useState([
-        { key: 'overview', title: 'Overview' },
-        { key: 'active', title: 'Active' },
+        { key: 'overview', title: 'Explore' },
+        { key: 'active', title: 'Challenges' },
         { key: 'recommended', title: 'Achievements' },
     ]);
 
