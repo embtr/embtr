@@ -6,7 +6,7 @@ import { PlannableTask } from '../PlannableTask';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
 interface Props {
@@ -25,7 +25,8 @@ export const PlanDay = ({
     onPlannedDayUpdated,
 }: Props) => {
     const { colors } = useTheme();
-    const navigation = useNavigation<StackNavigationProp<PlanTabScreens, 'DailyResultDetails'>>();
+    const navigation =
+        useNavigation<StackNavigationProp<ChallengeTabScreens, 'DailyResultDetails'>>();
     const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
 
     const onPlannedTaskUpdated = (plannedTask: PlannedTask) => {

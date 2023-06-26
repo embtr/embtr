@@ -33,7 +33,7 @@ export const ChallengeMain = () => {
                     </View>
                 );
 
-            case 'upcoming':
+            case 'recommended':
                 return (
                     <View style={{ height: '100%' }}>
                         <UpcomingChallenges />
@@ -66,18 +66,17 @@ export const ChallengeMain = () => {
     const [routes] = React.useState([
         { key: 'overview', title: 'Overview' },
         { key: 'active', title: 'Active' },
-        { key: 'upcoming', title: 'Upcoming' },
+        { key: 'recommended', title: 'Achievements' },
     ]);
 
     const handleTabLayout = (event: any) => {
         const { height } = event.nativeEvent.layout;
-        console.log(index, height);
     };
 
     return (
         <Screen>
             <View style={{ height: '100%', backgroundColor: '10' }}>
-                <Banner name="Challenges" />
+                <Banner name="Adventures" />
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}

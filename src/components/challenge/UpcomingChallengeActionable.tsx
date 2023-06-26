@@ -1,15 +1,17 @@
 import { IoniconName, POPPINS_REGULAR } from 'src/util/constants';
-import { View, Text } from 'react-native';
+import { View, Text, Touchable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     icon: IoniconName;
     count: number;
+    color?: string;
     onPress?: Function;
 }
 
-export const UpcomingChallengeActionable = ({ icon, count, onPress }: Props) => {
+export const UpcomingChallengeActionable = ({ icon, count, color, onPress }: Props) => {
     const { colors } = useTheme();
     return (
         <View
@@ -28,10 +30,8 @@ export const UpcomingChallengeActionable = ({ icon, count, onPress }: Props) => 
                     left: 9,
                 }}
             >
-                <Ionicons
-                    name={icon}
-                    size={30}
-                    color={colors.secondary_text}
+                <TouchableOpacity
+                    disabled={!onPress}
                     onPress={() => {
                         if (!onPress) {
                             return;
@@ -39,7 +39,9 @@ export const UpcomingChallengeActionable = ({ icon, count, onPress }: Props) => 
 
                         onPress();
                     }}
-                />
+                >
+                    <Ionicons name={icon} size={30} color={color ?? colors.secondary_text} />
+                </TouchableOpacity>
 
                 <Text
                     style={{

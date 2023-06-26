@@ -1,12 +1,21 @@
 import { POPPINS_REGULAR } from 'src/util/constants';
-
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Ionicons } from '@expo/vector-icons';
 import { shouldUseNarrowView } from 'src/util/GeneralUtility';
-export const ChallengeBadge = () => {
+import { SvgUri } from 'react-native-svg';
+import { ChallengeReward } from 'resources/schema';
+
+interface Props {
+    reward: ChallengeReward;
+}
+
+export const ChallengeBadge = ({ reward }: Props) => {
     const { colors } = useTheme();
     const useNarrowView = shouldUseNarrowView();
+
+    if (!reward.imageUrl) {
+        return <View />;
+    }
 
     return (
         <View
@@ -19,10 +28,10 @@ export const ChallengeBadge = () => {
                 alignItems: 'center',
             }}
         >
-            <Ionicons name={'water-outline'} size={useNarrowView ? 20 : 40} color={colors.link} />
+            <SvgUri width={30} height={30} uri={reward.imageUrl} />
             <Text
                 style={{
-                    paddingLeft: 5,
+                    paddingLeft: 7,
                     fontFamily: POPPINS_REGULAR,
                     color: colors.tab_selected,
                     fontSize: useNarrowView ? 12 : 17,

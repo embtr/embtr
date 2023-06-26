@@ -1,4 +1,3 @@
-import { getAuth } from 'firebase/auth';
 import { Timestamp } from 'firebase/firestore';
 import { USER_POST } from 'resources/endpoints';
 import { Like as LikeModel, UserPost, Comment as CommentModel, Image } from 'resources/schema';
@@ -13,9 +12,6 @@ import { Interactable } from 'resources/types/interactable/Interactable';
 import axiosInstance from 'src/axios/axios';
 import { LikeController } from 'src/controller/api/general/LikeController';
 import ImageController from 'src/controller/image/ImageController';
-import NotificationController, {
-    NotificationType,
-} from 'src/controller/notification/NotificationController';
 import { CommentController } from 'src/controller/api/general/CommentController';
 import { TimelinePostModel } from 'src/model/OldModels';
 

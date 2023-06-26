@@ -1,6 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { PlanTabScreens, TimelineTabScreens, TodayTab, ProfileTabScreens } from 'src/navigation/RootStackParamList';
+import {
+    ChallengeTabScreens,
+    TimelineTabScreens,
+    TodayTab,
+    ProfileTabScreens,
+} from 'src/navigation/RootStackParamList';
 import { TABS } from 'src/components/home/Dashboard';
 
 export const getNavigationHook = (currentTab: string) => {
@@ -13,7 +18,7 @@ export const getNavigationHook = (currentTab: string) => {
     }
 
     if (currentTab === TABS.PLAN) {
-        return useNavigation<StackNavigationProp<PlanTabScreens>>;
+        return useNavigation<StackNavigationProp<ChallengeTabScreens>>;
     }
 
     if (currentTab === TABS.USER_PROFILE) {

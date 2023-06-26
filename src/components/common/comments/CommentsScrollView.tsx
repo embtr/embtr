@@ -11,20 +11,16 @@ interface Props {
 }
 
 export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) => {
-    let commentViews: JSX.Element[] = [];
-
     let max = limit ? limit : comments.length;
     if (comments.length < max) {
         max = comments.length;
     }
 
-    for (let i = 0; i < max; i++) {
-        const comment: CommentModel = comments[i];
-
+    const commentViews = comments.map((comment) => {
         const isCurrentUsersComment = comment.user?.uid === getCurrentUid();
 
         if (isCurrentUsersComment) {
-            commentViews.push(
+            return (
                 <SwipeableDeleteCard
                     key={comment.id}
                     onDelete={() => {
@@ -33,19 +29,19 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
                         }
                     }}
                 >
-                    <View key={comment.id} style={{ marginBottom: 7.5, paddingTop: 15 }}>
+                    <View style={{ marginBottom: 7.5, paddingTop: 15 }}>
                         <CommentBoxComment comment={comment} />
                     </View>
                 </SwipeableDeleteCard>
             );
         } else {
-            commentViews.push(
+            return (
                 <View key={comment.id} style={{ marginBottom: 7.5, paddingTop: 15 }}>
                     <CommentBoxComment comment={comment} />
                 </View>
             );
         }
-    }
+    });
 
     return <View>{commentViews}</View>;
 };

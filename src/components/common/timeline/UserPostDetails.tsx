@@ -32,6 +32,8 @@ export const UserPostDetails = () => {
         }, [])
     );
 
+    console.log(userPost);
+
     const userIsPostOwner = userPost?.user?.uid === getAuth().currentUser?.uid;
 
     const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {

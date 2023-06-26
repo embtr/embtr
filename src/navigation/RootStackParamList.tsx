@@ -3,8 +3,25 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>;
     CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>;
-    PlanTab: NavigatorScreenParams<PlanTabScreens>;
+    PlanTab: NavigatorScreenParams<ChallengeTabScreens>;
     TodayTab: undefined;
+};
+
+export type TimelineTabScreens = {
+    UserSearch: undefined;
+    Timeline: undefined;
+    CreateUserPost: undefined;
+    EditUserPostDetails: { id: number };
+    EditDailyResultDetails: { id: number };
+    UserPostDetails: { id: number };
+    DailyResultDetails: { id: number };
+    UserProfile: { id: string };
+    Notifications: undefined;
+    PillarDetails: { uid: string; id: string };
+    ViewAllComments: { uid: string; goalId: string };
+    GoalDetails: { uid: string; id: string; source: string };
+    UserPosts: { userId: number };
+    DailyResults: { userId: number };
 };
 
 export type TodayTab = {
@@ -16,7 +33,7 @@ export type TodayTab = {
     UserProfile: { id: string };
 };
 
-export type PlanTabScreens = {
+export type ChallengeTabScreens = {
     PlanMain: undefined;
     PlanPreviews: undefined;
     Habits: undefined;
@@ -36,24 +53,7 @@ export type PlanTabScreens = {
     RoutineDetails: { id: string };
     ViewAllComments: { uid: string; goalId: string };
     DailyResultDetails: { id: number };
-};
-
-export type TimelineTabScreens = {
-    UserSearch: undefined;
-    Timeline: undefined;
-    CreateUserPost: undefined;
-    EditUserPostDetails: { id: number };
-    EditDailyResultDetails: { id: number };
-    UserPostDetails: { id: number };
-    ChallengeDetails: { id: string };
-    DailyResultDetails: { id: number };
-    UserProfile: { id: string };
-    Notifications: undefined;
-    PillarDetails: { uid: string; id: string };
-    ViewAllComments: { uid: string; goalId: string };
-    GoalDetails: { uid: string; id: string; source: string };
-    UserPosts: { userId: number };
-    DailyResults: { userId: number };
+    ChallengeDetails: { id: number };
 };
 
 export type ProfileTabScreens = {

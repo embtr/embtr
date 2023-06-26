@@ -23,7 +23,10 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
             return;
         }
 
-        const encodedComment: string = UsernameTagTracker.encodeTaggedUsers(commentText, taggedUsers);
+        const encodedComment: string = UsernameTagTracker.encodeTaggedUsers(
+            commentText,
+            taggedUsers
+        );
 
         Keyboard.dismiss();
         submitComment(encodedComment, taggedUsers);
@@ -86,7 +89,13 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
                         {/*currentUserProfile && <NavigatableUserImage userProfileModel={currentUserProfile} size={30} denyNavigation={true} />*/}
                     </View>
                     <TextInput
-                        style={{ paddingLeft: 10, color: colors.text, flex: 1, paddingBottom: focused ? 15 : 0, paddingTop: focused ? 15 : 0 }}
+                        style={{
+                            paddingLeft: 10,
+                            color: colors.text,
+                            flex: 1,
+                            paddingBottom: focused ? 15 : 0,
+                            paddingTop: focused ? 15 : 0,
+                        }}
                         placeholder={'add a comment...'}
                         placeholderTextColor={colors.secondary_text}
                         onChangeText={(text) => setCommentText(text)}
@@ -98,7 +107,13 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
                         onBlur={() => setFocused(false)}
                     />
 
-                    <View style={{ width: 90, paddingRight: 15, paddingBottom: isIosApp() ? 0 : focused ? 4 : 0 }}>
+                    <View
+                        style={{
+                            width: 90,
+                            paddingRight: 15,
+                            paddingBottom: isIosApp() ? 0 : focused ? 4 : 0,
+                        }}
+                    >
                         <EmbtrButton
                             buttonText={'send'}
                             callback={() => {

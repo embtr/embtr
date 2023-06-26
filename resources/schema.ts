@@ -235,6 +235,7 @@ export interface Challenge {
   creator?: User;
   creatorId?: number;
   challengeRequirements?: ChallengeRequirement[];
+  challengeRewards?: ChallengeReward[];
   start?: Date;
   end?: Date;
   active?: boolean;
@@ -261,6 +262,17 @@ export interface ChallengeRequirement {
   updatedAt?: Date;
   challenge?: Challenge;
   challengeId?: number;
+}
+
+export interface ChallengeReward {
+  id?: number;
+  name?: string;
+  description?: string;
+  imageUrl?: string;
+  active?: boolean;
+  challenge?: Challenge[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ChallengeParticipant {

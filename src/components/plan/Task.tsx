@@ -4,7 +4,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text, TouchableWithoutFeedback } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TaskModel } from 'src/controller/planning/TaskController';
-import { PlanTabScreens } from 'src/navigation/RootStackParamList';
+import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW } from 'src/util/constants';
@@ -20,7 +20,7 @@ interface Props {
 export const Task = ({ task, pillars }: Props) => {
     const { colors } = useTheme();
 
-    const navigation = useNavigation<StackNavigationProp<PlanTabScreens>>();
+    const navigation = useNavigation<StackNavigationProp<ChallengeTabScreens>>();
 
     const navigateToDetails = () => {
         navigation.navigate('TaskDetails', { id: task.id! });
@@ -45,11 +45,36 @@ export const Task = ({ task, pillars }: Props) => {
     return (
         <View style={{ width: '97%' }}>
             <TouchableWithoutFeedback onPress={navigateToDetails}>
-                <View style={[{ backgroundColor: colors.button_background, borderRadius: 15, paddingTop: 10 }, CARD_SHADOW]}>
+                <View
+                    style={[
+                        {
+                            backgroundColor: colors.button_background,
+                            borderRadius: 15,
+                            paddingTop: 10,
+                        },
+                        CARD_SHADOW,
+                    ]}
+                >
                     <View style={{ paddingLeft: 10 }}>
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_600SemiBold', fontSize: 14 }}>{task.name}</Text>
+                        <Text
+                            style={{
+                                color: colors.goal_primary_font,
+                                fontFamily: 'Poppins_600SemiBold',
+                                fontSize: 14,
+                            }}
+                        >
+                            {task.name}
+                        </Text>
 
-                        <Text style={{ color: colors.goal_primary_font, fontFamily: 'Poppins_400Regular', opacity: 0.75, fontSize: 10, paddingTop: 3 }}>
+                        <Text
+                            style={{
+                                color: colors.goal_primary_font,
+                                fontFamily: 'Poppins_400Regular',
+                                opacity: 0.75,
+                                fontSize: 10,
+                                paddingTop: 3,
+                            }}
+                        >
                             {task.description}
                         </Text>
                     </View>
@@ -59,16 +84,53 @@ export const Task = ({ task, pillars }: Props) => {
                     </View>
 
                     <View style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 10 }}>
-                        <View style={{ flex: 1, flexDirection: 'row', paddingLeft: 10, alignItems: 'center' }}>
-                            <Ionicons name={'stats-chart-outline'} size={14} color={colors.goal_secondary_font} />
-                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 12 }}>
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                paddingLeft: 10,
+                                alignItems: 'center',
+                            }}
+                        >
+                            <Ionicons
+                                name={'stats-chart-outline'}
+                                size={14}
+                                color={colors.goal_secondary_font}
+                            />
+                            <Text
+                                style={{
+                                    paddingLeft: 5,
+                                    color: colors.goal_secondary_font,
+                                    fontFamily: 'Poppins_400Regular',
+                                    fontSize: 12,
+                                }}
+                            >
                                 {goal?.name}
                             </Text>
                         </View>
 
-                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 30 }}>
-                            <MaterialCommunityIcons name="pillar" size={14} color={colors.goal_secondary_font} />
-                            <Text style={{ paddingLeft: 5, color: colors.goal_secondary_font, fontFamily: 'Poppins_400Regular', fontSize: 12 }}>
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end',
+                                alignItems: 'center',
+                                paddingRight: 30,
+                            }}
+                        >
+                            <MaterialCommunityIcons
+                                name="pillar"
+                                size={14}
+                                color={colors.goal_secondary_font}
+                            />
+                            <Text
+                                style={{
+                                    paddingLeft: 5,
+                                    color: colors.goal_secondary_font,
+                                    fontFamily: 'Poppins_400Regular',
+                                    fontSize: 12,
+                                }}
+                            >
                                 {pillarName}
                             </Text>
                         </View>

@@ -1,3 +1,4 @@
+import React from 'react';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -6,9 +7,10 @@ import { shouldUseNarrowView } from 'src/util/GeneralUtility';
 import { UpcomingChallengeActionable } from 'src/components/challenge/UpcomingChallengeActionable';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
-import { Challenge } from 'resources/schema';
+import { Challenge, ChallengeParticipant } from 'resources/schema';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
+import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 
 interface Props {
     challenge: Challenge;
@@ -16,6 +18,32 @@ interface Props {
 
 export const UpcomingChallenge = ({ challenge }: Props) => {
     const { colors } = useTheme();
+    const [userIsAParticipant, setUsetIsAParticipant] = React.useState(false);
+    const [participantCount, setParticipantCount] = React.useState(
+        challenge.challengeParticipants?.length || 0
+    );
+    const [likeCount, setLikeCount] = React.useState(challenge.likes?.length || 0);
+    const [isLiked, setIsLiked] = React.useState(false);
+
+    React.useEffect(() => {
+        const fetch = async () => {
+            const currentUserId = await getUserIdFromToken();
+
+            const userIsAParticipant = challenge?.challengeParticipants?.some(
+                (participant: ChallengeParticipant) => participant.userId === currentUserId
+            );
+
+            const userHasLiked = challenge?.likes?.some(
+                (like: ChallengeParticipant) => like.userId === currentUserId
+            );
+
+            setUsetIsAParticipant(userIsAParticipant || false);
+            setIsLiked(userHasLiked || false);
+        };
+
+        fetch();
+    }, []);
+
     const useNarrowView = shouldUseNarrowView();
 
     const daysRemaining = Math.floor(
@@ -28,6 +56,18 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
         }
 
         ChallengeController.register(challenge.id);
+        setUsetIsAParticipant(true);
+        setParticipantCount(participantCount + 1);
+    };
+
+    const likeChallenge = () => {
+        if (!challenge.id) {
+            return;
+        }
+
+        ChallengeController.like(challenge.id);
+        setIsLiked(true);
+        setLikeCount(likeCount + 1);
     };
 
     return (
@@ -61,7 +101,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                                 fontSize: 11,
                             }}
                         >
-                            {daysRemaining} days away
+                            starts in {daysRemaining} day{daysRemaining === 1 ? '' : 's'}
                         </Text>
                     </View>
 
@@ -121,7 +161,10 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         </Text>
 
                         <View style={{ paddingTop: 5 }}>
-                            <ChallengeBadge />
+                            {challenge.challengeRewards &&
+                                challenge.challengeRewards.length > 0 && (
+                                    <ChallengeBadge reward={challenge.challengeRewards[0]} />
+                                )}
                         </View>
                     </View>
                 </View>
@@ -135,21 +178,13 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         flexDirection: 'row',
                     }}
                 >
-                    <UpcomingChallengeActionable
-                        icon={'people-outline'}
-                        count={challenge.challengeParticipants?.length ?? 0}
-                    />
+                    <UpcomingChallengeActionable icon={'people-outline'} count={participantCount} />
 
                     <UpcomingChallengeActionable
-                        icon={'heart-outline'}
-                        count={challenge.likes?.length ?? 0}
-                        onPress={() => {
-                            if (!challenge.id) {
-                                return;
-                            }
-
-                            ChallengeController.like(challenge.id);
-                        }}
+                        icon={isLiked ? 'heart' : 'heart-outline'}
+                        count={likeCount}
+                        onPress={isLiked ? undefined : likeChallenge}
+                        color={isLiked ? 'red' : undefined}
                     />
 
                     <UpcomingChallengeActionable
@@ -191,6 +226,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         onPress={() => {
                             registerForChallenge();
                         }}
+                        disabled={userIsAParticipant}
                     >
                         <View
                             style={{
@@ -199,11 +235,29 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                                 borderRadius: 5,
                             }}
                         >
-                            <Text
-                                style={{ color: colors.text, fontFamily: POPPINS_REGULAR, top: 2 }}
-                            >
-                                Join Challenge
-                            </Text>
+                            {!userIsAParticipant && (
+                                <Text
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_REGULAR,
+                                        top: 2,
+                                    }}
+                                >
+                                    Join Challenge
+                                </Text>
+                            )}
+
+                            {userIsAParticipant && (
+                                <Text
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_REGULAR,
+                                        top: 2,
+                                    }}
+                                >
+                                    Participating ✅
+                                </Text>
+                            )}
                         </View>
                     </TouchableOpacity>
                 </View>
