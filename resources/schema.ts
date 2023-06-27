@@ -255,13 +255,13 @@ export interface ChallengeRequirement {
   habitId?: number;
   unit?: Unit;
   unitId?: number;
-  quantity?: number;
-  minimumRequired?: number;
+  required?: number;
+  challengeType?: ChallengeFrequency;
+  challenge?: Challenge;
+  challengeId?: number;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
-  challenge?: Challenge;
-  challengeId?: number;
 }
 
 export interface ChallengeReward {
@@ -316,4 +316,10 @@ export enum WidgetType {
   DAILY_HISTORY = 'DAILY_HISTORY',
   HABIT_JOURNEY = 'HABIT_JOURNEY',
   PLANNING = 'PLANNING',
+}
+
+export enum ChallengeFrequency {
+  INVALID = 'INVALID',
+  TOTAL = 'TOTAL',
+  DAILY = 'DAILY',
 }
