@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, RefreshControl, Pressable } from 'react-native';
+import { View, RefreshControl, TouchableOpacity, Pressable } from 'react-native';
 import { UpcomingChallenge } from 'src/components/challenge/UpcomingChallenge';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { Challenge } from 'resources/schema';
@@ -8,6 +8,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableWithoutFeedback } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type navigationProp = StackNavigationProp<ChallengeTabScreens, 'ChallengeDetails'>;
 
@@ -34,7 +35,7 @@ export const UpcomingChallenges = () => {
     const challengeElements: JSX.Element[] = [];
     for (const challenge of challenges) {
         const challengeElement = (
-            <TouchableWithoutFeedback
+            <Pressable
                 key={challenge.id}
                 onPress={() => {
                     if (!challenge.id) {
@@ -48,7 +49,7 @@ export const UpcomingChallenges = () => {
                 }}
             >
                 <UpcomingChallenge challenge={challenge} />
-            </TouchableWithoutFeedback>
+            </Pressable>
         );
 
         challengeElements.push(challengeElement);

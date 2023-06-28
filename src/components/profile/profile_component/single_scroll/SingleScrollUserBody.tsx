@@ -7,6 +7,7 @@ import { TodaysActivitiesWidget, WidgetSource } from 'src/components/widgets/Tod
 import { HabitJourneyWidget } from 'src/components/widgets/habit_journey/HabitJourneyWidget';
 import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsWidget';
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
+import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
 
 interface Props {
     user: User;
@@ -35,6 +36,10 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
 
                 <View style={{ paddingTop: 6 }}>
                     <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />
+                </View>
+
+                <View style={{ paddingTop: 6 }}>
+                    <View style={{ width: '100%' }}>{<ActiveChallengesWidget user={user} />}</View>
                 </View>
 
                 <View style={{ paddingTop: 6 }}>

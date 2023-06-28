@@ -29,6 +29,18 @@ export class ChallengeController {
             });
     }
 
+    public static async getAllForUser(userId: number) {
+        return axiosInstance
+            .get(`/user/${userId}/challenges/`)
+            .then((success) => {
+                const body: GetChallengesResponse = success.data;
+                return body.challenges ?? [];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
     public static async register(challengeId: number) {
         return axiosInstance
             .post(`/challenge/${challengeId}/register`)

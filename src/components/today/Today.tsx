@@ -30,6 +30,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../theme/ThemeProvider';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { PlanningWidget } from '../widgets/PlanningWidget';
+import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -174,6 +175,9 @@ export const Today = () => {
 
             case WidgetType.PLANNING:
                 return <PlanningWidget />;
+
+            case WidgetType.ACTIVE_CHALLENGES:
+                return <ActiveChallengesWidget user={user} />;
         }
 
         return <View />;

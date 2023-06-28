@@ -1,13 +1,12 @@
 import React from 'react';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { Challenge, ChallengeParticipant } from 'resources/schema';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     challenge: Challenge;

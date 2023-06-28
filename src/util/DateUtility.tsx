@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { differenceInDays, differenceInMonths, differenceInWeeks, format } from 'date-fns';
 
 export const getDaysOld = (then: any, now: any): number => {
     const dateDiff = now - then;
@@ -73,4 +73,22 @@ export const getDurationPretty = (duration: number): string => {
     }
 
     return durationString;
+};
+
+export const getTimeLeft = (endDate: Date) => {
+    const endDay = endDate ? new Date(endDate) : new Date();
+    const daysLeft = differenceInDays(endDay, new Date());
+
+    if (daysLeft > 13) {
+        const weeksLeft = differenceInWeeks(endDay, new Date());
+
+        if (weeksLeft > 5) {
+            const monthsLeft = differenceInMonths(endDay, new Date());
+            return `${monthsLeft} months left`;
+        } else {
+            return `${weeksLeft} weeks left`;
+        }
+    } else {
+        return `${daysLeft} days left`;
+    }
 };
