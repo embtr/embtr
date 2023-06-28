@@ -33,11 +33,11 @@ export const ChallengeBadge = ({ reward }: Props) => {
                 style={{
                     paddingLeft: 7,
                     fontFamily: POPPINS_REGULAR,
-                    color: colors.tab_selected,
+                    color: colors.text,
                     fontSize: useNarrowView ? 12 : 17,
                 }}
             >
-                Hydration Badge
+                {reward.name}
             </Text>
         </View>
     );

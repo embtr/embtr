@@ -2,15 +2,12 @@ import React from 'react';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Ionicons } from '@expo/vector-icons';
-import { shouldUseNarrowView } from 'src/util/GeneralUtility';
-import { UpcomingChallengeActionable } from 'src/components/challenge/UpcomingChallengeActionable';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
-import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { Challenge, ChallengeParticipant } from 'resources/schema';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     challenge: Challenge;
@@ -18,6 +15,7 @@ interface Props {
 
 export const UpcomingChallenge = ({ challenge }: Props) => {
     const { colors } = useTheme();
+
     const [userIsAParticipant, setUsetIsAParticipant] = React.useState(false);
     const [participantCount, setParticipantCount] = React.useState(
         challenge.challengeParticipants?.length || 0
@@ -44,8 +42,6 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
         fetch();
     }, []);
 
-    const useNarrowView = shouldUseNarrowView();
-
     const daysRemaining = Math.floor(
         (challenge.start!.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
     );
@@ -70,11 +66,17 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
         setLikeCount(likeCount + 1);
     };
 
+    const percentComplete = challenge.challengeRequirements?.reduce(
+        (acc, requirement) => acc + requirement.custom.percentComplete,
+        0
+    );
+
     return (
         <View
             style={{
-                width: '100%',
                 backgroundColor: colors.text_input_background,
+                width: '100%',
+                height: 280,
                 borderRadius: 5,
             }}
         >
@@ -82,26 +84,15 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
             <View style={{ padding: 10 }}>
                 {/* HEADER */}
                 <View>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View>
                         <Text
                             style={{
-                                flex: 1,
                                 color: colors.text,
                                 fontFamily: POPPINS_MEDIUM,
-                                fontSize: 18,
+                                fontSize: 15,
                             }}
                         >
                             {challenge.name}
-                        </Text>
-                        <Text
-                            style={{
-                                bottom: 5,
-                                color: colors.secondary_text,
-                                fontFamily: POPPINS_REGULAR,
-                                fontSize: 11,
-                            }}
-                        >
-                            starts in {daysRemaining} day{daysRemaining === 1 ? '' : 's'}
                         </Text>
                     </View>
 
@@ -109,47 +100,55 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         style={{
                             fontFamily: POPPINS_REGULAR,
                             color: colors.secondary_text,
-                            paddingTop: 10,
+                            fontSize: 8,
+                            bottom: 5,
+                        }}
+                    >
+                        {participantCount} participant{participantCount === 1 ? '' : 's'} • host
+                        {'  '}
+                        <Text
+                            style={{
+                                color: colors.tab_selected,
+                                fontFamily: POPPINS_REGULAR,
+                                paddingTop: 15,
+                                fontSize: 9,
+                                textAlign: 'right',
+                            }}
+                        >
+                            {challenge.creator?.displayName}
+                        </Text>
+                    </Text>
+
+                    <Text
+                        style={{
+                            fontFamily: POPPINS_REGULAR,
+                            color: colors.text,
+                            fontSize: 10,
                         }}
                     >
                         {challenge.description}
                     </Text>
                 </View>
+            </View>
 
+            {/* BOTTOM SECTION */}
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: 'flex-end',
+                    bottom: 5,
+                    alignContent: 'center',
+                }}
+            >
                 {/* Achievement */}
-                <View style={{ flexDirection: useNarrowView ? 'column' : 'row' }}>
-                    <View style={{ flex: 1 }}>
-                        <Text
-                            style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_MEDIUM,
-                                paddingTop: 15,
-                            }}
-                        >
-                            Hosted By
-                        </Text>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 5 }}>
-                            {challenge.creator && (
-                                <NavigatableUserImage
-                                    user={challenge.creator!}
-                                    size={useNarrowView ? 30 : 45}
-                                />
-                            )}
-                            <Text
-                                style={{
-                                    paddingLeft: 5,
-                                    fontFamily: POPPINS_REGULAR,
-                                    color: colors.text,
-                                    fontSize: useNarrowView ? 13 : 17,
-                                }}
-                            >
-                                {challenge.creator?.displayName}
-                            </Text>
-                        </View>
-                    </View>
-
-                    <View style={{ flex: 1 }}>
+                <View
+                    style={{
+                        flexDirection: 'column',
+                        paddingLeft: 5,
+                        paddingBottom: 5,
+                    }}
+                >
+                    <View>
                         <Text
                             style={{
                                 color: colors.text,
@@ -159,8 +158,10 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         >
                             Achievement
                         </Text>
+                    </View>
 
-                        <View style={{ paddingTop: 5 }}>
+                    <View>
+                        <View style={{}}>
                             {challenge.challengeRewards &&
                                 challenge.challengeRewards.length > 0 && (
                                     <ChallengeBadge reward={challenge.challengeRewards[0]} />
@@ -168,98 +169,47 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         </View>
                     </View>
                 </View>
-            </View>
-
-            {/* BOTTOM SECTION */}
-            <View style={{ flexDirection: 'row', flex: 1, paddingTop: 10 }}>
-                <View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                    }}
-                >
-                    <UpcomingChallengeActionable icon={'people-outline'} count={participantCount} />
-
-                    <UpcomingChallengeActionable
-                        icon={isLiked ? 'heart' : 'heart-outline'}
-                        count={likeCount}
-                        onPress={isLiked ? undefined : likeChallenge}
-                        color={isLiked ? 'red' : undefined}
-                    />
-
-                    <UpcomingChallengeActionable
-                        icon={'chatbox-outline'}
-                        count={challenge.comments?.length ?? 0}
-                    />
+                <View style={{ paddingTop: 7.5, paddingHorizontal: 5, paddingBottom: 15 }}>
+                    <View
+                        style={{
+                            borderWidth: 1,
+                            borderRadius: 5,
+                            borderColor: colors.toggle_background_unselected,
+                            flexDirection: 'row',
+                            padding: 7.5,
+                            backgroundColor: colors.text_input_background_secondary,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={registerForChallenge}
+                            disabled={userIsAParticipant}
+                        >
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text
+                                    style={{
+                                        fontFamily: POPPINS_MEDIUM,
+                                        color: colors.tab_selected,
+                                        fontSize: 12,
+                                    }}
+                                >
+                                    {userIsAParticipant
+                                        ? 'Challenge Accepted  ✅'
+                                        : 'Join Challenge'}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
-                <View
-                    style={{
-                        alignItems: 'flex-end',
-                        justifyContent: 'flex-end',
-                        paddingRight: 10,
-                        paddingLeft: useNarrowView ? 10 : 0,
-                        paddingBottom: 10,
-                        paddingTop: 5,
-                        flexDirection: 'row',
-                        flex: useNarrowView ? undefined : 1,
-                    }}
-                >
-                    {!useNarrowView && (
-                        <View
-                            style={{
-                                flex: 1,
-                                alignItems: 'flex-end',
-                                paddingRight: 20,
-                                bottom: 2,
-                            }}
-                        >
-                            <Ionicons
-                                name={'share-outline'}
-                                size={30}
-                                color={colors.secondary_text}
-                            />
-                        </View>
-                    )}
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            registerForChallenge();
-                        }}
-                        disabled={userIsAParticipant}
-                    >
-                        <View
-                            style={{
-                                backgroundColor: colors.text_input_background_secondary,
-                                padding: 10,
-                                borderRadius: 5,
-                            }}
-                        >
-                            {!userIsAParticipant && (
-                                <Text
-                                    style={{
-                                        color: colors.text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        top: 2,
-                                    }}
-                                >
-                                    Join Challenge
-                                </Text>
-                            )}
-
-                            {userIsAParticipant && (
-                                <Text
-                                    style={{
-                                        color: colors.text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        top: 2,
-                                    }}
-                                >
-                                    Participating ✅
-                                </Text>
-                            )}
-                        </View>
-                    </TouchableOpacity>
+                <View style={{ paddingLeft: 5 }}>
+                    <PostDetailsActionBar
+                        likeCount={likeCount}
+                        isLiked={isLiked}
+                        commentCount={challenge.comments?.length ?? 0}
+                        onLike={likeChallenge}
+                    />
                 </View>
             </View>
         </View>

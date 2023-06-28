@@ -16,15 +16,15 @@ import { Like } from 'resources/schema';
 import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
 
 interface Props {
-    likes: Like[];
-    commentCount: number;
+    likeCount: number;
+    isLiked: boolean;
     onLike: Function;
+    commentCount: number;
 }
 
-const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
+const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike }: Props) => {
     const { colors } = useTheme();
 
-    const isLiked = timelineEntryWasLikedBy(likes, getCurrentUid());
     const [heartPressed, setHeartPressed] = React.useState(isLiked);
     const [isAnimating, setIsAnimating] = React.useState(false);
 
@@ -95,7 +95,7 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
                             fontFamily: 'Poppins_500Medium',
                         }}
                     >
-                        {likes.length}
+                        {likeCount}
                     </Text>
                 </View>
 
@@ -120,7 +120,7 @@ const PostDetailsActionBar = ({ likes, commentCount, onLike }: Props) => {
                 </View>
             </View>
 
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, bottom: 3 }}>
                 <Pressable
                     style={{ alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}
                     onPress={() => {

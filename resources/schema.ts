@@ -249,19 +249,25 @@ export interface Challenge {
 
 export interface ChallengeRequirement {
   id?: number;
+  challenge?: Challenge;
+  challengeId?: number;
   task?: Task;
   taskId?: number;
   habit?: Habit;
   habitId?: number;
   unit?: Unit;
   unitId?: number;
-  required?: number;
-  challengeType?: ChallengeFrequency;
-  challenge?: Challenge;
-  challengeId?: number;
+  calculationType?: ChallengeCalculationType;
+  calculationIntervalDays?: number;
+  requiredIntervalQuantity?: number;
+  requiredTaskQuantity?: number;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+
+  custom: {
+    percentComplete: number
+  }
 }
 
 export interface ChallengeReward {
@@ -318,8 +324,8 @@ export enum WidgetType {
   PLANNING = 'PLANNING',
 }
 
-export enum ChallengeFrequency {
+export enum ChallengeCalculationType {
   INVALID = 'INVALID',
   TOTAL = 'TOTAL',
-  DAILY = 'DAILY',
+  UNIQUE = 'UNIQUE',
 }

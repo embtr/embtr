@@ -7,7 +7,7 @@ import { CARD_SHADOW } from 'src/util/constants';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { TouchableWithoutFeedback } from 'react-native';
 
 type navigationProp = StackNavigationProp<ChallengeTabScreens, 'ChallengeDetails'>;
 
@@ -34,22 +34,47 @@ export const UpcomingChallenges = () => {
     const challengeElements: JSX.Element[] = [];
     for (const challenge of challenges) {
         const challengeElement = (
-            <View key={challenge.id} style={[{ paddingTop: 5 }, CARD_SHADOW]}>
-                <TouchableWithoutFeedback
-                    onPress={() => {
-                        if (!challenge.id) {
-                            return;
-                        }
-
-                        navigation.navigate('ChallengeDetails', { id: challenge.id });
-                    }}
-                >
-                    <UpcomingChallenge challenge={challenge} />
-                </TouchableWithoutFeedback>
-            </View>
+            <TouchableWithoutFeedback
+                key={challenge.id}
+                onPress={() => {
+                    if (!challenge.id) {
+                        return;
+                    }
+                    navigation.navigate('ChallengeDetails', { id: challenge.id });
+                }}
+                style={{
+                    ...CARD_SHADOW, // Assuming CARD_SHADOW is the style for card shadow
+                    width: '100%',
+                }}
+            >
+                <UpcomingChallenge challenge={challenge} />
+            </TouchableWithoutFeedback>
         );
 
         challengeElements.push(challengeElement);
+    }
+
+    const pairViews: JSX.Element[] = [];
+    for (let i = 0; i < challengeElements.length; i += 2) {
+        const pairView = (
+            <View
+                key={i}
+                style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    marginBottom: 10, // Adjust the margin between rows as needed
+                }}
+            >
+                <View style={{ flex: 1, paddingLeft: 5, paddingRight: 3.5 }}>
+                    {challengeElements[i]}
+                </View>
+                <View style={{ flex: 1, paddingLeft: 3.5, paddingRight: 5 }}>
+                    {challengeElements[i + 1]}
+                </View>
+            </View>
+        );
+
+        pairViews.push(pairView);
     }
 
     return (
@@ -58,9 +83,8 @@ export const UpcomingChallenges = () => {
                 style={{ height: '100%' }}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
-                <View style={{ paddingLeft: 5, paddingRight: 5, paddingBottom: 5 }}>
-                    {challengeElements}
-                </View>
+                <View style={{ height: 5 }} />
+                {pairViews}
             </ScrollView>
         </View>
     );
