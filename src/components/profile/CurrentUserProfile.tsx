@@ -10,15 +10,13 @@ import { useSharedValue } from 'react-native-reanimated';
 import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { useFocusEffect } from '@react-navigation/native';
-import { ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, View } from 'react-native';
 import { SingleScrollUserBody } from 'src/components/profile/profile_component/single_scroll/SingleScrollUserBody';
 
 export const CurrentUserProfile = () => {
     const [refreshing, setRefreshing] = React.useState(false);
-    const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>(new Date());
     const [user, setUser] = React.useState<User>();
-    const [bodyHeight, setBodyHeight] = React.useState<number>(10000);
-    const [headerHeight, setHeaderHeight] = React.useState<number>(1000);
+    const [random, setRandom] = React.useState<number>(0);
 
     // used for profile header scroll animation
     useFocusEffect(
@@ -41,7 +39,7 @@ export const CurrentUserProfile = () => {
         setRefreshing(true);
         wait(500).then(() => {
             setRefreshing(false);
-            setRefreshedTimestamp(new Date());
+            setRandom(Math.random());
         });
     }, []);
 
@@ -66,18 +64,6 @@ export const CurrentUserProfile = () => {
         );
     }
 
-    const setBodyHeightWrapper = (n: number) => {
-        if (n > 30) {
-            setBodyHeight(n);
-        }
-    };
-
-    const setHeaderHeightWrapper = (n: number) => {
-        if (n > 30) {
-            setHeaderHeight(n);
-        }
-    };
-
     if (!user) {
         return (
             <Screen>
@@ -90,7 +76,9 @@ export const CurrentUserProfile = () => {
         <Screen>
             <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
             <EmbtrMenuCustom />
-            <ScrollView>
+            <ScrollView
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
                 <ProfileHeader
                     user={user}
                     onFollowUser={() => {}}
@@ -98,16 +86,13 @@ export const CurrentUserProfile = () => {
                     followerCount={0}
                     followingCount={0}
                     isFollowingUser={false}
-                    setHeight={setHeaderHeightWrapper}
+                    setHeight={() => {}}
                 />
-
                 {/* moving away from the tabs for now  */}
-
                 {/*
                     <ProfileBody newUser={user} setHeight={setBodyHeightWrapper} />
                     */}
-
-                <SingleScrollUserBody user={user} setHeight={setBodyHeight} />
+                <SingleScrollUserBody key={random} user={user} setHeight={() => {}} />
             </ScrollView>
         </Screen>
     );

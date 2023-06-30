@@ -1,22 +1,20 @@
 import {
-  Like,
-  User,
-  Image,
-  Task,
-  Habit,
-  Unit,
-  ChallengeCalculationType,
   Challenge,
+  ChallengeCalculationType,
+  Habit,
+  Task,
+  Unit,
 } from "../../schema";
 
-export interface ChallengeDto {
-  challenge: Challenge;
-  custom: {};
+interface ChallengeCompletionData {
+  amountComplete: number;
+  amountRequired: number;
+  percentComplete: number;
 }
 
-export interface ChallengeRequirementDto {
+export interface ChallengeRequirement {
   id?: number;
-  challenge?: ChallengeDto;
+  challenge?: Challenge;
   challengeId?: number;
   task?: Task;
   taskId?: number;
@@ -28,28 +26,6 @@ export interface ChallengeRequirementDto {
   calculationIntervalDays?: number;
   requiredIntervalQuantity?: number;
   requiredTaskQuantity?: number;
-  active?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface ChallengeRewardDto {
-  id?: number;
-  name?: string;
-  description?: string;
-  imageUrl?: string;
-  active?: boolean;
-  challenge?: ChallengeDto[];
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface ChallengeParticipantDto {
-  id?: number;
-  user?: User;
-  userId?: number;
-  challenge?: ChallengeDto;
-  challengeId?: number;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;

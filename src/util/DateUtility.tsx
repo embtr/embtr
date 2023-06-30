@@ -81,14 +81,8 @@ export const getTimeLeft = (endDate: Date) => {
 
     if (daysLeft > 13) {
         const weeksLeft = differenceInWeeks(endDay, new Date());
-
-        if (weeksLeft > 5) {
-            const monthsLeft = differenceInMonths(endDay, new Date());
-            return `${monthsLeft} months left`;
-        } else {
-            return `${weeksLeft} weeks left`;
-        }
-    } else {
-        return `${daysLeft} days left`;
+        return `${weeksLeft} weeks left`;
     }
+
+    return `${daysLeft} days left`;
 };

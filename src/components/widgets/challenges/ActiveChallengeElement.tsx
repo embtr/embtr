@@ -4,6 +4,7 @@ import { Challenge } from 'resources/schema';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { getTimeLeft } from 'src/util/DateUtility';
+import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
 
 interface Props {
     challenge: Challenge;
@@ -14,8 +15,19 @@ export const ActiveChallengeElement = ({ challenge }: Props) => {
 
     const percentComplete = challenge.challengeRequirements?.reduce(
         (acc, requirement) => acc + requirement.custom.percentComplete,
-        0
-    );
+    if (!challenge.challengeRequirements || challenge.challengeRequirements.length === 0) {
+        return <View />;
+    }
+    const challengeRequirement = challenge.challengeRequirements[0];
+
+    if (!challengeRequirement.custom.completionData) {
+        return <View />;
+    }
+    const challengeCompletionData = challengeRequirement.custom.completionData;
+
+    const description = challenge.description ?? '';
+    const progressRemaining =
+        ChallengeUtility.getChallengeRequirementProgressString(challengeRequirement);
 
     const endDay = challenge.end ?? new Date();
     const daysLeft = getTimeLeft(endDay);
@@ -24,16 +36,31 @@ export const ActiveChallengeElement = ({ challenge }: Props) => {
         <View
             style={[
                 {
+                    width: 200,
                     backgroundColor: colors.button_background,
                     borderRadius: 3,
                     paddingHorizontal: 7.5,
-                    paddingBottom: 5,
                 },
                 CARD_SHADOW,
             ]}
         >
-            <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 13 }}>
-                {challenge.name}
+            <View style={{}}>
+                <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 13 }}>
+                    {challenge.name}
+                </Text>
+            </View>
+
+            <Text
+                numberOfLines={2}
+                style={{
+                    height: 30,
+                    bottom: 3,
+                    color: colors.text,
+                    fontFamily: POPPINS_REGULAR,
+                    fontSize: 9,
+                }}
+            >
+                {description}
             </Text>
             <Text
                 style={{
@@ -43,9 +70,11 @@ export const ActiveChallengeElement = ({ challenge }: Props) => {
                     fontSize: 10,
                 }}
             >
-                10 miles to go! • {daysLeft}
+                {progressRemaining} • {daysLeft}
             </Text>
-            <ProgressBar progress={percentComplete ?? 0} />
+            <View style={{ paddingBottom: 5, paddingTop: 1 }}>
+                <ProgressBar progress={challengeCompletionData.percentComplete ?? 0} />
+            </View>
         </View>
     );
 };

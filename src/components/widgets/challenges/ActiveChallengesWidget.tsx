@@ -57,7 +57,7 @@ export const ActiveChallengesWidget = ({ user }: Props) => {
                 showsHorizontalScrollIndicator={false}
             >
                 {challenges.map((challenge) => (
-                    <View key={challenge.id} style={{ paddingRight: 5 }}>
+                    <View key={challenge.id} style={{ paddingRight: 7.5 }}>
                         <ActiveChallengeElement challenge={challenge} />
                     </View>
                 ))}
