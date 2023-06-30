@@ -13,8 +13,6 @@ interface Props {
 export const ActiveChallengeElement = ({ challenge }: Props) => {
     const { colors } = useTheme();
 
-    const percentComplete = challenge.challengeRequirements?.reduce(
-        (acc, requirement) => acc + requirement.custom.percentComplete,
     if (!challenge.challengeRequirements || challenge.challengeRequirements.length === 0) {
         return <View />;
     }
