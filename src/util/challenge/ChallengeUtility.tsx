@@ -1,4 +1,4 @@
-import { ChallengeRequirement } from 'resources/schema';
+import { ChallengeCalculationType, ChallengeRequirement } from 'resources/schema';
 import { UnitUtility } from '../UnitUtility';
 
 export class ChallengeUtility {
@@ -9,11 +9,29 @@ export class ChallengeUtility {
         const amount = challengeRequirement.custom.completionData.amountComplete;
         const required = challengeRequirement.custom.completionData.amountRequired;
 
-        if (unit) {
-            const unitPretty = UnitUtility.getReadableUnit(unit, required);
-            return `${amount} of ${required} ${unitPretty}`;
-        }
+        const calculationType = challengeRequirement.calculationType;
 
+        if (calculationType === ChallengeCalculationType.TOTAL) {
+            if (unit) {
+                const unitPretty = UnitUtility.getReadableUnit(unit, required);
+                return `${amount} of ${required} ${unitPretty}`;
+            }
+        } else if (calculationType === ChallengeCalculationType.UNIQUE) {
+            if (challengeRequirement.calculationIntervalDays === 1) {
+                return `${amount} of ${required} days`;
+            } else if (challengeRequirement.calculationIntervalDays === 7) {
+                return `${amount} of ${required} weeks`;
+            } else if (
+                challengeRequirement.calculationIntervalDays === 30 ||
+                challengeRequirement.calculationIntervalDays === 31 ||
+                challengeRequirement.calculationIntervalDays === 28 ||
+                challengeRequirement.calculationIntervalDays === 29
+            ) {
+                return `${amount} of ${required} months`;
+            } else {
+                return `${amount} of ${required} intervals`;
+            }
+        }
         return '';
     }
 }
