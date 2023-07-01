@@ -17,6 +17,7 @@ import { TouchableWithoutFeedback } from 'react-native';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
+    getCurrentUser,
     getTimelineCardRefreshRequests,
     removeTimelineCardRefreshRequest,
 } from 'src/redux/user/GlobalState';
@@ -31,10 +32,16 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
     const { colors } = useTheme();
     const dispatch = useAppDispatch();
+
+    const currentUser = useAppSelector(getCurrentUser);
     const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
 
     const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>(
         plannedDayResult.data.dayResult
+    );
+    const [isLiked, setIsLiked] = React.useState(
+        plannedDayResult.data.dayResult.likes?.some((like) => like.userId === currentUser.id) ||
+            false
     );
 
     const refreshPlannedDayResult = async () => {
@@ -68,10 +75,16 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
     };
 
     const onLike = async () => {
+        if (isLiked) {
+            return;
+        }
+
         if (!updatedDayResult.id) {
             return;
         }
+
         await DailyResultController.addLikeViaApi(updatedDayResult.id);
+        setIsLiked(true);
         refreshPlannedDayResult();
     };
 
@@ -123,7 +136,8 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
                     }}
                 >
                     <PostDetailsActionBar
-                        likes={updatedDayResult?.likes || []}
+                        likeCount={updatedDayResult?.likes?.length ?? 0}
+                        isLiked={isLiked}
                         commentCount={updatedDayResult.comments?.length ?? 0}
                         onLike={onLike}
                     />

@@ -7,6 +7,9 @@ import { TouchableWithoutFeedback } from 'react-native';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { Comment, Like, Image as ImageModel, User } from 'resources/schema';
+import React from 'react';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 interface Props {
     staticImage?: ImageSourcePropType;
@@ -44,6 +47,11 @@ export const TextCard = ({
 }: Props) => {
     const { colors } = useTheme();
 
+    const currentUser = useAppSelector(getCurrentUser);
+    const [isLiked, setIsLiked] = React.useState(
+        likes.some((like) => like.userId === currentUser.id)
+    );
+
     const headerTextStyle = {
         fontSize: 16,
         fontFamily: 'Poppins_500Medium',
@@ -56,6 +64,15 @@ export const TextCard = ({
         fontFamily: 'Poppins_400Regular',
         color: colors.timeline_card_body,
     } as TextStyle;
+
+    const handleOnLike = () => {
+        if (isLiked) {
+            return;
+        }
+
+        setIsLiked(true);
+        onLike();
+    };
 
     const navigateToDetails = () => {
         onCommented();
@@ -203,9 +220,10 @@ export const TextCard = ({
                     }}
                 >
                     <PostDetailsActionBar
-                        likes={likes}
+                        isLiked={isLiked}
+                        likeCount={likes.length}
                         commentCount={comments.length}
-                        onLike={onLike}
+                        onLike={handleOnLike}
                     />
                 </View>
             </View>

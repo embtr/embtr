@@ -5,6 +5,7 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { getTimeLeft } from 'src/util/DateUtility';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
+import { isAndroidDevice } from 'src/util/DeviceUtil';
 
 interface Props {
     challenge: Challenge;
@@ -43,7 +44,10 @@ export const ActiveChallengeElement = ({ challenge }: Props) => {
             ]}
         >
             <View style={{}}>
-                <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 13 }}>
+                <Text
+                    numberOfLines={1}
+                    style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 12 }}
+                >
                     {challenge.name}
                 </Text>
             </View>
@@ -52,7 +56,7 @@ export const ActiveChallengeElement = ({ challenge }: Props) => {
                 numberOfLines={2}
                 style={{
                     height: 30,
-                    bottom: 3,
+                    bottom: isAndroidDevice() ? 3 : undefined,
                     color: colors.text,
                     fontFamily: POPPINS_REGULAR,
                     fontSize: 9,

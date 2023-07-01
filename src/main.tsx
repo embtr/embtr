@@ -19,7 +19,7 @@ import {
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
-import { setUnits, setUserProfileImage } from 'src/redux/user/GlobalState';
+import { setCurrentUser, setUnits, setUserProfileImage } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { User as UserModel } from 'resources/schema';
 import PushNotificationController from './controller/notification/PushNotificationController';
@@ -142,8 +142,9 @@ export const Main = () => {
     registerAuthStateListener(setUser);
     PushNotificationController.registerUpdatePostNotificationTokenListener();
 
-    const resetGlobalState = (user: UserModel) => {
-        dispatch(setUserProfileImage(user.photoUrl));
+    const resetGlobalState = (userToReset: UserModel) => {
+        dispatch(setUserProfileImage(userToReset.photoUrl));
+        dispatch(setCurrentUser(userToReset));
     };
 
     const createUserIfNew = async (user: User) => {
@@ -152,6 +153,7 @@ export const Main = () => {
         }
 
         const loggedInUser = await UserController.loginUser();
+
         return loggedInUser;
     };
 

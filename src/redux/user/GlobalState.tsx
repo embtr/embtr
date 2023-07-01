@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { Habit, PlannedDay, Unit } from 'resources/schema';
+import { Habit, PlannedDay, Unit, User } from 'resources/schema';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -17,6 +17,7 @@ const INITIAL_STATE: GlobalState = {
     currentlySelectedPlannedDay: {},
     units: [],
     habits: [],
+    currentUser: {},
 };
 
 export interface GlobalState {
@@ -32,6 +33,7 @@ export interface GlobalState {
     currentlySelectedPlannedDay: PlannedDay;
     units: Unit[];
     habits: Habit[];
+    currentUser: User;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -96,6 +98,10 @@ export const GlobalState = createSlice({
         },
         setHabits(state, action) {
             state.habits = action.payload;
+        },
+        setCurrentUser(state, action) {
+            console.log('SETTING CURRENT USER: ', action.payload);
+            state.currentUser = action.payload;
         },
     },
 });
@@ -196,6 +202,14 @@ export const getHabits = (state: RootState): Habit[] => {
     return state.globalState.habits;
 };
 
+export const getCurrentUser = (state: RootState): User => {
+    if (!state?.globalState.currentUser) {
+        return INITIAL_STATE.currentUser;
+    }
+
+    return state.globalState.currentUser;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -210,5 +224,6 @@ export const {
     setCurrentlySelectedPlannedDay,
     setUnits,
     setHabits,
+    setCurrentUser,
 } = GlobalState.actions;
 export default GlobalState.reducer;
