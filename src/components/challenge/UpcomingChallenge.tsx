@@ -2,11 +2,12 @@ import React from 'react';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { Challenge, ChallengeParticipant } from 'resources/schema';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
+import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { ChallengeRewardView } from './ChallengeRewardView';
 
 interface Props {
     challenge: Challenge;
@@ -41,10 +42,6 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
         fetch();
     }, []);
 
-    const daysRemaining = Math.floor(
-        (challenge.start!.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-    );
-
     const registerForChallenge = async () => {
         if (!challenge.id) {
             return;
@@ -65,11 +62,6 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
         setLikeCount(likeCount + 1);
     };
 
-    const percentComplete = challenge.challengeRequirements?.reduce(
-        (acc, requirement) => acc + requirement.custom.percentComplete,
-        0
-    );
-
     return (
         <View
             style={{
@@ -85,10 +77,11 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                 <View>
                     <View>
                         <Text
+                            numberOfLines={1}
                             style={{
                                 color: colors.text,
                                 fontFamily: POPPINS_MEDIUM,
-                                fontSize: 15,
+                                fontSize: 13,
                             }}
                         >
                             {challenge.name}
@@ -100,7 +93,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                             fontFamily: POPPINS_REGULAR,
                             color: colors.secondary_text,
                             fontSize: 8,
-                            bottom: 5,
+                            bottom: isAndroidDevice() ? 5 : 3,
                         }}
                     >
                         {participantCount} participant{participantCount === 1 ? '' : 's'} • host
@@ -119,6 +112,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                     </Text>
 
                     <Text
+                        numberOfLines={2}
                         style={{
                             fontFamily: POPPINS_REGULAR,
                             color: colors.text,
@@ -163,7 +157,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                         <View style={{}}>
                             {challenge.challengeRewards &&
                                 challenge.challengeRewards.length > 0 && (
-                                    <ChallengeBadge reward={challenge.challengeRewards[0]} />
+                                    <ChallengeRewardView reward={challenge.challengeRewards[0]} />
                                 )}
                         </View>
                     </View>
