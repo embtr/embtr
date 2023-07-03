@@ -1,4 +1,5 @@
 import {
+    GetChallengeParticipationResponse,
     GetChallengeResponse,
     GetChallengesResponse,
 } from 'resources/types/requests/ChallengeTypes';
@@ -31,10 +32,10 @@ export class ChallengeController {
 
     public static async getAllForUser(userId: number) {
         return axiosInstance
-            .get(`/user/${userId}/challenges/`)
+            .get(`/user/${userId}/challenge-participation/`)
             .then((success) => {
-                const body: GetChallengesResponse = success.data;
-                return body.challenges ?? [];
+                const body: GetChallengeParticipationResponse = success.data;
+                return body.challengeParticipation ?? [];
             })
             .catch((error) => {
                 return [];

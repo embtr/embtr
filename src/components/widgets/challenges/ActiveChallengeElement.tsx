@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Challenge, ChallengeCompletionState } from 'resources/schema';
+import { ChallengeCalculationType, ChallengeParticipant } from 'resources/schema';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { getTimeLeft } from 'src/util/DateUtility';
@@ -10,30 +10,43 @@ import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import CompletionStamp from 'src/components/common/stamp/CompletionStamp';
 
 interface Props {
-    challenge: Challenge;
+    challengeParticipant: ChallengeParticipant;
 }
 
-export const ActiveChallengeElement = ({ challenge }: Props) => {
+export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
     const { colors } = useTheme();
+
+    if (!challengeParticipant.challenge) {
+        return <View />;
+    }
+
+    const challenge = challengeParticipant.challenge;
+
+    console.log(challenge);
 
     if (!challenge.challengeRequirements || challenge.challengeRequirements.length === 0) {
         return <View />;
     }
     const challengeRequirement = challenge.challengeRequirements[0];
+    const amountComplete = challengeParticipant.amountComplete ?? 0;
+    const amountRequired =
+        (challengeRequirement.calculationType === ChallengeCalculationType.TOTAL
+            ? challengeRequirement.requiredTaskQuantity
+            : challengeRequirement.requiredIntervalQuantity) ?? 0;
+    const percentComplete = Math.floor((amountComplete / amountRequired) * 100);
 
-    if (!challengeRequirement.custom.completionData) {
-        return <View />;
-    }
-    const challengeCompletionData = challengeRequirement.custom.completionData;
-    const isComplete =
-        challengeCompletionData.challengeCompletionState === ChallengeCompletionState.COMPLETE;
+    const isComplete = amountComplete >= amountRequired;
 
     const description = challenge.description ?? '';
-    const progressRemaining =
-        ChallengeUtility.getChallengeRequirementProgressString(challengeRequirement);
 
     const endDay = challenge.end ?? new Date();
     const daysLeft = getTimeLeft(endDay);
+
+    const progressRemaining = ChallengeUtility.getChallengeRequirementProgressString(
+        challengeRequirement,
+        amountComplete,
+        amountRequired
+    );
 
     return (
         <View
@@ -48,7 +61,7 @@ export const ActiveChallengeElement = ({ challenge }: Props) => {
             ]}
         >
             {isComplete && (
-                <View style={{ zIndex: -1, top: 20, left: '55%', position: 'absolute' }}>
+                <View style={{ zIndex: 1, top: 20, left: '50%', position: 'absolute' }}>
                     <CompletionStamp />
                 </View>
             )}
@@ -97,13 +110,7 @@ export const ActiveChallengeElement = ({ challenge }: Props) => {
             </Text>
             <View style={{ paddingBottom: 5, paddingTop: 1 }}>
                 <ProgressBar
-                    progress={
-                        challengeCompletionData.percentComplete
-                            ? challengeCompletionData.percentComplete > 100
-                                ? 100
-                                : challengeCompletionData.percentComplete
-                            : 0
-                    }
+                    progress={percentComplete ? (percentComplete > 100 ? 100 : percentComplete) : 0}
                 />
             </View>
         </View>

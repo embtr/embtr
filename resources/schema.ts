@@ -247,7 +247,7 @@ export interface Challenge {
   challengeParticipants?: ChallengeParticipant[];
 }
 
-export interface ChallengeRequirement extends ChallengeRequirementCustom {
+export interface ChallengeRequirement {
   id?: number;
   challenge?: Challenge;
   challengeId?: number;
@@ -283,6 +283,8 @@ export interface ChallengeParticipant {
   userId?: number;
   challenge?: Challenge;
   challengeId?: number;
+  amountComplete?: number;
+  challengeRequirementCompletionState?: ChallengeRequirementCompletionState;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -327,20 +329,16 @@ export enum ChallengeCalculationType {
   UNIQUE = 'UNIQUE',
 }
 
+export enum ChallengeRequirementCompletionState {
+  INVALID = 'INVALID',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+}
+
 export interface ChallengeCompletionData {
   amountComplete: number;
   amountRequired: number;
   percentComplete: number;
-  challengeCompletionState: ChallengeCompletionState;
+  challengeRequirementCompletionState: ChallengeRequirementCompletionState;
 }
 
-export interface ChallengeRequirementCustom {
-  custom: {
-    completionData: ChallengeCompletionData;
-  };
-}
-
-export enum ChallengeCompletionState {
-  ACTIVE,
-  COMPLETE,
-}

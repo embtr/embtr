@@ -3,11 +3,11 @@ import { UnitUtility } from '../UnitUtility';
 
 export class ChallengeUtility {
     public static getChallengeRequirementProgressString(
-        challengeRequirement: ChallengeRequirement
+        challengeRequirement: ChallengeRequirement,
+        amount: number,
+        required: number
     ): string {
         const unit = challengeRequirement.unit;
-        const amount = challengeRequirement.custom.completionData.amountComplete;
-        const required = challengeRequirement.custom.completionData.amountRequired;
 
         const calculationType = challengeRequirement.calculationType;
 
