@@ -55,7 +55,7 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
                     width: 220,
                     backgroundColor: colors.button_background,
                     borderRadius: 3,
-                    paddingHorizontal: 7.5,
+                    padding: 7.5,
                 },
                 CARD_SHADOW,
             ]}
@@ -89,7 +89,7 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
                         {description}
                     </Text>
                 </View>
-                <View style={{ paddingTop: 3 }}>
+                <View style={{ paddingTop: 0 }}>
                     <ChallengeBadge
                         reward={challenge.challengeRewards![0]}
                         size={20}

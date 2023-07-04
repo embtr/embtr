@@ -46,7 +46,7 @@ export const ActiveChallengesWidget = ({ user }: Props) => {
                     </Text>
                 </View>
 
-                <View>
+                <View style={{ paddingTop: 10 }}>
                     <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, fontSize: 12 }}>
                         {challengeParticipation.length}
                     </Text>
