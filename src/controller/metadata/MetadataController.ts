@@ -1,11 +1,10 @@
-import { Metadata } from 'resources/schema';
 import { GetAllMetadataResonse } from 'resources/types/requests/MetadataTypes';
 import axiosInstance from 'src/axios/axios';
 
-// enum with string values
 export enum MetadataKey {
     VERSION = 'VERSION',
     RECOMMENDED_TASKS = 'RECOMMENDED_TASKS',
+    TIMELINE_DAYS = 'TIMELINE_DAYS',
 }
 
 export class MetadataController {

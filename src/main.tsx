@@ -19,7 +19,12 @@ import {
 import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
-import { setCurrentUser, setUnits, setUserProfileImage } from 'src/redux/user/GlobalState';
+import {
+    setCurrentUser,
+    setTimelineDays,
+    setUnits,
+    setUserProfileImage,
+} from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { User as UserModel } from 'resources/schema';
 import PushNotificationController from './controller/notification/PushNotificationController';
@@ -135,6 +140,15 @@ export const Main = () => {
         dispatch(setUnits(units));
     };
 
+    const loadTimelineDays = async () => {
+        const timelineDays = await MetadataController.getMetadata(MetadataKey.TIMELINE_DAYS);
+        if (!timelineDays) {
+            return;
+        }
+
+        dispatch(setTimelineDays(Number(timelineDays)));
+    };
+
     const dispatch = useAppDispatch();
     getFirebaseConnection('', '');
 
@@ -158,7 +172,8 @@ export const Main = () => {
     };
 
     React.useEffect(() => {
-        checkForUpdates();
+        const loads = [checkForUpdates, loadUnits, loadTimelineDays];
+        loads.forEach((load) => load());
 
         const blockingLoad = async () => {
             if (!user) {
@@ -170,7 +185,6 @@ export const Main = () => {
                 resetGlobalState(loggedInUser);
             }
 
-            await loadUnits();
             setUserIsLoggedIn(loggedInUser !== undefined);
         };
 

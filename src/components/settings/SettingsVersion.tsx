@@ -1,9 +1,7 @@
 import Constants from 'expo-constants';
 import React from 'react';
-import { Linking } from 'react-native';
 import { SettingsTextElement } from 'src/components/settings/SettingsTextElement';
 import { MetadataController, MetadataKey } from 'src/controller/metadata/MetadataController';
-import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { UpdateUtility } from 'src/util/updates/UpdateUtility';
 
 export const SettingsVersion = () => {

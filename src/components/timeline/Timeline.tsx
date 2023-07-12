@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import NotificationController, {
@@ -11,6 +11,8 @@ import DailyResultController from 'src/controller/timeline/daily_result/DailyRes
 import { Notification as NotificationModel, PlannedDayResult, UserPost } from 'resources/schema';
 import { FilteredTimeline } from './FilteredTimeline';
 import StoryController from 'src/controller/timeline/story/StoryController';
+import { getTimelineDays } from 'src/redux/user/GlobalState';
+import { useAppSelector } from 'src/redux/Hooks';
 
 export const Timeline = () => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
@@ -20,6 +22,7 @@ export const Timeline = () => {
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
 
+    const refreshDays = useAppSelector(getTimelineDays);
     const getDateMinusDays = (date: Date, days: number) => {
         date.setDate(date.getDate() - days);
         return date;
@@ -27,7 +30,7 @@ export const Timeline = () => {
 
     const [bounds, setBounds] = React.useState<{ upperBound: Date; lowerBound: Date }>({
         upperBound: getDateMinusDays(new Date(), 0),
-        lowerBound: getDateMinusDays(new Date(), 2),
+        lowerBound: getDateMinusDays(new Date(), refreshDays),
     });
 
     React.useEffect(() => {
@@ -48,7 +51,7 @@ export const Timeline = () => {
         }
 
         const upperBound = refresh ? new Date() : bounds.upperBound;
-        const lowerBound = refresh ? getDateMinusDays(new Date(), 2) : bounds.lowerBound;
+        const lowerBound = refresh ? getDateMinusDays(new Date(), refreshDays) : bounds.lowerBound;
 
         const dailyResultsPromise = DailyResultController.getAllViaApi(upperBound, lowerBound);
         const userPostsPromise = StoryController.getAllViaApi(upperBound, lowerBound);
@@ -58,8 +61,8 @@ export const Timeline = () => {
                 setDayResults(!refresh ? [...dayResults, ...newDayResults] : newDayResults);
                 setUserPosts(!refresh ? [...userPosts, ...newUserPosts] : newUserPosts);
 
-                const newUpperBound = getDateMinusDays(upperBound, 2);
-                const newLowerBound = getDateMinusDays(lowerBound, 2);
+                const newUpperBound = getDateMinusDays(upperBound, refreshDays);
+                const newLowerBound = getDateMinusDays(lowerBound, refreshDays);
                 setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
 
                 if (refresh) {

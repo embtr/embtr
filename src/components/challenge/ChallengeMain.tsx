@@ -4,7 +4,7 @@ import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from '../common/Banner';
-import { POPPINS_MEDIUM } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { UpcomingChallenges } from './UpcomingChallenges';
 
 export const ChallengeMain = () => {
@@ -19,24 +19,39 @@ export const ChallengeMain = () => {
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
-            case 'overview':
+            case 'explore':
                 return (
                     <View style={{ height: '100%' }}>
                         <UpcomingChallenges />
                     </View>
                 );
 
-            case 'active':
+            case 'challenges':
                 return (
                     <View style={{ height: '100%' }}>
                         <UpcomingChallenges />
                     </View>
                 );
 
-            case 'recommended':
+            case 'achievements':
                 return (
-                    <View style={{ height: '100%' }}>
-                        <UpcomingChallenges />
+                    <View
+                        style={{
+                            height: '100%',
+                            width: '100%',
+                            alignContent: 'center',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                color: colors.text,
+                                fontFamily: POPPINS_REGULAR,
+                            }}
+                        >
+                            Coming Soon!
+                        </Text>
                     </View>
                 );
         }
@@ -64,9 +79,9 @@ export const ChallengeMain = () => {
     };
 
     const [routes] = React.useState([
-        { key: 'overview', title: 'Explore' },
-        { key: 'active', title: 'Challenges' },
-        { key: 'recommended', title: 'Achievements' },
+        { key: 'explore', title: 'Explore' },
+        { key: 'challenges', title: 'Challenges' },
+        { key: 'achievements', title: 'Achievements' },
     ]);
 
     const handleTabLayout = (event: any) => {

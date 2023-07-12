@@ -18,6 +18,7 @@ const INITIAL_STATE: GlobalState = {
     units: [],
     habits: [],
     currentUser: {},
+    timelineDays: 0,
 };
 
 export interface GlobalState {
@@ -34,6 +35,7 @@ export interface GlobalState {
     units: Unit[];
     habits: Habit[];
     currentUser: User;
+    timelineDays: number;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -100,8 +102,10 @@ export const GlobalState = createSlice({
             state.habits = action.payload;
         },
         setCurrentUser(state, action) {
-            console.log('SETTING CURRENT USER: ', action.payload);
             state.currentUser = action.payload;
+        },
+        setTimelineDays(state, action) {
+            state.timelineDays = action.payload;
         },
     },
 });
@@ -210,6 +214,14 @@ export const getCurrentUser = (state: RootState): User => {
     return state.globalState.currentUser;
 };
 
+export const getTimelineDays = (state: RootState): number => {
+    if (!state?.globalState.timelineDays) {
+        return INITIAL_STATE.timelineDays;
+    }
+
+    return state.globalState.timelineDays;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -225,5 +237,6 @@ export const {
     setUnits,
     setHabits,
     setCurrentUser,
+    setTimelineDays,
 } = GlobalState.actions;
 export default GlobalState.reducer;
