@@ -13,6 +13,7 @@ const INITIAL_STATE: GlobalState = {
     showCardShadow: true,
     cardRefreshRequests: [],
     fireConfetti: () => {},
+    displayDropDownAlert: () => {},
     todaysPlannedDay: {},
     currentlySelectedPlannedDay: {},
     units: [],
@@ -30,6 +31,7 @@ export interface GlobalState {
     showCardShadow: boolean;
     cardRefreshRequests: string[];
     fireConfetti: Function;
+    displayDropDownAlert: Function;
     todaysPlannedDay: PlannedDay;
     currentlySelectedPlannedDay: PlannedDay;
     units: Unit[];
@@ -80,6 +82,9 @@ export const GlobalState = createSlice({
         },
         setFireConfetti(state, action) {
             state.fireConfetti = action.payload;
+        },
+        setDisplayDropDownAlert(state, action) {
+            state.displayDropDownAlert = action.payload;
         },
         setTodaysPlannedDay(state, action) {
             state.todaysPlannedDay = action.payload;
@@ -174,6 +179,14 @@ export const getFireConfetti = (state: RootState): Function => {
     return state.globalState.fireConfetti;
 };
 
+export const getDisplayDropDownAlert = (state: RootState): Function => {
+    if (!state?.globalState.displayDropDownAlert) {
+        return INITIAL_STATE.displayDropDownAlert;
+    }
+
+    return state.globalState.displayDropDownAlert;
+};
+
 export const getTodaysPlannedDay = (state: RootState): PlannedDay => {
     if (!state?.globalState.todaysPlannedDay) {
         return INITIAL_STATE.todaysPlannedDay;
@@ -232,6 +245,7 @@ export const {
     addTimelineCardRefreshRequest,
     removeTimelineCardRefreshRequest,
     setFireConfetti,
+    setDisplayDropDownAlert,
     setTodaysPlannedDay,
     setCurrentlySelectedPlannedDay,
     setUnits,

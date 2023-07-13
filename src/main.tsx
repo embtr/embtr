@@ -7,7 +7,7 @@ import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
-import { LogBox } from 'react-native';
+import { LogBox, View } from 'react-native';
 import { Roboto_500Medium } from '@expo-google-fonts/roboto';
 import {
     useFonts,
@@ -35,6 +35,7 @@ import Constants from 'expo-constants';
 import { UpdateUtility } from './util/updates/UpdateUtility';
 import { ConfettiView } from './components/common/animated_view/ConfettiView';
 import { UnitController } from 'src/controller/unit/UnitController';
+import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -204,14 +205,17 @@ export const Main = () => {
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
                     <ModalContainingComponent modalVisible={showUpdateAvailableModal} />
+                    {/* TOP LEVEL COMPONENTS */}
                     <ConfettiView />
+                    <DropDownAlert />
                     <NewVersionModal
                         visible={showUpdateAvailableModal}
                         onDismiss={() => {
                             setShowUpdateAvailableModal(false);
                         }}
                     />
-                    {user === undefined && <LoadingPage />}
+                    {/* END TOP LEVEL COMPONENTS */}
+
                     {user === null && <InsecureMainStack />}
                     {user !== undefined && user !== null && <SecureMainStack />}
                 </NavigationContainer>

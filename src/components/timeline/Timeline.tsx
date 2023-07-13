@@ -11,7 +11,7 @@ import DailyResultController from 'src/controller/timeline/daily_result/DailyRes
 import { Notification as NotificationModel, PlannedDayResult, UserPost } from 'resources/schema';
 import { FilteredTimeline } from './FilteredTimeline';
 import StoryController from 'src/controller/timeline/story/StoryController';
-import { getTimelineDays } from 'src/redux/user/GlobalState';
+import { getDisplayDropDownAlert, getTimelineDays } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
 
 export const Timeline = () => {

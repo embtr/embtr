@@ -59,35 +59,6 @@ class PlannedTaskController {
         return await this.update(plannedTask);
     }
 
-    public static async reset(plannedTask: PlannedTask) {
-        const clone = { ...plannedTask };
-        clone.status = 'INCOMPLETE';
-
-        return await this.update(clone);
-    }
-
-    public static async fail(plannedTask: PlannedTask) {
-        plannedTask.status = 'FAILED';
-        return await this.update(plannedTask);
-    }
-
-    public static async delete(plannedTask: PlannedTask) {
-        const clone = { ...plannedTask };
-        clone.active = false;
-        return await this.update(clone);
-    }
-
-    public static async get(plannedTaskId: number) {
-        return await axiosInstance
-            .get(`${PLANNED_DAY}planned-task/${plannedTaskId}`)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
-    }
-
     public static async update(plannedTask: PlannedTask) {
         const request: UpdatePlannedTaskRequest = {
             plannedTask,
@@ -97,7 +68,7 @@ class PlannedTaskController {
             .patch(`${PLANNED_DAY}planned-task/`, request)
             .then((success) => {
                 const updatedPlannedTask: UpdatePlannedTaskResponse = success.data;
-                return updatedPlannedTask.plannedTask;
+                return updatedPlannedTask;
             })
             .catch((error) => {
                 return undefined;

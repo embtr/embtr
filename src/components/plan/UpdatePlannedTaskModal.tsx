@@ -104,7 +104,7 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                             textAlign: 'center',
                                         }}
                                     >
-                                        {'Add New Activity Event'}
+                                        {'Update Progress'}
                                     </Text>
                                     <Text
                                         style={{
@@ -154,7 +154,7 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                     }}
                                 >{`${
                                     plannedTask.unit
-                                        ? UnitUtility.getReadableUnit(plannedTask.unit)
+                                        ? UnitUtility.getReadableUnit(plannedTask.unit, 2)
                                         : ''
                                 }`}</Text>
 

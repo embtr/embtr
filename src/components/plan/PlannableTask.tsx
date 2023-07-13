@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import {
     getCloseMenu,
+    getDisplayDropDownAlert,
     getFireConfetti,
     getOpenMenu,
     setMenuOptions,
@@ -23,6 +24,7 @@ import { UnitUtility } from 'src/util/UnitUtility';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
 
 interface Props {
     initialPlannedTask: PlannedTaskModel;
@@ -57,15 +59,31 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
     const taskIsFailed = initialPlannedTask.status === 'FAILED';
 
     const fireConfetti = useAppSelector(getFireConfetti);
+    const displayDropDownAlert = useAppSelector(getDisplayDropDownAlert);
 
     const updatePlannedTaskCompletedQuantity = async (quantity: number) => {
         const clone = { ...initialPlannedTask };
         clone.completedQuantity = quantity;
         const updatedPlannedTask = await PlannedTaskController.update(clone);
 
-        if (updatedPlannedTask?.plannedDay) {
+        if (updatedPlannedTask?.plannedTask?.plannedDay) {
             onPlannedTaskUpdated(clone);
             await PlanningService.onTaskUpdated(initialPlannedTask.plannedDay!, fireConfetti);
+        }
+
+        if (
+            updatedPlannedTask?.completedChallenges &&
+            updatedPlannedTask.completedChallenges.length > 0
+        ) {
+            const completedChallenge = updatedPlannedTask.completedChallenges[0];
+            let badgeUrl = completedChallenge.challengeRewards?.[0].imageUrl ?? '';
+
+            const alert: DropDownAlertModal = {
+                title: 'Challenge Complete!',
+                body: `${completedChallenge.name}`,
+                badgeUrl,
+            };
+            displayDropDownAlert(alert);
         }
     };
 
@@ -80,9 +98,7 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                 name: 'Complete Task',
                 onPress: async () => {
                     closeMenu();
-                    const updatedPlannedTask = await PlannedTaskController.complete(
-                        initialPlannedTask
-                    );
+                    const result = await PlannedTaskController.complete(initialPlannedTask);
                 },
             });
         }
@@ -290,7 +306,8 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                                         {`${completedQuantity} / ${initialPlannedTask.quantity} ${
                                             initialPlannedTask.unit
                                                 ? UnitUtility.getReadableUnit(
-                                                      initialPlannedTask.unit
+                                                      initialPlannedTask.unit,
+                                                      completedQuantity
                                                   )
                                                 : ''
                                         }`}
