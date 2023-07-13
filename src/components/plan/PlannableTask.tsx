@@ -84,6 +84,7 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                 badgeUrl,
             };
             displayDropDownAlert(alert);
+            fireConfetti();
         }
     };
 

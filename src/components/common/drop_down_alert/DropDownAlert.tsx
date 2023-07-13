@@ -72,7 +72,7 @@ export const DropDownAlert = () => {
             style={[
                 {
                     position: 'absolute',
-                    top: 10,
+                    top: 50,
                     left: 5,
                     right: 5,
                     borderRadius: 5,
