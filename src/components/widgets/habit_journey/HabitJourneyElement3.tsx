@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
-    const { colors } = useTheme();
+    const { colors, isDark } = useTheme();
 
     const dataset = [];
     for (const element of habitJourney.elements) {
@@ -124,8 +124,12 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                     fillShadowGradientFromOpacity: 0.1,
                     fillShadowGradientToOpacity: 1,
                     decimalPlaces: 0,
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    backgroundGradientFrom: colors.timeline_card_background,
+                    backgroundGradientTo: colors.timeline_card_background,
+                    color: (opacity = 1) =>
+                        isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
+                    labelColor: (opacity = 1) =>
+                        isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
                     propsForDots: {},
                 }}
             />

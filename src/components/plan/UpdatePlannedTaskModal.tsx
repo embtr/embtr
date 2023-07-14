@@ -47,6 +47,14 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
         setIsExpanded(!isExpanded);
     };
 
+    const textInputRef = React.useRef<TextInput>(null);
+
+    const handleTextInputFocus = () => {
+        textInputRef.current?.setNativeProps({
+            selection: { start: 0, end: selectedValue.toString().length },
+        });
+    };
+
     return (
         <Modal visible={visible} transparent={true} animationType={'fade'}>
             <Pressable
@@ -130,6 +138,8 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                 />
                                 <TextInput
                                     keyboardType={'numeric'}
+                                    ref={textInputRef}
+                                    onFocus={handleTextInputFocus}
                                     value={selectedValue.toString()}
                                     onChangeText={(text) => {
                                         if (isNaN(parseInt(text))) {

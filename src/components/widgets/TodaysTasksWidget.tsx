@@ -34,13 +34,14 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
     const [showAddTaskModal, setShowSelectTaskModal] = React.useState(false);
     const [guestPlannedDay, setGuestPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
 
+    const isCurrentUser = user.uid === getCurrentUid();
+
     const dispatch = useAppDispatch();
-    const todaysPlannedDay =
-        user.uid === getCurrentUid() ? useAppSelector(getTodaysPlannedDay) : guestPlannedDay;
+    const todaysPlannedDay = isCurrentUser ? useAppSelector(getTodaysPlannedDay) : guestPlannedDay;
     const closeMenu = useAppSelector(getCloseMenu);
 
     const updateTodaysPlannedDay = (plannedDay: PlannedDay) => {
-        if (user.uid === getCurrentUid()) {
+        if (isCurrentUser) {
             dispatch(setTodaysPlannedDay(plannedDay));
         } else {
             setGuestPlannedDay(plannedDay);
@@ -84,11 +85,15 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
 
     return (
         <WidgetBase
-            menuOptions={menuOptions}
-            symbol="add-outline"
-            onPressSymbol={() => {
-                setShowSelectTaskModal(true);
-            }}
+            menuOptions={isCurrentUser ? menuOptions : undefined}
+            symbol={isCurrentUser ? 'add-outline' : undefined}
+            onPressSymbol={
+                isCurrentUser
+                    ? () => {
+                          setShowSelectTaskModal(true);
+                      }
+                    : undefined
+            }
         >
             {todaysPlannedDay?.id && (
                 <AddHabitModal
