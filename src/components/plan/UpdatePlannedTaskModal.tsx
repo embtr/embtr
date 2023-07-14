@@ -1,9 +1,17 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Modal, Text, Pressable, Animated, TextInput } from 'react-native';
+import {
+    View,
+    TouchableOpacity,
+    Modal,
+    Text,
+    Pressable,
+    Animated,
+    TextInput,
+    Keyboard,
+} from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_ICON_SIZE } from 'src/util/constants';
 import { PlannedTask } from 'resources/schema';
-import Slider from '@react-native-community/slider';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { Ionicons } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
@@ -24,14 +32,17 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
     }, [plannedTask]);
 
     const onDismissWrapper = () => {
+        setKeyboardFocused(false);
         setSelectedValue(plannedTask.completedQuantity ?? 0);
         dismiss();
     };
 
-    const [selectedValue, setSelectedValue] = React.useState<number>(
+    const [selectedValue, setSelectedValue] = React.useState<number | null>(
         plannedTask.completedQuantity ?? 0
     );
+
     const [isExpanded, setIsExpanded] = React.useState(false);
+    const [keyboardFocused, setKeyboardFocused] = React.useState(false);
 
     const initialHeight = 230;
     const heightValue = React.useRef(new Animated.Value(initialHeight)).current;
@@ -49,12 +60,6 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
 
     const textInputRef = React.useRef<TextInput>(null);
 
-    const handleTextInputFocus = () => {
-        textInputRef.current?.setNativeProps({
-            selection: { start: 0, end: selectedValue.toString().length },
-        });
-    };
-
     return (
         <Modal visible={visible} transparent={true} animationType={'fade'}>
             <Pressable
@@ -68,6 +73,10 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                 }}
             >
                 <Pressable
+                    onPress={() => {
+                        setKeyboardFocused(false);
+                        Keyboard.dismiss();
+                    }}
                     style={{
                         position: 'absolute',
                         zIndex: 1,
@@ -127,35 +136,67 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                     </Text>
                                 </View>
 
-                                <Slider
-                                    minimumValue={0}
-                                    maximumValue={plannedTask.quantity}
-                                    value={selectedValue}
-                                    step={plannedTask.unit?.stepSize ?? 1}
-                                    onValueChange={(value: number) => {
-                                        setSelectedValue(value);
-                                    }}
-                                />
-                                <TextInput
-                                    keyboardType={'numeric'}
-                                    ref={textInputRef}
-                                    onFocus={handleTextInputFocus}
-                                    value={selectedValue.toString()}
-                                    onChangeText={(text) => {
-                                        if (isNaN(parseInt(text))) {
-                                            return;
-                                        }
-
-                                        setSelectedValue(parseInt(text));
-                                    }}
+                                <View
                                     style={{
-                                        color: colors.text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        textAlign: 'center',
-                                        fontSize: 20,
-                                        paddingTop: 10,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                     }}
-                                />
+                                >
+                                    <View style={{ flex: 1 }} />
+                                    <TextInput
+                                        keyboardType={'numeric'}
+                                        ref={textInputRef}
+                                        onBlur={() => {
+                                            setKeyboardFocused(false);
+                                        }}
+                                        onSubmitEditing={() => {
+                                            confirm(selectedValue ?? 0);
+                                        }}
+                                        onFocus={() => {
+                                            setKeyboardFocused(true);
+                                            textInputRef.current?.setNativeProps({
+                                                selection: {
+                                                    start: 0,
+                                                    end: selectedValue?.toString().length,
+                                                },
+                                            });
+                                        }}
+                                        value={selectedValue?.toString()}
+                                        onChangeText={(text) => {
+                                            textInputRef.current?.setNativeProps({
+                                                selection: { start: text.length, end: text.length },
+                                            });
+
+                                            if (text.length > 0 && isNaN(parseInt(text))) {
+                                                return;
+                                            }
+
+                                            setSelectedValue(
+                                                text.length === 0 ? null : parseInt(text)
+                                            );
+                                        }}
+                                        style={{
+                                            color: colors.text,
+                                            fontFamily: POPPINS_REGULAR,
+                                            textAlign: 'center',
+                                            fontSize: 20,
+                                            paddingTop: 10,
+                                        }}
+                                    />
+                                    <View style={{ flex: 1 }}>
+                                        {!keyboardFocused && (
+                                            <EvilIcons
+                                                onPress={() => {
+                                                    textInputRef.current?.focus();
+                                                }}
+                                                name="pencil"
+                                                size={20}
+                                                color={colors.secondary_text}
+                                            />
+                                        )}
+                                    </View>
+                                </View>
                                 <Text
                                     style={{
                                         color: colors.text,
@@ -172,7 +213,7 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                 <View
                                     style={{
                                         width: '100%',
-                                        paddingTop: 5,
+                                        paddingTop: 20,
                                         paddingBottom: 5,
                                         flexDirection: 'row',
                                     }}
@@ -204,7 +245,8 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                     >
                                         <TouchableOpacity
                                             onPress={() => {
-                                                confirm(selectedValue);
+                                                setKeyboardFocused(false);
+                                                confirm(selectedValue ?? 0);
                                             }}
                                         >
                                             <Ionicons

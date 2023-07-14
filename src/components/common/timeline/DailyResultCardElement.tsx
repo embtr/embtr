@@ -30,7 +30,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     let progress = 0;
     if (quantity && completedQuantity) {
         progress = completedQuantity / quantity;
-        taskIsComplete = quantity === completedQuantity;
+        taskIsComplete = completedQuantity >= quantity;
     }
 
     let icon: JSX.Element = <TaskFailedSymbol />;
@@ -112,7 +112,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                         }}
                     >
                         <ProgressBar
-                            progress={progress * 100}
+                            progress={Math.min(100, progress * 100)}
                             success={taskIsComplete}
                             showPercent={false}
                         />

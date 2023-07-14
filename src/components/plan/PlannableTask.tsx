@@ -22,7 +22,6 @@ import { HabitIcon } from './habit/HabitIcon';
 import { UpdatePlannedTaskModal } from 'src/components/plan/UpdatePlannedTaskModal';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { PlanningService } from 'src/util/planning/PlanningService';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
 
@@ -172,7 +171,7 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
 
     const getPercentageComplete = () => {
         if (initialPlannedTask.quantity) {
-            return ((completedQuantity ?? 0) / initialPlannedTask.quantity) * 100;
+            return Math.min(100, ((completedQuantity ?? 0) / initialPlannedTask.quantity) * 100);
         }
 
         return initialPlannedTask.status === 'COMPLETE' ? 100 : 0;
@@ -212,7 +211,7 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                             style={{
                                 width: '2%',
                                 backgroundColor:
-                                    initialPlannedTask.quantity === completedQuantity
+                                    initialPlannedTask.quantity ?? 0 >= completedQuantity
                                         ? colors.progress_bar_complete
                                         : initialPlannedTask?.status === 'FAILED'
                                         ? colors.progress_bar_failed
@@ -261,7 +260,8 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                                             </View>
                                         )}
                                         <View>
-                                            {initialPlannedTask.quantity === completedQuantity ? (
+                                            {initialPlannedTask.quantity ??
+                                            0 >= completedQuantity ? (
                                                 <TaskCompleteSymbol small={true} />
                                             ) : initialPlannedTask?.status === 'FAILED' ? (
                                                 <TaskFailedSymbol small={true} />

@@ -262,6 +262,7 @@ export const Today = () => {
                     />
                     <GestureHandlerRootView style={{ flex: 1 }}>
                         <DraggableFlatList
+                            keyboardShouldPersistTaps={'always'}
                             data={widgets}
                             onDragEnd={({ data }) => {
                                 setWidgets(data);
