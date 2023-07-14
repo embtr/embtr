@@ -36,7 +36,7 @@ export const DayPickerElement = ({ item, index, isSelected }: Props) => {
                             ? isSelected
                                 ? colors.today_calendar_picker_selected
                                 : colors.today_calendar_picker_unselected
-                            : undefined
+                            : colors.timeline_card_background
                     }
                 />
             </View>
