@@ -211,7 +211,7 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                             style={{
                                 width: '2%',
                                 backgroundColor:
-                                    initialPlannedTask.quantity ?? 0 >= completedQuantity
+                                    completedQuantity >= (initialPlannedTask.quantity ?? 0)
                                         ? colors.progress_bar_complete
                                         : initialPlannedTask?.status === 'FAILED'
                                         ? colors.progress_bar_failed
@@ -260,8 +260,8 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                                             </View>
                                         )}
                                         <View>
-                                            {initialPlannedTask.quantity ??
-                                            0 >= completedQuantity ? (
+                                            {completedQuantity >=
+                                            (initialPlannedTask.quantity ?? 0) ? (
                                                 <TaskCompleteSymbol small={true} />
                                             ) : initialPlannedTask?.status === 'FAILED' ? (
                                                 <TaskFailedSymbol small={true} />
