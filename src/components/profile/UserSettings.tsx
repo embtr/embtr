@@ -18,27 +18,27 @@ export const UserSettings = () => {
             <Banner name="Settings" leftIcon={'arrow-back'} leftRoute="BACK" />
 
             <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                <View style={{ paddingTop: 10, width: '97%', alignItems: 'center' }}>
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <ThemeToggle />
                 </View>
 
-                <View style={{ paddingTop: 10, width: '97%', alignItems: 'center' }}>
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <NotificationsToggle />
                 </View>
 
-                <View style={{ paddingTop: 10, width: '97%', alignItems: 'center' }}>
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <EditProfileSettingsButton />
                 </View>
 
-                <View style={{ paddingTop: 10, width: '97%', alignItems: 'center' }}>
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <SettingsAccount />
                 </View>
 
-                <View style={{ paddingTop: 10, width: '97%', alignItems: 'center' }}>
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <SettingsMembership />
                 </View>
 
-                <View style={{ paddingTop: 10, width: '97%', alignItems: 'center' }}>
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <SettingsButtonElement
                         text={'Sign Out'}
                         icon={'exit-outline'}
@@ -49,7 +49,7 @@ export const UserSettings = () => {
                     />
                 </View>
 
-                <View style={{ paddingTop: 10, width: '97%', alignItems: 'center' }}>
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <SettingsVersion />
                 </View>
             </View>

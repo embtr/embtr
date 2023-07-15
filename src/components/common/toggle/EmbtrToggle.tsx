@@ -31,7 +31,7 @@ export const EmbtrToggle = ({ text, onToggle, value }: Props) => {
                     backgroundColor: colors.button_background,
                     width: SETTINGS_MENU_ITEM_WIDTH,
                     height: 75,
-                    borderRadius: 15,
+                    borderRadius: 3,
                     flexDirection: 'row',
                 },
                 CARD_SHADOW,

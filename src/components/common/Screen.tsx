@@ -11,6 +11,7 @@ export const Screen = (props: { children: any }) => {
 
     if (isAndroidDevice()) {
         NavigationBar.setBackgroundColorAsync(colors.tab_bar_menu);
+        NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
     }
 
     return (
