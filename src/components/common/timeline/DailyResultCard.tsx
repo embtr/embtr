@@ -108,7 +108,7 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
         <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View
                 style={[
-                    { backgroundColor: colors.timeline_card_background, borderRadius: 10 },
+                    { backgroundColor: colors.timeline_card_background, borderRadius: 2.5 },
                     CARD_SHADOW,
                 ]}
             >

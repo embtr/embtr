@@ -22,7 +22,7 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, loadMore }
     const { colors } = useTheme();
     const card = {
         width: '100%',
-        paddingTop: 10,
+        paddingTop: 7.5,
         paddingLeft: 5,
         paddingRight: 5,
     };

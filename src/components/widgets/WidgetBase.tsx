@@ -33,7 +33,7 @@ export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Pro
             <View
                 style={[
                     {
-                        borderRadius: 10,
+                        borderRadius: 2.5,
                         backgroundColor: colors.timeline_card_background,
                         paddingTop: 5,
                         paddingBottom: 8,

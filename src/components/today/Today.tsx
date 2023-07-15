@@ -183,7 +183,7 @@ export const Today = () => {
         return <View />;
     };
 
-    const renderItem = ({ item, drag }: RenderItemParams<Widget>) => {
+    const renderItem = ({ item, drag, index }: RenderItemParams<Widget>) => {
         if (item.active === false) {
             return <View />;
         }
@@ -226,8 +226,9 @@ export const Today = () => {
                                     />
                                 </View>
                             )}
-                            <View style={{ paddingBottom: 10 }}>
+                            <View style={{ paddingTop: 7.5 }}>
                                 {getWidgetFromType(item.type!)}
+                                {index === widgets.length - 1 && <View style={{ height: 7.5 }} />}
                             </View>
                         </View>
                     </DeletableView>
