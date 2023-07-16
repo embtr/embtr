@@ -68,7 +68,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                 backgroundColor: colors.text_input_background,
                 width: '100%',
                 height: 280,
-                borderRadius: 5,
+                borderRadius: 2.5,
             }}
         >
             {/* TOP SECTION */}

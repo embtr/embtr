@@ -1,11 +1,12 @@
-import { Text, ScrollView, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
-import { Challenge, ChallengeParticipant, User } from 'resources/schema';
+import { ChallengeParticipant, User } from 'resources/schema';
 import React from 'react';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { ActiveChallengeElement } from './ActiveChallengeElement';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
     user: User;

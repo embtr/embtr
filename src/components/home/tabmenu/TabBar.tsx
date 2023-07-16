@@ -13,7 +13,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
 
     const style = StyleSheet.create({
         tabContainer: {
-            paddingBottom: isAndroidDevice() ? 0 : 25,
+            paddingBottom: isAndroidDevice() ? 2.5 : 25,
             shadowOffset: {
                 width: 0,
                 height: -1,

@@ -8,6 +8,7 @@ import { HabitJourneyWidget } from 'src/components/widgets/habit_journey/HabitJo
 import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsWidget';
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
 import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
+import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
 
 interface Props {
     user: User;
@@ -28,6 +29,10 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
             <View style={{ height: '100%' }}>
                 <View style={{ paddingTop: 5 }}>
                     <View style={{ width: '100%' }}>{<DailyHistoryWidget userId={user.id} />}</View>
+                </View>
+
+                <View style={{ paddingTop: 5 }}>
+                    <View style={{ width: '100%' }}>{<TrophyCaseWidget user={user} />}</View>
                 </View>
 
                 <View style={{ paddingTop: 6 }}>

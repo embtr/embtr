@@ -1,7 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { Text, View } from 'react-native';
-import { User } from 'resources/schema';
 import { DayResult } from 'resources/types/widget/DailyHistory';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';

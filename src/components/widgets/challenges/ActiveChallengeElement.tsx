@@ -1,6 +1,10 @@
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { ChallengeCalculationType, ChallengeParticipant } from 'resources/schema';
+import {
+    ChallengeCalculationType,
+    ChallengeParticipant,
+    ChallengeRequirementCompletionState,
+} from 'resources/schema';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { getTimeLeft } from 'src/util/DateUtility';
@@ -22,8 +26,6 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
 
     const challenge = challengeParticipant.challenge;
 
-    console.log(challenge);
-
     if (!challenge.challengeRequirements || challenge.challengeRequirements.length === 0) {
         return <View />;
     }
@@ -35,7 +37,9 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
             : challengeRequirement.requiredIntervalQuantity) ?? 0;
     const percentComplete = Math.floor((amountComplete / amountRequired) * 100);
 
-    const isComplete = amountComplete >= amountRequired;
+    const isComplete =
+        challengeParticipant.challengeRequirementCompletionState ===
+        ChallengeRequirementCompletionState.COMPLETED;
 
     const description = challenge.description ?? '';
 
