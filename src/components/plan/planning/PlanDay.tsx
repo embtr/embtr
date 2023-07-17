@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { PlannedDay as PlannedDayModel, PlannedDayResult, PlannedTask } from 'resources/schema';
+import {
+    Challenge,
+    ChallengeParticipant,
+    ChallengeReward,
+    PlannedDay as PlannedDayModel,
+    PlannedDayResult,
+    PlannedTask,
+} from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
@@ -9,6 +16,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ChallengeController } from 'src/controller/challenge/ChallengeController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
+import React from 'react';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -29,6 +40,9 @@ export const PlanDay = ({
     const navigation =
         useNavigation<StackNavigationProp<ChallengeTabScreens, 'DailyResultDetails'>>();
     const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
+    const [userChallengeParticipation, setUserChallengeParticipation] = useState<
+        ChallengeParticipant[]
+    >([]);
 
     const onPlannedTaskUpdated = (plannedTask: PlannedTask) => {
         const clonedPlannedDay = { ...plannedDay };
@@ -43,6 +57,21 @@ export const PlanDay = ({
 
         onPlannedDayUpdated(clonedPlannedDay);
     };
+
+    const currentUser = useAppSelector(getCurrentUser);
+
+    React.useEffect(() => {
+        const fetch = async () => {
+            if (!currentUser.id) {
+                return;
+            }
+
+            const challengeParticipation = await ChallengeController.getAllForUser(currentUser.id);
+            setUserChallengeParticipation(challengeParticipation ?? []);
+        };
+
+        fetch();
+    }, []);
 
     let taskViews: JSX.Element[] = [];
     let allTasksAreComplete = true;
@@ -61,6 +90,16 @@ export const PlanDay = ({
             allTasksAreComplete = false;
         }
 
+        const challengeRewards: ChallengeReward[] = [];
+        for (const challengeParticipation of userChallengeParticipation) {
+            const challenge = challengeParticipation.challenge;
+            for (const challengeRequirement of challenge?.challengeRequirements ?? []) {
+                if (challengeRequirement.taskId === plannedTask.taskId) {
+                    challengeRewards.push(...(challenge?.challengeRewards ?? []));
+                }
+            }
+        }
+
         taskViews.push(
             <View
                 key={plannedTask.id}
@@ -71,6 +110,7 @@ export const PlanDay = ({
                 }}
             >
                 <PlannableTask
+                    challengeRewards={challengeRewards}
                     initialPlannedTask={plannedTask}
                     onPlannedTaskUpdated={onPlannedTaskUpdated}
                 />

@@ -13,7 +13,7 @@ import {
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
-import { PlannedTask as PlannedTaskModel } from 'resources/schema';
+import { ChallengeReward, PlannedTask as PlannedTaskModel } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
@@ -24,13 +24,19 @@ import { UnitUtility } from 'src/util/UnitUtility';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
+import { SvgUri } from 'react-native-svg';
 
 interface Props {
     initialPlannedTask: PlannedTaskModel;
     onPlannedTaskUpdated: Function;
+    challengeRewards: ChallengeReward[];
 }
 
-export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Props) => {
+export const PlannableTask = ({
+    initialPlannedTask,
+    onPlannedTaskUpdated,
+    challengeRewards,
+}: Props) => {
     const { colors } = useTheme();
 
     const [showUpdatePlannedTaskModal, setShowUpdatePlannedTaskModal] =
@@ -248,6 +254,17 @@ export const PlannableTask = ({ initialPlannedTask, onPlannedTaskUpdated }: Prop
                                             paddingRight: 10,
                                         }}
                                     >
+                                        {challengeRewards.length > 0 && (
+                                            <View
+                                                style={{ paddingRight: 10, flexDirection: 'row' }}
+                                            >
+                                                <SvgUri
+                                                    width={17}
+                                                    height={17}
+                                                    uri={challengeRewards[0].imageUrl ?? ''}
+                                                />
+                                            </View>
+                                        )}
                                         {initialPlannedTask.habit && (
                                             <View
                                                 style={{ paddingRight: 10, flexDirection: 'row' }}

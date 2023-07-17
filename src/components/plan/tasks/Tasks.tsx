@@ -5,10 +5,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { ScrollView, TextInput, View, Text } from 'react-native';
 import TaskController from 'src/controller/planning/TaskController';
 import { TaskPreview } from './TaskPreview';
-import { Habit, PlannedDay as PlannedDayModel } from 'resources/schema';
+import {
+    ChallengeParticipant,
+    ChallengeReward,
+    Habit,
+    PlannedDay as PlannedDayModel,
+} from 'resources/schema';
 import { Task as TaskModel } from 'resources/schema';
 import { HabitController } from 'src/controller/habit/HabitController';
-import { getRandomInt } from 'src/util/GeneralUtility';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -22,17 +29,23 @@ export const Tasks = ({ plannedDay }: Props) => {
     const [recentTasks, setRecentTasks] = React.useState<TaskModel[]>([]);
     const [recommendedTasks, setRecommendedTasks] = React.useState<TaskModel[]>([]);
     const [habits, setHabits] = React.useState<Habit[]>([]);
+    const [userChallengeParticipation, setUserChallengeParticipation] = React.useState<
+        ChallengeParticipant[]
+    >([]);
 
-    const placeholderOptions: string[] = [
-        'Call a friend',
-        'Meal prep',
-        'Do the dishes',
-        'Mediate before bed',
-        'Review weekly finances',
-    ];
-    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(
-        placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]
-    );
+    const currentUser = useAppSelector(getCurrentUser);
+    React.useEffect(() => {
+        const fetch = async () => {
+            if (!currentUser.id) {
+                return;
+            }
+
+            const challengeParticipation = await ChallengeController.getAllForUser(currentUser.id);
+            setUserChallengeParticipation(challengeParticipation ?? []);
+        };
+
+        fetch();
+    }, []);
 
     React.useEffect(() => {
         if (searchText === '') {
@@ -84,12 +97,29 @@ export const Tasks = ({ plannedDay }: Props) => {
     const taskElements: JSX.Element[] = [];
     for (let i = 0; i < tasks.length; i++) {
         const task = tasks[i];
+
+        const challengeRewards: ChallengeReward[] = [];
+        for (const challengeParticipation of userChallengeParticipation) {
+            const challenge = challengeParticipation.challenge;
+            for (const challengeRequirement of challenge?.challengeRequirements ?? []) {
+                if (challengeRequirement.taskId === task.id) {
+                    challengeRewards.push(...(challenge?.challengeRewards ?? []));
+                }
+            }
+        }
+
         taskElements.push(
             <View key={task.id} style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
-                <TaskPreview plannedDay={plannedDay} task={task} habits={habits} />
+                <TaskPreview
+                    plannedDay={plannedDay}
+                    task={task}
+                    habits={habits}
+                    challengeRewards={challengeRewards}
+                />
             </View>
         );
     }
+
     if (searchText) {
         if (!tasks.find((task) => task.title?.toLowerCase() === searchText.toLowerCase())) {
             taskElements.push(
@@ -101,6 +131,7 @@ export const Tasks = ({ plannedDay }: Props) => {
                         plannedDay={plannedDay}
                         task={{ id: undefined, title: searchText, description: '' }}
                         habits={habits}
+                        challengeRewards={[]}
                     />
                 </View>
             );
@@ -111,6 +142,16 @@ export const Tasks = ({ plannedDay }: Props) => {
     if (taskElements.length === 0) {
         for (let i = 0; i < recentTasks.length; i++) {
             const task = recentTasks[i];
+            const challengeRewards: ChallengeReward[] = [];
+            for (const challengeParticipation of userChallengeParticipation) {
+                const challenge = challengeParticipation.challenge;
+                for (const challengeRequirement of challenge?.challengeRequirements ?? []) {
+                    if (challengeRequirement.taskId === task.id) {
+                        challengeRewards.push(...(challenge?.challengeRewards ?? []));
+                    }
+                }
+            }
+
             recentTaskElements.push(
                 <View
                     key={task.id}
@@ -119,7 +160,12 @@ export const Tasks = ({ plannedDay }: Props) => {
                         width: '100%',
                     }}
                 >
-                    <TaskPreview plannedDay={plannedDay} task={task} habits={habits} />
+                    <TaskPreview
+                        plannedDay={plannedDay}
+                        task={task}
+                        habits={habits}
+                        challengeRewards={challengeRewards}
+                    />
                 </View>
             );
         }
@@ -129,12 +175,26 @@ export const Tasks = ({ plannedDay }: Props) => {
     if (taskElements.length === 0) {
         for (let i = 0; i < recommendedTasks.length; i++) {
             const task = recommendedTasks[i];
+            const challengeRewards: ChallengeReward[] = [];
+            for (const challengeParticipation of userChallengeParticipation) {
+                const challenge = challengeParticipation.challenge;
+                for (const challengeRequirement of challenge?.challengeRequirements ?? []) {
+                    if (challengeRequirement.taskId === task.id) {
+                        challengeRewards.push(...(challenge?.challengeRewards ?? []));
+                    }
+                }
+            }
             recommendedTaskElements.push(
                 <View
                     key={task.id}
                     style={{ width: '100%', paddingBottom: 5, alignItems: 'center' }}
                 >
-                    <TaskPreview plannedDay={plannedDay} task={task} habits={habits} />
+                    <TaskPreview
+                        plannedDay={plannedDay}
+                        task={task}
+                        habits={habits}
+                        challengeRewards={challengeRewards}
+                    />
                 </View>
             );
         }

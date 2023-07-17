@@ -9,7 +9,15 @@ import {
 import Toast from 'react-native-root-toast';
 import React, { useEffect } from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
-import { Habit, PlannedDay as PlannedDayModel, PlannedTask, Task, Unit } from 'resources/schema';
+import {
+    ChallengeParticipant,
+    ChallengeReward,
+    Habit,
+    PlannedDay as PlannedDayModel,
+    PlannedTask,
+    Task,
+    Unit,
+} from 'resources/schema';
 import TaskController from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { HabitScrollSelector } from './HabitScrollSelector';
@@ -18,6 +26,10 @@ import { TextInput } from 'react-native-gesture-handler';
 import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
 import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { useAppSelector } from 'src/redux/Hooks';
+import { ChallengeController } from 'src/controller/challenge/ChallengeController';
+import { SvgUri } from 'react-native-svg';
 
 /* Pog I was here - Cherkim */
 
@@ -25,9 +37,10 @@ interface Props {
     plannedDay: PlannedDayModel;
     task: Task;
     habits: Habit[];
+    challengeRewards: ChallengeReward[];
 }
 
-export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
+export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Props) => {
     const { colors } = useTheme();
 
     const [isExpanded, setIsExpanded] = React.useState(false);
@@ -193,23 +206,41 @@ export const TaskPreview = ({ plannedDay, task, habits }: Props) => {
                                     flex: 1,
                                 }}
                             >
-                                <View
-                                    style={{
-                                        height: 30,
-                                        borderRadius: 5,
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'center',
-                                        paddingRight: 5,
-                                    }}
-                                >
-                                    {selectedHabit?.iconName && (
+                                {challengeRewards.length > 0 && (
+                                    <View
+                                        style={{
+                                            height: 30,
+                                            top: 2,
+                                            borderRadius: 5,
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <SvgUri
+                                            width={25}
+                                            height={25}
+                                            uri={challengeRewards[0].imageUrl ?? ''}
+                                        />
+                                    </View>
+                                )}
+
+                                {selectedHabit?.iconName && (
+                                    <View
+                                        style={{
+                                            height: 30,
+                                            paddingLeft: 5,
+                                            borderRadius: 5,
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
                                         <HabitIcon
                                             habit={selectedHabit}
                                             size={30}
                                             color={colors.text}
                                         />
-                                    )}
-                                </View>
+                                    </View>
+                                )}
 
                                 {/*
                                  * ADD PLANNED TASK
