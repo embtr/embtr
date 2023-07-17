@@ -3,11 +3,12 @@ import { Pressable, Text, View } from 'react-native';
 import { PlannedDay as PlannedDayModel, PlannedDayResult, PlannedTask } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -56,7 +57,7 @@ export const PlanDay = ({
             allTasksAreComplete = false;
         }
 
-        if (plannedTask.completedQuantity !== plannedTask.quantity) {
+        if ((plannedTask.completedQuantity ?? 0) < (plannedTask.quantity ?? 0)) {
             allTasksAreComplete = false;
         }
 
@@ -160,25 +161,41 @@ export const PlanDay = ({
                             <Text style={{ color: colors.secondary_text }}>
                                 {allTasksAreComplete
                                     ? 'Congratulations, you have completed your day!'
+                                    : dayIsComplete
+                                    ? "Congratulations on your day's work!"
                                     : 'Finished with your day?'}
                             </Text>
-                            <View style={{ flexDirection: 'row', paddingTop: 4 }}>
-                                <View style={{ paddingRight: 5 }}>
-                                    <Text
-                                        onPress={() => {
-                                            dayIsComplete
-                                                ? navigateToDetails()
-                                                : onSharePlannedDayResults();
-                                        }}
+                            <View
+                                style={{ flexDirection: 'row', paddingTop: 10, paddingBottom: 5 }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        dayIsComplete
+                                            ? navigateToDetails()
+                                            : onSharePlannedDayResults();
+                                    }}
+                                >
+                                    <View
                                         style={{
-                                            color: colors.tab_selected,
-                                            fontFamily: 'Poppins_400Regular',
+                                            backgroundColor: colors.tab_selected,
+                                            borderRadius: 5,
+                                            paddingHorizontal: 10,
                                         }}
                                     >
-                                        {' '}
-                                        {dayIsComplete ? 'View Shared Results' : 'Share Results'}
-                                    </Text>
-                                </View>
+                                        <Text
+                                            style={{
+                                                paddingTop: 2,
+                                                color: colors.text,
+                                                fontFamily: POPPINS_MEDIUM,
+                                                fontSize: 12,
+                                            }}
+                                        >
+                                            {dayIsComplete
+                                                ? 'View Shared Results'
+                                                : 'Share Results'}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     )}
@@ -191,6 +208,40 @@ export const PlanDay = ({
                     >
                         {taskViews}
                     </View>
+                    {!dayIsComplete && (
+                        <View
+                            style={{
+                                width: '100%',
+                                paddingTop: 15,
+                                paddingBottom: 5,
+                                alignItems: 'center',
+                            }}
+                        >
+                            <View style={{ width: '97%' }}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        onSharePlannedDayResults();
+                                    }}
+                                    style={{
+                                        borderRadius: 5,
+                                        backgroundColor: colors.tab_selected,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: colors.text,
+                                            fontFamily: POPPINS_MEDIUM,
+                                            paddingTop: 8,
+                                            paddingBottom: 5,
+                                            textAlign: 'center',
+                                        }}
+                                    >
+                                        Share Your Day!
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
                 </View>
             ) : (
                 <View

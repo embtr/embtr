@@ -30,6 +30,7 @@ export type TodayTab = {
     PlanDay: { id: string };
     WidgetMarketplace: undefined;
     AddQuoteOfTheDay: undefined;
+    DailyResultDetails: { id: number };
     UserProfile: { id: string };
 };
 
