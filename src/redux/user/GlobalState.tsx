@@ -20,6 +20,7 @@ const INITIAL_STATE: GlobalState = {
     habits: [],
     currentUser: {},
     timelineDays: 0,
+    globalBlurBackground: false,
 };
 
 export interface GlobalState {
@@ -38,6 +39,7 @@ export interface GlobalState {
     habits: Habit[];
     currentUser: User;
     timelineDays: number;
+    globalBlurBackground: boolean;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -111,6 +113,9 @@ export const GlobalState = createSlice({
         },
         setTimelineDays(state, action) {
             state.timelineDays = action.payload;
+        },
+        setGlobalBlurBackground(state, action) {
+            state.globalBlurBackground = action.payload;
         },
     },
 });
@@ -235,6 +240,14 @@ export const getTimelineDays = (state: RootState): number => {
     return state.globalState.timelineDays;
 };
 
+export const getGlobalBlurBackground = (state: RootState): boolean => {
+    if (!state?.globalState.globalBlurBackground) {
+        return INITIAL_STATE.globalBlurBackground;
+    }
+
+    return state.globalState.globalBlurBackground;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -252,5 +265,6 @@ export const {
     setHabits,
     setCurrentUser,
     setTimelineDays,
+    setGlobalBlurBackground,
 } = GlobalState.actions;
 export default GlobalState.reducer;

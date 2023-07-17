@@ -1,11 +1,12 @@
-import { View, Text, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import { WidgetBase } from '../WidgetBase';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
-import React from 'react';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { ChallengeParticipant, User } from 'resources/schema';
+import { Challenge, ChallengeParticipant, User } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
+import { TrophyDetailsModal } from 'src/components/trophy_case/TrophyDetailsModal';
 
 interface Props {
     user: User;
@@ -16,6 +17,8 @@ export const TrophyCaseWidget = ({ user }: Props) => {
     const [completedChallengeParticipation, setCompletedChallengeParticipation] = React.useState<
         ChallengeParticipant[]
     >([]);
+    const [selectedChallengeParticipant, setSelectedChallengeParticipant] =
+        React.useState<ChallengeParticipant>();
 
     React.useEffect(() => {
         const fetch = async () => {
@@ -41,13 +44,26 @@ export const TrophyCaseWidget = ({ user }: Props) => {
         const url = completedChallengeParticipation[i].challenge?.challengeRewards?.[0].imageUrl;
         trophyElements.push(
             <View style={{ paddingHorizontal: 10 }}>
-                <SvgUri width={50} height={50} uri={url ?? ''} />
+                <Pressable
+                    onPress={() => {
+                        setSelectedChallengeParticipant(completedChallengeParticipation[i]);
+                    }}
+                >
+                    <SvgUri width={50} height={50} uri={url ?? ''} />
+                </Pressable>
             </View>
         );
     }
 
     return (
         <WidgetBase>
+            <TrophyDetailsModal
+                challengeParticipant={selectedChallengeParticipant}
+                visible={selectedChallengeParticipant !== undefined}
+                onDismiss={() => {
+                    setSelectedChallengeParticipant(undefined);
+                }}
+            />
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                 Trophy Case
             </Text>

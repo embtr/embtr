@@ -4,7 +4,6 @@ import SafeAreaView from 'react-native-safe-area-view';
 import { Banner } from 'src/components/common/Banner';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { PlannedDay as PlannedDayModel } from 'resources/schema';
-import { useAppDispatch } from 'src/redux/Hooks';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
@@ -15,8 +14,6 @@ interface Props {
 
 export const AddHabitModal = ({ visible, plannedDay, dismiss }: Props) => {
     const { colors } = useTheme();
-
-    const dispatch = useAppDispatch();
 
     const closeModal = () => {
         dismiss();
