@@ -1,12 +1,10 @@
 import { View, Text, TextStyle } from 'react-native';
-import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getUTCDayOfWeek } from 'src/controller/planning/TaskController';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
-import { getDatePretty } from 'src/util/DateUtility';
+import { SvgUri } from 'react-native-svg';
 
 interface Props {
     plannedDayResult: PlannedDayResultModel;
@@ -16,12 +14,10 @@ interface Props {
 export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) => {
     const { colors } = useTheme();
 
-    const headerTextStyle = {
-        fontSize: 16,
-        fontFamily: 'Poppins_500Medium',
-        color: colors.timeline_card_body,
-        paddingLeft: TIMELINE_CARD_PADDING,
-    } as TextStyle;
+    const challengeName = plannedDayResult.plannedDay?.challengeParticipant?.[0]?.challenge?.name;
+    const svgUrl =
+        plannedDayResult.plannedDay?.challengeParticipant?.[0]?.challenge?.challengeRewards?.[0]
+            ?.imageUrl;
 
     let plannedTaskViews: JSX.Element[] = [];
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
@@ -45,9 +41,6 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
         });
     });
 
-    const dayOfWeek = getUTCDayOfWeek(plannedDayResult.plannedDay?.date!);
-
-    let totalTasks = plannedDayResult.plannedDay?.plannedTasks?.length;
     let completedCount = 0;
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
         if (plannedTask.status === 'COMPLETE') {
@@ -68,6 +61,39 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
                     <Text style={[{ textAlign: 'left', paddingBottom: 10, color: colors.text }]}>
                         {plannedDayResult.description}
                     </Text>
+                )}
+
+                {svgUrl && (
+                    <View style={{ paddingBottom: 10, paddingTop: 2.5 }}>
+                        <View
+                            style={{
+                                paddingVertical: 7.5,
+                                paddingLeft: 7.5,
+                                borderWidth: 1,
+                                borderRadius: 3,
+                                borderColor: colors.secondary_text,
+                            }}
+                        >
+                            <View style={{ flexDirection: 'row' }}>
+                                <SvgUri width={50} height={50} uri={svgUrl ?? ''} />
+                                <View style={{ paddingLeft: 7.5 }}>
+                                    <Text
+                                        style={{ color: colors.text, fontFamily: POPPINS_MEDIUM }}
+                                    >
+                                        Challenge Complete
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: colors.tab_selected,
+                                            fontFamily: POPPINS_MEDIUM,
+                                        }}
+                                    >
+                                        {challengeName}
+                                    </Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
                 )}
 
                 <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
