@@ -2,7 +2,7 @@ import React from 'react';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Challenge, ChallengeParticipant, JoinedChallenge } from 'resources/schema';
+import { ChallengeParticipant, JoinedChallenge } from 'resources/schema';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
@@ -13,6 +13,7 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useNavigation } from '@react-navigation/native';
+import { formatUtcDate } from 'src/util/DateUtility';
 
 interface Props {
     joinedChallenge: JoinedChallenge;
@@ -23,6 +24,13 @@ type navigationProp = StackNavigationProp<TimelineTabScreens, 'ChallengeDetails'
 export const JoinedChallengeCard = ({ joinedChallenge }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<navigationProp>();
+
+    const startDate: Date = joinedChallenge.challenge.start ?? new Date();
+    const endDate: Date = joinedChallenge.challenge.end ?? new Date();
+    const formattedStartDate = formatUtcDate(startDate);
+    const formattedEndDate = formatUtcDate(endDate);
+
+    const daysUntilStart = Math.floor((startDate.getTime() - new Date().getTime()) / 86400000);
 
     const challenge = joinedChallenge.challenge;
     const newParticipants = joinedChallenge.participants;
@@ -130,43 +138,82 @@ export const JoinedChallengeCard = ({ joinedChallenge }: Props) => {
                 <View style={{ padding: 10 }}>
                     <HorizontalLine />
                     <View style={{ height: TIMELINE_CARD_PADDING }} />
-                    <View>
-                        <View>
+                    <View style={{ flexDirection: 'row' }}>
+                        <View style={{ flex: 1 }}>
+                            <View>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    {challenge.name}
+                                </Text>
+                            </View>
+
                             <Text
-                                numberOfLines={1}
                                 style={{
-                                    color: colors.text,
-                                    fontFamily: POPPINS_MEDIUM,
-                                    fontSize: 16,
+                                    paddingTop: 2,
+                                    fontFamily: POPPINS_REGULAR,
+                                    color: colors.secondary_text,
+                                    fontSize: 12,
+                                    bottom: isAndroidDevice() ? 5 : 3,
                                 }}
                             >
-                                {challenge.name}
+                                {participantCount} participant{participantCount === 1 ? '' : 's'} •
+                                {daysUntilStart > 0 ? (
+                                    <Text
+                                        style={{
+                                            paddingTop: 2,
+                                            fontFamily: POPPINS_REGULAR,
+                                            color: colors.tab_selected,
+                                            fontSize: 12,
+                                            bottom: isAndroidDevice() ? 5 : 3,
+                                        }}
+                                    >
+                                        {' '}
+                                        starts in {daysUntilStart} days
+                                    </Text>
+                                ) : (
+                                    <Text
+                                        style={{
+                                            paddingTop: 2,
+                                            fontFamily: POPPINS_REGULAR,
+                                            color: colors.tab_selected,
+                                            fontSize: 12,
+                                            bottom: isAndroidDevice() ? 5 : 3,
+                                        }}
+                                    >
+                                        {' in progress'}
+                                    </Text>
+                                )}
+                            </Text>
+
+                            <Text
+                                numberOfLines={2}
+                                style={{
+                                    paddingTop: 5,
+                                    fontFamily: POPPINS_REGULAR,
+                                    color: colors.text,
+                                    fontSize: 13,
+                                }}
+                            >
+                                {challenge.description}
                             </Text>
                         </View>
-
-                        <Text
-                            style={{
-                                paddingTop: 2,
-                                fontFamily: POPPINS_REGULAR,
-                                color: colors.secondary_text,
-                                fontSize: 12,
-                                bottom: isAndroidDevice() ? 5 : 3,
-                            }}
-                        >
-                            {participantCount} participant{participantCount === 1 ? '' : 's'}
-                        </Text>
-
-                        <Text
-                            numberOfLines={2}
-                            style={{
-                                paddingTop: 5,
-                                fontFamily: POPPINS_REGULAR,
-                                color: colors.text,
-                                fontSize: 13,
-                            }}
-                        >
-                            {challenge.description}
-                        </Text>
+                        <View>
+                            <Text
+                                style={{
+                                    color: colors.secondary_text,
+                                    fontFamily: POPPINS_REGULAR,
+                                    fontSize: 10,
+                                }}
+                            >
+                                {formattedStartDate} - {formattedEndDate}
+                            </Text>
+                        </View>
                     </View>
                 </View>
 
@@ -183,7 +230,7 @@ export const JoinedChallengeCard = ({ joinedChallenge }: Props) => {
                     <View
                         style={{
                             flexDirection: 'column',
-                            paddingLeft: 5,
+                            paddingLeft: TIMELINE_CARD_PADDING,
                             paddingBottom: 5,
                         }}
                     >
@@ -200,7 +247,7 @@ export const JoinedChallengeCard = ({ joinedChallenge }: Props) => {
                         </View>
 
                         <View>
-                            <View style={{}}>
+                            <View>
                                 {challenge.challengeRewards &&
                                     challenge.challengeRewards.length > 0 && (
                                         <ChallengeRewardView
@@ -210,7 +257,13 @@ export const JoinedChallengeCard = ({ joinedChallenge }: Props) => {
                             </View>
                         </View>
                     </View>
-                    <View style={{ paddingTop: 7.5, paddingHorizontal: 5, paddingBottom: 15 }}>
+                    <View
+                        style={{
+                            paddingTop: 7.5,
+                            paddingHorizontal: TIMELINE_CARD_PADDING,
+                            paddingBottom: 15,
+                        }}
+                    >
                         <TouchableOpacity
                             onPress={registerForChallenge}
                             disabled={userIsAParticipant}

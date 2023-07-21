@@ -30,6 +30,28 @@ export const getDatePretty = (date: Date): string => {
     return format(date, 'MMMM dd, yyyy');
 };
 
+export const formatUtcDate = (date: Date) => {
+    const months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+    ];
+
+    const month = months[date.getUTCMonth()];
+    const day = date.getUTCDate();
+
+    return `${month} ${day}`;
+};
+
 export const getTimePretty = (date: Date): string => {
     return format(date, 'h:mm aaa');
 };

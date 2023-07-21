@@ -91,7 +91,7 @@ export const ChallengeMain = () => {
     return (
         <Screen>
             <View style={{ height: '100%', backgroundColor: '10' }}>
-                <Banner name="Adventures" />
+                <Banner name="Habit Journey" />
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
