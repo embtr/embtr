@@ -22,6 +22,7 @@ export type TimelineTabScreens = {
     GoalDetails: { uid: string; id: string; source: string };
     UserPosts: { userId: number };
     DailyResults: { userId: number };
+    ChallengeDetails: { id: number };
 };
 
 export type TodayTab = {

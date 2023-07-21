@@ -1,11 +1,9 @@
+import React from 'react';
 import { View } from 'react-native';
 import { PostDetails } from '../../comments/PostDetails';
-import { UserPostBody } from '../../comments/UserPostBody';
 import { Challenge, User } from 'resources/schema';
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
-import { ChallengeTabScreens, TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React from 'react';
+import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeDetailsBody } from 'src/components/challenge/ChallengeDetailsBody';

@@ -96,8 +96,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                             bottom: isAndroidDevice() ? 5 : 3,
                         }}
                     >
-                        {participantCount} participant{participantCount === 1 ? '' : 's'} • host
-                        {'  '}
+                        {participantCount} participant{participantCount === 1 ? '' : 's'} • host{' '}
                         <Text
                             style={{
                                 color: colors.tab_selected,

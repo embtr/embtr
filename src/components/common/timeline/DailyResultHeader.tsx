@@ -25,53 +25,65 @@ export const DailyResultHeader = ({ user, date }: Props) => {
                     paddingLeft: TIMELINE_CARD_PADDING,
                 }}
             >
-                <NavigatableUserImage user={user} size={45} />
+                <View style={{ flexDirection: 'row', flex: 1 }}>
+                    <NavigatableUserImage user={user} size={45} />
 
-                <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                            <Text
+                    <View
+                        style={{
+                            paddingLeft: 10,
+                            flex: 1,
+                            alignSelf: 'stretch',
+                        }}
+                    >
+                        <View style={{ flex: 1, flexDirection: 'row' }}>
+                            <View
                                 style={{
-                                    fontFamily: 'Poppins_600SemiBold',
-                                    color: colors.timeline_card_header,
+                                    flex: 1,
+                                    justifyContent: 'flex-end',
                                 }}
                             >
-                                {user.displayName}
-                            </Text>
+                                <Text
+                                    style={{
+                                        fontFamily: 'Poppins_600SemiBold',
+                                        color: colors.timeline_card_header,
+                                    }}
+                                >
+                                    {user.displayName}
+                                </Text>
+                            </View>
                         </View>
-                        <View
-                            style={{
-                                flex: 1,
-                                justifyContent: 'center',
-                                alignItems: 'flex-end',
-                                paddingRight: TIMELINE_CARD_PADDING,
-                            }}
-                        >
+
+                        <View style={{ flex: 1, justifyContent: 'flex-start' }}>
                             <Text
                                 style={{
                                     fontFamily: 'Poppins_400Regular',
-                                    fontSize: 12,
-                                    opacity: 0.75,
+                                    fontSize: 10,
                                     color: colors.timeline_card_header,
                                 }}
                             >
-                                {datePretty}
+                                {user?.location}
                             </Text>
                         </View>
                     </View>
-
-                    <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                        <Text
-                            style={{
-                                fontFamily: 'Poppins_400Regular',
-                                fontSize: 10,
-                                color: colors.timeline_card_header,
-                            }}
-                        >
-                            {user?.location}
-                        </Text>
-                    </View>
                 </View>
+            </View>
+            <View
+                style={{
+                    alignItems: 'flex-end',
+                    paddingTop: TIMELINE_CARD_PADDING / 2,
+                    paddingRight: TIMELINE_CARD_PADDING,
+                }}
+            >
+                <Text
+                    style={{
+                        fontFamily: 'Poppins_400Regular',
+                        fontSize: 12,
+                        opacity: 0.75,
+                        color: colors.secondary_text,
+                    }}
+                >
+                    {datePretty}
+                </Text>
             </View>
         </View>
     );

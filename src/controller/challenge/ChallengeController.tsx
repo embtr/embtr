@@ -1,11 +1,41 @@
+import { Challenge, JoinedChallenge } from 'resources/schema';
 import {
     GetChallengeParticipationResponse,
     GetChallengeResponse,
     GetChallengesResponse,
+    GetJoinedChallengesResponse,
 } from 'resources/types/requests/ChallengeTypes';
 import axiosInstance from 'src/axios/axios';
+import { TimelinePostModel } from 'src/model/OldModels';
+
+export interface JoinedChallengeTimelinePost extends TimelinePostModel {
+    data: {
+        joinedChallenge: JoinedChallenge;
+    };
+}
 
 export class ChallengeController {
+    public static async getAllRecentJoined(upperBound: Date, lowerBound: Date) {
+        const upperBoundDate = new Date(upperBound).toISOString();
+        const lowerBoundDate = new Date(lowerBound).toISOString();
+
+        return axiosInstance
+            .get(`/challenge/recently-joined/`, {
+                params: {
+                    upperBound: upperBoundDate,
+                    lowerBound: lowerBoundDate,
+                },
+            })
+
+            .then((success) => {
+                const body: GetJoinedChallengesResponse = success.data;
+                return body.joinedChallenges ?? [];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
     public static async get(id: number) {
         return axiosInstance
             .get(`/challenge/${id}`)

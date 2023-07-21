@@ -1,24 +1,35 @@
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
-import { PlannedDayResult as PlannedDayResultModel, UserPost } from 'resources/schema';
+import {
+    JoinedChallenge,
+    PlannedDayResult as PlannedDayResultModel,
+    UserPost,
+} from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 import { TimelinePostModel } from 'src/model/OldModels';
-import React from 'react';
+import { JoinedChallengeTimelinePost } from 'src/controller/challenge/ChallengeController';
+import { JoinedChallengeCard } from '../common/timeline/challenges/JoinedChallengeCard';
 
 interface Props {
     userPosts: UserPost[];
     dayResults: PlannedDayResultModel[];
+    joinedChallenges: JoinedChallenge[];
     refreshing: boolean;
     loadMore: Function;
 }
 
-export const FilteredTimeline = ({ userPosts, dayResults, refreshing, loadMore }: Props) => {
+export const FilteredTimeline = ({
+    userPosts,
+    dayResults,
+    joinedChallenges,
+    refreshing,
+    loadMore,
+}: Props) => {
     const { colors } = useTheme();
     const card = {
         width: '100%',
@@ -58,7 +69,26 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, loadMore }
             active: true,
         }));
 
-        return [...userPostTimelinePosts, ...dayResultTimelinePosts];
+        const joinedChallengesTimelinePosts = joinedChallenges.map((joinedChallenge) => ({
+            added: Timestamp.fromDate(joinedChallenge.participants?.[0]?.createdAt!),
+            modified: Timestamp.fromDate(joinedChallenge.participants?.[0].updatedAt!),
+            type: 'JOINED_CHALLENGE',
+            public: {
+                comments: [],
+                likes: [],
+            },
+            uid: '',
+            data: {
+                joinedChallenge,
+            },
+            active: true,
+        }));
+
+        return [
+            ...userPostTimelinePosts,
+            ...dayResultTimelinePosts,
+            ...joinedChallengesTimelinePosts,
+        ];
     };
 
     const createTimelineViews = () => {
@@ -99,6 +129,17 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, loadMore }
         );
     };
 
+    const createJoinedChallengeView = (timelineEntry: TimelinePostModel) => {
+        const model = timelineEntry as JoinedChallengeTimelinePost;
+
+        const key = model.data.joinedChallenge.challenge.id;
+        return (
+            <View key={key} style={[card]}>
+                <JoinedChallengeCard joinedChallenge={model.data.joinedChallenge} />
+            </View>
+        );
+    };
+
     const createTimelineView = (timelineEntry: TimelinePostModel) => {
         switch (timelineEntry.type) {
             case 'STORY':
@@ -106,6 +147,9 @@ export const FilteredTimeline = ({ userPosts, dayResults, refreshing, loadMore }
 
             case 'DAILY_RESULT':
                 return createDailyResultView(timelineEntry);
+
+            case 'JOINED_CHALLENGE':
+                return createJoinedChallengeView(timelineEntry);
 
             default:
                 return <View />;

@@ -33,7 +33,19 @@ interface Props {
     onDelete?: Function;
 }
 
-export const PostDetails = ({ type, author, children, added, likes, comments, onLike, submitComment, deleteComment, onEdit, onDelete }: Props) => {
+export const PostDetails = ({
+    type,
+    author,
+    children,
+    added,
+    likes,
+    comments,
+    onLike,
+    submitComment,
+    deleteComment,
+    onEdit,
+    onDelete,
+}: Props) => {
     const { colors } = useTheme();
     const closeMenu = useAppSelector(getCloseMenu);
     const [currentUser, setCurrentUser] = React.useState<UserModel | undefined>(undefined);
@@ -79,6 +91,7 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
     ];
 
     const userIsAuthor = currentUser?.uid === author?.uid;
+    const userHasLiked = likes.some((like) => like.userId === currentUser?.id);
 
     return (
         <Screen>
@@ -100,23 +113,59 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
                 <ScrollableTextInputBox submitComment={submitComment}>
                     {/* HEADER */}
                     <View style={{ flexDirection: 'row' }}>
-                        <View style={{ flex: 1, flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING, paddingLeft: TIMELINE_CARD_PADDING }}>
-                            <View>{author && <NavigatableUserImage user={author} size={45} />}</View>
+                        <View
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                paddingTop: TIMELINE_CARD_PADDING,
+                                paddingLeft: TIMELINE_CARD_PADDING,
+                            }}
+                        >
+                            <View>
+                                {author && <NavigatableUserImage user={author} size={45} />}
+                            </View>
 
                             <View style={{ paddingLeft: 10, flex: 1, alignSelf: 'stretch' }}>
                                 <View style={{ flex: 1, flexDirection: 'row' }}>
                                     <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-                                        <Text style={{ fontFamily: 'Poppins_600SemiBold', color: colors.timeline_card_header }}>{author.displayName}</Text>
+                                        <Text
+                                            style={{
+                                                fontFamily: 'Poppins_600SemiBold',
+                                                color: colors.timeline_card_header,
+                                            }}
+                                        >
+                                            {author.displayName}
+                                        </Text>
                                     </View>
-                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', paddingRight: TIMELINE_CARD_PADDING }}>
-                                        <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 12, opacity: 0.75, color: colors.timeline_card_header }}>
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            justifyContent: 'center',
+                                            alignItems: 'flex-end',
+                                            paddingRight: TIMELINE_CARD_PADDING,
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontFamily: 'Poppins_400Regular',
+                                                fontSize: 12,
+                                                opacity: 0.75,
+                                                color: colors.timeline_card_header,
+                                            }}
+                                        >
                                             {daysAgo}
                                         </Text>
                                     </View>
                                 </View>
 
                                 <View style={{ flex: 1, justifyContent: 'flex-start' }}>
-                                    <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 10, color: colors.timeline_card_header }}>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Poppins_400Regular',
+                                            fontSize: 10,
+                                            color: colors.timeline_card_header,
+                                        }}
+                                    >
                                         {author?.location}
                                     </Text>
                                 </View>
@@ -127,12 +176,30 @@ export const PostDetails = ({ type, author, children, added, likes, comments, on
                     {/*this is the body of the post*/}
                     {children}
 
-                    <View style={{ paddingLeft: TIMELINE_CARD_PADDING, paddingTop: 10, paddingBottom: TIMELINE_CARD_PADDING }}>
-                        <PostDetailsActionBar likes={likes} commentCount={comments.length} onLike={onLike} />
+                    <View
+                        style={{
+                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingTop: 10,
+                            paddingBottom: TIMELINE_CARD_PADDING,
+                        }}
+                    >
+                        <PostDetailsActionBar
+                            likeCount={likes.length}
+                            commentCount={comments.length}
+                            onLike={onLike}
+                            isLiked={userHasLiked}
+                        />
                     </View>
 
                     <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%' }}>
-                        <View style={{ height: 1, width: '100%', backgroundColor: colors.today_calendar_line, opacity: 0.25 }} />
+                        <View
+                            style={{
+                                height: 1,
+                                width: '100%',
+                                backgroundColor: colors.today_calendar_line,
+                                opacity: 0.25,
+                            }}
+                        />
                     </View>
 
                     <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />

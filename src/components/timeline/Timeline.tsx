@@ -8,17 +8,25 @@ import NotificationController, {
     getUnreadNotificationCount,
 } from 'src/controller/notification/NotificationController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { Notification as NotificationModel, PlannedDayResult, UserPost } from 'resources/schema';
+import {
+    Challenge,
+    JoinedChallenge,
+    Notification as NotificationModel,
+    PlannedDayResult,
+    UserPost,
+} from 'resources/schema';
 import { FilteredTimeline } from './FilteredTimeline';
 import StoryController from 'src/controller/timeline/story/StoryController';
-import { getDisplayDropDownAlert, getTimelineDays } from 'src/redux/user/GlobalState';
+import { getTimelineDays } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
+import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 
 export const Timeline = () => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const [userPosts, setUserPosts] = React.useState<UserPost[]>([]);
     const [dayResults, setDayResults] = React.useState<PlannedDayResult[]>([]);
+    const [joinedChallenges, setJoinedChallenges] = React.useState<JoinedChallenge[]>([]);
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -53,23 +61,32 @@ export const Timeline = () => {
         const upperBound = refresh ? new Date() : bounds.upperBound;
         const lowerBound = refresh ? getDateMinusDays(new Date(), refreshDays) : bounds.lowerBound;
 
-        const dailyResultsPromise = DailyResultController.getAllViaApi(upperBound, lowerBound);
         const userPostsPromise = StoryController.getAllViaApi(upperBound, lowerBound);
-
-        const combinedPromise = Promise.all([dailyResultsPromise, userPostsPromise]).then(
-            ([newDayResults, newUserPosts]) => {
-                setDayResults(!refresh ? [...dayResults, ...newDayResults] : newDayResults);
-                setUserPosts(!refresh ? [...userPosts, ...newUserPosts] : newUserPosts);
-
-                const newUpperBound = getDateMinusDays(upperBound, refreshDays);
-                const newLowerBound = getDateMinusDays(lowerBound, refreshDays);
-                setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
-
-                if (refresh) {
-                    setRefreshing(false);
-                }
-            }
+        const dailyResultsPromise = DailyResultController.getAllViaApi(upperBound, lowerBound);
+        const joinedChallengesPromise = ChallengeController.getAllRecentJoined(
+            upperBound,
+            lowerBound
         );
+
+        const combinedPromise = Promise.all([
+            dailyResultsPromise,
+            userPostsPromise,
+            joinedChallengesPromise,
+        ]).then(([newDayResults, newUserPosts, newJoinedChallenges]) => {
+            setUserPosts(!refresh ? [...userPosts, ...newUserPosts] : newUserPosts);
+            setDayResults(!refresh ? [...dayResults, ...newDayResults] : newDayResults);
+            setJoinedChallenges(
+                !refresh ? [...joinedChallenges, ...newJoinedChallenges] : newJoinedChallenges
+            );
+
+            const newUpperBound = getDateMinusDays(upperBound, refreshDays);
+            const newLowerBound = getDateMinusDays(lowerBound, refreshDays);
+            setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
+
+            if (refresh) {
+                setRefreshing(false);
+            }
+        });
 
         return combinedPromise;
     };
@@ -91,6 +108,7 @@ export const Timeline = () => {
             <FilteredTimeline
                 userPosts={userPosts}
                 dayResults={dayResults}
+                joinedChallenges={joinedChallenges}
                 refreshing={refreshing}
                 loadMore={loadMore}
             />
