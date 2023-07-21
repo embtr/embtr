@@ -6,6 +6,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from '../common/Banner';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { UpcomingChallenges } from './UpcomingChallenges';
+import { Journey } from '../journey/Journey';
 
 export const ChallengeMain = () => {
     const { colors } = useTheme();
@@ -19,10 +20,10 @@ export const ChallengeMain = () => {
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
-            case 'explore':
+            case 'journey':
                 return (
                     <View style={{ height: '100%' }}>
-                        <UpcomingChallenges />
+                        <Journey />
                     </View>
                 );
 
@@ -79,7 +80,7 @@ export const ChallengeMain = () => {
     };
 
     const [routes] = React.useState([
-        { key: 'explore', title: 'Explore' },
+        { key: 'journey', title: 'Journey' },
         { key: 'challenges', title: 'Challenges' },
         { key: 'achievements', title: 'Achievements' },
     ]);
