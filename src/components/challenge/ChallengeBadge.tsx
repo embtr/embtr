@@ -13,5 +13,5 @@ export const ChallengeBadge = ({ reward, size, opaque }: Props) => {
         return <View />;
     }
 
-    return <SvgUri width={size} height={size} uri={reward.imageUrl} />;
+    return <SvgUri width={size} height={size} uri={reward.imageUrl} opacity={opaque ? .2 : undefined} />;
 };

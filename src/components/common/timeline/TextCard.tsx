@@ -211,21 +211,12 @@ export const TextCard = ({
                 {/**********/}
                 {/* FOOTER */}
                 {/**********/}
-                <View
-                    style={{
-                        paddingLeft: TIMELINE_CARD_PADDING,
-                        paddingTop: 10,
-                        zIndex: 1,
-                        paddingBottom: TIMELINE_CARD_PADDING,
-                    }}
-                >
-                    <PostDetailsActionBar
-                        isLiked={isLiked}
-                        likeCount={likes.length}
-                        commentCount={comments.length}
-                        onLike={handleOnLike}
-                    />
-                </View>
+                <PostDetailsActionBar
+                    isLiked={isLiked}
+                    likeCount={likes.length}
+                    commentCount={comments.length}
+                    onLike={handleOnLike}
+                />
             </View>
         </TouchableWithoutFeedback>
     );

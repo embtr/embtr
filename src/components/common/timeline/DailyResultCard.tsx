@@ -108,7 +108,10 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
         <TouchableWithoutFeedback onPress={navigateToDetails}>
             <View
                 style={[
-                    { backgroundColor: colors.timeline_card_background, borderRadius: 2.5 },
+                    {
+                        backgroundColor: colors.timeline_card_background,
+                        borderRadius: 2.5,
+                    },
                     CARD_SHADOW,
                 ]}
             >
@@ -128,20 +131,12 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
                 {/**********/}
                 {/* FOOTER */}
                 {/**********/}
-                <View
-                    style={{
-                        paddingLeft: TIMELINE_CARD_PADDING,
-                        paddingTop: 10,
-                        paddingBottom: TIMELINE_CARD_PADDING / 2,
-                    }}
-                >
-                    <PostDetailsActionBar
-                        likeCount={updatedDayResult?.likes?.length ?? 0}
-                        isLiked={isLiked}
-                        commentCount={updatedDayResult.comments?.length ?? 0}
-                        onLike={onLike}
-                    />
-                </View>
+                <PostDetailsActionBar
+                    likeCount={updatedDayResult?.likes?.length ?? 0}
+                    isLiked={isLiked}
+                    commentCount={updatedDayResult.comments?.length ?? 0}
+                    onLike={onLike}
+                />
             </View>
         </TouchableWithoutFeedback>
     );

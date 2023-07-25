@@ -97,7 +97,7 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
                     <ChallengeBadge
                         reward={challenge.challengeRewards![0]}
                         size={20}
-                        opaque={isComplete ? undefined : true}
+                        opaque={!isComplete}
                     />
                 </View>
             </View>

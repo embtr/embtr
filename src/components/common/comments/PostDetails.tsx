@@ -176,20 +176,12 @@ export const PostDetails = ({
                     {/*this is the body of the post*/}
                     {children}
 
-                    <View
-                        style={{
-                            paddingLeft: TIMELINE_CARD_PADDING,
-                            paddingTop: 10,
-                            paddingBottom: TIMELINE_CARD_PADDING,
-                        }}
-                    >
-                        <PostDetailsActionBar
-                            likeCount={likes.length}
-                            commentCount={comments.length}
-                            onLike={onLike}
-                            isLiked={userHasLiked}
-                        />
-                    </View>
+                    <PostDetailsActionBar
+                        likeCount={likes.length}
+                        commentCount={comments.length}
+                        onLike={onLike}
+                        isLiked={userHasLiked}
+                    />
 
                     <View style={{ width: '100%', paddingLeft: '3.5%', paddingRight: '3.5%' }}>
                         <View

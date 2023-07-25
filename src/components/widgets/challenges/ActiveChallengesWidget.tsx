@@ -25,7 +25,7 @@ export const ActiveChallengesWidget = ({ user }: Props) => {
                 return;
             }
 
-            const challengeParticipation = await ChallengeController.getAllForUser(user.id);
+            const challengeParticipation = await ChallengeController.getAllActiveForUser(user.id);
             if (!challengeParticipation) {
                 return;
             }

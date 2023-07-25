@@ -23,6 +23,19 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
     const [likeCount, setLikeCount] = React.useState(challenge.likes?.length || 0);
     const [isLiked, setIsLiked] = React.useState(false);
 
+    const daysUntilStart = Math.floor(
+        ((challenge.start ?? new Date()).getTime() - new Date().getTime()) / 86400000
+    );
+
+    const daysRemaining = Math.floor(
+        ((challenge.end ?? new Date()).getTime() - new Date().getTime()) / 86400000
+    );
+
+    const totalDays = Math.floor(
+        ((challenge.end ?? new Date()).getTime() - (challenge.start ?? new Date()).getTime()) /
+            86400000
+    );
+
     React.useEffect(() => {
         const fetch = async () => {
             const currentUserId = await getUserIdFromToken();
@@ -75,40 +88,56 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
             <View style={{ padding: 10 }}>
                 {/* HEADER */}
                 <View>
-                    <View>
-                        <Text
-                            numberOfLines={1}
-                            style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 13,
-                            }}
-                        >
-                            {challenge.name}
-                        </Text>
-                    </View>
-
                     <Text
+                        numberOfLines={1}
                         style={{
-                            fontFamily: POPPINS_REGULAR,
-                            color: colors.secondary_text,
-                            fontSize: 8,
-                            bottom: isAndroidDevice() ? 5 : 3,
+                            color: colors.text,
+                            fontFamily: POPPINS_MEDIUM,
+                            fontSize: 12,
+                            height: 20,
                         }}
                     >
-                        {participantCount} participant{participantCount === 1 ? '' : 's'} • host{' '}
+                        {challenge.name}
+                    </Text>
+
+                    <View>
                         <Text
                             style={{
-                                color: colors.tab_selected,
                                 fontFamily: POPPINS_REGULAR,
-                                paddingTop: 15,
-                                fontSize: 9,
-                                textAlign: 'right',
+                                color: colors.secondary_text,
+                                fontSize: 8,
+                                bottom: 4,
                             }}
                         >
-                            {challenge.creator?.displayName}
+                            {participantCount} participant{participantCount === 1 ? '' : 's'} •{' '}
+                            {daysUntilStart > 0 ? (
+                                <Text
+                                    style={{
+                                        paddingTop: 2,
+                                        fontFamily: POPPINS_REGULAR,
+                                        color: colors.tab_selected,
+                                        fontSize: 8,
+                                    }}
+                                >
+                                    starts in {daysUntilStart} days
+                                </Text>
+                            ) : (
+                                <Text
+                                    style={{
+                                        paddingTop: 2,
+                                        fontFamily: POPPINS_REGULAR,
+                                        color: colors.tab_selected,
+                                        fontSize: 8,
+                                    }}
+                                >
+                                    {daysRemaining} {'day'}
+                                    {daysRemaining === 1 ? '' : 's'} left
+                                </Text>
+                            )}{' '}
+                            • {totalDays}
+                            {' days'}
                         </Text>
-                    </Text>
+                    </View>
 
                     <Text
                         numberOfLines={2}
@@ -195,14 +224,12 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                     </View>
                 </View>
 
-                <View style={{ paddingLeft: 5 }}>
-                    <PostDetailsActionBar
-                        likeCount={likeCount}
-                        isLiked={isLiked}
-                        commentCount={challenge.comments?.length ?? 0}
-                        onLike={likeChallenge}
-                    />
-                </View>
+                <PostDetailsActionBar
+                    likeCount={likeCount}
+                    isLiked={isLiked}
+                    commentCount={challenge.comments?.length ?? 0}
+                    onLike={likeChallenge}
+                />
             </View>
         </View>
     );
