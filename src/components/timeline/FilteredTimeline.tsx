@@ -121,9 +121,8 @@ export const FilteredTimeline = ({
     const createDailyResultView = (timelineEntry: TimelinePostModel) => {
         const model = timelineEntry as DayResultTimelinePost;
 
-        const key = ModelKeyGenerator.generatePlannedDayResultKey(model.data.dayResult);
         return (
-            <View key={key} style={[card]}>
+            <View key={model.id} style={[card]}>
                 <DailyResultCard plannedDayResult={model} />
             </View>
         );

@@ -47,9 +47,6 @@ class PushNotificationController {
 
         const token = (await Notifications.getExpoPushTokenAsync()).data;
 
-        console.log(
-            'PushNotificationController.registerForPushNotificationsAsync: token: ' + token
-        );
         this.addPushNotificationTokenViaApi(token);
     };
 

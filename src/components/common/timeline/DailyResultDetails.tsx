@@ -16,13 +16,12 @@ import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const dispatch = useAppDispatch();
 
     const [plannedDayResult, setPlannedDayResult] = React.useState<
         PlannedDayResultModel | undefined
     >(undefined);
     const { setScheme, isDark } = useTheme();
-
-    const dispatch = useAppDispatch();
 
     const fetchData = async () => {
         const plannedDayResult = await DailyResultController.getViaApi(route.params.id);

@@ -16,6 +16,7 @@ import { DailyResultCardElement } from './DailyResultCardElement';
 import { Screen } from 'src/components/common/Screen';
 import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
 import { Image as ImageModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { ImageUtility } from 'src/util/images/ImageUtility';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -69,27 +70,11 @@ export const EditDailyResultDetails = () => {
     };
 
     React.useEffect(() => {
-        let newCarouselImages: ImageCarouselImage[] = [];
-        updatedImageUrls.forEach((image) => {
-            if (!image.url || !image.active) {
-                return;
-            }
-
-            newCarouselImages.push({
-                url: image.url,
-                format: 'png',
-                type: 'image',
-                onDelete: onDeleteImage,
-            });
-        });
-
-        newCarouselImages.push({
-            url: '',
-            format: '',
-            type: 'add_image',
-            uploadImage: uploadImage,
-        });
-
+        let newCarouselImages: ImageCarouselImage[] = ImageUtility.createUpdatableCarouselImages(
+            updatedImageUrls,
+            uploadImage,
+            onDeleteImage
+        );
         setCarouselImages(newCarouselImages);
     }, [updatedImageUrls]);
 

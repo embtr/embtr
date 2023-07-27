@@ -13,6 +13,7 @@ export class ModelKeyGenerator {
         ${plannedDayResult.description}
         ${plannedDayResult.likes?.length}
         ${plannedDayResult.comments?.length}
+        ${plannedDayResult.images?.length}
         ${tasksKey}`;
     }
 

@@ -6,15 +6,13 @@ import DailyResultController, {
     DayResultTimelinePost,
 } from 'src/controller/timeline/daily_result/DailyResultController';
 import { View } from 'react-native';
-import { CARD_SHADOW, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CARD_SHADOW } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { DailyResultCardElement } from './DailyResultCardElement';
 import { DailyResultBody } from './DailyResultBody';
 import { DailyResultHeader } from './DailyResultHeader';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import PostDetailsActionBar from '../comments/PostDetailsActionBar';
 import { TouchableWithoutFeedback } from 'react-native';
-import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
@@ -28,7 +26,7 @@ interface Props {
     plannedDayResult: DayResultTimelinePost;
 }
 
-export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
+export const DailyResultCard = ({ plannedDayResult }: Props) => {
     const navigation = useNavigation<timelineCommentsScreenProp>();
     const { colors } = useTheme();
     const dispatch = useAppDispatch();
@@ -53,16 +51,9 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
         }
     };
 
-    let plannedTaskViews: JSX.Element[] = [];
-
-    updatedDayResult.plannedDay?.plannedTasks!.forEach((plannedTask) => {
-        const key = ModelKeyGenerator.generatePlannedTaskKey(plannedTask);
-        plannedTaskViews.push(
-            <View key={key} style={{ paddingBottom: 5 }}>
-                <DailyResultCardElement plannedTask={plannedTask} />
-            </View>
-        );
-    });
+    React.useEffect(() => {
+        setUpdatedDayResult(plannedDayResult.data.dayResult);
+    }, [plannedDayResult]);
 
     const navigateToDetails = () => {
         if (!updatedDayResult.id) {
@@ -140,4 +131,4 @@ export const DailyResultCard = React.memo(({ plannedDayResult }: Props) => {
             </View>
         </TouchableWithoutFeedback>
     );
-});
+};

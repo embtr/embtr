@@ -9,6 +9,7 @@ import { ImageUploadProgressReport } from 'src/controller/image/ImageController'
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { Image } from 'resources/schema';
+import { ImageUtility } from 'src/util/images/ImageUtility';
 
 interface Props {
     title: string;
@@ -57,21 +58,11 @@ export const CreateEditUserPostBase = ({
         setImagesUploading(false);
     };
 
-    let carouselImages: ImageCarouselImage[] = [];
-    images.forEach((image) => {
-        carouselImages.push({
-            url: image.url ?? '',
-            format: 'png',
-            type: 'image',
-            onDelete: onDeleteImage,
-        });
-    });
-    carouselImages.push({
-        url: '',
-        format: '',
-        type: 'add_image',
-        uploadImage: uploadImage,
-    });
+    let carouselImages: ImageCarouselImage[] = ImageUtility.createUpdatableCarouselImages(
+        images,
+        uploadImage,
+        onDeleteImage
+    );
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>

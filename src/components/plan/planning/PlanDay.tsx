@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import {
-    Challenge,
     ChallengeParticipant,
     ChallengeReward,
     PlannedDay as PlannedDayModel,
@@ -10,12 +9,10 @@ import {
 } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_MEDIUM } from 'src/util/constants';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';

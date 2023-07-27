@@ -5,6 +5,7 @@ import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
+import { ImageUtility } from 'src/util/images/ImageUtility';
 
 interface Props {
     plannedDayResult: PlannedDayResultModel;
@@ -28,18 +29,9 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
         );
     });
 
-    let carouselImages: ImageCarouselImage[] = [];
-    plannedDayResult.images?.forEach((plannedDayResultImage) => {
-        if (!plannedDayResultImage.url) {
-            return;
-        }
-
-        carouselImages.push({
-            url: plannedDayResultImage.url,
-            format: 'png',
-            type: 'image',
-        });
-    });
+    const carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(
+        plannedDayResult.images ?? []
+    );
 
     let completedCount = 0;
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {

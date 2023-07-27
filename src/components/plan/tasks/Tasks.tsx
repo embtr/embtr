@@ -70,7 +70,6 @@ export const Tasks = ({ plannedDay }: Props) => {
 
     const fetchRecentTasks = async () => {
         const results: TaskModel[] = await TaskController.getRecent();
-        console.log(results);
         setRecentTasks(results);
     };
 

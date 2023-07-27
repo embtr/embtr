@@ -9,7 +9,6 @@ import NotificationController, {
 } from 'src/controller/notification/NotificationController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import {
-    Challenge,
     JoinedChallenge,
     Notification as NotificationModel,
     PlannedDayResult,

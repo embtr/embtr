@@ -10,6 +10,7 @@ import { Comment, Like, Image as ImageModel, User } from 'resources/schema';
 import React from 'react';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { ImageUtility } from 'src/util/images/ImageUtility';
 
 interface Props {
     staticImage?: ImageSourcePropType;
@@ -82,15 +83,7 @@ export const TextCard = ({
 
     let bodyWithNewLines = body;
 
-    let carouselImages: ImageCarouselImage[] = [];
-    images.forEach((image) => {
-        carouselImages.push({
-            url: image.url ?? '',
-            format: 'png',
-            type: 'image',
-            onPress: navigateToDetails,
-        });
-    });
+    let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(images);
 
     return (
         <TouchableWithoutFeedback onPress={navigateToDetails}>

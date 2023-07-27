@@ -36,6 +36,7 @@ export const CarouselCards = ({ images }: Props) => {
                 renderItem={CarouselCardItem}
                 sliderWidth={Dimensions.get('window').width}
                 itemWidth={CAROUSEL_IMAGE_HEIGHT + 5}
+                vertical={false}
             />
         </View>
     );

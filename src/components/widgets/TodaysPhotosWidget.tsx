@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import ImageController, { ImageUploadProgressReport } from 'src/controller/image/ImageController';
+import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
@@ -8,11 +8,13 @@ import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { Image } from 'resources/schema';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getTodaysPlannedDay } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { addTimelineCardRefreshRequest, getTodaysPlannedDay } from 'src/redux/user/GlobalState';
+import { ImageUtility } from 'src/util/images/ImageUtility';
 
 export const TodaysPhotosWidget = () => {
     const { colors } = useTheme();
+    const dispatch = useAppDispatch();
 
     const plannedDay = useAppSelector(getTodaysPlannedDay);
 
@@ -29,13 +31,22 @@ export const TodaysPhotosWidget = () => {
         setImageUploadProgress('preparing photo upload');
 
         const imageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
-        const images = createImages(imageUrls);
-        const plannedDayResult = await DailyResultController.getOrCreate(plannedDay);
+        const images: Image[] = createImages(imageUrls);
+
+        let plannedDayResult = await DailyResultController.getByPlannedDay(plannedDay);
+        if (!plannedDayResult) {
+            plannedDayResult = await DailyResultController.create(plannedDay.id ?? 0);
+            if (plannedDayResult) {
+                plannedDayResult.active = false;
+            }
+        }
+
         if (plannedDayResult) {
             const updatedDailyResult = await DailyResultController.addPhotos(
                 images,
                 plannedDayResult
             );
+
             if (updatedDailyResult) {
                 setImages(updatedDailyResult.images ?? []);
             }
@@ -43,47 +54,10 @@ export const TodaysPhotosWidget = () => {
 
         setImageUploadProgress('');
         setImagesUploading(false);
-    };
 
-    const createImages = (imageUrls: string[]): Image[] => {
-        const images: Image[] = [];
-        imageUrls.forEach((url) => {
-            images.push({
-                url: url,
-                active: true,
-            });
-        });
-
-        return images;
-    };
-
-    let carouselImages: ImageCarouselImage[] = [];
-    images.forEach((image) => {
-        if (!image.url || !image.active) {
-            return;
+        if (plannedDayResult?.active) {
+            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
         }
-
-        carouselImages.push({
-            url: image.url,
-            format: 'png',
-            type: 'image',
-            onDelete: () => {
-                deleteImage(image.url ?? '');
-            },
-        });
-    });
-
-    carouselImages.push({
-        url: '',
-        format: '',
-        type: 'add_image',
-        uploadImage: uploadImage,
-    });
-
-    const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
-        setImageUploadProgress(
-            'uploading image ' + progressReport.completed + ' of ' + progressReport.total
-        );
     };
 
     const deleteImage = async (imageUrl: string) => {
@@ -100,6 +74,30 @@ export const TodaysPhotosWidget = () => {
 
         const updatedPlannedDayResult = await DailyResultController.updateViaApi(plannedDayResult);
         setImages(updatedPlannedDayResult?.images ?? []);
+    };
+
+    const createImages = (imageUrls: string[]): Image[] => {
+        const images: Image[] = [];
+        imageUrls.forEach((url) => {
+            images.push({
+                url: url,
+                active: true,
+            });
+        });
+
+        return images;
+    };
+
+    const carouselImages: ImageCarouselImage[] = ImageUtility.createUpdatableCarouselImages(
+        images,
+        uploadImage,
+        deleteImage
+    );
+
+    const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
+        setImageUploadProgress(
+            'uploading image ' + progressReport.completed + ' of ' + progressReport.total
+        );
     };
 
     return (
