@@ -1,73 +1,75 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
-import DailyResultController, { DailyResultModel } from 'src/controller/timeline/daily_result/DailyResultController';
+import ImageController, { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
+import { Image } from 'resources/schema';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getTodaysPlannedDay } from 'src/redux/user/GlobalState';
 
-interface Props {
-    dailyResult: DailyResultModel;
-    onImagesChanged: Function;
-}
-
-export const TodaysPhotosWidget = ({ dailyResult, onImagesChanged }: Props) => {
+export const TodaysPhotosWidget = () => {
     const { colors } = useTheme();
+
+    const plannedDay = useAppSelector(getTodaysPlannedDay);
 
     const [imagesUploading, setImagesUploading] = React.useState(false);
     const [imageUploadProgess, setImageUploadProgress] = React.useState('');
+    const [images, setImages] = React.useState<Image[]>([]);
 
-    const savePhotos = async (photoUrls: string[]) => {
-        if (dailyResult) {
-            let clonedDailyResult = DailyResultController.clone(dailyResult);
-            clonedDailyResult.data.imageUrls = photoUrls;
-            if (!clonedDailyResult.data.description) {
-                clonedDailyResult.data.description = '';
-            }
-            await DailyResultController.update(clonedDailyResult);
-            onImagesChanged();
-        }
-    };
+    React.useEffect(() => {
+        setImages(plannedDay.plannedDayResults?.[0]?.images ?? []);
+    }, [plannedDay]);
 
-    const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
-        setImageUploadProgress('uploading image ' + progressReport.completed + ' of ' + progressReport.total);
-    };
-
-    const onUploadImage = async () => {
+    const uploadImage = async () => {
         setImagesUploading(true);
         setImageUploadProgress('preparing photo upload');
 
-        const newImageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
-        let updatedImageUrls = [...(dailyResult.data.imageUrls ? dailyResult.data.imageUrls : [])];
-        updatedImageUrls = updatedImageUrls.concat(newImageUrls);
-
-        savePhotos(updatedImageUrls);
+        const imageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
+        const images = createImages(imageUrls);
+        const plannedDayResult = await DailyResultController.getOrCreate(plannedDay);
+        if (plannedDayResult) {
+            const updatedDailyResult = await DailyResultController.addPhotos(
+                images,
+                plannedDayResult
+            );
+            if (updatedDailyResult) {
+                setImages(updatedDailyResult.images ?? []);
+            }
+        }
 
         setImageUploadProgress('');
         setImagesUploading(false);
     };
 
-    const onDeleteImage = (deletedImageUrl: string) => {
-        let imageUrls: string[] = [];
-        dailyResult.data.imageUrls?.forEach((imageUrl) => {
-            if (imageUrl !== deletedImageUrl) {
-                imageUrls.push(imageUrl);
-            }
+    const createImages = (imageUrls: string[]): Image[] => {
+        const images: Image[] = [];
+        imageUrls.forEach((url) => {
+            images.push({
+                url: url,
+                active: true,
+            });
         });
 
-        savePhotos(imageUrls);
+        return images;
     };
 
     let carouselImages: ImageCarouselImage[] = [];
+    images.forEach((image) => {
+        if (!image.url || !image.active) {
+            return;
+        }
 
-    dailyResult.data.imageUrls?.forEach((image) => {
         carouselImages.push({
-            url: image,
+            url: image.url,
             format: 'png',
             type: 'image',
-            onDelete: onDeleteImage,
+            onDelete: () => {
+                deleteImage(image.url ?? '');
+            },
         });
     });
 
@@ -75,13 +77,37 @@ export const TodaysPhotosWidget = ({ dailyResult, onImagesChanged }: Props) => {
         url: '',
         format: '',
         type: 'add_image',
-        uploadImage: onUploadImage,
+        uploadImage: uploadImage,
     });
+
+    const onImageUploadProgressReport = (progressReport: ImageUploadProgressReport) => {
+        setImageUploadProgress(
+            'uploading image ' + progressReport.completed + ' of ' + progressReport.total
+        );
+    };
+
+    const deleteImage = async (imageUrl: string) => {
+        const plannedDayResult = await DailyResultController.getOrCreate(plannedDay);
+        if (!plannedDayResult) {
+            return;
+        }
+
+        plannedDayResult.images?.forEach((image) => {
+            if (image.url === imageUrl) {
+                image.active = false;
+            }
+        });
+
+        const updatedPlannedDayResult = await DailyResultController.updateViaApi(plannedDayResult);
+        setImages(updatedPlannedDayResult?.images ?? []);
+    };
 
     return (
         <WidgetBase>
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>Today's Photos</Text>
+            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+                Today's Photos
+            </Text>
             <View style={{ paddingTop: 10 }}>
                 <CarouselCards images={carouselImages} />
             </View>

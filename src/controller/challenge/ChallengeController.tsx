@@ -1,4 +1,5 @@
-import { Challenge, JoinedChallenge } from 'resources/schema';
+import { Challenge, Comment, JoinedChallenge } from 'resources/schema';
+import { Interactable } from 'resources/types/interactable/Interactable';
 import {
     GetChallengeParticipationResponse,
     GetChallengeResponse,
@@ -7,6 +8,7 @@ import {
 } from 'resources/types/requests/ChallengeTypes';
 import axiosInstance from 'src/axios/axios';
 import { TimelinePostModel } from 'src/model/OldModels';
+import { CommentController } from '../api/general/CommentController';
 
 export interface JoinedChallengeTimelinePost extends TimelinePostModel {
     data: {
@@ -119,13 +121,10 @@ export class ChallengeController {
     }
 
     public static async comment(challengeId: number, comment: string) {
-        return axiosInstance
-            .post(`/challenge/${challengeId}/comment`, { comment })
-            .then((success) => {
-                return true;
-            })
-            .catch((error) => {
-                return false;
-            });
+        return await CommentController.add(Interactable.CHALLENGE, challengeId, comment);
+    }
+
+    public static async deleteComment(comment: Comment) {
+        return await CommentController.delete(Interactable.CHALLENGE, comment);
     }
 }

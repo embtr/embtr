@@ -1,30 +1,29 @@
 import * as React from 'react';
-import {
-    View,
-    TouchableOpacity,
-    Modal,
-    Text,
-    Pressable,
-    Animated,
-    TextInput,
-    Keyboard,
-} from 'react-native';
+import { View, TouchableOpacity, Modal, Text, Pressable, TextInput, Keyboard } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_ICON_SIZE } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { PlannedTask } from 'resources/schema';
 import { UnitUtility } from 'src/util/UnitUtility';
-import { Ionicons } from '@expo/vector-icons';
 import { EvilIcons } from '@expo/vector-icons';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 
 interface Props {
     plannedTask: PlannedTask;
     visible: boolean;
-    confirm: Function;
+    complete: Function;
+    update: Function;
+    fail: Function;
     dismiss: Function;
 }
 
-export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss }: Props) => {
+export const UpdatePlannedTaskModal = ({
+    plannedTask,
+    visible,
+    complete,
+    update,
+    fail,
+    dismiss,
+}: Props) => {
     const { colors } = useTheme();
 
     React.useEffect(() => {
@@ -37,26 +36,15 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
         dismiss();
     };
 
+    const BUTTON_WIDTH = 90;
+
     const [selectedValue, setSelectedValue] = React.useState<number | null>(
         plannedTask.completedQuantity ?? 0
     );
 
-    const [isExpanded, setIsExpanded] = React.useState(false);
     const [keyboardFocused, setKeyboardFocused] = React.useState(false);
 
-    const initialHeight = 230;
-    const heightValue = React.useRef(new Animated.Value(initialHeight)).current;
-
     const top = getWindowHeight() / 2 - 150;
-    const toggleExpand = () => {
-        Animated.timing(heightValue, {
-            toValue: isExpanded ? initialHeight : 300, // Set the target height value to 0 or the height you want to expand to
-            duration: 100, // Set the duration of the animation
-            useNativeDriver: false, // Make sure to set useNativeDriver to false for layout animations
-        }).start();
-
-        setIsExpanded(!isExpanded);
-    };
 
     const textInputRef = React.useRef<TextInput>(null);
 
@@ -91,10 +79,9 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                             backgroundColor: colors.modal_background,
                         }}
                     >
-                        <Animated.View
+                        <View
                             style={{
                                 width: 300,
-                                height: heightValue,
                                 backgroundColor: colors.modal_background,
                                 borderRadius: 12,
                             }}
@@ -151,7 +138,7 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                             setKeyboardFocused(false);
                                         }}
                                         onSubmitEditing={() => {
-                                            confirm(selectedValue ?? 0);
+                                            update(selectedValue ?? 0);
                                         }}
                                         onFocus={() => {
                                             setKeyboardFocused(true);
@@ -168,7 +155,12 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                                 selection: { start: text.length, end: text.length },
                                             });
 
-                                            if (text.length > 0 && isNaN(parseInt(text))) {
+                                            //allow period
+                                            if (
+                                                text.length > 0 &&
+                                                text !== '.' &&
+                                                isNaN(parseInt(text))
+                                            ) {
                                                 return;
                                             }
 
@@ -214,10 +206,11 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                     style={{
                                         width: '100%',
                                         paddingTop: 20,
-                                        paddingBottom: 5,
                                         flexDirection: 'row',
                                     }}
                                 >
+                                    {/* UPDATE BUTTON */}
+                                    <View style={{ flex: 0.5 }} />
                                     <View
                                         style={{
                                             flex: 1,
@@ -225,59 +218,68 @@ export const UpdatePlannedTaskModal = ({ plannedTask, visible, confirm, dismiss 
                                         }}
                                     >
                                         <TouchableOpacity
-                                            onPress={() => {
-                                                onDismissWrapper();
+                                            style={{
+                                                padding: 5,
+                                                borderRadius: 5,
+                                                borderWidth: 1,
+                                                borderColor: colors.link,
+                                                width: BUTTON_WIDTH,
+                                                alignItems: 'center',
                                             }}
-                                        >
-                                            <EvilIcons
-                                                name="close"
-                                                size={30}
-                                                color={colors.tab_selected}
-                                            />
-                                        </TouchableOpacity>
-                                    </View>
-                                    <View style={{ flex: 2 }} />
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <TouchableOpacity
                                             onPress={() => {
                                                 setKeyboardFocused(false);
-                                                confirm(selectedValue ?? 0);
+                                                update(selectedValue ?? 0);
                                             }}
                                         >
-                                            <Ionicons
-                                                name={'checkmark'}
-                                                size={TIMELINE_CARD_ICON_SIZE}
-                                                color={colors.link}
-                                            />
+                                            <Text
+                                                style={{
+                                                    color: colors.link,
+                                                    fontFamily: POPPINS_REGULAR,
+                                                }}
+                                            >
+                                                update
+                                            </Text>
                                         </TouchableOpacity>
                                     </View>
+
+                                    <View style={{ flex: 0.5 }} />
+
+                                    {/* COMPLETE BUTTON */}
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            style={{
+                                                padding: 5,
+                                                borderRadius: 5,
+                                                borderWidth: 1,
+                                                borderColor: colors.progress_bar_complete,
+                                                width: BUTTON_WIDTH,
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => {
+                                                setKeyboardFocused(false);
+                                                complete();
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: colors.progress_bar_complete,
+                                                    fontFamily: POPPINS_REGULAR,
+                                                }}
+                                            >
+                                                complete
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    <View style={{ flex: 0.5 }} />
                                 </View>
                             </View>
-                        </Animated.View>
-
-                        {/* Expand Button */}
-                        {/*
-                        <View
-                            style={{
-                                width: '100%',
-                                paddingBottom: 3,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Pressable onPress={toggleExpand}>
-                                <Ionicons
-                                    name={isExpanded ? 'chevron-up' : 'chevron-down'}
-                                    size={20}
-                                    color={colors.secondary_text}
-                                />
-                            </Pressable>
                         </View>
-                        */}
                     </View>
                 </Pressable>
             </Pressable>

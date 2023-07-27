@@ -21,25 +21,17 @@ interface Props {
 export const CarouselCards = ({ images }: Props) => {
     const { setScheme, isDark } = useTheme();
 
-    const isCarousel = React.useRef(null);
-    const [loadedImages, setLoadedImages] = React.useState<ImageCarouselImage[]>([]);
-
-    // for some reason leveraging state here 
-    // causes the re-render to be smooth.
-    React.useEffect(() => {
-        let newImages = [...images];
-        if (newImages.length > 0) {
-            newImages[newImages.length - 1].isDarkTheme = isDark;
-        }
-        setLoadedImages(newImages);
-    }, [images]);
+    const isCarousel = React.useRef<Carousel<ImageCarouselImage>>(null);
+    images[images.length - 1].isDarkTheme = isDark;
 
     return (
-        <View style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT + 5 }}>
+        <View
+            style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT + 5 }}
+        >
             <Carousel
                 layout="default"
                 ref={isCarousel}
-                data={loadedImages}
+                data={images}
                 inactiveSlideScale={1}
                 renderItem={CarouselCardItem}
                 sliderWidth={Dimensions.get('window').width}

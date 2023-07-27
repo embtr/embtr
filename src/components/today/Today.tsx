@@ -1,24 +1,12 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { TouchableOpacity, View, Text } from 'react-native';
-import DraggableFlatList, {
-    RenderItemParams,
-    ScaleDecorator,
-} from 'react-native-draggable-flatlist';
+import { View, FlatList, ListRenderItemInfo } from 'react-native';
 import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
 import { User, Widget, WidgetType } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
-import { WidgetController } from 'src/controller/widget/WidgetController';
-import { TodayTab } from 'src/navigation/RootStackParamList';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, setShowCardShadow } from 'src/redux/user/GlobalState';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
-import { DeletableView } from '../common/animated_view/DeletableView';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
-import { EmbtrMenuOption, createEmbtrMenuOptions } from '../common/menu/EmbtrMenuOption';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { TodaysActivitiesWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
@@ -26,42 +14,22 @@ import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget'
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { ConfettiView } from '../common/animated_view/ConfettiView';
 import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
-import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../theme/ThemeProvider';
-import { POPPINS_REGULAR } from 'src/util/constants';
 import { PlanningWidget } from '../widgets/PlanningWidget';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
+import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [refreshing, setRefreshing] = React.useState(false);
-    const [widgets, setWidgets] = React.useState<Widget[]>([]);
-    const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
     const [user, setUser] = React.useState<User>();
 
-    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
-    const dispatch = useAppDispatch();
-
-    const { colors } = useTheme();
-
-    const fetch = async () => {
-        let widgets = await WidgetController.get();
-        widgets.sort((a, b) => {
-            return (a.order ?? 0) - (b.order ?? 0);
-        });
-
-        if (widgets.length === 0) {
-            widgets = WidgetController.getDefaults();
-        }
-
-        setWidgets(widgets);
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            fetch();
-        }, [])
-    );
+    const TODAY_PAGE_WIDGETS = [
+        WidgetType.TIME_LEFT_IN_DAY,
+        WidgetType.QUOTE_OF_THE_DAY,
+        WidgetType.PLANNING,
+        WidgetType.TODAYS_PHOTOS,
+        WidgetType.TODAYS_NOTES,
+    ];
 
     React.useEffect(() => {
         setRefreshedTimestamp(new Date());
@@ -94,38 +62,6 @@ export const Today = () => {
         });
     }, []);
 
-    const removeWidget = (widget: Widget) => {
-        const clone = [...widgets];
-        const index = clone.indexOf(widget);
-        clone[index].active = false;
-
-        setWidgets(clone);
-    };
-
-    const closeMenu = useAppSelector(getCloseMenu);
-    const menuOptions: EmbtrMenuOption[] = [
-        {
-            name: 'Widget Marketplace',
-            onPress: () => {
-                navigation.navigate('WidgetMarketplace');
-                closeMenu();
-            },
-        },
-        {
-            name: 'Configure',
-            onPress: () => {
-                if (!isConfiguringWidgets) {
-                    setIsConfiguringWidgets(true);
-                    dispatch(setShowCardShadow(false));
-                } else {
-                    setIsConfiguringWidgets(false);
-                    dispatch(setShowCardShadow(true));
-                }
-                closeMenu();
-            },
-        },
-    ];
-
     if (!user) {
         return (
             <Screen>
@@ -133,25 +69,6 @@ export const Today = () => {
             </Screen>
         );
     }
-
-    const updateWidgetOrdering = async () => {
-        const orderedWidgets = reorderWidgets(widgets);
-        await WidgetController.update(orderedWidgets);
-        await fetch();
-    };
-
-    const reorderWidgets = (data: Widget[]) => {
-        for (let i = 0; i < data.length; i++) {
-            data[i].order = i;
-        }
-
-        //sort data by order
-        data.sort((a, b) => {
-            return (a.order ?? 0) - (b.order ?? 0);
-        });
-
-        return data;
-    };
 
     const getWidgetFromType = (type: WidgetType) => {
         switch (type) {
@@ -178,62 +95,24 @@ export const Today = () => {
 
             case WidgetType.ACTIVE_CHALLENGES:
                 return <ActiveChallengesWidget user={user} />;
+
+            case WidgetType.TODAYS_PHOTOS:
+                return <TodaysPhotosWidget />;
+
+                return <View />;
         }
 
         return <View />;
     };
 
-    const renderItem = ({ item, drag, index }: RenderItemParams<Widget>) => {
-        if (item.active === false) {
-            return <View />;
-        }
-
+    const renderItem = ({ item, index }: ListRenderItemInfo<WidgetType>) => {
         return (
-            <ScaleDecorator>
-                <TouchableOpacity onPressIn={drag} disabled={!isConfiguringWidgets}>
-                    <DeletableView
-                        visible={isConfiguringWidgets}
-                        onPress={() => {
-                            removeWidget(item);
-                        }}
-                    >
-                        <View>
-                            {isConfiguringWidgets && (
-                                <View
-                                    style={{
-                                        zIndex: 1,
-                                        position: 'absolute',
-                                        alignSelf: 'flex-end',
-                                        right: 50,
-                                        top: 3,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: colors.secondary_text,
-                                            fontSize: 12,
-                                            fontFamily: POPPINS_REGULAR,
-                                        }}
-                                    >
-                                        reorder
-                                    </Text>
-                                    <Ionicons
-                                        name={'reorder-four-outline'}
-                                        size={20}
-                                        color={colors.secondary_text}
-                                    />
-                                </View>
-                            )}
-                            <View style={{ paddingTop: 7.5 }}>
-                                {getWidgetFromType(item.type!)}
-                                {index === widgets.length - 1 && <View style={{ height: 7.5 }} />}
-                            </View>
-                        </View>
-                    </DeletableView>
-                </TouchableOpacity>
-            </ScaleDecorator>
+            <View>
+                <View style={{ paddingTop: 7.5 }}>
+                    {getWidgetFromType(item)}
+                    {index === TODAY_PAGE_WIDGETS.length - 1 && <View style={{ height: 7.5 }} />}
+                </View>
+            </View>
         );
     };
 
@@ -244,43 +123,17 @@ export const Today = () => {
                 <ConfettiView />
 
                 <View style={{ height: '100%', width: '100%' }}>
-                    <Banner
-                        name="Today"
-                        rightText={isConfiguringWidgets ? 'done' : undefined}
-                        rightOnClick={
-                            isConfiguringWidgets
-                                ? () => {
-                                      updateWidgetOrdering();
-                                      setIsConfiguringWidgets(false);
-                                      dispatch(setShowCardShadow(true));
-                                  }
-                                : undefined
-                        }
-                        rightIcon={!isConfiguringWidgets ? 'ellipsis-horizontal' : undefined}
-                        menuOptions={
-                            !isConfiguringWidgets ? createEmbtrMenuOptions(menuOptions) : undefined
+                    <Banner name="Today" />
+                    <FlatList
+                        keyboardShouldPersistTaps={'always'}
+                        data={TODAY_PAGE_WIDGETS}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={(item) => item.toString()}
+                        renderItem={renderItem}
+                        refreshControl={
+                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                         }
                     />
-                    <GestureHandlerRootView style={{ flex: 1 }}>
-                        <DraggableFlatList
-                            keyboardShouldPersistTaps={'always'}
-                            data={widgets}
-                            onDragEnd={({ data }) => {
-                                setWidgets(data);
-                            }}
-                            showsVerticalScrollIndicator={false}
-                            keyExtractor={(item) => item.type!}
-                            renderItem={renderItem}
-                            // Add this prop to handle refresh
-                            refreshControl={
-                                <RefreshControl
-                                    enabled={!isConfiguringWidgets}
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
-                                />
-                            }
-                        />
-                    </GestureHandlerRootView>
                 </View>
             </View>
         </Screen>

@@ -11,7 +11,7 @@ interface Props {
 
 export const CAROUSEL_IMAGE_HEIGHT = Dimensions.get('window').width * 0.6;
 
-export const CarouselCardItem = ({ item, index }: Props) => {
+export const CarouselCardItem = ({ item }: Props) => {
     const color = item.isDarkTheme === true ? 'white' : 'black';
 
     if (item.type === 'add_image') {
@@ -35,7 +35,9 @@ export const CarouselCardItem = ({ item, index }: Props) => {
                         borderStyle: 'dashed',
                     }}
                 >
-                    <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 13, color: color }}>add photos</Text>
+                    <Text style={{ fontFamily: 'Poppins_400Regular', fontSize: 13, color: color }}>
+                        add photos
+                    </Text>
                     <Ionicons name={'image-outline'} size={40} color={color} />
                 </View>
             </TouchableOpacity>

@@ -1,4 +1,4 @@
-import { PlannedDay } from 'resources/schema';
+import { Image, PlannedDay } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
@@ -23,9 +23,9 @@ export class PlanningService {
         if (plannedDay.plannedDayResults?.length) {
             const plannedDayResult = plannedDay!.plannedDayResults![0];
             plannedDayResult.active = true;
-            await DailyResultController.updateViaApi(plannedDayResult);
+            return await DailyResultController.updateViaApi(plannedDayResult);
         } else if (plannedDay) {
-            await PlannedDayController.completeDayViaApi(plannedDay);
+            return await PlannedDayController.completeDayViaApi(plannedDay);
         }
     }
 

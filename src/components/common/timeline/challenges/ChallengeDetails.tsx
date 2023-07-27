@@ -1,27 +1,31 @@
 import React from 'react';
 import { View } from 'react-native';
-import { PostDetails } from '../../comments/PostDetails';
-import { Challenge, ChallengeParticipant, User } from 'resources/schema';
+import { Challenge, ChallengeParticipant, Comment, User } from 'resources/schema';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { ChallengeDetailsBody } from 'src/components/challenge/ChallengeDetailsBody';
 import { Screen } from '../../Screen';
 import { ChallengeBody } from './ChallengeBody';
 import { Banner } from '../../Banner';
 import { HorizontalLine } from '../../HorizontalLine';
 import PostDetailsActionBar from '../../comments/PostDetailsActionBar';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import ScrollableTextInputBox from '../../textbox/ScrollableTextInputBox';
+import { CommentsScrollView } from '../../comments/CommentsScrollView';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 export const ChallengeDetails = () => {
     const route = useRoute<RouteProp<ChallengeTabScreens, 'ChallengeDetails'>>();
-    const { colors } = useTheme();
 
     const [challenge, setChallenge] = React.useState<Challenge>();
+    const [comments, setComments] = React.useState<Comment[]>([]);
 
     const [likeCount, setLikeCount] = React.useState(0);
     const [isLiked, setIsLiked] = React.useState(false);
+
+    const currentUser = useAppSelector(getCurrentUser);
 
     React.useEffect(() => {
         const fetch = async () => {
@@ -35,6 +39,7 @@ export const ChallengeDetails = () => {
                 (like: ChallengeParticipant) => like.userId === currentUserId
             );
 
+            setComments(challenge.comments ?? []);
             setLikeCount(challenge.likes?.length || 0);
             setIsLiked(userHasLiked || false);
         };
@@ -77,21 +82,47 @@ export const ChallengeDetails = () => {
         setLikeCount(likeCount + 1);
     };
 
-    return (
-        <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
-            <Banner name="Challenge Details" />
-            <HorizontalLine />
-            <View style={{ padding: 7.5 }}>
-                <ChallengeBody challenge={challenge} />
-            </View>
+    const submitComment = (comment: string, taggedUsers: string[]) => {
+        if (!challenge.id) {
+            return;
+        }
 
-            <PostDetailsActionBar
-                likeCount={likeCount}
-                isLiked={isLiked}
-                commentCount={challenge.comments?.length ?? 0}
-                onLike={likeChallenge}
-            />
-            <HorizontalLine />
-        </View>
+        const updatedComments = [...comments];
+        updatedComments.push({ comment, createdAt: new Date(), user: currentUser });
+        setComments(updatedComments);
+
+        ChallengeController.comment(challenge.id, comment);
+    };
+
+    const deleteComment = async (comment: Comment) => {
+        if (challenge.id) {
+            await ChallengeController.deleteComment(comment);
+            //dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
+            const updatedComments = comments.filter((c) => c.id !== comment.id);
+            setComments(updatedComments);
+        }
+    };
+
+    return (
+        <Screen>
+            <ScrollableTextInputBox submitComment={submitComment}>
+                <Banner name="Challenge Details" leftText="back" leftRoute="BACK" />
+                <HorizontalLine />
+
+                <View style={{ padding: 7.5 }}>
+                    <ChallengeBody challenge={challenge} />
+                </View>
+
+                <PostDetailsActionBar
+                    likeCount={likeCount}
+                    isLiked={isLiked}
+                    commentCount={comments.length}
+                    onLike={likeChallenge}
+                />
+                <HorizontalLine />
+
+                <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
+            </ScrollableTextInputBox>
+        </Screen>
     );
 };

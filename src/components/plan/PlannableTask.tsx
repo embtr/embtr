@@ -66,8 +66,10 @@ export const PlannableTask = ({
     const fireConfetti = useAppSelector(getFireConfetti);
     const displayDropDownAlert = useAppSelector(getDisplayDropDownAlert);
 
-    const updatePlannedTaskCompletedQuantity = async (quantity: number) => {
-        const clone = { ...initialPlannedTask };
+    const updatePlannedTaskCompletedQuantity = async (
+        clone: PlannedTaskModel,
+        quantity: number
+    ) => {
         clone.completedQuantity = quantity;
         const updatedPlannedTask = await PlannedTaskController.update(clone);
 
@@ -188,10 +190,32 @@ export const PlannableTask = ({
             <UpdatePlannedTaskModal
                 plannedTask={initialPlannedTask}
                 visible={showUpdatePlannedTaskModal}
-                confirm={async (updatedValue: number) => {
+                fail={async () => {
+                    setShowUpdatePlannedTaskModal(false);
+
+                    const clone = { ...initialPlannedTask };
+                    clone.status = 'FAILED';
+                    onPlannedTaskUpdated(clone);
+
+                    await PlannedTaskController.update(clone);
+                }}
+                complete={async () => {
+                    setShowUpdatePlannedTaskModal(false);
+
+                    const clone = { ...initialPlannedTask };
+                    clone.status = 'INCOMPLETE';
+                    setShowUpdatePlannedTaskModal(false);
+                    setCompletedQuantity(clone.quantity ?? 0);
+                    await updatePlannedTaskCompletedQuantity(clone, clone.quantity ?? 0);
+                }}
+                update={async (updatedValue: number) => {
+                    setShowUpdatePlannedTaskModal(false);
+
+                    const clone = { ...initialPlannedTask };
+                    clone.status = 'INCOMPLETE';
                     setShowUpdatePlannedTaskModal(false);
                     setCompletedQuantity(updatedValue);
-                    await updatePlannedTaskCompletedQuantity(updatedValue);
+                    await updatePlannedTaskCompletedQuantity(clone, updatedValue);
                 }}
                 dismiss={() => {
                     setShowUpdatePlannedTaskModal(false);
@@ -217,10 +241,10 @@ export const PlannableTask = ({
                             style={{
                                 width: '2%',
                                 backgroundColor:
-                                    completedQuantity >= (initialPlannedTask.quantity ?? 0)
-                                        ? colors.progress_bar_complete
-                                        : initialPlannedTask?.status === 'FAILED'
+                                    initialPlannedTask?.status === 'FAILED'
                                         ? colors.progress_bar_failed
+                                        : completedQuantity >= (initialPlannedTask.quantity ?? 0)
+                                        ? colors.progress_bar_complete
                                         : 'gray',
                             }}
                         />
@@ -277,11 +301,11 @@ export const PlannableTask = ({
                                             </View>
                                         )}
                                         <View>
-                                            {completedQuantity >=
-                                            (initialPlannedTask.quantity ?? 0) ? (
-                                                <TaskCompleteSymbol small={true} />
-                                            ) : initialPlannedTask?.status === 'FAILED' ? (
+                                            {initialPlannedTask?.status === 'FAILED' ? (
                                                 <TaskFailedSymbol small={true} />
+                                            ) : completedQuantity >=
+                                              (initialPlannedTask.quantity ?? 0) ? (
+                                                <TaskCompleteSymbol small={true} />
                                             ) : (
                                                 <TaskInProgressSymbol small={true} />
                                             )}
