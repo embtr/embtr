@@ -11,8 +11,18 @@ import { SettingsFeedback } from 'src/components/settings/SettingsFeedback';
 import UserController from 'src/controller/user/UserController';
 import { SettingsAccount } from '../settings/SettingsAccount';
 import { SettingsMembership } from '../settings/SettingsMembership';
+import { useAppDispatch } from 'src/redux/Hooks';
+import {
+    INITIAL_STATE,
+    setCurrentUser,
+    setCurrentlySelectedPlannedDay,
+    setTodaysPlannedDay,
+    setUserProfileImage,
+} from 'src/redux/user/GlobalState';
 
 export const UserSettings = () => {
+    const dispatch = useAppDispatch();
+
     return (
         <Screen>
             <Banner name="Settings" leftIcon={'arrow-back'} leftRoute="BACK" />
@@ -44,7 +54,15 @@ export const UserSettings = () => {
                         icon={'exit-outline'}
                         onPress={async () => {
                             await UserController.refreshToken();
-                            await getAuth().signOut();
+                            dispatch(setCurrentUser(INITIAL_STATE.currentUser));
+                            dispatch(setTodaysPlannedDay(INITIAL_STATE.todaysPlannedDay));
+                            dispatch(setUserProfileImage(INITIAL_STATE.userProfileImage));
+                            dispatch(
+                                setCurrentlySelectedPlannedDay(
+                                    INITIAL_STATE.currentlySelectedPlannedDay
+                                )
+                            );
+                            getAuth().signOut();
                         }}
                     />
                 </View>

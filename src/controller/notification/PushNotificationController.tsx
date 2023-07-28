@@ -8,15 +8,7 @@ import { darkColors } from 'src/theme/ColorThemes';
 import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
 
 class PushNotificationController {
-    public static registerUpdatePostNotificationTokenListener() {
-        registerAuthStateListener((user: User) => {
-            if (user) {
-                this.registerForPushNotificationsAsync();
-            }
-        });
-    }
-
-    private static registerForPushNotificationsAsync = async () => {
+    public static registerForPushNotificationsAsync = async () => {
         if (!isPhysicalDevice()) {
             return;
         }

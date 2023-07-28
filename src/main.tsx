@@ -20,6 +20,7 @@ import UserController from './controller/user/UserController';
 import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import {
+    getCurrentUser,
     getGlobalBlurBackground,
     setCurrentUser,
     setTimelineDays,
@@ -129,6 +130,15 @@ export const Main = () => {
     const [showUpdateAvailableModal, setShowUpdateAvailableModal] = React.useState(false);
 
     const globalBlurBackground = useAppSelector(getGlobalBlurBackground);
+    const currentUser = useAppSelector(getCurrentUser);
+
+    React.useEffect(() => {
+        const loginUnsubscribe = registerAuthStateListener(setUser);
+
+        return () => {
+            loginUnsubscribe();
+        };
+    }, []);
 
     const checkForUpdates = async () => {
         const currentVersion = Constants!.manifest!.version!;
@@ -157,8 +167,6 @@ export const Main = () => {
     getFirebaseConnection('', '');
 
     LogBox.ignoreAllLogs();
-    registerAuthStateListener(setUser);
-    PushNotificationController.registerUpdatePostNotificationTokenListener();
 
     const resetGlobalState = (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
@@ -176,9 +184,6 @@ export const Main = () => {
     };
 
     React.useEffect(() => {
-        const loads = [checkForUpdates, loadUnits, loadTimelineDays];
-        loads.forEach((load) => load());
-
         const blockingLoad = async () => {
             if (!user) {
                 return;
@@ -188,8 +193,6 @@ export const Main = () => {
             if (loggedInUser) {
                 resetGlobalState(loggedInUser);
             }
-
-            setUserIsLoggedIn(loggedInUser !== undefined);
         };
 
         blockingLoad();
@@ -202,6 +205,22 @@ export const Main = () => {
         Poppins_600SemiBold,
         Roboto_500Medium,
     });
+
+    const userIsLoggedIn = Object.keys(currentUser ?? {}).length !== 0;
+
+    React.useEffect(() => {
+        if (!user || !userIsLoggedIn) {
+            return;
+        }
+
+        const loads = [
+            checkForUpdates,
+            loadUnits,
+            loadTimelineDays,
+            PushNotificationController.registerForPushNotificationsAsync,
+        ];
+        Promise.all(loads.map((load) => load()));
+    }, [user, userIsLoggedIn]);
 
     return (
         <Screen>
@@ -219,8 +238,8 @@ export const Main = () => {
                     />
                     {/* END TOP LEVEL COMPONENTS */}
 
-                    {user === null && <InsecureMainStack />}
-                    {user !== undefined && user !== null && <SecureMainStack />}
+                    {(user === null || !userIsLoggedIn) && <InsecureMainStack />}
+                    {user !== undefined && user !== null && userIsLoggedIn && <SecureMainStack />}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

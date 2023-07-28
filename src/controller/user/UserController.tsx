@@ -112,11 +112,9 @@ class UserController {
         return await axiosInstance
             .post(`/${USER_ENDPOINT}/`)
             .then(async (success) => {
-                this.forceRefreshIdToken();
                 return success.data;
             })
             .catch((error) => {
-                getAuth().currentUser?.getIdToken(true);
                 return error.response.data;
             });
     }

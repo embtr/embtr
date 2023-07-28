@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, FlatList, ListRenderItemInfo } from 'react-native';
-import { GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
-import { User, Widget, WidgetType } from 'resources/schema';
-import UserController from 'src/controller/user/UserController';
+import { View, Text, FlatList, ListRenderItemInfo } from 'react-native';
+import { RefreshControl } from 'react-native-gesture-handler';
+import { WidgetType } from 'resources/schema';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
@@ -17,11 +16,14 @@ import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget'
 import { PlanningWidget } from '../widgets/PlanningWidget';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [refreshing, setRefreshing] = React.useState(false);
-    const [user, setUser] = React.useState<User>();
+
+    const user = useAppSelector(getCurrentUser);
 
     const TODAY_PAGE_WIDGETS = [
         WidgetType.TIME_LEFT_IN_DAY,
@@ -33,19 +35,6 @@ export const Today = () => {
 
     React.useEffect(() => {
         setRefreshedTimestamp(new Date());
-    }, []);
-
-    const fetchNewCurrentUser = async () => {
-        const newCurrentUser = await UserController.getCurrentUser();
-        if (!newCurrentUser.user) {
-            return;
-        }
-
-        setUser(newCurrentUser.user);
-    };
-
-    React.useEffect(() => {
-        fetchNewCurrentUser();
     }, []);
 
     const refresh = () => {
@@ -65,7 +54,9 @@ export const Today = () => {
     if (!user) {
         return (
             <Screen>
-                <View />
+                <View>
+                    <Text>no user</Text>
+                </View>
             </Screen>
         );
     }
@@ -98,8 +89,6 @@ export const Today = () => {
 
             case WidgetType.TODAYS_PHOTOS:
                 return <TodaysPhotosWidget />;
-
-                return <View />;
         }
 
         return <View />;

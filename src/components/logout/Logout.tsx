@@ -5,6 +5,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { getAuth } from 'firebase/auth';
+import { setCurrentUser } from 'src/redux/user/GlobalState';
 
 export const Logout = () => {
     const { colors } = useTheme();
@@ -31,6 +32,7 @@ export const Logout = () => {
 
     useFocusEffect(
         React.useCallback(() => {
+            dispatch(setCurrentUser({}));
             getAuth().signOut();
         }, [])
     );
@@ -39,7 +41,10 @@ export const Logout = () => {
         <Screen>
             <View style={textViewStyle}>
                 <View style={logoViewStyle}>
-                    <Image source={require('assets/logo.png')} style={{ width: 200, height: 200 }} />
+                    <Image
+                        source={require('assets/logo.png')}
+                        style={{ width: 200, height: 200 }}
+                    />
                 </View>
                 <Text>{'\n\n\n\n'}</Text>
                 <Text style={textStyle}>You have logged out ✌️</Text>

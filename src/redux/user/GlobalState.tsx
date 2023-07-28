@@ -3,7 +3,7 @@ import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { Habit, PlannedDay, Unit, User } from 'resources/schema';
 
-const INITIAL_STATE: GlobalState = {
+export const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
     openMenu: () => {},
     closeMenu: () => {},
