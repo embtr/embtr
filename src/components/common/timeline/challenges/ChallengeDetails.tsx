@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Keyboard, View } from 'react-native';
 import { Challenge, ChallengeParticipant, Comment, User } from 'resources/schema';
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
@@ -70,8 +70,6 @@ export const ChallengeDetails = () => {
         );
     }
 
-    const author: User = challenge?.creator;
-
     const likeChallenge = () => {
         if (!challenge.id) {
             return;
@@ -82,19 +80,35 @@ export const ChallengeDetails = () => {
         setLikeCount(likeCount + 1);
     };
 
-    const submitComment = (comment: string, taggedUsers: string[]) => {
+    const submitComment = async (comment: string, taggedUsers: string[]) => {
+        Keyboard.dismiss();
+
         if (!challenge.id) {
             return;
         }
 
-        const updatedComments = [...comments];
-        updatedComments.push({ comment, createdAt: new Date(), user: currentUser });
-        setComments(updatedComments);
+        const preSaveUpdatedComments = [...comments];
+        preSaveUpdatedComments.push({
+            comment,
+            createdAt: new Date(),
+            user: currentUser,
+        });
+        setComments(preSaveUpdatedComments);
 
-        ChallengeController.comment(challenge.id, comment);
+        const addedComment = await ChallengeController.comment(challenge.id, comment);
+
+        const postSaveUpdatedComments = [...comments];
+        postSaveUpdatedComments.push({
+            id: addedComment.id,
+            comment,
+            createdAt: new Date(),
+            user: currentUser,
+        });
+        setComments(postSaveUpdatedComments);
     };
 
     const deleteComment = async (comment: Comment) => {
+        console.log('deleting comment: ', comment.id);
         if (challenge.id) {
             await ChallengeController.deleteComment(comment);
             //dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));

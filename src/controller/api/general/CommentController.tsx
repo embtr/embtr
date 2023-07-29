@@ -1,7 +1,7 @@
 import { getInteractableEndpoint } from 'resources/endpoints';
 import { Comment } from 'resources/schema';
 import { Interactable } from 'resources/types/interactable/Interactable';
-import { CreateCommentRequest } from 'resources/types/requests/GeneralTypes';
+import { CreateCommentRequest, CreateCommentResponse } from 'resources/types/requests/GeneralTypes';
 import axiosInstance from 'src/axios/axios';
 
 export class CommentController {
@@ -14,7 +14,8 @@ export class CommentController {
         return await axiosInstance
             .post(`${endpoint}${id}/comment/`, request)
             .then((success) => {
-                return success.data;
+                const response: CreateCommentResponse = success.data;
+                return response.comment;
             })
             .catch((error) => {
                 return error.response.data;

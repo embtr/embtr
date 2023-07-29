@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
@@ -38,6 +38,7 @@ import { UpdateUtility } from './util/updates/UpdateUtility';
 import { ConfettiView } from './components/common/animated_view/ConfettiView';
 import { UnitController } from 'src/controller/unit/UnitController';
 import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';
+import { AnyAction } from '@reduxjs/toolkit';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -126,7 +127,6 @@ const linking: LinkingOptions<RootStackParamList> = {
 
 export const Main = () => {
     const [user, setUser] = React.useState<User | undefined | null>(undefined);
-    const [userIsLoggedIn, setUserIsLoggedIn] = React.useState<boolean | undefined>(undefined);
     const [showUpdateAvailableModal, setShowUpdateAvailableModal] = React.useState(false);
 
     const globalBlurBackground = useAppSelector(getGlobalBlurBackground);
@@ -163,7 +163,7 @@ export const Main = () => {
         dispatch(setTimelineDays(Number(timelineDays)));
     };
 
-    const dispatch = useAppDispatch();
+    const dispatch: Dispatch<AnyAction> = useAppDispatch();
     getFirebaseConnection('', '');
 
     LogBox.ignoreAllLogs();

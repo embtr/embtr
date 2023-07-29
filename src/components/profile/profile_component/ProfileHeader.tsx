@@ -5,7 +5,8 @@ import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 import { User } from 'resources/schema';
-import { HorizontalLine } from 'src/components/common/HorizontalLine';
+import { POPPINS_REGULAR } from 'src/util/constants';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     user: User;
@@ -113,34 +114,46 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                             </Text>
                         </View>
                     </View>
-                    <Text
+                    <View
                         style={{
-                            fontSize: 10,
-                            fontFamily: 'Poppins_500Medium',
-                            color: colors.profile_bio_text,
+                            flexDirection: 'row',
                         }}
                     >
-                        {user.location}
-                    </Text>
+                        <View
+                            style={{
+                                justifyContent: 'center',
+                                paddingTop: 2,
+                            }}
+                        >
+                            <Ionicons name={'location-outline'} size={14} color={colors.link} />
+                        </View>
+                        <Text
+                            style={{
+                                top: 0.5,
+                                fontSize: 12,
+                                fontFamily: 'Poppins_500Medium',
+                                color: colors.secondary_text,
+                            }}
+                        >
+                            {user.location}
+                        </Text>
+                    </View>
 
                     <Text
                         style={{
                             fontSize: 12,
-                            fontFamily: 'Poppins_500Medium',
-                            color: colors.profile_bio_text,
+                            fontFamily: POPPINS_REGULAR,
+                            textAlign: 'center',
+                            color: colors.text,
                             paddingTop: 3,
                         }}
                     >
                         {user.bio}
                     </Text>
                 </View>
-
-                <View style={{ paddingTop: 5, width: '100%' }}>
-                    <HorizontalLine />
-                </View>
             </View>
 
-            <View style={{ height: 10 }} />
+            <View style={{ height: 5 }} />
         </View>
     );
 };

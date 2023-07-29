@@ -1,7 +1,5 @@
 import * as Notifications from 'expo-notifications';
 import UserController, { UserModel } from 'src/controller/user/UserController';
-import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
-import { User } from 'firebase/auth';
 import { Linking } from 'react-native';
 import { isAndroidDevice, isPhysicalDevice } from 'src/util/DeviceUtil';
 import { darkColors } from 'src/theme/ColorThemes';

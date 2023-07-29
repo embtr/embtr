@@ -9,32 +9,11 @@ import { ActiveChallengeElement } from './ActiveChallengeElement';
 import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
-    user: User;
+    challengeParticipation: ChallengeParticipant[];
 }
 
-export const ActiveChallengesWidget = ({ user }: Props) => {
+export const ActiveChallengesWidget = ({ challengeParticipation }: Props) => {
     const { colors } = useTheme();
-
-    const [challengeParticipation, setChallengeParticipation] = React.useState<
-        ChallengeParticipant[]
-    >([]);
-
-    React.useEffect(() => {
-        const fetch = async () => {
-            if (!user.id) {
-                return;
-            }
-
-            const challengeParticipation = await ChallengeController.getAllActiveForUser(user.id);
-            if (!challengeParticipation) {
-                return;
-            }
-
-            setChallengeParticipation(challengeParticipation);
-        };
-
-        fetch();
-    }, []);
 
     return (
         <WidgetBase>

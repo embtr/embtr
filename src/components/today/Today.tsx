@@ -18,6 +18,8 @@ import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWi
 import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
+import UserController from 'src/controller/user/UserController';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -61,6 +63,16 @@ export const Today = () => {
         );
     }
 
+    const [context, setContext] = React.useState<Context>(DEFAULT_CONTEXT);
+    React.useEffect(() => {
+        const fetch = async () => {
+            const context = await UserUtility.fetch(user.id!, [ContextOptions.ACTIVE_CHALLENGES]);
+            setContext(context);
+        };
+
+        fetch();
+    }, []);
+
     const getWidgetFromType = (type: WidgetType) => {
         switch (type) {
             case WidgetType.TIME_LEFT_IN_DAY:
@@ -85,7 +97,7 @@ export const Today = () => {
                 return <PlanningWidget />;
 
             case WidgetType.ACTIVE_CHALLENGES:
-                return <ActiveChallengesWidget user={user} />;
+                return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;
 
             case WidgetType.TODAYS_PHOTOS:
                 return <TodaysPhotosWidget />;

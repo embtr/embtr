@@ -121,7 +121,13 @@ export class ChallengeController {
     }
 
     public static async comment(challengeId: number, comment: string) {
-        return await CommentController.add(Interactable.CHALLENGE, challengeId, comment);
+        const addedComment: Comment = await CommentController.add(
+            Interactable.CHALLENGE,
+            challengeId,
+            comment
+        );
+
+        return addedComment;
     }
 
     public static async deleteComment(comment: Comment) {

@@ -1,21 +1,12 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import DraggableFlatList, {
-    RenderItemParams,
-    ScaleDecorator,
-} from 'react-native-draggable-flatlist';
-import { FlatList, GestureHandlerRootView, RefreshControl } from 'react-native-gesture-handler';
-import { User, Widget, WidgetType } from 'resources/schema';
+import { View } from 'react-native';
+import { FlatList, RefreshControl } from 'react-native-gesture-handler';
+import { User, WidgetType } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
-import { WidgetController } from 'src/controller/widget/WidgetController';
-import { TodayTab } from 'src/navigation/RootStackParamList';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getCloseMenu, setShowCardShadow } from 'src/redux/user/GlobalState';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { wait } from 'src/util/GeneralUtility';
 import { Screen } from '../common/Screen';
-import { DeletableView } from '../common/animated_view/DeletableView';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
@@ -27,16 +18,13 @@ import { ConfettiView } from '../common/animated_view/ConfettiView';
 import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
 import { PlanningWidget } from '../widgets/PlanningWidget';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
-import { DAILY_HISTORY } from 'resources/endpoints';
+import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
 
 export const Journey = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [refreshing, setRefreshing] = React.useState(false);
     const [isConfiguringWidgets, setIsConfiguringWidgets] = React.useState<boolean>(false);
     const [user, setUser] = React.useState<User>();
-
-    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
-    const dispatch = useAppDispatch();
 
     React.useEffect(() => {
         setRefreshedTimestamp(new Date());
@@ -69,6 +57,15 @@ export const Journey = () => {
         });
     }, []);
 
+    const [context, setContext] = React.useState<Context>(DEFAULT_CONTEXT);
+    React.useEffect(() => {
+        const fetch = async () => {
+            const context = await UserUtility.fetch(user?.id!, [ContextOptions.ACTIVE_CHALLENGES]);
+            setContext(context);
+        };
+
+        fetch();
+    }, []);
     const closeMenu = useAppSelector(getCloseMenu);
     const menuOptions: EmbtrMenuOption[] = [
         {
@@ -117,7 +114,7 @@ export const Journey = () => {
                 return <PlanningWidget />;
 
             case WidgetType.ACTIVE_CHALLENGES:
-                return <ActiveChallengesWidget user={user} />;
+                return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;
         }
 
         return <View />;

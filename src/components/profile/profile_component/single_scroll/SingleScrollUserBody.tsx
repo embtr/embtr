@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { User } from 'resources/schema';
@@ -9,6 +8,8 @@ import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsW
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
 import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
 import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
+import React from 'react';
+import { Context, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
 
 interface Props {
     user: User;
@@ -24,16 +25,28 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
         );
     }
 
+    const [context, setContext] = React.useState<Context>(DEFAULT_CONTEXT);
+    React.useEffect(() => {
+        const fetch = async () => {
+            const context = await UserUtility.fetch(user.id!);
+            setContext(context);
+        };
+
+        fetch();
+    }, []);
+
     return (
         <Screen>
             <View style={{ height: '100%' }}>
-                <View style={{ paddingTop: 5 }}>
+                <View style={{ paddingTop: 6 }}>
                     <View style={{ width: '100%' }}>{<DailyHistoryWidget userId={user.id} />}</View>
                 </View>
 
-                <View style={{ paddingTop: 5 }}>
-                    <View style={{ width: '100%' }}>{<TrophyCaseWidget user={user} />}</View>
-                </View>
+                {context.completedChallenges.length > 0 && (
+                    <View style={{ paddingTop: 6 }}>
+                        {<TrophyCaseWidget completedChallenges={context.completedChallenges} />}
+                    </View>
+                )}
 
                 <View style={{ paddingTop: 6 }}>
                     <HabitJourneyWidget user={user} />
@@ -43,18 +56,18 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
                     <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />
                 </View>
 
-                <View style={{ paddingTop: 6 }}>
-                    <View style={{ width: '100%' }}>{<ActiveChallengesWidget user={user} />}</View>
-                </View>
+                {context.activeChallenges.length > 0 && (
+                    <View style={{ paddingTop: 6 }}>
+                        <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />
+                    </View>
+                )}
 
                 <View style={{ paddingTop: 6 }}>
                     <View style={{ width: '100%' }}>{<UserPostsWidget userId={user.id} />}</View>
                 </View>
 
                 <View style={{ paddingTop: 6 }}>
-                    <View style={{ width: '100%' }}>
-                        {<UserDailyResultsWidget userId={user.id} />}
-                    </View>
+                    <UserDailyResultsWidget userId={user.id} />
                 </View>
 
                 <View style={{ height: 10 }} />

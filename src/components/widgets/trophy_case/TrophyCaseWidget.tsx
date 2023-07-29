@@ -3,50 +3,25 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { WidgetBase } from '../WidgetBase';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
-import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { Challenge, ChallengeParticipant, User } from 'resources/schema';
+import { ChallengeParticipant } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
 import { TrophyDetailsModal } from 'src/components/trophy_case/TrophyDetailsModal';
 
 interface Props {
-    user: User;
+    completedChallenges: ChallengeParticipant[];
 }
-export const TrophyCaseWidget = ({ user }: Props) => {
+export const TrophyCaseWidget = ({ completedChallenges }: Props) => {
     const { colors } = useTheme();
-
-    const [completedChallengeParticipation, setCompletedChallengeParticipation] = React.useState<
-        ChallengeParticipant[]
-    >([]);
-    const [selectedChallengeParticipant, setSelectedChallengeParticipant] =
-        React.useState<ChallengeParticipant>();
-
-    React.useEffect(() => {
-        const fetch = async () => {
-            if (!user.id) {
-                return;
-            }
-
-            const challengeParticipation = await ChallengeController.getAllCompletedForUser(
-                user.id
-            );
-            if (!challengeParticipation) {
-                return;
-            }
-
-            setCompletedChallengeParticipation(challengeParticipation);
-        };
-
-        fetch();
-    }, []);
+    const [selectedChallenge, setSelectedChallenge] = React.useState<ChallengeParticipant>();
 
     const trophyElements: JSX.Element[] = [];
-    for (let i = 0; i < completedChallengeParticipation.length; i++) {
-        const url = completedChallengeParticipation[i].challenge?.challengeRewards?.[0].imageUrl;
+    for (let i = 0; i < completedChallenges.length; i++) {
+        const url = completedChallenges[i].challenge?.challengeRewards?.[0].imageUrl;
         trophyElements.push(
             <View style={{ paddingHorizontal: 10 }}>
                 <Pressable
                     onPress={() => {
-                        setSelectedChallengeParticipant(completedChallengeParticipation[i]);
+                        setSelectedChallenge(completedChallenges[i]);
                     }}
                 >
                     <SvgUri width={50} height={50} uri={url ?? ''} />
@@ -58,10 +33,10 @@ export const TrophyCaseWidget = ({ user }: Props) => {
     return (
         <WidgetBase>
             <TrophyDetailsModal
-                challengeParticipant={selectedChallengeParticipant}
-                visible={selectedChallengeParticipant !== undefined}
+                challengeParticipant={selectedChallenge}
+                visible={selectedChallenge !== undefined}
                 onDismiss={() => {
-                    setSelectedChallengeParticipant(undefined);
+                    setSelectedChallenge(undefined);
                 }}
             />
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
