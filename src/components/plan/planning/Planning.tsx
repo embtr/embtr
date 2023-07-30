@@ -7,7 +7,6 @@ import PlannedDayController, {
     getTodayKey,
 } from 'src/controller/planning/PlannedDayController';
 import { DayPicker } from 'src/components/plan/planning/DayPicker';
-import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { PlannedTask } from './PlannedTask';
 import { PlanDay } from './PlanDay';
@@ -16,22 +15,10 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentlySelectedPlannedDay,
     setCurrentlySelectedPlannedDay,
-    setTodaysPlannedDay,
 } from 'src/redux/user/GlobalState';
 import { PlannedDay } from 'resources/schema';
 
-interface Props {
-    showSelectTaskModal: boolean;
-    setShowSelectTaskModal: Function;
-    dismissSelectTaskModal: Function;
-    useCalendarView: boolean;
-}
-
-export const Planning = ({
-    showSelectTaskModal,
-    setShowSelectTaskModal,
-    dismissSelectTaskModal,
-}: Props) => {
+export const Planning = () => {
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
     const dispatch = useAppDispatch();
@@ -56,7 +43,6 @@ export const Planning = ({
 
     const onDismissSelectTaskModal = () => {
         refreshPlannedToday();
-        dismissSelectTaskModal();
     };
 
     const onSharePlannedDayResults = async () => {
@@ -80,13 +66,6 @@ export const Planning = ({
     return (
         <View>
             <EmbtrMenuCustom />
-            {selectedPlannedDay?.id && (
-                <AddHabitModal
-                    visible={showSelectTaskModal}
-                    plannedDay={selectedPlannedDay}
-                    dismiss={onDismissSelectTaskModal}
-                />
-            )}
 
             <View style={{ flex: 1 }}>
                 <View style={{ paddingBottom: 25 }}>
@@ -97,7 +76,7 @@ export const Planning = ({
                     <PlanDay
                         plannedDay={selectedPlannedDay}
                         onPlannedDayUpdated={updateSelectedPlannedDay}
-                        setShowSelectTaskModal={setShowSelectTaskModal}
+                        navigateToAddTasks={() => {}}
                         onSharePlannedDayResults={onSharePlannedDayResults}
                         showCreatePlannedDayResultsRecommendation={true}
                     />

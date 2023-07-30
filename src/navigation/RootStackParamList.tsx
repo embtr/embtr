@@ -33,6 +33,7 @@ export type TodayTab = {
     AddQuoteOfTheDay: undefined;
     DailyResultDetails: { id: number };
     UserProfile: { id: string };
+    AddTasks: undefined;
 };
 
 export type ChallengeTabScreens = {

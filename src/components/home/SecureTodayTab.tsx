@@ -4,6 +4,7 @@ import { Today } from '../today/Today';
 import { WidgetMarketplace } from '../widgets/marketplace/WidgetMarketplace';
 import { AddQuoteOfTheDay } from '../widgets/quote_of_the_day/AddQuoteOfTheDay';
 import { DailyResultDetails } from '../common/timeline/DailyResultDetails';
+import { AddTasks } from '../plan/planning/AddTasks';
 
 export const SecureTodayTabStack = () => {
     const Stack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ export const SecureTodayTabStack = () => {
             <Stack.Screen name="AddQuoteOfTheDay" component={AddQuoteOfTheDay} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="DailyResultDetails" component={DailyResultDetails} />
+            <Stack.Screen name="AddTasks" component={AddTasks} />
         </Stack.Navigator>
     );
 };

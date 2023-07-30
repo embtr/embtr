@@ -21,16 +21,15 @@ import React from 'react';
 interface Props {
     plannedDay: PlannedDayModel;
     onPlannedDayUpdated: Function;
-    setShowSelectTaskModal: Function;
+    navigateToAddTasks: Function;
     onSharePlannedDayResults: Function;
     showCreatePlannedDayResultsRecommendation?: boolean;
 }
 
 export const PlanDay = ({
     plannedDay,
-    setShowSelectTaskModal,
     onSharePlannedDayResults,
-    showCreatePlannedDayResultsRecommendation,
+    navigateToAddTasks,
     onPlannedDayUpdated,
 }: Props) => {
     const { colors } = useTheme();
@@ -121,25 +120,6 @@ export const PlanDay = ({
         dayIsComplete = plannedDayResult.active ?? false;
     }
 
-    const navigateToDetails = () => {
-        if (!plannedDay?.plannedDayResults?.length) {
-            return;
-        }
-
-        if (!plannedDay.plannedDayResults[0].id) {
-            return;
-        }
-
-        navigation.navigate('DailyResultDetails', {
-            id: plannedDay.plannedDayResults[0].id,
-        });
-    };
-
-    const hideRecommendation =
-        hideRecommendationRequested ||
-        (plannedDay.hiddenPlannedDayResultRecommendations?.length &&
-            plannedDay.hiddenPlannedDayResultRecommendations[0].active);
-
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
             {taskViews.length > 0 ? (
@@ -208,7 +188,7 @@ export const PlanDay = ({
                         <View style={{ paddingRight: 5 }}>
                             <Text
                                 onPress={() => {
-                                    setShowSelectTaskModal(true);
+                                    navigateToAddTasks();
                                 }}
                                 style={{
                                     color: colors.tab_selected,

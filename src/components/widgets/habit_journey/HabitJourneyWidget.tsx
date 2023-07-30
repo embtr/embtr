@@ -9,7 +9,6 @@ import { HabitController } from 'src/controller/habit/HabitController';
 import { HabitJourneyElement3 } from './HabitJourneyElement3';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { getWindowWidth } from 'src/util/GeneralUtility';
-import { AddHabitModal } from 'src/components/plan/planning/AddHabitModal';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentlySelectedPlannedDay, getTodaysPlannedDay } from 'src/redux/user/GlobalState';
 
@@ -117,14 +116,6 @@ export const HabitJourneyWidget = ({ user }: Props) => {
 
     return (
         <WidgetBase>
-            {todaysPlannedDay && (
-                <AddHabitModal
-                    visible={showAddTaskModal}
-                    plannedDay={todaysPlannedDay}
-                    dismiss={onDismissSelectTaskModal}
-                />
-            )}
-
             <View>
                 <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                     Habit Journey

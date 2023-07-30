@@ -122,15 +122,14 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                         <View
                             style={{
                                 justifyContent: 'center',
-                                paddingTop: 2,
                             }}
                         >
-                            <Ionicons name={'location-outline'} size={14} color={colors.link} />
+                            <Ionicons name={'location-outline'} size={12} color={colors.link} />
                         </View>
                         <Text
                             style={{
-                                top: 0.5,
                                 fontSize: 12,
+                                includeFontPadding: false,
                                 fontFamily: 'Poppins_500Medium',
                                 color: colors.secondary_text,
                             }}

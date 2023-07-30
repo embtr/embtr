@@ -68,16 +68,7 @@ export const PlanMain = () => {
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
 
-                <Planning
-                    showSelectTaskModal={showAddTaskModal}
-                    setShowSelectTaskModal={setShowAddTaskModal}
-                    dismissSelectTaskModal={() => {
-                        setShowAddTaskModal(false);
-                    }}
-                    onDayChange={onDayChanged}
-                    selectedDayKey={selectedDayKey}
-                    useCalendarView={false}
-                />
+                <Planning />
             </View>
         </Screen>
     );

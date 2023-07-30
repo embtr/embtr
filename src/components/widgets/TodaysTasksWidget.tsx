@@ -13,8 +13,6 @@ import React from 'react';
 import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { PlanDay } from '../plan/planning/PlanDay';
 import { PlanningService } from 'src/util/planning/PlanningService';
-import { AddHabitModal } from '../plan/planning/AddHabitModal';
-import { getAuth } from 'firebase/auth';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export enum WidgetSource {
@@ -31,7 +29,6 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
 
-    const [showAddTaskModal, setShowSelectTaskModal] = React.useState(false);
     const [guestPlannedDay, setGuestPlannedDay] = React.useState<PlannedDay | undefined>(undefined);
 
     const isCurrentUser = user.uid === getCurrentUid();
@@ -87,33 +84,17 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
         <WidgetBase
             menuOptions={isCurrentUser ? menuOptions : undefined}
             symbol={isCurrentUser ? 'add-outline' : undefined}
-            onPressSymbol={
-                isCurrentUser
-                    ? () => {
-                          setShowSelectTaskModal(true);
-                      }
-                    : undefined
-            }
+            onPressSymbol={isCurrentUser ? () => {} : undefined}
         >
-            {todaysPlannedDay?.id && (
-                <AddHabitModal
-                    visible={showAddTaskModal}
-                    plannedDay={todaysPlannedDay}
-                    dismiss={() => {
-                        fetch();
-                        setShowSelectTaskModal(false);
-                    }}
-                />
-            )}
-
             <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                 Today's Activities
             </Text>
+
             {todaysPlannedDay ? (
                 <PlanDay
                     plannedDay={todaysPlannedDay}
                     onPlannedDayUpdated={updateTodaysPlannedDay}
-                    setShowSelectTaskModal={setShowSelectTaskModal}
+                    navigateToAddTasks={() => {}}
                     onSharePlannedDayResults={onSharePlannedDayResults}
                     showCreatePlannedDayResultsRecommendation={source !== WidgetSource.PROFILE}
                 />
