@@ -108,7 +108,6 @@ export const ChallengeDetails = () => {
     };
 
     const deleteComment = async (comment: Comment) => {
-        console.log('deleting comment: ', comment.id);
         if (challenge.id) {
             await ChallengeController.deleteComment(comment);
             //dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));

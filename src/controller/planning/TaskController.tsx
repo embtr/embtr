@@ -2,8 +2,12 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { TASK } from 'resources/endpoints';
-import { Habit, Task as NewTaskModel, Task } from 'resources/schema';
-import { CreateTaskRequest, CreateTaskResponse } from 'resources/types/requests/TaskTypes';
+import { Habit, Task as NewTaskModel, Task, Unit } from 'resources/schema';
+import {
+    CreateTaskRequest,
+    CreateTaskResponse,
+    TaskPreferenceRequest,
+} from 'resources/types/requests/TaskTypes';
 import { Timestamp } from 'firebase/firestore';
 import { MetadataController, MetadataKey } from '../metadata/MetadataController';
 
@@ -153,13 +157,20 @@ class TaskController {
             });
     }
 
-    public static async updateHabitPreference(task: Task, habit: Habit | undefined) {
-        const request = {
+    public static async updatePreference(
+        task: Task,
+        habit?: Habit,
+        unit?: Unit,
+        quantity?: number
+    ) {
+        const request: TaskPreferenceRequest = {
             habitId: habit?.id,
+            unitId: unit?.id,
+            quantity: quantity,
         };
 
         return await axiosInstance
-            .put(`/task/${task.id}/habit-preference`, request)
+            .put(`/task/${task.id}/preference`, request)
             .then((success) => {
                 return success.data;
             })

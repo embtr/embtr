@@ -109,7 +109,7 @@ export const Tasks = ({ plannedDay }: Props) => {
         }
 
         taskElements.push(
-            <View key={task.id} style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}>
+            <View key={task.id} style={{ width: '100%', paddingTop: 7.5, alignItems: 'center' }}>
                 <TaskPreview
                     plannedDay={plannedDay}
                     task={task}
@@ -125,7 +125,7 @@ export const Tasks = ({ plannedDay }: Props) => {
             taskElements.push(
                 <View
                     key={searchText}
-                    style={{ width: '100%', paddingTop: 5, alignItems: 'center' }}
+                    style={{ width: '100%', paddingTop: 7.5, alignItems: 'center' }}
                 >
                     <TaskPreview
                         plannedDay={plannedDay}
@@ -156,7 +156,7 @@ export const Tasks = ({ plannedDay }: Props) => {
                 <View
                     key={task.id}
                     style={{
-                        paddingBottom: 5,
+                        paddingBottom: 7.5,
                         width: '100%',
                     }}
                 >
@@ -187,7 +187,7 @@ export const Tasks = ({ plannedDay }: Props) => {
             recommendedTaskElements.push(
                 <View
                     key={task.id}
-                    style={{ width: '100%', paddingBottom: 5, alignItems: 'center' }}
+                    style={{ width: '100%', paddingBottom: 7.5, alignItems: 'center' }}
                 >
                     <TaskPreview
                         plannedDay={plannedDay}

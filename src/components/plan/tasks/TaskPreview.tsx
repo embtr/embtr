@@ -14,12 +14,10 @@ import {
 } from 'resources/schema';
 import TaskController from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
-import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
-import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
-import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { DetailedTaskPreviewModal } from './DetailedTaskPreviewModal';
 import { HabitIcon } from '../habit/HabitIcon';
 import { SvgUri } from 'react-native-svg';
+import { UnitUtility } from 'src/util/UnitUtility';
 
 /* Pog I was here - Cherkim */
 
@@ -50,8 +48,10 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
     capitalizedUnitValue += capitalizedUnitValue === 'Of What?' ? '' : 's';
 
     useEffect(() => {
-        if (task?.taskHabitPreference?.length) {
-            setSelectedHabit(task.taskHabitPreference[0].habit!);
+        if (task?.taskPreference?.length) {
+            setSelectedHabit(task.taskPreference[0].habit);
+            setSelectedUnit(task.taskPreference[0].unit);
+            setEnteredQuantity(task.taskPreference[0].quantity);
         }
     }, []);
 
@@ -114,14 +114,26 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
     return (
         <View style={{ width: '100%', alignItems: 'center' }}>
             <DetailedTaskPreviewModal
+                key={task.id}
                 plannedDay={plannedDay}
                 task={task}
                 habits={habits}
+                selectedHabit={selectedHabit}
+                selectedUnit={selectedUnit}
+                enteredQuantity={enteredQuantity}
                 challengeRewards={challengeRewards}
                 visible={showDetailedTaskPreviewModal}
                 onDismiss={() => {
                     setShowDetailedTaskPreviewModal(false);
                 }}
+                onHabitChanged={(habit: Habit) => {
+                    TaskController.updatePreference(task, habit, selectedUnit, enteredQuantity);
+                    setSelectedHabit(habit);
+                }}
+                onUnitChanged={(unit: Unit) => {
+                    setSelectedUnit(unit);
+                }}
+                onQuantityChanged={setEnteredQuantity}
             />
             <View style={{ width: '97%' }}>
                 <View
@@ -135,13 +147,13 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
                             <View style={{ flex: 1 }}>
                                 <View
                                     style={{
-                                        paddingTop: 5,
-                                        paddingBottom: 5,
+                                        paddingTop: 2.5,
+                                        paddingLeft: 10,
+                                        paddingBottom: 2.5,
                                     }}
                                 >
                                     <View
                                         style={{
-                                            paddingLeft: 5,
                                             justifyContent: 'center',
                                         }}
                                     >
@@ -151,42 +163,82 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
                                                 alignItems: 'center',
                                             }}
                                         >
-                                            <Text
-                                                numberOfLines={1}
-                                                style={{
-                                                    color: colors.goal_primary_font,
-                                                    fontFamily: POPPINS_MEDIUM,
-                                                    includeFontPadding: false,
-                                                    fontSize: 14,
-                                                }}
-                                            >
-                                                {task.title}
-                                            </Text>
+                                            <View style={{ flex: 1 }}>
+                                                <View
+                                                    style={{
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <Text
+                                                        numberOfLines={1}
+                                                        style={{
+                                                            color: colors.goal_primary_font,
+                                                            fontFamily: POPPINS_MEDIUM,
+                                                            includeFontPadding: false,
+                                                            fontSize: 14,
+                                                        }}
+                                                    >
+                                                        {task.title}
+                                                    </Text>
 
+                                                    <View
+                                                        style={{
+                                                            borderRadius: 5,
+                                                            alignItems: 'flex-end',
+                                                            justifyContent: 'center',
+                                                            paddingLeft: 5,
+                                                            paddingRight: 10,
+                                                        }}
+                                                    >
+                                                        <Ionicons
+                                                            name={
+                                                                isExpanded
+                                                                    ? 'chevron-up-outline'
+                                                                    : 'chevron-down-outline'
+                                                            }
+                                                            size={18}
+                                                            color={colors.secondary_text}
+                                                        />
+                                                    </View>
+                                                </View>
+                                                {(enteredQuantity || selectedUnit) && (
+                                                    <Text
+                                                        style={{
+                                                            color: colors.secondary_text,
+                                                            includeFontPadding: false,
+                                                            fontFamily: POPPINS_REGULAR,
+                                                            fontSize: 12,
+                                                            bottom: 3,
+                                                        }}
+                                                    >
+                                                        {enteredQuantity}{' '}
+                                                        {selectedUnit &&
+                                                            enteredQuantity &&
+                                                            UnitUtility.getReadableUnit(
+                                                                selectedUnit,
+                                                                enteredQuantity
+                                                            )}
+                                                    </Text>
+                                                )}
+                                            </View>
                                             <View
                                                 style={{
-                                                    borderRadius: 5,
-                                                    alignItems: 'flex-end',
-                                                    justifyContent: 'center',
-                                                    paddingLeft: 5,
-                                                    paddingRight: 10,
+                                                    flexDirection: 'row',
+                                                    paddingTop: 5,
+                                                    paddingBottom: 5,
                                                 }}
                                             >
-                                                <Ionicons
-                                                    name={
-                                                        isExpanded
-                                                            ? 'chevron-up-outline'
-                                                            : 'chevron-down-outline'
-                                                    }
-                                                    size={18}
-                                                    color={colors.secondary_text}
-                                                />
+                                                <View style={{ paddingLeft: 10 }}>{addButton}</View>
                                             </View>
                                         </View>
                                     </View>
 
                                     {(selectedHabit?.iconName || challengeRewards.length > 0) && (
-                                        <View style={{ paddingLeft: 5 }}>
+                                        <View
+                                            style={{
+                                                bottom: 5,
+                                            }}
+                                        >
                                             <View style={{ height: 5 }} />
                                             {selectedHabit?.iconName && (
                                                 <View
@@ -201,7 +253,7 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
                                                     />
                                                     <Text
                                                         style={{
-                                                            color: colors.tab_selected,
+                                                            color: colors.secondary_text,
                                                             includeFontPadding: false,
                                                             fontFamily: POPPINS_REGULAR,
                                                             fontSize: 12,
@@ -228,7 +280,7 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
 
                                                     <Text
                                                         style={{
-                                                            color: colors.tab_selected,
+                                                            color: colors.secondary_text,
                                                             includeFontPadding: false,
                                                             fontFamily: POPPINS_REGULAR,
                                                             fontSize: 12,
@@ -242,16 +294,6 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
                                         </View>
                                     )}
                                 </View>
-                            </View>
-
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    paddingTop: 5,
-                                    paddingBottom: 5,
-                                }}
-                            >
-                                <View style={{ paddingLeft: 10 }}>{addButton}</View>
                             </View>
                         </View>
                     </TouchableOpacity>

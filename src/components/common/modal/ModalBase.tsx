@@ -10,6 +10,7 @@ interface Props {
 
 export const ModalBase = ({ children, visible }: Props) => {
     const dispatch = useAppDispatch();
+
     React.useEffect(() => {
         dispatch(setGlobalBlurBackground(visible));
     }, [visible]);

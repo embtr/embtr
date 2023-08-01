@@ -45,8 +45,6 @@ export const SlideUpModal = ({ children, visible, onDismiss }: Props) => {
                         style={{
                             flex: 1,
                             backgroundColor: colors.modal_background,
-                            borderRadius: 7,
-
                             borderTopRightRadius: 15,
                             borderTopLeftRadius: 15,
                             justifyContent: 'space-around',

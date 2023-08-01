@@ -2,6 +2,18 @@ import { ChallengeCalculationType, ChallengeRequirement } from 'resources/schema
 import { UnitUtility } from '../UnitUtility';
 
 export class ChallengeUtility {
+    public static getDaysRemainingText(daysUntilStart: number, daysRemaining: number) {
+        if (daysUntilStart > 1) {
+            return `starts in ${daysUntilStart} days`;
+        }
+
+        if (daysUntilStart === 1) {
+            return `starts tomorrow`;
+        }
+
+        return `${daysRemaining} day${daysRemaining === 1 ? '' : 's'} left`;
+    }
+
     public static getChallengeRequirementProgressString(
         challengeRequirement: ChallengeRequirement,
         amount: number,

@@ -8,6 +8,7 @@ import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ChallengeRewardView } from './ChallengeRewardView';
+import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
 
 interface Props {
     challenge: Challenge;
@@ -110,30 +111,19 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                             }}
                         >
                             {participantCount} participant{participantCount === 1 ? '' : 's'} •{' '}
-                            {daysUntilStart > 0 ? (
-                                <Text
-                                    style={{
-                                        paddingTop: 2,
-                                        fontFamily: POPPINS_REGULAR,
-                                        color: colors.tab_selected,
-                                        fontSize: 8,
-                                    }}
-                                >
-                                    starts in {daysUntilStart} days
-                                </Text>
-                            ) : (
-                                <Text
-                                    style={{
-                                        paddingTop: 2,
-                                        fontFamily: POPPINS_REGULAR,
-                                        color: colors.tab_selected,
-                                        fontSize: 8,
-                                    }}
-                                >
-                                    {daysRemaining} {'day'}
-                                    {daysRemaining === 1 ? '' : 's'} left
-                                </Text>
-                            )}{' '}
+                            <Text
+                                style={{
+                                    paddingTop: 2,
+                                    fontFamily: POPPINS_REGULAR,
+                                    color: colors.tab_selected,
+                                    fontSize: 8,
+                                }}
+                            >
+                                {ChallengeUtility.getDaysRemainingText(
+                                    daysUntilStart,
+                                    daysRemaining
+                                )}
+                            </Text>{' '}
                             • {totalDays}
                             {' days'}
                         </Text>

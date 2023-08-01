@@ -1,16 +1,14 @@
-import { TouchableOpacity, View, Text, PanResponder, TextInput } from 'react-native';
+import { View, Text, TextInput } from 'react-native';
 import { ChallengeReward, Habit, PlannedDay, PlannedTask, Task, Unit } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import React from 'react';
 import { SlideUpModal } from 'src/components/common/modal/SlideUpModal';
 import { POPPINS_SEMI_BOLD, POPPINS_MEDIUM } from 'src/util/constants';
 import { HabitScrollSelector } from './HabitScrollSelector';
-import TaskController from 'src/controller/planning/TaskController';
-import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
-import Toast from 'react-native-root-toast';
 import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
 import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { AddTaskButton } from './AddTaskButton';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -19,6 +17,12 @@ interface Props {
     challengeRewards: ChallengeReward[];
     visible: boolean;
     onDismiss: Function;
+    selectedHabit?: Habit;
+    selectedUnit?: Unit;
+    enteredQuantity?: number;
+    onHabitChanged: Function;
+    onUnitChanged: Function;
+    onQuantityChanged: Function;
 }
 
 export const DetailedTaskPreviewModal = ({
@@ -28,14 +32,19 @@ export const DetailedTaskPreviewModal = ({
     challengeRewards,
     visible,
     onDismiss,
+    selectedHabit,
+    selectedUnit,
+    enteredQuantity,
+    onHabitChanged,
+    onUnitChanged,
+    onQuantityChanged,
 }: Props) => {
     const { colors } = useTheme();
-
-    const [selectedHabit, setSelectedHabit] = React.useState<Habit>();
-    const [enteredQuantity, setEnteredQuantity] = React.useState<number>();
-    const [selectedUnit, setSelectedUnit] = React.useState<Unit>();
+    console.log('selectedHabit', selectedHabit);
+    console.log('selectedUnit', selectedUnit);
     const [plannedTaskFromDatabase, setPlannedTaskFromDatabase] = React.useState<PlannedTask>();
     const [showSetUnitModal, setShowSetUnitModal] = React.useState<boolean>(false);
+    const [saveDetails, setSaveDetails] = React.useState<boolean>(false);
 
     const selectedUnitValue = selectedUnit?.unit
         ? selectedUnit.unit.toString().toLowerCase()
@@ -45,89 +54,20 @@ export const DetailedTaskPreviewModal = ({
     capitalizedUnitValue += capitalizedUnitValue === 'Of What?' ? '' : 's';
 
     const onHabitSelected = async (habit: Habit) => {
-        setSelectedHabit(habit);
-        TaskController.updateHabitPreference(task, habit);
+        onHabitChanged(habit);
     };
 
-    const onHandleDismiss = () => {
-        onDismiss();
-    };
-
-    const panResponder = React.useRef(
-        PanResponder.create({
-            onStartShouldSetPanResponder: () => true,
-            onMoveShouldSetPanResponder: () => false,
-            onPanResponderMove: (_, gestureState) => {
-                // Close the modal if the user swipes down beyond a certain threshold
-                if (gestureState.dy > 50) {
-                    onHandleDismiss();
-                }
-            },
-            onPanResponderRelease: () => {},
-            onPanResponderTerminate: () => {},
-        })
-    ).current;
-
-    const addButton = (
-        <View
-            style={{
-                paddingRight: 10,
-                width: 75,
-            }}
-        >
-            <TouchableOpacity
-                onPress={async () => {
-                    let taskToAdd = task;
-
-                    if (!task.id) {
-                        taskToAdd = await TaskController.createViaApi(task.title!);
-                    }
-
-                    const created = await PlannedTaskController.addTaskViaApi(
-                        plannedDay,
-                        taskToAdd,
-                        selectedHabit,
-                        selectedUnit,
-                        enteredQuantity
-                    );
-                    setPlannedTaskFromDatabase(created.plannedTask);
-
-                    Toast.show('task added!', {
-                        duration: Toast.durations.LONG,
-                    });
-                }}
-            >
-                <View
-                    style={{
-                        borderRadius: 7,
-                        backgroundColor: '#27B24A',
-                        alignItems: 'center',
-                        paddingVertical: 3,
-                        marginVertical: 1,
-                    }}
-                >
-                    <Text
-                        style={{
-                            color: colors.text,
-                            fontFamily: POPPINS_MEDIUM,
-                            top: 1.5,
-                        }}
-                    >
-                        Add
-                    </Text>
-                </View>
-            </TouchableOpacity>
-        </View>
-    );
+    const PADDING = 12.5;
 
     return (
         <SlideUpModal visible={visible} onDismiss={onDismiss}>
             {isAndroidDevice() ? (
                 <AndroidUnitPicker
+                    defaultUnit={selectedUnit}
                     visible={showSetUnitModal}
                     confirm={(selected: Unit) => {
                         setShowSetUnitModal(false);
-                        setSelectedUnit(selected);
+                        onUnitChanged(selected);
                     }}
                     dismiss={() => {
                         setShowSetUnitModal(false);
@@ -135,17 +75,18 @@ export const DetailedTaskPreviewModal = ({
                 />
             ) : (
                 <IOSUnitPicker
+                    defaultUnit={selectedUnit}
                     visible={showSetUnitModal}
                     confirm={(selected: Unit) => {
                         setShowSetUnitModal(false);
-                        setSelectedUnit(selected);
+                        onUnitChanged(selected);
                     }}
                     dismiss={() => {
                         setShowSetUnitModal(false);
                     }}
                 />
             )}
-            <View style={{ paddingLeft: 15, paddingTop: 5 }}>
+            <View style={{ paddingLeft: PADDING, paddingTop: 5, width: '100%' }}>
                 <View
                     style={{
                         flexDirection: 'row',
@@ -164,7 +105,6 @@ export const DetailedTaskPreviewModal = ({
                     >
                         {task.title}
                     </Text>
-                    {addButton}
                 </View>
                 {/* Select A Habit */}
                 <View style={{ paddingTop: 10 }}>
@@ -186,16 +126,26 @@ export const DetailedTaskPreviewModal = ({
                     </View>
                 </View>
 
-                <Text
-                    style={{
-                        color: colors.secondary_text,
-                        paddingTop: 20,
-                        fontFamily: POPPINS_SEMI_BOLD,
-                        fontSize: 12,
-                    }}
-                >
-                    Details
-                </Text>
+                <View style={{ paddingTop: 20 }}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                flex: 1,
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_SEMI_BOLD,
+                                fontSize: 12,
+                                includeFontPadding: false,
+                            }}
+                        >
+                            Details
+                        </Text>
+                    </View>
+                </View>
                 <View
                     style={{
                         flexDirection: 'row',
@@ -224,7 +174,7 @@ export const DetailedTaskPreviewModal = ({
                     <View
                         style={{
                             flex: 1,
-                            paddingRight: 10,
+                            paddingRight: PADDING,
                             flexDirection: 'row',
                             justifyContent: 'flex-end',
                         }}
@@ -248,18 +198,18 @@ export const DetailedTaskPreviewModal = ({
                             placeholderTextColor={colors.secondary_text}
                             autoCorrect={true}
                             onChangeText={(text) => {
-                                setEnteredQuantity(parseInt(text));
+                                onQuantityChanged(parseInt(text));
                             }}
                             value={enteredQuantity?.toString()}
                         />
                     </View>
                 </View>
+
                 <View style={{ flexDirection: 'row', paddingTop: 10 }}>
                     <View
                         style={{
                             alignItems: 'center',
                             flex: 1,
-                            paddingLeft: 10,
                             flexDirection: 'row',
                         }}
                     >
@@ -279,7 +229,7 @@ export const DetailedTaskPreviewModal = ({
                         style={{
                             justifyContent: 'flex-end',
                             flex: 1,
-                            paddingRight: 10,
+                            paddingRight: PADDING,
                             flexDirection: 'row',
                         }}
                     >
@@ -305,6 +255,27 @@ export const DetailedTaskPreviewModal = ({
                         </Text>
                     </View>
                 </View>
+            </View>
+
+            <View
+                style={{
+                    alignItems: 'center',
+                    width: '100%',
+                    paddingHorizontal: PADDING,
+                    paddingTop: 10,
+                }}
+            >
+                <AddTaskButton
+                    task={task}
+                    plannedDay={plannedDay}
+                    setPlannedTaskFromDatabase={setPlannedTaskFromDatabase}
+                    habit={selectedHabit}
+                    unit={selectedUnit}
+                    quantity={enteredQuantity}
+                    onPressed={() => {
+                        onDismiss();
+                    }}
+                />
             </View>
         </SlideUpModal>
     );

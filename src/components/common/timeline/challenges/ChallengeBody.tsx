@@ -8,6 +8,7 @@ import { ChallengeController } from 'src/controller/challenge/ChallengeControlle
 import React from 'react';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { formatUtcDate } from 'src/util/DateUtility';
+import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
 
 interface Props {
     challenge: Challenge;
@@ -27,6 +28,10 @@ export const ChallengeBody = ({ challenge }: Props) => {
     const formattedEndDate = formatUtcDate(endDate);
 
     const daysUntilStart = Math.floor((startDate.getTime() - new Date().getTime()) / 86400000);
+
+    const daysRemaining = Math.floor(
+        ((challenge.end ?? new Date()).getTime() - new Date().getTime()) / 86400000
+    );
 
     React.useEffect(() => {
         const fetch = async () => {
@@ -79,32 +84,18 @@ export const ChallengeBody = ({ challenge }: Props) => {
                         }}
                     >
                         {participantCount} participant{participantCount === 1 ? '' : 's'} •
-                        {daysUntilStart > 0 ? (
-                            <Text
-                                style={{
-                                    paddingTop: 2,
-                                    fontFamily: POPPINS_REGULAR,
-                                    color: colors.tab_selected,
-                                    fontSize: 12,
-                                    bottom: isAndroidDevice() ? 5 : 3,
-                                }}
-                            >
-                                {' '}
-                                starts in {daysUntilStart} days
-                            </Text>
-                        ) : (
-                            <Text
-                                style={{
-                                    paddingTop: 2,
-                                    fontFamily: POPPINS_REGULAR,
-                                    color: colors.tab_selected,
-                                    fontSize: 12,
-                                    bottom: isAndroidDevice() ? 5 : 3,
-                                }}
-                            >
-                                {' in progress'}
-                            </Text>
-                        )}
+                        <Text
+                            style={{
+                                paddingTop: 2,
+                                fontFamily: POPPINS_REGULAR,
+                                color: colors.tab_selected,
+                                fontSize: 12,
+                                bottom: isAndroidDevice() ? 5 : 3,
+                            }}
+                        >
+                            {' '}
+                            {ChallengeUtility.getDaysRemainingText(daysUntilStart, daysRemaining)}
+                        </Text>
                     </Text>
 
                     <Text

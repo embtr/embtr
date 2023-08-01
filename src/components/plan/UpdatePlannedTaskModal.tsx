@@ -33,7 +33,20 @@ export const UpdatePlannedTaskModal = ({
     const onDismissWrapper = () => {
         setKeyboardFocused(false);
         setSelectedValue(plannedTask.completedQuantity ?? 0);
+        setInputWasFocused(false);
         dismiss();
+    };
+
+    const onCompleteWrapper = () => {
+        setKeyboardFocused(false);
+        complete();
+        setInputWasFocused(false);
+    };
+
+    const onUpdateWrapper = () => {
+        setKeyboardFocused(false);
+        update(selectedValue ?? 0);
+        setInputWasFocused(false);
     };
 
     const BUTTON_WIDTH = 90;
@@ -41,6 +54,8 @@ export const UpdatePlannedTaskModal = ({
     const [selectedValue, setSelectedValue] = React.useState<number | null>(
         plannedTask.completedQuantity ?? 0
     );
+
+    const [inputWasFocused, setInputWasFocused] = React.useState(false);
 
     const [keyboardFocused, setKeyboardFocused] = React.useState(false);
 
@@ -138,9 +153,10 @@ export const UpdatePlannedTaskModal = ({
                                             setKeyboardFocused(false);
                                         }}
                                         onSubmitEditing={() => {
-                                            update(selectedValue ?? 0);
+                                            onUpdateWrapper();
                                         }}
                                         onFocus={() => {
+                                            setInputWasFocused(true);
                                             setKeyboardFocused(true);
                                             textInputRef.current?.setNativeProps({
                                                 selection: {
@@ -210,73 +226,70 @@ export const UpdatePlannedTaskModal = ({
                                     }}
                                 >
                                     {/* UPDATE BUTTON */}
-                                    <View style={{ flex: 0.5 }} />
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <TouchableOpacity
+                                    {inputWasFocused && (
+                                        <View
                                             style={{
-                                                padding: 5,
-                                                borderRadius: 5,
-                                                borderWidth: 1,
-                                                borderColor: colors.link,
-                                                width: BUTTON_WIDTH,
+                                                flex: 1,
                                                 alignItems: 'center',
                                             }}
-                                            onPress={() => {
-                                                setKeyboardFocused(false);
-                                                update(selectedValue ?? 0);
-                                            }}
                                         >
-                                            <Text
+                                            <TouchableOpacity
                                                 style={{
-                                                    color: colors.link,
-                                                    fontFamily: POPPINS_REGULAR,
+                                                    padding: 5,
+                                                    borderRadius: 5,
+                                                    borderWidth: 1,
+                                                    borderColor: colors.link,
+                                                    width: BUTTON_WIDTH,
+                                                    alignItems: 'center',
+                                                }}
+                                                onPress={() => {
+                                                    onUpdateWrapper();
                                                 }}
                                             >
-                                                update
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-
-                                    <View style={{ flex: 0.5 }} />
+                                                <Text
+                                                    style={{
+                                                        color: colors.link,
+                                                        fontFamily: POPPINS_REGULAR,
+                                                    }}
+                                                >
+                                                    update
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
 
                                     {/* COMPLETE BUTTON */}
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            alignItems: 'center',
-                                        }}
-                                    >
-                                        <TouchableOpacity
+                                    {!inputWasFocused && (
+                                        <View
                                             style={{
-                                                padding: 5,
-                                                borderRadius: 5,
-                                                borderWidth: 1,
-                                                borderColor: colors.progress_bar_complete,
-                                                width: BUTTON_WIDTH,
+                                                flex: 1,
                                                 alignItems: 'center',
                                             }}
-                                            onPress={() => {
-                                                setKeyboardFocused(false);
-                                                complete();
-                                            }}
                                         >
-                                            <Text
+                                            <TouchableOpacity
                                                 style={{
-                                                    color: colors.progress_bar_complete,
-                                                    fontFamily: POPPINS_REGULAR,
+                                                    padding: 5,
+                                                    borderRadius: 5,
+                                                    borderWidth: 1,
+                                                    borderColor: colors.progress_bar_complete,
+                                                    width: BUTTON_WIDTH,
+                                                    alignItems: 'center',
+                                                }}
+                                                onPress={() => {
+                                                    onCompleteWrapper();
                                                 }}
                                             >
-                                                complete
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </View>
-
-                                    <View style={{ flex: 0.5 }} />
+                                                <Text
+                                                    style={{
+                                                        color: colors.progress_bar_complete,
+                                                        fontFamily: POPPINS_REGULAR,
+                                                    }}
+                                                >
+                                                    complete
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
                                 </View>
                             </View>
                         </View>
