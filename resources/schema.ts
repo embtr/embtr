@@ -305,7 +305,7 @@ export interface Unit {
   updatedAt?: Date;
   PlannedTask?: PlannedTask[];
   challengeRequirement?: ChallengeRequirement[];
-  TaskPreference?: TaskPreference[];
+  taskPreference?: TaskPreference[];
 }
 
 export enum NotificationTargetPage {

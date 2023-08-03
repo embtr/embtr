@@ -29,60 +29,58 @@ export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Pro
     };
 
     return (
-        <View style={{ paddingLeft: 5, paddingRight: 5 }}>
-            <View
-                style={[
-                    {
-                        borderRadius: 3,
-                        backgroundColor: colors.timeline_card_background,
-                        paddingTop: 5,
-                        paddingBottom: 8,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                    },
-                    useCardShadow ? CARD_SHADOW : {},
-                ]}
-            >
-                {menuOptions && (
-                    <View
-                        style={{
-                            width: '100%',
-                            zIndex: 1,
-                            position: 'absolute',
-                            alignSelf: 'flex-end',
-                            alignItems: 'flex-end',
-                            justifyContent: 'center',
+        <View
+            style={[
+                {
+                    borderRadius: 9,
+                    backgroundColor: colors.timeline_card_background,
+                    paddingTop: 5,
+                    paddingBottom: 8,
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                },
+                useCardShadow ? CARD_SHADOW : {},
+            ]}
+        >
+            {menuOptions && (
+                <View
+                    style={{
+                        width: '100%',
+                        zIndex: 1,
+                        position: 'absolute',
+                        alignSelf: 'flex-end',
+                        alignItems: 'flex-end',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <TouchableWithoutFeedback
+                        style={{ padding: 4, paddingLeft: 7, paddingBottom: 7 }}
+                        onPress={() => {
+                            if (onPressSymbol) {
+                                onPressSymbol();
+                            } else {
+                                updateMenuOptions();
+                                openMenu();
+                            }
                         }}
                     >
-                        <TouchableWithoutFeedback
-                            style={{ padding: 4, paddingLeft: 7, paddingBottom: 7 }}
-                            onPress={() => {
-                                if (onPressSymbol) {
-                                    onPressSymbol();
-                                } else {
-                                    updateMenuOptions();
-                                    openMenu();
-                                }
+                        <View
+                            style={{
+                                paddingTop: 3,
+                                paddingRight: 3,
+                                flexDirection: 'row',
                             }}
                         >
-                            <View
-                                style={{
-                                    paddingTop: 3,
-                                    paddingRight: 3,
-                                    flexDirection: 'row',
-                                }}
-                            >
-                                <Ionicons
-                                    name={symbol ?? 'ellipsis-horizontal'}
-                                    size={20}
-                                    color={colors.text}
-                                />
-                            </View>
-                        </TouchableWithoutFeedback>
-                    </View>
-                )}
-                {children}
-            </View>
+                            <Ionicons
+                                name={symbol ?? 'ellipsis-horizontal'}
+                                size={20}
+                                color={colors.text}
+                            />
+                        </View>
+                    </TouchableWithoutFeedback>
+                </View>
+            )}
+            {children}
         </View>
     );
 };

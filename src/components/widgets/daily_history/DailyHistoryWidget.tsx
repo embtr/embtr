@@ -16,7 +16,7 @@ interface Props {
 export const DailyHistoryWidget = ({ userId }: Props) => {
     const { colors } = useTheme();
     const diameter = 9;
-    const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
+    const margin = ((getWindowWidth() - 40) / 30 - diameter) / 2;
 
     const [history, setHistory] = React.useState<DayResult[]>([]);
 

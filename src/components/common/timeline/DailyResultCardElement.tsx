@@ -10,6 +10,7 @@ import { POPPINS_REGULAR } from 'src/util/constants';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { UnitUtility } from 'src/util/UnitUtility';
+import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -78,37 +79,43 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
 
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <TouchableWithoutFeedback
-                disabled={!onPress}
-                onPress={() => {
-                    if (onPress) {
-                        onPress(plannedTask, status, setTemporaryStatus);
-                    }
-                }}
-            >
-                {icon}
-            </TouchableWithoutFeedback>
+            <View style={{}}>{icon}</View>
 
-            <View style={{ flex: 1 }}>
-                <Text
+            <View style={{ flex: 1, paddingLeft: 7.5 }}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text
+                        style={{
+                            color: colors.goal_primary_font,
+                            fontFamily: 'Poppins_600SemiBold',
+                            fontSize: 12,
+                            includeFontPadding: false,
+                        }}
+                    >
+                        {plannedTask.task?.title}{' '}
+                    </Text>
+                    <View style={{ paddingLeft: 2.5 }}>
+                        {plannedTask.habit && (
+                            <HabitIcon
+                                habit={plannedTask.habit}
+                                size={15}
+                                color={colors.tab_selected}
+                            />
+                        )}
+                    </View>
+                </View>
+
+                <View
                     style={{
-                        color: colors.goal_primary_font,
-                        fontFamily: 'Poppins_600SemiBold',
-                        fontSize: 12,
-                        lineHeight: 14,
-                        paddingLeft: 5,
+                        flexDirection: 'row',
+                        width: '100%',
+                        paddingTop: 2.5,
                     }}
                 >
-                    {plannedTask.task?.title}
-                </Text>
-
-                <View style={{ flexDirection: 'row', width: '100%' }}>
                     <View
                         style={{
-                            flex: 1,
+                            flex: 1.5,
                             flexDirection: 'row',
                             alignItems: 'center',
-                            paddingLeft: 5,
                         }}
                     >
                         <ProgressBar
@@ -117,25 +124,19 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                             showPercent={false}
                         />
                     </View>
-
-                    <View
+                    <Text
                         style={{
-                            flex: 3,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingLeft: 10,
+                            paddingLeft: 5,
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 10,
+                            includeFontPadding: false,
                         }}
                     >
-                        <Text
-                            style={{
-                                color: colors.secondary_text,
-                                fontFamily: POPPINS_REGULAR,
-                                fontSize: 10,
-                            }}
-                        >
-                            {statText}
-                        </Text>
-                    </View>
+                        {statText}
+                    </Text>
+
+                    <View style={{ flex: 2 }} />
                 </View>
             </View>
         </View>

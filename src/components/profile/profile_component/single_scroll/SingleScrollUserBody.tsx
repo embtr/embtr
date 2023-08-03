@@ -38,35 +38,35 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
     return (
         <Screen>
             <View style={{ height: '100%' }}>
-                <View style={{ paddingTop: 6 }}>
+                <View style={{ paddingTop: 6, paddingHorizontal: 12 }}>
                     <View style={{ width: '100%' }}>{<DailyHistoryWidget userId={user.id} />}</View>
                 </View>
 
                 {context.completedChallenges.length > 0 && (
-                    <View style={{ paddingTop: 6 }}>
+                    <View style={{ paddingTop: 6, paddingHorizontal: 12 }}>
                         {<TrophyCaseWidget completedChallenges={context.completedChallenges} />}
                     </View>
                 )}
 
-                <View style={{ paddingTop: 6 }}>
+                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
                     <HabitJourneyWidget user={user} />
                 </View>
 
-                <View style={{ paddingTop: 6 }}>
+                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
                     <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />
                 </View>
 
                 {context.activeChallenges.length > 0 && (
-                    <View style={{ paddingTop: 6 }}>
+                    <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
                         <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />
                     </View>
                 )}
 
-                <View style={{ paddingTop: 6 }}>
+                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
                     <View style={{ width: '100%' }}>{<UserPostsWidget userId={user.id} />}</View>
                 </View>
 
-                <View style={{ paddingTop: 6 }}>
+                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
                     <UserDailyResultsWidget userId={user.id} />
                 </View>
 

@@ -5,20 +5,19 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import DailyResultController, {
     DayResultTimelinePost,
 } from 'src/controller/timeline/daily_result/DailyResultController';
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { CARD_SHADOW } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { DailyResultBody } from './DailyResultBody';
-import { DailyResultHeader } from './DailyResultHeader';
-import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
-import PostDetailsActionBar from '../comments/PostDetailsActionBar';
-import { TouchableWithoutFeedback } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
     getTimelineCardRefreshRequests,
     removeTimelineCardRefreshRequest,
 } from 'src/redux/user/GlobalState';
+import { DailyResultHeader } from '../DailyResultHeader';
+import PostDetailsActionBar from '../../comments/PostDetailsActionBar';
+import { PlannedDayResultBody } from './PlannedDayResultBody';
+import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 
 type timelineCommentsScreenProp = StackNavigationProp<TimelineTabScreens, 'UserPostDetails'>;
 
@@ -26,7 +25,12 @@ interface Props {
     plannedDayResult: DayResultTimelinePost;
 }
 
-export const DailyResultCard = ({ plannedDayResult }: Props) => {
+export const PlannedDayResultCard = ({ plannedDayResult }: Props) => {
+    console.log(
+        plannedDayResult.data.plannedDayResultSummary.plannedDayResult.id +
+            ' ' +
+            plannedDayResult.data.plannedDayResultSummary.plannedDayResult.plannedDay?.dayKey
+    );
     const navigation = useNavigation<timelineCommentsScreenProp>();
     const { colors } = useTheme();
     const dispatch = useAppDispatch();
@@ -34,34 +38,31 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
     const currentUser = useAppSelector(getCurrentUser);
     const timelineCardRefreshRequests: string[] = useAppSelector(getTimelineCardRefreshRequests);
 
-    const [updatedDayResult, setUpdatedDayResult] = React.useState<PlannedDayResultModel>(
-        plannedDayResult.data.dayResult
-    );
+    const [updatedDayResultSummary, setUpdatedDayResultSummary] =
+        React.useState<PlannedDayResultSummary>(plannedDayResult.data.plannedDayResultSummary);
     const [isLiked, setIsLiked] = React.useState(
-        plannedDayResult.data.dayResult.likes?.some((like) => like.userId === currentUser.id) ||
-            false
+        plannedDayResult.data.plannedDayResultSummary.plannedDayResult.likes?.some(
+            (like) => like.userId === currentUser.id
+        ) || false
     );
 
     const refreshPlannedDayResult = async () => {
-        const refreshedPlannedDayResult = await DailyResultController.getViaApi(
-            updatedDayResult.id!
+        const refreshedPlannedDayResult = await DailyResultController.getSummary(
+            updatedDayResultSummary.plannedDayResult.id ?? 0
         );
+
         if (refreshedPlannedDayResult) {
-            setUpdatedDayResult(refreshedPlannedDayResult);
+            setUpdatedDayResultSummary(refreshedPlannedDayResult);
         }
     };
 
-    React.useEffect(() => {
-        setUpdatedDayResult(plannedDayResult.data.dayResult);
-    }, [plannedDayResult]);
-
     const navigateToDetails = () => {
-        if (!updatedDayResult.id) {
+        if (!updatedDayResultSummary.plannedDayResult.id) {
             return;
         }
 
         navigation.navigate('DailyResultDetails', {
-            id: updatedDayResult.id,
+            id: updatedDayResultSummary.plannedDayResult.id,
         });
     };
 
@@ -70,21 +71,21 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
             return;
         }
 
-        if (!updatedDayResult.id) {
+        if (!updatedDayResultSummary.plannedDayResult.id) {
             return;
         }
 
-        await DailyResultController.addLikeViaApi(updatedDayResult.id);
+        await DailyResultController.addLikeViaApi(updatedDayResultSummary.plannedDayResult.id);
         setIsLiked(true);
         refreshPlannedDayResult();
     };
 
     React.useEffect(() => {
-        if (!updatedDayResult.id) {
+        if (!updatedDayResultSummary.plannedDayResult.id) {
             return;
         }
 
-        const key = 'RESULT_' + updatedDayResult.id;
+        const key = 'RESULT_' + updatedDayResultSummary.plannedDayResult.id;
 
         if (timelineCardRefreshRequests.includes(key)) {
             refreshPlannedDayResult();
@@ -93,10 +94,10 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
         }
     }, [timelineCardRefreshRequests]);
 
-    const user = plannedDayResult.data.dayResult.plannedDay!.user!;
+    const user = updatedDayResultSummary.plannedDayResult.plannedDay!.user!;
 
     return (
-        <TouchableWithoutFeedback onPress={navigateToDetails}>
+        <Pressable onPress={navigateToDetails}>
             <View
                 style={[
                     {
@@ -109,26 +110,31 @@ export const DailyResultCard = ({ plannedDayResult }: Props) => {
                 {/**********/}
                 {/* HEADER */}
                 {/**********/}
-                <DailyResultHeader user={user} date={updatedDayResult.createdAt!} />
+                <DailyResultHeader
+                    user={user}
+                    date={updatedDayResultSummary.plannedDayResult.createdAt!}
+                />
 
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                <DailyResultBody
-                    plannedDayResult={updatedDayResult}
-                    navigateToDetails={navigateToDetails}
-                />
+                <View style={{ paddingVertical: 5 }}>
+                    <PlannedDayResultBody
+                        plannedDayResultSummary={updatedDayResultSummary}
+                        navigateToDetails={navigateToDetails}
+                    />
+                </View>
 
                 {/**********/}
                 {/* FOOTER */}
                 {/**********/}
                 <PostDetailsActionBar
-                    likeCount={updatedDayResult?.likes?.length ?? 0}
+                    likeCount={updatedDayResultSummary.plannedDayResult?.likes?.length ?? 0}
                     isLiked={isLiked}
-                    commentCount={updatedDayResult.comments?.length ?? 0}
+                    commentCount={updatedDayResultSummary.plannedDayResult.comments?.length ?? 0}
                     onLike={onLike}
                 />
             </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
     );
 };

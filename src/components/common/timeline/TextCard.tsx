@@ -91,7 +91,7 @@ export const TextCard = ({
                 style={[
                     {
                         backgroundColor: colors.timeline_card_background,
-                        borderRadius: 3,
+                        borderRadius: 9,
                     },
                     CARD_SHADOW,
                 ]}

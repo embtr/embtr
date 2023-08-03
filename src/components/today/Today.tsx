@@ -109,9 +109,9 @@ export const Today = () => {
     const renderItem = ({ item, index }: ListRenderItemInfo<WidgetType>) => {
         return (
             <View>
-                <View style={{ paddingTop: 7.5 }}>
+                <View style={{ paddingHorizontal: 12, paddingBottom: 12 }}>
+                    {index === 0 && <View style={{ height: 7.5 }} />}
                     {getWidgetFromType(item)}
-                    {index === TODAY_PAGE_WIDGETS.length - 1 && <View style={{ height: 7.5 }} />}
                 </View>
             </View>
         );

@@ -1,5 +1,5 @@
 import React from 'react';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Challenge, ChallengeParticipant } from 'resources/schema';
@@ -79,10 +79,10 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
     return (
         <View
             style={{
-                backgroundColor: colors.text_input_background,
+                backgroundColor: colors.timeline_card_background,
                 width: '100%',
                 height: 280,
-                borderRadius: 2.5,
+                borderRadius: 9,
             }}
         >
             {/* TOP SECTION */}
@@ -182,16 +182,18 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                 </View>
                 <View style={{ paddingTop: 7.5, paddingHorizontal: 5, paddingBottom: 15 }}>
                     <View
-                        style={{
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            borderColor: colors.toggle_background_unselected,
-                            flexDirection: 'row',
-                            padding: 7.5,
-                            backgroundColor: colors.text_input_background_secondary,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
+                        style={[
+                            {
+                                borderRadius: 5,
+                                borderColor: colors.toggle_background_unselected,
+                                flexDirection: 'row',
+                                padding: 7.5,
+                                backgroundColor: colors.text_input_background_secondary,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            },
+                            CARD_SHADOW,
+                        ]}
                     >
                         <TouchableOpacity
                             onPress={registerForChallenge}

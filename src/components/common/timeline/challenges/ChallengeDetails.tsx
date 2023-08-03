@@ -4,7 +4,6 @@ import { Challenge, ChallengeParticipant, Comment, User } from 'resources/schema
 import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Screen } from '../../Screen';
 import { ChallengeBody } from './ChallengeBody';
 import { Banner } from '../../Banner';

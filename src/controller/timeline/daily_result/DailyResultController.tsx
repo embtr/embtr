@@ -4,6 +4,8 @@ import {
     CreatePlannedDayResultRequest,
     CreatePlannedDayResultResponse,
     GetPlannedDayResultResponse,
+    GetPlannedDayResultSummariesResponse,
+    GetPlannedDayResultSummaryResponse,
     GetPlannedDayResultsResponse,
     UpdatePlannedDayResultRequest,
     UpdatePlannedDayResultResponse,
@@ -16,6 +18,7 @@ import { CommentController } from 'src/controller/api/general/CommentController'
 import { Timestamp } from 'firebase/firestore';
 import { TimelinePostModel } from 'src/model/OldModels';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 
 export interface DailyResultModel extends TimelinePostModel {
     data: {
@@ -31,7 +34,7 @@ export interface DailyResultModel extends TimelinePostModel {
 
 export interface DayResultTimelinePost extends TimelinePostModel {
     data: {
-        dayResult: PlannedDayResult;
+        plannedDayResultSummary: PlannedDayResultSummary;
     };
 }
 
@@ -73,6 +76,43 @@ class DailyResultController {
 
     public static async getViaApi(id: number): Promise<PlannedDayResult | undefined> {
         return this.get(id);
+    }
+
+    public static async getAllSummaries(
+        upperBound: Date,
+        lowerBound: Date
+    ): Promise<PlannedDayResultSummary[]> {
+        const upperBoundDate = new Date(upperBound).toISOString();
+        const lowerBoundDate = new Date(lowerBound).toISOString();
+
+        return await axiosInstance
+            .get(`${PLANNED_DAY_RESULT}summaries`, {
+                params: {
+                    upperBound: upperBoundDate,
+                    lowerBound: lowerBoundDate,
+                },
+            })
+            .then((success) => {
+                const response = success.data as GetPlannedDayResultSummariesResponse;
+                return response.plannedDayResultSummaries ?? [];
+            })
+            .catch((error) => {
+                return [];
+            });
+    }
+
+    public static async getSummary(
+        plannedDayResultId: number
+    ): Promise<PlannedDayResultSummary | undefined> {
+        return await axiosInstance
+            .get(`${PLANNED_DAY_RESULT}summary/${plannedDayResultId}`)
+            .then((success) => {
+                const response = success.data as GetPlannedDayResultSummaryResponse;
+                return response.plannedDayResultSummary;
+            })
+            .catch((error) => {
+                return undefined;
+            });
     }
 
     public static async get(id: number): Promise<PlannedDayResult | undefined> {

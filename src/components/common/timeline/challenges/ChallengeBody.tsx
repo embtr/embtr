@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { ChallengeRewardView } from 'src/components/challenge/ChallengeRewardView';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { Challenge, ChallengeParticipant } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
@@ -9,6 +9,7 @@ import React from 'react';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { formatUtcDate } from 'src/util/DateUtility';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     challenge: Challenge;
@@ -158,6 +159,7 @@ export const ChallengeBody = ({ challenge }: Props) => {
                         </View>
                     </View>
                 </View>
+
                 <View
                     style={{
                         paddingTop: 15,
@@ -166,16 +168,18 @@ export const ChallengeBody = ({ challenge }: Props) => {
                 >
                     <TouchableOpacity onPress={registerForChallenge} disabled={userIsAParticipant}>
                         <View
-                            style={{
-                                borderWidth: 1,
-                                borderRadius: 5,
-                                borderColor: colors.toggle_background_unselected,
-                                flexDirection: 'row',
-                                padding: 7.5,
-                                backgroundColor: colors.text_input_background_secondary,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
+                            style={[
+                                {
+                                    borderRadius: 5,
+                                    flexDirection: 'row',
+                                    padding: 7.5,
+                                    margin: 10,
+                                    backgroundColor: colors.text_input_background_secondary,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                },
+                                CARD_SHADOW,
+                            ]}
                         >
                             <View style={{ flexDirection: 'row' }}>
                                 <Text

@@ -3,21 +3,18 @@ import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
-import { DailyResultCard } from 'src/components/common/timeline/DailyResultCard';
-import {
-    JoinedChallenge,
-    PlannedDayResult as PlannedDayResultModel,
-    UserPost,
-} from 'resources/schema';
+import { JoinedChallenge, UserPost } from 'resources/schema';
 import { Timestamp } from 'firebase/firestore';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 import { TimelinePostModel } from 'src/model/OldModels';
 import { JoinedChallengeTimelinePost } from 'src/controller/challenge/ChallengeController';
 import { JoinedChallengeCard } from '../common/timeline/challenges/JoinedChallengeCard';
+import { PlannedDayResultCard } from '../common/timeline/planned_day_result/PlannedDayResultCard';
+import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 
 interface Props {
     userPosts: UserPost[];
-    dayResults: PlannedDayResultModel[];
+    plannedDayResultSummaries: PlannedDayResultSummary[];
     joinedChallenges: JoinedChallenge[];
     refreshing: boolean;
     loadMore: Function;
@@ -25,7 +22,7 @@ interface Props {
 
 export const FilteredTimeline = ({
     userPosts,
-    dayResults,
+    plannedDayResultSummaries,
     joinedChallenges,
     refreshing,
     loadMore,
@@ -33,9 +30,8 @@ export const FilteredTimeline = ({
     const { colors } = useTheme();
     const card = {
         width: '100%',
-        paddingTop: 7.5,
-        paddingLeft: 5,
-        paddingRight: 5,
+        paddingTop: 12,
+        paddingHorizontal: 12,
     };
 
     const createTimelineModels = (): TimelinePostModel[] => {
@@ -54,17 +50,17 @@ export const FilteredTimeline = ({
             active: true,
         }));
 
-        const dayResultTimelinePosts = dayResults.map((dayResult) => ({
-            added: Timestamp.fromDate(dayResult.createdAt!),
-            modified: Timestamp.fromDate(dayResult.updatedAt!),
+        const dayResultTimelinePosts = plannedDayResultSummaries.map((plannedDayResultSummary) => ({
+            added: Timestamp.fromDate(plannedDayResultSummary.plannedDayResult.createdAt!),
+            modified: Timestamp.fromDate(plannedDayResultSummary.plannedDayResult.updatedAt!),
             type: 'DAILY_RESULT',
-            uid: dayResult.plannedDay!.user!.uid!,
+            uid: plannedDayResultSummary.plannedDayResult.plannedDay!.user!.uid!,
             public: {
                 comments: [],
                 likes: [],
             },
             data: {
-                dayResult,
+                plannedDayResultSummary,
             },
             active: true,
         }));
@@ -93,7 +89,6 @@ export const FilteredTimeline = ({
 
     const createTimelineViews = () => {
         let timelinePosts: TimelinePostModel[] = createTimelineModels();
-
         const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
             let postADate = postA.added.toDate();
             let postBDate = postB.added.toDate();
@@ -122,8 +117,8 @@ export const FilteredTimeline = ({
         const model = timelineEntry as DayResultTimelinePost;
 
         return (
-            <View key={model.id} style={[card]}>
-                <DailyResultCard plannedDayResult={model} />
+            <View key={model.data.plannedDayResultSummary.plannedDayResult.id} style={[card]}>
+                <PlannedDayResultCard plannedDayResult={model} />
             </View>
         );
     };

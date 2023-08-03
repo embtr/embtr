@@ -64,7 +64,7 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
         legend: ['Habit Points'],
     };
 
-    const screenWidth = getWindowWidth();
+    const screenWidth = getWindowWidth() - 20;
 
     return (
         <View
@@ -142,7 +142,7 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                         paddingLeft: 20,
                         paddingTop: 10,
                         lineHeight: 12,
-                        width: '80%',
+                        width: '100%',
                     }}
                 >
                     * Habit Level Threshold

@@ -22,7 +22,6 @@ export const lightColors = {
     tab_bar_menu: '#EEEEEE',
     tab_selected: '#FF5E7C',
     tab_unselected: '#8C909E',
-    background: '#f6f6f6',
     button_background: '#FFFFFF',
     button_text: '#000000',
     push_button_background: '#FF5E7C',
@@ -35,13 +34,12 @@ export const lightColors = {
     scroll_tab_background: 'rgba(000,000,000,.15)',
 
     text_input_background: '#EEEEEE',
-    text_input_background_secondary: '#F3F3F3',
+    text_input_background_secondary: '#FFFFFF',
     text_input_border: '#DEDEDE',
 
     timeline_card_header: '#444B66',
     timeline_card_body: '#292929',
     timeline_card_footer: '#444B66',
-    timeline_card_background: '#FFFFFF',
 
     notification_dot: '#FF5E7C',
 
@@ -81,6 +79,10 @@ export const lightColors = {
 
     google_login_background: '#FFFFFF',
     google_login_text: '#757575',
+
+    // REAL COLORS
+    timeline_card_background: '#FFFFFF',
+    background: '#f6f6f6',
 };
 
 // Dark theme colors
@@ -107,7 +109,6 @@ export const darkColors = {
     tab_bar_menu: '#121212',
     tab_selected: '#F14E6B',
     tab_unselected: '#8C909E',
-    background: '#232323',
     button_background: '#121212',
     button_text: '#FFFFFF',
     push_button_background: '#F14E6B',
@@ -126,7 +127,6 @@ export const darkColors = {
     timeline_card_header: '#FFFFFF',
     timeline_card_body: '#FFFFFF',
     timeline_card_footer: '#FFFFFF',
-    timeline_card_background: '#000000',
 
     notification_dot: '#F14C6B',
 
@@ -166,4 +166,8 @@ export const darkColors = {
 
     google_login_background: '#4285F4',
     google_login_text: '#FFFFFF',
+
+    // REAL COLORS
+    timeline_card_background: '#282828',
+    background: '#181818',
 };

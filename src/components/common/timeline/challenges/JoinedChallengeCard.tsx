@@ -1,4 +1,4 @@
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CARD_SHADOW, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { View, Text, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeParticipant, JoinedChallenge } from 'resources/schema';
@@ -64,11 +64,14 @@ export const JoinedChallengeCard = ({ joinedChallenge }: Props) => {
             }}
         >
             <View
-                style={{
-                    backgroundColor: colors.timeline_card_background,
-                    width: '100%',
-                    borderRadius: 2.5,
-                }}
+                style={[
+                    {
+                        backgroundColor: colors.timeline_card_background,
+                        width: '100%',
+                        borderRadius: 9,
+                    },
+                    CARD_SHADOW,
+                ]}
             >
                 <View
                     style={{

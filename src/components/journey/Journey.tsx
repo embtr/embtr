@@ -122,9 +122,9 @@ export const Journey = () => {
 
     const renderItem = (item: WidgetType, index: number) => {
         return (
-            <View style={{ paddingTop: 7.5 }}>
+            <View style={{ paddingHorizontal: 12, paddingBottom: 12 }}>
+                {index === 0 && <View style={{ height: 7.5 }} />}
                 {getWidgetFromType(item)}
-                {index === widgets.length - 1 && <View style={{ height: 7.5 }} />}
             </View>
         );
     };

@@ -44,6 +44,7 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
     const description = challenge.description ?? '';
 
     const endDay = challenge.end ?? new Date();
+    endDay.setHours(0, 0, 0, 0);
     const daysLeft = getTimeLeft(endDay);
 
     const progressRemaining = ChallengeUtility.getChallengeRequirementProgressString(

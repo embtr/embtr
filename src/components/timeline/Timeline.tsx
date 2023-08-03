@@ -8,23 +8,19 @@ import NotificationController, {
     getUnreadNotificationCount,
 } from 'src/controller/notification/NotificationController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import {
-    JoinedChallenge,
-    Notification as NotificationModel,
-    PlannedDayResult,
-    UserPost,
-} from 'resources/schema';
+import { JoinedChallenge, Notification as NotificationModel, UserPost } from 'resources/schema';
 import { FilteredTimeline } from './FilteredTimeline';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { getTimelineDays } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
+import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 
 export const Timeline = () => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const [userPosts, setUserPosts] = React.useState<UserPost[]>([]);
-    const [dayResults, setDayResults] = React.useState<PlannedDayResult[]>([]);
+    const [dayResults, setDayResults] = React.useState<PlannedDayResultSummary[]>([]);
     const [joinedChallenges, setJoinedChallenges] = React.useState<JoinedChallenge[]>([]);
     const [notifications, setNotifications] = React.useState<NotificationModel[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
@@ -61,7 +57,7 @@ export const Timeline = () => {
         const lowerBound = refresh ? getDateMinusDays(new Date(), refreshDays) : bounds.lowerBound;
 
         const userPostsPromise = StoryController.getAllViaApi(upperBound, lowerBound);
-        const dailyResultsPromise = DailyResultController.getAllViaApi(upperBound, lowerBound);
+        const dailyResultsPromise = DailyResultController.getAllSummaries(upperBound, lowerBound);
         const joinedChallengesPromise = ChallengeController.getAllRecentJoined(
             upperBound,
             lowerBound
@@ -106,7 +102,7 @@ export const Timeline = () => {
             />
             <FilteredTimeline
                 userPosts={userPosts}
-                dayResults={dayResults}
+                plannedDayResultSummaries={dayResults}
                 joinedChallenges={joinedChallenges}
                 refreshing={refreshing}
                 loadMore={loadMore}
