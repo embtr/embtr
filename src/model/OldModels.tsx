@@ -1,28 +1,26 @@
 import { Timestamp } from 'firebase/firestore';
-
-export interface Comment {
-    uid: string;
-    comment: string;
-    timestamp: Timestamp;
-}
-
-export interface Like {
-    uid: string;
-    added: Timestamp;
-}
+import { Comment, Like, Image, User } from 'resources/schema';
+import { TimelineType } from 'resources/types/Types';
+import { CompletedHabit } from 'resources/types/planned_day_result/PlannedDayResult';
 
 export interface TimelinePostModel {
-    id?: string;
-    added: Timestamp;
-    modified: Timestamp;
-    type: string;
-    uid: string;
-    public: {
-        comments: Comment[];
-        likes: Like[];
-    };
+    user: User;
+    type: TimelineType;
+    id: number;
+    sortDate: Date;
+
+    comments: Comment[];
+    likes: Like[];
+    images: Image[];
+    title?: string;
+    body?: string;
+    // experience points
+    // completed habits
+    completedHabits?: CompletedHabit[];
+    // banner
+
+    secondaryText?: string;
     data: {};
-    active: boolean;
 }
 
 export interface UserProfileModel {

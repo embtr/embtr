@@ -134,6 +134,25 @@ export const getTomorrowKey = () => {
     return getKey(new Date().getDate() + 1);
 };
 
+export const getDayOfTheWeekFromDate = (date: Date) => {
+    switch (date.getDay()) {
+        case 0:
+            return 'Monday';
+        case 1:
+            return 'Tuesday';
+        case 2:
+            return 'Wednesday';
+        case 3:
+            return 'Thursday';
+        case 4:
+            return 'Friday';
+        case 5:
+            return 'Saturday';
+        case 6:
+            return 'Sunday';
+    }
+};
+
 export const getDayFromDayKey = (dayKey: string) => {
     return parseInt(dayKey.substring(8, 10));
 };

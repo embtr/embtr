@@ -9,7 +9,7 @@ interface Props {
     index: number;
 }
 
-export const CAROUSEL_IMAGE_HEIGHT = Dimensions.get('window').width * 0.6;
+export const CAROUSEL_IMAGE_HEIGHT = Dimensions.get('window').width * 0.9;
 
 export const CarouselCardItem = ({ item }: Props) => {
     const color = item.isDarkTheme === true ? 'white' : 'black';

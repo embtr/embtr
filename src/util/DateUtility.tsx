@@ -27,7 +27,7 @@ export const formatDate = (date: Date): string => {
 export const getDatePretty = (date: Date): string => {
     const daysOld = getDaysOld(date, new Date());
 
-    return format(date, 'MMMM dd, yyyy');
+    return format(date, 'MMM dd');
 };
 
 export const formatUtcDate = (date: Date) => {
@@ -58,7 +58,7 @@ export const getTimePretty = (date: Date): string => {
 
 export const getDatePrettyWithTime = (date: Date): string => {
     let datePretty = getDatePretty(date);
-    datePretty = datePretty + ' at ' + getTimePretty(date);
+    datePretty = datePretty + ', ' + getTimePretty(date);
 
     return datePretty;
 };

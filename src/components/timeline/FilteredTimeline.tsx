@@ -4,13 +4,15 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { StoryModel } from 'src/controller/timeline/story/StoryController';
 import { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { JoinedChallenge, UserPost } from 'resources/schema';
-import { Timestamp } from 'firebase/firestore';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 import { TimelinePostModel } from 'src/model/OldModels';
 import { JoinedChallengeTimelinePost } from 'src/controller/challenge/ChallengeController';
 import { JoinedChallengeCard } from '../common/timeline/challenges/JoinedChallengeCard';
 import { PlannedDayResultCard } from '../common/timeline/planned_day_result/PlannedDayResultCard';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
+import { TimelineType } from 'resources/types/Types';
+import { TimelineCard } from './TimelineCard';
+import { getDayOfTheWeekFromDate } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     userPosts: UserPost[];
@@ -35,49 +37,54 @@ export const FilteredTimeline = ({
     };
 
     const createTimelineModels = (): TimelinePostModel[] => {
-        const userPostTimelinePosts = userPosts.map((userPost) => ({
-            added: Timestamp.fromDate(userPost.createdAt!),
-            modified: Timestamp.fromDate(userPost.updatedAt!),
-            type: 'STORY',
-            uid: userPost.user!.uid!,
-            public: {
-                comments: [],
-                likes: [],
-            },
+        const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost) => ({
+            user: userPost.user!,
+            type: TimelineType.USER_POST,
+            id: userPost.id!,
+            sortDate: userPost.createdAt!,
+            comments: userPost.comments ?? [],
+            likes: userPost.likes ?? [],
+            images: userPost.images ?? [],
+            title: userPost.title ?? '',
+            body: userPost.body ?? '',
             data: {
                 userPost,
             },
-            active: true,
         }));
 
-        const dayResultTimelinePosts = plannedDayResultSummaries.map((plannedDayResultSummary) => ({
-            added: Timestamp.fromDate(plannedDayResultSummary.plannedDayResult.createdAt!),
-            modified: Timestamp.fromDate(plannedDayResultSummary.plannedDayResult.updatedAt!),
-            type: 'DAILY_RESULT',
-            uid: plannedDayResultSummary.plannedDayResult.plannedDay!.user!.uid!,
-            public: {
-                comments: [],
-                likes: [],
-            },
-            data: {
-                plannedDayResultSummary,
-            },
-            active: true,
-        }));
+        const dayResultTimelinePosts: TimelinePostModel[] = plannedDayResultSummaries.map(
+            (plannedDayResultSummary) => ({
+                title: plannedDayResultSummary.plannedDayResult.title,
+                secondaryText:
+                    getDayOfTheWeekFromDate(
+                        plannedDayResultSummary.plannedDayResult.plannedDay?.date ?? new Date()
+                    ) + ' Results',
+                user: plannedDayResultSummary.plannedDayResult.plannedDay?.user!,
+                type: TimelineType.PLANNED_DAY_RESULT,
+                id: plannedDayResultSummary.plannedDayResult.plannedDay?.id!,
+                sortDate: plannedDayResultSummary.plannedDayResult.createdAt!,
+                comments: plannedDayResultSummary.plannedDayResult.comments ?? [],
+                likes: plannedDayResultSummary.plannedDayResult.likes ?? [],
+                images: plannedDayResultSummary.plannedDayResult.images ?? [],
+                body: plannedDayResultSummary.plannedDayResult.description ?? '',
+                completedHabits: plannedDayResultSummary.completedHabits,
+                data: {
+                    plannedDayResultSummary,
+                },
+            })
+        );
 
         const joinedChallengesTimelinePosts = joinedChallenges.map((joinedChallenge) => ({
-            added: Timestamp.fromDate(joinedChallenge.participants?.[0]?.createdAt!),
-            modified: Timestamp.fromDate(joinedChallenge.participants?.[0].updatedAt!),
-            type: 'JOINED_CHALLENGE',
-            public: {
-                comments: [],
-                likes: [],
-            },
-            uid: '',
+            user: joinedChallenge.participants?.[0]?.user!,
+            type: TimelineType.JOINED_CHALLENGE,
+            id: joinedChallenge.challenge.id!,
+            sortDate: joinedChallenge.participants?.[0]?.createdAt!,
+            comments: joinedChallenge.challenge.comments ?? [],
+            likes: joinedChallenge.challenge.likes ?? [],
+            images: joinedChallenge.challenge.images ?? [],
             data: {
                 joinedChallenge,
             },
-            active: true,
         }));
 
         return [
@@ -90,8 +97,8 @@ export const FilteredTimeline = ({
     const createTimelineViews = () => {
         let timelinePosts: TimelinePostModel[] = createTimelineModels();
         const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
-            let postADate = postA.added.toDate();
-            let postBDate = postB.added.toDate();
+            let postADate = postA.sortDate;
+            let postBDate = postB.sortDate;
 
             return postBDate.getTime() - postADate.getTime();
         };
@@ -101,53 +108,17 @@ export const FilteredTimeline = ({
         return timelinePosts;
     };
 
-    const createUserPostView = (timelineEntry: TimelinePostModel) => {
-        const model = timelineEntry as StoryModel;
-
-        const key = ModelKeyGenerator.generateUserPostKey(model.data.userPost);
-
+    const createTimelineView = (timelinePostModel: TimelinePostModel) => {
+        const key = timelinePostModel.id;
         return (
             <View key={key} style={[card]}>
-                <UserTextCard oldModel={model} />
+                <TimelineCard
+                    timelinePostModel={timelinePostModel}
+                    onLike={() => {}}
+                    navigateToDetails={() => {}}
+                />
             </View>
         );
-    };
-
-    const createDailyResultView = (timelineEntry: TimelinePostModel) => {
-        const model = timelineEntry as DayResultTimelinePost;
-
-        return (
-            <View key={model.data.plannedDayResultSummary.plannedDayResult.id} style={[card]}>
-                <PlannedDayResultCard plannedDayResult={model} />
-            </View>
-        );
-    };
-
-    const createJoinedChallengeView = (timelineEntry: TimelinePostModel) => {
-        const model = timelineEntry as JoinedChallengeTimelinePost;
-
-        const key = model.data.joinedChallenge.challenge.id;
-        return (
-            <View key={key} style={[card]}>
-                <JoinedChallengeCard joinedChallenge={model.data.joinedChallenge} />
-            </View>
-        );
-    };
-
-    const createTimelineView = (timelineEntry: TimelinePostModel) => {
-        switch (timelineEntry.type) {
-            case 'STORY':
-                return createUserPostView(timelineEntry);
-
-            case 'DAILY_RESULT':
-                return createDailyResultView(timelineEntry);
-
-            case 'JOINED_CHALLENGE':
-                return createJoinedChallengeView(timelineEntry);
-
-            default:
-                return <View />;
-        }
     };
 
     const data = createTimelineViews();

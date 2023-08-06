@@ -29,7 +29,7 @@ export const PlannedDayResultBody = ({ plannedDayResultSummary, navigateToDetail
 
     const renderElement = ({ item }: { item: CompletedHabit }) => {
         return (
-            <View key={item.habit.id} style={{ paddingHorizontal: 5 }}>
+            <View key={item.habit.id} style={{ paddingLeft: 15 }}>
                 <View style={{ flexDirection: 'row' }} onStartShouldSetResponder={() => true}>
                     <Pressable onPress={() => navigateToDetails?.()}>
                         <CompletedHabitElement completedHabit={item} color={colors.text} />
@@ -44,7 +44,7 @@ export const PlannedDayResultBody = ({ plannedDayResultSummary, navigateToDetail
             <View style={{ paddingLeft: 10, paddingBottom: 7.5 }}>
                 <Text style={{ fontFamily: POPPINS_MEDIUM, color: colors.text }}>{dayOfWeek}</Text>
             </View>
-            <View style={{ paddingHorizontal: 5 }}>
+            <View style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
                 <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}

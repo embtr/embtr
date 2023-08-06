@@ -44,7 +44,7 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
     };
 
     return (
-        <View style={{ padding: padding ?? 5 }}>
+        <View style={{ padding: padding ?? undefined }}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ height: 0, width: 0, position: 'relative' }}>
                     <View

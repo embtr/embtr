@@ -25,17 +25,15 @@ export const CarouselCards = ({ images }: Props) => {
     images[images.length - 1].isDarkTheme = isDark;
 
     return (
-        <View
-            style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT + 5 }}
-        >
+        <View style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT }}>
             <Carousel
                 layout="default"
                 ref={isCarousel}
                 data={images}
                 inactiveSlideScale={1}
                 renderItem={CarouselCardItem}
-                sliderWidth={Dimensions.get('window').width}
-                itemWidth={CAROUSEL_IMAGE_HEIGHT + 5}
+                sliderWidth={Dimensions.get('window').width * 0.9}
+                itemWidth={CAROUSEL_IMAGE_HEIGHT}
                 vertical={false}
             />
         </View>
