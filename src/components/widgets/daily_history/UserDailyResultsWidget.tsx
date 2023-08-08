@@ -2,17 +2,15 @@ import React from 'react';
 import { Text, View, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
-import { PlannedDayResult, UserPost } from 'resources/schema';
+import { POPPINS_MEDIUM, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
+import { CompletedHabits } from 'src/components/timeline/card_components/CompletedHabits';
 import { getDatePretty } from 'src/util/DateUtility';
-import { TaskCompleteSymbol } from 'src/components/common/task_symbols/TaskCompleteSymbol';
-import { TaskFailedSymbol } from 'src/components/common/task_symbols/TaskFailedSymbol';
-import { TaskInProgressSymbol } from 'src/components/common/task_symbols/TaskInProgressSymbol';
 
 interface Props {
     userId: number;
@@ -24,18 +22,13 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
     const currentTab = useAppSelector(getCurrentTab);
     const navigation = getNavigationHook(currentTab)();
 
-    const [dailyResults, setDailyResults] = React.useState<PlannedDayResult[]>([]);
+    const [plannedDayResultSummaries, setPlannedDayResultSummaries] = React.useState<
+        PlannedDayResultSummary[]
+    >([]);
 
     const fetch = async () => {
-        const dailyResults = await DailyResultController.getAllForUser(userId);
-        if (dailyResults) {
-            dailyResults.sort((a, b) => {
-                const aDate = a.plannedDay?.date ?? new Date();
-                const bDate = b.plannedDay?.date ?? new Date();
-                return bDate.getTime() - aDate.getTime();
-            });
-            setDailyResults(dailyResults);
-        }
+        const summaries = (await DailyResultController.getAllSummariesForUser(userId)) ?? [];
+        setPlannedDayResultSummaries(summaries);
     };
 
     React.useEffect(() => {
@@ -43,34 +36,34 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
     }, []);
 
     const elements: JSX.Element[] = [];
-    for (let i = 0; i < (dailyResults.length < 3 ? dailyResults.length : 3); i++) {
-        const dailyResult = dailyResults[i];
-        const plannedTasks = dailyResult.plannedDay?.plannedTasks;
-        const completeCount =
-            plannedTasks?.filter((task) => task.completedQuantity === task.quantity).length ?? 0;
-        const incompleteCount =
-            plannedTasks?.filter((task) => task.completedQuantity !== task.quantity).length ?? 0;
-        const failedCount = plannedTasks?.filter((task) => task.status === 'FAILED').length ?? 0;
+    for (
+        let i = 0;
+        i < (plannedDayResultSummaries.length < 3 ? plannedDayResultSummaries.length : 3);
+        i++
+    ) {
+        const summary = plannedDayResultSummaries[i];
 
         const element = (
             <Pressable
                 onPress={() => {
-                    //@ts-ignore
                     navigation.navigate('DailyResultDetails', {
-                        id: dailyResult.id,
+                        id: summary.plannedDayResult.id ?? 0,
                     });
                 }}
             >
                 <View
                     key={i}
                     style={{
-                        padding: 10,
-                        paddingTop: 12,
                         flexDirection: 'row',
                     }}
                 >
-                    <View style={{ flex: 1 }}>
-                        <View>
+                    <View
+                        style={{
+                            paddingBottom: 16,
+                            flex: 1,
+                        }}
+                    >
+                        <View style={{ paddingLeft: 12 }}>
                             <Text
                                 style={{
                                     color: colors.text,
@@ -78,63 +71,22 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                                     fontSize: 12,
                                 }}
                             >
-                                {getDatePretty(dailyResult.plannedDay?.date ?? new Date())}
+                                {summary.plannedDayResult.title ??
+                                    getDatePretty(
+                                        summary.plannedDayResult.plannedDay?.date ?? new Date()
+                                    ) + ' Results'}
                             </Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row' }}>
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <TaskCompleteSymbol small />
-                                <Text
-                                    style={{
-                                        paddingLeft: 5,
-                                        color: colors.secondary_text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 12,
-                                        lineHeight: 16,
-                                    }}
-                                >
-                                    {completeCount} complete
-                                </Text>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <TaskInProgressSymbol small />
-                                <Text
-                                    style={{
-                                        paddingLeft: 5,
-                                        color: colors.secondary_text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 12,
-                                        lineHeight: 16,
-                                    }}
-                                >
-                                    {incompleteCount} incomplete
-                                </Text>
-                            </View>
-
-                            <View style={{ flex: 1, flexDirection: 'row' }}>
-                                <TaskFailedSymbol small />
-
-                                <Text
-                                    style={{
-                                        paddingLeft: 5,
-                                        color: colors.secondary_text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 12,
-                                        lineHeight: 16,
-                                    }}
-                                >
-                                    {failedCount} failed
-                                </Text>
-                            </View>
+                            <View style={{ height: 6 }} />
+                            <CompletedHabits completedHabits={summary.completedHabits} limit={3} />
                         </View>
                     </View>
-
-                    <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
-                        <View>
-                            <Ionicons name={'chevron-forward'} size={14} color={colors.text} />
-                        </View>
+                    <View
+                        style={{
+                            paddingRight: 12,
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Ionicons name={'chevron-forward'} size={14} color={colors.text} />
                     </View>
                 </View>
             </Pressable>
@@ -149,11 +101,11 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                 Daily Results
             </Text>
 
-            <View style={{ width: '100%' }}>
+            <View style={{ width: '100%', paddingTop: 12 }}>
                 {elements.length > 0 && (
                     <View>
-                        <View>{elements}</View>
-                        <View style={{ width: '100%', paddingLeft: 10 }}>
+                        <View style={{}}>{elements}</View>
+                        <View style={{ width: '100%', paddingLeft: 12 }}>
                             <Text
                                 onPress={() => {
                                     //@ts-ignore

@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
-import { Comment, Like, Image, User } from 'resources/schema';
+import { Comment, Like, Image, User, JoinedChallenge } from 'resources/schema';
 import { TimelineType } from 'resources/types/Types';
 import { CompletedHabit } from 'resources/types/planned_day_result/PlannedDayResult';
 
@@ -14,12 +14,10 @@ export interface TimelinePostModel {
     images: Image[];
     title?: string;
     body?: string;
-    // experience points
-    // completed habits
+    secondaryHeaderText?: string;
     completedHabits?: CompletedHabit[];
-    // banner
+    joinedChallenge?: JoinedChallenge;
 
-    secondaryText?: string;
     data: {};
 }
 

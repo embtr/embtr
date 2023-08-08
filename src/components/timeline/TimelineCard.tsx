@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { TouchableWithoutFeedback } from 'react-native';
@@ -11,6 +11,7 @@ import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarouse
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
 import { CompletedHabits } from './card_components/CompletedHabits';
+import { JoinedChallengeDetails } from './card_components/JoinedChallengeDetails';
 
 interface Props {
     timelinePostModel: TimelinePostModel;
@@ -25,6 +26,9 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
     const [isLiked, setIsLiked] = React.useState(
         timelinePostModel.likes.some((like) => like.userId === currentUser.id)
     );
+
+    const [likeCount, setLikeCount] = React.useState(timelinePostModel.likes.length);
+    const [commentCount, setCommentCount] = React.useState(timelinePostModel.comments.length);
 
     const handleOnLike = () => {
         if (isLiked) {
@@ -61,7 +65,8 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
                 <CardHeader
                     date={timelinePostModel.sortDate}
                     user={timelinePostModel.user}
-                    secondaryText={timelinePostModel.secondaryText}
+                    secondaryText={timelinePostModel.secondaryHeaderText}
+                    type={timelinePostModel.type}
                 />
 
                 {carouselImages.length > 0 && (
@@ -113,6 +118,17 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
                     </View>
                 )}
 
+                {/*********************/}
+                {/* Challenge Details */}
+                {/*********************/}
+                {timelinePostModel.joinedChallenge && (
+                    <View style={{ paddingTop: 12 }}>
+                        <JoinedChallengeDetails
+                            joinedChallenge={timelinePostModel.joinedChallenge}
+                        />
+                    </View>
+                )}
+
                 {/********************/}
                 {/* COMPLETED HABITS */}
                 {/********************/}
@@ -122,6 +138,9 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
                     </View>
                 )}
 
+                {/********************/}
+                {/*    ACTION BAR    */}
+                {/********************/}
                 <View style={{ paddingTop: 12 }}>
                     <View
                         style={{
@@ -133,8 +152,8 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
                         <View style={{ height: 8 }} />
                         <PostDetailsActionBar
                             isLiked={isLiked}
-                            likeCount={timelinePostModel.likes.length}
-                            commentCount={timelinePostModel.comments.length}
+                            likeCount={likeCount}
+                            commentCount={commentCount}
                             onLike={handleOnLike}
                         />
                     </View>

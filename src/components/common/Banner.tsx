@@ -212,7 +212,7 @@ export const Banner = ({
                                 >
                                     <View
                                         style={{
-                                            backgroundColor: colors.notification_dot,
+                                            backgroundColor: colors.accent_color,
                                             borderRadius: 50,
                                             width: 9,
                                             height: 9,

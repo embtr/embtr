@@ -34,7 +34,7 @@ export const DayPickerElement = ({ item, index, isSelected }: Props) => {
                     color={
                         getDayKey(index + 1) === getTodayKey()
                             ? isSelected
-                                ? colors.today_calendar_picker_selected
+                                ? colors.accent_color
                                 : colors.today_calendar_picker_unselected
                             : colors.timeline_card_background
                     }
@@ -47,7 +47,7 @@ export const DayPickerElement = ({ item, index, isSelected }: Props) => {
                     fontSize: 14,
                     fontFamily: 'Poppins_400Regular',
                     color: isSelected
-                        ? colors.today_calendar_picker_selected
+                        ? colors.accent_color
                         : colors.today_calendar_picker_unselected,
                 }}
             >
@@ -67,7 +67,7 @@ export const DayPickerElement = ({ item, index, isSelected }: Props) => {
                     fontSize: 16,
                     fontFamily: 'Poppins_600SemiBold',
                     color: isSelected
-                        ? colors.today_calendar_picker_selected
+                        ? colors.accent_color
                         : colors.today_calendar_picker_unselected,
                 }}
             >
@@ -78,7 +78,7 @@ export const DayPickerElement = ({ item, index, isSelected }: Props) => {
                     marginTop: 2,
                     width: '75%',
                     height: 2,
-                    backgroundColor: isSelected ? colors.today_calendar_picker_selected : undefined,
+                    backgroundColor: isSelected ? colors.accent_color : undefined,
                 }}
             />
         </View>

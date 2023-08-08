@@ -1,18 +1,14 @@
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
-import { UserTextCard } from 'src/components/common/timeline/UserTextCard';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { StoryModel } from 'src/controller/timeline/story/StoryController';
-import { DayResultTimelinePost } from 'src/controller/timeline/daily_result/DailyResultController';
 import { JoinedChallenge, UserPost } from 'resources/schema';
-import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
 import { TimelinePostModel } from 'src/model/OldModels';
-import { JoinedChallengeTimelinePost } from 'src/controller/challenge/ChallengeController';
-import { JoinedChallengeCard } from '../common/timeline/challenges/JoinedChallengeCard';
-import { PlannedDayResultCard } from '../common/timeline/planned_day_result/PlannedDayResultCard';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 import { TimelineType } from 'resources/types/Types';
 import { TimelineCard } from './TimelineCard';
-import { getDayOfTheWeekFromDate } from 'src/controller/planning/PlannedDayController';
+import { getDateStringFromDate } from 'src/controller/planning/PlannedDayController';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
     userPosts: UserPost[];
@@ -29,11 +25,26 @@ export const FilteredTimeline = ({
     refreshing,
     loadMore,
 }: Props) => {
+    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+
     const { colors } = useTheme();
     const card = {
         width: '100%',
         paddingTop: 12,
         paddingHorizontal: 12,
+    };
+
+    const getRecentlyJoinedMessage = (joinedChallenge: JoinedChallenge) => {
+        const participants = joinedChallenge.participants;
+        if (participants.length === 1) {
+            return 'recently joined';
+        }
+
+        if (participants.length === 2) {
+            return '+ ' + (participants.length - 1) + ' other recently joined';
+        }
+
+        return '+ ' + (participants.length - 1) + ' others recently joined';
     };
 
     const createTimelineModels = (): TimelinePostModel[] => {
@@ -55,18 +66,19 @@ export const FilteredTimeline = ({
         const dayResultTimelinePosts: TimelinePostModel[] = plannedDayResultSummaries.map(
             (plannedDayResultSummary) => ({
                 title: plannedDayResultSummary.plannedDayResult.title,
-                secondaryText:
-                    getDayOfTheWeekFromDate(
-                        plannedDayResultSummary.plannedDayResult.plannedDay?.date ?? new Date()
-                    ) + ' Results',
+                body:
+                    plannedDayResultSummary.plannedDayResult.description ??
+                    'Results for ' +
+                        getDateStringFromDate(
+                            plannedDayResultSummary.plannedDayResult.plannedDay?.date ?? new Date()
+                        ),
                 user: plannedDayResultSummary.plannedDayResult.plannedDay?.user!,
                 type: TimelineType.PLANNED_DAY_RESULT,
-                id: plannedDayResultSummary.plannedDayResult.plannedDay?.id!,
+                id: plannedDayResultSummary.plannedDayResult.id!,
                 sortDate: plannedDayResultSummary.plannedDayResult.createdAt!,
                 comments: plannedDayResultSummary.plannedDayResult.comments ?? [],
                 likes: plannedDayResultSummary.plannedDayResult.likes ?? [],
                 images: plannedDayResultSummary.plannedDayResult.images ?? [],
-                body: plannedDayResultSummary.plannedDayResult.description ?? '',
                 completedHabits: plannedDayResultSummary.completedHabits,
                 data: {
                     plannedDayResultSummary,
@@ -76,12 +88,17 @@ export const FilteredTimeline = ({
 
         const joinedChallengesTimelinePosts = joinedChallenges.map((joinedChallenge) => ({
             user: joinedChallenge.participants?.[0]?.user!,
+            secondaryHeaderText: getRecentlyJoinedMessage(joinedChallenge),
+            title: joinedChallenge.challenge.name,
+            body: joinedChallenge.challenge.description ?? '',
             type: TimelineType.JOINED_CHALLENGE,
             id: joinedChallenge.challenge.id!,
             sortDate: joinedChallenge.participants?.[0]?.createdAt!,
             comments: joinedChallenge.challenge.comments ?? [],
             likes: joinedChallenge.challenge.likes ?? [],
             images: joinedChallenge.challenge.images ?? [],
+            joinedChallenge,
+
             data: {
                 joinedChallenge,
             },
@@ -115,7 +132,16 @@ export const FilteredTimeline = ({
                 <TimelineCard
                     timelinePostModel={timelinePostModel}
                     onLike={() => {}}
-                    navigateToDetails={() => {}}
+                    navigateToDetails={() => {
+                        if (timelinePostModel.type === TimelineType.USER_POST) {
+                            navigation.navigate('UserPostDetails', { id: timelinePostModel.id });
+                        } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
+                            navigation.navigate('ChallengeDetails', { id: timelinePostModel.id });
+                        } else if (timelinePostModel.type === TimelineType.PLANNED_DAY_RESULT) {
+                            console.log(timelinePostModel.id);
+                            navigation.navigate('DailyResultDetails', { id: timelinePostModel.id });
+                        }
+                    }}
                 />
             </View>
         );

@@ -155,7 +155,7 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
                         added by{'  '}
                         <Text
                             style={{
-                                color: colors.tab_selected,
+                                color: colors.secondary_accent_color,
                                 fontFamily: POPPINS_REGULAR,
                                 paddingTop: 15,
                                 fontSize: 10,

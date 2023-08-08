@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { User } from 'resources/schema';
+import { TimelineType } from 'resources/types/Types';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDatePrettyWithTime } from 'src/util/DateUtility';
@@ -7,14 +8,33 @@ import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/con
 
 interface Props {
     date: Date;
-    secondaryText?: string;
     user: User;
+    secondaryText?: string;
+    type: TimelineType;
 }
 
-export const CardHeader = ({ date, secondaryText, user }: Props) => {
+export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
     const { colors } = useTheme();
 
-    const datePretty = getDatePrettyWithTime(date);
+    let datePretty = getDatePrettyWithTime(date);
+    while (datePretty.length < 16) {
+        datePretty = ' ' + datePretty;
+    }
+
+    const label =
+        type === TimelineType.USER_POST
+            ? 'Post'
+            : type === TimelineType.PLANNED_DAY_RESULT
+            ? 'Daily Update'
+            : 'Challenge';
+
+    const color =
+        type === TimelineType.USER_POST
+            ? colors.timeline_label_user_post
+            : type === TimelineType.PLANNED_DAY_RESULT
+            ? colors.timeline_label_daily_results
+            : colors.timeline_label_challenge;
+
     return (
         <View style={{ width: '100%', flexDirection: 'row' }}>
             <View
@@ -52,7 +72,7 @@ export const CardHeader = ({ date, secondaryText, user }: Props) => {
                                 color: colors.secondary_text,
                             }}
                         >
-                            {user.location}
+                            {secondaryText ?? user.location}
                         </Text>
                     </View>
 
@@ -66,6 +86,7 @@ export const CardHeader = ({ date, secondaryText, user }: Props) => {
                         <Text
                             style={{
                                 includeFontPadding: false,
+                                bottom: 3,
                                 fontFamily: POPPINS_REGULAR,
                                 fontSize: 10,
                                 color: colors.secondary_text,
@@ -74,17 +95,26 @@ export const CardHeader = ({ date, secondaryText, user }: Props) => {
                         >
                             {datePretty}
                         </Text>
-                        <Text
+                        <View
                             style={{
-                                includeFontPadding: false,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 11,
-                                color: colors.progress_bar_complete,
-                                textAlign: 'right',
+                                backgroundColor: color,
+                                paddingHorizontal: 12,
+                                paddingVertical: 2,
+                                borderRadius: 50,
                             }}
                         >
-                            {secondaryText}
-                        </Text>
+                            <Text
+                                style={{
+                                    includeFontPadding: false,
+                                    fontFamily: POPPINS_SEMI_BOLD,
+                                    fontSize: 9,
+                                    color: colors.text,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                {label}
+                            </Text>
+                        </View>
                     </View>
                 </View>
             </View>

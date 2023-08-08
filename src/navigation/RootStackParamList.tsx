@@ -69,6 +69,7 @@ export type ProfileTabScreens = {
     UserPostDetails: { id: number };
     UserPosts: { userId: number };
     DailyResults: { userId: number };
+    DailyResultDetails: { id: number };
 };
 
 export type RootStackParamList = {

@@ -4,6 +4,7 @@ import {
     CreatePlannedDayResultRequest,
     CreatePlannedDayResultResponse,
     GetPlannedDayResultResponse,
+    GetPlannedDayResultSummariesRequest,
     GetPlannedDayResultSummariesResponse,
     GetPlannedDayResultSummaryResponse,
     GetPlannedDayResultsResponse,
@@ -39,12 +40,12 @@ export interface DayResultTimelinePost extends TimelinePostModel {
 }
 
 class DailyResultController {
-    public static async getAllForUser(userId: number): Promise<PlannedDayResult[]> {
+    public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {
         return await axiosInstance
             .get(`/user/${userId}/day-results`)
             .then((success) => {
-                const response = success.data as GetPlannedDayResultsResponse;
-                return response.plannedDayResults ?? [];
+                const response = success.data as GetPlannedDayResultSummariesResponse;
+                return response.plannedDayResultSummaries ?? [];
             })
             .catch((error) => {
                 return [];

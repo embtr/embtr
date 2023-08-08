@@ -40,8 +40,6 @@ export const DetailedTaskPreviewModal = ({
     onQuantityChanged,
 }: Props) => {
     const { colors } = useTheme();
-    console.log('selectedHabit', selectedHabit);
-    console.log('selectedUnit', selectedUnit);
     const [plannedTaskFromDatabase, setPlannedTaskFromDatabase] = React.useState<PlannedTask>();
     const [showSetUnitModal, setShowSetUnitModal] = React.useState<boolean>(false);
     const [saveDetails, setSaveDetails] = React.useState<boolean>(false);

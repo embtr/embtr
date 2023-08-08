@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
-import { ProfileBody } from 'src/components/profile/profile_component/ProfileBody';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { getAuth } from 'firebase/auth';

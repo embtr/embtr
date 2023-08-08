@@ -12,6 +12,7 @@ import { Comment, UserPost } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 import { UserProfileModel } from 'src/model/OldModels';
+import { Screen } from '../Screen';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
@@ -104,7 +105,11 @@ export const UserPostDetails = () => {
     };
 
     if (!userPost) {
-        return <View />;
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
     }
 
     return (

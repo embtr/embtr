@@ -191,7 +191,7 @@ export const PlanDay = ({
                                     navigateToAddTasks();
                                 }}
                                 style={{
-                                    color: colors.tab_selected,
+                                    color: colors.accent_color,
                                     fontFamily: 'Poppins_400Regular',
                                 }}
                             >

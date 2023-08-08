@@ -48,7 +48,8 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
         datasets: [
             {
                 data: dataset,
-                color: (opacity = 1) => colors.link, // optional
+                color: (opacity = 1) => '#578EB6', // optional
+
                 strokeWidth: 2, // optional
             },
 
@@ -86,7 +87,7 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                 {habitJourney.habit.title}:{' '}
                 <Text
                     style={{
-                        color: colors.tab_selected,
+                        color: colors.accent_color,
                         fontFamily: POPPINS_REGULAR,
                         fontSize: 12,
                         paddingLeft: 2,
@@ -102,7 +103,7 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                 <Text
                     style={{
                         fontFamily: POPPINS_SEMI_BOLD,
-                        color: colors.link,
+                        color: '#578EB6',
                         right: 5,
                     }}
                 >
@@ -117,8 +118,8 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                 height={220}
                 withVerticalLines={false}
                 chartConfig={{
-                    fillShadowGradientFrom: colors.tab_selected,
-                    fillShadowGradientTo: colors.tab_selected,
+                    fillShadowGradientFrom: colors.accent_color,
+                    fillShadowGradientTo: colors.accent_color,
                     fillShadowGradientFromOffset: 1,
                     fillShadowGradientToOffset: 0.001,
                     fillShadowGradientFromOpacity: 0.1,
@@ -138,7 +139,7 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                     style={{
                         fontSize: 12,
                         fontFamily: POPPINS_SEMI_BOLD,
-                        color: colors.link,
+                        color: '#578EB6',
                         paddingLeft: 20,
                         paddingTop: 10,
                         lineHeight: 12,
@@ -150,7 +151,7 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                         style={{
                             fontSize: 11,
                             fontFamily: POPPINS_REGULAR,
-                            color: colors.link,
+                            color: '#578EB6',
                             paddingLeft: 20,
                             paddingTop: 10,
                             lineHeight: 12,

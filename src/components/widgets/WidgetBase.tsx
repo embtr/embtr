@@ -34,10 +34,9 @@ export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Pro
                 {
                     borderRadius: 9,
                     backgroundColor: colors.timeline_card_background,
-                    paddingTop: 5,
+                    paddingTop: 8,
                     paddingBottom: 8,
-                    paddingLeft: 8,
-                    paddingRight: 8,
+                    paddingHorizontal: 12,
                 },
                 useCardShadow ? CARD_SHADOW : {},
             ]}

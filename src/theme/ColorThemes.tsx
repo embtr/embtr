@@ -83,6 +83,12 @@ export const lightColors = {
     // REAL COLORS
     timeline_card_background: '#FFFFFF',
     background: '#f6f6f6',
+    accent_color: '#7D44E4',
+    accent_color_light: '#9F78E7',
+    secondary_accent_color: '#FF6712',
+    timeline_label_daily_results: '#DF5A6E',
+    timeline_label_challenge: '#7D44E4',
+    timeline_label_user_post: '#27B24A',
 };
 
 // Dark theme colors
@@ -169,5 +175,11 @@ export const darkColors = {
 
     // REAL COLORS
     timeline_card_background: '#282828',
+    accent_color: '#9154FF',
+    accent_color_light: '#9F78E7',
+    secondary_accent_color: '#FF6712',
     background: '#181818',
+    timeline_label_daily_results: '#DF5A6E',
+    timeline_label_challenge: '#9154FF',
+    timeline_label_user_post: '#27B24A',
 };

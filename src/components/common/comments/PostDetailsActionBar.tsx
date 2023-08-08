@@ -2,7 +2,11 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
-import { TIMELINE_CARD_ICON_COUNT_SIZE, TIMELINE_CARD_ICON_SIZE } from 'src/util/constants';
+import {
+    POPPINS_REGULAR,
+    TIMELINE_CARD_ICON_COUNT_SIZE,
+    TIMELINE_CARD_ICON_SIZE,
+} from 'src/util/constants';
 import * as Haptics from 'expo-haptics';
 import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
@@ -118,11 +122,25 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
                 <View style={{ flex: 1 }} />
                 <View style={{}}>
                     <Pressable
-                        style={{ alignItems: 'flex-end' }}
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
                         onPress={() => {
                             alert("I don't work yet :(");
                         }}
                     >
+                        <Text
+                            style={{
+                                paddingRight: 12,
+                                color: colors.text,
+                                fontSize: 12,
+                                fontFamily: POPPINS_REGULAR,
+                            }}
+                        >
+                            Share
+                        </Text>
                         <Ionicons
                             name={'share-outline'}
                             size={TIMELINE_CARD_ICON_SIZE}

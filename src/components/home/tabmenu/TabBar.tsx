@@ -20,7 +20,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             },
             shadowOpacity: 0.1,
             shadowRadius: 4.0,
-            backgroundColor: '#10130f',
+            backgroundColor: colors.background,
             elevation: 10,
             bottom: 0,
         },
@@ -30,7 +30,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             width: 5,
             top: 0,
             left: 10,
-            backgroundColor: colors.tab_selected,
+            backgroundColor: colors.accent_color,
             borderRadius: 50,
         },
     });

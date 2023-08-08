@@ -6,6 +6,7 @@ import { UserPostDetails } from '../common/timeline/UserPostDetails';
 import { UserProfile } from '../profile/UserProfile';
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
+import { DailyResultDetails } from '../common/timeline/DailyResultDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,6 +20,7 @@ export const SecureUserTabStack = () => {
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="UserPosts" component={UserPosts} />
             <Stack.Screen name="DailyResults" component={DailyResults} />
+            <Stack.Screen name="DailyResultDetails" component={DailyResultDetails} />
         </Stack.Navigator>
     );
 };

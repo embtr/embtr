@@ -11,7 +11,8 @@ export const Screen = (props: { children: any }) => {
 
     if (isAndroidDevice()) {
         NavigationBar.setBackgroundColorAsync(colors.tab_bar_menu);
-        NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
+        NavigationBar.setButtonStyleAsync('light');
+        //NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
     }
 
     return (
@@ -19,7 +20,8 @@ export const Screen = (props: { children: any }) => {
             {/* We can also use the isDark prop to set the statusbar style accordingly */}
             <StatusBar
                 animated
-                barStyle={isDark ? 'light-content' : 'dark-content'}
+                //barStyle={isDark ? 'light-content' : 'dark-content'}
+                barStyle={'light-content'}
                 backgroundColor={colors.background}
             />
             <View

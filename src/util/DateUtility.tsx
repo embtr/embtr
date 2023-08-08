@@ -1,4 +1,4 @@
-import { differenceInDays, differenceInMonths, differenceInWeeks, format } from 'date-fns';
+import { differenceInDays, differenceInWeeks, format } from 'date-fns';
 
 export const getDaysOld = (then: any, now: any): number => {
     const dateDiff = now - then;
@@ -25,8 +25,6 @@ export const formatDate = (date: Date): string => {
 };
 
 export const getDatePretty = (date: Date): string => {
-    const daysOld = getDaysOld(date, new Date());
-
     return format(date, 'MMM dd');
 };
 
