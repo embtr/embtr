@@ -1,53 +1,51 @@
 {
-  "expo": {
-    "jsEngine": "hermes",
-    "name": "embtr",
-    "slug": "embtr",
-    "version": "0.0.293",
-    "orientation": "portrait",
-    "icon": "assets/app_icon.png",
-    "scheme": "embtr",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "assets/app_icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#000000"
+    "expo": {
+        "jsEngine": "hermes",
+        "name": "embtr",
+        "slug": "embtr",
+        "version": "0.0.293",
+        "orientation": "portrait",
+        "icon": "assets/app_icon.png",
+        "scheme": "embtr",
+        "userInterfaceStyle": "automatic",
+        "splash": {
+            "image": "assets/app_icon.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#000000"
+        },
+        "updates": {
+            "fallbackToCacheTimeout": 0
+        },
+        "assetBundlePatterns": ["**/*"],
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.brentryczak.embtr",
+            "userInterfaceStyle": "automatic",
+            "config": {
+                "usesNonExemptEncryption": false
+            },
+            "buildNumber": "0.0.293"
+        },
+        "android": {
+            "adaptiveIcon": {
+                "foregroundImage": "assets/playstore-icon.png",
+                "backgroundColor": "#000000"
+            },
+            "userInterfaceStyle": "automatic",
+            "package": "com.brentryczak.embtr",
+            "googleServicesFile": "./google-services.json",
+            "softwareKeyboardLayoutMode": "pan",
+            "versionCode": 470000293
+        },
+        "web": {
+            "favicon": "assets/favicon.png"
+        },
+        "extra": {
+            "eas": {
+                "projectId": "06fe8c41-43dd-4736-bfaf-ed45cf068748"
+            }
+        },
+        "sdkVersion": "47.0.0"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.brentryczak.embtr",
-      "userInterfaceStyle": "automatic",
-      "config": {
-        "usesNonExemptEncryption": false
-      },
-      "buildNumber": "0.0.293"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "assets/playstore-icon.png",
-        "backgroundColor": "#000000"
-      },
-      "userInterfaceStyle": "automatic",
-      "package": "com.brentryczak.embtr",
-      "googleServicesFile": "./google-services.json",
-      "softwareKeyboardLayoutMode": "pan",
-      "versionCode": 470000293
-    },
-    "web": {
-      "favicon": "assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "06fe8c41-43dd-4736-bfaf-ed45cf068748"
-      }
-    },
-    "sdkVersion": "47.0.0"
-  },
-  "name": "embtr"
+    "name": "embtr"
 }

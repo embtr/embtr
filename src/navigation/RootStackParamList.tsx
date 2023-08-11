@@ -7,7 +7,7 @@ export type MainTabScreens = {
     TodayTab: undefined;
 };
 
-export type TimelineTabScreens = {
+export type MasterScreens = {
     UserSearch: undefined;
     Timeline: undefined;
     CreateUserPost: undefined;
@@ -23,22 +23,11 @@ export type TimelineTabScreens = {
     UserPosts: { userId: number };
     DailyResults: { userId: number };
     ChallengeDetails: { id: number };
-};
-
-export type TodayTab = {
+    AddTasks: undefined;
     Today: undefined;
-    CreateEditOneTimeTask: { dayKey: string; id: string };
     PlanDay: { id: string };
     WidgetMarketplace: undefined;
     AddQuoteOfTheDay: undefined;
-    DailyResultDetails: { id: number };
-    UserProfile: { id: string };
-    AddTasks: undefined;
-};
-
-export type ChallengeTabScreens = {
-    PlanMain: undefined;
-    PlanPreviews: undefined;
     Habits: undefined;
     Planning: undefined;
     Routines: undefined;
@@ -46,31 +35,22 @@ export type ChallengeTabScreens = {
     CreateEditOneTimeTask: { dayKey: string; id?: string };
     CreateEditGoal: { id?: string };
     CreateEditRoutine: { id?: string };
-    GoalDetails: { uid: string; id: string; source: string };
-    Goals: undefined;
     TaskDetails: { id: string };
-    PlanDay: { id: string };
+    Goals: undefined;
     Pillars: undefined;
-    CreateEditPillar: undefined;
-    PillarDetails: { uid: string; id: string };
     RoutineDetails: { id: string };
-    ViewAllComments: { uid: string; goalId: string };
-    DailyResultDetails: { id: number };
-    ChallengeDetails: { id: number };
-};
-
-export type ProfileTabScreens = {
     Profile: undefined;
     UserSettings: undefined;
-    CreateEditPillar: undefined;
-    PillarDetails: { uid: string; id: string };
     EditUserProfile: undefined;
-    GoalDetails: { uid: string; id: string; source: string };
-    UserPostDetails: { id: number };
-    UserPosts: { userId: number };
-    DailyResults: { userId: number };
-    DailyResultDetails: { id: number };
 };
+
+export type TimelineTabScreens = MasterScreens & {};
+
+export type TodayTab = MasterScreens & {};
+
+export type ChallengeTabScreens = MasterScreens & {};
+
+export type ProfileTabScreens = MasterScreens & {};
 
 export type RootStackParamList = {
     LandingPage: undefined;

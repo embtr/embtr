@@ -39,6 +39,7 @@ import { ConfettiView } from './components/common/animated_view/ConfettiView';
 import { UnitController } from 'src/controller/unit/UnitController';
 import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';
 import { AnyAction } from '@reduxjs/toolkit';
+import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -129,7 +130,6 @@ export const Main = () => {
     const [user, setUser] = React.useState<User | undefined | null>(undefined);
     const [showUpdateAvailableModal, setShowUpdateAvailableModal] = React.useState(false);
 
-    const globalBlurBackground = useAppSelector(getGlobalBlurBackground);
     const currentUser = useAppSelector(getCurrentUser);
 
     React.useEffect(() => {
@@ -227,7 +227,8 @@ export const Main = () => {
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer linking={linking} fallback={<LoadingPage />}>
                     {/* TOP LEVEL COMPONENTS */}
-                    <ModalContainingComponent modalVisible={globalBlurBackground} />
+                    <ModalContainingComponent />
+                    <QuickAddModal />
                     <ConfettiView />
                     <DropDownAlert />
                     <NewVersionModal

@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 export const wait = (timeout: number | undefined) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -31,4 +31,20 @@ export const getOptional = (optional?: string): string => {
     }
 
     return result;
+};
+
+export const getVerticalAlignmentLine = () => {
+    return (
+        <View
+            style={{
+                flexDirection: 'row',
+                width: 1,
+                height: '100%',
+                position: 'absolute',
+                zIndex: 1223,
+                backgroundColor: 'yellow',
+                alignSelf: 'center',
+            }}
+        />
+    );
 };

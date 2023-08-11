@@ -44,7 +44,7 @@ export const CreateUserPost = () => {
                 name="Share A Story"
                 rightOnClick={submitStory}
                 rightText="submit"
-                leftIcon={'arrow-back'}
+                leftText="close"
                 leftRoute="BACK"
             />
             <LoadingOverlay active={enableSubmit === false} />

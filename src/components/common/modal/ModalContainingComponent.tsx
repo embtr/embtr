@@ -1,18 +1,18 @@
 import { View } from 'react-native';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getGlobalBlurBackground } from 'src/redux/user/GlobalState';
 
-interface Props {
-    modalVisible: boolean;
-}
+export const ModalContainingComponent = () => {
+    const globalBlurBackground = useAppSelector(getGlobalBlurBackground);
 
-export const ModalContainingComponent = ({ modalVisible }: Props) => {
     return (
         <View
             style={{
                 position: 'absolute',
-                zIndex: modalVisible ? 1 : -1,
-                height: '100%',
+                zIndex: globalBlurBackground ? 1 : -1,
+                height: '110%',
                 width: '100%',
-                backgroundColor: modalVisible ? 'rgba(000,000,000,.7)' : undefined,
+                backgroundColor: globalBlurBackground ? 'rgba(000,000,000,.7)' : undefined,
             }}
         />
     );

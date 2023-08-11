@@ -131,14 +131,12 @@ export const FilteredTimeline = ({
             <View key={key} style={[card]}>
                 <TimelineCard
                     timelinePostModel={timelinePostModel}
-                    onLike={() => {}}
                     navigateToDetails={() => {
                         if (timelinePostModel.type === TimelineType.USER_POST) {
                             navigation.navigate('UserPostDetails', { id: timelinePostModel.id });
                         } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
                             navigation.navigate('ChallengeDetails', { id: timelinePostModel.id });
                         } else if (timelinePostModel.type === TimelineType.PLANNED_DAY_RESULT) {
-                            console.log(timelinePostModel.id);
                             navigation.navigate('DailyResultDetails', { id: timelinePostModel.id });
                         }
                     }}

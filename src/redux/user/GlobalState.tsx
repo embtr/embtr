@@ -21,6 +21,7 @@ export const INITIAL_STATE: GlobalState = {
     currentUser: {},
     timelineDays: 0,
     globalBlurBackground: false,
+    showQuickAddModal: false,
 };
 
 export interface GlobalState {
@@ -40,6 +41,7 @@ export interface GlobalState {
     currentUser: User;
     timelineDays: number;
     globalBlurBackground: boolean;
+    showQuickAddModal: boolean;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -116,6 +118,10 @@ export const GlobalState = createSlice({
         },
         setGlobalBlurBackground(state, action) {
             state.globalBlurBackground = action.payload;
+        },
+        setShowQuickAddModal(state, action) {
+            console.log('setShowQuickAddModal', action.payload);
+            state.showQuickAddModal = action.payload;
         },
     },
 });
@@ -248,6 +254,14 @@ export const getGlobalBlurBackground = (state: RootState): boolean => {
     return state.globalState.globalBlurBackground;
 };
 
+export const getShowQuickAddModal = (state: RootState): boolean => {
+    if (!state?.globalState.showQuickAddModal) {
+        return INITIAL_STATE.showQuickAddModal;
+    }
+
+    return state.globalState.showQuickAddModal;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -266,5 +280,6 @@ export const {
     setCurrentUser,
     setTimelineDays,
     setGlobalBlurBackground,
+    setShowQuickAddModal,
 } = GlobalState.actions;
 export default GlobalState.reducer;

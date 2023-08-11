@@ -10,6 +10,7 @@ import { TabBar } from 'src/components/home/tabmenu/TabBar';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
 import { ChallengeTab } from 'src/components/challenge/ChallengeTab';
+import { getVerticalAlignmentLine } from 'src/util/GeneralUtility';
 
 const Tab = createBottomTabNavigator();
 
@@ -86,6 +87,33 @@ export const Dashboard = () => {
                         },
                     })}
                     component={TodayTab}
+                />
+
+                <Tab.Screen
+                    name={'PLACEHOLDER'}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: (e) => {
+                            dispatch(setCurrentTab(TABS.CHALLENGE));
+
+                            const currentlyInFocus = navigation.isFocused();
+                            if (
+                                currentlyInFocus &&
+                                route &&
+                                route.state &&
+                                route.state.routes.length >= 1 &&
+                                route.state.routes[0]['name'] !== 'PlanMain'
+                            ) {
+                                e.preventDefault();
+                                navigation.dispatch(
+                                    CommonActions.reset({
+                                        index: 0,
+                                        routes: [{ name: 'PlanMain' }],
+                                    })
+                                );
+                            }
+                        },
+                    })}
+                    component={ChallengeTab}
                 />
 
                 <Tab.Screen

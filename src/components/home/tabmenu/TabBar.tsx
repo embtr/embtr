@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Dimensions, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Dimensions, StyleSheet, Pressable } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { TabElement } from 'src/components/home/tabmenu/TabElement';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -7,6 +7,10 @@ import Animated from 'react-native-reanimated';
 import { TABS } from 'src/components/home/Dashboard';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { Ionicons } from '@expo/vector-icons';
+import { CARD_SHADOW } from 'src/util/constants';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { setShowQuickAddModal } from 'src/redux/user/GlobalState';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
@@ -20,7 +24,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             },
             shadowOpacity: 0.1,
             shadowRadius: 4.0,
-            backgroundColor: colors.background,
+            backgroundColor: colors.tab_bar_menu,
             elevation: 10,
             bottom: 0,
         },
@@ -42,6 +46,8 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const calculateDotLocation = (index: number) => {
         return index * tabWidth + (tabWidth / 2 - 12.5);
     };
+
+    const dispatch = useAppDispatch();
 
     const [translateValue] = React.useState(new Animated.Value(calculateDotLocation(1)));
 
@@ -73,6 +79,41 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
         } else if (route.name === TABS.USER_PROFILE) {
             element = <UserTabElement size={iconSize} />;
+        } else {
+            element = (
+                <Pressable
+                    onPress={() => {
+                        dispatch(setShowQuickAddModal(true));
+                    }}
+                    style={[
+                        {
+                            padding: 10,
+                            borderRadius: 50,
+                            position: 'absolute',
+                            zIndex: 2,
+                            alignSelf: 'center',
+                        },
+                    ]}
+                >
+                    <View
+                        style={[
+                            CARD_SHADOW,
+                            {
+                                backgroundColor: colors.accent_color,
+                                borderRadius: 50,
+                                height: 60,
+                                width: 60,
+
+                                bottom: 25,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            },
+                        ]}
+                    >
+                        <Ionicons name="add" size={40} color={colors.text} style={{ left: 1.5 }} />
+                    </View>
+                </Pressable>
+            );
         }
 
         elements.push(

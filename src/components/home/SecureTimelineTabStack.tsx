@@ -11,14 +11,25 @@ import { EditDailyResultDetails } from '../common/timeline/EditDailyResultDetail
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
+import { AddTasks } from '../plan/planning/AddTasks';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 
 export const SecureTimelineTabStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Timeline" component={Timeline} />
-            <Stack.Screen name="CreateUserPost" component={CreateUserPost} />
+            <Stack.Screen
+                name="CreateUserPost"
+                component={CreateUserPost}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name="AddTasks"
+                component={AddTasks}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
             <Stack.Screen name="UserSearch" component={UserSearch} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="EditUserPostDetails" component={EditUserPostDetails} />

@@ -12,14 +12,17 @@ import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
 import { CompletedHabits } from './card_components/CompletedHabits';
 import { JoinedChallengeDetails } from './card_components/JoinedChallengeDetails';
+import { TimelineType } from 'resources/types/Types';
+import StoryController from 'src/controller/timeline/story/StoryController';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 
 interface Props {
     timelinePostModel: TimelinePostModel;
-    onLike: Function;
     navigateToDetails: Function;
 }
 
-export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: Props) => {
+export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) => {
     const { colors } = useTheme();
 
     const currentUser = useAppSelector(getCurrentUser);
@@ -36,7 +39,15 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
         }
 
         setIsLiked(true);
-        onLike();
+        setLikeCount(likeCount + 1);
+
+        if (timelinePostModel.type === TimelineType.USER_POST) {
+            StoryController.addLikeViaApi(timelinePostModel.id);
+        } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
+            ChallengeController.like(timelinePostModel.id);
+        } else if (timelinePostModel.type === TimelineType.PLANNED_DAY_RESULT) {
+            DailyResultController.addLikeViaApi(timelinePostModel.id);
+        }
     };
 
     let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(
@@ -68,20 +79,6 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
                     secondaryText={timelinePostModel.secondaryHeaderText}
                     type={timelinePostModel.type}
                 />
-
-                {carouselImages.length > 0 && (
-                    <View
-                        style={{
-                            marginLeft: 10,
-                            marginRight: 10,
-                            overflow: 'hidden',
-                            paddingTop: 10,
-                            alignItems: 'center',
-                        }}
-                    >
-                        <CarouselCards images={carouselImages} />
-                    </View>
-                )}
 
                 {/**********/}
                 {/* TITLE */}
@@ -115,6 +112,23 @@ export const TimelineCard = ({ timelinePostModel, onLike, navigateToDetails }: P
                         >
                             {timelinePostModel.body}
                         </Text>
+                    </View>
+                )}
+
+                {/**********/}
+                {/* IMAGES */}
+                {/**********/}
+                {carouselImages.length > 0 && (
+                    <View
+                        style={{
+                            marginLeft: 10,
+                            marginRight: 10,
+                            overflow: 'hidden',
+                            paddingTop: 10,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <CarouselCards images={carouselImages} />
                     </View>
                 )}
 

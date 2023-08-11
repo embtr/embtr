@@ -6,6 +6,7 @@ import { PlannedTask } from 'resources/schema';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { EvilIcons } from '@expo/vector-icons';
 import { getWindowHeight } from 'src/util/GeneralUtility';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -31,10 +32,14 @@ export const UpdatePlannedTaskModal = ({
     }, [plannedTask]);
 
     const onDismissWrapper = () => {
-        setKeyboardFocused(false);
-        setSelectedValue(plannedTask.completedQuantity ?? 0);
-        setInputWasFocused(false);
-        dismiss();
+        if (keyboardFocused) {
+            Keyboard.dismiss();
+            setKeyboardFocused(false);
+            setSelectedValue(plannedTask.completedQuantity ?? 0);
+        } else {
+            setInputWasFocused(false);
+            dismiss();
+        }
     };
 
     const onCompleteWrapper = () => {
@@ -56,7 +61,6 @@ export const UpdatePlannedTaskModal = ({
     );
 
     const [inputWasFocused, setInputWasFocused] = React.useState(false);
-
     const [keyboardFocused, setKeyboardFocused] = React.useState(false);
 
     const top = getWindowHeight() / 2 - 150;
@@ -130,7 +134,7 @@ export const UpdatePlannedTaskModal = ({
                                             paddingTop: 10,
                                             fontSize: 16,
                                             fontFamily: POPPINS_REGULAR,
-                                            color: colors.tab_selected,
+                                            color: colors.accent_color,
                                             textAlign: 'center',
                                         }}
                                     >
@@ -145,64 +149,103 @@ export const UpdatePlannedTaskModal = ({
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    <View style={{ flex: 1 }} />
-                                    <TextInput
-                                        keyboardType={'numeric'}
-                                        ref={textInputRef}
-                                        onBlur={() => {
-                                            setKeyboardFocused(false);
-                                        }}
-                                        onSubmitEditing={() => {
-                                            onUpdateWrapper();
-                                        }}
-                                        onFocus={() => {
-                                            setInputWasFocused(true);
-                                            setKeyboardFocused(true);
-                                            textInputRef.current?.setNativeProps({
-                                                selection: {
-                                                    start: 0,
-                                                    end: selectedValue?.toString().length,
-                                                },
-                                            });
-                                        }}
-                                        value={selectedValue?.toString()}
-                                        onChangeText={(text) => {
-                                            textInputRef.current?.setNativeProps({
-                                                selection: { start: text.length, end: text.length },
-                                            });
-
-                                            //allow period
-                                            if (
-                                                text.length > 0 &&
-                                                text !== '.' &&
-                                                isNaN(parseInt(text))
-                                            ) {
-                                                return;
-                                            }
-
-                                            setSelectedValue(
-                                                text.length === 0 ? null : parseInt(text)
-                                            );
-                                        }}
+                                    <View style={{ flex: 1, alignItems: 'center' }}>
+                                        <Ionicons
+                                            name={'remove'}
+                                            size={30}
+                                            color={colors.text}
+                                            onPress={() => {
+                                                setSelectedValue((selectedValue ?? 0) - 1);
+                                                setInputWasFocused(true);
+                                            }}
+                                        />
+                                    </View>
+                                    <View
                                         style={{
-                                            color: colors.text,
-                                            fontFamily: POPPINS_REGULAR,
-                                            textAlign: 'center',
-                                            fontSize: 20,
-                                            paddingTop: 10,
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
                                         }}
-                                    />
-                                    <View style={{ flex: 1 }}>
-                                        {!keyboardFocused && (
-                                            <EvilIcons
-                                                onPress={() => {
-                                                    textInputRef.current?.focus();
-                                                }}
-                                                name="pencil"
-                                                size={20}
-                                                color={colors.secondary_text}
-                                            />
-                                        )}
+                                    >
+                                        <View style={{ flex: 1 }} />
+                                        <TextInput
+                                            keyboardType={'numeric'}
+                                            ref={textInputRef}
+                                            onBlur={() => {
+                                                setKeyboardFocused(false);
+                                            }}
+                                            onSubmitEditing={() => {
+                                                onUpdateWrapper();
+                                            }}
+                                            onFocus={() => {
+                                                setInputWasFocused(true);
+                                                setKeyboardFocused(true);
+                                                textInputRef.current?.setNativeProps({
+                                                    selection: {
+                                                        start: 0,
+                                                        end: selectedValue?.toString().length,
+                                                    },
+                                                });
+                                            }}
+                                            value={selectedValue?.toString()}
+                                            onChangeText={(text) => {
+                                                textInputRef.current?.setNativeProps({
+                                                    selection: {
+                                                        start: text.length,
+                                                        end: text.length,
+                                                    },
+                                                });
+
+                                                if (text.length > 0 && isNaN(parseInt(text))) {
+                                                    return;
+                                                }
+
+                                                setSelectedValue(
+                                                    text.length === 0 ? null : parseInt(text)
+                                                );
+                                            }}
+                                            style={{
+                                                color: colors.text,
+                                                fontFamily: POPPINS_REGULAR,
+                                                textAlign: 'center',
+                                                fontSize: 20,
+                                                paddingTop: 10,
+                                            }}
+                                        />
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                            }}
+                                        >
+                                            {!keyboardFocused && (
+                                                <EvilIcons
+                                                    onPress={() => {
+                                                        textInputRef.current?.focus();
+                                                    }}
+                                                    name="pencil"
+                                                    size={20}
+                                                    color={colors.secondary_text}
+                                                />
+                                            )}
+                                        </View>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name={'add'}
+                                            size={30}
+                                            color={colors.text}
+                                            onPress={() => {
+                                                setSelectedValue((selectedValue ?? 0) + 1);
+                                                setInputWasFocused(true);
+                                            }}
+                                        />
                                     </View>
                                 </View>
                                 <Text
@@ -238,7 +281,7 @@ export const UpdatePlannedTaskModal = ({
                                                     padding: 5,
                                                     borderRadius: 5,
                                                     borderWidth: 1,
-                                                    borderColor: colors.link,
+                                                    borderColor: colors.secondary_accent_color,
                                                     width: BUTTON_WIDTH,
                                                     alignItems: 'center',
                                                 }}
@@ -248,7 +291,7 @@ export const UpdatePlannedTaskModal = ({
                                             >
                                                 <Text
                                                     style={{
-                                                        color: colors.link,
+                                                        color: colors.secondary_accent_color,
                                                         fontFamily: POPPINS_REGULAR,
                                                     }}
                                                 >
