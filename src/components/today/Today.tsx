@@ -34,7 +34,8 @@ export const Today = () => {
     const TODAY_PAGE_WIDGETS = [
         WidgetType.TIME_LEFT_IN_DAY,
         WidgetType.QUOTE_OF_THE_DAY,
-        WidgetType.TODAYS_TASKS,
+        WidgetType.PLANNING,
+        //WidgetType.TODAYS_TASKS,
         //WidgetType.TODAYS_NOTES,
     ];
 

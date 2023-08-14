@@ -104,7 +104,7 @@ export const ChallengeMain = () => {
                                 indicatorStyle={{
                                     height: 4,
                                     borderRadius: 15,
-                                    backgroundColor: colors.planning_horizontal_indicator,
+                                    backgroundColor: colors.accent_color,
                                 }}
                                 renderLabel={({ focused, route }) => {
                                     return (

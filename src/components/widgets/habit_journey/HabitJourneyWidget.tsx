@@ -67,7 +67,7 @@ export const HabitJourneyWidget = ({ user }: Props) => {
 
                             borderColor:
                                 selectedView === habitJourney.habit.id
-                                    ? colors.tab_selected
+                                    ? colors.accent_color
                                     : colors.background,
                             flexDirection: 'row',
                         }}
