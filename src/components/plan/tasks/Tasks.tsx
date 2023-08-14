@@ -8,7 +8,6 @@ import { TaskPreview } from './TaskPreview';
 import {
     ChallengeParticipant,
     ChallengeReward,
-    Habit,
     PlannedDay as PlannedDayModel,
 } from 'resources/schema';
 import { Task as TaskModel } from 'resources/schema';
@@ -28,7 +27,6 @@ export const Tasks = ({ plannedDay }: Props) => {
     const [tasks, setTasks] = React.useState<TaskModel[]>([]);
     const [recentTasks, setRecentTasks] = React.useState<TaskModel[]>([]);
     const [recommendedTasks, setRecommendedTasks] = React.useState<TaskModel[]>([]);
-    const [habits, setHabits] = React.useState<Habit[]>([]);
     const [userChallengeParticipation, setUserChallengeParticipation] = React.useState<
         ChallengeParticipant[]
     >([]);
@@ -63,11 +61,6 @@ export const Tasks = ({ plannedDay }: Props) => {
         };
     }, [searchText]);
 
-    const fetchHabits = async () => {
-        const results: Habit[] = await HabitController.getHabits();
-        setHabits(results);
-    };
-
     const fetchRecentTasks = async () => {
         const results: TaskModel[] = await TaskController.getRecent();
         setRecentTasks(results);
@@ -79,7 +72,6 @@ export const Tasks = ({ plannedDay }: Props) => {
     };
 
     React.useEffect(() => {
-        fetchHabits();
         fetchRecentTasks();
         fetchRecommendedTasks();
     }, []);
@@ -113,7 +105,6 @@ export const Tasks = ({ plannedDay }: Props) => {
                 <TaskPreview
                     plannedDay={plannedDay}
                     task={task}
-                    habits={habits}
                     challengeRewards={challengeRewards}
                 />
             </View>
@@ -130,7 +121,6 @@ export const Tasks = ({ plannedDay }: Props) => {
                     <TaskPreview
                         plannedDay={plannedDay}
                         task={{ id: undefined, title: searchText, description: '' }}
-                        habits={habits}
                         challengeRewards={[]}
                     />
                 </View>
@@ -163,7 +153,6 @@ export const Tasks = ({ plannedDay }: Props) => {
                     <TaskPreview
                         plannedDay={plannedDay}
                         task={task}
-                        habits={habits}
                         challengeRewards={challengeRewards}
                     />
                 </View>
@@ -192,7 +181,6 @@ export const Tasks = ({ plannedDay }: Props) => {
                     <TaskPreview
                         plannedDay={plannedDay}
                         task={task}
-                        habits={habits}
                         challengeRewards={challengeRewards}
                     />
                 </View>
@@ -244,7 +232,7 @@ export const Tasks = ({ plannedDay }: Props) => {
                         onChangeText={setSearchText}
                         value={searchText}
                         placeholderTextColor={colors.search_preview}
-                        placeholder={'add an activity...'}
+                        placeholder={'add a habit...'}
                         autoCapitalize="none"
                     />
                 </View>

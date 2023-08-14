@@ -7,7 +7,7 @@ import {
     UpdatePlannedTaskRequest,
     UpdatePlannedTaskResponse,
 } from 'resources/types/requests/PlannedTaskTypes';
-import { Habit, PlannedDay, Unit } from 'resources/schema';
+import { PlannedDay, Unit } from 'resources/schema';
 import { PlannedTask } from 'resources/schema';
 import { Task } from 'resources/schema';
 
@@ -29,7 +29,6 @@ class PlannedTaskController {
     public static async addTaskViaApi(
         plannedDay: PlannedDay,
         task: Task,
-        habit?: Habit,
         unit?: Unit,
         quantity?: number
     ) {
@@ -40,7 +39,6 @@ class PlannedTaskController {
         const request: CreatePlannedTaskRequest = {
             plannedDayId: plannedDay.id,
             taskId: task.id,
-            habitId: habit?.id,
             unitId: unit?.id,
             quantity,
         };

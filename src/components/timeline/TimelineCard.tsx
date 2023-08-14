@@ -16,6 +16,7 @@ import { TimelineType } from 'resources/types/Types';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
+import { DailyResultBody } from '../common/timeline/DailyResultBody';
 
 interface Props {
     timelinePostModel: TimelinePostModel;
@@ -146,9 +147,9 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                 {/********************/}
                 {/* COMPLETED HABITS */}
                 {/********************/}
-                {timelinePostModel.completedHabits && (
+                {timelinePostModel.plannedDayResult && (
                     <View style={{ paddingTop: 12 }}>
-                        <CompletedHabits completedHabits={timelinePostModel.completedHabits} />
+                        <DailyResultBody plannedDayResult={timelinePostModel.plannedDayResult} />
                     </View>
                 )}
 

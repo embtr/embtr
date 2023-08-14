@@ -6,7 +6,6 @@ import React, { useEffect } from 'react';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import {
     ChallengeReward,
-    Habit,
     PlannedDay as PlannedDayModel,
     PlannedTask,
     Task,
@@ -24,15 +23,13 @@ import { UnitUtility } from 'src/util/UnitUtility';
 interface Props {
     plannedDay: PlannedDayModel;
     task: Task;
-    habits: Habit[];
     challengeRewards: ChallengeReward[];
 }
 
-export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Props) => {
+export const TaskPreview = ({ plannedDay, task, challengeRewards }: Props) => {
     const { colors } = useTheme();
 
     const [isExpanded, setIsExpanded] = React.useState(false);
-    const [selectedHabit, setSelectedHabit] = React.useState<Habit>();
     const [enteredQuantity, setEnteredQuantity] = React.useState<number>();
     const [selectedUnit, setSelectedUnit] = React.useState<Unit>();
     const [plannedTaskFromDatabase, setPlannedTaskFromDatabase] = React.useState<PlannedTask>();
@@ -49,7 +46,6 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
 
     useEffect(() => {
         if (task?.taskPreference?.length) {
-            setSelectedHabit(task.taskPreference[0].habit);
             setSelectedUnit(task.taskPreference[0].unit);
             setEnteredQuantity(task.taskPreference[0].quantity);
         }
@@ -77,7 +73,6 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
                     const created = await PlannedTaskController.addTaskViaApi(
                         plannedDay,
                         taskToAdd,
-                        selectedHabit,
                         selectedUnit,
                         enteredQuantity
                     );
@@ -117,18 +112,12 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
                 key={task.id}
                 plannedDay={plannedDay}
                 task={task}
-                habits={habits}
-                selectedHabit={selectedHabit}
                 selectedUnit={selectedUnit}
                 enteredQuantity={enteredQuantity}
                 challengeRewards={challengeRewards}
                 visible={showDetailedTaskPreviewModal}
                 onDismiss={() => {
                     setShowDetailedTaskPreviewModal(false);
-                }}
-                onHabitChanged={(habit: Habit) => {
-                    TaskController.updatePreference(task, habit, selectedUnit, enteredQuantity);
-                    setSelectedHabit(habit);
                 }}
                 onUnitChanged={(unit: Unit) => {
                     setSelectedUnit(unit);
@@ -232,67 +221,6 @@ export const TaskPreview = ({ plannedDay, task, habits, challengeRewards }: Prop
                                             </View>
                                         </View>
                                     </View>
-
-                                    {(selectedHabit?.iconName || challengeRewards.length > 0) && (
-                                        <View
-                                            style={{
-                                                bottom: 5,
-                                            }}
-                                        >
-                                            <View style={{ height: 5 }} />
-                                            {selectedHabit?.iconName && (
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row',
-                                                    }}
-                                                >
-                                                    <HabitIcon
-                                                        habit={selectedHabit}
-                                                        size={15}
-                                                        color={colors.text}
-                                                    />
-                                                    <Text
-                                                        style={{
-                                                            color: colors.secondary_text,
-                                                            includeFontPadding: false,
-                                                            fontFamily: POPPINS_REGULAR,
-                                                            fontSize: 12,
-                                                        }}
-                                                    >
-                                                        {' Habit: '}
-                                                        {selectedHabit.title}
-                                                    </Text>
-                                                </View>
-                                            )}
-
-                                            {challengeRewards.length > 0 && (
-                                                <View
-                                                    style={{
-                                                        flexDirection: 'row',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
-                                                    <SvgUri
-                                                        width={15}
-                                                        height={15}
-                                                        uri={challengeRewards[0].imageUrl ?? ''}
-                                                    />
-
-                                                    <Text
-                                                        style={{
-                                                            color: colors.secondary_text,
-                                                            includeFontPadding: false,
-                                                            fontFamily: POPPINS_REGULAR,
-                                                            fontSize: 12,
-                                                        }}
-                                                    >
-                                                        {' Challenge: '}
-                                                        {challengeRewards[0].name}
-                                                    </Text>
-                                                </View>
-                                            )}
-                                        </View>
-                                    )}
                                 </View>
                             </View>
                         </View>

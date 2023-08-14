@@ -1,7 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
-import { Comment, Like, Image, User, JoinedChallenge } from 'resources/schema';
+import { Comment, Like, Image, User, JoinedChallenge, PlannedDayResult } from 'resources/schema';
 import { TimelineType } from 'resources/types/Types';
-import { CompletedHabit } from 'resources/types/planned_day_result/PlannedDayResult';
 
 export interface TimelinePostModel {
     user: User;
@@ -15,8 +14,8 @@ export interface TimelinePostModel {
     title?: string;
     body?: string;
     secondaryHeaderText?: string;
-    completedHabits?: CompletedHabit[];
     joinedChallenge?: JoinedChallenge;
+    plannedDayResult?: PlannedDayResult;
 
     data: {};
 }

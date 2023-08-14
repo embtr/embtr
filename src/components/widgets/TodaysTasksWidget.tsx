@@ -75,7 +75,6 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
     menuOptions.push({
         name: 'Edit',
         onPress: () => {
-            navigation.navigate('PlanTab', { screen: 'PlanMain' });
             closeMenu();
         },
     });

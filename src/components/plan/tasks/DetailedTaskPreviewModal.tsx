@@ -1,10 +1,9 @@
 import { View, Text, TextInput } from 'react-native';
-import { ChallengeReward, Habit, PlannedDay, PlannedTask, Task, Unit } from 'resources/schema';
+import { ChallengeReward, PlannedDay, PlannedTask, Task, Unit } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import React from 'react';
 import { SlideUpModal } from 'src/components/common/modal/SlideUpModal';
 import { POPPINS_SEMI_BOLD, POPPINS_MEDIUM } from 'src/util/constants';
-import { HabitScrollSelector } from './HabitScrollSelector';
 import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
 import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
@@ -13,14 +12,11 @@ import { AddTaskButton } from './AddTaskButton';
 interface Props {
     plannedDay: PlannedDay;
     task: Task;
-    habits: Habit[];
     challengeRewards: ChallengeReward[];
     visible: boolean;
     onDismiss: Function;
-    selectedHabit?: Habit;
     selectedUnit?: Unit;
     enteredQuantity?: number;
-    onHabitChanged: Function;
     onUnitChanged: Function;
     onQuantityChanged: Function;
 }
@@ -28,14 +24,11 @@ interface Props {
 export const DetailedTaskPreviewModal = ({
     plannedDay,
     task,
-    habits,
     challengeRewards,
     visible,
     onDismiss,
-    selectedHabit,
     selectedUnit,
     enteredQuantity,
-    onHabitChanged,
     onUnitChanged,
     onQuantityChanged,
 }: Props) => {
@@ -50,10 +43,6 @@ export const DetailedTaskPreviewModal = ({
     let capitalizedUnitValue =
         selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1);
     capitalizedUnitValue += capitalizedUnitValue === 'Of What?' ? '' : 's';
-
-    const onHabitSelected = async (habit: Habit) => {
-        onHabitChanged(habit);
-    };
 
     const PADDING = 12.5;
 
@@ -103,25 +92,6 @@ export const DetailedTaskPreviewModal = ({
                     >
                         {task.title}
                     </Text>
-                </View>
-                {/* Select A Habit */}
-                <View style={{ paddingTop: 10 }}>
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            fontFamily: POPPINS_SEMI_BOLD,
-                            fontSize: 12,
-                        }}
-                    >
-                        Select a Habit
-                    </Text>
-                    <View style={{ height: 50 }}>
-                        <HabitScrollSelector
-                            habits={habits}
-                            initialHabit={selectedHabit}
-                            onHabitSelected={onHabitSelected}
-                        />
-                    </View>
                 </View>
 
                 <View style={{ paddingTop: 20 }}>
@@ -267,7 +237,6 @@ export const DetailedTaskPreviewModal = ({
                     task={task}
                     plannedDay={plannedDay}
                     setPlannedTaskFromDatabase={setPlannedTaskFromDatabase}
-                    habit={selectedHabit}
                     unit={selectedUnit}
                     quantity={enteredQuantity}
                     onPressed={() => {

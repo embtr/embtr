@@ -41,69 +41,45 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
     });
 
     return (
-        <View style={{ paddingTop: 10 }}>
-            <View
-                style={{
-                    paddingLeft: TIMELINE_CARD_PADDING,
-                    paddingRight: TIMELINE_CARD_PADDING,
-                    paddingTop: 5,
-                }}
-            >
-                {plannedDayResult.description && (
-                    <Text style={[{ textAlign: 'left', paddingBottom: 10, color: colors.text }]}>
-                        {plannedDayResult.description}
-                    </Text>
-                )}
+        <View style={{}}>
+            {plannedDayResult.description && (
+                <Text style={[{ textAlign: 'left', paddingBottom: 10, color: colors.text }]}>
+                    {plannedDayResult.description}
+                </Text>
+            )}
 
-                {svgUrl && (
-                    <View style={{ paddingBottom: 10, paddingTop: 2.5 }}>
-                        <View
-                            style={{
-                                paddingVertical: 7.5,
-                                paddingLeft: 7.5,
-                                borderWidth: 1,
-                                borderRadius: 3,
-                                borderColor: colors.secondary_text,
-                            }}
-                        >
-                            <View style={{ flexDirection: 'row' }}>
-                                <SvgUri width={50} height={50} uri={svgUrl ?? ''} />
-                                <View style={{ paddingLeft: 7.5 }}>
-                                    <Text
-                                        style={{ color: colors.text, fontFamily: POPPINS_MEDIUM }}
-                                    >
-                                        Challenge Complete
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            color: colors.tab_selected,
-                                            fontFamily: POPPINS_MEDIUM,
-                                        }}
-                                    >
-                                        {challengeName}
-                                    </Text>
-                                </View>
+            {svgUrl && (
+                <View style={{ paddingBottom: 10, paddingTop: 2.5 }}>
+                    <View
+                        style={{
+                            paddingVertical: 7.5,
+                            paddingLeft: 7.5,
+                            borderWidth: 1,
+                            borderRadius: 3,
+                            borderColor: colors.secondary_text,
+                        }}
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <SvgUri width={50} height={50} uri={svgUrl ?? ''} />
+                            <View style={{ paddingLeft: 7.5 }}>
+                                <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM }}>
+                                    Challenge Complete
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: colors.tab_selected,
+                                        fontFamily: POPPINS_MEDIUM,
+                                    }}
+                                >
+                                    {challengeName}
+                                </Text>
                             </View>
                         </View>
                     </View>
-                )}
-
-                <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
-            </View>
-
-            {carouselImages.length > 0 && (
-                <View
-                    style={{
-                        marginLeft: 10,
-                        marginRight: 10,
-                        overflow: 'hidden',
-                        paddingTop: 10,
-                        alignItems: 'center',
-                    }}
-                >
-                    <CarouselCards images={carouselImages} />
                 </View>
             )}
+
+            <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
         </View>
     );
 };

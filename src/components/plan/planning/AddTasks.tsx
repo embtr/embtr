@@ -17,7 +17,7 @@ export const AddTasks = () => {
         <Screen>
             <View style={{ height: '100%', width: '100%' }}>
                 <Banner
-                    name="Add Activities"
+                    name="Add Habits"
                     leftText="close"
                     leftOnClick={() => {
                         navigation.goBack();

@@ -1,6 +1,6 @@
 import { TouchableOpacity, View, Text } from 'react-native';
 import Toast from 'react-native-root-toast';
-import { Habit, PlannedDay, Task, Unit } from 'resources/schema';
+import { PlannedDay, Task, Unit } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import TaskController from 'src/controller/planning/TaskController';
@@ -9,7 +9,6 @@ import { POPPINS_MEDIUM } from 'src/util/constants';
 interface Props {
     task: Task;
     plannedDay: PlannedDay;
-    habit?: Habit;
     unit?: Unit;
     quantity?: number;
     setPlannedTaskFromDatabase: Function;
@@ -19,7 +18,6 @@ interface Props {
 export const AddTaskButton = ({
     task,
     plannedDay,
-    habit,
     unit,
     quantity,
     setPlannedTaskFromDatabase,
@@ -50,12 +48,11 @@ export const AddTaskButton = ({
                 const created = await PlannedTaskController.addTaskViaApi(
                     plannedDay,
                     taskToAdd,
-                    habit,
                     unit,
                     quantity
                 );
                 setPlannedTaskFromDatabase(created.plannedTask);
-                TaskController.updatePreference(task, habit, unit, quantity);
+                TaskController.updatePreference(task, unit, quantity);
             }}
         >
             <View

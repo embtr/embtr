@@ -79,7 +79,7 @@ export const FilteredTimeline = ({
                 comments: plannedDayResultSummary.plannedDayResult.comments ?? [],
                 likes: plannedDayResultSummary.plannedDayResult.likes ?? [],
                 images: plannedDayResultSummary.plannedDayResult.images ?? [],
-                completedHabits: plannedDayResultSummary.completedHabits,
+                plannedDayResult: plannedDayResultSummary.plannedDayResult,
                 data: {
                     plannedDayResultSummary,
                 },

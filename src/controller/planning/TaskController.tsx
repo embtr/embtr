@@ -2,7 +2,7 @@ import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
 import { TASK } from 'resources/endpoints';
-import { Habit, Task as NewTaskModel, Task, Unit } from 'resources/schema';
+import { Task as NewTaskModel, Task, Unit } from 'resources/schema';
 import {
     CreateTaskRequest,
     CreateTaskResponse,
@@ -157,14 +157,8 @@ class TaskController {
             });
     }
 
-    public static async updatePreference(
-        task: Task,
-        habit?: Habit,
-        unit?: Unit,
-        quantity?: number
-    ) {
+    public static async updatePreference(task: Task, unit?: Unit, quantity?: number) {
         const request: TaskPreferenceRequest = {
-            habitId: habit?.id,
             unitId: unit?.id,
             quantity: quantity,
         };
