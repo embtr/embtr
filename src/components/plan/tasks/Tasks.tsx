@@ -11,7 +11,6 @@ import {
     PlannedDay as PlannedDayModel,
 } from 'resources/schema';
 import { Task as TaskModel } from 'resources/schema';
-import { HabitController } from 'src/controller/habit/HabitController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
