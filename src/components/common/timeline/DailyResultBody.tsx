@@ -1,7 +1,7 @@
-import { View, Text, TextStyle } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
+import { POPPINS_MEDIUM } from 'src/util/constants';
+import { ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
