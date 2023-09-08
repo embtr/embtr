@@ -6,12 +6,11 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentlySelectedPlannedDay } from 'src/redux/user/GlobalState';
-import { SvgUri } from 'react-native-svg';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
-import { HabitCategory } from 'resources/schema';
 import React from 'react';
 import { HabitController } from 'src/controller/habit/HabitController';
+import { HabitCategory } from 'resources/schema';
+import { HabitCategoryElement } from '../habit/HabitCategoryElement';
 
 export const AddTasks = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -20,11 +19,26 @@ export const AddTasks = () => {
     const selectedPlannedDay = useAppSelector(getCurrentlySelectedPlannedDay);
 
     const [habitCategories, setHabitCategories] = React.useState<HabitCategory[]>([]);
+    console.log(habitCategories);
 
     React.useEffect(() => {
         const fetch = async () => {
-            const habitCategories = HabitController.getHabitCategories();
-            if (havit)
+            const habitCategories = await HabitController.getHabitCategories();
+            if (habitCategories) {
+                setHabitCategories(habitCategories);
+            }
+        };
+
+        fetch();
+    }, []);
+
+    const elements: JSX.Element[] = [];
+    habitCategories.forEach((habitCategory) => {
+        elements.push(
+            <HabitCategoryElement key={habitCategory.id} habitCategory={habitCategory} />
+        );
+    });
+
     return (
         <Screen>
             <View style={{ height: '100%', width: '100%' }}>
@@ -35,7 +49,6 @@ export const AddTasks = () => {
                         navigation.goBack();
                     }}
                 />
-
                 <View
                     style={{
                         width: '100%',
@@ -43,6 +56,7 @@ export const AddTasks = () => {
                         alignItems: 'center',
                     }}
                 >
+                    {elements}
                 </View>
             </View>
         </Screen>

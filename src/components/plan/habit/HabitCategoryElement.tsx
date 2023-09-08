@@ -32,13 +32,7 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
                     CARD_SHADOW,
                 ]}
             >
-                <SvgUri
-                    width={50}
-                    height={50}
-                    uri={
-                        'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Flayers.svg?alt=media'
-                    }
-                />
+                <SvgUri width={50} height={50} uri={habitCategory.imageUrl ?? ''} />
                 <View style={{ paddingLeft: 9 }}>
                     <Text
                         style={{
@@ -47,7 +41,7 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
                             fontSize: 22,
                         }}
                     >
-                        Physical Health
+                        {habitCategory.name}
                     </Text>
                     <Text
                         style={{
@@ -57,7 +51,7 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
                             bottom: 5,
                         }}
                     >
-                        Fitness routines, balanced nutrition, restful sleep
+                        {habitCategory.description}
                     </Text>
                 </View>
             </View>

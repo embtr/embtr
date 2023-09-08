@@ -1,13 +1,21 @@
-import { Habit } from 'resources/schema';
-import { GetHabitJourneyResponse } from 'resources/types/requests/HabitTypes';
+import { HabitCategory } from 'resources/schema';
+import {
+    GetHabitCategoriesResponse,
+    GetHabitJourneyResponse,
+} from 'resources/types/requests/HabitTypes';
 import axiosInstance from 'src/axios/axios';
 
 export class HabitController {
-    public static async getHabits(): Promise<Habit[]> {
+    public static async getHabitCategories(): Promise<HabitCategory[]> {
         return await axiosInstance
-            .get('/habit')
+            .get('/habit/categories/')
             .then((success) => {
-                return success.data.habits;
+                const habitCategoriesResponse: GetHabitCategoriesResponse = success.data;
+                if (habitCategoriesResponse.habitCategories) {
+                    return habitCategoriesResponse.habitCategories;
+                } else {
+                    return [];
+                }
             })
             .catch((error) => {
                 return [];
