@@ -1,60 +1,63 @@
-import { View, Text } from 'react-native';
-import { SvgUri } from 'react-native-svg';
 import { HabitCategory } from 'resources/schema';
-import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
+import { HabitCategoryCard } from './HabitCategoryCard';
+import { Animated, Pressable, View, Text } from 'react-native';
+import { HabitElement } from './HabitElement';
+import React from 'react';
 
 interface Props {
     habitCategory: HabitCategory;
 }
 
 export const HabitCategoryElement = ({ habitCategory }: Props) => {
-    const { colors } = useTheme();
+    const height = React.useRef(new Animated.Value(0)).current;
+    const [expand, setExpand] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        Animated.timing(height, {
+            toValue: expand ? 200 : 0,
+            duration: 200,
+            useNativeDriver: false,
+        }).start();
+    }, [expand]);
+
     return (
-        <View
-            style={{
-                width: '100%',
-                paddingHorizontal: 12,
-                paddingTop: 12,
-                flexDirection: 'row',
+        <Pressable
+            onPress={() => {
+                if (expand === undefined) {
+                    setExpand(true);
+                } else {
+                    setExpand(!expand);
+                }
             }}
         >
-            <View
-                style={[
-                    {
-                        backgroundColor: colors.timeline_card_background,
-                        borderRadius: 9,
-                        flex: 1,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        padding: 12,
-                    },
-                    CARD_SHADOW,
-                ]}
-            >
-                <SvgUri width={50} height={50} uri={habitCategory.imageUrl ?? ''} />
-                <View style={{ paddingLeft: 9 }}>
-                    <Text
-                        style={{
-                            color: colors.text,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 22,
-                        }}
-                    >
-                        {habitCategory.name}
-                    </Text>
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 10,
-                            bottom: 5,
-                        }}
-                    >
-                        {habitCategory.description}
-                    </Text>
+            <HabitCategoryCard habitCategory={habitCategory} />
+            <Animated.View style={{ height: height }}>
+                <View>
+                    <HabitElement
+                        iconUrl="https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fgratitude.svg?alt=media"
+                        title="Go for a run"
+                        description="hello"
+                    />
+
+                    <HabitElement
+                        iconUrl="https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fgratitude.svg?alt=media"
+                        title="Go for a run"
+                        description="hello"
+                    />
+
+                    <HabitElement
+                        iconUrl="https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fgratitude.svg?alt=media"
+                        title="Go for a run"
+                        description="hello"
+                    />
+
+                    <HabitElement
+                        iconUrl="https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fgratitude.svg?alt=media"
+                        title="Go for a run"
+                        description="hello"
+                    />
                 </View>
-            </View>
-        </View>
+            </Animated.View>
+        </Pressable>
     );
 };

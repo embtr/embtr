@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import Toast from 'react-native-root-toast';
@@ -14,8 +14,6 @@ import {
 import TaskController from 'src/controller/planning/TaskController';
 import { Ionicons } from '@expo/vector-icons';
 import { DetailedTaskPreviewModal } from './DetailedTaskPreviewModal';
-import { HabitIcon } from '../habit/HabitIcon';
-import { SvgUri } from 'react-native-svg';
 import { UnitUtility } from 'src/util/UnitUtility';
 
 /* Pog I was here - Cherkim */
