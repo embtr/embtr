@@ -8,9 +8,6 @@ import {
     setShowQuickAddModal,
 } from 'src/redux/user/GlobalState';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import React from 'react';
 import * as NavigationBar from 'expo-navigation-bar';
@@ -32,8 +29,10 @@ export const QuickAddModal = () => {
     };
 
     React.useEffect(() => {
-        NavigationBar.setBackgroundColorAsync(colors.tab_bar_menu);
-        NavigationBar.setButtonStyleAsync('light');
+        if (isAndroidDevice()) {
+            NavigationBar.setBackgroundColorAsync(colors.tab_bar_menu);
+            NavigationBar.setButtonStyleAsync('light');
+        }
     }, [showModal]);
 
     const backgroundColor = 'white';

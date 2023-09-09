@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
@@ -29,7 +29,9 @@ export const AddTasks = () => {
 
     const elements: JSX.Element[] = [];
     habitCategories.forEach((habitCategory) => {
-        elements.push(<HabitCategoryElement habitCategory={habitCategory} />);
+        elements.push(
+            <HabitCategoryElement key={habitCategory.id} habitCategory={habitCategory} />
+        );
     });
 
     return (

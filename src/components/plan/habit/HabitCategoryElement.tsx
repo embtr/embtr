@@ -10,28 +10,28 @@ interface Props {
 
 export const HabitCategoryElement = ({ habitCategory }: Props) => {
     const height = React.useRef(new Animated.Value(0)).current;
-    const [expand, setExpand] = React.useState<boolean>(false);
+    const [expanded, setExpanded] = React.useState<boolean>(false);
 
     React.useEffect(() => {
         Animated.timing(height, {
-            toValue: expand ? 200 : 0,
-            duration: 200,
+            toValue: expanded ? 200 : 0,
+            duration: 150,
             useNativeDriver: false,
         }).start();
-    }, [expand]);
+    }, [expanded]);
 
     return (
         <Pressable
             onPress={() => {
-                if (expand === undefined) {
-                    setExpand(true);
+                if (expanded === undefined) {
+                    setExpanded(true);
                 } else {
-                    setExpand(!expand);
+                    setExpanded(!expanded);
                 }
             }}
         >
-            <HabitCategoryCard habitCategory={habitCategory} />
-            <Animated.View style={{ height: height }}>
+            <HabitCategoryCard habitCategory={habitCategory} expanded={expanded} />
+            <Animated.View style={{ height: height, overflow: 'hidden' }}>
                 <View>
                     <HabitElement
                         iconUrl="https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fgratitude.svg?alt=media"

@@ -21,7 +21,6 @@ import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import {
     getCurrentUser,
-    getGlobalBlurBackground,
     setCurrentUser,
     setTimelineDays,
     setUnits,

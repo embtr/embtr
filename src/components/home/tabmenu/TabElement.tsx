@@ -1,7 +1,6 @@
-import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 
 interface Props {
     icon: any;
