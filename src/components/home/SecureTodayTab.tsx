@@ -6,10 +6,10 @@ import { DailyResultDetails } from '../common/timeline/DailyResultDetails';
 import { AddTasks } from '../plan/planning/AddTasks';
 import { CreateUserPost } from '../timeline/CreateUserPost';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import React from 'react';
 
+const Stack = createStackNavigator();
 export const SecureTodayTabStack = () => {
-    const Stack = createStackNavigator();
-
     return (
         <Stack.Navigator initialRouteName="Today" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Today" component={Today} />
@@ -21,11 +21,6 @@ export const SecureTodayTabStack = () => {
             <Stack.Screen
                 name="CreateUserPost"
                 component={CreateUserPost}
-                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            />
-            <Stack.Screen
-                name="AddTasks"
-                component={AddTasks}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
         </Stack.Navigator>

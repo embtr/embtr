@@ -12,6 +12,9 @@ import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import React from 'react';
 import * as NavigationBar from 'expo-navigation-bar';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { useNavigation } from '@react-navigation/core';
+import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Props {}
 
@@ -22,7 +25,7 @@ export const QuickAddModal = () => {
     const dispatch = useAppDispatch();
 
     const currentTab = useAppSelector(getCurrentTab);
-    const navigation = getNavigationHook(currentTab)();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const onHandleDismiss = () => {
         dispatch(setShowQuickAddModal(false));

@@ -10,13 +10,8 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 export const PlanningWidget = () => {
     const { colors } = useTheme();
 
-    const navigation = useNavigation<StackNavigationProp<TodayTab>>();
-    const navigateToAddTasks = () => {
-        navigation.navigate('AddTasks');
-    };
-
     return (
-        <WidgetBase menuOptions={[]} symbol="add-outline" onPressSymbol={navigateToAddTasks}>
+        <WidgetBase menuOptions={[]} symbol="add-outline">
             <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                     Planning

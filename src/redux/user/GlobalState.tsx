@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { Habit, PlannedDay, Unit, User } from 'resources/schema';
+import { PlannedDay, Unit, User } from 'resources/schema';
 
 export const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -17,7 +17,6 @@ export const INITIAL_STATE: GlobalState = {
     todaysPlannedDay: {},
     currentlySelectedPlannedDay: {},
     units: [],
-    habits: [],
     currentUser: {},
     timelineDays: 0,
     globalBlurBackground: false,
@@ -37,7 +36,6 @@ export interface GlobalState {
     todaysPlannedDay: PlannedDay;
     currentlySelectedPlannedDay: PlannedDay;
     units: Unit[];
-    habits: Habit[];
     currentUser: User;
     timelineDays: number;
     globalBlurBackground: boolean;
@@ -107,9 +105,6 @@ export const GlobalState = createSlice({
         setUnits(state, action) {
             state.units = action.payload;
         },
-        setHabits(state, action) {
-            state.habits = action.payload;
-        },
         setCurrentUser(state, action) {
             state.currentUser = action.payload;
         },
@@ -120,7 +115,6 @@ export const GlobalState = createSlice({
             state.globalBlurBackground = action.payload;
         },
         setShowQuickAddModal(state, action) {
-            console.log('setShowQuickAddModal', action.payload);
             state.showQuickAddModal = action.payload;
         },
     },
@@ -222,14 +216,6 @@ export const getUnits = (state: RootState): Unit[] => {
     return state.globalState.units;
 };
 
-export const getHabits = (state: RootState): Habit[] => {
-    if (!state?.globalState.habits) {
-        return INITIAL_STATE.habits;
-    }
-
-    return state.globalState.habits;
-};
-
 export const getCurrentUser = (state: RootState): User => {
     if (!state?.globalState.currentUser) {
         return INITIAL_STATE.currentUser;
@@ -247,7 +233,7 @@ export const getTimelineDays = (state: RootState): number => {
 };
 
 export const getGlobalBlurBackground = (state: RootState): boolean => {
-    if (!state?.globalState.globalBlurBackground) {
+    if (state?.globalState.globalBlurBackground === undefined) {
         return INITIAL_STATE.globalBlurBackground;
     }
 
@@ -255,7 +241,7 @@ export const getGlobalBlurBackground = (state: RootState): boolean => {
 };
 
 export const getShowQuickAddModal = (state: RootState): boolean => {
-    if (!state?.globalState.showQuickAddModal) {
+    if (state?.globalState.showQuickAddModal === undefined) {
         return INITIAL_STATE.showQuickAddModal;
     }
 
@@ -276,7 +262,6 @@ export const {
     setTodaysPlannedDay,
     setCurrentlySelectedPlannedDay,
     setUnits,
-    setHabits,
     setCurrentUser,
     setTimelineDays,
     setGlobalBlurBackground,

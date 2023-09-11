@@ -25,11 +25,6 @@ export const SecureTimelineTabStack = () => {
                 component={CreateUserPost}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
-            <Stack.Screen
-                name="AddTasks"
-                component={AddTasks}
-                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            />
             <Stack.Screen name="UserSearch" component={UserSearch} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="EditUserPostDetails" component={EditUserPostDetails} />

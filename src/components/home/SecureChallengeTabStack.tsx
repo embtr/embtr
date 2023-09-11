@@ -16,11 +16,6 @@ export const SecureChallengeTabStack = () => {
                 component={CreateUserPost}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
-            <Stack.Screen
-                name="AddTasks"
-                component={AddTasks}
-                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            />
         </Stack.Navigator>
     );
 };
