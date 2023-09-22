@@ -54,11 +54,14 @@ export type ProfileTabScreens = MasterScreens & {};
 export type RootStackParamList = {
     LandingPage: undefined;
     Dashboard: NavigatorScreenParams<MainTabScreens>;
-    AddTasks: undefined;
     About: undefined;
     ReleaseNotes: undefined;
     Contact: undefined;
     Logout: undefined;
     LoadingPage: undefined;
     Loading: undefined;
+
+    // in-app screens without tab bar
+    AddHabit: { id: number };
+    AddHabitCategory: undefined;
 };

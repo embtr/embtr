@@ -141,7 +141,7 @@ export const QuickAddModal = () => {
                         <View style={{ flex: 1, alignItems: 'center', height: coreHeight }}>
                             <Pressable
                                 onPress={() => {
-                                    navigation.navigate('AddTasks');
+                                    navigation.navigate('AddHabitCategory');
                                     onHandleDismiss();
                                 }}
                                 style={{

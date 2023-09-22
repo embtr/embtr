@@ -1,39 +1,29 @@
 import React from 'react';
-import { View, RefreshControl, TouchableOpacity, Pressable } from 'react-native';
+import { View, RefreshControl, Pressable } from 'react-native';
 import { UpcomingChallenge } from 'src/components/challenge/UpcomingChallenge';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { Challenge } from 'resources/schema';
 import { CARD_SHADOW } from 'src/util/constants';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { useNavigation } from '@react-navigation/native';
-import { TouchableWithoutFeedback } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 type navigationProp = StackNavigationProp<ChallengeTabScreens, 'ChallengeDetails'>;
 
 export const UpcomingChallenges = () => {
-    const [challenges, setChallenges] = React.useState<Challenge[]>([]);
     const [refreshing, setRefreshing] = React.useState(false);
     const navigation = useNavigation<navigationProp>();
 
-    const fetch = async () => {
-        const challenges = await ChallengeController.getAll();
-        setChallenges(challenges);
-    };
-
-    React.useEffect(() => {
-        fetch();
-    }, []);
+    const challenges = ChallengeController.useGetChallenges();
 
     const onRefresh = async () => {
         setRefreshing(true);
-        await fetch();
+        await challenges.refresh();
         setRefreshing(false);
     };
 
     const challengeElements: JSX.Element[] = [];
-    for (const challenge of challenges) {
+    for (const challenge of challenges.challenges) {
         const challengeElement = (
             <Pressable
                 key={challenge.id}

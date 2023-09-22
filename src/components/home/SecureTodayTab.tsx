@@ -3,7 +3,7 @@ import { Today } from '../today/Today';
 import { WidgetMarketplace } from '../widgets/marketplace/WidgetMarketplace';
 import { AddQuoteOfTheDay } from '../widgets/quote_of_the_day/AddQuoteOfTheDay';
 import { DailyResultDetails } from '../common/timeline/DailyResultDetails';
-import { AddTasks } from '../plan/planning/AddTasks';
+import { AddHabitCategory } from '../plan/planning/AddHabitCategory';
 import { CreateUserPost } from '../timeline/CreateUserPost';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import React from 'react';

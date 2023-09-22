@@ -1,31 +1,18 @@
-import React from 'react';
 import { View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
-import { HabitController } from 'src/controller/habit/HabitController';
-import { HabitCategory } from 'resources/schema';
 import { HabitCategoryElement } from '../habit/HabitCategoryElement';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getHabitCategories } from 'src/redux/user/GlobalState';
 
-export const AddTasks = () => {
+export const AddHabitCategory = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-    const [habitCategories, setHabitCategories] = React.useState<HabitCategory[]>([]);
-    console.log(habitCategories);
-
-    React.useEffect(() => {
-        const fetch = async () => {
-            const habitCategories = await HabitController.getHabitCategories();
-            if (habitCategories) {
-                setHabitCategories(habitCategories);
-            }
-        };
-
-        fetch();
-    }, []);
+    const habitCategories = useAppSelector(getHabitCategories);
 
     const elements: JSX.Element[] = [];
     habitCategories.forEach((habitCategory) => {
@@ -38,7 +25,7 @@ export const AddTasks = () => {
         <Screen>
             <View style={{ height: '100%', width: '100%' }}>
                 <Banner
-                    name="Add Habits"
+                    name="Habit Categories"
                     leftText="close"
                     leftOnClick={() => {
                         navigation.goBack();

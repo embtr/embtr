@@ -9,6 +9,7 @@ import {
 import axiosInstance from 'src/axios/axios';
 import { TimelinePostModel } from 'src/model/OldModels';
 import { CommentController } from '../api/general/CommentController';
+import React from 'react';
 
 export interface JoinedChallengeTimelinePost extends TimelinePostModel {
     data: {
@@ -132,5 +133,24 @@ export class ChallengeController {
 
     public static async deleteComment(comment: Comment) {
         return await CommentController.delete(Interactable.CHALLENGE, comment);
+    }
+
+    public static useGetChallenges() {
+        const [challenges, setChallenges] = React.useState<Challenge[]>([]);
+        React.useEffect(() => {
+            const fetch = async () => {
+                const challenges = await ChallengeController.getAll();
+                setChallenges(challenges);
+            };
+
+            fetch();
+        }, []);
+
+        const refresh = async () => {
+            const challenges = await ChallengeController.getAll();
+            setChallenges(challenges);
+        };
+
+        return { refresh, challenges };
     }
 }

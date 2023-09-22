@@ -7,10 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     habitCategory: HabitCategory;
-    expanded: boolean;
 }
 
-export const HabitCategoryCard = ({ habitCategory, expanded }: Props) => {
+export const HabitCategoryCard = ({ habitCategory }: Props) => {
     const { colors } = useTheme();
     return (
         <View
@@ -34,7 +33,9 @@ export const HabitCategoryCard = ({ habitCategory, expanded }: Props) => {
                     CARD_SHADOW,
                 ]}
             >
-                <SvgUri width={50} height={50} uri={habitCategory.imageUrl ?? ''} />
+                <View style={{ height: 50, width: 50 }}>
+                    <SvgUri width={50} height={50} uri={habitCategory.imageUrl ?? ''} />
+                </View>
                 <View style={{ paddingLeft: 9, flex: 1 }}>
                     <Text
                         style={{
@@ -58,7 +59,7 @@ export const HabitCategoryCard = ({ habitCategory, expanded }: Props) => {
                 </View>
                 <View>
                     <Ionicons
-                        name={expanded ? 'chevron-down-outline' : 'chevron-up-outline'}
+                        name={'chevron-forward-outline'}
                         size={18}
                         color={colors.secondary_text}
                     />

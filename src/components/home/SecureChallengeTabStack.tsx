@@ -2,7 +2,7 @@ import { ChallengeMain } from 'src/components/challenge/ChallengeMain';
 import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { CreateUserPost } from '../timeline/CreateUserPost';
-import { AddTasks } from '../plan/planning/AddTasks';
+import { AddHabitCategory } from '../plan/planning/AddHabitCategory';
 
 export const SecureChallengeTabStack = () => {
     const Stack = createStackNavigator();

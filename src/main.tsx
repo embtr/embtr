@@ -22,6 +22,7 @@ import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import {
     getCurrentUser,
     setCurrentUser,
+    setHabitCategories,
     setTimelineDays,
     setUnits,
     setUserProfileImage,
@@ -39,6 +40,7 @@ import { UnitController } from 'src/controller/unit/UnitController';
 import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';
 import { AnyAction } from '@reduxjs/toolkit';
 import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
+import { HabitController } from './controller/habit/HabitController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -167,9 +169,15 @@ export const Main = () => {
 
     LogBox.ignoreAllLogs();
 
-    const resetGlobalState = (userToReset: UserModel) => {
+    const fetchHabitCategories = async () => {
+        const habitCategories = await HabitController.getHabitCategories();
+        return habitCategories;
+    };
+
+    const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
         dispatch(setCurrentUser(userToReset));
+        dispatch(setHabitCategories(await fetchHabitCategories()));
     };
 
     const createUserIfNew = async (user: User) => {

@@ -4,6 +4,8 @@ import {
     GetHabitJourneyResponse,
 } from 'resources/types/requests/HabitTypes';
 import axiosInstance from 'src/axios/axios';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getHabitCategories } from 'src/redux/user/GlobalState';
 
 export class HabitController {
     public static async getHabitCategories(): Promise<HabitCategory[]> {
@@ -20,6 +22,17 @@ export class HabitController {
             .catch((error) => {
                 return [];
             });
+    }
+
+    public static getHabitFromCache(id: number): HabitCategory | undefined {
+        const habitCategories = useAppSelector(getHabitCategories);
+        for (const habitCategory of habitCategories) {
+            if (habitCategory.id === id) {
+                return habitCategory;
+            }
+        }
+
+        return undefined;
     }
 
     public static async getHabitJourneys(userId: number) {
