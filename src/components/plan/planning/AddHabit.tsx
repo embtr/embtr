@@ -10,17 +10,15 @@ export const AddHabit = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'AddHabit'>>();
 
-    const habitCategory = HabitController.getHabitFromCache(Number(route.params.id));
+    const habitCategory = HabitController.useHabitCategory(Number(route.params.id));
 
     return (
         <Screen>
             <View style={{ height: '100%', width: '100%' }}>
                 <Banner
                     name={habitCategory?.name ?? 'unfound'}
-                    leftText="close"
-                    leftOnClick={() => {
-                        navigation.goBack();
-                    }}
+                    leftRoute="BACK"
+                    leftIcon={'arrow-back'}
                 />
             </View>
         </Screen>

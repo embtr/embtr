@@ -169,15 +169,9 @@ export const Main = () => {
 
     LogBox.ignoreAllLogs();
 
-    const fetchHabitCategories = async () => {
-        const habitCategories = await HabitController.getHabitCategories();
-        return habitCategories;
-    };
-
     const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
         dispatch(setCurrentUser(userToReset));
-        dispatch(setHabitCategories(await fetchHabitCategories()));
     };
 
     const createUserIfNew = async (user: User) => {

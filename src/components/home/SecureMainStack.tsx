@@ -4,6 +4,7 @@ import { Logout } from 'src/components/logout/Logout';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { AddHabitCategory } from '../plan/planning/AddHabitCategory';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { AddHabit } from '../plan/planning/AddHabit';
 
 const Stack = createStackNavigator();
 
@@ -19,6 +20,7 @@ export const SecureMainStack = () => {
                 component={AddHabitCategory}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
+            <Stack.Screen name="AddHabit" component={AddHabit} />
         </Stack.Navigator>
     );
 };

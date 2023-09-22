@@ -6,13 +6,12 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { HabitCategoryElement } from '../habit/HabitCategoryElement';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getHabitCategories } from 'src/redux/user/GlobalState';
+import { HabitController } from 'src/controller/habit/HabitController';
 
 export const AddHabitCategory = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-    const habitCategories = useAppSelector(getHabitCategories);
+    const habitCategories = HabitController.useHabitCategories();
 
     const elements: JSX.Element[] = [];
     habitCategories.forEach((habitCategory) => {
