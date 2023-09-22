@@ -18,23 +18,9 @@ export class HabitController {
         dispatch(setHabitCategories(habitCategories));
     }
 
-    public static useHabitCategories() {
-        let habitCategories = useAppSelector(getHabitCategories);
-
-        const fetch = async () => {
-            await this.cacheHabitCategories();
-        };
-
-        if (!habitCategories) {
-            fetch();
-        }
-
-        return habitCategories;
-    }
-
     public static useHabitCategory(id: number) {
         const [habitCategory, setHabitCategory] = React.useState<HabitCategory | undefined>();
-        const habitCategories = this.useHabitCategories();
+        const habitCategories = HabitCustomHooks.useHabitCategories();
 
         React.useEffect(() => {
             for (const habitCategory of habitCategories) {
@@ -59,7 +45,7 @@ export class HabitController {
             });
     }
 
-    private static async getHabitCategories(): Promise<HabitCategory[]> {
+    public static async getHabitCategories(): Promise<HabitCategory[]> {
         return await axiosInstance
             .get('/habit/categories/')
             .then((success) => {
@@ -74,4 +60,21 @@ export class HabitController {
                 return [];
             });
     }
+}
+
+export namespace HabitCustomHooks {
+    export const useHabitCategories = () => {
+        const [habitCategories, setHabitCategories] = React.useState<HabitCategory[]>([]);
+
+        React.useEffect(() => {
+            const fetch = async () => {
+                const habitCategories = await HabitController.getHabitCategories();
+                setHabitCategories(habitCategories);
+            };
+
+            fetch();
+        }, []);
+
+        return habitCategories;
+    };
 }

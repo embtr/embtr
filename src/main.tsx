@@ -40,7 +40,6 @@ import { UnitController } from 'src/controller/unit/UnitController';
 import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';
 import { AnyAction } from '@reduxjs/toolkit';
 import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
-import { HabitController } from './controller/habit/HabitController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -172,6 +171,7 @@ export const Main = () => {
     const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
         dispatch(setCurrentUser(userToReset));
+        dispatch(setHabitCategories([]));
     };
 
     const createUserIfNew = async (user: User) => {
