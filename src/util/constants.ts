@@ -97,3 +97,8 @@ export enum ScrollChangeEvent {
 
 export type IoniconName = keyof typeof Ionicons.glyphMap;
 export type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
+
+export namespace ReactQueryStaleTimes {
+    const ONE_HOUR = 60 * 60 * 1000;
+    export const HABIT_CATEGORIES = 1 * ONE_HOUR;
+}

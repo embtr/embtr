@@ -19,9 +19,7 @@ import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
-import { POPPINS_MEDIUM } from 'src/util/constants';
 import { useTheme } from '../theme/ThemeProvider';
-import { Ionicons } from '@expo/vector-icons';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();

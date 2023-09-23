@@ -6,9 +6,7 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { HabitCategoryElement } from '../habit/HabitCategoryElement';
 import { ScrollView } from 'react-native-gesture-handler';
-import { HabitController, HabitCustomHooks } from 'src/controller/habit/HabitController';
-import React from 'react';
-import { HabitCategory } from 'resources/schema';
+import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 
 export const AddHabitCategory = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();

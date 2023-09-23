@@ -22,7 +22,6 @@ import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import {
     getCurrentUser,
     setCurrentUser,
-    setHabitCategories,
     setTimelineDays,
     setUnits,
     setUserProfileImage,
@@ -171,7 +170,6 @@ export const Main = () => {
     const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
         dispatch(setCurrentUser(userToReset));
-        dispatch(setHabitCategories([]));
     };
 
     const createUserIfNew = async (user: User) => {
@@ -223,6 +221,17 @@ export const Main = () => {
         Promise.all(loads.map((load) => load()));
     }, [user, userIsLoggedIn]);
 
+    let view: JSX.Element = <LoadingPage />;
+    if (user === null || !userIsLoggedIn) {
+        view = <InsecureMainStack />;
+    } else if (user !== undefined && user !== null && userIsLoggedIn) {
+        view = <SecureMainStack />;
+    }
+
+    if (!fontsLoaded) {
+        return <LoadingPage />;
+    }
+
     return (
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
@@ -240,8 +249,7 @@ export const Main = () => {
                     />
                     {/* END TOP LEVEL COMPONENTS */}
 
-                    {(user === null || !userIsLoggedIn) && <InsecureMainStack />}
-                    {user !== undefined && user !== null && userIsLoggedIn && <SecureMainStack />}
+                    {view}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

@@ -1,15 +1,16 @@
 import { View, Text } from 'react-native';
 import { SvgUri } from 'react-native-svg';
-import { HabitCategory } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
-    habitCategory: HabitCategory;
+    imageUrl: string;
+    name: string;
+    description: string;
 }
 
-export const HabitCategoryCard = ({ habitCategory }: Props) => {
+export const AddHabitElement = ({ imageUrl, name, description }: Props) => {
     const { colors } = useTheme();
     return (
         <View
@@ -33,18 +34,18 @@ export const HabitCategoryCard = ({ habitCategory }: Props) => {
                     CARD_SHADOW,
                 ]}
             >
-                <View style={{ height: 50, width: 50 }}>
-                    <SvgUri width={50} height={50} uri={habitCategory.imageUrl ?? ''} />
+                <View style={{ height: 40, width: 40 }}>
+                    <SvgUri width={40} height={40} uri={imageUrl} />
                 </View>
-                <View style={{ paddingLeft: 9, flex: 1 }}>
+                <View style={{ paddingLeft: 15, flex: 1 }}>
                     <Text
                         style={{
                             color: colors.text,
                             fontFamily: POPPINS_REGULAR,
-                            fontSize: 22,
+                            fontSize: 18,
                         }}
                     >
-                        {habitCategory.name}
+                        {name}
                     </Text>
                     <Text
                         style={{
@@ -54,7 +55,7 @@ export const HabitCategoryCard = ({ habitCategory }: Props) => {
                             bottom: 5,
                         }}
                     >
-                        {habitCategory.description}
+                        {description}
                     </Text>
                 </View>
                 <View>

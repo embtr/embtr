@@ -21,7 +21,6 @@ export const INITIAL_STATE: GlobalState = {
     timelineDays: 0,
     globalBlurBackground: false,
     showQuickAddModal: false,
-    habitCategories: [],
 };
 
 export interface GlobalState {
@@ -41,7 +40,6 @@ export interface GlobalState {
     timelineDays: number;
     globalBlurBackground: boolean;
     showQuickAddModal: boolean;
-    habitCategories: HabitCategory[];
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -118,9 +116,6 @@ export const GlobalState = createSlice({
         },
         setShowQuickAddModal(state, action) {
             state.showQuickAddModal = action.payload;
-        },
-        setHabitCategories(state, action) {
-            state.habitCategories = action.payload;
         },
     },
 });
@@ -253,14 +248,6 @@ export const getShowQuickAddModal = (state: RootState): boolean => {
     return state.globalState.showQuickAddModal;
 };
 
-export const getHabitCategories = (state: RootState): HabitCategory[] => {
-    if (state?.globalState.habitCategories === undefined) {
-        return INITIAL_STATE.habitCategories;
-    }
-
-    return state.globalState.habitCategories;
-};
-
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -279,6 +266,5 @@ export const {
     setTimelineDays,
     setGlobalBlurBackground,
     setShowQuickAddModal,
-    setHabitCategories,
 } = GlobalState.actions;
 export default GlobalState.reducer;

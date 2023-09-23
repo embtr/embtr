@@ -1,38 +1,14 @@
-import { AnyAction } from '@reduxjs/toolkit';
 import React from 'react';
-import { Dispatch } from 'react';
 import { HabitCategory } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
     GetHabitJourneyResponse,
 } from 'resources/types/requests/HabitTypes';
 import axiosInstance from 'src/axios/axios';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getHabitCategories, setHabitCategories } from 'src/redux/user/GlobalState';
+import { useQuery } from '@tanstack/react-query';
+import { ReactQueryStaleTimes } from 'src/util/constants';
 
 export class HabitController {
-    public static async cacheHabitCategories() {
-        const dispatch: Dispatch<AnyAction> = useAppDispatch();
-
-        const habitCategories = await HabitController.getHabitCategories();
-        dispatch(setHabitCategories(habitCategories));
-    }
-
-    public static useHabitCategory(id: number) {
-        const [habitCategory, setHabitCategory] = React.useState<HabitCategory | undefined>();
-        const habitCategories = HabitCustomHooks.useHabitCategories();
-
-        React.useEffect(() => {
-            for (const habitCategory of habitCategories) {
-                if (habitCategory.id === id) {
-                    setHabitCategory(habitCategory);
-                }
-            }
-        }, [habitCategories]);
-
-        return habitCategory;
-    }
-
     public static async getHabitJourneys(userId: number) {
         return await axiosInstance
             .get(`/user/${userId}/habit-journey`)
@@ -63,18 +39,28 @@ export class HabitController {
 }
 
 export namespace HabitCustomHooks {
-    export const useHabitCategories = () => {
-        const [habitCategories, setHabitCategories] = React.useState<HabitCategory[]>([]);
+    export const useHabitCategory = (id: number) => {
+        const [habitCategory, setHabitCategory] = React.useState<HabitCategory | undefined>();
+        const habitCategories = HabitCustomHooks.useHabitCategories();
 
         React.useEffect(() => {
-            const fetch = async () => {
-                const habitCategories = await HabitController.getHabitCategories();
-                setHabitCategories(habitCategories);
-            };
+            for (const habitCategory of habitCategories) {
+                if (habitCategory.id === id) {
+                    setHabitCategory(habitCategory);
+                }
+            }
+        }, [habitCategories]);
 
-            fetch();
-        }, []);
+        return habitCategory;
+    };
 
-        return habitCategories;
+    export const useHabitCategories = () => {
+        const { status, error, data } = useQuery({
+            queryKey: ['habitCategories'],
+            queryFn: HabitController.getHabitCategories,
+            staleTime: ReactQueryStaleTimes.HABIT_CATEGORIES,
+        });
+
+        return data ?? [];
     };
 }

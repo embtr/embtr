@@ -4,13 +4,27 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
-import { HabitController } from 'src/controller/habit/HabitController';
+import { HabitCustomHooks } from 'src/controller/habit/HabitController';
+import { AddHabitElement } from '../habit/AddHabitElement';
 
 export const AddHabit = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'AddHabit'>>();
 
-    const habitCategory = HabitController.useHabitCategory(Number(route.params.id));
+    const habitCategory = HabitCustomHooks.useHabitCategory(Number(route.params.id));
+
+    const elements: JSX.Element[] = [];
+    habitCategory?.tasks?.forEach((task) => {
+        elements.push(
+            <View key={task.id}>
+                <AddHabitElement
+                    imageUrl={task.iconUrl ?? ''}
+                    name={task.title ?? ''}
+                    description={task.description ?? ''}
+                />
+            </View>
+        );
+    });
 
     return (
         <Screen>
@@ -20,6 +34,7 @@ export const AddHabit = () => {
                     leftRoute="BACK"
                     leftIcon={'arrow-back'}
                 />
+                <View>{elements}</View>
             </View>
         </Screen>
     );

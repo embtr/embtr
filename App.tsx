@@ -6,6 +6,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, Store } from './src/redux/store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootSiblingParent } from 'react-native-root-siblings';
+import { Query, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 export default function App() {
     return (
@@ -15,7 +18,9 @@ export default function App() {
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeProvider>
                             <RootSiblingParent>
-                                <Main />
+                                <QueryClientProvider client={queryClient}>
+                                    <Main />
+                                </QueryClientProvider>
                                 {/*My name is the DevDad and im going to buy a quest so i can do VR biking with goose .... now this is documented i must do this.....*/}
                             </RootSiblingParent>
                         </ThemeProvider>
