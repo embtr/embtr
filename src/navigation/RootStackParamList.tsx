@@ -62,6 +62,13 @@ export type RootStackParamList = {
     Loading: undefined;
 
     // in-app screens without tab bar
-    AddHabit: { id: number };
-    AddHabitCategory: undefined;
+    AddHabitCategory: { id: number };
+    AddHabitCategories: undefined;
+    CreateEditScheduledHabit: { habitId?: number; scheduledHabitId?: number };
 };
+
+export namespace Routes {
+    export const ADD_HABIT_CATEGORY = 'AddHabitCategory';
+    export const ADD_HABIT_CATEGORIES = 'AddHabitCategories';
+    export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';
+}

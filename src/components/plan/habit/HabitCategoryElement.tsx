@@ -15,7 +15,7 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
     return (
         <Pressable
             onPress={() => {
-                navigation.navigate('AddHabit', { id: habitCategory.id ?? 0 });
+                navigation.navigate('AddHabitCategory', { id: habitCategory.id ?? 0 });
             }}
         >
             <AddHabitElement

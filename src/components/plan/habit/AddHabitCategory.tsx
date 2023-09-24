@@ -1,15 +1,15 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
-import { AddHabitElement } from '../habit/AddHabitElement';
+import { AddHabitElement } from './AddHabitElement';
 
-export const AddHabit = () => {
+export const AddHabitCategory = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const route = useRoute<RouteProp<RootStackParamList, 'AddHabit'>>();
+    const route = useRoute<RouteProp<RootStackParamList, 'AddHabitCategory'>>();
 
     const habitCategory = HabitCustomHooks.useHabitCategory(Number(route.params.id));
 
@@ -17,11 +17,19 @@ export const AddHabit = () => {
     habitCategory?.tasks?.forEach((task) => {
         elements.push(
             <View key={task.id}>
-                <AddHabitElement
-                    imageUrl={task.iconUrl ?? ''}
-                    name={task.title ?? ''}
-                    description={task.description ?? ''}
-                />
+                <Pressable
+                    onPress={() => {
+                        navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
+                            habitId: task.id,
+                        });
+                    }}
+                >
+                    <AddHabitElement
+                        imageUrl={task.iconUrl ?? ''}
+                        name={task.title ?? ''}
+                        description={task.description ?? ''}
+                    />
+                </Pressable>
             </View>
         );
     });

@@ -13,7 +13,7 @@ import React from 'react';
 import * as NavigationBar from 'expo-navigation-bar';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { useNavigation } from '@react-navigation/core';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Props {}
@@ -141,7 +141,7 @@ export const QuickAddModal = () => {
                         <View style={{ flex: 1, alignItems: 'center', height: coreHeight }}>
                             <Pressable
                                 onPress={() => {
-                                    navigation.navigate('AddHabitCategory');
+                                    navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
                                     onHandleDismiss();
                                 }}
                                 style={{

@@ -8,7 +8,7 @@ import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { DailyResultDetails } from '../common/timeline/DailyResultDetails';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { CreateUserPost } from '../timeline/CreateUserPost';
-import { AddHabitCategory } from '../plan/planning/AddHabitCategory';
+import { AddHabitCategories } from '../plan/habit/AddHabitCategories';
 
 const Stack = createStackNavigator();
 

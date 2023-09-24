@@ -4,11 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
-import { HabitCategoryElement } from '../habit/HabitCategoryElement';
+import { HabitCategoryElement } from './HabitCategoryElement';
 import { ScrollView } from 'react-native-gesture-handler';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 
-export const AddHabitCategory = () => {
+export const AddHabitCategories = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const habitCategories = HabitCustomHooks.useHabitCategories();

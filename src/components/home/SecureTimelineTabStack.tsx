@@ -11,9 +11,9 @@ import { EditDailyResultDetails } from '../common/timeline/EditDailyResultDetail
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
-import { AddHabitCategory } from '../plan/planning/AddHabitCategory';
+import { AddHabitCategories } from '../plan/habit/AddHabitCategories';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { AddHabit } from '../plan/planning/AddHabit';
+import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
 
 const Stack = createStackNavigator();
 
@@ -36,7 +36,7 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="UserPosts" component={UserPosts} />
             <Stack.Screen name="DailyResults" component={DailyResults} />
             <Stack.Screen name="ChallengeDetails" component={ChallengeDetails} />
-            <Stack.Screen name="AddHabit" component={AddHabit} />
+            <Stack.Screen name="AddHabit" component={AddHabitCategory} />
         </Stack.Navigator>
     );
 };

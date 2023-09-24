@@ -1,5 +1,5 @@
 import React from 'react';
-import { HabitCategory } from 'resources/schema';
+import { HabitCategory, Task } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
     GetHabitJourneyResponse,
@@ -7,6 +7,8 @@ import {
 import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
+import TaskController from '../planning/TaskController';
+import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -36,6 +38,18 @@ export class HabitController {
                 return [];
             });
     }
+
+    public static async getHabit(id: number): Promise<Task | undefined> {
+        return await axiosInstance
+            .get(`/task/${id}`)
+            .then((success) => {
+                const result: GetTaskResponse = success.data;
+                return result.task;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
 }
 
 export namespace HabitCustomHooks {
@@ -62,5 +76,17 @@ export namespace HabitCustomHooks {
         });
 
         return data ?? [];
+    };
+
+    export const useHabit = (id: number) => {
+        const [habit, setHabit] = React.useState<Task | undefined>();
+
+        const { status, error, data } = useQuery({
+            queryKey: ['habit', id],
+            queryFn: () => HabitController.getHabit(id),
+            staleTime: ReactQueryStaleTimes.HABIT,
+        });
+
+        return data;
     };
 }

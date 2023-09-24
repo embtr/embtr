@@ -100,5 +100,6 @@ export type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyp
 
 export namespace ReactQueryStaleTimes {
     const ONE_HOUR = 60 * 60 * 1000;
+    export const HABIT = 1 * ONE_HOUR;
     export const HABIT_CATEGORIES = 1 * ONE_HOUR;
 }
