@@ -1,14 +1,13 @@
-import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
-    dayOfTheWeek: string;
+    timeOfDay: string;
     value: boolean;
     setValue: Function;
 }
 
-export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue }: Props) => {
+export const TimeOfDayToggle = ({ timeOfDay, value, setValue }: Props) => {
     const { colors } = useTheme();
 
     const toggle = () => {
@@ -19,7 +18,7 @@ export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue }: Props) => 
         <Pressable
             style={{
                 height: 50,
-                width: 50,
+                width: 90,
                 alignContent: 'center',
                 justifyContent: 'center',
 
@@ -30,7 +29,7 @@ export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue }: Props) => 
             }}
             onPress={toggle}
         >
-            <Text style={{ textAlign: 'center', color: colors.text }}>{dayOfTheWeek}</Text>
+            <Text style={{ textAlign: 'center', color: colors.text }}>{timeOfDay}</Text>
         </Pressable>
     );
 };

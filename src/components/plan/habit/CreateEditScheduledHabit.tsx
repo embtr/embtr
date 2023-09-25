@@ -1,137 +1,170 @@
-import { RouteProp, useRoute } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, Keyboard, TextInput, Switch } from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { Text, Keyboard, TextInput, Pressable } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { DayOfTheWeekToggle } from './DayOfTheWeekToggle';
+import {
+    DayOfTheWeek,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    TIMELINE_CARD_PADDING,
+    TimeOfDay,
+} from 'src/util/constants';
+import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { View, Switch, Animated, Easing } from 'react-native';
+import { HabitQuantityInput } from './HabitQuantityInput';
+import { ScrollView } from 'react-native-gesture-handler';
+import { SvgUri } from 'react-native-svg';
+import { CreateScheduledHabitRequest } from 'resources/types/requests/ScheduledHabitTypes';
+import { DaysOfTheWeekToggle } from './DaysOfTheWeekToggle';
+import { TimesOfDayToggle } from './TimesOfDayToggle';
+import { HabitUnitPicker } from './HabitUnitPicker';
+import { Unit } from 'resources/schema';
 
 export const CreateEditScheduledHabit = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
     const { colors } = useTheme();
+    const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
     const habitId = route.params.habitId;
     const habit = HabitCustomHooks.useHabit(Number(habitId));
 
-    const [title, setTitle] = React.useState(habit?.title ?? '');
+    React.useEffect(() => {
+        if (habit) {
+            setTitle(habit.title ?? '');
+        }
+    }, [habit]);
+
+    const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
-    const [repeating, setRepeating] = React.useState(false);
+
+    const [repeatingScheduleEnabled, setRepeatingScheduleEnabled] = React.useState(false);
+    const [repeatingScheduleViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
+
+    const [timeOfDayEnabled, setTimeOfDayEnabled] = React.useState(false);
+    const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
+
+    const [detailsEnabled, setDetailsEnabled] = React.useState(false);
+    const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
+
+    const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfTheWeek[]>([]);
+    const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>([]);
+
+    const [quantity, setQuantity] = React.useState<number>(0);
+    const [unit, setUnit] = React.useState<Unit>();
+
+    const toggleVisibility = (
+        enabled: boolean,
+        setEnabled: Function,
+        viewHeight: Animated.Value,
+        maxHeight: number = 50
+    ) => {
+        setEnabled(!enabled);
+        const height = enabled ? 0 : maxHeight;
+
+        Animated.timing(viewHeight, {
+            toValue: height, // Set the desired height
+            duration: 125, // Adjust the duration as needed
+            easing: Easing.ease, // Adjust the easing function as needed
+            useNativeDriver: false, // Make sure to set this to false for height animation
+        }).start();
+    };
 
     //todo - implement me
     //const scheduledHabitId = route.params.scheduledHabitId;
 
     return (
         <Screen>
-            <View
-                style={{ height: '100%', width: '100%', paddingHorizontal: TIMELINE_CARD_PADDING }}
-            >
-                <Banner name={'Schedule Habit'} leftRoute="BACK" leftIcon={'arrow-back'} />
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <View
+                    style={{
+                        flex: 1,
+                        paddingHorizontal: TIMELINE_CARD_PADDING,
+                    }}
+                >
+                    <Banner name={'Schedule Habit'} leftRoute="BACK" leftIcon={'arrow-back'} />
 
-                {/* TITLE */}
-                <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 16,
-                            }}
-                        >
-                            Title
-                        </Text>
-
-                        {title.length < 1 && (
+                    {/* HABIT */}
+                    <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
+                        <View style={{ flexDirection: 'row' }}>
                             <Text
                                 onPress={() => {
                                     Keyboard.dismiss();
                                 }}
                                 style={{
-                                    alignSelf: 'flex-end',
-                                    color: colors.tab_selected,
-                                    paddingLeft: 5,
-                                    paddingBottom: 3,
-                                    fontFamily: POPPINS_REGULAR,
-                                    fontSize: 10,
+                                    color: colors.text,
+                                    fontFamily: POPPINS_MEDIUM,
+                                    fontSize: 16,
                                 }}
                             >
-                                cannot be blank
+                                Habit
                             </Text>
-                        )}
-                    </View>
-                    <View style={{ paddingTop: TIMELINE_CARD_PADDING / 4 }}>
-                        <TextInput
-                            style={{
-                                padding: TIMELINE_CARD_PADDING,
-                                color: colors.text,
-                                borderRadius: 12,
-                                backgroundColor: colors.text_input_background,
-                                borderColor: colors.text_input_border,
-                                borderWidth: 1,
-                                fontFamily: POPPINS_REGULAR,
-                            }}
-                            placeholder={'Give your habit a title'}
-                            placeholderTextColor={colors.secondary_text}
-                            onChangeText={setTitle}
-                            value={title}
-                        />
-                    </View>
-                </View>
 
-                {/* DESCRIPTION */}
-                <View
-                    style={{
-                        paddingTop: TIMELINE_CARD_PADDING * 2,
-                    }}
-                >
-                    <Text
-                        onPress={() => {
-                            Keyboard.dismiss();
-                        }}
+                            {title.length < 1 && (
+                                <Text
+                                    onPress={() => {
+                                        Keyboard.dismiss();
+                                    }}
+                                    style={{
+                                        alignSelf: 'flex-end',
+                                        color: colors.tab_selected,
+                                        paddingLeft: 5,
+                                        paddingBottom: 3,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 10,
+                                    }}
+                                >
+                                    cannot be blank
+                                </Text>
+                            )}
+                        </View>
+                        <View
+                            style={{ paddingTop: TIMELINE_CARD_PADDING / 4, flexDirection: 'row' }}
+                        >
+                            <View
+                                style={{
+                                    height: 50,
+                                    width: 50,
+
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <SvgUri width={37.5} height={37.5} uri={habit?.iconUrl ?? ''} />
+                            </View>
+                            <View style={{ width: TIMELINE_CARD_PADDING }} />
+                            <TextInput
+                                style={{
+                                    height: 50,
+                                    padding: TIMELINE_CARD_PADDING,
+                                    flex: 1,
+                                    color: colors.text,
+                                    borderRadius: 12,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    fontFamily: POPPINS_REGULAR,
+                                }}
+                                placeholder={'Give your habit a title'}
+                                placeholderTextColor={colors.secondary_text}
+                                onChangeText={setTitle}
+                                value={title}
+                            />
+                        </View>
+                    </View>
+
+                    {/* DESCRIPTION */}
+                    <View
                         style={{
-                            color: colors.text,
-                            fontFamily: POPPINS_MEDIUM,
-                            fontSize: 16,
+                            paddingTop: TIMELINE_CARD_PADDING * 2,
                         }}
                     >
-                        Description
-                    </Text>
-
-                    <View style={{ paddingTop: TIMELINE_CARD_PADDING / 4 }}>
-                        <TextInput
-                            textAlignVertical="top"
-                            style={{
-                                height: 150,
-                                borderRadius: 12,
-                                padding: TIMELINE_CARD_PADDING,
-                                backgroundColor: colors.text_input_background,
-                                borderColor: colors.text_input_border,
-                                borderWidth: 1,
-                                color: colors.text,
-                                fontFamily: POPPINS_REGULAR,
-                            }}
-                            multiline={true}
-                            placeholder={'Enter some specifics about this habit.'}
-                            placeholderTextColor={colors.secondary_text}
-                            onChangeText={setDescription}
-                            value={description}
-                        />
-                    </View>
-                </View>
-
-                <View
-                    style={{
-                        paddingTop: TIMELINE_CARD_PADDING * 2,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}
-                >
-                    <View style={{ flex: 1 }}>
                         <Text
                             onPress={() => {
                                 Keyboard.dismiss();
@@ -142,58 +175,246 @@ export const CreateEditScheduledHabit = () => {
                                 fontSize: 16,
                             }}
                         >
-                            Repeating Schedule
+                            Description
                         </Text>
+
+                        <View style={{ paddingTop: TIMELINE_CARD_PADDING / 4 }}>
+                            <TextInput
+                                textAlignVertical="top"
+                                style={{
+                                    height: 150,
+                                    borderRadius: 12,
+                                    padding: TIMELINE_CARD_PADDING,
+                                    backgroundColor: colors.text_input_background,
+                                    borderColor: colors.text_input_border,
+                                    borderWidth: 1,
+                                    color: colors.text,
+                                    fontFamily: POPPINS_REGULAR,
+                                }}
+                                multiline={true}
+                                placeholder={'Enter some specifics about this habit.'}
+                                placeholderTextColor={colors.secondary_text}
+                                onChangeText={setDescription}
+                                value={description}
+                            />
+                        </View>
                     </View>
 
-                    <View style={{}}>
-                        <Switch
-                            style={{ height: 20 }}
-                            trackColor={{
-                                false: colors.secondary_text,
-                                true: colors.accent_color,
+                    {/* Repeating Schedule */}
+                    <View>
+                        <View
+                            style={{
+                                paddingTop: TIMELINE_CARD_PADDING * 2,
+                                flexDirection: 'row',
+                                alignItems: 'center',
                             }}
-                            thumbColor={colors.toggle}
-                            ios_backgroundColor={colors.toggle_background_unselected}
-                            onValueChange={setRepeating}
-                            value={repeating}
-                        />
+                        >
+                            <View style={{ flex: 1 }}>
+                                <Text
+                                    onPress={() => {
+                                        Keyboard.dismiss();
+                                    }}
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    Repeating Schedule
+                                </Text>
+                            </View>
+
+                            <View style={{}}>
+                                <Switch
+                                    onValueChange={() => {
+                                        toggleVisibility(
+                                            repeatingScheduleEnabled,
+                                            setRepeatingScheduleEnabled,
+                                            repeatingScheduleViewHeight
+                                        );
+                                    }}
+                                    value={repeatingScheduleEnabled}
+                                    style={isAndroidDevice() ? { height: 20 } : {}}
+                                    trackColor={{
+                                        false: colors.secondary_text,
+                                        true: colors.accent_color,
+                                    }}
+                                    thumbColor={colors.toggle}
+                                    ios_backgroundColor={colors.toggle_background_unselected}
+                                />
+                            </View>
+                        </View>
+
+                        <Animated.View
+                            style={{
+                                marginTop: TIMELINE_CARD_PADDING,
+                                flexDirection: 'row',
+                                height: repeatingScheduleViewHeight,
+                                overflow: 'hidden',
+                            }}
+                        >
+                            <DaysOfTheWeekToggle onDaysChanged={setDaysOfWeek} />
+                        </Animated.View>
+                    </View>
+
+                    {/* Time Of Day */}
+                    <View>
+                        <View
+                            style={{
+                                paddingTop: TIMELINE_CARD_PADDING * 2,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <View style={{ flex: 1 }}>
+                                <Text
+                                    onPress={() => {
+                                        Keyboard.dismiss();
+                                    }}
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    Time Of Day
+                                </Text>
+                            </View>
+
+                            <View style={{}}>
+                                <Switch
+                                    onValueChange={() => {
+                                        toggleVisibility(
+                                            timeOfDayEnabled,
+                                            setTimeOfDayEnabled,
+                                            timeOfDayViewHeight
+                                        );
+                                    }}
+                                    value={timeOfDayEnabled}
+                                    style={isAndroidDevice() ? { height: 20 } : {}}
+                                    trackColor={{
+                                        false: colors.secondary_text,
+                                        true: colors.accent_color,
+                                    }}
+                                    thumbColor={colors.toggle}
+                                    ios_backgroundColor={colors.toggle_background_unselected}
+                                />
+                            </View>
+                        </View>
+
+                        <Animated.View
+                            style={{
+                                marginTop: TIMELINE_CARD_PADDING,
+                                flexDirection: 'row',
+                                height: timeOfDayViewHeight,
+                                overflow: 'hidden',
+                            }}
+                        >
+                            <TimesOfDayToggle onTimesChanged={setTimesOfDay} />
+                        </Animated.View>
+                    </View>
+
+                    {/* Details */}
+                    <View>
+                        <View
+                            style={{
+                                paddingTop: TIMELINE_CARD_PADDING * 2,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <View style={{ flex: 1 }}>
+                                <Text
+                                    onPress={() => {
+                                        Keyboard.dismiss();
+                                    }}
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    Details
+                                </Text>
+                            </View>
+
+                            <View style={{}}>
+                                <Switch
+                                    onValueChange={() => {
+                                        toggleVisibility(
+                                            detailsEnabled,
+                                            setDetailsEnabled,
+                                            detailsViewHeight,
+                                            100 + TIMELINE_CARD_PADDING
+                                        );
+                                    }}
+                                    value={detailsEnabled}
+                                    style={isAndroidDevice() ? { height: 20 } : {}}
+                                    trackColor={{
+                                        false: colors.secondary_text,
+                                        true: colors.accent_color,
+                                    }}
+                                    thumbColor={colors.toggle}
+                                    ios_backgroundColor={colors.toggle_background_unselected}
+                                />
+                            </View>
+                        </View>
+
+                        <Animated.View
+                            style={{
+                                marginTop: TIMELINE_CARD_PADDING,
+                                height: detailsViewHeight,
+                                overflow: 'hidden',
+                            }}
+                        >
+                            <View style={{ flex: 1 }}>
+                                <HabitQuantityInput value={quantity} setValue={setQuantity} />
+                            </View>
+
+                            <View style={{ flex: 1, paddingTop: TIMELINE_CARD_PADDING }}>
+                                <HabitUnitPicker detailName={'Of What?'} onUnitChanged={() => {}} />
+                            </View>
+                        </Animated.View>
                     </View>
                 </View>
+            </ScrollView>
 
+            {/* SAVE BUTTON */}
+            <View style={{ backgroundColor: colors.tab_bar_menu, width: '100%', height: 50 }}>
                 <View
                     style={{
-                        paddingTop: TIMELINE_CARD_PADDING,
-                        flexDirection: 'row',
+                        height: 50 - TIMELINE_CARD_PADDING,
+                        top: TIMELINE_CARD_PADDING / 2,
+                        marginHorizontal: TIMELINE_CARD_PADDING / 2,
+                        backgroundColor: colors.accent_color,
+                        justifyContent: 'center',
+                        borderRadius: 3,
                     }}
                 >
-                    <View style={{ flex: 1 }}>
-                        <DayOfTheWeekToggle dayOfTheWeek={'M'} onToggle={() => {}} />
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <DayOfTheWeekToggle dayOfTheWeek={'T'} onToggle={() => {}} />
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <DayOfTheWeekToggle dayOfTheWeek={'W'} onToggle={() => {}} />
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <DayOfTheWeekToggle dayOfTheWeek={'T'} onToggle={() => {}} />
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <DayOfTheWeekToggle dayOfTheWeek={'F'} onToggle={() => {}} />
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <DayOfTheWeekToggle dayOfTheWeek={'S'} onToggle={() => {}} />
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                        <DayOfTheWeekToggle dayOfTheWeek={'S'} onToggle={() => {}} />
-                    </View>
+                    <Pressable
+                        onPress={() => {
+                            Keyboard.dismiss();
+                            const scheduledHabit: CreateScheduledHabitRequest = {
+                                taskId: Number(habitId),
+                                description: description,
+                                daysOfWeekIds: daysOfWeek,
+                                timesOfDayIds: timesOfDay,
+                                quantity: quantity,
+                                unitId: 1,
+                            };
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                color: colors.text,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 16,
+                            }}
+                        >
+                            Save
+                        </Text>
+                    </Pressable>
                 </View>
             </View>
         </Screen>
