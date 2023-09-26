@@ -2,12 +2,18 @@ import { Text, TextInput, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
-    value: number;
+    value: string;
     setValue: Function;
 }
 
 export const HabitQuantityInput = ({ value, setValue }: Props) => {
     const { colors } = useTheme();
+
+    const handleTextChange = (text: string) => {
+        // remove all non numberic characters and only allow the first decimal point
+        let numericValue = text.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+        setValue(numericValue);
+    };
 
     return (
         <View
@@ -18,10 +24,8 @@ export const HabitQuantityInput = ({ value, setValue }: Props) => {
         >
             <Text style={{ color: colors.text, flex: 1 }}>How Many?</Text>
             <TextInput
-                onChangeText={(text) => {
-                    setValue(text);
-                }}
-                value={value.toString()}
+                onChangeText={handleTextChange}
+                value={value}
                 keyboardType="numeric"
                 placeholder="0"
                 style={{

@@ -1,3 +1,4 @@
+import { Response } from "./RequestTypes";
 import { ScheduledHabit } from "../../schema";
 
 export interface CreateScheduledHabitRequest {
@@ -10,5 +11,5 @@ export interface CreateScheduledHabitRequest {
 }
 
 export interface CreateScheduledHabitResponse extends Response {
-  sheduledHabit?: ScheduledHabit;
+  scheduledHabit?: ScheduledHabit;
 }

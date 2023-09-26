@@ -6,7 +6,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, Store } from './src/redux/store';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootSiblingParent } from 'react-native-root-siblings';
-import { Query, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 

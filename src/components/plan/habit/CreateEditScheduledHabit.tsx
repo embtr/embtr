@@ -1,10 +1,10 @@
 import React from 'react';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { Text, Keyboard, TextInput, Pressable } from 'react-native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { Text, Keyboard, TextInput, Pressable, TouchableOpacity } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { HabitCustomHooks } from 'src/controller/habit/HabitController';
+import { HabitController, HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import {
     DayOfTheWeek,
@@ -23,9 +23,11 @@ import { DaysOfTheWeekToggle } from './DaysOfTheWeekToggle';
 import { TimesOfDayToggle } from './TimesOfDayToggle';
 import { HabitUnitPicker } from './HabitUnitPicker';
 import { Unit } from 'resources/schema';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
     const habitId = route.params.habitId;
@@ -52,7 +54,7 @@ export const CreateEditScheduledHabit = () => {
     const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfTheWeek[]>([]);
     const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>([]);
 
-    const [quantity, setQuantity] = React.useState<number>(0);
+    const [quantity, setQuantity] = React.useState('0');
     const [unit, setUnit] = React.useState<Unit>();
 
     const toggleVisibility = (
@@ -77,6 +79,7 @@ export const CreateEditScheduledHabit = () => {
 
     return (
         <Screen>
+            <Banner name={'Schedule Habit'} leftRoute="BACK" leftIcon={'arrow-back'} />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View
                     style={{
@@ -84,8 +87,6 @@ export const CreateEditScheduledHabit = () => {
                         paddingHorizontal: TIMELINE_CARD_PADDING,
                     }}
                 >
-                    <Banner name={'Schedule Habit'} leftRoute="BACK" leftIcon={'arrow-back'} />
-
                     {/* HABIT */}
                     <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
                         <View style={{ flexDirection: 'row' }}>
@@ -391,17 +392,20 @@ export const CreateEditScheduledHabit = () => {
                         borderRadius: 3,
                     }}
                 >
-                    <Pressable
+                    <TouchableOpacity
                         onPress={() => {
                             Keyboard.dismiss();
-                            const scheduledHabit: CreateScheduledHabitRequest = {
+                            const createScheduledHabitRequest: CreateScheduledHabitRequest = {
                                 taskId: Number(habitId),
                                 description: description,
                                 daysOfWeekIds: daysOfWeek,
                                 timesOfDayIds: timesOfDay,
-                                quantity: quantity,
-                                unitId: 1,
+                                quantity: parseFloat(quantity),
+                                unitId: unit?.id ?? undefined,
                             };
+
+                            HabitController.createScheduledHabit(createScheduledHabitRequest);
+                            navigation.popToTop();
                         }}
                     >
                         <Text
@@ -414,7 +418,7 @@ export const CreateEditScheduledHabit = () => {
                         >
                             Save
                         </Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Screen>

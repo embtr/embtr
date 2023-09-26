@@ -24,6 +24,7 @@ export interface User {
   ChallengeParticipant?: ChallengeParticipant[];
   userAchievements?: UserAchievement[];
   tasks?: Task[];
+  scheduledHabits?: ScheduledHabit[];
 }
 
 export interface PushNotificationToken {
@@ -349,6 +350,8 @@ export interface TimeOfDay {
 
 export interface ScheduledHabit {
   id?: number;
+  userId?: number;
+  user?: User;
   taskId?: number;
   task?: Task;
   description?: string;

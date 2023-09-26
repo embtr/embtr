@@ -1,5 +1,5 @@
 import React from 'react';
-import { HabitCategory, Task } from 'resources/schema';
+import { HabitCategory, ScheduledHabit, Task } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
     GetHabitJourneyResponse,
@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import TaskController from '../planning/TaskController';
 import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
+import { CreateScheduledHabitRequest } from 'resources/types/requests/ScheduledHabitTypes';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -48,6 +49,19 @@ export class HabitController {
             })
             .catch((error) => {
                 return undefined;
+            });
+    }
+
+    public static async createScheduledHabit(
+        createScheduledHabitRequest: CreateScheduledHabitRequest
+    ) {
+        return await axiosInstance
+            .post('/habit/schedule', createScheduledHabitRequest)
+            .then((success) => {
+                return true;
+            })
+            .catch((error) => {
+                return false;
             });
     }
 }
