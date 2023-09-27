@@ -266,7 +266,7 @@ export const PlannableTask = ({
                                                 fontSize: 14,
                                             }}
                                         >
-                                            {initialPlannedTask?.task?.title}
+                                            {initialPlannedTask.title}
                                         </Text>
                                     </View>
                                     <View
@@ -286,17 +286,6 @@ export const PlannableTask = ({
                                                     width={17}
                                                     height={17}
                                                     uri={challengeRewards[0].imageUrl ?? ''}
-                                                />
-                                            </View>
-                                        )}
-                                        {initialPlannedTask.habit && (
-                                            <View
-                                                style={{ paddingRight: 10, flexDirection: 'row' }}
-                                            >
-                                                <HabitIcon
-                                                    habit={initialPlannedTask.habit}
-                                                    size={17}
-                                                    color={colors.tab_selected}
                                                 />
                                             </View>
                                         )}

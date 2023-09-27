@@ -1,4 +1,3 @@
-import { Dimensions } from 'react-native';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,8 +11,6 @@ interface Props {
 
 export const DayPickerElement = ({ item, index, isSelected }: Props) => {
     const { colors } = useTheme();
-
-    const itemWidth = Dimensions.get('window').width / 9.5;
 
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
