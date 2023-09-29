@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { View, Button, Text, ActivityIndicator } from 'react-native';
+import { View, Button, Text, ActivityIndicator, TextInput } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TextInput } from 'react-native-gesture-handler';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Response } from 'resources/types/requests/RequestTypes';
 import UserController from 'src/controller/user/UserController';

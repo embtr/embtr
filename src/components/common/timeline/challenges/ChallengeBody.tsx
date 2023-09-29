@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { ChallengeRewardView } from 'src/components/challenge/ChallengeRewardView';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
@@ -9,7 +9,6 @@ import React from 'react';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { formatUtcDate } from 'src/util/DateUtility';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     challenge: Challenge;

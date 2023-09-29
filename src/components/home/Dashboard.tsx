@@ -5,12 +5,10 @@ import { TimelineTab } from 'src/components/navigation/TimelineTab';
 import { ProfileTab } from 'src/components/navigation/ProfileTab';
 import { CommonActions } from '@react-navigation/native';
 import { TodayTab } from 'src/components/today/TodayTab';
-import { PlanTab } from 'src/components/plan/PlanTab';
 import { TabBar } from 'src/components/home/tabmenu/TabBar';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
 import { ChallengeTab } from 'src/components/challenge/ChallengeTab';
-import { getVerticalAlignmentLine } from 'src/util/GeneralUtility';
 
 const Tab = createBottomTabNavigator();
 

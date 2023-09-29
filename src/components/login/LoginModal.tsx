@@ -5,18 +5,20 @@ import {
     Modal,
     Button,
     Text,
+    TextInput,
     Keyboard,
     ActivityIndicator,
 } from 'react-native';
 import { HorizontalLine } from 'src/components/common/HorizontalLine';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import UserController from 'src/controller/user/UserController';
 import { Code } from 'resources/codes';
+import { useDispatch } from 'react-redux';
+import { setGlobalBlurBackground } from 'src/redux/user/GlobalState';
 
 interface Props {
     visible: boolean;
@@ -35,6 +37,8 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
     const [isLoggingIn, setIsLoggingIn] = React.useState<boolean>(false);
 
     const [keyboardOpen, setKeyboardOpen] = React.useState(false);
+
+    const dispatch = useDispatch();
 
     const onDismissModal = () => {
         if (keyboardOpen) {
@@ -56,6 +60,14 @@ export const LoginModal = ({ visible, confirm, dismiss }: Props) => {
         setError('');
         setStatus('');
     };
+
+    React.useEffect(() => {
+        dispatch(setGlobalBlurBackground(visible));
+
+        return () => {
+            dispatch(setGlobalBlurBackground(false));
+        };
+    }, [visible]);
 
     React.useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));

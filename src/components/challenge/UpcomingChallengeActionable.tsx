@@ -1,8 +1,7 @@
 import { IoniconName, POPPINS_REGULAR } from 'src/util/constants';
-import { View, Text, Touchable } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     icon: IoniconName;

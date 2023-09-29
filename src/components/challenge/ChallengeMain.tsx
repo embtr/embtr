@@ -2,21 +2,15 @@ import * as React from 'react';
 import { View, Text } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Screen } from 'src/components/common/Screen';
 import { Banner } from '../common/Banner';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { UpcomingChallenges } from './UpcomingChallenges';
 import { Journey } from '../journey/Journey';
+import { Screen } from '../common/Screen';
 
 export const ChallengeMain = () => {
     const { colors } = useTheme();
     const [index, setIndex] = React.useState(0);
-
-    const [height, setHeight] = React.useState(0);
-    const [pageLoaded, setPageLoaded] = React.useState(false);
-    const [profileHeight, setProfileHeight] = React.useState(0);
-    const [todayHeight, setTodayHeight] = React.useState(0);
-    const [activityHeight, setActivityHeight] = React.useState(0);
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
@@ -60,23 +54,8 @@ export const ChallengeMain = () => {
         return <View />;
     };
 
-    React.useEffect(() => {
-        setPageLoaded(true);
-        setHeight(profileHeight);
-    }, [profileHeight]);
-
     const indexChanged = (index: number) => {
         setIndex(index);
-
-        if (pageLoaded) {
-            if (index === 0) {
-                setHeight(profileHeight);
-            } else if (index === 1) {
-                setHeight(todayHeight);
-            } else if (index === 2) {
-                setHeight(activityHeight);
-            }
-        }
     };
 
     const [routes] = React.useState([
@@ -84,10 +63,6 @@ export const ChallengeMain = () => {
         { key: 'challenges', title: 'Challenges' },
         { key: 'achievements', title: 'Achievements' },
     ]);
-
-    const handleTabLayout = (event: any) => {
-        const { height } = event.nativeEvent.layout;
-    };
 
     return (
         <Screen>
@@ -97,8 +72,8 @@ export const ChallengeMain = () => {
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
                     onIndexChange={indexChanged}
-                    renderTabBar={(props) => (
-                        <View onLayout={handleTabLayout}>
+                    renderTabBar={(props: any) => (
+                        <View>
                             <TabBar
                                 {...props}
                                 indicatorStyle={{

@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, TouchableOpacity, Dimensions, StyleSheet, Pressable } from 'react-native';
+import { View, TouchableOpacity, Dimensions, StyleSheet, Pressable, Animated } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { TabElement } from 'src/components/home/tabmenu/TabElement';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import Animated from 'react-native-reanimated';
 import { TABS } from 'src/components/home/Dashboard';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
@@ -50,6 +49,22 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const dispatch = useAppDispatch();
 
     const [translateValue] = React.useState(new Animated.Value(calculateDotLocation(1)));
+    const config = {
+        damping: 25,
+        mass: 1,
+        stiffness: 300,
+        overshootClamping: false,
+        restSpeedThreshold: 0.001,
+        restDisplacementThreshold: 0.001,
+        useNativeDriver: true,
+    };
+
+    React.useEffect(() => {
+        Animated.spring(translateValue, {
+            toValue: calculateDotLocation(state.index),
+            ...config,
+        }).start();
+    }, [state.index]);
 
     let elements: JSX.Element[] = [];
     state.routes.forEach((route, index) => {
@@ -127,27 +142,6 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             </TouchableOpacity>
         );
     });
-
-    /*
-     * note! this is experimental (oct 14 2022) - if weird things happen move this logic back to onPress() above
-     */
-    const config = {
-        damping: 25,
-        mass: 1,
-        stiffness: 300,
-        overshootClamping: false,
-        restSpeedThreshold: 0.001,
-        restDisplacementThreshold: 0.001,
-    };
-
-    Animated.spring(translateValue, {
-        toValue: calculateDotLocation(state.index),
-        ...config,
-    }).start();
-
-    /*
-     * END EXPERIMENT
-     */
 
     return (
         <View style={[style.tabContainer, { width: totalWidth }]}>

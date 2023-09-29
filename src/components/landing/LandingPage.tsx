@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TextStyle, Image, View } from 'react-native';
+import { Text, TextStyle, Image, View, Pressable } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
@@ -45,7 +45,7 @@ export const LandingPage = () => {
 
     return (
         <Screen>
-            <ModalContainingComponent modalVisible={displayLoginModal || displayRegisterModal} />
+            <ModalContainingComponent />
             <LoginModal
                 visible={displayLoginModal}
                 confirm={onLoginModalConfirm}
@@ -60,6 +60,15 @@ export const LandingPage = () => {
 
             <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
                 {/* FLEX 1 LOGO */}
+
+                <Pressable
+                    onPress={() => {
+                        let x = 4;
+                        console.log(x);
+                    }}
+                >
+                    <Text style={{ color: 'white' }}>press me to debug</Text>
+                </Pressable>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
                     <View style={{ bottom: '10%' }}>
                         <Image

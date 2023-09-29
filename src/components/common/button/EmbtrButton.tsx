@@ -1,4 +1,12 @@
-import { TouchableOpacity, ViewStyle, Text, TextStyle, View, Image, ImageURISource } from 'react-native';
+import {
+    TouchableOpacity,
+    ViewStyle,
+    Text,
+    TextStyle,
+    View,
+    Image,
+    ImageURISource,
+} from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';

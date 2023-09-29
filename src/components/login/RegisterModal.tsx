@@ -3,6 +3,8 @@ import { RegisterSuccessModal } from './RegisterSuccessModalBody';
 import { RegisterModalBody } from './RegisterModalBody';
 import { getWindowHeight, wait } from 'src/util/GeneralUtility';
 import { Keyboard, Modal, TouchableOpacity, View } from 'react-native';
+import { setGlobalBlurBackground } from 'src/redux/user/GlobalState';
+import { useDispatch } from 'react-redux';
 
 interface Props {
     visible: boolean;
@@ -12,6 +14,8 @@ interface Props {
 export const RegisterModal = ({ visible, onDismiss }: Props) => {
     const [displayRegisterModal, setDisplayRegisterModal] = React.useState(true);
     const [keyboardOpen, setKeyboardOpen] = React.useState(false);
+
+    const dispatch = useDispatch();
 
     const onRegisterSuccessModalDismiss = () => {
         onDismiss();
@@ -23,6 +27,14 @@ export const RegisterModal = ({ visible, onDismiss }: Props) => {
     const onRegisterModalConfirm = (registrationSuccess: boolean) => {
         setDisplayRegisterModal(false);
     };
+
+    React.useEffect(() => {
+        dispatch(setGlobalBlurBackground(visible));
+
+        return () => {
+            dispatch(setGlobalBlurBackground(false));
+        };
+    }, [visible]);
 
     React.useEffect(() => {
         Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
