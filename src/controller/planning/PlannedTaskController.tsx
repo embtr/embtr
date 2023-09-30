@@ -26,25 +26,17 @@ export interface PlannedTaskModel {
 }
 
 class PlannedTaskController {
-    public static async addTaskViaApi(
-        plannedDay: PlannedDay,
-        task: Task,
-        unit?: Unit,
-        quantity?: number
-    ) {
-        if (!plannedDay.id || !task.id) {
+    public static async create(plannedDay: PlannedDay, plannedTask: PlannedTask) {
+        if (!plannedDay.id) {
             return;
         }
 
         const request: CreatePlannedTaskRequest = {
-            plannedDayId: plannedDay.id,
-            taskId: task.id,
-            unitId: unit?.id,
-            quantity,
+            plannedTask,
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY}planned-task/`, request)
+            .post(`${PLANNED_DAY}${plannedDay.dayKey}/planned-task/`, request)
             .then((success) => {
                 return success.data;
             })

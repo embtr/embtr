@@ -45,7 +45,7 @@ export const AddTaskButton = ({
                     taskToAdd = await TaskController.createViaApi(task.title!);
                 }
 
-                const created = await PlannedTaskController.addTaskViaApi(
+                const created = await PlannedTaskController.create(
                     plannedDay,
                     taskToAdd,
                     unit,

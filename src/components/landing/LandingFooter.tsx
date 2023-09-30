@@ -2,7 +2,6 @@ import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { useNavigation } from '@react-navigation/native';
-import Constants from 'expo-constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import * as Linking from 'expo-linking';
 
@@ -52,10 +51,6 @@ export const LandingFooter = () => {
                         </Text>
                     </View>
                 </View>
-            </View>
-
-            <View style={{ flex: 1 }}>
-                <Text style={[footerTextStyle, { textAlign: 'right' }]}>v{Constants.manifest!.version} </Text>
             </View>
         </View>
     );

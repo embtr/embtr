@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import {
@@ -13,12 +13,11 @@ import {
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
-import { ChallengeReward, PlannedTask as PlannedTaskModel } from 'resources/schema';
+import { ChallengeReward, PlannedDay, PlannedTask as PlannedTaskModel } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
 import { ProgressBar } from './goals/ProgressBar';
-import { HabitIcon } from './habit/HabitIcon';
 import { UpdatePlannedTaskModal } from 'src/components/plan/UpdatePlannedTaskModal';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { PlanningService } from 'src/util/planning/PlanningService';
@@ -27,12 +26,14 @@ import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
 import { SvgUri } from 'react-native-svg';
 
 interface Props {
+    plannedDay: PlannedDay;
     initialPlannedTask: PlannedTaskModel;
     onPlannedTaskUpdated: Function;
     challengeRewards: ChallengeReward[];
 }
 
 export const PlannableTask = ({
+    plannedDay,
     initialPlannedTask,
     onPlannedTaskUpdated,
     challengeRewards,
@@ -71,7 +72,9 @@ export const PlannableTask = ({
         quantity: number
     ) => {
         clone.completedQuantity = quantity;
-        const updatedPlannedTask = await PlannedTaskController.update(clone);
+        const updatedPlannedTask = clone.id
+            ? await PlannedTaskController.update(clone)
+            : await PlannedTaskController.create(plannedDay, clone);
 
         if (updatedPlannedTask?.plannedTask?.plannedDay) {
             onPlannedTaskUpdated(clone);
@@ -159,10 +162,6 @@ export const PlannableTask = ({
     const closeMenu = useAppSelector(getCloseMenu);
 
     const onShortPress = async () => {
-        if (initialPlannedTask.plannedDay?.userId !== userId) {
-            return;
-        }
-
         setShowUpdatePlannedTaskModal(true);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     };
@@ -212,6 +211,7 @@ export const PlannableTask = ({
                     setShowUpdatePlannedTaskModal(false);
 
                     const clone = { ...initialPlannedTask };
+
                     clone.status = 'INCOMPLETE';
                     setShowUpdatePlannedTaskModal(false);
                     setCompletedQuantity(updatedValue);
@@ -221,6 +221,7 @@ export const PlannableTask = ({
                     setShowUpdatePlannedTaskModal(false);
                 }}
             />
+
             <TouchableOpacity
                 onPress={onShortPress}
                 onLongPress={onLongPress}
@@ -262,7 +263,7 @@ export const PlannableTask = ({
                                         <Text
                                             style={{
                                                 color: colors.goal_primary_font,
-                                                fontFamily: 'Poppins_600SemiBold',
+                                                fontFamily: POPPINS_SEMI_BOLD,
                                                 fontSize: 14,
                                             }}
                                         >

@@ -68,7 +68,7 @@ export const TaskPreview = ({ plannedDay, task, challengeRewards }: Props) => {
                         taskToAdd = await TaskController.createViaApi(task.title!);
                     }
 
-                    const created = await PlannedTaskController.addTaskViaApi(
+                    const created = await PlannedTaskController.create(
                         plannedDay,
                         taskToAdd,
                         selectedUnit,

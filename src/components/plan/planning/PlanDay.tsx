@@ -106,6 +106,7 @@ export const PlanDay = ({
                 }}
             >
                 <PlannableTask
+                    plannedDay={plannedDay}
                     challengeRewards={challengeRewards}
                     initialPlannedTask={plannedTask}
                     onPlannedTaskUpdated={onPlannedTaskUpdated}
