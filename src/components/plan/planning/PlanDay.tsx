@@ -87,6 +87,8 @@ export const PlanDay = ({
         }
 
         const challengeRewards: ChallengeReward[] = [];
+        // TODO - update this to use the new planned task/ habit concept
+        /*
         for (const challengeParticipation of userChallengeParticipation) {
             const challenge = challengeParticipation.challenge;
             for (const challengeRequirement of challenge?.challengeRequirements ?? []) {
@@ -95,6 +97,7 @@ export const PlanDay = ({
                 }
             }
         }
+        */
 
         taskViews.push(
             <View
