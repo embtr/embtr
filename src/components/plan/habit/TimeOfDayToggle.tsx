@@ -1,5 +1,6 @@
 import { Pressable, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
     timeOfDay: string;
@@ -29,7 +30,9 @@ export const TimeOfDayToggle = ({ timeOfDay, value, setValue }: Props) => {
             }}
             onPress={toggle}
         >
-            <Text style={{ textAlign: 'center', color: colors.text }}>{timeOfDay}</Text>
+            <Text style={{ textAlign: 'center', color: colors.text, fontFamily: POPPINS_REGULAR }}>
+                {timeOfDay}
+            </Text>
         </Pressable>
     );
 };

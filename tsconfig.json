@@ -4,7 +4,8 @@
         "paths": {
             "src/*": ["./src/*"],
             "resources/*": ["./resources/*"],
-            "assets/*": ["./assets/*"]
+            "assets/*": ["./assets/*"],
+            "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
         },
         "target": "es6",
         "lib": ["dom", "dom.iterable", "esnext"],

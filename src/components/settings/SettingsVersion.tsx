@@ -5,12 +5,12 @@ import { MetadataController, MetadataKey } from 'src/controller/metadata/Metadat
 import { UpdateUtility } from 'src/util/updates/UpdateUtility';
 
 export const SettingsVersion = () => {
-    const [version, setVersion] = React.useState<string>('');
+    const [latestReleasedVersion, setLatestReleasedVersion] = React.useState<string>('');
 
     const fetch = async () => {
-        const version = await MetadataController.getMetadata(MetadataKey.VERSION);
-        if (version) {
-            setVersion(version);
+        const latestReleasedVersion = await MetadataController.getMetadata(MetadataKey.VERSION);
+        if (latestReleasedVersion) {
+            setLatestReleasedVersion(latestReleasedVersion);
         }
     };
 
@@ -18,9 +18,11 @@ export const SettingsVersion = () => {
         fetch();
     }, []);
 
+    const currentVersion = Constants.expoConfig?.version ?? '';
+
     const updateIsAvailable = UpdateUtility.updateIsAvailable(
-        Constants!.manifest!.version!,
-        version
+        currentVersion,
+        latestReleasedVersion
     );
 
     const thirdaryText = updateIsAvailable ? 'Update available!' : '';
@@ -28,7 +30,7 @@ export const SettingsVersion = () => {
     return (
         <SettingsTextElement
             text={'Version'}
-            secondaryText={Constants!.manifest!.version ?? ''}
+            secondaryText={currentVersion}
             thirdaryText={thirdaryText}
             onPress={() => {
                 if (updateIsAvailable) {

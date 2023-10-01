@@ -7,9 +7,8 @@ import {
     UpdatePlannedTaskRequest,
     UpdatePlannedTaskResponse,
 } from 'resources/types/requests/PlannedTaskTypes';
-import { PlannedDay, Unit } from 'resources/schema';
+import { PlannedDay } from 'resources/schema';
 import { PlannedTask } from 'resources/schema';
-import { Task } from 'resources/schema';
 
 export interface PlannedTaskModel {
     id?: string;

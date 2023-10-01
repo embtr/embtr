@@ -231,7 +231,8 @@ export const CreateEditScheduledHabit = () => {
                                         toggleVisibility(
                                             repeatingScheduleEnabled,
                                             setRepeatingScheduleEnabled,
-                                            repeatingScheduleViewHeight
+                                            repeatingScheduleViewHeight,
+                                            100 + TIMELINE_CARD_PADDING
                                         );
                                     }}
                                     value={repeatingScheduleEnabled}
@@ -249,12 +250,54 @@ export const CreateEditScheduledHabit = () => {
                         <Animated.View
                             style={{
                                 marginTop: TIMELINE_CARD_PADDING,
-                                flexDirection: 'row',
                                 height: repeatingScheduleViewHeight,
                                 overflow: 'hidden',
                             }}
                         >
                             <DaysOfTheWeekToggle onDaysChanged={setDaysOfWeek} />
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingTop: TIMELINE_CARD_PADDING,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        flex: 1,
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    End Date
+                                </Text>
+
+                                <Pressable
+                                    style={{
+                                        height: 50,
+                                        width: 90,
+                                        alignContent: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: 12,
+                                        backgroundColor: colors.text_input_background,
+                                        borderColor: colors.text_input_border,
+                                        borderWidth: 1,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            color: colors.text,
+                                            fontFamily: POPPINS_REGULAR,
+                                        }}
+                                    >
+                                        July 4
+                                    </Text>
+                                </Pressable>
+                            </View>
                         </Animated.View>
                     </View>
 
