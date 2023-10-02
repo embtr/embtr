@@ -64,7 +64,7 @@ export const CreateEditScheduledHabit = () => {
         React.useState(false);
     const [endDateDatePickerModalVisible, setEndDateDatePickerModalVisible] = React.useState(false);
     const [startDate, setStartDate] = React.useState<Date>(new Date());
-    const [endDate, setEndDate] = React.useState<Date>(new Date());
+    const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
 
     const toggleVisibility = (
         enabled: boolean,
@@ -84,7 +84,7 @@ export const CreateEditScheduledHabit = () => {
     };
 
     const startDatePretty = formatDate(startDate);
-    const endDatePretty = formatDate(endDate);
+    const endDatePretty = endDate ? formatDate(endDate) : 'Forever';
 
     const startDateDatePickerMemo = React.useMemo(() => {
         return (
@@ -106,7 +106,7 @@ export const CreateEditScheduledHabit = () => {
         return (
             <DatePicker
                 visible={endDateDatePickerModalVisible}
-                date={endDate}
+                date={endDate ?? new Date()}
                 onConfirm={(date: Date) => {
                     setEndDateDatePickerModalVisible(false);
                     setEndDate(date);
@@ -475,6 +475,8 @@ export const CreateEditScheduledHabit = () => {
                                 timesOfDayIds: timesOfDay,
                                 quantity: parseFloat(quantity),
                                 unitId: unit?.id ?? undefined,
+                                startDate: startDate,
+                                endDate: endDate,
                             };
 
                             HabitController.createScheduledHabit(createScheduledHabitRequest);
