@@ -24,6 +24,8 @@ import { TimesOfDayToggle } from './TimesOfDayToggle';
 import { HabitUnitPicker } from './HabitUnitPicker';
 import { Unit } from 'resources/schema';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { DatePicker } from 'src/components/common/date/DatePicker';
+import { getDatePretty } from 'src/util/DateUtility';
 
 export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
@@ -57,6 +59,9 @@ export const CreateEditScheduledHabit = () => {
     const [quantity, setQuantity] = React.useState('0');
     const [unit, setUnit] = React.useState<Unit>();
 
+    const [endDateDatePickerModalVisible, setEndDateDatePickerModalVisible] = React.useState(false);
+    const [endDate, setEndDate] = React.useState<Date>(new Date());
+
     const toggleVisibility = (
         enabled: boolean,
         setEnabled: Function,
@@ -74,12 +79,30 @@ export const CreateEditScheduledHabit = () => {
         }).start();
     };
 
+    const prettyDate = getDatePretty(endDate);
+
+    const datePickerMemo = React.useMemo(() => {
+        return (
+            <DatePicker
+                visible={endDateDatePickerModalVisible}
+                date={endDate}
+                onConfirm={(date: Date) => {
+                    setEndDateDatePickerModalVisible(false);
+                    setEndDate(date);
+                }}
+                onCancel={() => {
+                    setEndDateDatePickerModalVisible(false);
+                }}
+            />
+        );
+    }, [endDateDatePickerModalVisible]);
+
     //todo - implement me
     //const scheduledHabitId = route.params.scheduledHabitId;
-
     return (
         <Screen>
             <Banner name={'Schedule Habit'} leftRoute="BACK" leftIcon={'arrow-back'} />
+            {datePickerMemo}
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View
                     style={{
@@ -276,6 +299,9 @@ export const CreateEditScheduledHabit = () => {
                                 </Text>
 
                                 <Pressable
+                                    onPress={() => {
+                                        setEndDateDatePickerModalVisible(true);
+                                    }}
                                     style={{
                                         height: 50,
                                         width: 90,
@@ -294,7 +320,7 @@ export const CreateEditScheduledHabit = () => {
                                             fontFamily: POPPINS_REGULAR,
                                         }}
                                     >
-                                        July 4
+                                        {prettyDate}
                                     </Text>
                                 </Pressable>
                             </View>

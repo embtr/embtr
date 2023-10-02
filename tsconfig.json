@@ -5,6 +5,8 @@
             "src/*": ["./src/*"],
             "resources/*": ["./resources/*"],
             "assets/*": ["./assets/*"],
+
+            // needed to access firebase auth (ts error)
             "@firebase/auth": ["./node_modules/@firebase/auth/dist/index.rn.d.ts"]
         },
         "target": "es6",
