@@ -26,6 +26,7 @@ import { Unit } from 'resources/schema';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DatePicker } from 'src/components/common/date/DatePicker';
 import { getDatePretty } from 'src/util/DateUtility';
+import { HabitDatePicker } from './HabitDatePicker';
 
 export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
@@ -59,7 +60,10 @@ export const CreateEditScheduledHabit = () => {
     const [quantity, setQuantity] = React.useState('0');
     const [unit, setUnit] = React.useState<Unit>();
 
+    const [startDateDatePickerModalVisible, setStartDateDatePickerModalVisible] =
+        React.useState(false);
     const [endDateDatePickerModalVisible, setEndDateDatePickerModalVisible] = React.useState(false);
+    const [startDate, setStartDate] = React.useState<Date>(new Date());
     const [endDate, setEndDate] = React.useState<Date>(new Date());
 
     const toggleVisibility = (
@@ -79,9 +83,26 @@ export const CreateEditScheduledHabit = () => {
         }).start();
     };
 
-    const prettyDate = getDatePretty(endDate);
+    const startDatePretty = getDatePretty(startDate);
+    const endDatePretty = getDatePretty(endDate);
 
-    const datePickerMemo = React.useMemo(() => {
+    const startDateDatePickerMemo = React.useMemo(() => {
+        return (
+            <DatePicker
+                visible={startDateDatePickerModalVisible}
+                date={startDate}
+                onConfirm={(date: Date) => {
+                    setStartDateDatePickerModalVisible(false);
+                    setStartDate(date);
+                }}
+                onCancel={() => {
+                    setStartDateDatePickerModalVisible(false);
+                }}
+            />
+        );
+    }, [startDateDatePickerModalVisible]);
+
+    const endDateDatePickerMemo = React.useMemo(() => {
         return (
             <DatePicker
                 visible={endDateDatePickerModalVisible}
@@ -102,7 +123,8 @@ export const CreateEditScheduledHabit = () => {
     return (
         <Screen>
             <Banner name={'Schedule Habit'} leftRoute="BACK" leftIcon={'arrow-back'} />
-            {datePickerMemo}
+            {startDateDatePickerMemo}
+            {endDateDatePickerMemo}
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View
                     style={{
@@ -278,51 +300,26 @@ export const CreateEditScheduledHabit = () => {
                             }}
                         >
                             <DaysOfTheWeekToggle onDaysChanged={setDaysOfWeek} />
-
-                            <View
-                                style={{
-                                    width: '100%',
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    paddingTop: TIMELINE_CARD_PADDING,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        flex: 1,
-                                        color: colors.text,
-                                        fontFamily: POPPINS_MEDIUM,
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    End Date
-                                </Text>
-
-                                <Pressable
-                                    onPress={() => {
-                                        setEndDateDatePickerModalVisible(true);
-                                    }}
-                                    style={{
-                                        height: 50,
-                                        width: 90,
-                                        alignContent: 'center',
-                                        justifyContent: 'center',
-                                        borderRadius: 12,
-                                        backgroundColor: colors.text_input_background,
-                                        borderColor: colors.text_input_border,
-                                        borderWidth: 1,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            color: colors.text,
-                                            fontFamily: POPPINS_REGULAR,
+                            <View style={{ flexDirection: 'row', width: '100%' }}>
+                                <View style={{ flex: 1 }}>
+                                    <HabitDatePicker
+                                        dateType="Start Date"
+                                        prettyDate={startDatePretty}
+                                        onPress={() => {
+                                            setStartDateDatePickerModalVisible(true);
                                         }}
-                                    >
-                                        {prettyDate}
-                                    </Text>
-                                </Pressable>
+                                    />
+                                </View>
+
+                                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                                    <HabitDatePicker
+                                        dateType="End Date"
+                                        prettyDate={endDatePretty}
+                                        onPress={() => {
+                                            setEndDateDatePickerModalVisible(true);
+                                        }}
+                                    />
+                                </View>
                             </View>
                         </Animated.View>
                     </View>
