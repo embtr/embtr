@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { PlannedDay, Unit, User, HabitCategory } from 'resources/schema';
+import { PlannedDay, Unit, User} from 'resources/schema';
 
-export const INITIAL_STATE: GlobalState = {
+const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
     openMenu: () => {},
     closeMenu: () => {},
@@ -23,7 +23,7 @@ export const INITIAL_STATE: GlobalState = {
     showQuickAddModal: false,
 };
 
-export interface GlobalState {
+interface GlobalState {
     menuOptions: EmbtrMenuOptions;
     openMenu: Function;
     closeMenu: Function;
@@ -267,4 +267,3 @@ export const {
     setGlobalBlurBackground,
     setShowQuickAddModal,
 } = GlobalState.actions;
-export default GlobalState.reducer;

@@ -6,9 +6,10 @@ interface Props {
     dayOfTheWeek: string;
     value: boolean;
     setValue: Function;
+    size: number;
 }
 
-export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue }: Props) => {
+export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue, size }: Props) => {
     const { colors } = useTheme();
 
     const toggle = () => {
@@ -18,11 +19,10 @@ export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue }: Props) => 
     return (
         <Pressable
             style={{
-                height: 50,
-                width: 50,
+                height: size,
+                width: size,
                 alignContent: 'center',
                 justifyContent: 'center',
-
                 borderRadius: 12,
                 backgroundColor: value ? colors.accent_color : colors.text_input_background,
                 borderColor: colors.text_input_border,

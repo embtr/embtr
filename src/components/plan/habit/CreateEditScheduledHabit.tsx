@@ -1,6 +1,6 @@
 import React from 'react';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { Text, Keyboard, TextInput, Pressable, TouchableOpacity } from 'react-native';
+import { Text, Keyboard, TextInput, TouchableOpacity } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -25,7 +25,7 @@ import { HabitUnitPicker } from './HabitUnitPicker';
 import { Unit } from 'resources/schema';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DatePicker } from 'src/components/common/date/DatePicker';
-import { getDatePretty } from 'src/util/DateUtility';
+import { formatDate } from 'src/util/DateUtility';
 import { HabitDatePicker } from './HabitDatePicker';
 
 export const CreateEditScheduledHabit = () => {
@@ -83,8 +83,8 @@ export const CreateEditScheduledHabit = () => {
         }).start();
     };
 
-    const startDatePretty = getDatePretty(startDate);
-    const endDatePretty = getDatePretty(endDate);
+    const startDatePretty = formatDate(startDate);
+    const endDatePretty = formatDate(endDate);
 
     const startDateDatePickerMemo = React.useMemo(() => {
         return (
@@ -277,7 +277,7 @@ export const CreateEditScheduledHabit = () => {
                                             repeatingScheduleEnabled,
                                             setRepeatingScheduleEnabled,
                                             repeatingScheduleViewHeight,
-                                            100 + TIMELINE_CARD_PADDING
+                                            150 + TIMELINE_CARD_PADDING * 2
                                         );
                                     }}
                                     value={repeatingScheduleEnabled}
@@ -299,27 +299,33 @@ export const CreateEditScheduledHabit = () => {
                                 overflow: 'hidden',
                             }}
                         >
-                            <DaysOfTheWeekToggle onDaysChanged={setDaysOfWeek} />
-                            <View style={{ flexDirection: 'row', width: '100%' }}>
-                                <View style={{ flex: 1 }}>
-                                    <HabitDatePicker
-                                        dateType="Start Date"
-                                        prettyDate={startDatePretty}
-                                        onPress={() => {
-                                            setStartDateDatePickerModalVisible(true);
-                                        }}
-                                    />
-                                </View>
+                            <DaysOfTheWeekToggle
+                                onDaysChanged={setDaysOfWeek}
+                            />
 
-                                <View style={{ flex: 1, alignItems: 'flex-end' }}>
-                                    <HabitDatePicker
-                                        dateType="End Date"
-                                        prettyDate={endDatePretty}
-                                        onPress={() => {
-                                            setEndDateDatePickerModalVisible(true);
-                                        }}
-                                    />
-                                </View>
+                            <View style={{ width: '100%'}}>
+                                <HabitDatePicker
+                                    dateType="Start Date"
+                                    prettyDate={startDatePretty}
+                                    onPress={() => {
+                                        setStartDateDatePickerModalVisible(true);
+                                    }}
+                                />
+                            </View>
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    paddingTop: TIMELINE_CARD_PADDING,
+                                }}
+                            >
+                                <HabitDatePicker
+                                    dateType="End Date"
+                                    prettyDate={endDatePretty}
+                                    onPress={() => {
+                                        setEndDateDatePickerModalVisible(true);
+                                    }}
+                                />
                             </View>
                         </Animated.View>
                     </View>
@@ -443,6 +449,7 @@ export const CreateEditScheduledHabit = () => {
                             </View>
                         </Animated.View>
                     </View>
+                    <View style={{ height: TIMELINE_CARD_PADDING}} />
                 </View>
             </ScrollView>
 

@@ -5,6 +5,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
 import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { UI } from 'src/util/constants';
 
 interface Props {
     detailName: string;
@@ -62,7 +63,7 @@ export const HabitUnitPicker = ({ detailName, onUnitChanged }: Props) => {
                 }}
                 style={{
                     height: 50,
-                    width: 90,
+                    width: UI.SCHEDULE_HABIT.DETAILS.DETAIL_WIDTH,
                     borderRadius: 12,
                     backgroundColor: colors.text_input_background,
                     borderColor: colors.text_input_border,

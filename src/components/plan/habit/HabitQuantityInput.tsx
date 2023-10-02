@@ -1,5 +1,6 @@
 import { Text, TextInput, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { UI } from 'src/util/constants';
 
 interface Props {
     value: string;
@@ -31,7 +32,7 @@ export const HabitQuantityInput = ({ value, setValue }: Props) => {
                 style={{
                     color: colors.text,
                     height: 50,
-                    width: 90,
+                    width: UI.SCHEDULE_HABIT.DETAILS.DETAIL_WIDTH,
                     alignContent: 'center',
                     justifyContent: 'center',
                     borderRadius: 12,

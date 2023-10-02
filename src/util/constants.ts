@@ -1,4 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { getSafeWindowWidth, getWindowWidth } from './GeneralUtility';
 
 export const USER_SEARCH_WIDTH = '95%';
 export const SETTINGS_MENU_ITEM_WIDTH = '95%';
@@ -119,4 +120,25 @@ export const enum TimeOfDay {
     AFTERNOON = 2,
     EVENING = 3,
     NIGHT = 4,
+}
+
+export namespace UI {
+    export namespace SCHEDULE_HABIT {
+        export namespace REPEATING_SCHEDULE {
+            const totalDayOfWeekWidth = getSafeWindowWidth() - (TIMELINE_CARD_PADDING / 3) * 7;
+            export const DAY_OF_WEEK_WIDTH = totalDayOfWeekWidth / 7;
+            export const GAP_BETWEEN_DAYS = (getSafeWindowWidth() - totalDayOfWeekWidth) / 6;
+            export const DATE_WIDTH = DAY_OF_WEEK_WIDTH * 3 + GAP_BETWEEN_DAYS * 2; 
+        }
+
+        export namespace TIME_OF_DAY {
+            const totalWidth = getSafeWindowWidth() - (TIMELINE_CARD_PADDING / 3) * 4;
+            export const TIME_OF_DAY_WIDTH = totalWidth / 4;
+            export const GAP_BETWEEN_TIME_OF_DAY = (getSafeWindowWidth() - totalWidth) / 3;
+        }
+
+        export namespace DETAILS {
+            export const DETAIL_WIDTH = REPEATING_SCHEDULE.DATE_WIDTH;
+        }
+    }
 }

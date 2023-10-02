@@ -33,25 +33,16 @@ export const TimesOfDayToggle = ({ onTimesChanged }: Props) => {
 
     return (
         <View style={{ flexDirection: 'row', width: '100%' }}>
-            <View style={{ flex: 1 }}>
-                <TimeOfDayToggle timeOfDay={'Morning'} value={morning} setValue={setMorning} />
-            </View>
+            <TimeOfDayToggle timeOfDay={'Morning'} value={morning} setValue={setMorning} />
+            <View style={{ flex: 1 }}></View>
 
-            <View style={{ flex: 1 }}>
-                <TimeOfDayToggle
-                    timeOfDay={'Afternoon'}
-                    value={afternoon}
-                    setValue={setAfternoon}
-                />
-            </View>
+            <TimeOfDayToggle timeOfDay={'Afternoon'} value={afternoon} setValue={setAfternoon} />
+            <View style={{ flex: 1 }}></View>
 
-            <View style={{ flex: 1 }}>
-                <TimeOfDayToggle timeOfDay={'Evening'} value={evening} setValue={setEvening} />
-            </View>
+            <TimeOfDayToggle timeOfDay={'Evening'} value={evening} setValue={setEvening} />
+            <View style={{ flex: 1 }}></View>
 
-            <View style={{ flex: 1 }}>
-                <TimeOfDayToggle timeOfDay={'Night'} value={night} setValue={setNight} />
-            </View>
+            <TimeOfDayToggle timeOfDay={'Night'} value={night} setValue={setNight} />
         </View>
     );
 };

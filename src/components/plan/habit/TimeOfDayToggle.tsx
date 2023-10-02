@@ -1,6 +1,6 @@
 import { Pressable, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR, UI } from 'src/util/constants';
 
 interface Props {
     timeOfDay: string;
@@ -19,7 +19,7 @@ export const TimeOfDayToggle = ({ timeOfDay, value, setValue }: Props) => {
         <Pressable
             style={{
                 height: 50,
-                width: 90,
+                width: UI.SCHEDULE_HABIT.TIME_OF_DAY.TIME_OF_DAY_WIDTH,
                 alignContent: 'center',
                 justifyContent: 'center',
 
