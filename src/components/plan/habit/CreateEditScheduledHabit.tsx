@@ -471,13 +471,22 @@ export const CreateEditScheduledHabit = () => {
                             const createScheduledHabitRequest: CreateScheduledHabitRequest = {
                                 taskId: Number(habitId),
                                 description: description,
-                                daysOfWeekIds: daysOfWeek,
-                                timesOfDayIds: timesOfDay,
-                                quantity: parseFloat(quantity),
-                                unitId: unit?.id ?? undefined,
-                                startDate: startDate,
-                                endDate: endDate,
                             };
+
+                            if (repeatingScheduleEnabled) {
+                                createScheduledHabitRequest.daysOfWeekIds = daysOfWeek;
+                                createScheduledHabitRequest.startDate = startDate;
+                                createScheduledHabitRequest.endDate = endDate;
+                            }
+
+                            if (detailsEnabled) {
+                                createScheduledHabitRequest.quantity = parseFloat(quantity);
+                                createScheduledHabitRequest.unitId = unit?.id ?? undefined;
+                            }
+
+                            if (timeOfDayEnabled) {
+                                createScheduledHabitRequest.timesOfDayIds = timesOfDay;
+                            }
 
                             HabitController.createScheduledHabit(createScheduledHabitRequest);
                             navigation.popToTop();
