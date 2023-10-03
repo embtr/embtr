@@ -1,5 +1,5 @@
 import React from 'react';
-import { HabitCategory, ScheduledHabit, Task } from 'resources/schema';
+import { HabitCategory, Task } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
     GetHabitJourneyResponse,
@@ -7,7 +7,6 @@ import {
 import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
-import TaskController from '../planning/TaskController';
 import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 import { CreateScheduledHabitRequest } from 'resources/types/requests/ScheduledHabitTypes';
 
