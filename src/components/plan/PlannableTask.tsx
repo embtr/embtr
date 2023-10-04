@@ -14,7 +14,6 @@ import {
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
 import { ChallengeReward, PlannedDay, PlannedTask as PlannedTaskModel } from 'resources/schema';
-import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { TaskCompleteSymbol } from '../common/task_symbols/TaskCompleteSymbol';
 import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
 import { ProgressBar } from './goals/ProgressBar';
@@ -24,6 +23,10 @@ import { PlanningService } from 'src/util/planning/PlanningService';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
 import { SvgUri } from 'react-native-svg';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -39,6 +42,7 @@ export const PlannableTask = ({
     challengeRewards,
 }: Props) => {
     const { colors } = useTheme();
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const [showUpdatePlannedTaskModal, setShowUpdatePlannedTaskModal] =
         React.useState<boolean>(false);
@@ -54,6 +58,23 @@ export const PlannableTask = ({
 
         fetch();
     }, [initialPlannedTask]);
+
+    //this entire section listens to the population of this callback id
+    //if it is set, that means we want to edit a planned task. first we must
+    //close the modal so we wait untilwe hit this useFocusEffect to know it's time
+    const [editScheduledHabitCallbackId, setEditScheduledHabitCallbackId] = React.useState<
+        number | undefined
+    >();
+    useFocusEffect(
+        React.useCallback(() => {
+            if (editScheduledHabitCallbackId && !showUpdatePlannedTaskModal) {
+                navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
+                    scheduledHabitId: editScheduledHabitCallbackId,
+                });
+                setEditScheduledHabitCallbackId(undefined);
+            }
+        }, [editScheduledHabitCallbackId, showUpdatePlannedTaskModal])
+    );
 
     React.useEffect(() => {
         setCompletedQuantity(initialPlannedTask.completedQuantity ?? 0);
@@ -217,7 +238,8 @@ export const PlannableTask = ({
                     setCompletedQuantity(updatedValue);
                     await updatePlannedTaskCompletedQuantity(clone, updatedValue);
                 }}
-                dismiss={() => {
+                dismiss={(editScheduledHabitCallbackId?: number) => {
+                    setEditScheduledHabitCallbackId(editScheduledHabitCallbackId);
                     setShowUpdatePlannedTaskModal(false);
                 }}
             />

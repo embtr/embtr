@@ -1,5 +1,3 @@
-import { getInteractableEndpoint } from 'resources/endpoints';
-import { Interactable } from 'resources/types/interactable/Interactable';
 import axiosInstance from 'src/axios/axios';
 import { GetUnitsResponse } from 'resources/types/requests/UnitTypes';
 

@@ -25,11 +25,10 @@ export class HabitController {
 
     public static async getHabitCategories(): Promise<HabitCategory[]> {
         return await axiosInstance
-            .get('/habit/categories/')
+            .get<GetHabitCategoriesResponse>('/habit/categories/')
             .then((success) => {
-                const habitCategoriesResponse: GetHabitCategoriesResponse = success.data;
-                if (habitCategoriesResponse.habitCategories) {
-                    return habitCategoriesResponse.habitCategories;
+                if (success.data.habitCategories) {
+                    return success.data.habitCategories;
                 } else {
                     return [];
                 }
@@ -92,12 +91,11 @@ export namespace HabitCustomHooks {
     };
 
     export const useHabit = (id: number) => {
-        const [habit, setHabit] = React.useState<Task | undefined>();
-
         const { status, error, data } = useQuery({
             queryKey: ['habit', id],
             queryFn: () => HabitController.getHabit(id),
             staleTime: ReactQueryStaleTimes.HABIT,
+            enabled: !!id,
         });
 
         return data;

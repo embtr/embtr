@@ -6,13 +6,7 @@ import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { HabitController, HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
-import {
-    DayOfTheWeek,
-    POPPINS_MEDIUM,
-    POPPINS_REGULAR,
-    TIMELINE_CARD_PADDING,
-    TimeOfDay,
-} from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated, Easing } from 'react-native';
 import { HabitQuantityInput } from './HabitQuantityInput';
@@ -22,11 +16,12 @@ import { CreateScheduledHabitRequest } from 'resources/types/requests/ScheduledH
 import { DaysOfTheWeekToggle } from './DaysOfTheWeekToggle';
 import { TimesOfDayToggle } from './TimesOfDayToggle';
 import { HabitUnitPicker } from './HabitUnitPicker';
-import { Unit } from 'resources/schema';
+import { DayOfWeek, TimeOfDay, Unit } from 'resources/schema';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { DatePicker } from 'src/components/common/date/DatePicker';
 import { formatDate } from 'src/util/DateUtility';
 import { HabitDatePicker } from './HabitDatePicker';
+import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
 
 export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
@@ -36,14 +31,25 @@ export const CreateEditScheduledHabit = () => {
     const habitId = route.params.habitId;
     const habit = HabitCustomHooks.useHabit(Number(habitId));
 
+    const plannedTaskId = route.params.plannedTaskId;
+    const plannedTask = PlannedHabitCustomHooks.usePlannedHabit(Number(plannedTaskId));
+
     React.useEffect(() => {
         if (habit) {
             setTitle(habit.title ?? '');
         }
     }, [habit]);
 
-    const [title, setTitle] = React.useState('');
-    const [description, setDescription] = React.useState('');
+    const [title, setTitle] = React.useState(plannedTask?.title ?? '');
+    const [description, setDescription] = React.useState(plannedTask?.description ?? '');
+    const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfWeek[]>(
+        plannedTask?.scheduledHabit?.daysOfWeek ?? []
+    );
+    const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>(
+        plannedTask?.scheduledHabit?.timesOfDay ?? []
+    );
+    const [quantity, setQuantity] = React.useState('0');
+    const [unit, setUnit] = React.useState<Unit>();
 
     const [repeatingScheduleEnabled, setRepeatingScheduleEnabled] = React.useState(false);
     const [repeatingScheduleViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
@@ -53,12 +59,6 @@ export const CreateEditScheduledHabit = () => {
 
     const [detailsEnabled, setDetailsEnabled] = React.useState(false);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
-
-    const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfTheWeek[]>([]);
-    const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>([]);
-
-    const [quantity, setQuantity] = React.useState('0');
-    const [unit, setUnit] = React.useState<Unit>();
 
     const [startDateDatePickerModalVisible, setStartDateDatePickerModalVisible] =
         React.useState(false);
@@ -299,11 +299,9 @@ export const CreateEditScheduledHabit = () => {
                                 overflow: 'hidden',
                             }}
                         >
-                            <DaysOfTheWeekToggle
-                                onDaysChanged={setDaysOfWeek}
-                            />
+                            <DaysOfTheWeekToggle onDaysChanged={setDaysOfWeek} />
 
-                            <View style={{ width: '100%'}}>
+                            <View style={{ width: '100%' }}>
                                 <HabitDatePicker
                                     dateType="Start Date"
                                     prettyDate={startDatePretty}
@@ -449,7 +447,7 @@ export const CreateEditScheduledHabit = () => {
                             </View>
                         </Animated.View>
                     </View>
-                    <View style={{ height: TIMELINE_CARD_PADDING}} />
+                    <View style={{ height: TIMELINE_CARD_PADDING }} />
                 </View>
             </ScrollView>
 
@@ -474,7 +472,9 @@ export const CreateEditScheduledHabit = () => {
                             };
 
                             if (repeatingScheduleEnabled) {
-                                createScheduledHabitRequest.daysOfWeekIds = daysOfWeek;
+                                createScheduledHabitRequest.daysOfWeekIds = daysOfWeek
+                                    .map((dayOfWeek) => dayOfWeek.id)
+                                    .filter((id) => id !== undefined) as number[];
                                 createScheduledHabitRequest.startDate = startDate;
                                 createScheduledHabitRequest.endDate = endDate;
                             }
@@ -485,7 +485,9 @@ export const CreateEditScheduledHabit = () => {
                             }
 
                             if (timeOfDayEnabled) {
-                                createScheduledHabitRequest.timesOfDayIds = timesOfDay;
+                                createScheduledHabitRequest.timesOfDayIds = timesOfDay
+                                    .map((timeOfDay) => timeOfDay.id)
+                                    .filter((id) => id !== undefined) as number[];
                             }
 
                             HabitController.createScheduledHabit(createScheduledHabitRequest);

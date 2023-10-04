@@ -101,25 +101,10 @@ export type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyp
 
 export namespace ReactQueryStaleTimes {
     const ONE_HOUR = 60 * 60 * 1000;
+    export const INSTANTLY = 0;
+    export const INFINITY = Infinity; 
     export const HABIT = 1 * ONE_HOUR;
     export const HABIT_CATEGORIES = 1 * ONE_HOUR;
-}
-
-export const enum DayOfTheWeek {
-    SUNDAY = 1,
-    MONDAY = 2,
-    TUESDAY = 3,
-    WEDNESDAY = 4,
-    THURSDAY = 5,
-    FRIDAY = 6,
-    SATURDAY = 7,
-}
-
-export const enum TimeOfDay {
-    MORNING = 1,
-    AFTERNOON = 2,
-    EVENING = 3,
-    NIGHT = 4,
 }
 
 export namespace UI {

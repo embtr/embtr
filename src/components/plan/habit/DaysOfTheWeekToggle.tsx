@@ -1,13 +1,17 @@
 import React from 'react';
 import { View } from 'react-native';
 import { DayOfTheWeekToggle } from './DayOfTheWeekToggle';
-import { DayOfTheWeek, UI} from 'src/util/constants';
+import { UI } from 'src/util/constants';
+import { DayOfWeekCustomHooks } from 'src/controller/day_of_week/DayOfWeekController';
+import { DayOfWeek } from 'resources/schema';
 
 interface Props {
     onDaysChanged: Function;
 }
 
-export const DaysOfTheWeekToggle = ({ onDaysChanged}: Props) => {
+export const DaysOfTheWeekToggle = ({ onDaysChanged }: Props) => {
+    const daysOfWeek: DayOfWeek[] = DayOfWeekCustomHooks.useDaysOfWeek();
+
     const [monday, setMonday] = React.useState<boolean>(false);
     const [tuesday, setTuesday] = React.useState<boolean>(false);
     const [wednesday, setWednesday] = React.useState<boolean>(false);
@@ -17,43 +21,66 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged}: Props) => {
     const [sunday, setSunday] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        const daysOfWeek: DayOfTheWeek[] = [];
-        if (monday) {
-            daysOfWeek.push(DayOfTheWeek.MONDAY);
-        }
-        if (tuesday) {
-            daysOfWeek.push(DayOfTheWeek.TUESDAY);
-        }
-        if (wednesday) {
-            daysOfWeek.push(DayOfTheWeek.WEDNESDAY);
-        }
-        if (thursday) {
-            daysOfWeek.push(DayOfTheWeek.THURSDAY);
-        }
-        if (friday) {
-            daysOfWeek.push(DayOfTheWeek.FRIDAY);
-        }
-        if (saturday) {
-            daysOfWeek.push(DayOfTheWeek.SATURDAY);
-        }
-        if (sunday) {
-            daysOfWeek.push(DayOfTheWeek.SUNDAY);
+        if (daysOfWeek?.length === 0) {
+            return;
         }
 
-        onDaysChanged(daysOfWeek);
-    }, [monday, tuesday, wednesday, thursday, friday, saturday, sunday]);
+        const toggledDaysOfWeek: DayOfWeek[] = [];
+        for (const dayOfWeek of daysOfWeek) {
+            switch (dayOfWeek.day) {
+                case 'MONDAY':
+                    if (monday) {
+                        toggledDaysOfWeek.push(dayOfWeek);
+                    }
+                    break;
+                case 'TUESDAY':
+                    if (tuesday) {
+                        toggledDaysOfWeek.push(dayOfWeek);
+                    }
+                    break;
+                case 'WEDNESDAY':
+                    if (wednesday) {
+                        toggledDaysOfWeek.push(dayOfWeek);
+                    }
+                    break;
+                case 'THURSDAY':
+                    if (thursday) {
+                        toggledDaysOfWeek.push(dayOfWeek);
+                    }
+                    break;
+                case 'FRIDAY':
+                    if (friday) {
+                        toggledDaysOfWeek.push(dayOfWeek);
+                    }
+                    break;
+                case 'SATURDAY':
+                    if (saturday) {
+                        toggledDaysOfWeek.push(dayOfWeek);
+                    }
+                    break;
+                case 'SUNDAY':
+                    if (sunday) {
+                        toggledDaysOfWeek.push(dayOfWeek);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        onDaysChanged(toggledDaysOfWeek);
+    }, [daysOfWeek, monday, tuesday, wednesday, thursday, friday, saturday, sunday]);
 
     return (
-        <View style={{ flex: 1, flexDirection: 'row', width: '100%'}}>
+        <View style={{ flex: 1, flexDirection: 'row', width: '100%' }}>
             <DayOfTheWeekToggle
                 dayOfTheWeek={'M'}
                 value={monday}
                 setValue={setMonday}
                 size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
             />
-            <View
-                style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS}}
-            />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
             <DayOfTheWeekToggle
                 dayOfTheWeek={'T'}
@@ -61,9 +88,7 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged}: Props) => {
                 setValue={setTuesday}
                 size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
             />
-            <View 
-                style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS}}
-            />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
             <DayOfTheWeekToggle
                 dayOfTheWeek={'W'}
@@ -71,9 +96,7 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged}: Props) => {
                 setValue={setWednesday}
                 size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
             />
-            <View 
-                style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS}}
-            />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
             <DayOfTheWeekToggle
                 dayOfTheWeek={'T'}
@@ -81,9 +104,7 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged}: Props) => {
                 setValue={setThursday}
                 size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
             />
-            <View 
-                style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS}}
-            />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
             <DayOfTheWeekToggle
                 dayOfTheWeek={'F'}
@@ -91,9 +112,7 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged}: Props) => {
                 setValue={setFriday}
                 size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
             />
-            <View 
-                style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS}}
-            />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
             <DayOfTheWeekToggle
                 dayOfTheWeek={'S'}
@@ -101,9 +120,7 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged}: Props) => {
                 setValue={setSaturday}
                 size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
             />
-            <View 
-                style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS}}
-            />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
             <DayOfTheWeekToggle
                 dayOfTheWeek={'S'}

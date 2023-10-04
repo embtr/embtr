@@ -5,10 +5,13 @@ export const getAuthTokenId = async () => {
     return currentToken;
 };
 
-export const getUserIdFromToken = async () => {
+export const getUserIdFromToken = async (): Promise<number | null> => {
     const decodedToken = await getAuth().currentUser?.getIdTokenResult();
     if (decodedToken) {
-        return decodedToken.claims.userId;
+        const id = decodedToken.claims.userId;
+        if (typeof id === 'number') {
+            return id;
+        }
     }
 
     return null;

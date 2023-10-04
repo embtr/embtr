@@ -31,6 +31,16 @@ export const UpdatePlannedTaskModal = ({
         setSelectedValue(plannedTask.completedQuantity ?? 0);
     }, [plannedTask]);
 
+    const onEdit = () => {
+        if (keyboardFocused) {
+            Keyboard.dismiss();
+            setKeyboardFocused(false);
+        }
+
+        setInputWasFocused(false);
+        dismiss(plannedTask.scheduledHabitId);
+    };
+
     const onDismissWrapper = () => {
         if (keyboardFocused) {
             Keyboard.dismiss();
@@ -107,233 +117,255 @@ export const UpdatePlannedTaskModal = ({
                         >
                             <View
                                 style={{
-                                    width: '100%',
-                                    paddingTop: 15,
-                                    paddingBottom: 10,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    paddingBottom: 25,
                                 }}
                             >
                                 <View
                                     style={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        paddingBottom: 25,
+                                        width: '100%',
+                                        flexDirection: 'row',
                                     }}
                                 >
+                                    <View style={{ flex: 1 }} />
                                     <Text
                                         style={{
                                             fontSize: 16,
+                                            flex: 10,
                                             fontFamily: POPPINS_MEDIUM,
                                             color: colors.text,
+                                            paddingTop: 15,
                                             textAlign: 'center',
                                         }}
                                     >
                                         {'Update Progress'}
                                     </Text>
-                                    <Text
-                                        style={{
-                                            paddingTop: 10,
-                                            fontSize: 16,
-                                            fontFamily: POPPINS_REGULAR,
-                                            color: colors.accent_color,
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        {plannedTask.task?.title ?? ''}
-                                    </Text>
-                                </View>
-
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-                                    <View style={{ flex: 1, alignItems: 'center' }}>
-                                        <Ionicons
-                                            name={'remove'}
-                                            size={30}
-                                            color={colors.text}
-                                            onPress={() => {
-                                                setSelectedValue((selectedValue ?? 0) - 1);
-                                                setInputWasFocused(true);
-                                            }}
-                                        />
-                                    </View>
-                                    <View
-                                        style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        <View style={{ flex: 1 }} />
-                                        <TextInput
-                                            keyboardType={'numeric'}
-                                            ref={textInputRef}
-                                            onBlur={() => {
-                                                setKeyboardFocused(false);
-                                            }}
-                                            onSubmitEditing={() => {
-                                                onUpdateWrapper();
-                                            }}
-                                            onFocus={() => {
-                                                setInputWasFocused(true);
-                                                setKeyboardFocused(true);
-                                                textInputRef.current?.setNativeProps({
-                                                    selection: {
-                                                        start: 0,
-                                                        end: selectedValue?.toString().length,
-                                                    },
-                                                });
-                                            }}
-                                            value={selectedValue?.toString()}
-                                            onChangeText={(text) => {
-                                                textInputRef.current?.setNativeProps({
-                                                    selection: {
-                                                        start: text.length,
-                                                        end: text.length,
-                                                    },
-                                                });
-
-                                                if (text.length > 0 && isNaN(parseInt(text))) {
-                                                    return;
-                                                }
-
-                                                setSelectedValue(
-                                                    text.length === 0 ? null : parseInt(text)
-                                                );
-                                            }}
-                                            style={{
-                                                color: colors.text,
-                                                fontFamily: POPPINS_REGULAR,
-                                                textAlign: 'center',
-                                                fontSize: 20,
-                                                paddingTop: 10,
-                                            }}
-                                        />
-                                        <View
-                                            style={{
-                                                flex: 1,
-                                            }}
-                                        >
-                                            {!keyboardFocused && (
-                                                <EvilIcons
-                                                    onPress={() => {
-                                                        textInputRef.current?.focus();
-                                                    }}
-                                                    name="pencil"
-                                                    size={20}
-                                                    color={colors.secondary_text}
-                                                />
-                                            )}
-                                        </View>
-                                    </View>
 
                                     <View
                                         style={{
                                             flex: 1,
-                                            alignItems: 'center',
                                         }}
                                     >
-                                        <Ionicons
-                                            name={'add'}
-                                            size={30}
-                                            color={colors.text}
-                                            onPress={() => {
-                                                setSelectedValue((selectedValue ?? 0) + 1);
-                                                setInputWasFocused(true);
+                                        <EvilIcons
+                                            style={{
+                                                top: 7.5,
+                                                right: 1.5,
                                             }}
+                                            onPress={() => {
+                                                onEdit();
+                                            }}
+                                            name="gear"
+                                            size={20}
+                                            color={colors.secondary_text}
                                         />
                                     </View>
                                 </View>
                                 <Text
                                     style={{
-                                        color: colors.text,
+                                        paddingTop: 10,
+                                        fontSize: 20,
                                         fontFamily: POPPINS_REGULAR,
+                                        color: colors.accent_color,
                                         textAlign: 'center',
                                     }}
-                                >{`${
-                                    plannedTask.unit
-                                        ? UnitUtility.getReadableUnit(plannedTask.unit, 2)
-                                        : ''
-                                }`}</Text>
+                                >
+                                    {plannedTask.title ?? ''}
+                                </Text>
+                            </View>
 
-                                {/* Close Or Save Section */}
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <View style={{ flex: 1, alignItems: 'center' }}>
+                                    <Ionicons
+                                        name={'remove'}
+                                        size={30}
+                                        color={colors.text}
+                                        onPress={() => {
+                                            setSelectedValue((selectedValue ?? 0) - 1);
+                                            setInputWasFocused(true);
+                                        }}
+                                    />
+                                </View>
                                 <View
                                     style={{
-                                        width: '100%',
-                                        paddingTop: 20,
+                                        flex: 1,
                                         flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                     }}
                                 >
-                                    {/* UPDATE BUTTON */}
-                                    {inputWasFocused && (
-                                        <View
-                                            style={{
-                                                flex: 1,
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                style={{
-                                                    padding: 5,
-                                                    borderRadius: 5,
-                                                    borderWidth: 1,
-                                                    borderColor: colors.secondary_accent_color,
-                                                    width: BUTTON_WIDTH,
-                                                    alignItems: 'center',
-                                                }}
-                                                onPress={() => {
-                                                    onUpdateWrapper();
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        color: colors.secondary_accent_color,
-                                                        fontFamily: POPPINS_REGULAR,
-                                                    }}
-                                                >
-                                                    update
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    )}
+                                    <View style={{ flex: 1 }} />
+                                    <TextInput
+                                        keyboardType={'numeric'}
+                                        ref={textInputRef}
+                                        onBlur={() => {
+                                            setKeyboardFocused(false);
+                                        }}
+                                        onSubmitEditing={() => {
+                                            onUpdateWrapper();
+                                        }}
+                                        onFocus={() => {
+                                            setInputWasFocused(true);
+                                            setKeyboardFocused(true);
+                                            textInputRef.current?.setNativeProps({
+                                                selection: {
+                                                    start: 0,
+                                                    end: selectedValue?.toString().length,
+                                                },
+                                            });
+                                        }}
+                                        value={selectedValue?.toString()}
+                                        onChangeText={(text) => {
+                                            textInputRef.current?.setNativeProps({
+                                                selection: {
+                                                    start: text.length,
+                                                    end: text.length,
+                                                },
+                                            });
 
-                                    {/* COMPLETE BUTTON */}
-                                    {!inputWasFocused && (
-                                        <View
+                                            if (text.length > 0 && isNaN(parseInt(text))) {
+                                                return;
+                                            }
+
+                                            setSelectedValue(
+                                                text.length === 0 ? null : parseInt(text)
+                                            );
+                                        }}
+                                        style={{
+                                            color: colors.text,
+                                            fontFamily: POPPINS_REGULAR,
+                                            textAlign: 'center',
+                                            fontSize: 20,
+                                            paddingTop: 10,
+                                        }}
+                                    />
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                        }}
+                                    >
+                                        {!keyboardFocused && (
+                                            <EvilIcons
+                                                onPress={() => {
+                                                    textInputRef.current?.focus();
+                                                }}
+                                                name="pencil"
+                                                size={20}
+                                                color={colors.secondary_text}
+                                            />
+                                        )}
+                                    </View>
+                                </View>
+
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Ionicons
+                                        name={'add'}
+                                        size={30}
+                                        color={colors.text}
+                                        onPress={() => {
+                                            setSelectedValue((selectedValue ?? 0) + 1);
+                                            setInputWasFocused(true);
+                                        }}
+                                    />
+                                </View>
+                            </View>
+                            <Text
+                                style={{
+                                    color: colors.text,
+                                    fontFamily: POPPINS_REGULAR,
+                                    textAlign: 'center',
+                                }}
+                            >{`${
+                                plannedTask.unit
+                                    ? UnitUtility.getReadableUnit(plannedTask.unit, 2)
+                                    : ''
+                            }`}</Text>
+
+                            {/* Close Or Save Section */}
+                            <View
+                                style={{
+                                    width: '100%',
+                                    paddingTop: 20,
+                                    flexDirection: 'row',
+                                }}
+                            >
+                                {/* UPDATE BUTTON */}
+                                {inputWasFocused && (
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                        }}
+                                    >
+                                        <TouchableOpacity
                                             style={{
-                                                flex: 1,
+                                                padding: 5,
+                                                borderRadius: 5,
+                                                borderWidth: 1,
+                                                borderColor: colors.secondary_accent_color,
+                                                width: BUTTON_WIDTH,
                                                 alignItems: 'center',
                                             }}
+                                            onPress={() => {
+                                                onUpdateWrapper();
+                                            }}
                                         >
-                                            <TouchableOpacity
+                                            <Text
                                                 style={{
-                                                    padding: 5,
-                                                    borderRadius: 5,
-                                                    borderWidth: 1,
-                                                    borderColor: colors.progress_bar_complete,
-                                                    width: BUTTON_WIDTH,
-                                                    alignItems: 'center',
-                                                }}
-                                                onPress={() => {
-                                                    onCompleteWrapper();
+                                                    color: colors.secondary_accent_color,
+                                                    fontFamily: POPPINS_REGULAR,
                                                 }}
                                             >
-                                                <Text
-                                                    style={{
-                                                        color: colors.progress_bar_complete,
-                                                        fontFamily: POPPINS_REGULAR,
-                                                    }}
-                                                >
-                                                    complete
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    )}
-                                </View>
+                                                update
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+
+                                {/* COMPLETE BUTTON */}
+                                {!inputWasFocused && (
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            alignItems: 'center',
+                                            paddingBottom: 10,
+                                        }}
+                                    >
+                                        <TouchableOpacity
+                                            style={{
+                                                padding: 5,
+                                                borderRadius: 5,
+                                                borderWidth: 1,
+                                                borderColor: colors.progress_bar_complete,
+                                                width: BUTTON_WIDTH,
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => {
+                                                onCompleteWrapper();
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: colors.progress_bar_complete,
+                                                    fontFamily: POPPINS_REGULAR,
+                                                }}
+                                            >
+                                                complete
+                                            </Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                             </View>
                         </View>
                     </View>
