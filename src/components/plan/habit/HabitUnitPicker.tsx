@@ -9,14 +9,19 @@ import { UI } from 'src/util/constants';
 
 interface Props {
     detailName: string;
+    currentUnit?: Unit;
     onUnitChanged: Function;
 }
 
-export const HabitUnitPicker = ({ detailName, onUnitChanged }: Props) => {
+export const HabitUnitPicker = ({ detailName, currentUnit, onUnitChanged }: Props) => {
     const { colors } = useTheme();
 
     const [showSetUnitModal, setShowSetUnitModal] = React.useState<boolean>(false);
-    const [unit, setUnit] = React.useState<Unit>();
+    const [unit, setUnit] = React.useState<Unit | undefined>();
+
+    React.useEffect(() => {
+        setUnit(currentUnit);
+    }, [currentUnit]);
 
     let selectedUnitValue = unit?.unit ? unit.unit.toString().toLowerCase() : 'Of What?';
     selectedUnitValue = selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1);

@@ -8,7 +8,10 @@ import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
-import { CreateScheduledHabitRequest } from 'resources/types/requests/ScheduledHabitTypes';
+import {
+    CreateScheduledHabitRequest,
+    GetScheduledHabitResponse,
+} from 'resources/types/requests/ScheduledHabitTypes';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -62,6 +65,17 @@ export class HabitController {
                 return false;
             });
     }
+
+    public static async getScheduledHabit(id: number) {
+        return await axiosInstance
+            .get<GetScheduledHabitResponse>(`/habit/schedule/${id}`)
+            .then((success) => {
+                return success.data.scheduledHabit;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
 }
 
 export namespace HabitCustomHooks {
@@ -91,13 +105,24 @@ export namespace HabitCustomHooks {
     };
 
     export const useHabit = (id: number) => {
-        const { status, error, data } = useQuery({
+        const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['habit', id],
             queryFn: () => HabitController.getHabit(id),
             staleTime: ReactQueryStaleTimes.HABIT,
             enabled: !!id,
         });
 
-        return data;
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useScheduledHabit = (id: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['scheduledHabit', id],
+            queryFn: () => HabitController.getScheduledHabit(id),
+            staleTime: ReactQueryStaleTimes.HABIT,
+            enabled: !!id,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
 }

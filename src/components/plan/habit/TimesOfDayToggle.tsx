@@ -6,15 +6,23 @@ import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayContr
 
 interface Props {
     onTimesChanged: Function;
+    toggledTimesOfDay?: TimeOfDay[];
 }
 
-export const TimesOfDayToggle = ({ onTimesChanged }: Props) => {
+export const TimesOfDayToggle = ({ onTimesChanged, toggledTimesOfDay }: Props) => {
     const timesOfDay: TimeOfDay[] = TimesOfDayCustomHooks.useTimesOfDay();
 
     const [morning, setMorning] = React.useState<boolean>(false);
     const [afternoon, setAfternoon] = React.useState<boolean>(false);
     const [evening, setEvening] = React.useState<boolean>(false);
     const [night, setNight] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        setMorning(toggledTimesOfDay?.some((time) => time.period === 'MORNING') ?? false);
+        setAfternoon(toggledTimesOfDay?.some((time) => time.period === 'AFTERNOON') ?? false);
+        setEvening(toggledTimesOfDay?.some((time) => time.period === 'EVENING') ?? false);
+        setNight(toggledTimesOfDay?.some((time) => time.period === 'NIGHT') ?? false);
+    }, [toggledTimesOfDay]);
 
     React.useEffect(() => {
         if (timesOfDay?.length === 0) {

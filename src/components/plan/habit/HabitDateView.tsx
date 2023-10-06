@@ -9,7 +9,7 @@ interface Props {
     onPress: () => void;
 }
 
-export const HabitDatePicker = ({ dateType, prettyDate, onPress }: Props) => {
+export const HabitDateView = ({ dateType, prettyDate, onPress }: Props) => {
     const { colors } = useTheme();
 
     return (

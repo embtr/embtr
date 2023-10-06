@@ -13,15 +13,19 @@ import { HabitQuantityInput } from './HabitQuantityInput';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SvgUri } from 'react-native-svg';
 import { CreateScheduledHabitRequest } from 'resources/types/requests/ScheduledHabitTypes';
-import { DaysOfTheWeekToggle } from './DaysOfTheWeekToggle';
 import { TimesOfDayToggle } from './TimesOfDayToggle';
 import { HabitUnitPicker } from './HabitUnitPicker';
 import { DayOfWeek, TimeOfDay, Unit } from 'resources/schema';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { DatePicker } from 'src/components/common/date/DatePicker';
-import { formatDate } from 'src/util/DateUtility';
-import { HabitDatePicker } from './HabitDatePicker';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
+import { LoadingOverlay } from 'src/components/common/loading/LoadingOverlay';
+import { ScheduleHabitDescription } from 'src/components/plan/habit/ScheduleHabitDescription';
+import {
+    ScheduleHabitRepeatingSchedule,
+    useScheduledHabitRepeatingScheduleDetails,
+} from 'src/components/plan/habit/ScheduledHabitRepeatingSchedule';
+
+// 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
 export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
@@ -34,25 +38,22 @@ export const CreateEditScheduledHabit = () => {
     const plannedTaskId = route.params.plannedTaskId;
     const plannedTask = PlannedHabitCustomHooks.usePlannedHabit(Number(plannedTaskId));
 
+    const scheduledHabitId = route.params.scheduledHabitId;
+    const scheduledHabit = HabitCustomHooks.useScheduledHabit(Number(scheduledHabitId));
+
     React.useEffect(() => {
-        if (habit) {
-            setTitle(habit.title ?? '');
+        if (habit.data) {
+            setTitle(habit.data.title ?? '');
         }
     }, [habit]);
 
-    const [title, setTitle] = React.useState(plannedTask?.title ?? '');
-    const [description, setDescription] = React.useState(plannedTask?.description ?? '');
-    const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfWeek[]>(
-        plannedTask?.scheduledHabit?.daysOfWeek ?? []
-    );
-    const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>(
-        plannedTask?.scheduledHabit?.timesOfDay ?? []
-    );
-    const [quantity, setQuantity] = React.useState('0');
-    const [unit, setUnit] = React.useState<Unit>();
-
-    const [repeatingScheduleEnabled, setRepeatingScheduleEnabled] = React.useState(false);
-    const [repeatingScheduleViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
+    const [icon, setIcon] = React.useState('');
+    const [title, setTitle] = React.useState('');
+    const [description, setDescription] = React.useState('');
+    const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfWeek[]>([]);
+    const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>([]);
+    const [quantity, setQuantity] = React.useState('');
+    const [unit, setUnit] = React.useState<Unit | undefined>(undefined);
 
     const [timeOfDayEnabled, setTimeOfDayEnabled] = React.useState(false);
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
@@ -60,11 +61,48 @@ export const CreateEditScheduledHabit = () => {
     const [detailsEnabled, setDetailsEnabled] = React.useState(false);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
 
-    const [startDateDatePickerModalVisible, setStartDateDatePickerModalVisible] =
-        React.useState(false);
-    const [endDateDatePickerModalVisible, setEndDateDatePickerModalVisible] = React.useState(false);
-    const [startDate, setStartDate] = React.useState<Date>(new Date());
-    const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
+    const TIME_OF_DAY_HEIGHT = 50 + TIMELINE_CARD_PADDING;
+    const DETAILS_HEIGHT = 100 + TIMELINE_CARD_PADDING;
+
+    const repeatingScheduleData = useScheduledHabitRepeatingScheduleDetails();
+
+    const runAnimation = (viewHeight: Animated.Value, maxHeight: number = 50) => {
+        Animated.timing(viewHeight, {
+            toValue: maxHeight, // Set the desired height
+            duration: 0, // Adjust the duration as needed
+            easing: Easing.ease, // Adjust the easing function as needed
+            useNativeDriver: false, // Make sure to set this to false for height animation
+        }).start();
+    };
+
+    React.useEffect(() => {
+        if (!scheduledHabit.data) {
+            return;
+        }
+
+        setIcon(scheduledHabit.data.task?.iconUrl ?? '');
+        setTitle(scheduledHabit.data.task?.title ?? '');
+        setDescription(scheduledHabit.data.description ?? '');
+        setDaysOfWeek(scheduledHabit.data.daysOfWeek ?? []);
+        setTimesOfDay(scheduledHabit.data.timesOfDay ?? []);
+        setQuantity(scheduledHabit.data.quantity?.toString() ?? '');
+        setUnit(scheduledHabit.data.unit);
+
+        //if (scheduledHabit.data.daysOfWeek?.length !== 0) {
+        //    setRepeatingScheduleEnabled(true);
+        //    runAnimation(repeatingScheduleViewHeight, REPEATING_SCHEDULE_HEIGHT);
+        //}
+
+        if (scheduledHabit.data.timesOfDay?.length !== 0) {
+            setTimeOfDayEnabled(true);
+            runAnimation(timeOfDayViewHeight, TIME_OF_DAY_HEIGHT);
+        }
+
+        if (scheduledHabit.data.quantity !== undefined || scheduledHabit.data.unit !== undefined) {
+            setDetailsEnabled(true);
+            runAnimation(detailsViewHeight, DETAILS_HEIGHT);
+        }
+    }, [scheduledHabit.data]);
 
     const toggleVisibility = (
         enabled: boolean,
@@ -83,48 +121,15 @@ export const CreateEditScheduledHabit = () => {
         }).start();
     };
 
-    const startDatePretty = formatDate(startDate);
-    const endDatePretty = endDate ? formatDate(endDate) : 'Forever';
-
-    const startDateDatePickerMemo = React.useMemo(() => {
-        return (
-            <DatePicker
-                visible={startDateDatePickerModalVisible}
-                date={startDate}
-                onConfirm={(date: Date) => {
-                    setStartDateDatePickerModalVisible(false);
-                    setStartDate(date);
-                }}
-                onCancel={() => {
-                    setStartDateDatePickerModalVisible(false);
-                }}
-            />
-        );
-    }, [startDateDatePickerModalVisible]);
-
-    const endDateDatePickerMemo = React.useMemo(() => {
-        return (
-            <DatePicker
-                visible={endDateDatePickerModalVisible}
-                date={endDate ?? new Date()}
-                onConfirm={(date: Date) => {
-                    setEndDateDatePickerModalVisible(false);
-                    setEndDate(date);
-                }}
-                onCancel={() => {
-                    setEndDateDatePickerModalVisible(false);
-                }}
-            />
-        );
-    }, [endDateDatePickerModalVisible]);
-
+    const loading = plannedTask.isLoading || scheduledHabit.isLoading || habit.isLoading;
     //todo - implement me
     //const scheduledHabitId = route.params.scheduledHabitId;
+
     return (
         <Screen>
+            <LoadingOverlay active={loading} />
             <Banner name={'Schedule Habit'} leftRoute="BACK" leftIcon={'arrow-back'} />
-            {startDateDatePickerMemo}
-            {endDateDatePickerMemo}
+
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View
                     style={{
@@ -182,7 +187,7 @@ export const CreateEditScheduledHabit = () => {
                                     justifyContent: 'center',
                                 }}
                             >
-                                <SvgUri width={37.5} height={37.5} uri={habit?.iconUrl ?? ''} />
+                                <SvgUri width={37.5} height={37.5} uri={icon} />
                             </View>
                             <View style={{ width: TIMELINE_CARD_PADDING }} />
                             <TextInput
@@ -206,127 +211,19 @@ export const CreateEditScheduledHabit = () => {
                     </View>
 
                     {/* DESCRIPTION */}
-                    <View
-                        style={{
-                            paddingTop: TIMELINE_CARD_PADDING * 2,
+                    <ScheduleHabitDescription
+                        onPress={() => {
+                            Keyboard.dismiss();
                         }}
-                    >
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 16,
-                            }}
-                        >
-                            Description
-                        </Text>
-
-                        <View style={{ paddingTop: TIMELINE_CARD_PADDING / 4 }}>
-                            <TextInput
-                                textAlignVertical="top"
-                                style={{
-                                    height: 150,
-                                    borderRadius: 12,
-                                    padding: TIMELINE_CARD_PADDING,
-                                    backgroundColor: colors.text_input_background,
-                                    borderColor: colors.text_input_border,
-                                    borderWidth: 1,
-                                    color: colors.text,
-                                    fontFamily: POPPINS_REGULAR,
-                                }}
-                                multiline={true}
-                                placeholder={'Enter some specifics about this habit.'}
-                                placeholderTextColor={colors.secondary_text}
-                                onChangeText={setDescription}
-                                value={description}
-                            />
-                        </View>
-                    </View>
+                        onChangeText={setDescription}
+                        text={description}
+                    />
 
                     {/* Repeating Schedule */}
-                    <View>
-                        <View
-                            style={{
-                                paddingTop: TIMELINE_CARD_PADDING * 2,
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <View style={{ flex: 1 }}>
-                                <Text
-                                    onPress={() => {
-                                        Keyboard.dismiss();
-                                    }}
-                                    style={{
-                                        color: colors.text,
-                                        fontFamily: POPPINS_MEDIUM,
-                                        fontSize: 16,
-                                    }}
-                                >
-                                    Repeating Schedule
-                                </Text>
-                            </View>
-
-                            <View style={{}}>
-                                <Switch
-                                    onValueChange={() => {
-                                        toggleVisibility(
-                                            repeatingScheduleEnabled,
-                                            setRepeatingScheduleEnabled,
-                                            repeatingScheduleViewHeight,
-                                            150 + TIMELINE_CARD_PADDING * 2
-                                        );
-                                    }}
-                                    value={repeatingScheduleEnabled}
-                                    style={isAndroidDevice() ? { height: 20 } : {}}
-                                    trackColor={{
-                                        false: colors.secondary_text,
-                                        true: colors.accent_color,
-                                    }}
-                                    thumbColor={colors.toggle}
-                                    ios_backgroundColor={colors.toggle_background_unselected}
-                                />
-                            </View>
-                        </View>
-
-                        <Animated.View
-                            style={{
-                                marginTop: TIMELINE_CARD_PADDING,
-                                height: repeatingScheduleViewHeight,
-                                overflow: 'hidden',
-                            }}
-                        >
-                            <DaysOfTheWeekToggle onDaysChanged={setDaysOfWeek} />
-
-                            <View style={{ width: '100%' }}>
-                                <HabitDatePicker
-                                    dateType="Start Date"
-                                    prettyDate={startDatePretty}
-                                    onPress={() => {
-                                        setStartDateDatePickerModalVisible(true);
-                                    }}
-                                />
-                            </View>
-
-                            <View
-                                style={{
-                                    width: '100%',
-                                    paddingTop: TIMELINE_CARD_PADDING,
-                                }}
-                            >
-                                <HabitDatePicker
-                                    dateType="End Date"
-                                    prettyDate={endDatePretty}
-                                    onPress={() => {
-                                        setEndDateDatePickerModalVisible(true);
-                                    }}
-                                />
-                            </View>
-                        </Animated.View>
-                    </View>
+                    <ScheduleHabitRepeatingSchedule
+                        props={repeatingScheduleData}
+                        onVisibilityToggled={toggleVisibility}
+                    />
 
                     {/* Time Of Day */}
                     <View>
@@ -358,7 +255,8 @@ export const CreateEditScheduledHabit = () => {
                                         toggleVisibility(
                                             timeOfDayEnabled,
                                             setTimeOfDayEnabled,
-                                            timeOfDayViewHeight
+                                            timeOfDayViewHeight,
+                                            TIME_OF_DAY_HEIGHT
                                         );
                                     }}
                                     value={timeOfDayEnabled}
@@ -381,7 +279,10 @@ export const CreateEditScheduledHabit = () => {
                                 overflow: 'hidden',
                             }}
                         >
-                            <TimesOfDayToggle onTimesChanged={setTimesOfDay} />
+                            <TimesOfDayToggle
+                                onTimesChanged={setTimesOfDay}
+                                toggledTimesOfDay={timesOfDay}
+                            />
                         </Animated.View>
                     </View>
 
@@ -416,7 +317,7 @@ export const CreateEditScheduledHabit = () => {
                                             detailsEnabled,
                                             setDetailsEnabled,
                                             detailsViewHeight,
-                                            100 + TIMELINE_CARD_PADDING
+                                            DETAILS_HEIGHT
                                         );
                                     }}
                                     value={detailsEnabled}
@@ -443,7 +344,11 @@ export const CreateEditScheduledHabit = () => {
                             </View>
 
                             <View style={{ flex: 1, paddingTop: TIMELINE_CARD_PADDING }}>
-                                <HabitUnitPicker detailName={'Of What?'} onUnitChanged={() => {}} />
+                                <HabitUnitPicker
+                                    detailName={'Of What?'}
+                                    currentUnit={unit}
+                                    onUnitChanged={setUnit}
+                                />
                             </View>
                         </Animated.View>
                     </View>
@@ -471,12 +376,13 @@ export const CreateEditScheduledHabit = () => {
                                 description: description,
                             };
 
-                            if (repeatingScheduleEnabled) {
+                            if (repeatingScheduleData.detailsVisible) {
                                 createScheduledHabitRequest.daysOfWeekIds = daysOfWeek
                                     .map((dayOfWeek) => dayOfWeek.id)
                                     .filter((id) => id !== undefined) as number[];
-                                createScheduledHabitRequest.startDate = startDate;
-                                createScheduledHabitRequest.endDate = endDate;
+                                createScheduledHabitRequest.startDate =
+                                    repeatingScheduleData.startDate;
+                                createScheduledHabitRequest.endDate = repeatingScheduleData.endDate;
                             }
 
                             if (detailsEnabled) {

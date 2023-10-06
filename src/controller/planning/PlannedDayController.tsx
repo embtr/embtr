@@ -275,7 +275,11 @@ class PlannedDayController {
         dayKey: string
     ): Promise<PlannedDayModel | undefined> {
         const userId = await getUserIdFromToken();
-        return await this.getViaApi(userId, dayKey);
+        if (!!userId) {
+            return await this.getViaApi(userId, dayKey);
+        }
+
+        return undefined;
     }
 
     public static async getViaApi(

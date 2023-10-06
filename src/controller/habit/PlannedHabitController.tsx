@@ -19,13 +19,13 @@ export class PlannedHabitController {
 
 export namespace PlannedHabitCustomHooks {
     export const usePlannedHabit = (id: number) => {
-        const { status, error, data } = useQuery({
+        const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['plannedHabit', id],
             queryFn: () => PlannedHabitController.get(id),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
             enabled: !!id,
         });
 
-        return data;
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
 }

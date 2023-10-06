@@ -161,7 +161,7 @@ export const Banner = ({
                     )}
                 </View>
 
-                <View style={{ flex: 2, justifyContent: 'center' }}>
+                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
                     <Text
                         style={[
                             textStyle,

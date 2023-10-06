@@ -12,6 +12,7 @@ export const AndroidDatePicker = ({ date, onConfirm, onCancel }: Props) => {
             display="default"
             value={date}
             mode={'date'}
+            timeZoneOffsetInMinutes={0}
             onChange={(event: DateTimePickerEvent, updatedDate?: Date) => {
                 if (event.type === 'set') {
                     onConfirm(updatedDate || date);

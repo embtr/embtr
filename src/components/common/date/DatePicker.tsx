@@ -2,6 +2,7 @@ import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { AndroidDatePicker } from './AndroidDatePicker';
 import { IOSDatePicker } from './IOSDatePicker';
 import { View } from 'react-native';
+import React from "react";
 
 interface Props {
     visible: boolean;

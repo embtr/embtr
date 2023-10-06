@@ -7,9 +7,10 @@ import { DayOfWeek } from 'resources/schema';
 
 interface Props {
     onDaysChanged: Function;
+    daysOfWeek1?: DayOfWeek[];
 }
 
-export const DaysOfTheWeekToggle = ({ onDaysChanged }: Props) => {
+export const DaysOfTheWeekToggle = ({ onDaysChanged, daysOfWeek1 }: Props) => {
     const daysOfWeek: DayOfWeek[] = DayOfWeekCustomHooks.useDaysOfWeek();
 
     const [monday, setMonday] = React.useState<boolean>(false);
@@ -19,6 +20,16 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged }: Props) => {
     const [friday, setFriday] = React.useState<boolean>(false);
     const [saturday, setSaturday] = React.useState<boolean>(false);
     const [sunday, setSunday] = React.useState<boolean>(false);
+
+    React.useEffect(() => {
+        setMonday(daysOfWeek1?.some((day) => day.day === 'MONDAY') ?? false);
+        setTuesday(daysOfWeek1?.some((day) => day.day === 'TUESDAY') ?? false);
+        setWednesday(daysOfWeek1?.some((day) => day.day === 'WEDNESDAY') ?? false);
+        setThursday(daysOfWeek1?.some((day) => day.day === 'THURSDAY') ?? false);
+        setFriday(daysOfWeek1?.some((day) => day.day === 'FRIDAY') ?? false);
+        setSaturday(daysOfWeek1?.some((day) => day.day === 'SATURDAY') ?? false);
+        setSunday(daysOfWeek1?.some((day) => day.day === 'SUNDAY') ?? false);
+    }, [daysOfWeek1]);
 
     React.useEffect(() => {
         if (daysOfWeek?.length === 0) {

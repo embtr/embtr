@@ -45,7 +45,7 @@
         "lodash": "^4.17.21",
         "logger": "^0.0.1",
         "lottie-react-native": "5.1.6",
-        "prettier": "^2.7.1",
+        "prettier": "^3.0.3",
         "react": "18.2.0",
         "react-device-detect": "^2.1.2",
         "react-dom": "18.2.0",
