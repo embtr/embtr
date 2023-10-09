@@ -4,14 +4,12 @@ import { DayOfTheWeekToggle } from './DayOfTheWeekToggle';
 import { UI } from 'src/util/constants';
 import { DayOfWeekCustomHooks } from 'src/controller/day_of_week/DayOfWeekController';
 import { DayOfWeek } from 'resources/schema';
+import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-interface Props {
-    onDaysChanged: Function;
-    daysOfWeek1?: DayOfWeek[];
-}
+export const DaysOfTheWeekToggle = () => {
+    const allDaysOfWeek: DayOfWeek[] = DayOfWeekCustomHooks.useDaysOfWeek();
 
-export const DaysOfTheWeekToggle = ({ onDaysChanged, daysOfWeek1 }: Props) => {
-    const daysOfWeek: DayOfWeek[] = DayOfWeekCustomHooks.useDaysOfWeek();
+    const { daysOfWeek, setDaysOfWeek } = useCreateEditScheduleHabit();
 
     const [monday, setMonday] = React.useState<boolean>(false);
     const [tuesday, setTuesday] = React.useState<boolean>(false);
@@ -22,22 +20,22 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged, daysOfWeek1 }: Props) => {
     const [sunday, setSunday] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        setMonday(daysOfWeek1?.some((day) => day.day === 'MONDAY') ?? false);
-        setTuesday(daysOfWeek1?.some((day) => day.day === 'TUESDAY') ?? false);
-        setWednesday(daysOfWeek1?.some((day) => day.day === 'WEDNESDAY') ?? false);
-        setThursday(daysOfWeek1?.some((day) => day.day === 'THURSDAY') ?? false);
-        setFriday(daysOfWeek1?.some((day) => day.day === 'FRIDAY') ?? false);
-        setSaturday(daysOfWeek1?.some((day) => day.day === 'SATURDAY') ?? false);
-        setSunday(daysOfWeek1?.some((day) => day.day === 'SUNDAY') ?? false);
-    }, [daysOfWeek1]);
+        setMonday(daysOfWeek?.some((day) => day.day === 'MONDAY') ?? false);
+        setTuesday(daysOfWeek?.some((day) => day.day === 'TUESDAY') ?? false);
+        setWednesday(daysOfWeek?.some((day) => day.day === 'WEDNESDAY') ?? false);
+        setThursday(daysOfWeek?.some((day) => day.day === 'THURSDAY') ?? false);
+        setFriday(daysOfWeek?.some((day) => day.day === 'FRIDAY') ?? false);
+        setSaturday(daysOfWeek?.some((day) => day.day === 'SATURDAY') ?? false);
+        setSunday(daysOfWeek?.some((day) => day.day === 'SUNDAY') ?? false);
+    }, [daysOfWeek]);
 
     React.useEffect(() => {
-        if (daysOfWeek?.length === 0) {
+        if (allDaysOfWeek?.length === 0) {
             return;
         }
 
         const toggledDaysOfWeek: DayOfWeek[] = [];
-        for (const dayOfWeek of daysOfWeek) {
+        for (const dayOfWeek of allDaysOfWeek) {
             switch (dayOfWeek.day) {
                 case 'MONDAY':
                     if (monday) {
@@ -80,8 +78,8 @@ export const DaysOfTheWeekToggle = ({ onDaysChanged, daysOfWeek1 }: Props) => {
             }
         }
 
-        onDaysChanged(toggledDaysOfWeek);
-    }, [daysOfWeek, monday, tuesday, wednesday, thursday, friday, saturday, sunday]);
+        setDaysOfWeek(toggledDaysOfWeek);
+    }, [allDaysOfWeek, monday, tuesday, wednesday, thursday, friday, saturday, sunday]);
 
     return (
         <View style={{ flex: 1, flexDirection: 'row', width: '100%' }}>

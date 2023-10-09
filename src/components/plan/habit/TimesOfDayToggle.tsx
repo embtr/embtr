@@ -3,14 +3,12 @@ import { View } from 'react-native';
 import { TimeOfDayToggle } from './TimeOfDayToggle';
 import { TimeOfDay } from 'resources/schema';
 import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayController';
+import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-interface Props {
-    onTimesChanged: Function;
-    toggledTimesOfDay?: TimeOfDay[];
-}
-
-export const TimesOfDayToggle = ({ onTimesChanged, toggledTimesOfDay }: Props) => {
+export const TimesOfDayToggle = () => {
     const timesOfDay: TimeOfDay[] = TimesOfDayCustomHooks.useTimesOfDay();
+    const { timesOfDay: toggledTimesOfDay, setTimesOfDay: onTimesChanged } =
+        useCreateEditScheduleHabit();
 
     const [morning, setMorning] = React.useState<boolean>(false);
     const [afternoon, setAfternoon] = React.useState<boolean>(false);

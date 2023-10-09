@@ -6,22 +6,14 @@ import { AndroidUnitPicker } from 'src/components/units/AndroidUnitPicker';
 import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { UI } from 'src/util/constants';
+import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-interface Props {
-    detailName: string;
-    currentUnit?: Unit;
-    onUnitChanged: Function;
-}
-
-export const HabitUnitPicker = ({ detailName, currentUnit, onUnitChanged }: Props) => {
+export const ScheduledHabitUnitPicker = () => {
     const { colors } = useTheme();
 
     const [showSetUnitModal, setShowSetUnitModal] = React.useState<boolean>(false);
-    const [unit, setUnit] = React.useState<Unit | undefined>();
 
-    React.useEffect(() => {
-        setUnit(currentUnit);
-    }, [currentUnit]);
+    const { unit, setUnit } = useCreateEditScheduleHabit();
 
     let selectedUnitValue = unit?.unit ? unit.unit.toString().toLowerCase() : 'Of What?';
     selectedUnitValue = selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1);
@@ -39,7 +31,6 @@ export const HabitUnitPicker = ({ detailName, currentUnit, onUnitChanged }: Prop
                     visible={showSetUnitModal}
                     confirm={(selected: Unit) => {
                         setShowSetUnitModal(false);
-                        onUnitChanged(selected);
                         setUnit(selected);
                     }}
                     dismiss={() => {
@@ -52,7 +43,6 @@ export const HabitUnitPicker = ({ detailName, currentUnit, onUnitChanged }: Prop
                     visible={showSetUnitModal}
                     confirm={(selected: Unit) => {
                         setShowSetUnitModal(false);
-                        onUnitChanged(selected);
                         setUnit(selected);
                     }}
                     dismiss={() => {
@@ -61,7 +51,7 @@ export const HabitUnitPicker = ({ detailName, currentUnit, onUnitChanged }: Prop
                 />
             )}
 
-            <Text style={{ color: colors.text, flex: 1 }}>{detailName}</Text>
+            <Text style={{ color: colors.text, flex: 1 }}>Of What?</Text>
             <Pressable
                 onPress={() => {
                     setShowSetUnitModal(true);

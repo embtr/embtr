@@ -1,14 +1,13 @@
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { View, Text, TextInput } from 'react-native';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-interface Props {
-    text: string;
-    onChangeText: (text: string) => void;
-    onPress: () => void;
-}
-export const ScheduleHabitDescription = ({ text, onChangeText, onPress }: Props) => {
+interface Props {}
+export const ScheduleHabitDescription = ({}: Props) => {
     const { colors } = useTheme();
+    const { description, setDescription } = useCreateEditScheduleHabit();
+
     return (
         <View
             style={{
@@ -16,7 +15,6 @@ export const ScheduleHabitDescription = ({ text, onChangeText, onPress }: Props)
             }}
         >
             <Text
-                onPress={onPress}
                 style={{
                     color: colors.text,
                     fontFamily: POPPINS_MEDIUM,
@@ -42,8 +40,8 @@ export const ScheduleHabitDescription = ({ text, onChangeText, onPress }: Props)
                     multiline={true}
                     placeholder={'Enter some specifics about this habit.'}
                     placeholderTextColor={colors.secondary_text}
-                    onChangeText={onChangeText}
-                    value={text}
+                    onChangeText={setDescription}
+                    value={description}
                 />
             </View>
         </View>

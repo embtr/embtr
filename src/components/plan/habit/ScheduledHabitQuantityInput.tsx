@@ -1,19 +1,19 @@
 import { Text, TextInput, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UI } from 'src/util/constants';
+import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-interface Props {
-    value: string;
-    setValue: Function;
-}
-
-export const HabitQuantityInput = ({ value, setValue }: Props) => {
+export const ScheduledHabitQuantityInput = () => {
     const { colors } = useTheme();
+
+    const { quantity, setQuantity } = useCreateEditScheduleHabit();
 
     const handleTextChange = (text: string) => {
         // remove all non numberic characters and only allow the first decimal point
         let numericValue = text.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-        setValue(numericValue);
+        const asNumber = parseFloat(numericValue);
+
+        setQuantity(asNumber);
     };
 
     return (
@@ -26,7 +26,7 @@ export const HabitQuantityInput = ({ value, setValue }: Props) => {
             <Text style={{ color: colors.text, flex: 1 }}>How Many?</Text>
             <TextInput
                 onChangeText={handleTextChange}
-                value={value}
+                value={quantity.toString()}
                 keyboardType="numeric"
                 placeholder="0"
                 style={{

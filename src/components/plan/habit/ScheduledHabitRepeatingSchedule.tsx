@@ -6,19 +6,23 @@ import { DaysOfTheWeekToggle } from 'src/components/plan/habit/DaysOfTheWeekTogg
 import { HabitDateView } from 'src/components/plan/habit/HabitDateView';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { formatDate } from 'src/util/DateUtility';
-import {DatePicker} from 'src/components/common/date/DatePicker';
-import { DayOfWeek } from 'resources/schema';
+import { DatePicker } from 'src/components/common/date/DatePicker';
+import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-export const useScheduledHabitRepeatingScheduleDetails = () => {
-    const [startDate, setStartDate] = React.useState<Date | undefined>(undefined);
-    const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
-    const [startDateDatePickerModalVisible, setStartDateDatePickerModalVisible] =
-        React.useState(false);
-    const [endDateDatePickerModalVisible, setEndDateDatePickerModalVisible] = React.useState(false);
-    const [detailsVisible, setDetailsVisible] = React.useState(false);
-    const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfWeek[]>([]);
+interface Props {
+    toggleVisibility: (
+        enabled: boolean,
+        setEnabled: Function,
+        viewHeight: Animated.Value,
+        maxHeight: number
+    ) => void;
+}
 
-    return {
+export const ScheduleHabitRepeatingSchedule = ({ toggleVisibility }: Props) => {
+    const { colors } = useTheme();
+
+    const REPEATING_SCHEDULE_HEIGHT = 150 + TIMELINE_CARD_PADDING * 2;
+    const {
         startDate,
         setStartDate,
         endDate,
@@ -27,64 +31,46 @@ export const useScheduledHabitRepeatingScheduleDetails = () => {
         setStartDateDatePickerModalVisible,
         endDateDatePickerModalVisible,
         setEndDateDatePickerModalVisible,
-        detailsVisible,
-        setDetailsVisible,
-        daysOfWeek,
-        setDaysOfWeek,
-    };
-};
-
-interface Props {
-    props: ReturnType<typeof useScheduledHabitRepeatingScheduleDetails>;
-    onVisibilityToggled: (
-        enabled: boolean,
-        setEnabled: Function,
-        viewHeight: Animated.Value,
-        maxHeight: number
-    ) => void;
-}
-
-export const ScheduleHabitRepeatingSchedule = ({ props, onVisibilityToggled }: Props) => {
-    const { colors } = useTheme();
-
-    const REPEATING_SCHEDULE_HEIGHT = 150 + TIMELINE_CARD_PADDING * 2;
+        detailsEnabled,
+        setDetailsEnabled,
+    } = useCreateEditScheduleHabit();
     const [height] = React.useState<Animated.Value>(new Animated.Value(0));
 
-    const startDatePretty = props.startDate ? formatDate(props.startDate) : 'Forever';
-    const endDatePretty = props.endDate ? formatDate(props.endDate) : 'Forever';
+    const startDatePretty = startDate ? formatDate(startDate) : 'Forever';
+    const endDatePretty = endDate ? formatDate(endDate) : 'Forever';
 
     //TODO React.useMemo() vs React.memo()
     const startDateDatePickerMemo = React.useMemo(() => {
         return (
             <DatePicker
-                visible={props.startDateDatePickerModalVisible}
-                date={props.startDate ?? new Date()}
+                visible={startDateDatePickerModalVisible}
+                date={startDate ?? new Date()}
                 onConfirm={(date: Date) => {
-                    props.setStartDateDatePickerModalVisible(false);
-                    props.setStartDate(date);
+                    setStartDateDatePickerModalVisible(false);
+                    setStartDate(date);
                 }}
                 onCancel={() => {
-                    props.setStartDateDatePickerModalVisible(false);
+                    setStartDateDatePickerModalVisible(false);
                 }}
             />
         );
-    }, [props.startDateDatePickerModalVisible]);
+    }, [startDateDatePickerModalVisible]);
 
     const endDateDatePickerMemo = React.useMemo(() => {
         return (
             <DatePicker
-                visible={props.endDateDatePickerModalVisible}
-                date={props.endDate ?? new Date()}
+                visible={endDateDatePickerModalVisible}
+                date={endDate ?? new Date()}
                 onConfirm={(date: Date) => {
-                    props.setEndDateDatePickerModalVisible(false);
-                    props.setEndDate(date);
+                    setEndDateDatePickerModalVisible(false);
+                    setEndDate(date);
                 }}
                 onCancel={() => {
-                    props.setEndDateDatePickerModalVisible(false);
+                    setEndDateDatePickerModalVisible(false);
                 }}
             />
         );
-    }, [props.endDateDatePickerModalVisible]);
+    }, [endDateDatePickerModalVisible]);
 
     return (
         <View>
@@ -112,11 +98,11 @@ export const ScheduleHabitRepeatingSchedule = ({ props, onVisibilityToggled }: P
 
                 <View>
                     <Switch
-                        value={props.detailsVisible}
+                        value={detailsEnabled}
                         onValueChange={() => {
-                            onVisibilityToggled(
-                                props.detailsVisible,
-                                props.setDetailsVisible,
+                            toggleVisibility(
+                                detailsEnabled,
+                                setDetailsEnabled,
                                 height,
                                 REPEATING_SCHEDULE_HEIGHT
                             );
@@ -139,17 +125,14 @@ export const ScheduleHabitRepeatingSchedule = ({ props, onVisibilityToggled }: P
                     overflow: 'hidden',
                 }}
             >
-                <DaysOfTheWeekToggle
-                    daysOfWeek1={props.daysOfWeek}
-                    onDaysChanged={props.setDaysOfWeek}
-                />
+                <DaysOfTheWeekToggle />
 
                 <View style={{ width: '100%' }}>
                     <HabitDateView
                         dateType="Start Date"
                         prettyDate={startDatePretty}
                         onPress={() => {
-                            props.setStartDateDatePickerModalVisible(true);
+                            setStartDateDatePickerModalVisible(true);
                         }}
                     />
                 </View>
@@ -164,7 +147,7 @@ export const ScheduleHabitRepeatingSchedule = ({ props, onVisibilityToggled }: P
                         dateType="End Date"
                         prettyDate={endDatePretty}
                         onPress={() => {
-                            props.setEndDateDatePickerModalVisible(true);
+                            setEndDateDatePickerModalVisible(true);
                         }}
                     />
                 </View>
