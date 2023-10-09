@@ -5,24 +5,20 @@ import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ScheduledHabitQuantityInput } from 'src/components/plan/habit/ScheduledHabitQuantityInput';
 import { ScheduledHabitUnitPicker } from 'src/components/plan/habit/ScheduledHabitUnitPicker';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-interface Props {
-    toggleVisibility: (
-        enabled: boolean,
-        setEnabled: Function,
-        viewHeight: Animated.Value,
-        maxHeight: number
-    ) => void;
-}
-
-export const ScheduledHabitDetails = ({ toggleVisibility }: Props) => {
+export const ScheduledHabitDetails = () => {
     const { colors } = useTheme();
 
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
-    const [detailsEnabled, setDetailsEnabled] = React.useState(false);
+    const { detailsEnabled, setDetailsEnabled } = useCreateEditScheduleHabit();
 
     const DETAILS_HEIGHT = 100 + TIMELINE_CARD_PADDING;
+
+    React.useEffect(() => {
+        runCreateEditScheduledHabitAnimation(detailsEnabled, detailsViewHeight, DETAILS_HEIGHT);
+    }, [detailsEnabled]);
 
     return (
         <View>
@@ -51,12 +47,8 @@ export const ScheduledHabitDetails = ({ toggleVisibility }: Props) => {
                 <View style={{}}>
                     <Switch
                         onValueChange={() => {
-                            toggleVisibility(
-                                detailsEnabled,
-                                setDetailsEnabled,
-                                detailsViewHeight,
-                                DETAILS_HEIGHT
-                            );
+                            console.log('new value', !detailsEnabled);
+                            setDetailsEnabled(!detailsEnabled);
                         }}
                         value={detailsEnabled}
                         style={isAndroidDevice() ? { height: 20 } : {}}

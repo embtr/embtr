@@ -112,10 +112,16 @@ export const CreateEditScheduledHabitProvider = ({
             setIcon(scheduledHabit.data.task?.iconUrl ?? '');
             setTitle(scheduledHabit.data.task?.title ?? '');
             setDescription(scheduledHabit.data.description ?? '');
+            setStartDate(scheduledHabit.data.startDate ?? undefined);
+            setEndDate(scheduledHabit.data.endDate ?? undefined);
             setDaysOfWeek(scheduledHabit.data.daysOfWeek ?? []);
             setTimesOfDay(scheduledHabit.data.timesOfDay ?? []);
             setQuantity(scheduledHabit.data.quantity ?? 1);
             setUnit(scheduledHabit.data.unit ?? undefined);
+
+            setRepeatingScheduleEnabled(scheduledHabit.data.daysOfWeek?.length !== 0);
+            setTimeOfDayEnabled(scheduledHabit.data.timesOfDay?.length !== 0);
+            setDetailsEnabled(scheduledHabit.data.quantity !== undefined || scheduledHabit.data.unit !== undefined);
         }
     }, [scheduledHabit.data]);
 

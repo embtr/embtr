@@ -1,4 +1,3 @@
-import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
@@ -17,29 +16,27 @@ import { ScheduledHabitSaveButton } from 'src/components/plan/habit/ScheduledHab
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
+export const runCreateEditScheduledHabitAnimation = (
+    expand: boolean,
+    viewHeight: Animated.Value,
+    maxHeight: number = 50
+) => {
+    const height = expand ? maxHeight : 0;
+
+    Animated.timing(viewHeight, {
+        toValue: height, // Set the desired height
+        duration: 125, // Adjust the duration as needed
+        easing: Easing.ease, // Adjust the easing function as needed
+        useNativeDriver: false, // Make sure to set this to false for height animation
+    }).start();
+};
+
 export const CreateEditScheduledHabit = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
     const habitId = route.params.habitId;
     const plannedTaskId = route.params.plannedTaskId;
     const scheduledHabitId = route.params.scheduledHabitId;
-
-    const toggleVisibility = (
-        enabled: boolean,
-        setEnabled: Function,
-        viewHeight: Animated.Value,
-        maxHeight: number = 50
-    ) => {
-        setEnabled(!enabled);
-        const height = enabled ? 0 : maxHeight;
-
-        Animated.timing(viewHeight, {
-            toValue: height, // Set the desired height
-            duration: 125, // Adjust the duration as needed
-            easing: Easing.ease, // Adjust the easing function as needed
-            useNativeDriver: false, // Make sure to set this to false for height animation
-        }).start();
-    };
 
     return (
         <CreateEditScheduledHabitProvider
@@ -60,9 +57,9 @@ export const CreateEditScheduledHabit = () => {
                     >
                         <ScheduledHabitTitle />
                         <ScheduleHabitDescription />
-                        <ScheduleHabitRepeatingSchedule toggleVisibility={toggleVisibility} />
-                        <ScheduledHabitTimeOfDay toggleVisibility={toggleVisibility} />
-                        <ScheduledHabitDetails toggleVisibility={toggleVisibility} />
+                        <ScheduleHabitRepeatingSchedule />
+                        <ScheduledHabitTimeOfDay />
+                        <ScheduledHabitDetails />
                         <View style={{ height: TIMELINE_CARD_PADDING }} />
                     </View>
                 </ScrollView>

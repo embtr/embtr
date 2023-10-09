@@ -8,17 +8,9 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { formatDate } from 'src/util/DateUtility';
 import { DatePicker } from 'src/components/common/date/DatePicker';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
 
-interface Props {
-    toggleVisibility: (
-        enabled: boolean,
-        setEnabled: Function,
-        viewHeight: Animated.Value,
-        maxHeight: number
-    ) => void;
-}
-
-export const ScheduleHabitRepeatingSchedule = ({ toggleVisibility }: Props) => {
+export const ScheduleHabitRepeatingSchedule = () => {
     const { colors } = useTheme();
 
     const REPEATING_SCHEDULE_HEIGHT = 150 + TIMELINE_CARD_PADDING * 2;
@@ -32,12 +24,20 @@ export const ScheduleHabitRepeatingSchedule = ({ toggleVisibility }: Props) => {
         endDateDatePickerModalVisible,
         setEndDateDatePickerModalVisible,
         repeatingScheduleEnabled,
-        setRepeatingScheduleEnabled
+        setRepeatingScheduleEnabled,
     } = useCreateEditScheduleHabit();
     const [height] = React.useState<Animated.Value>(new Animated.Value(0));
 
     const startDatePretty = startDate ? formatDate(startDate) : 'Forever';
     const endDatePretty = endDate ? formatDate(endDate) : 'Forever';
+
+    React.useEffect(() => {
+        runCreateEditScheduledHabitAnimation(
+            repeatingScheduleEnabled,
+            height,
+            REPEATING_SCHEDULE_HEIGHT
+        );
+    }, [repeatingScheduleEnabled]);
 
     //TODO React.useMemo() vs React.memo()
     const startDateDatePickerMemo = React.useMemo(() => {
@@ -100,12 +100,7 @@ export const ScheduleHabitRepeatingSchedule = ({ toggleVisibility }: Props) => {
                     <Switch
                         value={repeatingScheduleEnabled}
                         onValueChange={() => {
-                            toggleVisibility(
-                                repeatingScheduleEnabled,
-                                setRepeatingScheduleEnabled,
-                                height,
-                                REPEATING_SCHEDULE_HEIGHT
-                            );
+                            setRepeatingScheduleEnabled(!repeatingScheduleEnabled);
                         }}
                         style={isAndroidDevice() ? { height: 20 } : {}}
                         trackColor={{

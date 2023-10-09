@@ -6,22 +6,24 @@ import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated } from 'react-native';
 import { TimesOfDayToggle } from './TimesOfDayToggle';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
+import { set } from 'lodash';
 
-interface Props {
-    toggleVisibility: (
-        enabled: boolean,
-        setEnabled: Function,
-        viewHeight: Animated.Value,
-        maxHeight: number
-    ) => void;
-}
-export const ScheduledHabitTimeOfDay = ({ toggleVisibility }: Props) => {
+export const ScheduledHabitTimeOfDay = () => {
     const { colors } = useTheme();
 
     const { timeOfDayEnabled, setTimeOfDayEnabled } = useCreateEditScheduleHabit();
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
 
     const TIME_OF_DAY_HEIGHT = 50 + TIMELINE_CARD_PADDING;
+
+    React.useEffect(() => {
+        runCreateEditScheduledHabitAnimation(
+            timeOfDayEnabled,
+            timeOfDayViewHeight,
+            TIME_OF_DAY_HEIGHT
+        );
+    }, [timeOfDayEnabled]);
 
     return (
         <View>
@@ -50,12 +52,7 @@ export const ScheduledHabitTimeOfDay = ({ toggleVisibility }: Props) => {
                 <View style={{}}>
                     <Switch
                         onValueChange={() => {
-                            toggleVisibility(
-                                timeOfDayEnabled,
-                                setTimeOfDayEnabled,
-                                timeOfDayViewHeight,
-                                TIME_OF_DAY_HEIGHT
-                            );
+                            setTimeOfDayEnabled(!timeOfDayEnabled);
                         }}
                         value={timeOfDayEnabled}
                         style={isAndroidDevice() ? { height: 20 } : {}}

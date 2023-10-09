@@ -101,7 +101,7 @@ export const PlanDay = ({
 
         taskViews.push(
             <View
-                key={plannedTask.id}
+                key={plannedTask.scheduledHabitId + "~" + plannedTask.id}
                 style={{
                     paddingBottom: 5,
                     alignItems: 'center',
