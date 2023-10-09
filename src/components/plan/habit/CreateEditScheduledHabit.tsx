@@ -2,7 +2,6 @@ import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
@@ -19,7 +18,6 @@ import { ScheduledHabitSaveButton } from 'src/components/plan/habit/ScheduledHab
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
 export const CreateEditScheduledHabit = () => {
-    const { colors } = useTheme();
     const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
     const habitId = route.params.habitId;

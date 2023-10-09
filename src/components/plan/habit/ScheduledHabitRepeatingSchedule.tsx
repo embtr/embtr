@@ -31,8 +31,8 @@ export const ScheduleHabitRepeatingSchedule = ({ toggleVisibility }: Props) => {
         setStartDateDatePickerModalVisible,
         endDateDatePickerModalVisible,
         setEndDateDatePickerModalVisible,
-        detailsEnabled,
-        setDetailsEnabled,
+        repeatingScheduleEnabled,
+        setRepeatingScheduleEnabled
     } = useCreateEditScheduleHabit();
     const [height] = React.useState<Animated.Value>(new Animated.Value(0));
 
@@ -98,11 +98,11 @@ export const ScheduleHabitRepeatingSchedule = ({ toggleVisibility }: Props) => {
 
                 <View>
                     <Switch
-                        value={detailsEnabled}
+                        value={repeatingScheduleEnabled}
                         onValueChange={() => {
                             toggleVisibility(
-                                detailsEnabled,
-                                setDetailsEnabled,
+                                repeatingScheduleEnabled,
+                                setRepeatingScheduleEnabled,
                                 height,
                                 REPEATING_SCHEDULE_HEIGHT
                             );

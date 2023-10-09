@@ -82,7 +82,7 @@ export const ScheduledHabitDetails = ({ toggleVisibility }: Props) => {
                 </View>
 
                 <View style={{ flex: 1, paddingTop: TIMELINE_CARD_PADDING }}>
-                    <ScheduledHabitUnitPicker detailName={'Of What?'} />
+                    <ScheduledHabitUnitPicker />
                 </View>
             </Animated.View>
         </View>
