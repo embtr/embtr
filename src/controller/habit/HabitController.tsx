@@ -1,5 +1,5 @@
 import React from 'react';
-import { HabitCategory, Task } from 'resources/schema';
+import { HabitCategory, ScheduledHabit, Task } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
     GetHabitJourneyResponse,
@@ -11,6 +11,7 @@ import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 import {
     CreateScheduledHabitRequest,
     GetScheduledHabitResponse,
+    UpdateScheduledHabitRequest,
 } from 'resources/types/requests/ScheduledHabitTypes';
 
 export class HabitController {
@@ -53,9 +54,11 @@ export class HabitController {
             });
     }
 
-    public static async createScheduledHabit(
-        createScheduledHabitRequest: CreateScheduledHabitRequest
-    ) {
+    public static async createOrUpdateScheduledHabit(scheduledHabit: ScheduledHabit) {
+        const createScheduledHabitRequest: CreateScheduledHabitRequest = {
+            scheduledHabit: scheduledHabit,
+        };
+
         return await axiosInstance
             .post('/habit/schedule', createScheduledHabitRequest)
             .then((success) => {
@@ -119,7 +122,7 @@ export namespace HabitCustomHooks {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['scheduledHabit', id],
             queryFn: () => HabitController.getScheduledHabit(id),
-            staleTime: ReactQueryStaleTimes.HABIT,
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
             enabled: !!id,
         });
 

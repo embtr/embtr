@@ -13,6 +13,7 @@ import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTit
 import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
 import { ScheduledHabitSaveButton } from 'src/components/plan/habit/ScheduledHabitSaveButton';
+import SafeAreaView from 'react-native-safe-area-view';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -45,26 +46,32 @@ export const CreateEditScheduledHabit = () => {
             plannedTaskId={plannedTaskId}
         >
             <Screen>
-                <LoadingOverlay active={false} />
-                <Banner name={'Schedule Habit'} leftRoute={'BACK'} leftIcon={'arrow-back'} />
+                <SafeAreaView forceInset={{}} style={{ flex: 1 }}>
+                    <LoadingOverlay active={false} />
+                    <Banner name={'Schedule Habit'} leftRoute={'BACK'} leftIcon={'arrow-back'} />
 
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                    <View
-                        style={{
-                            flex: 1,
-                            paddingHorizontal: TIMELINE_CARD_PADDING,
-                        }}
-                    >
-                        <ScheduledHabitTitle />
-                        <ScheduleHabitDescription />
-                        <ScheduleHabitRepeatingSchedule />
-                        <ScheduledHabitTimeOfDay />
-                        <ScheduledHabitDetails />
-                        <View style={{ height: TIMELINE_CARD_PADDING }} />
-                    </View>
-                </ScrollView>
+                    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                        <View
+                            style={{
+                                flex: 1,
+                                paddingHorizontal: TIMELINE_CARD_PADDING,
+                            }}
+                        >
+                            <ScheduledHabitTitle />
+                            <ScheduleHabitDescription />
+                            <ScheduleHabitRepeatingSchedule />
+                            <ScheduledHabitTimeOfDay />
+                            <ScheduledHabitDetails />
+                            <View style={{ height: TIMELINE_CARD_PADDING }} />
+                        </View>
+                    </ScrollView>
 
-                <ScheduledHabitSaveButton habitId={habitId ?? 0} />
+                    <ScheduledHabitSaveButton
+                        habitId={habitId}
+                        scheduledHabitId={scheduledHabitId}
+                        plannedTaskId={plannedTaskId}
+                    />
+                </SafeAreaView>
             </Screen>
         </CreateEditScheduledHabitProvider>
     );

@@ -1,5 +1,4 @@
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
-import { CreateScheduledHabitRequest } from 'resources/types/requests/ScheduledHabitTypes';
 import { HabitController } from 'src/controller/habit/HabitController';
 import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
@@ -7,13 +6,17 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { ScheduledHabit } from 'resources/schema';
 
 interface Props {
-    habitId: number;
+    habitId?: number;
+    scheduledHabitId?: number;
+    plannedTaskId?: number;
 }
 
-export const ScheduledHabitSaveButton = ({ habitId }: Props) => {
+export const ScheduledHabitSaveButton = ({ habitId, scheduledHabitId, plannedTaskId }: Props) => {
     const { colors } = useTheme();
+
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const {
         description,
@@ -28,35 +31,56 @@ export const ScheduledHabitSaveButton = ({ habitId }: Props) => {
         timesOfDay,
     } = useCreateEditScheduleHabit();
 
-    const onSave = async () => {
+    const onUpdate = async () => {
+        const scheduledHabit = createScheduledHabitRequest(scheduledHabitId, habitId);
+        await handleCreateOrUpdate(scheduledHabit);
+    };
+
+    const onCreate = async () => {
+        await handleCreateOrUpdate(createScheduledHabitRequest(scheduledHabitId, habitId));
+    };
+
+    const handleCreateOrUpdate = async (scheduledHabit: ScheduledHabit) => {
         Keyboard.dismiss();
-        const createScheduledHabitRequest: CreateScheduledHabitRequest = {
-            taskId: Number(habitId),
+
+        await HabitController.createOrUpdateScheduledHabit(scheduledHabit);
+        navigation.popToTop();
+    };
+
+    const createScheduledHabitRequest = (id?: number, habitId?: number) => {
+        const scheduledHabit: ScheduledHabit = {
+            id: id,
+            taskId: habitId,
             description: description,
         };
 
         if (repeatingScheduleEnabled) {
-            createScheduledHabitRequest.daysOfWeekIds = daysOfWeek
-                .map((dayOfWeek) => dayOfWeek.id)
-                .filter((id) => id !== undefined) as number[];
-            createScheduledHabitRequest.startDate = startDate;
-            createScheduledHabitRequest.endDate = endDate;
+            scheduledHabit.daysOfWeek = daysOfWeek.map((day) => {
+                return {
+                    id: day.id,
+                };
+            });
+            scheduledHabit.startDate = startDate;
+            scheduledHabit.endDate = endDate;
         }
 
         if (detailsEnabled) {
-            createScheduledHabitRequest.quantity = quantity;
-            createScheduledHabitRequest.unitId = unit?.id ?? undefined;
+            scheduledHabit.quantity = quantity;
+            scheduledHabit.unitId = unit?.id ?? undefined;
         }
 
         if (timeOfDayEnabled) {
-            createScheduledHabitRequest.timesOfDayIds = timesOfDay
-                .map((timeOfDay) => timeOfDay.id)
-                .filter((id) => id !== undefined) as number[];
+            scheduledHabit.timesOfDay = timesOfDay.map((timeOfDay) => {
+                return {
+                    id: timeOfDay.id,
+                };
+            });
         }
 
-        HabitController.createScheduledHabit(createScheduledHabitRequest);
-        navigation.popToTop();
+        return scheduledHabit;
     };
+
+    const isUpdate = !!scheduledHabitId;
 
     return (
         <View
@@ -68,7 +92,7 @@ export const ScheduledHabitSaveButton = ({ habitId }: Props) => {
                 borderRadius: 3,
             }}
         >
-            <TouchableOpacity onPress={onSave}>
+            <TouchableOpacity onPress={isUpdate ? onUpdate : onCreate}>
                 <Text
                     style={{
                         textAlign: 'center',
@@ -77,7 +101,7 @@ export const ScheduledHabitSaveButton = ({ habitId }: Props) => {
                         fontSize: 16,
                     }}
                 >
-                    Save
+                    {isUpdate ? 'Update' : 'Create'}
                 </Text>
             </TouchableOpacity>
         </View>
