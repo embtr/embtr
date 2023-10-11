@@ -11,7 +11,6 @@ import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 import {
     CreateScheduledHabitRequest,
     GetScheduledHabitResponse,
-    UpdateScheduledHabitRequest,
 } from 'resources/types/requests/ScheduledHabitTypes';
 
 export class HabitController {

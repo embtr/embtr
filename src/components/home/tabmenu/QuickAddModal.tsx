@@ -1,4 +1,5 @@
-import { Modal, View, Text, Pressable } from 'react-native';
+import React from 'react';
+import { Modal, View, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
@@ -8,8 +9,6 @@ import {
     setShowQuickAddModal,
 } from 'src/redux/user/GlobalState';
 import { Ionicons } from '@expo/vector-icons';
-import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
-import React from 'react';
 import * as NavigationBar from 'expo-navigation-bar';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { useNavigation } from '@react-navigation/core';

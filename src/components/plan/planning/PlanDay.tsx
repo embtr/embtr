@@ -33,8 +33,7 @@ export const PlanDay = ({
     onPlannedDayUpdated,
 }: Props) => {
     const { colors } = useTheme();
-    const navigation =
-        useNavigation<StackNavigationProp<ChallengeTabScreens, 'DailyResultDetails'>>();
+
     const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
     const [userChallengeParticipation, setUserChallengeParticipation] = useState<
         ChallengeParticipant[]
@@ -101,7 +100,7 @@ export const PlanDay = ({
 
         taskViews.push(
             <View
-                key={plannedTask.scheduledHabitId + "~" + plannedTask.id}
+                key={plannedTask.scheduledHabitId + '~' + plannedTask.id}
                 style={{
                     paddingBottom: 5,
                     alignItems: 'center',

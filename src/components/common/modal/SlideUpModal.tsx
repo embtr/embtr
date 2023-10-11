@@ -1,7 +1,7 @@
-import { Modal, TouchableOpacity, View, Text, PanResponder } from 'react-native';
+import React from 'react';
+import { Modal, TouchableOpacity, View, PanResponder } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
-import React from 'react';
 
 interface Props {
     children: any;

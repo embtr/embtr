@@ -17,6 +17,7 @@ import {
     setCurrentlySelectedPlannedDay,
 } from 'src/redux/user/GlobalState';
 import { PlannedDay } from 'resources/schema';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 export const Planning = () => {
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
@@ -68,7 +69,7 @@ export const Planning = () => {
             <EmbtrMenuCustom />
 
             <View style={{ flex: 1 }}>
-                <View style={{ paddingBottom: 25 }}>
+                <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
 

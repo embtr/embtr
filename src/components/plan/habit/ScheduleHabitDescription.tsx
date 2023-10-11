@@ -3,17 +3,12 @@ import { View, Text, TextInput } from 'react-native';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-interface Props {}
-export const ScheduleHabitDescription = ({}: Props) => {
+export const ScheduleHabitDescription = () => {
     const { colors } = useTheme();
     const { description, setDescription } = useCreateEditScheduleHabit();
 
     return (
-        <View
-            style={{
-                paddingTop: TIMELINE_CARD_PADDING * 2,
-            }}
-        >
+        <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
             <Text
                 style={{
                     color: colors.text,

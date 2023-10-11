@@ -1,5 +1,5 @@
-import { Animated, Keyboard, Switch, Text, View } from 'react-native';
 import React from 'react';
+import { Animated, Keyboard, Switch, Text, View } from 'react-native';
 import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ScheduledHabitQuantityInput } from 'src/components/plan/habit/ScheduledHabitQuantityInput';
@@ -24,7 +24,6 @@ export const ScheduledHabitDetails = () => {
         <View>
             <View
                 style={{
-                    paddingTop: TIMELINE_CARD_PADDING * 2,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}
@@ -47,7 +46,6 @@ export const ScheduledHabitDetails = () => {
                 <View style={{}}>
                     <Switch
                         onValueChange={() => {
-                            console.log('new value', !detailsEnabled);
                             setDetailsEnabled(!detailsEnabled);
                         }}
                         value={detailsEnabled}

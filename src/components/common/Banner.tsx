@@ -23,7 +23,7 @@ interface Props {
 
     innerRightIcon?: any;
     innerRightOnClick?: Function;
-
+    rightColor?: string;
     rightRoute?: string;
     rightIcon?: any;
     rightOnClick?: Function;
@@ -42,6 +42,7 @@ export const Banner = ({
     rightOnClick,
     rightIcon,
     rightIconNotificationCount,
+    rightColor,
     innerLeftIcon,
     leftOnClick,
     innerLeftOnClick: innerLeftCallback,
@@ -251,7 +252,7 @@ export const Banner = ({
                                     style={{
                                         textAlign: 'center',
                                         fontFamily: 'Poppins_400Regular',
-                                        color: colors.link,
+                                        color: rightColor ?? colors.link,
                                         fontSize: 16,
                                     }}
                                 >

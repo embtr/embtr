@@ -7,7 +7,6 @@ import { View, Switch, Animated } from 'react-native';
 import { TimesOfDayToggle } from './TimesOfDayToggle';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
-import { set } from 'lodash';
 
 export const ScheduledHabitTimeOfDay = () => {
     const { colors } = useTheme();
@@ -15,7 +14,7 @@ export const ScheduledHabitTimeOfDay = () => {
     const { timeOfDayEnabled, setTimeOfDayEnabled } = useCreateEditScheduleHabit();
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
 
-    const TIME_OF_DAY_HEIGHT = 50 + TIMELINE_CARD_PADDING;
+    const TIME_OF_DAY_HEIGHT = 50;
 
     React.useEffect(() => {
         runCreateEditScheduledHabitAnimation(
@@ -26,10 +25,9 @@ export const ScheduledHabitTimeOfDay = () => {
     }, [timeOfDayEnabled]);
 
     return (
-        <View>
+        <View style={{paddingBottom: TIMELINE_CARD_PADDING}}>
             <View
                 style={{
-                    paddingTop: TIMELINE_CARD_PADDING * 2,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}

@@ -1,3 +1,4 @@
+import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
@@ -5,7 +6,6 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { LoadingOverlay } from 'src/components/common/loading/LoadingOverlay';
 import { ScheduleHabitDescription } from 'src/components/plan/habit/ScheduleHabitDescription';
 import { ScheduleHabitRepeatingSchedule } from 'src/components/plan/habit/ScheduledHabitRepeatingSchedule';
 import { CreateEditScheduledHabitProvider } from 'src/contexts/habit/CreateEditScheduledHabitContext';
@@ -14,6 +14,8 @@ import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabi
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
 import { ScheduledHabitSaveButton } from 'src/components/plan/habit/ScheduledHabitSaveButton';
 import SafeAreaView from 'react-native-safe-area-view';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -33,11 +35,14 @@ export const runCreateEditScheduledHabitAnimation = (
 };
 
 export const CreateEditScheduledHabit = () => {
+    const { colors } = useTheme();
     const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
     const habitId = route.params.habitId;
     const plannedTaskId = route.params.plannedTaskId;
     const scheduledHabitId = route.params.scheduledHabitId;
+
+    const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 
     return (
         <CreateEditScheduledHabitProvider
@@ -45,10 +50,27 @@ export const CreateEditScheduledHabit = () => {
             scheduledHabitId={scheduledHabitId}
             plannedTaskId={plannedTaskId}
         >
+            <ArchiveScheduledHabitModal
+                visible={archiveModalVisible}
+                onDismiss={() => {
+                    setArchiveModalVisible(!archiveModalVisible);
+                }}
+            />
+
             <Screen>
                 <SafeAreaView forceInset={{}} style={{ flex: 1 }}>
-                    <LoadingOverlay active={false} />
-                    <Banner name={'Schedule Habit'} leftRoute={'BACK'} leftIcon={'arrow-back'} />
+                    {/* <LoadingOverlay active={loading} /> */}
+
+                    <Banner
+                        name={'Schedule Habit'}
+                        leftRoute={'BACK'}
+                        leftIcon={'arrow-back'}
+                        rightText={'archive'}
+                        rightColor={colors.archive}
+                        rightOnClick={() => {
+                            setArchiveModalVisible(true);
+                        }}
+                    />
 
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                         <View
@@ -57,13 +79,14 @@ export const CreateEditScheduledHabit = () => {
                                 paddingHorizontal: TIMELINE_CARD_PADDING,
                             }}
                         >
+                            <View style={{ height: TIMELINE_CARD_PADDING }} />
                             <ScheduledHabitTitle />
                             <ScheduleHabitDescription />
                             <ScheduleHabitRepeatingSchedule />
                             <ScheduledHabitTimeOfDay />
                             <ScheduledHabitDetails />
-                            <View style={{ height: TIMELINE_CARD_PADDING }} />
                         </View>
+                        <View style={{ height: 10 * TIMELINE_CARD_PADDING }} />
                     </ScrollView>
 
                     <ScheduledHabitSaveButton

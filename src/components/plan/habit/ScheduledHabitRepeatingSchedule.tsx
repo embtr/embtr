@@ -73,13 +73,12 @@ export const ScheduleHabitRepeatingSchedule = () => {
     }, [endDateDatePickerModalVisible]);
 
     return (
-        <View>
+        <View style={{paddingBottom: TIMELINE_CARD_PADDING}}>
             {startDateDatePickerMemo}
             {endDateDatePickerMemo}
 
             <View
                 style={{
-                    paddingTop: TIMELINE_CARD_PADDING * 2,
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}

@@ -10,7 +10,7 @@ export const ScheduledHabitTitle = () => {
     const { iconUrl, title, setTitle } = useCreateEditScheduleHabit();
 
     return (
-        <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
+        <View style={{paddingBottom: TIMELINE_CARD_PADDING}}>
             <View style={{ flexDirection: 'row' }}>
                 <Text
                     style={{
