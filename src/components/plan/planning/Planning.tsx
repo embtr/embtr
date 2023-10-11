@@ -42,10 +42,6 @@ export const Planning = () => {
         }
     };
 
-    const onDismissSelectTaskModal = () => {
-        refreshPlannedToday();
-    };
-
     const onSharePlannedDayResults = async () => {
         if (selectedPlannedDay) {
             await PlanningService.sharePlannedDayResults(selectedPlannedDay!);

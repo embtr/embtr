@@ -8,7 +8,10 @@ import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ScheduleHabitDescription } from 'src/components/plan/habit/ScheduleHabitDescription';
 import { ScheduleHabitRepeatingSchedule } from 'src/components/plan/habit/ScheduledHabitRepeatingSchedule';
-import { CreateEditScheduledHabitProvider } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import {
+    CreateEditScheduledHabitMode,
+    CreateEditScheduledHabitProvider,
+} from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTitle';
 import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
@@ -38,9 +41,18 @@ export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
     const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
-    const habitId = route.params.habitId;
-    const plannedTaskId = route.params.plannedTaskId;
-    const scheduledHabitId = route.params.scheduledHabitId;
+    const habitId = route.params.habitId; // creating a new habit from a template
+    const plannedTaskId = route.params.plannedTaskId; // editing a habit on a specific day
+    const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
+
+    const editMode = habitId
+        ? CreateEditScheduledHabitMode.CREATE_NEW_HABIT
+        : plannedTaskId
+        ? CreateEditScheduledHabitMode.EDIT_EXISTING_PLANNED_TASK
+        : scheduledHabitId
+        ? CreateEditScheduledHabitMode.EDIT_EXISTING_HABIT
+        : CreateEditScheduledHabitMode.INVALID;
+    const isCreatingNewHabit = editMode === CreateEditScheduledHabitMode.CREATE_NEW_HABIT;
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 
@@ -50,14 +62,16 @@ export const CreateEditScheduledHabit = () => {
             scheduledHabitId={scheduledHabitId}
             plannedTaskId={plannedTaskId}
         >
-            <ArchiveScheduledHabitModal
-                visible={archiveModalVisible}
-                onDismiss={() => {
-                    setArchiveModalVisible(!archiveModalVisible);
-                }}
-            />
-
             <Screen>
+                {!isCreatingNewHabit && (
+                    <ArchiveScheduledHabitModal
+                        visible={archiveModalVisible}
+                        onDismiss={() => {
+                            setArchiveModalVisible(!archiveModalVisible);
+                        }}
+                    />
+                )}
+
                 <SafeAreaView forceInset={{}} style={{ flex: 1 }}>
                     {/* <LoadingOverlay active={loading} /> */}
 
@@ -65,11 +79,15 @@ export const CreateEditScheduledHabit = () => {
                         name={'Schedule Habit'}
                         leftRoute={'BACK'}
                         leftIcon={'arrow-back'}
-                        rightText={'archive'}
+                        rightText={!isCreatingNewHabit ? 'archive' : undefined}
                         rightColor={colors.archive}
-                        rightOnClick={() => {
-                            setArchiveModalVisible(true);
-                        }}
+                        rightOnClick={
+                            !isCreatingNewHabit
+                                ? () => {
+                                      setArchiveModalVisible(true);
+                                  }
+                                : undefined
+                        }
                     />
 
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>

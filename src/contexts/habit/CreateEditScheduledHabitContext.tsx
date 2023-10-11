@@ -1,7 +1,30 @@
-import { DayOfWeek, TimeOfDay, Unit } from 'resources/schema';
+import { DayOfWeek, PlannedTask, ScheduledHabit, Task, TimeOfDay, Unit } from 'resources/schema';
 import React, { createContext, useContext } from 'react';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
+
+export enum CreateEditScheduledHabitMode {
+    CREATE_NEW_HABIT = 'CREATE_NEW_HABIT',
+    EDIT_EXISTING_HABIT = 'EDIT_EXISTING_HABIT',
+    EDIT_EXISTING_PLANNED_TASK = 'EDIT_EXISTING_PLANNED_TASK',
+    INVALID = 'INVALID',
+}
+
+export const getEditMode = (
+    habit?: Task,
+    plannedTask?: PlannedTask,
+    scheduledHabit?: ScheduledHabit
+) => {
+    const editMode: CreateEditScheduledHabitMode = habit
+        ? CreateEditScheduledHabitMode.CREATE_NEW_HABIT
+        : plannedTask
+        ? CreateEditScheduledHabitMode.EDIT_EXISTING_PLANNED_TASK
+        : scheduledHabit
+        ? CreateEditScheduledHabitMode.EDIT_EXISTING_HABIT
+        : CreateEditScheduledHabitMode.INVALID;
+
+    return editMode;
+};
 
 interface CreateEditScheduledHabitType {
     iconUrl: string;
@@ -38,6 +61,8 @@ interface CreateEditScheduledHabitType {
     setEndDateDatePickerModalVisible: (visible: boolean) => void;
 
     loading: boolean;
+
+    editMode: CreateEditScheduledHabitMode;
 }
 
 export const CreateEditScheduledHabitContext = createContext<CreateEditScheduledHabitType>(
@@ -121,7 +146,9 @@ export const CreateEditScheduledHabitProvider = ({
 
             setRepeatingScheduleEnabled(scheduledHabit.data.daysOfWeek?.length !== 0);
             setTimeOfDayEnabled(scheduledHabit.data.timesOfDay?.length !== 0);
-            setDetailsEnabled(scheduledHabit.data.quantity !== undefined || scheduledHabit.data.unit !== undefined);
+            setDetailsEnabled(
+                scheduledHabit.data.quantity !== undefined || scheduledHabit.data.unit !== undefined
+            );
         }
     }, [scheduledHabit.data]);
 
@@ -158,6 +185,8 @@ export const CreateEditScheduledHabitProvider = ({
         setEndDateDatePickerModalVisible: setEndDateDatePickerModalVisible,
 
         loading: habit.isLoading || plannedTask.isLoading || scheduledHabit.isLoading,
+
+        editMode: getEditMode(habit.data, plannedTask.data, scheduledHabit.data),
     };
     return (
         <CreateEditScheduledHabitContext.Provider value={contextValue}>
