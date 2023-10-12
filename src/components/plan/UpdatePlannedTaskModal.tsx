@@ -1,14 +1,28 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Modal, Text, Pressable, TextInput, Keyboard } from 'react-native';
+import {
+    View,
+    TouchableOpacity,
+    Modal,
+    Text,
+    Pressable,
+    TextInput,
+    Keyboard,
+    Animated,
+    Easing,
+} from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import {
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+    TIMELINE_CARD_PADDING,
+} from 'src/util/constants';
 import { PlannedTask } from 'resources/schema';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { EvilIcons } from '@expo/vector-icons';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
-import { DropDownMenuItem, DropDownMenuItemData } from '../drop_down_menu/DropDownMenuItem';
-import { DropDownMenu } from '../drop_down_menu/DropDownMenu';
+import { DropDownMenuItemData } from '../drop_down_menu/DropDownMenuItem';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -28,6 +42,29 @@ export const UpdatePlannedTaskModal = ({
     dismiss,
 }: Props) => {
     const { colors } = useTheme();
+    const MAX_OPTIONS_HEIGHT = 40;
+
+    const [menuVisible, setMenuVisible] = React.useState(false);
+
+    const [advancedOptionsHeight] = React.useState<Animated.Value>(
+        new Animated.Value(MAX_OPTIONS_HEIGHT)
+    );
+
+    //const font = POPPINS_SEMI_BOLD;
+    const font = POPPINS_REGULAR;
+
+    const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
+        Animated.timing(viewHeight, {
+            toValue: expand ? MAX_OPTIONS_HEIGHT - 10 : 0, // Set the desired height
+            duration: 125, // Adjust the duration as needed
+            easing: Easing.ease, // Adjust the easing function as needed
+            useNativeDriver: false, // Make sure to set this to false for height animation
+        }).start();
+    };
+
+    React.useEffect(() => {
+        runAnimation(menuVisible, advancedOptionsHeight);
+    }, [menuVisible]);
 
     React.useEffect(() => {
         setSelectedValue(plannedTask.completedQuantity ?? 0);
@@ -68,13 +105,9 @@ export const UpdatePlannedTaskModal = ({
         setInputWasFocused(false);
     };
 
-    const BUTTON_WIDTH = 90;
-
     const [selectedValue, setSelectedValue] = React.useState<number | null>(
         plannedTask.completedQuantity ?? 0
     );
-
-    const [menuVisible, setMenuVisible] = React.useState(false);
 
     const [inputWasFocused, setInputWasFocused] = React.useState(false);
     const [keyboardFocused, setKeyboardFocused] = React.useState(false);
@@ -82,27 +115,6 @@ export const UpdatePlannedTaskModal = ({
     const top = getWindowHeight() / 2 - 150;
 
     const textInputRef = React.useRef<TextInput>(null);
-
-    const menuItems: DropDownMenuItemData[] = [
-        {
-            title: 'complete',
-            onPress: () => {
-                onCompleteWrapper();
-            },
-        },
-        {
-            title: 'edit',
-            onPress: () => {
-                onEdit();
-            },
-        },
-        {
-            title: 'fail',
-            onPress: () => {
-                fail();
-            },
-        },
-    ];
 
     return (
         <Modal visible={visible} transparent={true} animationType={'fade'}>
@@ -326,13 +338,13 @@ export const UpdatePlannedTaskModal = ({
                                     width: '100%',
                                     paddingTop: 20,
                                     flexDirection: 'row',
+                                    paddingBottom: TIMELINE_CARD_PADDING,
                                 }}
                             >
                                 <View
                                     style={{
                                         flex: 1,
                                         alignItems: 'center',
-                                        paddingBottom: 10,
                                     }}
                                 >
                                     {/* UPDATE BUTTON */}
@@ -429,7 +441,7 @@ export const UpdatePlannedTaskModal = ({
                                                 paddingHorizontal: 3,
                                             }}
                                             onPress={() => {
-                                                setMenuVisible(true);
+                                                setMenuVisible(!menuVisible);
                                             }}
                                         >
                                             <Ionicons
@@ -437,9 +449,103 @@ export const UpdatePlannedTaskModal = ({
                                                 size={20}
                                                 color={'black'}
                                             />
-                                            {menuVisible && <DropDownMenu items={menuItems} />}
                                         </TouchableOpacity>
                                     </View>
+
+                                    <Animated.View
+                                        style={{
+                                            height: advancedOptionsHeight,
+                                            overflow: 'hidden',
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'flex-end',
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                width: '100%',
+                                                paddingHorizontal: TIMELINE_CARD_PADDING,
+                                            }}
+                                        >
+
+                                            <View
+                                                style={{
+                                                    backgroundColor: 'red',
+                                                    flex: 1,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontFamily: font,
+                                                        fontSize: 12,
+                                                        color: colors.archive,
+                                                    }}
+                                                >
+                                                    delete
+                                                </Text>
+                                            </View>
+
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: 'purple',
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontFamily: font,
+                                                        color: colors.link,
+                                                        fontSize: 12,
+                                                    }}
+                                                >
+                                                    edit
+                                                </Text>
+                                            </View>
+
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: 'blue',
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontFamily: font,
+                                                        color: colors.trophy_icon,
+                                                        fontSize: 12,
+                                                    }}
+                                                >
+                                                    skip
+                                                </Text>
+                                            </View>
+
+
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: 'pink',
+                                                }}
+                                            >
+                                                <Text
+                                                    style={{
+                                                        fontFamily: font,
+                                                        color: colors.timeline_label_user_post,
+                                                        fontSize: 12,
+                                                    }}
+                                                >
+                                                    complete
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </Animated.View>
                                 </View>
                             </View>
                         </View>
