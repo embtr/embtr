@@ -55,7 +55,7 @@ export const UpdatePlannedTaskModal = ({
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
         Animated.timing(viewHeight, {
-            toValue: expand ? MAX_OPTIONS_HEIGHT: 0, // Set the desired height
+            toValue: expand ? MAX_OPTIONS_HEIGHT : 0, // Set the desired height
             duration: 125, // Adjust the duration as needed
             easing: Easing.ease, // Adjust the easing function as needed
             useNativeDriver: false, // Make sure to set this to false for height animation
@@ -464,14 +464,15 @@ export const UpdatePlannedTaskModal = ({
                                             style={{
                                                 flexDirection: 'row',
                                                 width: '100%',
-                                                paddingHorizontal: TIMELINE_CARD_PADDING,
                                                 height: 20,
+                                                paddingHorizontal: TIMELINE_CARD_PADDING,
                                             }}
                                         >
                                             <View
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
+                                                    paddingLeft: 3
                                                 }}
                                             >
                                                 <Text
@@ -479,7 +480,6 @@ export const UpdatePlannedTaskModal = ({
                                                         fontFamily: font,
                                                         fontSize: 12,
                                                         color: colors.archive,
-                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                     }}
                                                 >
                                                     delete
@@ -498,7 +498,6 @@ export const UpdatePlannedTaskModal = ({
                                                         fontFamily: font,
                                                         color: colors.link,
                                                         fontSize: 12,
-                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                     }}
                                                 >
                                                     edit
@@ -517,7 +516,6 @@ export const UpdatePlannedTaskModal = ({
                                                         fontFamily: font,
                                                         color: colors.trophy_icon,
                                                         fontSize: 12,
-                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                     }}
                                                 >
                                                     skip
@@ -529,12 +527,12 @@ export const UpdatePlannedTaskModal = ({
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
+                                                    paddingRight: 3
                                                 }}
                                             >
                                                 <Text
                                                     style={{
                                                         fontFamily: font,
-                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                         color: colors.timeline_label_user_post,
                                                         fontSize: 12,
                                                     }}
