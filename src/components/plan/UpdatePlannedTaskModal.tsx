@@ -42,7 +42,7 @@ export const UpdatePlannedTaskModal = ({
     dismiss,
 }: Props) => {
     const { colors } = useTheme();
-    const MAX_OPTIONS_HEIGHT = 40;
+    const MAX_OPTIONS_HEIGHT = 20 + TIMELINE_CARD_PADDING;
 
     const [menuVisible, setMenuVisible] = React.useState(false);
 
@@ -55,7 +55,7 @@ export const UpdatePlannedTaskModal = ({
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
         Animated.timing(viewHeight, {
-            toValue: expand ? MAX_OPTIONS_HEIGHT - 10 : 0, // Set the desired height
+            toValue: expand ? MAX_OPTIONS_HEIGHT: 0, // Set the desired height
             duration: 125, // Adjust the duration as needed
             easing: Easing.ease, // Adjust the easing function as needed
             useNativeDriver: false, // Make sure to set this to false for height animation
@@ -454,10 +454,10 @@ export const UpdatePlannedTaskModal = ({
 
                                     <Animated.View
                                         style={{
-                                            height: advancedOptionsHeight,
                                             overflow: 'hidden',
                                             alignItems: 'flex-end',
                                             justifyContent: 'flex-end',
+                                            height: advancedOptionsHeight,
                                         }}
                                     >
                                         <View
@@ -465,13 +465,11 @@ export const UpdatePlannedTaskModal = ({
                                                 flexDirection: 'row',
                                                 width: '100%',
                                                 paddingHorizontal: TIMELINE_CARD_PADDING,
+                                                height: 20,
                                             }}
                                         >
-
                                             <View
                                                 style={{
-                                                    backgroundColor: 'red',
-                                                    flex: 1,
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
                                                 }}
@@ -481,18 +479,18 @@ export const UpdatePlannedTaskModal = ({
                                                         fontFamily: font,
                                                         fontSize: 12,
                                                         color: colors.archive,
+                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                     }}
                                                 >
                                                     delete
                                                 </Text>
                                             </View>
 
+                                            <View style={{ flex: 1 }} />
                                             <View
                                                 style={{
-                                                    flex: 1,
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    backgroundColor: 'purple',
                                                 }}
                                             >
                                                 <Text
@@ -500,18 +498,18 @@ export const UpdatePlannedTaskModal = ({
                                                         fontFamily: font,
                                                         color: colors.link,
                                                         fontSize: 12,
+                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                     }}
                                                 >
                                                     edit
                                                 </Text>
                                             </View>
 
+                                            <View style={{ flex: 1 }} />
                                             <View
                                                 style={{
-                                                    flex: 1,
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    backgroundColor: 'blue',
                                                 }}
                                             >
                                                 <Text
@@ -519,24 +517,24 @@ export const UpdatePlannedTaskModal = ({
                                                         fontFamily: font,
                                                         color: colors.trophy_icon,
                                                         fontSize: 12,
+                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                     }}
                                                 >
                                                     skip
                                                 </Text>
                                             </View>
 
-
+                                            <View style={{ flex: 1 }} />
                                             <View
                                                 style={{
-                                                    flex: 1,
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    backgroundColor: 'pink',
                                                 }}
                                             >
                                                 <Text
                                                     style={{
                                                         fontFamily: font,
+                                                        paddingHorizontal: TIMELINE_CARD_PADDING,
                                                         color: colors.timeline_label_user_post,
                                                         fontSize: 12,
                                                     }}
