@@ -224,7 +224,6 @@ export const PlannableTask = ({
 
                     const clone = { ...initialPlannedTask };
                     clone.status = 'INCOMPLETE';
-                    setShowUpdatePlannedTaskModal(false);
                     setCompletedQuantity(clone.quantity ?? 0);
                     await updatePlannedTaskCompletedQuantity(clone, clone.quantity ?? 0);
                 }}
@@ -232,9 +231,9 @@ export const PlannableTask = ({
                     setShowUpdatePlannedTaskModal(false);
 
                     const clone = { ...initialPlannedTask };
+                    console.log('clone', clone);
 
                     clone.status = 'INCOMPLETE';
-                    setShowUpdatePlannedTaskModal(false);
                     setCompletedQuantity(updatedValue);
                     await updatePlannedTaskCompletedQuantity(clone, updatedValue);
                 }}
