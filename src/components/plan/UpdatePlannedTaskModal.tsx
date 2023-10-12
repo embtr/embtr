@@ -7,7 +7,8 @@ import { UnitUtility } from 'src/util/UnitUtility';
 import { EvilIcons } from '@expo/vector-icons';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
-import { set } from 'lodash';
+import { DropDownMenuItem, DropDownMenuItemData } from '../drop_down_menu/DropDownMenuItem';
+import { DropDownMenu } from '../drop_down_menu/DropDownMenu';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -81,6 +82,27 @@ export const UpdatePlannedTaskModal = ({
     const top = getWindowHeight() / 2 - 150;
 
     const textInputRef = React.useRef<TextInput>(null);
+
+    const menuItems: DropDownMenuItemData[] = [
+        {
+            title: 'complete',
+            onPress: () => {
+                onCompleteWrapper();
+            },
+        },
+        {
+            title: 'edit',
+            onPress: () => {
+                onEdit();
+            },
+        },
+        {
+            title: 'fail',
+            onPress: () => {
+                fail();
+            },
+        },
+    ];
 
     return (
         <Modal visible={visible} transparent={true} animationType={'fade'}>
@@ -415,103 +437,7 @@ export const UpdatePlannedTaskModal = ({
                                                 size={20}
                                                 color={'black'}
                                             />
-                                            {menuVisible && (
-                                                <View
-                                                    style={{
-                                                        position: 'absolute',
-                                                        zIndex: 1,
-                                                        left: -71, // Align to the left of the parent container
-                                                        bottom: -100 - (1.5 * TIMELINE_CARD_PADDING ), // Align to the bottom of the parent container
-                                                        borderRadius: 12,
-                                                        borderWidth: 2,
-                                                        borderColor: 'yellow',
-                                                    }}
-                                                >
-                                                    <View style={{ borderRadius: 9 }}>
-                                                        <View
-                                                            style={{
-                                                                height: 25,
-                                                                width: 100,
-                                                                backgroundColor:
-                                                                    colors.secondary_text,
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontFamily: POPPINS_REGULAR,
-                                                                    textAlign: 'center',
-                                                                    paddingTop: 2,
-                                                                }}
-                                                            >
-                                                                Skip Today
-                                                            </Text>
-                                                        </View>
-
-                                                        <View
-                                                            style={{
-                                                                height: 25,
-                                                                width: 100,
-                                                                backgroundColor:
-                                                                    colors.secondary_text,
-                                                                borderTopColor: 'black',
-                                                                borderTopWidth: 1,
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontFamily: POPPINS_REGULAR,
-                                                                    textAlign: 'center',
-                                                                    paddingTop: 2,
-                                                                }}
-                                                            >
-                                                                Edit
-                                                            </Text>
-                                                        </View>
-
-                                                        <View
-                                                            style={{
-                                                                height: 25,
-                                                                width: 100,
-                                                                backgroundColor:
-                                                                    colors.secondary_text,
-                                                                borderTopColor: 'black',
-                                                                borderTopWidth: 1,
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontFamily: POPPINS_REGULAR,
-                                                                    textAlign: 'center',
-                                                                    paddingTop: 2,
-                                                                }}
-                                                            >
-                                                                Edit
-                                                            </Text>
-                                                        </View>
-
-                                                        <View
-                                                            style={{
-                                                                height: 25,
-                                                                width: 100,
-                                                                backgroundColor:
-                                                                    colors.secondary_text,
-                                                                borderTopColor: 'black',
-                                                                borderTopWidth: 1,
-                                                            }}
-                                                        >
-                                                            <Text
-                                                                style={{
-                                                                    fontFamily: POPPINS_REGULAR,
-                                                                    textAlign: 'center',
-                                                                    paddingTop: 2,
-                                                                }}
-                                                            >
-                                                                Edit
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            )}
+                                            {menuVisible && <DropDownMenu items={menuItems} />}
                                         </TouchableOpacity>
                                     </View>
                                 </View>
