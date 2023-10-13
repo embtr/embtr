@@ -19,6 +19,7 @@ import { EvilIcons } from '@expo/vector-icons';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
 import { SvgUri } from 'react-native-svg';
+import { RemoveHabitModal } from './habit/RemoveHabitModal';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -27,6 +28,7 @@ interface Props {
     update: Function;
     fail: Function;
     dismiss: Function;
+    remove: Function;
 }
 
 export const UpdatePlannedTaskModal = ({
@@ -36,6 +38,7 @@ export const UpdatePlannedTaskModal = ({
     update,
     fail,
     dismiss,
+    remove,
 }: Props) => {
     const { colors } = useTheme();
     const MAX_OPTIONS_HEIGHT = 20 + TIMELINE_CARD_PADDING;
@@ -68,12 +71,20 @@ export const UpdatePlannedTaskModal = ({
         setSelectedValue(plannedTask.completedQuantity ?? 0);
     }, [plannedTask]);
 
+    const onRemove = () => {
+        setMenuVisible(false);
+        setKeyboardFocused(false);
+        setInputWasFocused(false);
+        remove();
+    };
+
     const onEdit = () => {
         if (keyboardFocused) {
             Keyboard.dismiss();
             setKeyboardFocused(false);
         }
 
+        setMenuVisible(false);
         setInputWasFocused(false);
         dismiss(plannedTask.scheduledHabitId);
     };
@@ -91,12 +102,14 @@ export const UpdatePlannedTaskModal = ({
     };
 
     const onCompleteWrapper = () => {
+        setMenuVisible(false);
         setKeyboardFocused(false);
         complete();
         setInputWasFocused(false);
     };
 
     const onUpdateWrapper = () => {
+        setMenuVisible(false);
         setKeyboardFocused(false);
         update(selectedValue ?? 0);
         setInputWasFocused(false);
@@ -338,57 +351,6 @@ export const UpdatePlannedTaskModal = ({
                                         alignItems: 'center',
                                     }}
                                 >
-                                    {/* UPDATE BUTTON */}
-                                    {/* {inputWasFocused && (
-                                        <TouchableOpacity
-                                            style={{
-                                                padding: 5,
-                                                borderRadius: 5,
-                                                borderWidth: 1,
-                                                borderColor: colors.secondary_accent_color,
-                                                width: BUTTON_WIDTH,
-                                                alignItems: 'center',
-                                            }}
-                                            onPress={() => {
-                                                onUpdateWrapper();
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: colors.secondary_accent_color,
-                                                    fontFamily: POPPINS_REGULAR,
-                                                }}
-                                            >
-                                                update
-                                            </Text>
-                                        </TouchableOpacity>
-                                    )} */}
-
-                                    {/* COMPLETE BUTTON */}
-                                    {/* {!inputWasFocused && (
-                                        <TouchableOpacity
-                                            style={{
-                                                padding: 5,
-                                                borderRadius: 5,
-                                                borderWidth: 1,
-                                                borderColor: colors.progress_bar_complete,
-                                                width: BUTTON_WIDTH,
-                                                alignItems: 'center',
-                                            }}
-                                            onPress={() => {
-                                                onCompleteWrapper();
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    color: colors.progress_bar_complete,
-                                                    fontFamily: POPPINS_REGULAR,
-                                                }}
-                                            >
-                                                complete
-                                            </Text>
-                                        </TouchableOpacity>
-                                    )} */}
                                     <View
                                         style={{
                                             width: '100%',
@@ -405,7 +367,7 @@ export const UpdatePlannedTaskModal = ({
                                                 flex: 9,
                                             }}
                                         >
-                                            <TouchableOpacity>
+                                            <TouchableOpacity onPress={onUpdateWrapper}>
                                                 <Text
                                                     style={{
                                                         textAlign: 'center',
@@ -470,6 +432,7 @@ export const UpdatePlannedTaskModal = ({
                                             }}
                                         >
                                             <TouchableOpacity
+                                                onPress={onRemove}
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
@@ -483,7 +446,7 @@ export const UpdatePlannedTaskModal = ({
                                                         color: colors.archive,
                                                     }}
                                                 >
-                                                    delete
+                                                    remove
                                                 </Text>
                                             </TouchableOpacity>
 
@@ -491,6 +454,7 @@ export const UpdatePlannedTaskModal = ({
                                             <View style={{ flex: 1 }} />
 
                                             <TouchableOpacity
+                                                onPress={onEdit}
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
@@ -531,6 +495,7 @@ export const UpdatePlannedTaskModal = ({
                                             <View style={{ flex: 1 }} />
 
                                             <TouchableOpacity
+                                                onPress={onCompleteWrapper}
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',

@@ -27,6 +27,8 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
+import { RemoveHabitModal } from './habit/RemoveHabitModal';
+import { set } from 'lodash';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -44,6 +46,7 @@ export const PlannableTask = ({
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
+    const [showRemoveHabitModal, setShowRemoveHabitModal] = React.useState<boolean>(false);
     const [showUpdatePlannedTaskModal, setShowUpdatePlannedTaskModal] =
         React.useState<boolean>(false);
     const [completedQuantity, setCompletedQuantity] = React.useState<number>(
@@ -62,6 +65,18 @@ export const PlannableTask = ({
     //this entire section listens to the population of this callback id
     //if it is set, that means we want to edit a planned task. first we must
     //close the modal so we wait untilwe hit this useFocusEffect to know it's time
+    const [removePlannedTaskTimestamp, setRemovePlannedTaskTimestamp] = React.useState<
+        Date | undefined
+    >();
+    useFocusEffect(
+        React.useCallback(() => {
+            setShowRemoveHabitModal(removePlannedTaskTimestamp !== undefined);
+        }, [removePlannedTaskTimestamp, showRemoveHabitModal])
+    );
+
+    //this entire section listens to the population of this callback id
+    //if it is set, that means we want to edit a planned task. first we must
+    //close the modal so we wait untilwe hit this useFocusEffect to know it's time
     const [editScheduledHabitCallbackId, setEditScheduledHabitCallbackId] = React.useState<
         number | undefined
     >();
@@ -69,7 +84,7 @@ export const PlannableTask = ({
         React.useCallback(() => {
             if (editScheduledHabitCallbackId && !showUpdatePlannedTaskModal) {
                 navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
-                    scheduledHabitId: editScheduledHabitCallbackId,
+                    scheduledHabitId: initialPlannedTask.scheduledHabitId,
                 });
                 setEditScheduledHabitCallbackId(undefined);
             }
@@ -207,9 +222,24 @@ export const PlannableTask = ({
 
     return (
         <View>
+            <RemoveHabitModal
+                visible={showRemoveHabitModal}
+                onDismiss={() => {
+                    setShowRemoveHabitModal(false);
+                    setRemovePlannedTaskTimestamp(undefined);
+                }}
+                habitTitle={initialPlannedTask.title ?? ''}
+                plannedHabitId={initialPlannedTask.id}
+                scheduledHabitId={initialPlannedTask.scheduledHabitId ?? 0}
+            />
             <UpdatePlannedTaskModal
                 plannedTask={initialPlannedTask}
                 visible={showUpdatePlannedTaskModal}
+                remove={() => {
+                    setShowUpdatePlannedTaskModal(false);
+                    setRemovePlannedTaskTimestamp(new Date());
+                    console.log('remove');
+                }}
                 fail={async () => {
                     setShowUpdatePlannedTaskModal(false);
 

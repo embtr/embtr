@@ -2,22 +2,38 @@ import { Modal, TouchableOpacity, View, Text, Pressable } from 'react-native';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
-import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import {
+    CARD_SHADOW,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    TIMELINE_CARD_PADDING,
+} from 'src/util/constants';
+import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
+import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 
 interface Props {
     visible: boolean;
     onDismiss: Function;
+    habitTitle: string;
+    plannedHabitId?: number;
+    scheduledHabitId: number;
 }
 
-export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
+export const RemoveHabitModal = ({
+    visible,
+    onDismiss,
+    habitTitle,
+    plannedHabitId,
+    scheduledHabitId,
+}: Props) => {
     const { colors } = useTheme();
-
-    const { title } = useCreateEditScheduleHabit();
 
     const onHandleDismiss = () => {
         onDismiss();
     };
+
+    const plannedHabit = PlannedHabitCustomHooks.usePlannedHabit(plannedHabitId ?? 0);
+    const scheduledHabit = HabitCustomHooks.useScheduledHabit(scheduledHabitId);
 
     const body = (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -37,7 +53,7 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                             textAlign: 'center',
                         }}
                     >
-                        Archive Habit
+                        Remove Habit
                     </Text>
 
                     <Text
@@ -49,11 +65,11 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                             textAlign: 'center',
                         }}
                     >
-                        {title}
+                        {habitTitle}
                     </Text>
                 </View>
 
-                <View style={{ paddingTop: 25 }}>
+                <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
                     <Text
                         style={{
                             textAlign: 'center',
@@ -68,8 +84,12 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                     </Text>
                 </View>
 
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1 }} />
+                <View
+                    style={{
+                        flex: 1,
+                        paddingVertical: TIMELINE_CARD_PADDING,
+                    }}
+                >
                     <View
                         style={{
                             flex: 1.5,
@@ -78,12 +98,15 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                         }}
                     >
                         <TouchableOpacity
-                            style={{
-                                backgroundColor: colors.link,
-                                width: '90%',
-                                paddingVertical: 5,
-                                borderRadius: 6,
-                            }}
+                            style={[
+                                {
+                                    backgroundColor: colors.toggle_color,
+                                    width: '90%',
+                                    paddingVertical: 5,
+                                    borderRadius: 6,
+                                },
+                                CARD_SHADOW,
+                            ]}
                             onPress={() => {
                                 onHandleDismiss();
                             }}
@@ -100,18 +123,51 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
+                    <View style={{ height: 7.5 }} />
                     <View
                         style={{
-                            flex: 1,
+                            flex: 1.5,
                             justifyContent: 'center',
                             alignItems: 'center',
                         }}
                     >
                         <TouchableOpacity
+                            style={[
+                                {
+                                    backgroundColor: colors.accent_color,
+                                    width: '90%',
+                                    paddingVertical: 5,
+                                    borderRadius: 6,
+                                },
+                                CARD_SHADOW,
+                            ]}
+                            onPress={() => {
+                                onHandleDismiss();
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    fontSize: 14,
+                                    fontFamily: POPPINS_REGULAR,
+                                    color: colors.text,
+                                }}
+                            >
+                                Remove For Today
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View
+                        style={{
+                            flex: 1.5,
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <TouchableOpacity
                             style={{
-                                marginTop: 2.5,
                                 width: '90%',
-                                paddingVertical: 5,
                                 borderRadius: 6,
                             }}
                             onPress={() => {
@@ -121,7 +177,7 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                             <Text
                                 style={{
                                     textAlign: 'center',
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     fontFamily: POPPINS_REGULAR,
                                     color: colors.archive,
                                 }}
@@ -130,7 +186,6 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    <View style={{ flex: 0.5 }} />
                 </View>
             </View>
         </View>
