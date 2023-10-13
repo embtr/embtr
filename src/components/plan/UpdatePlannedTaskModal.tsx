@@ -9,20 +9,16 @@ import {
     Keyboard,
     Animated,
     Easing,
+    StyleSheet,
 } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    POPPINS_MEDIUM,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-    TIMELINE_CARD_PADDING,
-} from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedTask } from 'resources/schema';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { EvilIcons } from '@expo/vector-icons';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
-import { DropDownMenuItemData } from '../drop_down_menu/DropDownMenuItem';
+import { SvgUri } from 'react-native-svg';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -45,13 +41,15 @@ export const UpdatePlannedTaskModal = ({
     const MAX_OPTIONS_HEIGHT = 20 + TIMELINE_CARD_PADDING;
 
     const [menuVisible, setMenuVisible] = React.useState(false);
+    const [inputWasFocused, setInputWasFocused] = React.useState(false);
+    const [keyboardFocused, setKeyboardFocused] = React.useState(false);
 
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
         new Animated.Value(MAX_OPTIONS_HEIGHT)
     );
 
-    //const font = POPPINS_SEMI_BOLD;
-    const font = POPPINS_REGULAR;
+    const fontSize = 14;
+    const fontFamily = POPPINS_REGULAR;
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
         Animated.timing(viewHeight, {
@@ -81,14 +79,13 @@ export const UpdatePlannedTaskModal = ({
     };
 
     const onDismissWrapper = () => {
-        if (menuVisible) {
-            setMenuVisible(false);
-        } else if (keyboardFocused) {
+        if (keyboardFocused) {
             Keyboard.dismiss();
             setKeyboardFocused(false);
             setSelectedValue(plannedTask.completedQuantity ?? 0);
         } else {
             setInputWasFocused(false);
+            setMenuVisible(false);
             dismiss();
         }
     };
@@ -109,9 +106,6 @@ export const UpdatePlannedTaskModal = ({
         plannedTask.completedQuantity ?? 0
     );
 
-    const [inputWasFocused, setInputWasFocused] = React.useState(false);
-    const [keyboardFocused, setKeyboardFocused] = React.useState(false);
-
     const top = getWindowHeight() / 2 - 150;
 
     const textInputRef = React.useRef<TextInput>(null);
@@ -130,7 +124,6 @@ export const UpdatePlannedTaskModal = ({
             >
                 <Pressable
                     onPress={() => {
-                        setMenuVisible(false);
                         setKeyboardFocused(false);
                         Keyboard.dismiss();
                     }}
@@ -150,7 +143,7 @@ export const UpdatePlannedTaskModal = ({
                     >
                         <View
                             style={{
-                                width: 300,
+                                width: 350,
                                 backgroundColor: colors.modal_background,
                                 borderRadius: 12,
                             }}
@@ -166,52 +159,47 @@ export const UpdatePlannedTaskModal = ({
                                     style={{
                                         width: '100%',
                                         flexDirection: 'row',
+                                        paddingLeft: TIMELINE_CARD_PADDING,
+                                        paddingTop: TIMELINE_CARD_PADDING,
                                     }}
                                 >
-                                    <View style={{ flex: 1 }} />
-                                    <Text
-                                        style={{
-                                            fontSize: 16,
-                                            flex: 10,
-                                            fontFamily: POPPINS_MEDIUM,
-                                            color: colors.text,
-                                            paddingTop: 15,
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        {'Update Progress'}
-                                    </Text>
-
+                                    <View style={{ width: 20, height: 20 }}>
+                                        <SvgUri
+                                            width={20}
+                                            height={20}
+                                            uri={plannedTask.iconUrl ?? ''}
+                                        />
+                                    </View>
                                     <View style={{ flex: 1 }}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                setMenuVisible(true);
+                                        <Text
+                                            numberOfLines={1}
+                                            style={{
+                                                fontSize: 20,
+                                                fontFamily: POPPINS_MEDIUM,
+                                                color: colors.text,
+                                                paddingLeft: TIMELINE_CARD_PADDING,
+                                                bottom: 5,
                                             }}
                                         >
-                                            <Ionicons
-                                                style={{
-                                                    position: 'absolute',
-                                                    top: 5,
-                                                    left: -5,
-                                                }}
-                                                name={'ellipsis-horizontal'}
-                                                size={20}
-                                                color={colors.secondary_text}
-                                            />
-                                        </TouchableOpacity>
+                                            {plannedTask.title ?? ''}
+                                        </Text>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            width: 20,
+                                            alignItems: 'flex-end',
+                                            marginRight: TIMELINE_CARD_PADDING,
+                                        }}
+                                    >
+                                        <Ionicons
+                                            style={{ alignItems: 'flex-end', left: 5, bottom: 5 }}
+                                            name={'close'}
+                                            size={20}
+                                            color={colors.secondary_text}
+                                        />
                                     </View>
                                 </View>
-                                <Text
-                                    style={{
-                                        paddingTop: 10,
-                                        fontSize: 20,
-                                        fontFamily: POPPINS_REGULAR,
-                                        color: colors.accent_color,
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    {plannedTask.title ?? ''}
-                                </Text>
                             </View>
 
                             <View
@@ -221,6 +209,7 @@ export const UpdatePlannedTaskModal = ({
                                     justifyContent: 'center',
                                 }}
                             >
+                                <View style={{ flex: 1 }} />
                                 <View style={{ flex: 1, alignItems: 'center' }}>
                                     <Ionicons
                                         name={'remove'}
@@ -319,6 +308,8 @@ export const UpdatePlannedTaskModal = ({
                                         }}
                                     />
                                 </View>
+
+                                <View style={{ flex: 1 }} />
                             </View>
                             <Text
                                 style={{
@@ -414,7 +405,7 @@ export const UpdatePlannedTaskModal = ({
                                                 flex: 9,
                                             }}
                                         >
-                                            <View>
+                                            <TouchableOpacity>
                                                 <Text
                                                     style={{
                                                         textAlign: 'center',
@@ -428,24 +419,34 @@ export const UpdatePlannedTaskModal = ({
                                                 >
                                                     update
                                                 </Text>
-                                            </View>
+                                            </TouchableOpacity>
                                         </View>
+                                        <View
+                                            style={{
+                                                backgroundColor: colors.secondary_text,
+                                                width: StyleSheet.hairlineWidth,
+                                                height: '100%',
+                                            }}
+                                        />
                                         <TouchableOpacity
                                             style={{
                                                 flex: 1,
-                                                backgroundColor: 'white',
                                                 borderTopRightRadius: 5,
                                                 borderBottomRightRadius: 5,
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 paddingHorizontal: 3,
+                                                backgroundColor: colors.accent_color,
                                             }}
                                             onPress={() => {
                                                 setMenuVisible(!menuVisible);
                                             }}
                                         >
                                             <Ionicons
-                                                name={'chevron-down'}
+                                                style={{
+                                                    backgroundColor: colors.accent_color,
+                                                }}
+                                                name={menuVisible ? 'chevron-up' : 'chevron-down'}
                                                 size={20}
                                                 color={'black'}
                                             />
@@ -468,26 +469,28 @@ export const UpdatePlannedTaskModal = ({
                                                 paddingHorizontal: TIMELINE_CARD_PADDING,
                                             }}
                                         >
-                                            <View
+                                            <TouchableOpacity
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    paddingLeft: 3
+                                                    paddingLeft: 3,
                                                 }}
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: font,
-                                                        fontSize: 12,
+                                                        fontFamily,
+                                                        fontSize,
                                                         color: colors.archive,
                                                     }}
                                                 >
                                                     delete
                                                 </Text>
-                                            </View>
+                                            </TouchableOpacity>
 
+                                            {/* spacer */}
                                             <View style={{ flex: 1 }} />
-                                            <View
+
+                                            <TouchableOpacity
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
@@ -495,17 +498,19 @@ export const UpdatePlannedTaskModal = ({
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: font,
+                                                        fontFamily,
+                                                        fontSize,
                                                         color: colors.link,
-                                                        fontSize: 12,
                                                     }}
                                                 >
                                                     edit
                                                 </Text>
-                                            </View>
+                                            </TouchableOpacity>
 
+                                            {/* spacer */}
                                             <View style={{ flex: 1 }} />
-                                            <View
+
+                                            <TouchableOpacity
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
@@ -513,33 +518,35 @@ export const UpdatePlannedTaskModal = ({
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: font,
+                                                        fontFamily,
+                                                        fontSize,
                                                         color: colors.trophy_icon,
-                                                        fontSize: 12,
                                                     }}
                                                 >
                                                     skip
                                                 </Text>
-                                            </View>
+                                            </TouchableOpacity>
 
+                                            {/* spacer */}
                                             <View style={{ flex: 1 }} />
-                                            <View
+
+                                            <TouchableOpacity
                                                 style={{
                                                     alignItems: 'center',
                                                     justifyContent: 'center',
-                                                    paddingRight: 3
+                                                    paddingRight: 3,
                                                 }}
                                             >
                                                 <Text
                                                     style={{
-                                                        fontFamily: font,
+                                                        fontFamily,
+                                                        fontSize,
                                                         color: colors.timeline_label_user_post,
-                                                        fontSize: 12,
                                                     }}
                                                 >
                                                     complete
                                                 </Text>
-                                            </View>
+                                            </TouchableOpacity>
                                         </View>
                                     </Animated.View>
                                 </View>
