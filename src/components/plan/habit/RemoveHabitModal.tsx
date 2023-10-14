@@ -1,5 +1,5 @@
 import { Modal, TouchableOpacity, View, Text, Pressable } from 'react-native';
-import { getWindowHeight } from 'src/util/GeneralUtility';
+import { getWindowHeight, getWindowWidth } from 'src/util/GeneralUtility';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
 import {
@@ -39,6 +39,11 @@ export const RemoveHabitModal = ({
     const scheduledHabit = HabitCustomHooks.useScheduledHabit(scheduledHabitId);
 
     const svgUri = plannedHabit.data?.iconUrl ?? scheduledHabit.data?.task?.iconUrl ?? '';
+
+    const isLargerScreen = getWindowHeight() > 800;
+    const buttonPadding = isLargerScreen ? 3 : 2;
+    const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
+    const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
 
     const body = (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -128,7 +133,7 @@ export const RemoveHabitModal = ({
                             fontSize: 14,
                             fontFamily: POPPINS_REGULAR,
                             color: colors.text,
-                            paddingVertical: 3,
+                            paddingVertical: buttonPadding,
                         }}
                     >
                         Nevermind!
@@ -162,7 +167,7 @@ export const RemoveHabitModal = ({
                             fontSize: 14,
                             fontFamily: POPPINS_REGULAR,
                             color: colors.text,
-                            paddingVertical: 3,
+                            paddingVertical: buttonPadding,
                         }}
                     >
                         Remove For Today
@@ -216,8 +221,8 @@ export const RemoveHabitModal = ({
                 >
                     <View
                         style={{
-                            width: getWindowHeight() / 3,
-                            height: getWindowHeight() / 3.5,
+                            width: modalWidth,
+                            height: modalHeight,
                             backgroundColor: colors.modal_background,
                             borderRadius: 7,
                             justifyContent: 'space-around',
