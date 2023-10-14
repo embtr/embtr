@@ -1,4 +1,4 @@
-import { Image, PlannedDay } from 'resources/schema';
+import { PlannedDay } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
