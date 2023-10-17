@@ -28,7 +28,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { RemoveHabitModal } from './habit/RemoveHabitModal';
-import { set } from 'lodash';
+import { HabitSkippedSymbol } from '../common/task_symbols/HabitSkippedSymbol';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -235,10 +235,18 @@ export const PlannableTask = ({
             <UpdatePlannedTaskModal
                 plannedTask={initialPlannedTask}
                 visible={showUpdatePlannedTaskModal}
+                skip={async () => {
+                    setShowUpdatePlannedTaskModal(false);
+
+                    const clone = { ...initialPlannedTask };
+                    clone.status = 'SKIPPED';
+                    onPlannedTaskUpdated(clone);
+
+                    await PlannedTaskController.update(clone);
+                }}
                 remove={() => {
                     setShowUpdatePlannedTaskModal(false);
                     setRemovePlannedTaskTimestamp(new Date());
-                    console.log('remove');
                 }}
                 fail={async () => {
                     setShowUpdatePlannedTaskModal(false);
@@ -261,8 +269,6 @@ export const PlannableTask = ({
                     setShowUpdatePlannedTaskModal(false);
 
                     const clone = { ...initialPlannedTask };
-                    console.log('clone', clone);
-
                     clone.status = 'INCOMPLETE';
                     setCompletedQuantity(updatedValue);
                     await updatePlannedTaskCompletedQuantity(clone, updatedValue);
@@ -295,6 +301,8 @@ export const PlannableTask = ({
                                 backgroundColor:
                                     initialPlannedTask?.status === 'FAILED'
                                         ? colors.progress_bar_failed
+                                        : initialPlannedTask?.status === 'SKIPPED'
+                                        ? colors.trophy_icon
                                         : completedQuantity >= (initialPlannedTask.quantity ?? 0)
                                         ? colors.progress_bar_complete
                                         : 'gray',
@@ -344,6 +352,8 @@ export const PlannableTask = ({
                                         <View>
                                             {initialPlannedTask?.status === 'FAILED' ? (
                                                 <TaskFailedSymbol small={true} />
+                                            ) : initialPlannedTask.status === 'SKIPPED' ? (
+                                                <HabitSkippedSymbol small={true} />
                                             ) : completedQuantity >=
                                               (initialPlannedTask.quantity ?? 0) ? (
                                                 <TaskCompleteSymbol small={true} />
@@ -366,7 +376,7 @@ export const PlannableTask = ({
                                 >
                                     <ProgressBar
                                         progress={getPercentageComplete()}
-                                        success={!taskIsFailed}
+                                        status={initialPlannedTask.status}
                                         showPercent={false}
                                     />
                                 </View>
@@ -386,14 +396,18 @@ export const PlannableTask = ({
                                             fontSize: 10,
                                         }}
                                     >
-                                        {`${completedQuantity} / ${initialPlannedTask.quantity} ${
-                                            initialPlannedTask.unit
-                                                ? UnitUtility.getReadableUnit(
-                                                      initialPlannedTask.unit,
-                                                      completedQuantity
-                                                  )
-                                                : ''
-                                        }`}
+                                        {initialPlannedTask.status === 'SKIPPED'
+                                            ? 'skipped'
+                                            : `${completedQuantity} / ${
+                                                  initialPlannedTask.quantity
+                                              } ${
+                                                  initialPlannedTask.unit
+                                                      ? UnitUtility.getReadableUnit(
+                                                            initialPlannedTask.unit,
+                                                            completedQuantity
+                                                        )
+                                                      : ''
+                                              }`}
                                     </Text>
                                 </View>
                                 <View

@@ -10,9 +10,6 @@ import {
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
 import { POPPINS_MEDIUM } from 'src/util/constants';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
@@ -33,11 +30,12 @@ export const PlanDay = ({
     onPlannedDayUpdated,
 }: Props) => {
     const { colors } = useTheme();
+    console.log("rendering!!!!!")
 
-    const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
-    const [userChallengeParticipation, setUserChallengeParticipation] = useState<
-        ChallengeParticipant[]
-    >([]);
+    // const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
+    // const [userChallengeParticipation, setUserChallengeParticipation] = useState<
+    //     ChallengeParticipant[]
+    // >([]);
 
     const onPlannedTaskUpdated = (plannedTask: PlannedTask) => {
         const clonedPlannedDay = { ...plannedDay };
@@ -53,23 +51,26 @@ export const PlanDay = ({
         onPlannedDayUpdated(clonedPlannedDay);
     };
 
-    const currentUser = useAppSelector(getCurrentUser);
+    //const currentUser = useAppSelector(getCurrentUser);
 
-    React.useEffect(() => {
-        const fetch = async () => {
-            if (!currentUser.id) {
-                return;
-            }
+    // React.useEffect(() => {
+    //     const fetch = async () => {
+    //         if (!currentUser.id) {
+    //             return;
+    //         }
 
-            const challengeParticipation = await ChallengeController.getAllForUser(currentUser.id);
-            setUserChallengeParticipation(challengeParticipation ?? []);
-        };
+    //         const challengeParticipation = await ChallengeController.getAllForUser(currentUser.id);
+    //         setUserChallengeParticipation(challengeParticipation ?? []);
+    //     };
 
-        fetch();
-    }, []);
+    //     fetch();
+    // }, []);
 
     let taskViews: JSX.Element[] = [];
     let allTasksAreComplete = true;
+
+    //console.log(plannedDay.plannedTasks)
+    //console.log(plannedDay.date)
 
     // get all current planned tasks
     plannedDay?.plannedTasks?.forEach((plannedTask) => {
@@ -98,9 +99,16 @@ export const PlanDay = ({
         }
         */
 
+        //keys:
+        // id from template
+        // id from planned task
+        const key =
+            'plannedTask' + plannedTask.id + '_scheduledHabit' + plannedTask.scheduledHabitId;
+        //console.log('key: ' + key);
+
         taskViews.push(
             <View
-                key={plannedTask.scheduledHabitId + '~' + plannedTask.id}
+                key={key}
                 style={{
                     paddingBottom: 5,
                     alignItems: 'center',
