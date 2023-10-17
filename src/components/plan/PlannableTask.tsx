@@ -3,14 +3,13 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import {
     getCloseMenu,
     getDisplayDropDownAlert,
     getFireConfetti,
     getOpenMenu,
+    setCurrentlySelectedPlannedDay,
     setGlobalBlurBackground,
-    setMenuOptions,
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
@@ -30,20 +29,15 @@ import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { RemoveHabitModal } from './habit/RemoveHabitModal';
 import { HabitSkippedSymbol } from '../common/task_symbols/HabitSkippedSymbol';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     plannedDay: PlannedDay;
     initialPlannedTask: PlannedTaskModel;
-    onPlannedTaskUpdated: Function;
     challengeRewards: ChallengeReward[];
 }
 
-export const PlannableTask = ({
-    plannedDay,
-    initialPlannedTask,
-    onPlannedTaskUpdated,
-    challengeRewards,
-}: Props) => {
+export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards }: Props) => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -53,6 +47,7 @@ export const PlannableTask = ({
     const [completedQuantity, setCompletedQuantity] = React.useState<number>(
         initialPlannedTask.completedQuantity ?? 0
     );
+    const [status, setStatus] = React.useState<string>(initialPlannedTask.status ?? 'INCOMPLETE');
     const [userId, setUserId] = React.useState<number | undefined>(undefined);
     React.useEffect(() => {
         const fetch = async () => {
@@ -62,6 +57,9 @@ export const PlannableTask = ({
 
         fetch();
     }, [initialPlannedTask]);
+
+    const hasConcretePlannedTask = !!initialPlannedTask.id;
+    const skipped = status === 'SKIPPED';
 
     //this entire section listens to the population of this callback id
     //if it is set, that means we want to edit a planned task. first we must
@@ -98,9 +96,6 @@ export const PlannableTask = ({
 
     const dispatch = useAppDispatch();
 
-    const taskIsComplete = false;
-    const taskIsFailed = initialPlannedTask.status === 'FAILED';
-
     const fireConfetti = useAppSelector(getFireConfetti);
     const displayDropDownAlert = useAppSelector(getDisplayDropDownAlert);
 
@@ -114,7 +109,6 @@ export const PlannableTask = ({
             : await PlannedTaskController.create(plannedDay, clone);
 
         if (updatedPlannedTask?.plannedTask?.plannedDay) {
-            onPlannedTaskUpdated(clone);
             await PlanningService.onTaskUpdated(initialPlannedTask.plannedDay!, fireConfetti);
         }
 
@@ -134,67 +128,6 @@ export const PlannableTask = ({
             fireConfetti();
         }
     };
-
-    const updateMenuOptions = () => {
-        if (!initialPlannedTask) {
-            return;
-        }
-
-        let menuOptions: EmbtrMenuOption[] = [];
-        if (!taskIsComplete && !taskIsFailed) {
-            menuOptions.push({
-                name: 'Complete Task',
-                onPress: async () => {
-                    closeMenu();
-                    const result = await PlannedTaskController.complete(initialPlannedTask);
-                },
-            });
-        }
-
-        menuOptions.push({
-            name: 'Reset task',
-            onPress: async () => {
-                closeMenu();
-
-                const clone = { ...initialPlannedTask };
-                clone.status = 'INCOMPLETE';
-                onPlannedTaskUpdated(clone);
-
-                await PlannedTaskController.update(clone);
-            },
-        });
-
-        if (!taskIsComplete && !taskIsFailed) {
-            menuOptions.push({
-                name: 'Mark task as failed',
-                onPress: async () => {
-                    closeMenu();
-
-                    const clone = { ...initialPlannedTask };
-                    clone.status = 'FAILED';
-                    onPlannedTaskUpdated(clone);
-
-                    await PlannedTaskController.update(clone);
-                },
-            });
-        }
-
-        menuOptions.push({
-            name: 'Delete',
-            onPress: async () => {
-                closeMenu();
-
-                const clone = { ...initialPlannedTask };
-                clone.active = false;
-                onPlannedTaskUpdated(clone);
-
-                await PlannedTaskController.update(clone);
-            },
-            destructive: true,
-        });
-        dispatch(setMenuOptions(createEmbtrMenuOptions(menuOptions)));
-    };
-
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
 
@@ -209,7 +142,6 @@ export const PlannableTask = ({
         }
 
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        updateMenuOptions();
         openMenu();
     };
 
@@ -219,6 +151,19 @@ export const PlannableTask = ({
         }
 
         return initialPlannedTask.status === 'COMPLETE' ? 100 : 0;
+    };
+
+    const refreshPlannedDay = async () => {
+        if (!plannedDay?.dayKey) {
+            return;
+        }
+
+        const updatedPlannedDay = await PlannedDayController.getForCurrentUserViaApi(
+            plannedDay.dayKey
+        );
+        if (updatedPlannedDay) {
+            dispatch(setCurrentlySelectedPlannedDay(updatedPlannedDay));
+        }
     };
 
     return (
@@ -231,10 +176,6 @@ export const PlannableTask = ({
                         // getting back into the modal's way of doing it since we
                         // delete "this" PlannableTask
                         dispatch(setGlobalBlurBackground(false));
-
-                        const clone = { ...initialPlannedTask };
-                        clone.active = false;
-                        onPlannedTaskUpdated(clone);
                     } else {
                         setRemovePlannedTaskTimestamp(undefined);
                     }
@@ -248,12 +189,14 @@ export const PlannableTask = ({
                 visible={showUpdatePlannedTaskModal}
                 skip={async () => {
                     setShowUpdatePlannedTaskModal(false);
+                    if (hasConcretePlannedTask) {
+                        setStatus('SKIPPED');
+                    }
 
                     const clone = { ...initialPlannedTask };
                     clone.status = 'SKIPPED';
-                    onPlannedTaskUpdated(clone);
-
                     await PlannedTaskController.update(clone);
+                    refreshPlannedDay();
                 }}
                 remove={() => {
                     setShowUpdatePlannedTaskModal(false);
@@ -264,25 +207,35 @@ export const PlannableTask = ({
 
                     const clone = { ...initialPlannedTask };
                     clone.status = 'FAILED';
-                    onPlannedTaskUpdated(clone);
-
                     await PlannedTaskController.update(clone);
+                    refreshPlannedDay();
                 }}
                 complete={async () => {
                     setShowUpdatePlannedTaskModal(false);
 
                     const clone = { ...initialPlannedTask };
                     clone.status = 'INCOMPLETE';
-                    setCompletedQuantity(clone.quantity ?? 0);
+
+                    if (hasConcretePlannedTask) {
+                        setStatus('INCOMPLETE');
+                        setCompletedQuantity(clone.quantity ?? 0);
+                    }
+
                     await updatePlannedTaskCompletedQuantity(clone, clone.quantity ?? 0);
+                    refreshPlannedDay();
                 }}
                 update={async (updatedValue: number) => {
                     setShowUpdatePlannedTaskModal(false);
 
+                    if (hasConcretePlannedTask) {
+                        setStatus('INCOMPLETE');
+                        setCompletedQuantity(updatedValue);
+                    }
+
                     const clone = { ...initialPlannedTask };
                     clone.status = 'INCOMPLETE';
-                    setCompletedQuantity(updatedValue);
                     await updatePlannedTaskCompletedQuantity(clone, updatedValue);
+                    refreshPlannedDay();
                 }}
                 dismiss={(editScheduledHabitCallbackId?: number) => {
                     setEditScheduledHabitCallbackId(editScheduledHabitCallbackId);
@@ -312,7 +265,7 @@ export const PlannableTask = ({
                                 backgroundColor:
                                     initialPlannedTask?.status === 'FAILED'
                                         ? colors.progress_bar_failed
-                                        : initialPlannedTask?.status === 'SKIPPED'
+                                        : skipped
                                         ? colors.trophy_icon
                                         : completedQuantity >= (initialPlannedTask.quantity ?? 0)
                                         ? colors.progress_bar_complete
@@ -363,7 +316,7 @@ export const PlannableTask = ({
                                         <View>
                                             {initialPlannedTask?.status === 'FAILED' ? (
                                                 <TaskFailedSymbol small={true} />
-                                            ) : initialPlannedTask.status === 'SKIPPED' ? (
+                                            ) : skipped ? (
                                                 <HabitSkippedSymbol small={true} />
                                             ) : completedQuantity >=
                                               (initialPlannedTask.quantity ?? 0) ? (
@@ -387,7 +340,7 @@ export const PlannableTask = ({
                                 >
                                     <ProgressBar
                                         progress={getPercentageComplete()}
-                                        status={initialPlannedTask.status}
+                                        status={status}
                                         showPercent={false}
                                     />
                                 </View>
@@ -407,7 +360,7 @@ export const PlannableTask = ({
                                             fontSize: 10,
                                         }}
                                     >
-                                        {initialPlannedTask.status === 'SKIPPED'
+                                        {skipped
                                             ? 'skipped'
                                             : `${completedQuantity} / ${
                                                   initialPlannedTask.quantity

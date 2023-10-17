@@ -71,7 +71,6 @@ export const Planning = () => {
 
                 {selectedPlannedDay && (
                     <PlanDay
-                        plannedDay={selectedPlannedDay}
                         onPlannedDayUpdated={updateSelectedPlannedDay}
                         navigateToAddTasks={() => {}}
                         onSharePlannedDayResults={onSharePlannedDayResults}

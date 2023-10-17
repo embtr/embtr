@@ -8,9 +8,10 @@ import {
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
 import { POPPINS_MEDIUM } from 'src/util/constants';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentlySelectedPlannedDay } from 'src/redux/user/GlobalState';
 
 interface Props {
-    plannedDay: PlannedDayModel;
     onPlannedDayUpdated: Function;
     navigateToAddTasks: Function;
     onSharePlannedDayResults: Function;
@@ -18,31 +19,17 @@ interface Props {
 }
 
 export const PlanDay = ({
-    plannedDay,
     onSharePlannedDayResults,
     navigateToAddTasks,
     onPlannedDayUpdated,
 }: Props) => {
+    const plannedDay = useAppSelector(getCurrentlySelectedPlannedDay);
     const { colors } = useTheme();
 
     // const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
     // const [userChallengeParticipation, setUserChallengeParticipation] = useState<
     //     ChallengeParticipant[]
     // >([]);
-
-    const onPlannedTaskUpdated = (plannedTask: PlannedTask) => {
-        const clonedPlannedDay = { ...plannedDay };
-
-        clonedPlannedDay.plannedTasks = clonedPlannedDay.plannedTasks?.map((task) => {
-            if (task.id === plannedTask.id) {
-                return plannedTask;
-            }
-
-            return task;
-        });
-
-        onPlannedDayUpdated(clonedPlannedDay);
-    };
 
     //const currentUser = useAppSelector(getCurrentUser);
 
@@ -66,6 +53,7 @@ export const PlanDay = ({
     //console.log(plannedDay.date)
 
     // get all current planned tasks
+    console.log(plannedDay?.plannedTasks);
     plannedDay?.plannedTasks?.forEach((plannedTask) => {
         if (!plannedTask.active) {
             return;
@@ -97,7 +85,7 @@ export const PlanDay = ({
         // id from planned task
         const key =
             'plannedTask' + plannedTask.id + '_scheduledHabit' + plannedTask.scheduledHabitId;
-        //console.log('key: ' + key);
+        console.log(key);
 
         taskViews.push(
             <View
@@ -112,7 +100,6 @@ export const PlanDay = ({
                     plannedDay={plannedDay}
                     challengeRewards={challengeRewards}
                     initialPlannedTask={plannedTask}
-                    onPlannedTaskUpdated={onPlannedTaskUpdated}
                 />
             </View>
         );
