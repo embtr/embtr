@@ -109,7 +109,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
             : await PlannedTaskController.create(plannedDay, clone);
 
         if (updatedPlannedTask?.plannedTask?.plannedDay) {
-            await PlanningService.onTaskUpdated(initialPlannedTask.plannedDay!, fireConfetti);
+            //todo commented out because tempate tasks do not have a reference to the planned day so this is failing
+            //await PlanningService.onTaskUpdated(initialPlannedTask.plannedDay!, fireConfetti);
         }
 
         if (
@@ -124,6 +125,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                 body: `${completedChallenge.name}`,
                 badgeUrl,
             };
+
             displayDropDownAlert(alert);
             fireConfetti();
         }
@@ -161,6 +163,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         const updatedPlannedDay = await PlannedDayController.getForCurrentUserViaApi(
             plannedDay.dayKey
         );
+
         if (updatedPlannedDay) {
             dispatch(setCurrentlySelectedPlannedDay(updatedPlannedDay));
         }
@@ -227,10 +230,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                 update={async (updatedValue: number) => {
                     setShowUpdatePlannedTaskModal(false);
 
-                    if (hasConcretePlannedTask) {
-                        setStatus('INCOMPLETE');
-                        setCompletedQuantity(updatedValue);
-                    }
+                    setStatus('INCOMPLETE');
+                    setCompletedQuantity(updatedValue);
 
                     const clone = { ...initialPlannedTask };
                     clone.status = 'INCOMPLETE';

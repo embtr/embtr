@@ -15,7 +15,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedTask } from 'resources/schema';
 import { UnitUtility } from 'src/util/UnitUtility';
-import { getVerticalAlignmentLine, getWindowHeight } from 'src/util/GeneralUtility';
+import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
 import { SvgUri } from 'react-native-svg';
 

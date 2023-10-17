@@ -26,7 +26,7 @@ export interface PlannedTaskModel {
 
 class PlannedTaskController {
     public static async create(plannedDay: PlannedDay, plannedTask: PlannedTask) {
-        if (!plannedDay.id) {
+        if (!plannedDay.dayKey) {
             return;
         }
 
