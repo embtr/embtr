@@ -1,7 +1,5 @@
-import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import {
-    ChallengeParticipant,
     ChallengeReward,
     PlannedDay as PlannedDayModel,
     PlannedDayResult,
@@ -10,10 +8,6 @@ import {
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
 import { POPPINS_MEDIUM } from 'src/util/constants';
-import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentUser } from 'src/redux/user/GlobalState';
-import React from 'react';
 
 interface Props {
     plannedDay: PlannedDayModel;
@@ -30,7 +24,6 @@ export const PlanDay = ({
     onPlannedDayUpdated,
 }: Props) => {
     const { colors } = useTheme();
-    console.log("rendering!!!!!")
 
     // const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
     // const [userChallengeParticipation, setUserChallengeParticipation] = useState<

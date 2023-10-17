@@ -9,6 +9,7 @@ import {
     getDisplayDropDownAlert,
     getFireConfetti,
     getOpenMenu,
+    setGlobalBlurBackground,
     setMenuOptions,
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
@@ -71,7 +72,7 @@ export const PlannableTask = ({
     useFocusEffect(
         React.useCallback(() => {
             setShowRemoveHabitModal(removePlannedTaskTimestamp !== undefined);
-        }, [removePlannedTaskTimestamp, showRemoveHabitModal])
+        }, [removePlannedTaskTimestamp])
     );
 
     //this entire section listens to the population of this callback id
@@ -224,9 +225,19 @@ export const PlannableTask = ({
         <View>
             <RemoveHabitModal
                 visible={showRemoveHabitModal}
-                onDismiss={() => {
-                    setShowRemoveHabitModal(false);
-                    setRemovePlannedTaskTimestamp(undefined);
+                onDismiss={async (removed: boolean) => {
+                    if (removed) {
+                        // manually remove the blur because we never end up
+                        // getting back into the modal's way of doing it since we
+                        // delete "this" PlannableTask
+                        dispatch(setGlobalBlurBackground(false));
+
+                        const clone = { ...initialPlannedTask };
+                        clone.active = false;
+                        onPlannedTaskUpdated(clone);
+                    } else {
+                        setRemovePlannedTaskTimestamp(undefined);
+                    }
                 }}
                 habitTitle={initialPlannedTask.title ?? ''}
                 plannedHabitId={initialPlannedTask.id}

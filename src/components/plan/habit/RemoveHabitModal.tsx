@@ -16,7 +16,7 @@ import { SvgUri } from 'react-native-svg';
 
 interface Props {
     visible: boolean;
-    onDismiss: Function;
+    onDismiss: (removed: boolean) => void;
     habitTitle: string;
     plannedHabitId?: number;
     scheduledHabitId: number;
@@ -30,10 +30,6 @@ export const RemoveHabitModal = ({
     scheduledHabitId,
 }: Props) => {
     const { colors } = useTheme();
-
-    const onHandleDismiss = () => {
-        onDismiss();
-    };
 
     const plannedHabit = PlannedHabitCustomHooks.usePlannedHabit(plannedHabitId ?? 0);
     const scheduledHabit = HabitCustomHooks.useScheduledHabit(scheduledHabitId);
@@ -124,7 +120,7 @@ export const RemoveHabitModal = ({
                         CARD_SHADOW,
                     ]}
                     onPress={() => {
-                        onHandleDismiss();
+                        onDismiss(false);
                     }}
                 >
                     <Text
@@ -158,7 +154,7 @@ export const RemoveHabitModal = ({
                                 ...plannedHabit.data,
                             });
                         }
-                        onHandleDismiss();
+                        onDismiss(true);
                     }}
                 >
                     <Text
@@ -182,7 +178,7 @@ export const RemoveHabitModal = ({
                         borderRadius: 6,
                     }}
                     onPress={() => {
-                        onHandleDismiss();
+                        onDismiss(false);
                     }}
                 >
                     <Text
@@ -215,7 +211,7 @@ export const RemoveHabitModal = ({
                     }}
                     onPress={(event) => {
                         if (event.target === event.currentTarget) {
-                            onHandleDismiss();
+                            onDismiss(false);
                         }
                     }}
                 >
