@@ -306,7 +306,7 @@ export const UpdatePlannedTaskModal = ({
                                                 : colors.accent_color,
                                     }}
                                 >
-                                    out of {plannedTask.quantity}
+                                    Goal: {plannedTask.quantity}
                                 </Text>
                             </Text>
                         </View>

@@ -1,5 +1,5 @@
 import { Modal, TouchableOpacity, View, Text, Pressable } from 'react-native';
-import { getWindowHeight, getWindowWidth } from 'src/util/GeneralUtility';
+import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
 import {

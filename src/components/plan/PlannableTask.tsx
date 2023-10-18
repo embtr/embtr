@@ -99,11 +99,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const fireConfetti = useAppSelector(getFireConfetti);
     const displayDropDownAlert = useAppSelector(getDisplayDropDownAlert);
 
-    const updatePlannedTaskCompletedQuantity = async (
-        clone: PlannedTaskModel,
-        quantity: number
-    ) => {
-        clone.completedQuantity = quantity;
+    const createUpdatePlannedTask = async (clone: PlannedTaskModel) => {
         const updatedPlannedTask = clone.id
             ? await PlannedTaskController.update(clone)
             : await PlannedTaskController.create(plannedDay, clone);
@@ -130,6 +126,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
             fireConfetti();
         }
     };
+
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
 
@@ -169,6 +166,66 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         }
     };
 
+    const skip = async () => {
+        setShowUpdatePlannedTaskModal(false);
+
+        const clone = { ...initialPlannedTask };
+        clone.status = 'SKIPPED';
+
+        await createUpdatePlannedTask(clone);
+        refreshPlannedDay();
+    };
+
+    const remove = async () => {
+        setShowUpdatePlannedTaskModal(false);
+        setRemovePlannedTaskTimestamp(new Date());
+    };
+
+    const fail = async () => {
+        setShowUpdatePlannedTaskModal(false);
+
+        const clone = { ...initialPlannedTask };
+        clone.status = 'FAILED';
+        await PlannedTaskController.update(clone);
+        refreshPlannedDay();
+    };
+
+    const complete = async () => {
+        setShowUpdatePlannedTaskModal(false);
+
+        const clone = { ...initialPlannedTask };
+        clone.status = 'INCOMPLETE';
+
+        if (hasConcretePlannedTask) {
+            setStatus('INCOMPLETE');
+            setCompletedQuantity(clone.quantity ?? 0);
+        }
+
+        clone.completedQuantity = clone.quantity ?? 0;
+
+        await createUpdatePlannedTask(clone);
+        refreshPlannedDay();
+    };
+
+    const update = async (updatedValue: number) => {
+        setShowUpdatePlannedTaskModal(false);
+
+        setStatus('INCOMPLETE');
+        setCompletedQuantity(updatedValue);
+
+        const clone = { ...initialPlannedTask };
+        clone.status = 'INCOMPLETE';
+        clone.completedQuantity = updatedValue;
+
+        await createUpdatePlannedTask(clone);
+        refreshPlannedDay();
+    };
+
+    const dismiss = (editScheduledHabitCallbackId?: number) => {
+        setEditScheduledHabitCallbackId(editScheduledHabitCallbackId);
+        setShowUpdatePlannedTaskModal(false);
+    };
+
     return (
         <View>
             <RemoveHabitModal
@@ -190,58 +247,12 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
             <UpdatePlannedTaskModal
                 plannedTask={initialPlannedTask}
                 visible={showUpdatePlannedTaskModal}
-                skip={async () => {
-                    setShowUpdatePlannedTaskModal(false);
-                    if (hasConcretePlannedTask) {
-                        setStatus('SKIPPED');
-                    }
-
-                    const clone = { ...initialPlannedTask };
-                    clone.status = 'SKIPPED';
-                    await PlannedTaskController.update(clone);
-                    refreshPlannedDay();
-                }}
-                remove={() => {
-                    setShowUpdatePlannedTaskModal(false);
-                    setRemovePlannedTaskTimestamp(new Date());
-                }}
-                fail={async () => {
-                    setShowUpdatePlannedTaskModal(false);
-
-                    const clone = { ...initialPlannedTask };
-                    clone.status = 'FAILED';
-                    await PlannedTaskController.update(clone);
-                    refreshPlannedDay();
-                }}
-                complete={async () => {
-                    setShowUpdatePlannedTaskModal(false);
-
-                    const clone = { ...initialPlannedTask };
-                    clone.status = 'INCOMPLETE';
-
-                    if (hasConcretePlannedTask) {
-                        setStatus('INCOMPLETE');
-                        setCompletedQuantity(clone.quantity ?? 0);
-                    }
-
-                    await updatePlannedTaskCompletedQuantity(clone, clone.quantity ?? 0);
-                    refreshPlannedDay();
-                }}
-                update={async (updatedValue: number) => {
-                    setShowUpdatePlannedTaskModal(false);
-
-                    setStatus('INCOMPLETE');
-                    setCompletedQuantity(updatedValue);
-
-                    const clone = { ...initialPlannedTask };
-                    clone.status = 'INCOMPLETE';
-                    await updatePlannedTaskCompletedQuantity(clone, updatedValue);
-                    refreshPlannedDay();
-                }}
-                dismiss={(editScheduledHabitCallbackId?: number) => {
-                    setEditScheduledHabitCallbackId(editScheduledHabitCallbackId);
-                    setShowUpdatePlannedTaskModal(false);
-                }}
+                skip={skip}
+                remove={remove}
+                fail={fail}
+                complete={complete}
+                update={update}
+                dismiss={dismiss}
             />
 
             <TouchableOpacity
