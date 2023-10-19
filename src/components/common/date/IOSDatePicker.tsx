@@ -47,7 +47,6 @@ export const IOSDatePicker = ({ date, onConfirm, onCancel, visible }: Props) => 
                             value={currentDate}
                             mode={'date'}
                             onChange={(event: DateTimePickerEvent, updatedDate?: Date) => {
-                                console.log(event.type);
                                 if (event.type === 'set') {
                                     setCurrentDate(updatedDate || date);
                                 }

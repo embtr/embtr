@@ -128,7 +128,7 @@ export const UpdatePlannedTaskModal = ({
 
     const textInputRef = React.useRef<TextInput>(null);
 
-    const unitsPretty = plannedTask.unit ? UnitUtility.getReadableUnit(plannedTask.unit, 2) : '';
+    const unitsPretty = plannedTask.unit ? UnitUtility.getReadableUnit(plannedTask.unit, 2) : 'Times';
 
     const body = (
         <View>

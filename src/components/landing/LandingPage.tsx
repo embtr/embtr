@@ -64,7 +64,6 @@ export const LandingPage = () => {
                 <Pressable
                     onPress={() => {
                         let x = 4;
-                        console.log(x);
                     }}
                 >
                     <Text style={{ color: 'white' }}>press me to debug</Text>

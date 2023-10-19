@@ -27,6 +27,7 @@ export interface PlannedTaskModel {
 class PlannedTaskController {
     public static async create(plannedDay: PlannedDay, plannedTask: PlannedTask) {
         if (!plannedDay.dayKey) {
+            console.log('no day key found')
             return;
         }
 
@@ -34,6 +35,7 @@ class PlannedTaskController {
             plannedTask,
         };
 
+        console.log('sending request:', request)
         return await axiosInstance
             .post(`${PLANNED_DAY}${plannedDay.dayKey}/planned-task/`, request)
             .then((success) => {

@@ -1,7 +1,12 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import {
+    CARD_SHADOW,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+    TIMELINE_CARD_PADDING,
+} from 'src/util/constants';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCloseMenu,
@@ -19,7 +24,6 @@ import { TaskFailedSymbol } from '../common/task_symbols/TaskFailedSymbol';
 import { ProgressBar } from './goals/ProgressBar';
 import { UpdatePlannedTaskModal } from 'src/components/plan/UpdatePlannedTaskModal';
 import { UnitUtility } from 'src/util/UnitUtility';
-import { PlanningService } from 'src/util/planning/PlanningService';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
 import { SvgUri } from 'react-native-svg';
@@ -130,6 +134,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
 
+    const prettyTimeOfDay = initialPlannedTask.timeOfDay?.period?.toLowerCase() ?? 'All Day';
+
     const onShortPress = async () => {
         setShowUpdatePlannedTaskModal(true);
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
@@ -231,18 +237,13 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
             <RemoveHabitModal
                 visible={showRemoveHabitModal}
                 onDismiss={async (removed: boolean) => {
+                    setRemovePlannedTaskTimestamp(undefined);
                     if (removed) {
-                        // manually remove the blur because we never end up
-                        // getting back into the modal's way of doing it since we
-                        // delete "this" PlannableTask
-                        dispatch(setGlobalBlurBackground(false));
-                    } else {
-                        setRemovePlannedTaskTimestamp(undefined);
+                        refreshPlannedDay();
                     }
                 }}
-                habitTitle={initialPlannedTask.title ?? ''}
-                plannedHabitId={initialPlannedTask.id}
-                scheduledHabitId={initialPlannedTask.scheduledHabitId ?? 0}
+                plannedHabit={initialPlannedTask}
+                plannedDay={plannedDay}
             />
             <UpdatePlannedTaskModal
                 plannedTask={initialPlannedTask}
@@ -386,11 +387,11 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                               }`}
                                     </Text>
                                 </View>
+
                                 <View
                                     style={{
                                         flex: 1,
                                         flexDirection: 'row',
-                                        alignItems: 'center',
                                         paddingLeft: 10,
                                     }}
                                 >
@@ -403,23 +404,26 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                         }}
                                     ></Text>
                                 </View>
-
                                 <View
                                     style={{
                                         flex: 1,
                                         flexDirection: 'row',
-                                        alignItems: 'center',
-                                        paddingLeft: 10,
+                                        alignItems: 'flex-end',
+                                        justifyContent: 'flex-end',
+                                        paddingRight: TIMELINE_CARD_PADDING,
                                     }}
                                 >
                                     <Text
                                         style={{
                                             paddingLeft: 5,
-                                            color: colors.goal_secondary_font,
+                                            color: colors.accent_color,
                                             fontFamily: 'Poppins_400Regular',
+                                            textAlign: 'left',
                                             fontSize: 10,
                                         }}
-                                    ></Text>
+                                    >
+                                        {prettyTimeOfDay}
+                                    </Text>
                                 </View>
                             </View>
                         </View>

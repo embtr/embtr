@@ -9,32 +9,21 @@ import {
     POPPINS_SEMI_BOLD,
     TIMELINE_CARD_PADDING,
 } from 'src/util/constants';
-import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
-import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitService } from 'src/service/PlannedHabitService';
 import { SvgUri } from 'react-native-svg';
+import { PlannedDay, PlannedTask } from 'resources/schema';
 
 interface Props {
     visible: boolean;
     onDismiss: (removed: boolean) => void;
-    habitTitle: string;
-    plannedHabitId?: number;
-    scheduledHabitId: number;
+    plannedHabit: PlannedTask;
+    plannedDay: PlannedDay;
 }
 
-export const RemoveHabitModal = ({
-    visible,
-    onDismiss,
-    habitTitle,
-    plannedHabitId,
-    scheduledHabitId,
-}: Props) => {
+export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay }: Props) => {
     const { colors } = useTheme();
 
-    const plannedHabit = PlannedHabitCustomHooks.usePlannedHabit(plannedHabitId ?? 0);
-    const scheduledHabit = HabitCustomHooks.useScheduledHabit(scheduledHabitId);
-
-    const svgUri = plannedHabit.data?.iconUrl ?? scheduledHabit.data?.task?.iconUrl ?? '';
+    const svgUri = plannedHabit.iconUrl ?? '';
 
     const isLargerScreen = getWindowHeight() > 800;
     const buttonPadding = isLargerScreen ? 3 : 2;
@@ -72,7 +61,7 @@ export const RemoveHabitModal = ({
                                 color: colors.accent_color,
                             }}
                         >
-                            {habitTitle}
+                            {plannedHabit.title}
                         </Text>
                     </View>
                 </View>
@@ -149,11 +138,12 @@ export const RemoveHabitModal = ({
                         CARD_SHADOW,
                     ]}
                     onPress={async () => {
-                        if (plannedHabit.data) {
-                            await PlannedHabitService.deactivate({
-                                ...plannedHabit.data,
-                            });
-                        }
+                        await PlannedHabitService.deactivate(
+                            {
+                                ...plannedHabit,
+                            },
+                            plannedDay
+                        );
                         onDismiss(true);
                     }}
                 >

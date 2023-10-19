@@ -49,11 +49,7 @@ export const PlanDay = ({
     let taskViews: JSX.Element[] = [];
     let allTasksAreComplete = true;
 
-    //console.log(plannedDay.plannedTasks)
-    //console.log(plannedDay.date)
-
     // get all current planned tasks
-    console.log(plannedDay?.plannedTasks);
     plannedDay?.plannedTasks?.forEach((plannedTask) => {
         if (!plannedTask.active) {
             return;
@@ -84,8 +80,7 @@ export const PlanDay = ({
         // id from template
         // id from planned task
         const key =
-            'plannedTask' + plannedTask.id + '_scheduledHabit' + plannedTask.scheduledHabitId;
-        console.log(key);
+            'plannedTask' + plannedTask.id + '_scheduledHabit' + plannedTask.scheduledHabitId + '_timeOfDay' + plannedTask.timeOfDayId;
 
         taskViews.push(
             <View
