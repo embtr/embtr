@@ -18,6 +18,7 @@ import { UnitUtility } from 'src/util/UnitUtility';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
 import { SvgUri } from 'react-native-svg';
+import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -128,7 +129,10 @@ export const UpdatePlannedTaskModal = ({
 
     const textInputRef = React.useRef<TextInput>(null);
 
-    const unitsPretty = plannedTask.unit ? UnitUtility.getReadableUnit(plannedTask.unit, 2) : 'Times';
+    const unitsPretty = plannedTask.unit
+        ? UnitUtility.getReadableUnit(plannedTask.unit, 2)
+        : 'Times';
+    const timeOfDayPretty = TimeOfDayUtility.getTimeOfDayPretty(plannedTask.timeOfDay);
 
     const body = (
         <View>
@@ -385,7 +389,7 @@ export const UpdatePlannedTaskModal = ({
                             numberOfLines={1}
                             ref={textInputRef}
                         >
-                            Evening
+                            {timeOfDayPretty}
                         </Text>
                     </View>
                     <View style={{ width: TIMELINE_CARD_PADDING }} />

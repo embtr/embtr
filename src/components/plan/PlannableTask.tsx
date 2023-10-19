@@ -34,6 +34,7 @@ import PlannedTaskController from 'src/controller/planning/PlannedTaskController
 import { RemoveHabitModal } from './habit/RemoveHabitModal';
 import { HabitSkippedSymbol } from '../common/task_symbols/HabitSkippedSymbol';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -134,7 +135,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const openMenu = useAppSelector(getOpenMenu);
     const closeMenu = useAppSelector(getCloseMenu);
 
-    const prettyTimeOfDay = initialPlannedTask.timeOfDay?.period?.toLowerCase() ?? 'All Day';
+    const prettyTimeOfDay = TimeOfDayUtility.getTimeOfDayPretty(initialPlannedTask.timeOfDay);
 
     const onShortPress = async () => {
         setShowUpdatePlannedTaskModal(true);
