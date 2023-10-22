@@ -14,7 +14,6 @@ import {
     getFireConfetti,
     getOpenMenu,
     setCurrentlySelectedPlannedDay,
-    setGlobalBlurBackground,
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
@@ -35,6 +34,7 @@ import { RemoveHabitModal } from './habit/RemoveHabitModal';
 import { HabitSkippedSymbol } from '../common/task_symbols/HabitSkippedSymbol';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
+import { EditHabitModal } from './habit/EditHabitModal';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -47,6 +47,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const [showRemoveHabitModal, setShowRemoveHabitModal] = React.useState<boolean>(false);
+    const [showEditHabitModal, setShowEditHabitModal] = React.useState<boolean>(false);
     const [showUpdatePlannedTaskModal, setShowUpdatePlannedTaskModal] =
         React.useState<boolean>(false);
     const [completedQuantity, setCompletedQuantity] = React.useState<number>(
@@ -69,13 +70,19 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     //this entire section listens to the population of this callback id
     //if it is set, that means we want to edit a planned task. first we must
     //close the modal so we wait untilwe hit this useFocusEffect to know it's time
-    const [removePlannedTaskTimestamp, setRemovePlannedTaskTimestamp] = React.useState<
-        Date | undefined
+    const [editPlannedHabitCallbackId, setEditPlannedHabitCallbackId] = React.useState<
+        number | undefined
     >();
     useFocusEffect(
         React.useCallback(() => {
-            setShowRemoveHabitModal(removePlannedTaskTimestamp !== undefined);
-        }, [removePlannedTaskTimestamp])
+            if (editPlannedHabitCallbackId && !showUpdatePlannedTaskModal) {
+                navigation.navigate(Routes.EDIT_PLANNED_HABIT, {
+                    plannedTaskId: initialPlannedTask.id,
+                    scheduledHabitId: initialPlannedTask.scheduledHabitId,
+                });
+                setEditPlannedHabitCallbackId(undefined);
+            }
+        }, [editPlannedHabitCallbackId, showUpdatePlannedTaskModal])
     );
 
     //this entire section listens to the population of this callback id
@@ -185,7 +192,12 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
 
     const remove = async () => {
         setShowUpdatePlannedTaskModal(false);
-        setRemovePlannedTaskTimestamp(new Date());
+        setShowRemoveHabitModal(true);
+    };
+
+    const edit = async () => {
+        setShowUpdatePlannedTaskModal(false);
+        setShowEditHabitModal(true);
     };
 
     const fail = async () => {
@@ -228,17 +240,36 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         refreshPlannedDay();
     };
 
-    const dismiss = (editScheduledHabitCallbackId?: number) => {
-        setEditScheduledHabitCallbackId(editScheduledHabitCallbackId);
+    const dismiss = () => {
         setShowUpdatePlannedTaskModal(false);
+    };
+
+    const editScheduledHabit = (editScheduledHabitCallbackId: number) => {
+        setEditScheduledHabitCallbackId(editScheduledHabitCallbackId);
+        setShowEditHabitModal(false);
+    };
+
+    const editPlannedHabit = (editPlannedHabitCallbackId: number) => {
+        setEditPlannedHabitCallbackId(editPlannedHabitCallbackId);
+        setShowEditHabitModal(false);
     };
 
     return (
         <View>
+            <EditHabitModal
+                visible={showEditHabitModal}
+                editPlannedHabit={editPlannedHabit}
+                editScheduledHabit={editScheduledHabit}
+                dismiss={() => {
+                    setShowEditHabitModal(false);
+                }}
+                plannedDay={plannedDay}
+                plannedHabit={initialPlannedTask}
+            />
             <RemoveHabitModal
                 visible={showRemoveHabitModal}
                 onDismiss={async (removed: boolean) => {
-                    setRemovePlannedTaskTimestamp(undefined);
+                    setShowRemoveHabitModal(false);
                     if (removed) {
                         refreshPlannedDay();
                     }
@@ -250,6 +281,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                 plannedTask={initialPlannedTask}
                 visible={showUpdatePlannedTaskModal}
                 skip={skip}
+                edit={edit}
                 remove={remove}
                 fail={fail}
                 complete={complete}

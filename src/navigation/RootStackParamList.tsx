@@ -69,10 +69,17 @@ export type RootStackParamList = {
         scheduledHabitId?: number;
         plannedTaskId?: number;
     };
+
+    EditPlannedHabit: {
+        habitId?: number;
+        scheduledHabitId?: number;
+        plannedTaskId?: number;
+    };
 };
 
 export namespace Routes {
     export const ADD_HABIT_CATEGORY = 'AddHabitCategory';
     export const ADD_HABIT_CATEGORIES = 'AddHabitCategories';
     export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';
+    export const EDIT_PLANNED_HABIT = 'EditPlannedHabit';
 }

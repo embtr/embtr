@@ -6,7 +6,8 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
-import { ScheduledHabit } from 'resources/schema';
+import { PlannedTask, ScheduledHabit } from 'resources/schema';
+import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 
 interface Props {
     habitId?: number;
@@ -19,6 +20,7 @@ export const ScheduledHabitSaveButton = ({ habitId, scheduledHabitId, plannedTas
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const {
+        title,
         description,
         daysOfWeek,
         quantity,
@@ -32,8 +34,8 @@ export const ScheduledHabitSaveButton = ({ habitId, scheduledHabitId, plannedTas
     } = useCreateEditScheduleHabit();
 
     const onUpdate = async () => {
-        const scheduledHabit = createScheduledHabitRequest(scheduledHabitId, habitId);
-        await handleCreateOrUpdate(scheduledHabit);
+        const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedTaskId);
+        await PlannedTaskController.update(plannedTask);
     };
 
     const onCreate = async () => {
@@ -45,6 +47,20 @@ export const ScheduledHabitSaveButton = ({ habitId, scheduledHabitId, plannedTas
 
         await HabitController.createOrUpdateScheduledHabit(scheduledHabit);
         navigation.popToTop();
+    };
+
+    const createUpdatedPlannedTask = (id?: number) => {
+        const plannedTask: PlannedTask = {
+            id: id,
+            scheduledHabitId: scheduledHabitId,
+            title: title,
+            description: description,
+            timeOfDay: timesOfDay.length > 0 ? timesOfDay[0] : undefined,
+            quantity: quantity,
+            unit: unit,
+        };
+
+        return plannedTask;
     };
 
     const createScheduledHabitRequest = (id?: number, habitId?: number) => {

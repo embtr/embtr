@@ -24,6 +24,7 @@ interface Props {
     plannedTask: PlannedTask;
     visible: boolean;
     skip: Function;
+    edit: Function;
     complete: Function;
     update: Function;
     fail: Function;
@@ -35,6 +36,7 @@ export const UpdatePlannedTaskModal = ({
     plannedTask,
     visible,
     skip,
+    edit,
     complete,
     update,
     fail,
@@ -87,7 +89,7 @@ export const UpdatePlannedTaskModal = ({
 
     const onEdit = () => {
         closeAll();
-        dismiss(plannedTask.scheduledHabitId);
+        edit();
     };
 
     const onSkip = () => {

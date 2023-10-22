@@ -4,14 +4,14 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated } from 'react-native';
-import { TimesOfDayToggle } from './TimesOfDayToggle';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
+import { TimeOfDaySingleSelect } from './TimeOfDaySingleSelect';
 
 export const ScheduledHabitTimeOfDay = () => {
     const { colors } = useTheme();
 
-    const { timeOfDayEnabled, setTimeOfDayEnabled } = useCreateEditScheduleHabit();
+    const { timeOfDayEnabled, setTimeOfDayEnabled, setTimesOfDay } = useCreateEditScheduleHabit();
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
 
     const TIME_OF_DAY_HEIGHT = 50;
@@ -25,7 +25,7 @@ export const ScheduledHabitTimeOfDay = () => {
     }, [timeOfDayEnabled]);
 
     return (
-        <View style={{paddingBottom: TIMELINE_CARD_PADDING}}>
+        <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
             <View
                 style={{
                     flexDirection: 'row',
@@ -72,7 +72,7 @@ export const ScheduledHabitTimeOfDay = () => {
                     overflow: 'hidden',
                 }}
             >
-                <TimesOfDayToggle />
+                <TimeOfDaySingleSelect />
             </Animated.View>
         </View>
     );

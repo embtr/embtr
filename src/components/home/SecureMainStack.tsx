@@ -6,6 +6,7 @@ import { AddHabitCategories } from '../plan/habit/AddHabitCategories';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
 import { CreateEditScheduledHabit } from '../plan/habit/CreateEditScheduledHabit';
+import { EditPlannedHabit } from '../plan/habit/EditPlannedHabit';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ export const SecureMainStack = () => {
             />
             <Stack.Screen name="AddHabitCategory" component={AddHabitCategory} />
             <Stack.Screen name="CreateEditScheduledHabit" component={CreateEditScheduledHabit} />
+            <Stack.Screen name="EditPlannedHabit" component={EditPlannedHabit} />
         </Stack.Navigator>
     );
 };

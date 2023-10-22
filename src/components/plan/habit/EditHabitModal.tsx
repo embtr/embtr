@@ -9,18 +9,27 @@ import {
     POPPINS_SEMI_BOLD,
     TIMELINE_CARD_PADDING,
 } from 'src/util/constants';
-import { PlannedHabitService } from 'src/service/PlannedHabitService';
 import { SvgUri } from 'react-native-svg';
 import { PlannedDay, PlannedTask } from 'resources/schema';
+import { getDatePretty, getDatePrettyFullMonth } from 'src/util/DateUtility';
 
 interface Props {
     visible: boolean;
-    onDismiss: (removed: boolean) => void;
+    editPlannedHabit: (id: number) => void;
+    editScheduledHabit: (id: number) => void;
+    dismiss: () => void;
     plannedHabit: PlannedTask;
     plannedDay: PlannedDay;
 }
 
-export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay }: Props) => {
+export const EditHabitModal = ({
+    visible,
+    editPlannedHabit,
+    editScheduledHabit,
+    dismiss,
+    plannedHabit,
+    plannedDay,
+}: Props) => {
     const { colors } = useTheme();
 
     const svgUri = plannedHabit.iconUrl ?? '';
@@ -29,6 +38,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
     const buttonPadding = isLargerScreen ? 3 : 2;
     const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
     const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
+    const fullDatePretty = getDatePrettyFullMonth(plannedDay.date ?? new Date())
 
     const body = (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -54,13 +64,13 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                     <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
                     <View style={{ flex: 1 }}>
                         <Text
-                        numberOfLines={1}
+                            numberOfLines={1}
                             style={{
                                 fontSize: 20,
                                 width: '100%',
                                 fontFamily: POPPINS_MEDIUM,
                                 color: colors.accent_color,
-                                paddingRight:TIMELINE_CARD_PADDING 
+                                paddingRight: TIMELINE_CARD_PADDING,
                             }}
                         >
                             {plannedHabit.title}
@@ -85,8 +95,12 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                         color: colors.text,
                     }}
                 >
-                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD }}>Remove this habit </Text>
-                    from today or from your habit schedule. You can always add it back later.
+                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD }}>Edit this habit </Text>
+                    for 
+                    
+                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.accent_color }}> {fullDatePretty} </Text>
+                    or edit the entire schedule
+
                 </Text>
             </View>
 
@@ -111,7 +125,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                         CARD_SHADOW,
                     ]}
                     onPress={() => {
-                        onDismiss(false);
+                        dismiss();
                     }}
                 >
                     <Text
@@ -140,13 +154,8 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                         CARD_SHADOW,
                     ]}
                     onPress={async () => {
-                        await PlannedHabitService.deactivate(
-                            {
-                                ...plannedHabit,
-                            },
-                            plannedDay
-                        );
-                        onDismiss(true);
+                        dismiss();
+                        editPlannedHabit(plannedHabit.id ?? 0);
                     }}
                 >
                     <Text
@@ -158,7 +167,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                             paddingVertical: buttonPadding,
                         }}
                     >
-                        Remove For Today
+                        Edit For {fullDatePretty}
                     </Text>
                 </TouchableOpacity>
 
@@ -170,7 +179,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                         borderRadius: 6,
                     }}
                     onPress={() => {
-                        onDismiss(false);
+                        editScheduledHabit(plannedHabit.scheduledHabitId ?? 0);
                     }}
                 >
                     <Text
@@ -181,7 +190,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                             color: colors.archive,
                         }}
                     >
-                        Archive
+                        edit schedule
                     </Text>
                 </TouchableOpacity>
 
@@ -203,7 +212,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                     }}
                     onPress={(event) => {
                         if (event.target === event.currentTarget) {
-                            onDismiss(false);
+                            dismiss();
                         }
                     }}
                 >

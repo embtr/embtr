@@ -22,6 +22,7 @@ import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import {
     getCurrentUser,
     setCurrentUser,
+    setCurrentlySelectedPlannedDay,
     setTimelineDays,
     setUnits,
     setUserProfileImage,
@@ -170,6 +171,7 @@ export const Main = () => {
     const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
         dispatch(setCurrentUser(userToReset));
+        dispatch(setCurrentlySelectedPlannedDay(undefined))
     };
 
     const createUserIfNew = async (user: User) => {

@@ -22,7 +22,12 @@ export const getDateMinusDays = (date: Date, days: number): Date => {
 
 export const formatDate = (date: Date): string => {
     return format(date, 'MMM dd, yyyy');
-    const formatted  = format(addMinutes(date, date.getTimezoneOffset()), 'MMM dd, yyyy');
+    const formatted = format(addMinutes(date, date.getTimezoneOffset()), 'MMM dd, yyyy');
+    return formatted;
+};
+
+export const getDatePrettyFullMonth = (date: Date): string => {
+    const formatted = format(addMinutes(date, date.getTimezoneOffset()), 'MMMM dd');
     return formatted;
 };
 
@@ -108,3 +113,29 @@ export const getTimeLeft = (endDate: Date) => {
 
     return `${daysLeft} days left`;
 };
+
+export function hydrateDates<T>(data: T): T {
+    if (Array.isArray(data)) {
+        return data.map((item) => hydrateDates(item)) as any;
+    } else if (typeof data === 'object' && data !== null) {
+        for (const key in data) {
+            // do not convert these
+            if (key === 'dayKey') {
+                continue;
+            }
+
+            if (typeof data[key] === 'string' && isDateString(data[key])) {
+                (data as any)[key] = new Date(data[key] as string) as any;
+            } else {
+                (data as any)[key] = hydrateDates((data as any)[key]) as any;
+            }
+        }
+    }
+    return data;
+}
+
+function isDateString(value: any): boolean {
+    // Use a regular expression to check if the string matches the format of a date string
+    const dateRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2}))?$/;
+    return dateRegex.test(value);
+}

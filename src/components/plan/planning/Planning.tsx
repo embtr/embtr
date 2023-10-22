@@ -23,7 +23,8 @@ export const Planning = () => {
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
 
     const dispatch = useAppDispatch();
-    const selectedPlannedDay = useAppSelector(getCurrentlySelectedPlannedDay);
+    const selectedPlannedDay: PlannedDay = useAppSelector(getCurrentlySelectedPlannedDay);
+    console.log("FUNCTION:", selectedPlannedDay.date?.getTimezoneOffset)
 
     const updateSelectedPlannedDay = (plannedDay: PlannedDay) => {
         dispatch(setCurrentlySelectedPlannedDay(plannedDay));
