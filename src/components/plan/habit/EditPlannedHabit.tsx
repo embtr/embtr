@@ -12,12 +12,12 @@ import {
     CreateEditScheduledHabitProvider,
 } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTitle';
-import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
-import { ScheduledHabitSaveButton } from 'src/components/plan/habit/ScheduledHabitSaveButton';
+import { CreateEditHabitSaveButton } from 'src/components/plan/habit/CreateEditHabitSaveButton';
 import SafeAreaView from 'react-native-safe-area-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
+import { ScheduledHabitTimeOfDay } from './ScheduledHabitTimeOfDay';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -41,14 +41,12 @@ export const EditPlannedHabit = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
     const habitId = route.params.habitId; // creating a new habit from a template
-    const plannedTaskId = route.params.plannedTaskId; // editing a habit on a specific day
     const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
+    const plannedTaskId = route.params.plannedTaskId; // editing a habit on a specific day
 
     const editMode = habitId
         ? CreateEditScheduledHabitMode.CREATE_NEW_HABIT
         : plannedTaskId
-        ? CreateEditScheduledHabitMode.EDIT_EXISTING_PLANNED_TASK
-        : scheduledHabitId
         ? CreateEditScheduledHabitMode.EDIT_EXISTING_HABIT
         : CreateEditScheduledHabitMode.INVALID;
     const isCreatingNewHabit = editMode === CreateEditScheduledHabitMode.CREATE_NEW_HABIT;
@@ -105,10 +103,10 @@ export const EditPlannedHabit = () => {
                         <View style={{ height: 10 * TIMELINE_CARD_PADDING }} />
                     </ScrollView>
 
-                    <ScheduledHabitSaveButton
+                    <CreateEditHabitSaveButton
                         habitId={habitId}
                         scheduledHabitId={scheduledHabitId}
-                        plannedTaskId={plannedTaskId}
+                        plannedHabitId={plannedTaskId}
                     />
                 </SafeAreaView>
             </Screen>

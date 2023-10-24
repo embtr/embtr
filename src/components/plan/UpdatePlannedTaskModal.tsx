@@ -114,6 +114,7 @@ export const UpdatePlannedTaskModal = ({
         setKeyboardFocused(false);
         complete();
         setInputWasFocused(false);
+        
     };
 
     const onUpdateWrapper = () => {

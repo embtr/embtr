@@ -12,10 +12,10 @@ import PlannedTaskController from 'src/controller/planning/PlannedTaskController
 interface Props {
     habitId?: number;
     scheduledHabitId?: number;
-    plannedTaskId?: number;
+    plannedHabitId?: number;
 }
 
-export const ScheduledHabitSaveButton = ({ habitId, scheduledHabitId, plannedTaskId }: Props) => {
+export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHabitId }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -34,7 +34,7 @@ export const ScheduledHabitSaveButton = ({ habitId, scheduledHabitId, plannedTas
     } = useCreateEditScheduleHabit();
 
     const onUpdate = async () => {
-        const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedTaskId);
+        const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedHabitId);
         await PlannedTaskController.update(plannedTask);
     };
 
@@ -96,7 +96,7 @@ export const ScheduledHabitSaveButton = ({ habitId, scheduledHabitId, plannedTas
         return scheduledHabit;
     };
 
-    const isUpdate = !!scheduledHabitId;
+    const isUpdate = !!scheduledHabitId || !!plannedHabitId;
 
     return (
         <View

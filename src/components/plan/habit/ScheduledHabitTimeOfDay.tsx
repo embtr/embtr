@@ -4,14 +4,18 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated } from 'react-native';
-import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import {
+    CreateEditScheduledHabitMode,
+    useCreateEditScheduleHabit,
+} from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
+import { TimeOfDayMultiSelect } from './TimeOfDayMultiSelect';
 import { TimeOfDaySingleSelect } from './TimeOfDaySingleSelect';
 
 export const ScheduledHabitTimeOfDay = () => {
     const { colors } = useTheme();
 
-    const { timeOfDayEnabled, setTimeOfDayEnabled, setTimesOfDay } = useCreateEditScheduleHabit();
+    const { timeOfDayEnabled, setTimeOfDayEnabled, editMode } = useCreateEditScheduleHabit();
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
 
     const TIME_OF_DAY_HEIGHT = 50;
@@ -72,7 +76,11 @@ export const ScheduledHabitTimeOfDay = () => {
                     overflow: 'hidden',
                 }}
             >
-                <TimeOfDaySingleSelect />
+                {editMode === CreateEditScheduledHabitMode.EDIT_EXISTING_PLANNED_TASK ? (
+                    <TimeOfDaySingleSelect />
+                ) : (
+                    <TimeOfDayMultiSelect />
+                )}
             </Animated.View>
         </View>
     );

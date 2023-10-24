@@ -3,7 +3,7 @@ import { TaskModel } from 'src/controller/planning/TaskController';
 import axiosInstance from 'src/axios/axios';
 import { PLANNED_DAY } from 'resources/endpoints';
 import {
-    CreatePlannedTaskRequest,
+    CreateOrReplacePlannedTaskRequest,
     UpdatePlannedTaskRequest,
     UpdatePlannedTaskResponse,
 } from 'resources/types/requests/PlannedTaskTypes';
@@ -27,15 +27,14 @@ export interface PlannedTaskModel {
 class PlannedTaskController {
     public static async create(plannedDay: PlannedDay, plannedTask: PlannedTask) {
         if (!plannedDay.dayKey) {
-            console.log('no day key found')
+            console.log('no day key found');
             return;
         }
 
-        const request: CreatePlannedTaskRequest = {
+        const request: CreateOrReplacePlannedTaskRequest = {
             plannedTask,
         };
 
-        console.log('sending request:', request)
         return await axiosInstance
             .post(`${PLANNED_DAY}${plannedDay.dayKey}/planned-task/`, request)
             .then((success) => {

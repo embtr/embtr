@@ -15,7 +15,7 @@ import {
 import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTitle';
 import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
-import { ScheduledHabitSaveButton } from 'src/components/plan/habit/ScheduledHabitSaveButton';
+import { CreateEditHabitSaveButton } from 'src/components/plan/habit/CreateEditHabitSaveButton';
 import SafeAreaView from 'react-native-safe-area-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
@@ -107,10 +107,10 @@ export const CreateEditScheduledHabit = () => {
                         <View style={{ height: 10 * TIMELINE_CARD_PADDING }} />
                     </ScrollView>
 
-                    <ScheduledHabitSaveButton
+                    <CreateEditHabitSaveButton
                         habitId={habitId}
                         scheduledHabitId={scheduledHabitId}
-                        plannedTaskId={plannedTaskId}
+                        plannedHabitId={plannedTaskId}
                     />
                 </SafeAreaView>
             </Screen>

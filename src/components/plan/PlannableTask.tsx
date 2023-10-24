@@ -77,8 +77,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         React.useCallback(() => {
             if (editPlannedHabitCallbackId && !showUpdatePlannedTaskModal) {
                 navigation.navigate(Routes.EDIT_PLANNED_HABIT, {
-                    plannedTaskId: initialPlannedTask.id,
-                    scheduledHabitId: initialPlannedTask.scheduledHabitId,
+                    plannedTaskId: editPlannedHabitCallbackId,
                 });
                 setEditPlannedHabitCallbackId(undefined);
             }
@@ -227,6 +226,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     };
 
     const update = async (updatedValue: number) => {
+        alert("update")
         setShowUpdatePlannedTaskModal(false);
 
         setStatus('INCOMPLETE');
@@ -237,7 +237,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         clone.completedQuantity = updatedValue;
 
         await createUpdatePlannedTask(clone);
-        refreshPlannedDay();
+        await refreshPlannedDay();
     };
 
     const dismiss = () => {

@@ -122,13 +122,19 @@ export const CreateEditScheduledHabitProvider = ({
 
     React.useEffect(() => {
         if (plannedTask.data) {
+            console.log(plannedTask.data.timeOfDay)
             setIcon(plannedTask.data.iconUrl ?? '');
             setTitle(plannedTask.data.title ?? '');
             setDescription(plannedTask.data.description ?? '');
             setDaysOfWeek([]);
-            setTimesOfDay([]);
+            setTimesOfDay(plannedTask.data.timeOfDay ? [plannedTask.data.timeOfDay] : []);
             setQuantity(1);
             setUnit(undefined);
+
+            setTimeOfDayEnabled(!!plannedTask.data.timeOfDay);
+            setDetailsEnabled(
+                plannedTask.data.quantity !== undefined || plannedTask.data.unit !== undefined
+            );
         }
     }, [plannedTask.data]);
 

@@ -11,16 +11,27 @@ export const TimeOfDaySingleSelect = () => {
         useCreateEditScheduleHabit();
 
     const [state, setState] = React.useState({
-        morning: true,
-        afternoon: true,
-        evening: false,
-        night: false,
+        morning: toggledTimesOfDay.some((time) => time.period === 'MORNING'),
+        afternoon: toggledTimesOfDay.some((time) => time.period === 'AFTERNOON'),
+        evening: toggledTimesOfDay.some((time) => time.period === 'EVENING'),
+        night: toggledTimesOfDay.some((time) => time.period === 'NIGHT'),
     });
+
+    React.useEffect(() => {
+        setState({
+            morning: toggledTimesOfDay.some((time) => time.period === 'MORNING'),
+            afternoon: toggledTimesOfDay.some((time) => time.period === 'AFTERNOON'),
+            evening: toggledTimesOfDay.some((time) => time.period === 'EVENING'),
+            night: toggledTimesOfDay.some((time) => time.period === 'NIGHT'),
+        });
+    }, [toggledTimesOfDay]);
 
     const updateMorning = (morningIsSet: boolean) => {
         if (morningIsSet) {
             const morningTimeOfDay = timesOfDay.find((time) => time.period === 'MORNING');
             onTimesChanged([morningTimeOfDay!]);
+        } else {
+            onTimesChanged([]);
         }
 
         setState({
@@ -35,6 +46,8 @@ export const TimeOfDaySingleSelect = () => {
         if (afternoonIsSet) {
             const afternoonTimeOfDay = timesOfDay.find((time) => time.period === 'AFTERNOON');
             onTimesChanged([afternoonTimeOfDay!]);
+        } else {
+            onTimesChanged([]);
         }
 
         setState({
@@ -49,6 +62,8 @@ export const TimeOfDaySingleSelect = () => {
         if (eveningIsSet) {
             const eveningTimeOfDay = timesOfDay.find((time) => time.period === 'EVENING');
             onTimesChanged([eveningTimeOfDay!]);
+        } else {
+            onTimesChanged([]);
         }
 
         setState({
@@ -63,6 +78,8 @@ export const TimeOfDaySingleSelect = () => {
         if (nightIsSet) {
             const nightTimeOfDay = timesOfDay.find((time) => time.period === 'NIGHT');
             onTimesChanged([nightTimeOfDay!]);
+        } else {
+            onTimesChanged([]);
         }
 
         setState({

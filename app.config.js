@@ -3,7 +3,7 @@ module.exports = ({ config }) => {
         ...config,
         extra: {
             ...config.extra,
-            apiUrl: process.env.APP_ENV === "production" ? "https://api.embtr.com" : "http://192.168.1.212:3000"
+            apiUrl: process.env.APP_ENV === "production" ? "https://api.embtr.com" : "http://192.168.0.171:3000"
         }, 
     };
 };
