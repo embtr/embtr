@@ -3,10 +3,10 @@ import React, { createContext, useContext } from 'react';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
 
-export enum CreateEditScheduledHabitMode {
+export enum CreateEditHabitMode {
     CREATE_NEW_HABIT = 'CREATE_NEW_HABIT',
     EDIT_EXISTING_HABIT = 'EDIT_EXISTING_HABIT',
-    EDIT_EXISTING_PLANNED_TASK = 'EDIT_EXISTING_PLANNED_TASK',
+    EDIT_EXISTING_PLANNED_HABIT = 'EDIT_EXISTING_PLANNED_HABIT',
     INVALID = 'INVALID',
 }
 
@@ -15,13 +15,13 @@ export const getEditMode = (
     plannedTask?: PlannedTask,
     scheduledHabit?: ScheduledHabit
 ) => {
-    const editMode: CreateEditScheduledHabitMode = habit
-        ? CreateEditScheduledHabitMode.CREATE_NEW_HABIT
+    const editMode: CreateEditHabitMode = habit
+        ? CreateEditHabitMode.CREATE_NEW_HABIT
         : plannedTask
-        ? CreateEditScheduledHabitMode.EDIT_EXISTING_PLANNED_TASK
+        ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
         : scheduledHabit
-        ? CreateEditScheduledHabitMode.EDIT_EXISTING_HABIT
-        : CreateEditScheduledHabitMode.INVALID;
+        ? CreateEditHabitMode.EDIT_EXISTING_HABIT
+        : CreateEditHabitMode.INVALID;
 
     return editMode;
 };
@@ -62,7 +62,7 @@ interface CreateEditScheduledHabitType {
 
     loading: boolean;
 
-    editMode: CreateEditScheduledHabitMode;
+    editMode: CreateEditHabitMode;
 }
 
 export const CreateEditScheduledHabitContext = createContext<CreateEditScheduledHabitType>(
@@ -122,7 +122,6 @@ export const CreateEditScheduledHabitProvider = ({
 
     React.useEffect(() => {
         if (plannedTask.data) {
-            console.log(plannedTask.data.timeOfDay)
             setIcon(plannedTask.data.iconUrl ?? '');
             setTitle(plannedTask.data.title ?? '');
             setDescription(plannedTask.data.description ?? '');

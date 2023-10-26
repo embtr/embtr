@@ -9,7 +9,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { ScheduleHabitDescription } from 'src/components/plan/habit/ScheduleHabitDescription';
 import { ScheduleHabitRepeatingSchedule } from 'src/components/plan/habit/ScheduledHabitRepeatingSchedule';
 import {
-    CreateEditScheduledHabitMode,
+    CreateEditHabitMode,
     CreateEditScheduledHabitProvider,
 } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTitle';
@@ -46,13 +46,13 @@ export const CreateEditScheduledHabit = () => {
     const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
 
     const editMode = habitId
-        ? CreateEditScheduledHabitMode.CREATE_NEW_HABIT
+        ? CreateEditHabitMode.CREATE_NEW_HABIT
         : plannedTaskId
-        ? CreateEditScheduledHabitMode.EDIT_EXISTING_PLANNED_TASK
+        ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
         : scheduledHabitId
-        ? CreateEditScheduledHabitMode.EDIT_EXISTING_HABIT
-        : CreateEditScheduledHabitMode.INVALID;
-    const isCreatingNewHabit = editMode === CreateEditScheduledHabitMode.CREATE_NEW_HABIT;
+        ? CreateEditHabitMode.EDIT_EXISTING_HABIT
+        : CreateEditHabitMode.INVALID;
+    const isCreatingNewHabit = editMode === CreateEditHabitMode.CREATE_NEW_HABIT;
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 

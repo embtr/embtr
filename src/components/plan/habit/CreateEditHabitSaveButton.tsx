@@ -1,13 +1,17 @@
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { HabitController } from 'src/controller/habit/HabitController';
 import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import {
+    CreateEditHabitMode,
+    useCreateEditScheduleHabit,
+} from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { PlannedTask, ScheduledHabit } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
+import { Logger } from 'src/util/GeneralUtility';
 
 interface Props {
     habitId?: number;
@@ -31,23 +35,10 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         startDate,
         endDate,
         timesOfDay,
+        editMode,
     } = useCreateEditScheduleHabit();
 
-    const onUpdate = async () => {
-        const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedHabitId);
-        await PlannedTaskController.update(plannedTask);
-    };
-
-    const onCreate = async () => {
-        await handleCreateOrUpdate(createScheduledHabitRequest(scheduledHabitId, habitId));
-    };
-
-    const handleCreateOrUpdate = async (scheduledHabit: ScheduledHabit) => {
-        Keyboard.dismiss();
-
-        await HabitController.createOrUpdateScheduledHabit(scheduledHabit);
-        navigation.popToTop();
-    };
+    const handleCreateOrUpdate = async (scheduledHabit: ScheduledHabit) => {};
 
     const createUpdatedPlannedTask = (id?: number) => {
         const plannedTask: PlannedTask = {
@@ -96,7 +87,43 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         return scheduledHabit;
     };
 
-    const isUpdate = !!scheduledHabitId || !!plannedHabitId;
+    const createHabit = async () => {
+        Keyboard.dismiss();
+        const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
+        await HabitController.create(scheduledHabit);
+        navigation.popToTop();
+    };
+
+    const updateHabit = async () => {
+        Keyboard.dismiss();
+        const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
+        await HabitController.create(scheduledHabit);
+        navigation.popToTop();
+    };
+
+    const updatePlannedHabit = async () => {
+        const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedHabitId);
+        Logger.titledLog("planned task", plannedTask);
+        await PlannedTaskController.update(plannedTask);
+    };
+
+    const onPress = async () => {
+        switch (editMode) {
+            case CreateEditHabitMode.CREATE_NEW_HABIT:
+                createHabit();
+                break;
+
+            case CreateEditHabitMode.EDIT_EXISTING_HABIT:
+                updateHabit();
+                break;
+
+            case CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT:
+                updatePlannedHabit();
+                break;
+        }
+    };
+
+    const buttonText = editMode === CreateEditHabitMode.CREATE_NEW_HABIT ? 'Create' : 'Update';
 
     return (
         <View
@@ -108,7 +135,7 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
                 borderRadius: 3,
             }}
         >
-            <TouchableOpacity onPress={isUpdate ? onUpdate : onCreate}>
+            <TouchableOpacity onPress={onPress}>
                 <Text
                     style={{
                         textAlign: 'center',
@@ -117,7 +144,7 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
                         fontSize: 16,
                     }}
                 >
-                    {isUpdate ? 'Update' : 'Create'}
+                    {buttonText}
                 </Text>
             </TouchableOpacity>
         </View>

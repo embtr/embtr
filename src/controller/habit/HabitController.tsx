@@ -53,7 +53,7 @@ export class HabitController {
             });
     }
 
-    public static async createOrUpdateScheduledHabit(scheduledHabit: ScheduledHabit) {
+    public static async create(scheduledHabit: ScheduledHabit) {
         const createScheduledHabitRequest: CreateScheduledHabitRequest = {
             scheduledHabit: scheduledHabit,
         };

@@ -5,7 +5,7 @@ import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated } from 'react-native';
 import {
-    CreateEditScheduledHabitMode,
+    CreateEditHabitMode,
     useCreateEditScheduleHabit,
 } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
@@ -76,7 +76,7 @@ export const ScheduledHabitTimeOfDay = () => {
                     overflow: 'hidden',
                 }}
             >
-                {editMode === CreateEditScheduledHabitMode.EDIT_EXISTING_PLANNED_TASK ? (
+                {editMode === CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT ? (
                     <TimeOfDaySingleSelect />
                 ) : (
                     <TimeOfDayMultiSelect />

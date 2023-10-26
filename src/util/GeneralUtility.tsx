@@ -54,3 +54,13 @@ export const getVerticalAlignmentLine = () => {
         />
     );
 };
+
+export namespace Logger {
+    export const titledLog = (title: string, object: unknown) => {
+        console.log('\n' + title + ':\n' + JSON.stringify(object, null, 2));
+    };
+
+    export const log = (object: unknown) => {
+        console.log('\n' + JSON.stringify(object, null, 2));
+    };
+}
