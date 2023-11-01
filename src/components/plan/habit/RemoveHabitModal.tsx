@@ -54,13 +54,13 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                     <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
                     <View style={{ flex: 1 }}>
                         <Text
-                        numberOfLines={1}
+                            numberOfLines={1}
                             style={{
                                 fontSize: 20,
                                 width: '100%',
                                 fontFamily: POPPINS_MEDIUM,
                                 color: colors.accent_color,
-                                paddingRight:TIMELINE_CARD_PADDING 
+                                paddingRight: TIMELINE_CARD_PADDING,
                             }}
                         >
                             {plannedHabit.title}
@@ -140,7 +140,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                         CARD_SHADOW,
                     ]}
                     onPress={async () => {
-                        await PlannedHabitService.deactivate(
+                        PlannedHabitService.deactivate(
                             {
                                 ...plannedHabit,
                             },

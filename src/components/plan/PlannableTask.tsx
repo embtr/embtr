@@ -56,6 +56,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const [optimisticallyUpdatedStatus, setOptimisticallyUpdatedStatus] = React.useState<string>(
         initialPlannedTask.status ?? 'INCOMPLETE'
     );
+    const [optimisticallyRemovedPlannedHabit, setOptimisticallyRemovedPlannedHabit] =
+        React.useState<boolean>(false);
     const [userId, setUserId] = React.useState<number | undefined>(undefined);
 
     React.useEffect(() => {
@@ -273,9 +275,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                 visible={showRemoveHabitModal}
                 onDismiss={async (removed: boolean) => {
                     setShowRemoveHabitModal(false);
-                    if (removed) {
-                        refreshPlannedDay();
-                    }
+                    setOptimisticallyRemovedPlannedHabit(removed);
                 }}
                 plannedHabit={initialPlannedTask}
                 plannedDay={plannedDay}
@@ -292,180 +292,192 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                 dismiss={dismiss}
             />
 
-            <TouchableOpacity
-                onPress={onShortPress}
-                onLongPress={onLongPress}
-                style={{ width: '100%' }}
-            >
-                <View
-                    style={[
-                        {
-                            backgroundColor: colors.button_background,
-                            borderRadius: 5,
-                            width: '100%',
-                        },
-                        CARD_SHADOW,
-                    ]}
+            {!optimisticallyRemovedPlannedHabit && (
+                <TouchableOpacity
+                    onPress={onShortPress}
+                    onLongPress={onLongPress}
+                    style={{ width: '100%' }}
                 >
-                    <View style={{ borderRadius: 5, flexDirection: 'row', overflow: 'hidden' }}>
-                        <View
-                            style={{
-                                width: '2%',
-                                backgroundColor:
-                                    initialPlannedTask?.status === 'FAILED'
-                                        ? colors.progress_bar_failed
-                                        : skipped
-                                        ? colors.trophy_icon
-                                        : completedQuantity >= (initialPlannedTask.quantity ?? 0)
-                                        ? colors.progress_bar_complete
-                                        : 'gray',
-                            }}
-                        />
+                    <View
+                        style={[
+                            {
+                                backgroundColor: colors.button_background,
+                                borderRadius: 5,
+                                width: '100%',
+                            },
+                            CARD_SHADOW,
+                        ]}
+                    >
+                        <View style={{ borderRadius: 5, flexDirection: 'row', overflow: 'hidden' }}>
+                            <View
+                                style={{
+                                    width: '2%',
+                                    backgroundColor:
+                                        initialPlannedTask?.status === 'FAILED'
+                                            ? colors.progress_bar_failed
+                                            : skipped
+                                            ? colors.trophy_icon
+                                            : completedQuantity >=
+                                              (initialPlannedTask.quantity ?? 0)
+                                            ? colors.progress_bar_complete
+                                            : 'gray',
+                                }}
+                            />
 
-                        <View style={{ width: '98%' }}>
-                            <View style={{ paddingLeft: 10 }}>
-                                <View style={{ flexDirection: 'row' }}>
+                            <View style={{ width: '98%' }}>
+                                <View style={{ paddingLeft: 10 }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    color: colors.goal_primary_font,
+                                                    fontFamily: POPPINS_SEMI_BOLD,
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                {initialPlannedTask.title}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: 'flex-end',
+                                                alignItems: 'center',
+                                                flexDirection: 'row',
+                                                paddingRight: 10,
+                                            }}
+                                        >
+                                            {challengeRewards.length > 0 && (
+                                                <View
+                                                    style={{
+                                                        paddingRight: 10,
+                                                        flexDirection: 'row',
+                                                    }}
+                                                >
+                                                    <SvgUri
+                                                        width={17}
+                                                        height={17}
+                                                        uri={challengeRewards[0].imageUrl ?? ''}
+                                                    />
+                                                </View>
+                                            )}
+                                            <View>
+                                                {initialPlannedTask?.status === 'FAILED' ? (
+                                                    <TaskFailedSymbol small={true} />
+                                                ) : skipped ? (
+                                                    <HabitSkippedSymbol small={true} />
+                                                ) : completedQuantity >=
+                                                  (initialPlannedTask.quantity ?? 0) ? (
+                                                    <TaskCompleteSymbol small={true} />
+                                                ) : (
+                                                    <TaskInProgressSymbol small={true} />
+                                                )}
+                                            </View>
+                                        </View>
+                                    </View>
+                                </View>
+
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        paddingTop: 5,
+                                        paddingBottom: 2,
+                                    }}
+                                >
                                     <View
                                         style={{
                                             flex: 1,
                                             flexDirection: 'row',
                                             alignItems: 'center',
+                                            paddingLeft: 10,
+                                        }}
+                                    >
+                                        <ProgressBar
+                                            progress={getPercentageComplete()}
+                                            status={optimisticallyUpdatedStatus}
+                                            showPercent={false}
+                                        />
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            paddingLeft: 10,
                                         }}
                                     >
                                         <Text
                                             style={{
-                                                color: colors.goal_primary_font,
-                                                fontFamily: POPPINS_SEMI_BOLD,
-                                                fontSize: 14,
+                                                color: colors.secondary_text,
+                                                fontFamily: POPPINS_REGULAR,
+                                                fontSize: 10,
                                             }}
                                         >
-                                            {initialPlannedTask.title}
+                                            {skipped
+                                                ? 'skipped'
+                                                : `${completedQuantity} / ${
+                                                      initialPlannedTask.quantity
+                                                  } ${
+                                                      initialPlannedTask.unit
+                                                          ? UnitUtility.getReadableUnit(
+                                                                initialPlannedTask.unit,
+                                                                completedQuantity
+                                                            )
+                                                          : ''
+                                                  }`}
                                         </Text>
+                                    </View>
+
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            paddingLeft: 10,
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                paddingLeft: 5,
+                                                color: colors.goal_secondary_font,
+                                                fontFamily: 'Poppins_400Regular',
+                                                fontSize: 10,
+                                            }}
+                                        ></Text>
                                     </View>
                                     <View
                                         style={{
                                             flex: 1,
-                                            justifyContent: 'flex-end',
-                                            alignItems: 'center',
                                             flexDirection: 'row',
-                                            paddingRight: 10,
+                                            alignItems: 'flex-end',
+                                            justifyContent: 'flex-end',
+                                            paddingRight: TIMELINE_CARD_PADDING,
                                         }}
                                     >
-                                        {challengeRewards.length > 0 && (
-                                            <View
-                                                style={{ paddingRight: 10, flexDirection: 'row' }}
-                                            >
-                                                <SvgUri
-                                                    width={17}
-                                                    height={17}
-                                                    uri={challengeRewards[0].imageUrl ?? ''}
-                                                />
-                                            </View>
-                                        )}
-                                        <View>
-                                            {initialPlannedTask?.status === 'FAILED' ? (
-                                                <TaskFailedSymbol small={true} />
-                                            ) : skipped ? (
-                                                <HabitSkippedSymbol small={true} />
-                                            ) : completedQuantity >=
-                                              (initialPlannedTask.quantity ?? 0) ? (
-                                                <TaskCompleteSymbol small={true} />
-                                            ) : (
-                                                <TaskInProgressSymbol small={true} />
-                                            )}
-                                        </View>
+                                        <Text
+                                            style={{
+                                                paddingLeft: 5,
+                                                color: colors.accent_color,
+                                                fontFamily: 'Poppins_400Regular',
+                                                textAlign: 'left',
+                                                fontSize: 10,
+                                            }}
+                                        >
+                                            {prettyTimeOfDay}
+                                        </Text>
                                     </View>
-                                </View>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', paddingTop: 5, paddingBottom: 2 }}>
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        paddingLeft: 10,
-                                    }}
-                                >
-                                    <ProgressBar
-                                        progress={getPercentageComplete()}
-                                        status={optimisticallyUpdatedStatus}
-                                        showPercent={false}
-                                    />
-                                </View>
-
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        paddingLeft: 10,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: colors.secondary_text,
-                                            fontFamily: POPPINS_REGULAR,
-                                            fontSize: 10,
-                                        }}
-                                    >
-                                        {skipped
-                                            ? 'skipped'
-                                            : `${completedQuantity} / ${
-                                                  initialPlannedTask.quantity
-                                              } ${
-                                                  initialPlannedTask.unit
-                                                      ? UnitUtility.getReadableUnit(
-                                                            initialPlannedTask.unit,
-                                                            completedQuantity
-                                                        )
-                                                      : ''
-                                              }`}
-                                    </Text>
-                                </View>
-
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        paddingLeft: 10,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            paddingLeft: 5,
-                                            color: colors.goal_secondary_font,
-                                            fontFamily: 'Poppins_400Regular',
-                                            fontSize: 10,
-                                        }}
-                                    ></Text>
-                                </View>
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        alignItems: 'flex-end',
-                                        justifyContent: 'flex-end',
-                                        paddingRight: TIMELINE_CARD_PADDING,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            paddingLeft: 5,
-                                            color: colors.accent_color,
-                                            fontFamily: 'Poppins_400Regular',
-                                            textAlign: 'left',
-                                            fontSize: 10,
-                                        }}
-                                    >
-                                        {prettyTimeOfDay}
-                                    </Text>
                                 </View>
                             </View>
                         </View>
                     </View>
-                </View>
-            </TouchableOpacity>
+                </TouchableOpacity>
+            )}
         </View>
     );
 };
