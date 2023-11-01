@@ -35,6 +35,7 @@ interface CreateEditScheduledHabitType {
     daysOfWeek: DayOfWeek[];
     timesOfDay: TimeOfDay[];
     quantity: number;
+    completedQuantity?: number;
     unit?: Unit;
 
     setIcon: (iconUrl: string) => void;
@@ -45,6 +46,7 @@ interface CreateEditScheduledHabitType {
     setDaysOfWeek: (daysOfWeek: DayOfWeek[]) => void;
     setTimesOfDay: (timesOfDay: TimeOfDay[]) => void;
     setQuantity: (quantity: number) => void;
+    setCompletedQuantity: (completedQuantity: number) => void;
     setUnit: (unit: Unit) => void;
 
     timeOfDayEnabled: boolean;
@@ -98,6 +100,7 @@ export const CreateEditScheduledHabitProvider = ({
     const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfWeek[]>([]);
     const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>([]);
     const [quantity, setQuantity] = React.useState(1);
+    const [completedQuantity, setCompletedQuantity] = React.useState(0);
     const [unit, setUnit] = React.useState<Unit | undefined>(undefined);
 
     const [repeatingScheduleEnabled, setRepeatingScheduleEnabled] = React.useState(false);
@@ -116,6 +119,7 @@ export const CreateEditScheduledHabitProvider = ({
             setDaysOfWeek([]);
             setTimesOfDay([]);
             setQuantity(1);
+            setCompletedQuantity(0);
             setUnit(undefined);
         }
     }, [habit.data]);
@@ -127,8 +131,9 @@ export const CreateEditScheduledHabitProvider = ({
             setDescription(plannedTask.data.description ?? '');
             setDaysOfWeek([]);
             setTimesOfDay(plannedTask.data.timeOfDay ? [plannedTask.data.timeOfDay] : []);
-            setQuantity(1);
-            setUnit(undefined);
+            setQuantity(plannedTask.data.quantity ?? 1);
+            setCompletedQuantity(plannedTask.data.completedQuantity ?? 0);
+            setUnit(plannedTask.data.unit ?? undefined);
 
             setTimeOfDayEnabled(!!plannedTask.data.timeOfDay);
             setDetailsEnabled(
@@ -147,6 +152,7 @@ export const CreateEditScheduledHabitProvider = ({
             setDaysOfWeek(scheduledHabit.data.daysOfWeek ?? []);
             setTimesOfDay(scheduledHabit.data.timesOfDay ?? []);
             setQuantity(scheduledHabit.data.quantity ?? 1);
+            setCompletedQuantity(0);
             setUnit(scheduledHabit.data.unit ?? undefined);
 
             setRepeatingScheduleEnabled(scheduledHabit.data.daysOfWeek?.length !== 0);
@@ -166,6 +172,7 @@ export const CreateEditScheduledHabitProvider = ({
         daysOfWeek: daysOfWeek,
         timesOfDay: timesOfDay,
         quantity: quantity,
+        completedQuantity: completedQuantity,
         unit: unit,
         setIcon: setIcon,
         setTitle: setTitle,
@@ -175,6 +182,7 @@ export const CreateEditScheduledHabitProvider = ({
         setDaysOfWeek: setDaysOfWeek,
         setTimesOfDay: setTimesOfDay,
         setQuantity: setQuantity,
+        setCompletedQuantity: setCompletedQuantity,
         setUnit: setUnit,
 
         repeatingScheduleEnabled: repeatingScheduleEnabled,

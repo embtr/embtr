@@ -226,7 +226,6 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     };
 
     const update = async (updatedValue: number) => {
-        alert("update")
         setShowUpdatePlannedTaskModal(false);
 
         setStatus('INCOMPLETE');

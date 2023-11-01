@@ -55,7 +55,7 @@ class PlannedTaskController {
         };
 
         return await axiosInstance
-            .patch(`${PLANNED_DAY}planned-task/`, request)
+            .put(`${PLANNED_DAY}planned-task/`, request)
             .then((success) => {
                 const updatedPlannedTask: UpdatePlannedTaskResponse = success.data;
                 return updatedPlannedTask;

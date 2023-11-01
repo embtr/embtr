@@ -12,6 +12,7 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { PlannedTask, ScheduledHabit } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { Logger } from 'src/util/GeneralUtility';
+import { times } from 'lodash';
 
 interface Props {
     habitId?: number;
@@ -28,6 +29,7 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         description,
         daysOfWeek,
         quantity,
+        completedQuantity,
         unit,
         timeOfDayEnabled,
         repeatingScheduleEnabled,
@@ -38,18 +40,23 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         editMode,
     } = useCreateEditScheduleHabit();
 
-    const handleCreateOrUpdate = async (scheduledHabit: ScheduledHabit) => {};
-
     const createUpdatedPlannedTask = (id?: number) => {
         const plannedTask: PlannedTask = {
             id: id,
             scheduledHabitId: scheduledHabitId,
             title: title,
             description: description,
-            timeOfDay: timesOfDay.length > 0 ? timesOfDay[0] : undefined,
             quantity: quantity,
-            unit: unit,
+            completedQuantity: completedQuantity,
         };
+        
+        if (unit) {
+            plannedTask.unitId = unit.id;
+        }
+
+        if(timesOfDay.length > 0) {
+            plannedTask.timeOfDayId = timesOfDay[0].id;
+        }
 
         return plannedTask;
     };
@@ -91,6 +98,7 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await HabitController.create(scheduledHabit);
+
         navigation.popToTop();
     };
 
@@ -98,13 +106,15 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await HabitController.create(scheduledHabit);
+
         navigation.popToTop();
     };
 
     const updatePlannedHabit = async () => {
         const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedHabitId);
-        Logger.titledLog("planned task", plannedTask);
         await PlannedTaskController.update(plannedTask);
+
+        navigation.popToTop();
     };
 
     const onPress = async () => {
