@@ -50,9 +50,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const [showEditHabitModal, setShowEditHabitModal] = React.useState<boolean>(false);
     const [showUpdatePlannedTaskModal, setShowUpdatePlannedTaskModal] =
         React.useState<boolean>(false);
-    const [completedQuantity, setCompletedQuantity] = React.useState<number>(
-        initialPlannedTask.completedQuantity ?? 0
-    );
+    const [optimisticallyUpdatedQuantity, setOptimisticallyUpdatedQuantity] =
+        React.useState<number>(initialPlannedTask.completedQuantity ?? 0);
     const [optimisticallyUpdatedStatus, setOptimisticallyUpdatedStatus] = React.useState<string>(
         initialPlannedTask.status ?? 'INCOMPLETE'
     );
@@ -69,7 +68,6 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         fetch();
     }, [initialPlannedTask]);
 
-    const hasConcretePlannedTask = !!initialPlannedTask.id;
     const skipped = optimisticallyUpdatedStatus === 'SKIPPED';
 
     //this entire section listens to the population of this callback id
@@ -107,7 +105,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     );
 
     React.useEffect(() => {
-        setCompletedQuantity(initialPlannedTask.completedQuantity ?? 0);
+        setOptimisticallyUpdatedQuantity(initialPlannedTask.completedQuantity ?? 0);
     }, [initialPlannedTask.completedQuantity]);
 
     const dispatch = useAppDispatch();
@@ -164,7 +162,10 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
 
     const getPercentageComplete = () => {
         if (initialPlannedTask.quantity) {
-            return Math.min(100, ((completedQuantity ?? 0) / initialPlannedTask.quantity) * 100);
+            return Math.min(
+                100,
+                ((optimisticallyUpdatedQuantity ?? 0) / initialPlannedTask.quantity) * 100
+            );
         }
 
         return initialPlannedTask.status === 'COMPLETE' ? 100 : 0;
@@ -220,10 +221,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         const clone = { ...initialPlannedTask };
         clone.status = 'INCOMPLETE';
 
-        if (hasConcretePlannedTask) {
-            setOptimisticallyUpdatedStatus('INCOMPLETE');
-            setCompletedQuantity(clone.quantity ?? 0);
-        }
+        setOptimisticallyUpdatedStatus('INCOMPLETE');
+        setOptimisticallyUpdatedQuantity(clone.quantity ?? 0);
 
         clone.completedQuantity = clone.quantity ?? 0;
 
@@ -235,7 +234,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         setShowUpdatePlannedTaskModal(false);
 
         setOptimisticallyUpdatedStatus('INCOMPLETE');
-        setCompletedQuantity(updatedValue);
+        setOptimisticallyUpdatedQuantity(updatedValue);
 
         const clone = { ...initialPlannedTask };
         clone.status = 'INCOMPLETE';
@@ -317,7 +316,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                             ? colors.progress_bar_failed
                                             : skipped
                                             ? colors.trophy_icon
-                                            : completedQuantity >=
+                                            : optimisticallyUpdatedQuantity >=
                                               (initialPlannedTask.quantity ?? 0)
                                             ? colors.progress_bar_complete
                                             : 'gray',
@@ -372,7 +371,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                     <TaskFailedSymbol small={true} />
                                                 ) : skipped ? (
                                                     <HabitSkippedSymbol small={true} />
-                                                ) : completedQuantity >=
+                                                ) : optimisticallyUpdatedQuantity >=
                                                   (initialPlannedTask.quantity ?? 0) ? (
                                                     <TaskCompleteSymbol small={true} />
                                                 ) : (
@@ -422,13 +421,13 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                         >
                                             {skipped
                                                 ? 'skipped'
-                                                : `${completedQuantity} / ${
+                                                : `${optimisticallyUpdatedQuantity} / ${
                                                       initialPlannedTask.quantity
                                                   } ${
                                                       initialPlannedTask.unit
                                                           ? UnitUtility.getReadableUnit(
                                                                 initialPlannedTask.unit,
-                                                                completedQuantity
+                                                                optimisticallyUpdatedQuantity
                                                             )
                                                           : ''
                                                   }`}
