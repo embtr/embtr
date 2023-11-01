@@ -24,7 +24,6 @@ export const Planning = () => {
 
     const dispatch = useAppDispatch();
     const selectedPlannedDay: PlannedDay = useAppSelector(getCurrentlySelectedPlannedDay);
-    console.log("FUNCTION:", selectedPlannedDay.date?.getTimezoneOffset)
 
     const updateSelectedPlannedDay = (plannedDay: PlannedDay) => {
         dispatch(setCurrentlySelectedPlannedDay(plannedDay));
@@ -50,11 +49,6 @@ export const Planning = () => {
 
         refreshPlannedToday();
     };
-
-    let taskViews: JSX.Element[] = [];
-    for (const task of selectedPlannedDay?.plannedTasks || []) {
-        taskViews.push(<PlannedTask key={task.id} plannedTask={task} />);
-    }
 
     const onDayChanged = (day: number) => {
         const newDayKey = getDayKey(day);

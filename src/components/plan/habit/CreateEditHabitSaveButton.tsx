@@ -11,8 +11,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { PlannedTask, ScheduledHabit } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
-import { Logger } from 'src/util/GeneralUtility';
-import { times } from 'lodash';
 
 interface Props {
     habitId?: number;

@@ -53,8 +53,11 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const [completedQuantity, setCompletedQuantity] = React.useState<number>(
         initialPlannedTask.completedQuantity ?? 0
     );
-    const [status, setStatus] = React.useState<string>(initialPlannedTask.status ?? 'INCOMPLETE');
+    const [optimisticallyUpdatedStatus, setOptimisticallyUpdatedStatus] = React.useState<string>(
+        initialPlannedTask.status ?? 'INCOMPLETE'
+    );
     const [userId, setUserId] = React.useState<number | undefined>(undefined);
+
     React.useEffect(() => {
         const fetch = async () => {
             const userId = await getUserIdFromToken();
@@ -65,7 +68,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     }, [initialPlannedTask]);
 
     const hasConcretePlannedTask = !!initialPlannedTask.id;
-    const skipped = status === 'SKIPPED';
+    const skipped = optimisticallyUpdatedStatus === 'SKIPPED';
 
     //this entire section listens to the population of this callback id
     //if it is set, that means we want to edit a planned task. first we must
@@ -181,6 +184,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
 
     const skip = async () => {
         setShowUpdatePlannedTaskModal(false);
+        setOptimisticallyUpdatedStatus('SKIPPED');
 
         const clone = { ...initialPlannedTask };
         clone.status = 'SKIPPED';
@@ -215,7 +219,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         clone.status = 'INCOMPLETE';
 
         if (hasConcretePlannedTask) {
-            setStatus('INCOMPLETE');
+            setOptimisticallyUpdatedStatus('INCOMPLETE');
             setCompletedQuantity(clone.quantity ?? 0);
         }
 
@@ -228,7 +232,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const update = async (updatedValue: number) => {
         setShowUpdatePlannedTaskModal(false);
 
-        setStatus('INCOMPLETE');
+        setOptimisticallyUpdatedStatus('INCOMPLETE');
         setCompletedQuantity(updatedValue);
 
         const clone = { ...initialPlannedTask };
@@ -385,7 +389,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                 >
                                     <ProgressBar
                                         progress={getPercentageComplete()}
-                                        status={status}
+                                        status={optimisticallyUpdatedStatus}
                                         showPercent={false}
                                     />
                                 </View>
