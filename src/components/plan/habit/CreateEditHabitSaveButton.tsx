@@ -59,9 +59,9 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         return plannedTask;
     };
 
-    const createScheduledHabitRequest = (id?: number, habitId?: number) => {
+    const createScheduledHabitRequest = () => {
         const scheduledHabit: ScheduledHabit = {
-            id: id,
+            id: scheduledHabitId,
             taskId: habitId,
             description: description,
         };

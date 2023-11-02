@@ -4,6 +4,7 @@
     "main": "node_modules/expo/AppEntry.js",
     "scripts": {
         "start": "npx expo start",
+        "dev": "REACT_NATIVE_PACKAGER_HOSTNAME='192.168.1.212' npx expo start",
         "android": "npx expo start --android",
         "ios": "npx expo start --ios",
         "web": "npx expo start --web",

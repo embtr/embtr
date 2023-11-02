@@ -35,6 +35,7 @@ import { HabitSkippedSymbol } from '../common/task_symbols/HabitSkippedSymbol';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { EditHabitModal } from './habit/EditHabitModal';
+import { NewPlannedHabit } from 'src/model/PlannedHabitModels';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -76,6 +77,9 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const [editPlannedHabitCallbackId, setEditPlannedHabitCallbackId] = React.useState<
         number | undefined
     >();
+    const [editNewPlannedHabitCallbackData, setNewEditPlannedHabitCallbackData] = React.useState<
+        NewPlannedHabit | undefined
+    >();
     useFocusEffect(
         React.useCallback(() => {
             if (editPlannedHabitCallbackId && !showUpdatePlannedTaskModal) {
@@ -83,8 +87,17 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                     plannedTaskId: editPlannedHabitCallbackId,
                 });
                 setEditPlannedHabitCallbackId(undefined);
+            } else if (editNewPlannedHabitCallbackData && !showUpdatePlannedTaskModal) {
+                navigation.navigate(Routes.EDIT_PLANNED_HABIT, {
+                    newPlannedHabit: editNewPlannedHabitCallbackData,
+                });
+                setEditPlannedHabitCallbackId(undefined);
             }
-        }, [editPlannedHabitCallbackId, showUpdatePlannedTaskModal])
+        }, [
+            editPlannedHabitCallbackId,
+            editNewPlannedHabitCallbackData,
+            showUpdatePlannedTaskModal,
+        ])
     );
 
     //this entire section listens to the population of this callback id

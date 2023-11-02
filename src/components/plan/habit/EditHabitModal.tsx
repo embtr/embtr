@@ -155,7 +155,9 @@ export const EditHabitModal = ({
                     ]}
                     onPress={async () => {
                         dismiss();
-                        editPlannedHabit(plannedHabit.id ?? 0);
+                        if (plannedHabit.id) {
+                            editPlannedHabit(plannedHabit.id);
+                        }
                     }}
                 >
                     <Text
