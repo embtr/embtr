@@ -84,6 +84,8 @@ export const CreateEditHabitSaveButton = ({
             plannedTask.timeOfDayId = timesOfDay[0].id;
         }
 
+        plannedTask.originalTimeOfDayId = newPlannedHabitData?.originalTimeOfDayId;
+
         return plannedTask;
     };
 

@@ -1,5 +1,5 @@
 import { Modal, TouchableOpacity, View, Text, Pressable } from 'react-native';
-import { Logger, getWindowHeight } from 'src/util/GeneralUtility';
+import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
 import {
@@ -11,7 +11,7 @@ import {
 } from 'src/util/constants';
 import { SvgUri } from 'react-native-svg';
 import { PlannedDay, PlannedTask } from 'resources/schema';
-import { getDatePretty, getDatePrettyFullMonth } from 'src/util/DateUtility';
+import { getDatePrettyFullMonth } from 'src/util/DateUtility';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 
 interface Props {
@@ -164,6 +164,7 @@ export const EditHabitModal = ({
                         } else if (plannedHabit.scheduledHabitId && plannedDay.dayKey) {
                             const newPlannedHabitData: NewPlannedHabitData = {
                                 scheduledHabitId: plannedHabit.scheduledHabitId,
+                                originalTimeOfDayId: plannedHabit.originalTimeOfDayId,
                                 dayKey: plannedDay.dayKey,
                             };
                             editNewPlannedHabit(newPlannedHabitData);
