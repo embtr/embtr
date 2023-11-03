@@ -11,14 +11,22 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { PlannedTask, ScheduledHabit } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
+import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
+import { Logger } from 'src/util/GeneralUtility';
 
 interface Props {
     habitId?: number;
     scheduledHabitId?: number;
     plannedHabitId?: number;
+    newPlannedHabitData?: NewPlannedHabitData;
 }
 
-export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHabitId }: Props) => {
+export const CreateEditHabitSaveButton = ({
+    habitId,
+    scheduledHabitId,
+    plannedHabitId,
+    newPlannedHabitData,
+}: Props) => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -38,7 +46,7 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
         editMode,
     } = useCreateEditScheduleHabit();
 
-    const createUpdatedPlannedTask = (id?: number) => {
+    const createUpdatedPlannedTask = (id: number) => {
         const plannedTask: PlannedTask = {
             id: id,
             scheduledHabitId: scheduledHabitId,
@@ -47,12 +55,32 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
             quantity: quantity,
             completedQuantity: completedQuantity,
         };
-        
+
         if (unit) {
             plannedTask.unitId = unit.id;
         }
 
-        if(timesOfDay.length > 0) {
+        if (timesOfDay.length > 0) {
+            plannedTask.timeOfDayId = timesOfDay[0].id;
+        }
+
+        return plannedTask;
+    };
+
+    const createCreatePlannedTask = () => {
+        const plannedTask: PlannedTask = {
+            scheduledHabitId: newPlannedHabitData?.scheduledHabitId,
+            title: title,
+            description: description,
+            quantity: quantity,
+            completedQuantity: completedQuantity,
+        };
+
+        if (unit) {
+            plannedTask.unitId = unit.id;
+        }
+
+        if (timesOfDay.length > 0) {
             plannedTask.timeOfDayId = timesOfDay[0].id;
         }
 
@@ -109,8 +137,26 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
     };
 
     const updatePlannedHabit = async () => {
+        if (!plannedHabitId) {
+            Logger.log('no planned habit id found');
+            navigation.popToTop();
+            return;
+        }
+
         const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedHabitId);
         await PlannedTaskController.update(plannedTask);
+
+        navigation.popToTop();
+    };
+
+    const createPlannedHabit = async () => {
+        if (!newPlannedHabitData?.dayKey || !newPlannedHabitData?.scheduledHabitId) {
+            Logger.log('invalid data to create planned habit');
+            return;
+        }
+
+        const plannedTask: PlannedTask = createCreatePlannedTask();
+        await PlannedTaskController.createWithDayKey(plannedTask, newPlannedHabitData!.dayKey);
 
         navigation.popToTop();
     };
@@ -127,6 +173,9 @@ export const CreateEditHabitSaveButton = ({ habitId, scheduledHabitId, plannedHa
 
             case CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT:
                 updatePlannedHabit();
+                break;
+            case CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT:
+                createPlannedHabit();
                 break;
         }
     };

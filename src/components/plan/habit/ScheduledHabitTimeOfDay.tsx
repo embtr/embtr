@@ -76,7 +76,8 @@ export const ScheduledHabitTimeOfDay = () => {
                     overflow: 'hidden',
                 }}
             >
-                {editMode === CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT ? (
+                {editMode === CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT ||
+                editMode === CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT ? (
                     <TimeOfDaySingleSelect />
                 ) : (
                     <TimeOfDayMultiSelect />

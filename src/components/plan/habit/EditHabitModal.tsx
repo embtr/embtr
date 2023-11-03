@@ -1,5 +1,5 @@
 import { Modal, TouchableOpacity, View, Text, Pressable } from 'react-native';
-import { getWindowHeight } from 'src/util/GeneralUtility';
+import { Logger, getWindowHeight } from 'src/util/GeneralUtility';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
 import {
@@ -12,10 +12,12 @@ import {
 import { SvgUri } from 'react-native-svg';
 import { PlannedDay, PlannedTask } from 'resources/schema';
 import { getDatePretty, getDatePrettyFullMonth } from 'src/util/DateUtility';
+import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 
 interface Props {
     visible: boolean;
     editPlannedHabit: (id: number) => void;
+    editNewPlannedHabit: (newPlannedHabit: NewPlannedHabitData) => void;
     editScheduledHabit: (id: number) => void;
     dismiss: () => void;
     plannedHabit: PlannedTask;
@@ -25,6 +27,7 @@ interface Props {
 export const EditHabitModal = ({
     visible,
     editPlannedHabit,
+    editNewPlannedHabit,
     editScheduledHabit,
     dismiss,
     plannedHabit,
@@ -38,7 +41,7 @@ export const EditHabitModal = ({
     const buttonPadding = isLargerScreen ? 3 : 2;
     const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
     const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
-    const fullDatePretty = getDatePrettyFullMonth(plannedDay.date ?? new Date())
+    const fullDatePretty = getDatePrettyFullMonth(plannedDay.date ?? new Date());
 
     const body = (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -96,11 +99,12 @@ export const EditHabitModal = ({
                     }}
                 >
                     <Text style={{ fontFamily: POPPINS_SEMI_BOLD }}>Edit this habit </Text>
-                    for 
-                    
-                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.accent_color }}> {fullDatePretty} </Text>
+                    for
+                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.accent_color }}>
+                        {' '}
+                        {fullDatePretty}{' '}
+                    </Text>
                     or edit the entire schedule
-
                 </Text>
             </View>
 
@@ -157,6 +161,12 @@ export const EditHabitModal = ({
                         dismiss();
                         if (plannedHabit.id) {
                             editPlannedHabit(plannedHabit.id);
+                        } else if (plannedHabit.scheduledHabitId && plannedDay.dayKey) {
+                            const newPlannedHabitData: NewPlannedHabitData = {
+                                scheduledHabitId: plannedHabit.scheduledHabitId,
+                                dayKey: plannedDay.dayKey,
+                            };
+                            editNewPlannedHabit(newPlannedHabitData);
                         }
                     }}
                 >

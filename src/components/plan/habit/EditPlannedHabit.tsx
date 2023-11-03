@@ -19,8 +19,6 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
 import { ScheduledHabitTimeOfDay } from './ScheduledHabitTimeOfDay';
 
-// 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
-
 export const runCreateEditScheduledHabitAnimation = (
     expand: boolean,
     viewHeight: Animated.Value,
@@ -38,29 +36,28 @@ export const runCreateEditScheduledHabitAnimation = (
 
 export const EditPlannedHabit = () => {
     const { colors } = useTheme();
-    const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
+    const route = useRoute<RouteProp<RootStackParamList, 'EditPlannedHabit'>>();
 
-    const habitId = route.params.habitId; // creating a new habit from a template
-    const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
-    const plannedTaskId = route.params.plannedTaskId; // editing a habit on a specific day
+    const newPlannedHabitData = route.params.newPlannedHabitData; // we are editing a planned habit that hasn't been saved yet
+    const plannedTaskId = route.params.plannedTaskId; // editing a planned habit
 
-    const editMode = habitId
-        ? CreateEditHabitMode.CREATE_NEW_HABIT
-        : plannedTaskId
-        ? CreateEditHabitMode.EDIT_EXISTING_HABIT
+    const editMode = plannedTaskId
+        ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
+        : newPlannedHabitData
+        ? CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT
         : CreateEditHabitMode.INVALID;
-    const isCreatingNewHabit = editMode === CreateEditHabitMode.CREATE_NEW_HABIT;
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 
+    const isCreatingNewPlannedHabit = editMode === CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT;
+
     return (
         <CreateEditScheduledHabitProvider
-            habitId={habitId}
-            scheduledHabitId={scheduledHabitId}
             plannedTaskId={plannedTaskId}
+            newPlannedHabitData={newPlannedHabitData}
         >
             <Screen>
-                {!isCreatingNewHabit && (
+                {!isCreatingNewPlannedHabit && (
                     <ArchiveScheduledHabitModal
                         visible={archiveModalVisible}
                         onDismiss={() => {
@@ -76,10 +73,10 @@ export const EditPlannedHabit = () => {
                         name={'Edit Habit'}
                         leftRoute={'BACK'}
                         leftIcon={'arrow-back'}
-                        rightText={!isCreatingNewHabit ? 'archive' : undefined}
+                        rightText={!isCreatingNewPlannedHabit ? 'archive' : undefined}
                         rightColor={colors.archive}
                         rightOnClick={
-                            !isCreatingNewHabit
+                            !isCreatingNewPlannedHabit
                                 ? () => {
                                       setArchiveModalVisible(true);
                                   }
@@ -104,9 +101,8 @@ export const EditPlannedHabit = () => {
                     </ScrollView>
 
                     <CreateEditHabitSaveButton
-                        habitId={habitId}
-                        scheduledHabitId={scheduledHabitId}
                         plannedHabitId={plannedTaskId}
+                        newPlannedHabitData={newPlannedHabitData}
                     />
                 </SafeAreaView>
             </Screen>

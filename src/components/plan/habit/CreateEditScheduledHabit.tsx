@@ -42,13 +42,10 @@ export const CreateEditScheduledHabit = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
 
     const habitId = route.params.habitId; // creating a new habit from a template
-    const plannedTaskId = route.params.plannedTaskId; // editing a habit on a specific day
     const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
 
     const editMode = habitId
         ? CreateEditHabitMode.CREATE_NEW_HABIT
-        : plannedTaskId
-        ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
         : scheduledHabitId
         ? CreateEditHabitMode.EDIT_EXISTING_HABIT
         : CreateEditHabitMode.INVALID;
@@ -57,11 +54,7 @@ export const CreateEditScheduledHabit = () => {
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 
     return (
-        <CreateEditScheduledHabitProvider
-            habitId={habitId}
-            scheduledHabitId={scheduledHabitId}
-            plannedTaskId={plannedTaskId}
-        >
+        <CreateEditScheduledHabitProvider habitId={habitId} scheduledHabitId={scheduledHabitId}>
             <Screen>
                 {!isCreatingNewHabit && (
                     <ArchiveScheduledHabitModal
@@ -110,7 +103,6 @@ export const CreateEditScheduledHabit = () => {
                     <CreateEditHabitSaveButton
                         habitId={habitId}
                         scheduledHabitId={scheduledHabitId}
-                        plannedHabitId={plannedTaskId}
                     />
                 </SafeAreaView>
             </Screen>

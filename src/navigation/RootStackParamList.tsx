@@ -1,5 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
-import { NewPlannedHabit } from 'src/model/PlannedHabitModels';
+import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>;
@@ -68,13 +68,11 @@ export type RootStackParamList = {
     CreateEditScheduledHabit: {
         habitId?: number;
         scheduledHabitId?: number;
-        plannedTaskId?: number;
     };
 
     EditPlannedHabit: {
-        habitId?: number;
-        newPlannedHabit?: NewPlannedHabit;
         plannedTaskId?: number;
+        newPlannedHabitData?: NewPlannedHabitData;
     };
 };
 

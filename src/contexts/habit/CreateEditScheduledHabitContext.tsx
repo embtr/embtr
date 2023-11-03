@@ -2,25 +2,30 @@ import { DayOfWeek, PlannedTask, ScheduledHabit, Task, TimeOfDay, Unit } from 'r
 import React, { createContext, useContext } from 'react';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
+import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 
 export enum CreateEditHabitMode {
     CREATE_NEW_HABIT = 'CREATE_NEW_HABIT',
     EDIT_EXISTING_HABIT = 'EDIT_EXISTING_HABIT',
     EDIT_EXISTING_PLANNED_HABIT = 'EDIT_EXISTING_PLANNED_HABIT',
+    CREATE_NEW_PLANNED_HABIT = 'CREATE_NEW_PLANNED_HABIT',
     INVALID = 'INVALID',
 }
 
 export const getEditMode = (
     habit?: Task,
     plannedTask?: PlannedTask,
-    scheduledHabit?: ScheduledHabit
+    scheduledHabit?: ScheduledHabit,
+    newPlannedHabitScheduledHabit?: ScheduledHabit
 ) => {
     const editMode: CreateEditHabitMode = habit
         ? CreateEditHabitMode.CREATE_NEW_HABIT
-        : plannedTask
-        ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
         : scheduledHabit
         ? CreateEditHabitMode.EDIT_EXISTING_HABIT
+        : plannedTask
+        ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
+        : newPlannedHabitScheduledHabit
+        ? CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT
         : CreateEditHabitMode.INVALID;
 
     return editMode;
@@ -80,6 +85,7 @@ interface Props {
     habitId?: number;
     scheduledHabitId?: number;
     plannedTaskId?: number;
+    newPlannedHabitData?: NewPlannedHabitData;
 }
 
 export const CreateEditScheduledHabitProvider = ({
@@ -87,10 +93,14 @@ export const CreateEditScheduledHabitProvider = ({
     habitId,
     scheduledHabitId,
     plannedTaskId,
+    newPlannedHabitData,
 }: Props) => {
     const habit = HabitCustomHooks.useHabit(Number(habitId));
-    const plannedTask = PlannedHabitCustomHooks.usePlannedHabit(Number(plannedTaskId));
+    const plannedHabit = PlannedHabitCustomHooks.usePlannedHabit(Number(plannedTaskId));
     const scheduledHabit = HabitCustomHooks.useScheduledHabit(Number(scheduledHabitId));
+    const newPlannedHabitScheduledHabit = HabitCustomHooks.useScheduledHabit(
+        Number(newPlannedHabitData?.scheduledHabitId)
+    );
 
     const [icon, setIcon] = React.useState('');
     const [title, setTitle] = React.useState('');
@@ -125,22 +135,22 @@ export const CreateEditScheduledHabitProvider = ({
     }, [habit.data]);
 
     React.useEffect(() => {
-        if (plannedTask.data) {
-            setIcon(plannedTask.data.iconUrl ?? '');
-            setTitle(plannedTask.data.title ?? '');
-            setDescription(plannedTask.data.description ?? '');
+        if (plannedHabit.data) {
+            setIcon(plannedHabit.data.iconUrl ?? '');
+            setTitle(plannedHabit.data.title ?? '');
+            setDescription(plannedHabit.data.description ?? '');
             setDaysOfWeek([]);
-            setTimesOfDay(plannedTask.data.timeOfDay ? [plannedTask.data.timeOfDay] : []);
-            setQuantity(plannedTask.data.quantity ?? 1);
-            setCompletedQuantity(plannedTask.data.completedQuantity ?? 0);
-            setUnit(plannedTask.data.unit ?? undefined);
+            setTimesOfDay(plannedHabit.data.timeOfDay ? [plannedHabit.data.timeOfDay] : []);
+            setQuantity(plannedHabit.data.quantity ?? 1);
+            setCompletedQuantity(plannedHabit.data.completedQuantity ?? 0);
+            setUnit(plannedHabit.data.unit ?? undefined);
 
-            setTimeOfDayEnabled(!!plannedTask.data.timeOfDay);
+            setTimeOfDayEnabled(!!plannedHabit.data.timeOfDay);
             setDetailsEnabled(
-                plannedTask.data.quantity !== undefined || plannedTask.data.unit !== undefined
+                plannedHabit.data.quantity !== undefined || plannedHabit.data.unit !== undefined
             );
         }
-    }, [plannedTask.data]);
+    }, [plannedHabit.data]);
 
     React.useEffect(() => {
         if (scheduledHabit.data) {
@@ -162,6 +172,30 @@ export const CreateEditScheduledHabitProvider = ({
             );
         }
     }, [scheduledHabit.data]);
+
+    React.useEffect(() => {
+        if (newPlannedHabitScheduledHabit.data) {
+            setIcon(newPlannedHabitScheduledHabit.data.task?.iconUrl ?? '');
+            setTitle(newPlannedHabitScheduledHabit.data.task?.title ?? '');
+            setDescription(newPlannedHabitScheduledHabit.data.description ?? '');
+            setStartDate(newPlannedHabitScheduledHabit.data.startDate ?? undefined);
+            setEndDate(newPlannedHabitScheduledHabit.data.endDate ?? undefined);
+            setDaysOfWeek(newPlannedHabitScheduledHabit.data.daysOfWeek ?? []);
+            setTimesOfDay(newPlannedHabitScheduledHabit.data.timesOfDay ?? []);
+            setQuantity(newPlannedHabitScheduledHabit.data.quantity ?? 1);
+            setCompletedQuantity(0);
+            setUnit(newPlannedHabitScheduledHabit.data.unit ?? undefined);
+
+            setRepeatingScheduleEnabled(
+                newPlannedHabitScheduledHabit.data.daysOfWeek?.length !== 0
+            );
+            setTimeOfDayEnabled(newPlannedHabitScheduledHabit.data.timesOfDay?.length !== 0);
+            setDetailsEnabled(
+                newPlannedHabitScheduledHabit.data.quantity !== undefined ||
+                    newPlannedHabitScheduledHabit.data.unit !== undefined
+            );
+        }
+    }, [newPlannedHabitScheduledHabit.data]);
 
     const contextValue: CreateEditScheduledHabitType = {
         iconUrl: icon,
@@ -197,10 +231,16 @@ export const CreateEditScheduledHabitProvider = ({
         setStartDateDatePickerModalVisible: setStartDateDatePickerModalVisible,
         setEndDateDatePickerModalVisible: setEndDateDatePickerModalVisible,
 
-        loading: habit.isLoading || plannedTask.isLoading || scheduledHabit.isLoading,
+        loading: habit.isLoading || plannedHabit.isLoading || scheduledHabit.isLoading,
 
-        editMode: getEditMode(habit.data, plannedTask.data, scheduledHabit.data),
+        editMode: getEditMode(
+            habit.data,
+            plannedHabit.data,
+            scheduledHabit.data,
+            newPlannedHabitScheduledHabit.data
+        ),
     };
+
     return (
         <CreateEditScheduledHabitContext.Provider value={contextValue}>
             {children}

@@ -35,7 +35,7 @@ import { HabitSkippedSymbol } from '../common/task_symbols/HabitSkippedSymbol';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { EditHabitModal } from './habit/EditHabitModal';
-import { NewPlannedHabit } from 'src/model/PlannedHabitModels';
+import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -78,7 +78,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         number | undefined
     >();
     const [editNewPlannedHabitCallbackData, setNewEditPlannedHabitCallbackData] = React.useState<
-        NewPlannedHabit | undefined
+        NewPlannedHabitData | undefined
     >();
     useFocusEffect(
         React.useCallback(() => {
@@ -89,9 +89,9 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                 setEditPlannedHabitCallbackId(undefined);
             } else if (editNewPlannedHabitCallbackData && !showUpdatePlannedTaskModal) {
                 navigation.navigate(Routes.EDIT_PLANNED_HABIT, {
-                    newPlannedHabit: editNewPlannedHabitCallbackData,
+                    newPlannedHabitData: editNewPlannedHabitCallbackData,
                 });
-                setEditPlannedHabitCallbackId(undefined);
+                setNewEditPlannedHabitCallbackData(undefined);
             }
         }, [
             editPlannedHabitCallbackId,
@@ -271,11 +271,17 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         setShowEditHabitModal(false);
     };
 
+    const editNewPlannedHabit = (newPlannedHabitData: NewPlannedHabitData) => {
+        setNewEditPlannedHabitCallbackData(newPlannedHabitData);
+        setShowEditHabitModal(false);
+    };
+
     return (
         <View>
             <EditHabitModal
                 visible={showEditHabitModal}
                 editPlannedHabit={editPlannedHabit}
+                editNewPlannedHabit={editNewPlannedHabit}
                 editScheduledHabit={editScheduledHabit}
                 dismiss={() => {
                     setShowEditHabitModal(false);

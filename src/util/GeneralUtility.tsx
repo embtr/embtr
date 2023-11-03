@@ -61,6 +61,6 @@ export namespace Logger {
     };
 
     export const log = (object: unknown) => {
-        console.log('\n' + JSON.stringify(object, null, 2));
+        console.log(JSON.stringify(object, null, 2));
     };
 }

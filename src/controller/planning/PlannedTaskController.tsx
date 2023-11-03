@@ -9,6 +9,7 @@ import {
 } from 'resources/types/requests/PlannedTaskTypes';
 import { PlannedDay } from 'resources/schema';
 import { PlannedTask } from 'resources/schema';
+import { Logger } from 'src/util/GeneralUtility';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -27,16 +28,20 @@ export interface PlannedTaskModel {
 class PlannedTaskController {
     public static async create(plannedDay: PlannedDay, plannedTask: PlannedTask) {
         if (!plannedDay.dayKey) {
-            console.log('no day key found');
+            Logger.log('no day key found');
             return;
         }
 
+        return await this.createWithDayKey(plannedTask, plannedDay.dayKey);
+    }
+
+    public static async createWithDayKey(plannedTask: PlannedTask, dayKey: string) {
         const request: CreateOrReplacePlannedTaskRequest = {
             plannedTask,
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY}${plannedDay.dayKey}/planned-task/`, request)
+            .post(`${PLANNED_DAY}${dayKey}/planned-task/`, request)
             .then((success) => {
                 return success.data;
             })
