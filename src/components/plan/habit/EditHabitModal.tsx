@@ -163,6 +163,7 @@ export const EditHabitModal = ({
                             editPlannedHabit(plannedHabit.id);
                         } else if (plannedHabit.scheduledHabitId && plannedDay.dayKey) {
                             const newPlannedHabitData: NewPlannedHabitData = {
+                                timeOfDay: plannedHabit.timeOfDay,
                                 scheduledHabitId: plannedHabit.scheduledHabitId,
                                 originalTimeOfDayId: plannedHabit.originalTimeOfDayId,
                                 dayKey: plannedDay.dayKey,

@@ -28,6 +28,10 @@ export const ScheduledHabitTimeOfDay = () => {
         );
     }, [timeOfDayEnabled]);
 
+    const useSingleSelect =
+        CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT === editMode ||
+        CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT === editMode;
+
     return (
         <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
             <View
@@ -76,12 +80,7 @@ export const ScheduledHabitTimeOfDay = () => {
                     overflow: 'hidden',
                 }}
             >
-                {editMode === CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT ||
-                editMode === CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT ? (
-                    <TimeOfDaySingleSelect />
-                ) : (
-                    <TimeOfDayMultiSelect />
-                )}
+                {useSingleSelect ? <TimeOfDaySingleSelect /> : <TimeOfDayMultiSelect />}
             </Animated.View>
         </View>
     );

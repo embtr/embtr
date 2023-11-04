@@ -121,6 +121,9 @@ export const CreateEditScheduledHabitProvider = ({
     const [endDateDatePickerModalVisible, setEndDateDatePickerModalVisible] = React.useState(false);
     const [timeOfDayEnabled, setTimeOfDayEnabled] = React.useState(false);
 
+    /*
+     * creating new scheduled habit
+     */
     React.useEffect(() => {
         if (habit.data) {
             setIcon(habit.data.iconUrl ?? '');
@@ -134,24 +137,9 @@ export const CreateEditScheduledHabitProvider = ({
         }
     }, [habit.data]);
 
-    React.useEffect(() => {
-        if (plannedHabit.data) {
-            setIcon(plannedHabit.data.iconUrl ?? '');
-            setTitle(plannedHabit.data.title ?? '');
-            setDescription(plannedHabit.data.description ?? '');
-            setDaysOfWeek([]);
-            setTimesOfDay(plannedHabit.data.timeOfDay ? [plannedHabit.data.timeOfDay] : []);
-            setQuantity(plannedHabit.data.quantity ?? 1);
-            setCompletedQuantity(plannedHabit.data.completedQuantity ?? 0);
-            setUnit(plannedHabit.data.unit ?? undefined);
-
-            setTimeOfDayEnabled(!!plannedHabit.data.timeOfDay);
-            setDetailsEnabled(
-                plannedHabit.data.quantity !== undefined || plannedHabit.data.unit !== undefined
-            );
-        }
-    }, [plannedHabit.data]);
-
+    /*
+     * editing existing scheduled habit
+     */
     React.useEffect(() => {
         if (scheduledHabit.data) {
             setIcon(scheduledHabit.data.task?.iconUrl ?? '');
@@ -173,6 +161,9 @@ export const CreateEditScheduledHabitProvider = ({
         }
     }, [scheduledHabit.data]);
 
+    /*
+     * creating new planned habit
+     */
     React.useEffect(() => {
         if (newPlannedHabitScheduledHabit.data) {
             setIcon(newPlannedHabitScheduledHabit.data.task?.iconUrl ?? '');
@@ -181,7 +172,7 @@ export const CreateEditScheduledHabitProvider = ({
             setStartDate(newPlannedHabitScheduledHabit.data.startDate ?? undefined);
             setEndDate(newPlannedHabitScheduledHabit.data.endDate ?? undefined);
             setDaysOfWeek(newPlannedHabitScheduledHabit.data.daysOfWeek ?? []);
-            setTimesOfDay(newPlannedHabitScheduledHabit.data.timesOfDay ?? []);
+            setTimesOfDay(newPlannedHabitData?.timeOfDay ? [newPlannedHabitData.timeOfDay] : []);
             setQuantity(newPlannedHabitScheduledHabit.data.quantity ?? 1);
             setCompletedQuantity(0);
             setUnit(newPlannedHabitScheduledHabit.data.unit ?? undefined);
@@ -196,6 +187,27 @@ export const CreateEditScheduledHabitProvider = ({
             );
         }
     }, [newPlannedHabitScheduledHabit.data]);
+
+    /*
+     * editing existing planned habit
+     */
+    React.useEffect(() => {
+        if (plannedHabit.data) {
+            setIcon(plannedHabit.data.iconUrl ?? '');
+            setTitle(plannedHabit.data.title ?? '');
+            setDescription(plannedHabit.data.description ?? '');
+            setDaysOfWeek([]);
+            setTimesOfDay(plannedHabit.data.timeOfDay ? [plannedHabit.data.timeOfDay] : []);
+            setQuantity(plannedHabit.data.quantity ?? 1);
+            setCompletedQuantity(plannedHabit.data.completedQuantity ?? 0);
+            setUnit(plannedHabit.data.unit ?? undefined);
+
+            setTimeOfDayEnabled(!!plannedHabit.data.timeOfDay);
+            setDetailsEnabled(
+                plannedHabit.data.quantity !== undefined || plannedHabit.data.unit !== undefined
+            );
+        }
+    }, [plannedHabit.data]);
 
     const contextValue: CreateEditScheduledHabitType = {
         iconUrl: icon,

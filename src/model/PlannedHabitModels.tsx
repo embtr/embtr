@@ -1,5 +1,8 @@
+import { TimeOfDay } from 'resources/schema';
+
 export interface NewPlannedHabitData {
     scheduledHabitId: number;
-    originalTimeOfDayId?: number;
     dayKey: string;
+    timeOfDay?: TimeOfDay;
+    originalTimeOfDayId?: number;
 }
