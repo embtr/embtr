@@ -4,6 +4,9 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { getDayKey, getTodayKey } from 'src/controller/planning/PlannedDayController';
 
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const CURRENT_DATE = new Date();
+
 interface Props {
     item: any;
     index: number;
@@ -38,16 +41,6 @@ export const DayPickerElement = ({
 }: Props) => {
     const { colors } = useTheme();
 
-    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-    const currentDate = new Date();
-    let dateElements = Array.from(
-        Array(
-            new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() + 1
-        ).keys()
-    );
-    dateElements.shift();
-
     return (
         <TouchableOpacity style={{ width: itemWidth }} onPress={() => onSelectionChange(index)}>
             <View style={{ alignItems: 'center' }}>
@@ -76,10 +69,10 @@ export const DayPickerElement = ({
                     }}
                 >
                     {
-                        days[
+                        DAYS[
                             new Date(
-                                currentDate.getFullYear(),
-                                currentDate.getMonth(),
+                                CURRENT_DATE.getFullYear(),
+                                CURRENT_DATE.getMonth(),
                                 index % 7
                             ).getDay()
                         ]
