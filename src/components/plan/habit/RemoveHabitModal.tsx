@@ -162,28 +162,6 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                     </Text>
                 </TouchableOpacity>
 
-                <View style={{ height: TIMELINE_CARD_PADDING }} />
-
-                <TouchableOpacity
-                    style={{
-                        width: '100%',
-                        borderRadius: 6,
-                    }}
-                    onPress={() => {
-                        onDismiss(false);
-                    }}
-                >
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            fontSize: 14,
-                            fontFamily: POPPINS_REGULAR,
-                            color: colors.archive,
-                        }}
-                    >
-                        Archive
-                    </Text>
-                </TouchableOpacity>
 
                 <View style={{ height: TIMELINE_CARD_PADDING }} />
             </View>

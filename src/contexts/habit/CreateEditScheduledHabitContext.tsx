@@ -3,6 +3,7 @@ import React, { createContext, useContext } from 'react';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
+import { ScheduledHabitCustomHooks } from 'src/controller/habit/ScheduledHabitController';
 
 export enum CreateEditHabitMode {
     CREATE_NEW_HABIT = 'CREATE_NEW_HABIT',
@@ -97,8 +98,8 @@ export const CreateEditScheduledHabitProvider = ({
 }: Props) => {
     const habit = HabitCustomHooks.useHabit(Number(habitId));
     const plannedHabit = PlannedHabitCustomHooks.usePlannedHabit(Number(plannedTaskId));
-    const scheduledHabit = HabitCustomHooks.useScheduledHabit(Number(scheduledHabitId));
-    const newPlannedHabitScheduledHabit = HabitCustomHooks.useScheduledHabit(
+    const scheduledHabit = ScheduledHabitCustomHooks.useScheduledHabit(Number(scheduledHabitId));
+    const newPlannedHabitScheduledHabit = ScheduledHabitCustomHooks.useScheduledHabit(
         Number(newPlannedHabitData?.scheduledHabitId)
     );
 

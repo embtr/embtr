@@ -51,8 +51,6 @@ export const Planning = () => {
     };
 
     const onDayChanged = (day: number) => {
-        const newDayKey = getDayKey(day);
-        setSelectedDayKey(newDayKey);
     };
 
     return (
@@ -64,7 +62,7 @@ export const Planning = () => {
                     <DayPicker day={getDayFromDayKey(selectedDayKey)} onDayChanged={onDayChanged} />
                 </View>
 
-                {selectedPlannedDay && (
+                {false && (
                     <PlanDay
                         onPlannedDayUpdated={updateSelectedPlannedDay}
                         navigateToAddTasks={() => {}}

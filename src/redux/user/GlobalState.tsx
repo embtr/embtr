@@ -21,6 +21,8 @@ const INITIAL_STATE: GlobalState = {
     timelineDays: 0,
     globalBlurBackground: false,
     showQuickAddModal: false,
+    globalLoading: false,
+    selectedIndex: 0,
 };
 
 interface GlobalState {
@@ -40,6 +42,8 @@ interface GlobalState {
     timelineDays: number;
     globalBlurBackground: boolean;
     showQuickAddModal: boolean;
+    globalLoading: boolean;
+    selectedIndex: number;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -116,6 +120,12 @@ export const GlobalState = createSlice({
         },
         setShowQuickAddModal(state, action) {
             state.showQuickAddModal = action.payload;
+        },
+        setGlobalLoading(state, action) {
+            state.globalLoading = action.payload;
+        },
+        setSelectedIndex(state, action) {
+            state.selectedIndex = action.payload;
         },
     },
 });
@@ -248,6 +258,22 @@ export const getShowQuickAddModal = (state: RootState): boolean => {
     return state.globalState.showQuickAddModal;
 };
 
+export const getGlobalLoading = (state: RootState): boolean => {
+    if (state?.globalState.globalLoading === undefined) {
+        return INITIAL_STATE.globalLoading;
+    }
+
+    return state.globalState.globalLoading;
+};
+
+export const getSelectedIndex = (state: RootState): number => {
+    if (state?.globalState.selectedIndex === undefined) {
+        return INITIAL_STATE.selectedIndex;
+    }
+
+    return state.globalState.selectedIndex;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -266,4 +292,6 @@ export const {
     setTimelineDays,
     setGlobalBlurBackground,
     setShowQuickAddModal,
+    setGlobalLoading,
+    setSelectedIndex,
 } = GlobalState.actions;

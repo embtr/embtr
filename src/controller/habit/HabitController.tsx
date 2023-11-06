@@ -1,5 +1,5 @@
 import React from 'react';
-import { HabitCategory, ScheduledHabit, Task } from 'resources/schema';
+import { HabitCategory, Task } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
     GetHabitJourneyResponse,
@@ -8,10 +8,6 @@ import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
-import {
-    CreateScheduledHabitRequest,
-    GetScheduledHabitResponse,
-} from 'resources/types/requests/ScheduledHabitTypes';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -52,32 +48,6 @@ export class HabitController {
                 return undefined;
             });
     }
-
-    public static async create(scheduledHabit: ScheduledHabit) {
-        const createScheduledHabitRequest: CreateScheduledHabitRequest = {
-            scheduledHabit: scheduledHabit,
-        };
-
-        return await axiosInstance
-            .post('/habit/schedule', createScheduledHabitRequest)
-            .then((success) => {
-                return true;
-            })
-            .catch((error) => {
-                return false;
-            });
-    }
-
-    public static async getScheduledHabit(id: number) {
-        return await axiosInstance
-            .get<GetScheduledHabitResponse>(`/habit/schedule/${id}`)
-            .then((success) => {
-                return success.data.scheduledHabit;
-            })
-            .catch((error) => {
-                return undefined;
-            });
-    }
 }
 
 export namespace HabitCustomHooks {
@@ -111,17 +81,6 @@ export namespace HabitCustomHooks {
             queryKey: ['habit', id],
             queryFn: () => HabitController.getHabit(id),
             staleTime: ReactQueryStaleTimes.HABIT,
-            enabled: !!id,
-        });
-
-        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
-    };
-
-    export const useScheduledHabit = (id: number) => {
-        const { status, error, data, fetchStatus } = useQuery({
-            queryKey: ['scheduledHabit', id],
-            queryFn: () => HabitController.getScheduledHabit(id),
-            staleTime: ReactQueryStaleTimes.INSTANTLY,
             enabled: !!id,
         });
 

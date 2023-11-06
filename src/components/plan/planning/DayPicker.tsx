@@ -1,8 +1,8 @@
-import React, { useRef, useMemo } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import React, { useRef } from 'react';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import { DayPickerElement } from './DayPickerElement';
 import { Dimensions } from 'react-native';
+import { DayPickerElementMemoized } from './DayPickerElementMemoized';
 
 interface Props {
     day: number;
@@ -36,23 +36,18 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
         });
     };
 
-    const renderItem = useMemo(
-        () =>
-            ({ item, index }: { item: number; index: number }) =>
-                (
-                    <TouchableOpacity
-                        style={{ width: itemWidth }}
-                        onPress={() => onSelectionChange(index)}
-                    >
-                        <DayPickerElement
-                            item={item}
-                            index={index}
-                            isSelected={index === selected}
-                        />
-                    </TouchableOpacity>
-                ),
-        [onSelectionChange]
-    );
+    const renderItem = ({ item, index }: { item: number; index: number }) => {
+        return (
+            <DayPickerElementMemoized
+                item={item}
+                index={index}
+                isSelected={index === selected}
+                itemWidth={itemWidth}
+                onSelectionChange={onSelectionChange}
+            />
+        );
+    };
+
     return (
         <View>
             <FlatList

@@ -7,10 +7,11 @@ import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditSchedul
 
 interface Props {
     visible: boolean;
+    onArchive: Function;
     onDismiss: Function;
 }
 
-export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
+export const ArchiveScheduledHabitModal = ({ visible, onArchive, onDismiss }: Props) => {
     const { colors } = useTheme();
 
     const { title } = useCreateEditScheduleHabit();
@@ -115,7 +116,7 @@ export const ArchiveScheduledHabitModal = ({ visible, onDismiss }: Props) => {
                                 borderRadius: 6,
                             }}
                             onPress={() => {
-                                onHandleDismiss();
+                                onArchive();
                             }}
                         >
                             <Text

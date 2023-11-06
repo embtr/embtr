@@ -23,6 +23,7 @@ import {
     getCurrentUser,
     setCurrentUser,
     setCurrentlySelectedPlannedDay,
+    setGlobalLoading,
     setTimelineDays,
     setUnits,
     setUserProfileImage,
@@ -40,6 +41,7 @@ import { UnitController } from 'src/controller/unit/UnitController';
 import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';
 import { AnyAction } from '@reduxjs/toolkit';
 import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
+import { LoadingOverlay } from './components/common/loading/LoadingOverlay';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -171,7 +173,8 @@ export const Main = () => {
     const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
         dispatch(setCurrentUser(userToReset));
-        dispatch(setCurrentlySelectedPlannedDay(undefined))
+        dispatch(setCurrentlySelectedPlannedDay(undefined));
+        dispatch(setGlobalLoading(false));
     };
 
     const createUserIfNew = async (user: User) => {
@@ -243,6 +246,7 @@ export const Main = () => {
                     <QuickAddModal />
                     <ConfettiView />
                     <DropDownAlert />
+                    <LoadingOverlay />
                     <NewVersionModal
                         visible={showUpdateAvailableModal}
                         onDismiss={() => {

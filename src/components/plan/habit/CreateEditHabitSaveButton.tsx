@@ -13,6 +13,7 @@ import { PlannedTask, ScheduledHabit } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { Logger } from 'src/util/GeneralUtility';
+import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 
 interface Props {
     habitId?: number;
@@ -125,7 +126,7 @@ export const CreateEditHabitSaveButton = ({
     const createHabit = async () => {
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
-        await HabitController.create(scheduledHabit);
+        await ScheduledHabitController.create(scheduledHabit);
 
         navigation.popToTop();
     };
@@ -133,7 +134,7 @@ export const CreateEditHabitSaveButton = ({
     const updateHabit = async () => {
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
-        await HabitController.create(scheduledHabit);
+        await ScheduledHabitController.update(scheduledHabit);
 
         navigation.popToTop();
     };

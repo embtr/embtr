@@ -19,6 +19,11 @@ import { CreateEditHabitSaveButton } from 'src/components/plan/habit/CreateEditH
 import SafeAreaView from 'react-native-safe-area-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
+import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
+import { LoadingOverlay } from 'src/components/common/loading/LoadingOverlay';
+import { ja } from 'date-fns/locale';
+import { useDispatch } from 'react-redux';
+import { setGlobalLoading } from 'src/redux/user/GlobalState';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -53,12 +58,34 @@ export const CreateEditScheduledHabit = () => {
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 
+    const dispatch = useDispatch();
+
+    // await 5 seconds
+    const await5Seconds = async () => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, 5000);
+        });
+    };
+
     return (
         <CreateEditScheduledHabitProvider habitId={habitId} scheduledHabitId={scheduledHabitId}>
             <Screen>
                 {!isCreatingNewHabit && (
                     <ArchiveScheduledHabitModal
                         visible={archiveModalVisible}
+                        onArchive={async () => {
+                            if (!scheduledHabitId) {
+                                return;
+                            }
+
+                            setArchiveModalVisible(!archiveModalVisible);
+
+                            dispatch(setGlobalLoading(true));
+                            await ScheduledHabitController.archive(scheduledHabitId);
+                            dispatch(setGlobalLoading(false));
+                        }}
                         onDismiss={() => {
                             setArchiveModalVisible(!archiveModalVisible);
                         }}
@@ -66,8 +93,6 @@ export const CreateEditScheduledHabit = () => {
                 )}
 
                 <SafeAreaView forceInset={{}} style={{ flex: 1 }}>
-                    {/* <LoadingOverlay active={loading} /> */}
-
                     <Banner
                         name={'Schedule Habit'}
                         leftRoute={'BACK'}

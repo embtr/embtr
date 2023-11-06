@@ -60,6 +60,9 @@ export const EditPlannedHabit = () => {
                 {!isCreatingNewPlannedHabit && (
                     <ArchiveScheduledHabitModal
                         visible={archiveModalVisible}
+                        onArchive={() => {
+                            setArchiveModalVisible(false);
+                        }}
                         onDismiss={() => {
                             setArchiveModalVisible(!archiveModalVisible);
                         }}
