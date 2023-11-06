@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
-import { MemoizedDayPickerElement } from './DayPickerElemen';
+import { MemoizedDayPickerElement } from './DayPickerElement';
 
 interface Props {
     day: number;
