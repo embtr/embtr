@@ -8,6 +8,13 @@ interface Props {
     day: number;
     onDayChanged: Function;
 }
+const scrollToSelected = (flatListRef: React.RefObject<FlatList>, day: number) => {
+    flatListRef.current?.scrollToIndex({
+        index: day,
+        animated: true,
+        viewPosition: 0.5, // Centers the selected item
+    });
+};
 
 export const DayPicker = ({ day, onDayChanged }: Props) => {
     const itemWidth = Dimensions.get('window').width / 9.5;
@@ -25,15 +32,7 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
     const onSelectionChange = (day: number) => {
         setSelected(day);
         onDayChanged(day + 1);
-        scrollToSelected(day);
-    };
-
-    const scrollToSelected = (day: number) => {
-        flatListRef.current?.scrollToIndex({
-            index: day,
-            animated: true,
-            viewPosition: 0.5, // Centers the selected item
-        });
+        scrollToSelected(flatListRef, day);
     };
 
     const renderItem = ({ item, index }: { item: number; index: number }) => {

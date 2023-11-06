@@ -41,8 +41,12 @@ export const DayPickerElement = ({
 }: Props) => {
     const { colors } = useTheme();
 
+    const onSelectionChangeCallback = React.useCallback(() => {
+        onSelectionChange(index);
+    }, [index, onSelectionChange]);
+
     return (
-        <TouchableOpacity style={{ width: itemWidth }} onPress={() => onSelectionChange(index)}>
+        <TouchableOpacity style={{ width: itemWidth }} onPress={onSelectionChangeCallback}>
             <View style={{ alignItems: 'center' }}>
                 <View style={{ alignItems: 'center' }}>
                     <Ionicons
