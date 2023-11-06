@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
-import { DayPickerElementMemoized } from './DayPickerElementMemoized';
+import { MemoizedDayPickerElement } from './DayPickerElemen';
 
 interface Props {
     day: number;
@@ -38,7 +38,7 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
 
     const renderItem = ({ item, index }: { item: number; index: number }) => {
         return (
-            <DayPickerElementMemoized
+            <MemoizedDayPickerElement
                 item={item}
                 index={index}
                 isSelected={index === selected}
