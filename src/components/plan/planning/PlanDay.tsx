@@ -1,18 +1,13 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import {
-    ChallengeReward,
-    PlannedDay as PlannedDayModel,
-    PlannedDayResult,
-    PlannedTask,
-} from 'resources/schema';
+import { ChallengeReward, PlannedDayResult } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
 import { POPPINS_MEDIUM } from 'src/util/constants';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentlySelectedPlannedDay } from 'src/redux/user/GlobalState';
+import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
+import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 
 interface Props {
-    onPlannedDayUpdated: Function;
     navigateToAddTasks: Function;
     onSharePlannedDayResults: Function;
     showCreatePlannedDayResultsRecommendation?: boolean;
@@ -21,9 +16,11 @@ interface Props {
 export const PlanDay = ({
     onSharePlannedDayResults,
     navigateToAddTasks,
-    onPlannedDayUpdated,
 }: Props) => {
-    const plannedDay = useAppSelector(getCurrentlySelectedPlannedDay);
+    const currentUser = useAppSelector(getCurrentUser);
+    const dayKey = useAppSelector(getSelectedDayKey);
+    const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, dayKey);
+
     const { colors } = useTheme();
 
     // const [hideRecommendationRequested, setHideRecommendationRequested] = useState<boolean>(false);
@@ -50,7 +47,7 @@ export const PlanDay = ({
     let allTasksAreComplete = true;
 
     // get all current planned tasks
-    plannedDay?.plannedTasks?.forEach((plannedTask) => {
+    plannedDay.data?.plannedTasks?.forEach((plannedTask) => {
         if (!plannedTask.active) {
             return;
         }
@@ -80,19 +77,23 @@ export const PlanDay = ({
         // id from template
         // id from planned task
         const key =
-            'plannedTask' + plannedTask.id + '_scheduledHabit' + plannedTask.scheduledHabitId + '_timeOfDay' + plannedTask.timeOfDayId;
+            'plannedTask' +
+            plannedTask.id +
+            '_scheduledHabit' +
+            plannedTask.scheduledHabitId +
+            '_timeOfDay' +
+            plannedTask.timeOfDayId;
 
         taskViews.push(
             <View
                 key={key}
                 style={{
-                    paddingBottom: 5,
                     alignItems: 'center',
                     width: '97%',
                 }}
             >
                 <PlannableTask
-                    plannedDay={plannedDay}
+                    plannedDay={plannedDay.data!}
                     challengeRewards={challengeRewards}
                     initialPlannedTask={plannedTask}
                 />
@@ -101,93 +102,78 @@ export const PlanDay = ({
     });
 
     let dayIsComplete = false;
-    const plannedDayResult: PlannedDayResult | undefined = plannedDay.plannedDayResults?.[0];
+    const plannedDayResult: PlannedDayResult | undefined = plannedDay.data?.plannedDayResults?.[0];
     if (plannedDayResult) {
         dayIsComplete = plannedDayResult.active ?? false;
     }
 
+    if (taskViews.length === 0) {
+        return (
+            <View
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Text style={{ color: colors.secondary_text }}>
+                    You have no activities planned. Let's change that!
+                </Text>
+            </View>
+        );
+    }
+
     return (
         <View style={{ flex: 1, flexDirection: 'column' }}>
-            {taskViews.length > 0 ? (
+            <View
+                style={{
+                    paddingTop: 5,
+                    height: '97%',
+                    width: '100%',
+                }}
+            >
                 <View
                     style={{
-                        paddingTop: 5,
-                        height: '97%',
+                        alignItems: 'center',
                         width: '100%',
                     }}
                 >
+                    {taskViews}
+                </View>
+                {!dayIsComplete && (
                     <View
                         style={{
-                            alignItems: 'center',
                             width: '100%',
+                            paddingTop: 15,
+                            paddingBottom: 5,
+                            alignItems: 'center',
                         }}
                     >
-                        {taskViews}
-                    </View>
-                    {!dayIsComplete && (
-                        <View
-                            style={{
-                                width: '100%',
-                                paddingTop: 15,
-                                paddingBottom: 5,
-                                alignItems: 'center',
-                            }}
-                        >
-                            <View style={{ width: '97%' }}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        onSharePlannedDayResults();
-                                    }}
-                                    style={{
-                                        borderRadius: 5,
-                                        backgroundColor: colors.tab_selected,
-                                    }}
-                                >
-                                    <Text
-                                        style={{
-                                            color: colors.text,
-                                            fontFamily: POPPINS_MEDIUM,
-                                            paddingTop: 8,
-                                            paddingBottom: 5,
-                                            textAlign: 'center',
-                                        }}
-                                    >
-                                        Share Your Day!
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    )}
-                </View>
-            ) : (
-                <View
-                    style={{
-                        height: '97%',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                >
-                    <Text style={{ color: colors.secondary_text }}>
-                        You have no activities planned. Let's change that!
-                    </Text>
-                    <View style={{ flexDirection: 'row', paddingTop: 4 }}>
-                        <View style={{ paddingRight: 5 }}>
-                            <Text
+                        <View style={{ width: '97%' }}>
+                            <TouchableOpacity
                                 onPress={() => {
-                                    navigateToAddTasks();
+                                    onSharePlannedDayResults();
                                 }}
                                 style={{
-                                    color: colors.accent_color,
-                                    fontFamily: 'Poppins_400Regular',
+                                    borderRadius: 5,
+                                    backgroundColor: colors.tab_selected,
                                 }}
                             >
-                                {' '}
-                                add activities
-                            </Text>
+                                <Text
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_MEDIUM,
+                                        paddingTop: 8,
+                                        paddingBottom: 5,
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    Share Your Day!
+                                </Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                </View>
-            )}
+                )}
+            </View>
         </View>
     );
 };

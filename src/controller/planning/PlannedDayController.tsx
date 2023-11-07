@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { COMPLETE, FAILED, INCOMPLETE } from 'src/util/constants';
+import { COMPLETE, FAILED, INCOMPLETE, ReactQueryStaleTimes } from 'src/util/constants';
 import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
 import { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
@@ -13,6 +13,7 @@ import {
     GetPlannedDayResponse,
 } from 'resources/types/requests/PlannedDayTypes';
 import { CreatePlannedDayResultRequest } from 'resources/types/requests/PlannedDayResultTypes';
+import { useQuery } from '@tanstack/react-query';
 
 export interface PlannedDay {
     id?: string;
@@ -313,6 +314,34 @@ class PlannedDayController {
 
         return undefined;
     }
+
+    public static async getOrCreateForUser(userId: number, dayKey: string) {
+        const plannedDay = await this.getViaApi(userId, dayKey);
+        if (plannedDay) {
+            return plannedDay;
+        }
+
+        const createResult: CreatePlannedDayResponse = await this.createViaApi(dayKey);
+        if (createResult.plannedDay) {
+            return createResult.plannedDay;
+        }
+
+        return undefined;
+    }
+}
+
+export namespace PlannedDayCustomHooks {
+    export const usePlannedDay = (userId: number, dayKey: string) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['plannedDay', userId, dayKey],
+            queryFn: () => PlannedDayController.getOrCreateForUser(userId, dayKey),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            enabled:
+                dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
 }
 
 export default PlannedDayController;

@@ -14,8 +14,7 @@ const INITIAL_STATE: GlobalState = {
     cardRefreshRequests: [],
     fireConfetti: () => {},
     displayDropDownAlert: () => {},
-    todaysPlannedDay: {},
-    currentlySelectedPlannedDay: {},
+    selectedDayKey: '',
     units: [],
     currentUser: {},
     timelineDays: 0,
@@ -34,8 +33,7 @@ interface GlobalState {
     cardRefreshRequests: string[];
     fireConfetti: Function;
     displayDropDownAlert: Function;
-    todaysPlannedDay: PlannedDay;
-    currentlySelectedPlannedDay: PlannedDay;
+    selectedDayKey: string;
     units: Unit[];
     currentUser: User;
     timelineDays: number;
@@ -90,19 +88,8 @@ export const GlobalState = createSlice({
         setDisplayDropDownAlert(state, action) {
             state.displayDropDownAlert = action.payload;
         },
-        setTodaysPlannedDay(state, action) {
-            state.todaysPlannedDay = action.payload;
-
-            if (state.currentlySelectedPlannedDay?.dayKey === state.todaysPlannedDay?.dayKey) {
-                state.currentlySelectedPlannedDay = action.payload;
-            }
-        },
-        setCurrentlySelectedPlannedDay(state, action) {
-            state.currentlySelectedPlannedDay = action.payload;
-
-            if (state.currentlySelectedPlannedDay?.dayKey === state.todaysPlannedDay?.dayKey) {
-                state.todaysPlannedDay = action.payload;
-            }
+        setSelectedDayKey(state, action) {
+            state.selectedDayKey = action.payload;
         },
         setUnits(state, action) {
             state.units = action.payload;
@@ -197,21 +184,13 @@ export const getDisplayDropDownAlert = (state: RootState): Function => {
     return state.globalState.displayDropDownAlert;
 };
 
-export const getTodaysPlannedDay = (state: RootState): PlannedDay => {
-    if (!state?.globalState.todaysPlannedDay) {
-        return INITIAL_STATE.todaysPlannedDay;
+export const getSelectedDayKey = (state: RootState): string => {
+    if (!state?.globalState.selectedDayKey) {
+        return INITIAL_STATE.selectedDayKey;
     }
 
-    return state.globalState.todaysPlannedDay;
-};
-
-export const getCurrentlySelectedPlannedDay = (state: RootState): PlannedDay => {
-    if (!state?.globalState.currentlySelectedPlannedDay) {
-        return INITIAL_STATE.currentlySelectedPlannedDay;
-    }
-
-    return state.globalState.currentlySelectedPlannedDay;
-};
+    return state.globalState.selectedDayKey;
+}
 
 export const getUnits = (state: RootState): Unit[] => {
     if (!state?.globalState.units) {
@@ -272,8 +251,7 @@ export const {
     removeTimelineCardRefreshRequest,
     setFireConfetti,
     setDisplayDropDownAlert,
-    setTodaysPlannedDay,
-    setCurrentlySelectedPlannedDay,
+    setSelectedDayKey,
     setUnits,
     setCurrentUser,
     setTimelineDays,

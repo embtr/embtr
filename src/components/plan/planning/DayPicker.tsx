@@ -3,11 +3,10 @@ import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Dimensions } from 'react-native';
 import { MemoizedDayPickerElement } from './DayPickerElement';
+import { getDayKey } from 'src/controller/planning/PlannedDayController';
+import { useDispatch } from 'react-redux';
+import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 
-interface Props {
-    day: number;
-    onDayChanged: Function;
-}
 const scrollToSelected = (flatListRef: React.RefObject<FlatList>, day: number) => {
     flatListRef.current?.scrollToIndex({
         index: day,
@@ -16,7 +15,7 @@ const scrollToSelected = (flatListRef: React.RefObject<FlatList>, day: number) =
     });
 };
 
-export const DayPicker = ({ day, onDayChanged }: Props) => {
+export const DayPicker = () => {
     const itemWidth = Dimensions.get('window').width / 9.5;
 
     const currentDate = new Date();
@@ -27,12 +26,15 @@ export const DayPicker = ({ day, onDayChanged }: Props) => {
     ).slice(1);
 
     const flatListRef = useRef<FlatList>(null);
-    const [selected, setSelected] = React.useState<number>(day - 1);
+    const [selected, setSelected] = React.useState<number>(0);
+    const dispatch = useDispatch();
 
     const onSelectionChange = (day: number) => {
         setSelected(day);
-        onDayChanged(day + 1);
         scrollToSelected(flatListRef, day);
+
+        const newDayKey = getDayKey(day);
+        dispatch(setSelectedDayKey(newDayKey));
     };
 
     const renderItem = ({ item, index }: { item: number; index: number }) => {
