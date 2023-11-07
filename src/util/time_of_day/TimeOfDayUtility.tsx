@@ -3,7 +3,7 @@ import { TimeOfDay } from "resources/schema";
 export class TimeOfDayUtility {
     public static getTimeOfDayPretty(timeOfDay?: TimeOfDay): string {
         if (!timeOfDay) {
-            return 'Add Day'
+            return 'All Day'
         } 
 
         if (!timeOfDay.period) {
