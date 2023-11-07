@@ -8,18 +8,11 @@ import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayControl
 import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 
 interface Props {
-    navigateToAddTasks: Function;
     onSharePlannedDayResults: Function;
-    showCreatePlannedDayResultsRecommendation?: boolean;
 }
 
-export const PlanDay = ({
-    onSharePlannedDayResults,
-    navigateToAddTasks,
-}: Props) => {
-    const currentUser = useAppSelector(getCurrentUser);
-    const dayKey = useAppSelector(getSelectedDayKey);
-    const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, dayKey);
+export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
+    const plannedDay = PlannedDayCustomHooks.useSelectedPlannedDay();
 
     const { colors } = useTheme();
 

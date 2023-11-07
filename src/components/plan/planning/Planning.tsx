@@ -4,7 +4,6 @@ import { PlanDay } from './PlanDay';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 export const Planning = () => {
-
     const onSharePlannedDayResults = async () => {
         // if (selectedPlannedDay) {
         //     await PlanningService.sharePlannedDayResults(selectedPlannedDay!);
@@ -19,11 +18,7 @@ export const Planning = () => {
                     <DayPicker />
                 </View>
 
-                <PlanDay
-                    navigateToAddTasks={() => {}}
-                    onSharePlannedDayResults={onSharePlannedDayResults}
-                    showCreatePlannedDayResultsRecommendation={true}
-                />
+                <PlanDay onSharePlannedDayResults={onSharePlannedDayResults} />
             </View>
         </View>
     );

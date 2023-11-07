@@ -1,12 +1,4 @@
-import {
-    TouchableOpacity,
-    ViewStyle,
-    Text,
-    TextStyle,
-    View,
-    Image,
-    ImageURISource,
-} from 'react-native';
+import { ViewStyle, Text, TextStyle, View, Image, ImageURISource, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { POPPINS_SEMI_BOLD } from 'src/util/constants';
@@ -45,7 +37,7 @@ export const EmbtrButton = ({ image, icon, buttonText, height, callback, color }
     } as ViewStyle;
 
     return image ? (
-        <TouchableOpacity
+        <Pressable
             style={containerStyle}
             onPress={() => {
                 callback();
@@ -57,9 +49,9 @@ export const EmbtrButton = ({ image, icon, buttonText, height, callback, color }
                 </View>
                 <Text style={textStyle}>{buttonText}</Text>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     ) : icon ? (
-        <TouchableOpacity
+        <Pressable
             style={containerStyle}
             onPress={() => {
                 callback();
@@ -69,9 +61,9 @@ export const EmbtrButton = ({ image, icon, buttonText, height, callback, color }
                 <Ionicons name={icon} size={32} color={colors.text} onPress={() => {}} />
                 <Text style={[textStyle]}>{buttonText}</Text>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     ) : (
-        <TouchableOpacity
+        <Pressable
             style={containerStyle}
             onPress={() => {
                 callback();
@@ -80,6 +72,6 @@ export const EmbtrButton = ({ image, icon, buttonText, height, callback, color }
             <View>
                 <Text style={textStyle}>{buttonText}</Text>
             </View>
-        </TouchableOpacity>
+        </Pressable>
     );
 };

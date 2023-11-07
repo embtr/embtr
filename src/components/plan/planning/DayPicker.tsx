@@ -32,8 +32,7 @@ export const DayPicker = () => {
     const onSelectionChange = (day: number) => {
         setSelected(day);
         scrollToSelected(flatListRef, day);
-
-        const newDayKey = getDayKey(day);
+        const newDayKey = getDayKey(day + 1);
         dispatch(setSelectedDayKey(newDayKey));
     };
 

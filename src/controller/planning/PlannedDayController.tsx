@@ -14,6 +14,8 @@ import {
 } from 'resources/types/requests/PlannedDayTypes';
 import { CreatePlannedDayResultRequest } from 'resources/types/requests/PlannedDayResultTypes';
 import { useQuery } from '@tanstack/react-query';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 
 export interface PlannedDay {
     id?: string;
@@ -341,6 +343,22 @@ export namespace PlannedDayCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useSelectedPlannedDay = () => {
+        const currentUser = useAppSelector(getCurrentUser);
+        const dayKey = useAppSelector(getSelectedDayKey);
+        const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, dayKey);
+
+        return plannedDay;
+    };
+
+    export const useTodaysPlannedDay = () => {
+        const currentUser = useAppSelector(getCurrentUser);
+        const todayDayKey = getTodayKey();
+        const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, todayDayKey);
+
+        return plannedDay;
     };
 }
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TouchableWithoutFeedback } from 'react-native';
 import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';
@@ -91,12 +90,12 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                             includeFontPadding: false,
                         }}
                     >
-                        {plannedTask.task?.title}{' '}
+                        {plannedTask?.title}{' '}
                     </Text>
                     <View style={{ paddingLeft: 2.5 }}>
-                        {plannedTask.habit && (
+                        {plannedTask.iconUrl && (
                             <HabitIcon
-                                habit={plannedTask.habit}
+                                iconUrl={plannedTask.iconUrl}
                                 size={15}
                                 color={colors.tab_selected}
                             />
@@ -120,7 +119,6 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                     >
                         <ProgressBar
                             progress={Math.min(100, progress * 100)}
-                            success={taskIsComplete}
                             showPercent={false}
                         />
                     </View>

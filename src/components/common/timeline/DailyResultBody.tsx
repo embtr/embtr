@@ -29,10 +29,6 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
         );
     });
 
-    const carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(
-        plannedDayResult.images ?? []
-    );
-
     let completedCount = 0;
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
         if (plannedTask.status === 'COMPLETE') {

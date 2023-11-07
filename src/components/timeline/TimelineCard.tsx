@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Pressable } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { TouchableWithoutFeedback } from 'react-native';
@@ -10,7 +10,6 @@ import { TimelinePostModel } from 'src/model/OldModels';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
-import { CompletedHabits } from './card_components/CompletedHabits';
 import { JoinedChallengeDetails } from './card_components/JoinedChallengeDetails';
 import { TimelineType } from 'resources/types/Types';
 import StoryController from 'src/controller/timeline/story/StoryController';
