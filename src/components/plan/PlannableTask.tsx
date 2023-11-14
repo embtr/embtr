@@ -13,7 +13,6 @@ import {
     getDisplayDropDownAlert,
     getFireConfetti,
     getOpenMenu,
-    setCurrentlySelectedPlannedDay,
 } from 'src/redux/user/GlobalState';
 import * as Haptics from 'expo-haptics';
 import { TaskInProgressSymbol } from '../common/task_symbols/TaskInProgressSymbol';
@@ -189,13 +188,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
             return;
         }
 
-        const updatedPlannedDay = await PlannedDayController.getForCurrentUserViaApi(
-            plannedDay.dayKey
-        );
-
-        if (updatedPlannedDay) {
-            dispatch(setCurrentlySelectedPlannedDay(updatedPlannedDay));
-        }
+        PlannedDayController.prefetchPlannedDayData(plannedDay.dayKey);
     };
 
     const skip = async () => {
@@ -212,11 +205,13 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     const remove = async () => {
         setShowUpdatePlannedTaskModal(false);
         setShowRemoveHabitModal(true);
+        refreshPlannedDay();
     };
 
     const edit = async () => {
         setShowUpdatePlannedTaskModal(false);
         setShowEditHabitModal(true);
+        refreshPlannedDay();
     };
 
     const fail = async () => {

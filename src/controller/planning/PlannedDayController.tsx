@@ -339,7 +339,7 @@ class PlannedDayController {
         return undefined;
     }
 
-    public static async prefetchPlannedDayData() {
+    public static async prefetchAllPlannedDayData() {
         const currentUserId = await getUserIdFromToken();
         if (!currentUserId) {
             return;
@@ -348,13 +348,21 @@ class PlannedDayController {
         let dayKey = getDayKeyForTheFirstOfTheMonth();
         for (let i = 0; i < 31; i++) {
             dayKey = getNextDayKey(dayKey);
-
-            reactQueryClient.prefetchQuery({
-                queryKey: ['plannedDay', currentUserId, dayKey],
-                queryFn: () => PlannedDayController.getOrCreateForUser(currentUserId, dayKey),
-                staleTime: ReactQueryStaleTimes.INFINITY,
-            });
+            this.prefetchPlannedDayData(dayKey);
         }
+    }
+
+    public static async prefetchPlannedDayData(dayKey: string) {
+        const currentUserId = await getUserIdFromToken();
+        if (!currentUserId) {
+            return;
+        }
+
+        reactQueryClient.prefetchQuery({
+            queryKey: ['plannedDay', currentUserId, dayKey],
+            queryFn: () => PlannedDayController.getOrCreateForUser(currentUserId, dayKey),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
     }
 }
 
@@ -363,7 +371,7 @@ export namespace PlannedDayCustomHooks {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['plannedDay', userId, dayKey],
             queryFn: () => PlannedDayController.getOrCreateForUser(userId, dayKey),
-            staleTime: ReactQueryStaleTimes.INFINITY,
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
             enabled:
                 dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
         });

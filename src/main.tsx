@@ -183,7 +183,7 @@ export const Main = () => {
         dispatch(setGlobalLoading(false));
         dispatch(setSelectedDayKey(getTodayKey()));
 
-        PlannedDayController.prefetchPlannedDayData();
+        PlannedDayController.prefetchAllPlannedDayData();
     };
 
     const createUserIfNew = async (user: User) => {
