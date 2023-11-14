@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { ThemeToggle } from 'src/components/theme/ThemeToggle';
-import { getAuth, useDeviceLanguage } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { NotificationsToggle } from 'src/components/settings/NotificationsToggle';
 import { SettingsButtonElement } from 'src/components/settings/SettingsButtonElement';
 import { SettingsVersion } from 'src/components/settings/SettingsVersion';
@@ -11,12 +11,8 @@ import UserController from 'src/controller/user/UserController';
 import { SettingsAccount } from '../settings/SettingsAccount';
 import { SettingsMembership } from '../settings/SettingsMembership';
 import { useAppDispatch } from 'src/redux/Hooks';
-import {
-    setCurrentUser,
-    setCurrentlySelectedPlannedDay,
-    setTodaysPlannedDay,
-    setUserProfileImage,
-} from 'src/redux/user/GlobalState';
+import { setCurrentUser, setUserProfileImage } from 'src/redux/user/GlobalState';
+import { SettingsSignOut } from '../settings/SettingsSignOut';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
@@ -47,18 +43,7 @@ export const UserSettings = () => {
                 </View>
 
                 <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
-                    <SettingsButtonElement
-                        text={'Sign Out'}
-                        icon={'exit-outline'}
-                        onPress={async () => {
-                            await UserController.refreshToken();
-                            dispatch(setCurrentUser(undefined));
-                            dispatch(setTodaysPlannedDay(undefined));
-                            dispatch(setUserProfileImage(undefined));
-                            dispatch(setCurrentlySelectedPlannedDay(undefined));
-                            getAuth().signOut();
-                        }}
-                    />
+                    <SettingsSignOut />
                 </View>
 
                 <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>

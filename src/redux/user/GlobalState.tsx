@@ -14,7 +14,7 @@ const INITIAL_STATE: GlobalState = {
     cardRefreshRequests: [],
     fireConfetti: () => {},
     displayDropDownAlert: () => {},
-    selectedDayKey: '',
+    selectedDayKey: '2023-01-01',
     units: [],
     currentUser: {},
     timelineDays: 0,
@@ -109,6 +109,11 @@ export const GlobalState = createSlice({
         setGlobalLoading(state, action) {
             state.globalLoading = action.payload;
         },
+        resetToDefault(state) {
+            state.currentUser = {};
+            state.userProfileImage = '';
+            state.selectedDayKey = '';
+        },
     },
 });
 
@@ -190,7 +195,7 @@ export const getSelectedDayKey = (state: RootState): string => {
     }
 
     return state.globalState.selectedDayKey;
-}
+};
 
 export const getUnits = (state: RootState): Unit[] => {
     if (!state?.globalState.units) {
@@ -258,4 +263,5 @@ export const {
     setGlobalBlurBackground,
     setShowQuickAddModal,
     setGlobalLoading,
+    resetToDefault
 } = GlobalState.actions;

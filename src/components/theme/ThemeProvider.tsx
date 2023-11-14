@@ -8,34 +8,39 @@ export const ThemeContext = React.createContext({
     setScheme: (scheme: string) => {},
 });
 
-export const ThemeProvider = (props: { children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined; }) => {
+export const ThemeProvider = (props: {
+    children:
+        | boolean
+        | React.ReactChild
+        | React.ReactFragment
+        | React.ReactPortal
+        | null
+        | undefined;
+}) => {
     const colorScheme = Appearance.getColorScheme();
 
     /*
-    * To enable changing the app theme dynamicly in the app (run-time)
-    * we're gonna use useState so we can override the default device theme
-    */
-    const [isDark, setIsDark] = React.useState(colorScheme === "dark");
+     * To enable changing the app theme dynamicly in the app (run-time)
+     * we're gonna use useState so we can override the default device theme
+     */
+    const [isDark, setIsDark] = React.useState(colorScheme === 'dark');
 
     // Listening to changes of device appearance while in run-time
     React.useEffect(() => {
-        setIsDark(colorScheme === "dark");
+        setIsDark(colorScheme === 'dark');
     }, [colorScheme]);
 
-    
     const defaultTheme = {
         isDark,
         // Chaning color schemes according to theme
         colors: isDark ? darkColors : lightColors,
-        // Overrides the isDark value will cause re-render inside the context.  
-        setScheme: (scheme: string) => {setIsDark(scheme === "dark")},
+        // Overrides the isDark value will cause re-render inside the context.
+        setScheme: (scheme: string) => {
+            setIsDark(scheme === 'dark');
+        },
     };
 
-  return (
-        <ThemeContext.Provider value={defaultTheme}>
-            {props.children}
-        </ThemeContext.Provider>
-    );
+    return <ThemeContext.Provider value={defaultTheme}>{props.children}</ThemeContext.Provider>;
 };
 
 // Custom hook to get the theme object returns {isDark, colors, setScheme}

@@ -2,6 +2,7 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
 export const registerAuthStateListener = (callback: Function) => {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
+        console.log('registerAuthStateListener', user)
         callback(user);
     });
 

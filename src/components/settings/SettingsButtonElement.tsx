@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { EmbtrButton2 } from 'src/components/common/button/EmbtrButton2';
 
 interface Props {

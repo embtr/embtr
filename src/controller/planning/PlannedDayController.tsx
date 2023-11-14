@@ -16,6 +16,7 @@ import { CreatePlannedDayResultRequest } from 'resources/types/requests/PlannedD
 import { useQuery } from '@tanstack/react-query';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export interface PlannedDay {
     id?: string;
@@ -133,6 +134,13 @@ export const getNextDayKey = (dayKey: string) => {
     return result;
 };
 
+export const getDayKeyForTheFirstOfTheMonth = () => {
+    const date = new Date();
+    date.setDate(1);
+
+    return getKeyFromDate(date);
+};
+
 export const getTomorrowKey = () => {
     return getKey(new Date().getDate() + 1);
 };
@@ -204,9 +212,9 @@ export const getDayFromDayKey = (dayKey: string) => {
 export const getDateFromDayKey = (dayKey: string) => {
     let date = new Date();
 
-    const day = parseInt(dayKey.substring(2, 4));
-    const month = parseInt(dayKey.substring(0, 2)) - 1;
-    const year = parseInt(dayKey.substring(4));
+    const year = parseInt(dayKey.substring(0, 4));
+    const month = parseInt(dayKey.substring(5, 7)) - 1;
+    const day = parseInt(dayKey.substring(8, 10));
 
     date.setFullYear(year);
     date.setMonth(month);
@@ -330,6 +338,24 @@ class PlannedDayController {
 
         return undefined;
     }
+
+    public static async prefetchPlannedDayData() {
+        const currentUserId = await getUserIdFromToken();
+        if (!currentUserId) {
+            return;
+        }
+
+        let dayKey = getDayKeyForTheFirstOfTheMonth();
+        for (let i = 0; i < 31; i++) {
+            dayKey = getNextDayKey(dayKey);
+
+            reactQueryClient.prefetchQuery({
+                queryKey: ['plannedDay', currentUserId, dayKey],
+                queryFn: () => PlannedDayController.getOrCreateForUser(currentUserId, dayKey),
+                staleTime: ReactQueryStaleTimes.INFINITY,
+            });
+        }
+    }
 }
 
 export namespace PlannedDayCustomHooks {
@@ -337,7 +363,7 @@ export namespace PlannedDayCustomHooks {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['plannedDay', userId, dayKey],
             queryFn: () => PlannedDayController.getOrCreateForUser(userId, dayKey),
-            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            staleTime: ReactQueryStaleTimes.INFINITY,
             enabled:
                 dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
         });

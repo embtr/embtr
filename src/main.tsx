@@ -21,9 +21,10 @@ import { User } from 'firebase/auth';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import {
     getCurrentUser,
+    resetToDefault,
     setCurrentUser,
-    setCurrentlySelectedPlannedDay,
     setGlobalLoading,
+    setSelectedDayKey,
     setTimelineDays,
     setUnits,
     setUserProfileImage,
@@ -42,6 +43,12 @@ import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert
 import { AnyAction } from '@reduxjs/toolkit';
 import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
 import { LoadingOverlay } from './components/common/loading/LoadingOverlay';
+import PlannedDayController, {
+    PlannedDayCustomHooks,
+    getDayKey,
+    getNextDayKey,
+    getTodayKey,
+} from './controller/planning/PlannedDayController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -173,8 +180,10 @@ export const Main = () => {
     const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(setUserProfileImage(userToReset.photoUrl));
         dispatch(setCurrentUser(userToReset));
-        dispatch(setCurrentlySelectedPlannedDay(undefined));
         dispatch(setGlobalLoading(false));
+        dispatch(setSelectedDayKey(getTodayKey()));
+
+        PlannedDayController.prefetchPlannedDayData();
     };
 
     const createUserIfNew = async (user: User) => {
