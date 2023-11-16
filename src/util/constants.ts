@@ -1,5 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { getSafeWindowWidth, getWindowWidth } from './GeneralUtility';
+import { getSafeWindowWidth } from './GeneralUtility';
 
 export const USER_SEARCH_WIDTH = '95%';
 export const SETTINGS_MENU_ITEM_WIDTH = '95%';
@@ -102,7 +102,7 @@ export type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyp
 export namespace ReactQueryStaleTimes {
     const ONE_HOUR = 60 * 60 * 1000;
     export const INSTANTLY = 0;
-    export const INFINITY = Infinity; 
+    export const INFINITY = Infinity;
     export const HABIT = 1 * ONE_HOUR;
     export const HABIT_CATEGORIES = 1 * ONE_HOUR;
 }
@@ -113,7 +113,7 @@ export namespace UI {
             const totalDayOfWeekWidth = getSafeWindowWidth() - (TIMELINE_CARD_PADDING / 3) * 7;
             export const DAY_OF_WEEK_WIDTH = totalDayOfWeekWidth / 7;
             export const GAP_BETWEEN_DAYS = (getSafeWindowWidth() - totalDayOfWeekWidth) / 6;
-            export const DATE_WIDTH = DAY_OF_WEEK_WIDTH * 3 + GAP_BETWEEN_DAYS * 2; 
+            export const DATE_WIDTH = DAY_OF_WEEK_WIDTH * 3 + GAP_BETWEEN_DAYS * 2;
         }
 
         export namespace TIME_OF_DAY {

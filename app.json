@@ -16,9 +16,7 @@
         "updates": {
             "fallbackToCacheTimeout": 0
         },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
+        "assetBundlePatterns": ["**/*"],
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.brentryczak.embtr",
@@ -51,9 +49,10 @@
             [
                 "expo-build-properties",
                 {
-                    "minSdkVersion": 33,
                     "android": {
-                        "minSdkVersion": 33
+                        "compileSdkVersion": 33,
+                        "targetSdkVersion": 33,
+                        "buildToolsVersion": "33.0.0"
                     }
                 }
             ]

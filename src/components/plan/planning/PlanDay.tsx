@@ -2,10 +2,9 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { ChallengeReward, PlannedDayResult } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannableTask } from '../PlannableTask';
-import { POPPINS_MEDIUM } from 'src/util/constants';
-import { useAppSelector } from 'src/redux/Hooks';
+import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
-import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
+import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 
 interface Props {
     onSharePlannedDayResults: Function;
@@ -36,7 +35,11 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
     //     fetch();
     // }, []);
 
-    let taskViews: JSX.Element[] = [];
+    let morningTaskViews: JSX.Element[] = [];
+    let afternoonTaskViews: JSX.Element[] = [];
+    let eveningTaskViews: JSX.Element[] = [];
+    let nightTaskViews: JSX.Element[] = [];
+
     let allTasksAreComplete = true;
 
     // get all current planned tasks
@@ -77,12 +80,21 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
             '_timeOfDay' +
             plannedTask.timeOfDayId;
 
-        taskViews.push(
+        let arrayToAddTo = morningTaskViews;
+        if (TimeOfDayUtility.isAfternoon(plannedTask.timeOfDay)) {
+            arrayToAddTo = afternoonTaskViews;
+        } else if (TimeOfDayUtility.isEvening(plannedTask.timeOfDay)) {
+            arrayToAddTo = eveningTaskViews;
+        } else if (TimeOfDayUtility.isNight(plannedTask.timeOfDay)) {
+            arrayToAddTo = nightTaskViews;
+        }
+
+        arrayToAddTo.push(
             <View
                 key={key}
                 style={{
                     alignItems: 'center',
-                    width: '97%',
+                    paddingBottom: TIMELINE_CARD_PADDING
                 }}
             >
                 <PlannableTask
@@ -100,7 +112,12 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
         dayIsComplete = plannedDayResult.active ?? false;
     }
 
-    if (taskViews.length === 0) {
+    if (
+        morningTaskViews.length === 0 &&
+        afternoonTaskViews.length === 0 &&
+        eveningTaskViews.length === 0 &&
+        nightTaskViews.length === 0
+    ) {
         return (
             <View
                 style={{
@@ -124,14 +141,46 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
                     width: '100%',
                 }}
             >
+                {/* Morning */}
                 <View
                     style={{
                         alignItems: 'center',
                         width: '100%',
                     }}
                 >
-                    {taskViews}
+                    {morningTaskViews}
                 </View>
+
+                {/* Afternoon */}
+                <View
+                    style={{
+                        alignItems: 'center',
+                        width: '100%',
+                    }}
+                >
+                    {afternoonTaskViews}
+                </View>
+
+                {/* Evening */}
+                <View
+                    style={{
+                        alignItems: 'center',
+                        width: '100%',
+                    }}
+                >
+                    {eveningTaskViews}
+                </View>
+
+                {/* Night */}
+                <View
+                    style={{
+                        alignItems: 'center',
+                        width: '100%',
+                    }}
+                >
+                    {nightTaskViews}
+                </View>
+
                 {!dayIsComplete && (
                     <View
                         style={{
@@ -141,7 +190,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
                             alignItems: 'center',
                         }}
                     >
-                        <View style={{ width: '97%' }}>
+                        <View style={{ width: '100%' }}>
                             <TouchableOpacity
                                 onPress={() => {
                                     onSharePlannedDayResults();
