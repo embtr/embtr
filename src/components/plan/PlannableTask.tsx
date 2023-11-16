@@ -23,7 +23,7 @@ import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { EditHabitModal } from './habit/EditHabitModal';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { UnitUtility } from 'src/util/UnitUtility';
-import { SvgUri } from 'react-native-svg';
+import Svg, { Circle, SvgUri } from 'react-native-svg';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 
 interface Props {
@@ -251,6 +251,15 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
         ? UnitUtility.getReadableUnit(initialPlannedTask.unit, initialPlannedTask.quantity ?? 0)
         : '';
 
+    // Calculate the circumference of the circle
+    const radius = 13;
+    const progress =
+        ((initialPlannedTask.completedQuantity ?? 0) / (initialPlannedTask.quantity ?? 1) * 100);
+    const circumference = 2 * Math.PI * radius;
+
+    // Calculate the dash offset to represent the progress
+    const dashOffset = circumference * (1 - progress / 100);
+
     return (
         <View>
             <EditHabitModal
@@ -389,14 +398,60 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                 </View>
 
                                 {/* RIGHT SIDE ICONS */}
-                                <View style={{ flexDirection: 'row', alignItems: 'center', paddingRight: TIMELINE_CARD_PADDING }}>
-                                    <SvgUri
-                                        width={30}
-                                        height={30}
-                                        uri={TimeOfDayUtility.getTimeOfDayIcon(
-                                            initialPlannedTask.timeOfDay
-                                        )}
-                                    />
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View style={{ paddingRight: TIMELINE_CARD_PADDING }}>
+                                        <SvgUri
+                                            width={30}
+                                            height={30}
+                                            uri={TimeOfDayUtility.getTimeOfDayIcon(
+                                                initialPlannedTask.timeOfDay
+                                            )}
+                                        />
+                                    </View>
+
+                                    <View style={{ paddingRight: TIMELINE_CARD_PADDING }}>
+                                        <Svg width={28} height={28} transform={[{ rotate: '-90deg' }]} >
+                                            {/* Background Circle */}
+                                            <Circle
+                                                cx={14}
+                                                cy={14}
+                                                r={radius}
+                                                stroke={colors.secondary_text}
+                                                strokeWidth={2}
+                                                fill="transparent"
+                                            />
+
+                                            {/* Progress Circle */}
+                                            <Circle
+                                                cx={14}
+                                                cy={14}
+                                                r={radius}
+                                                stroke={colors.progress_bar_complete}
+                                                strokeWidth={2}
+                                                fill="transparent"
+                                                strokeDasharray={circumference}
+                                                strokeDashoffset={dashOffset}
+                                                strokeLinecap="round"
+                                            />
+                                        </Svg>
+
+                                        {/* SVG Icon */}
+                                        <View
+                                            style={{
+                                                position: 'absolute',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                width: 28,
+                                                height: 28,
+                                            }}
+                                        >
+                                            <SvgUri
+                                                width={15}
+                                                height={15}
+                                                uri={initialPlannedTask.iconUrl ?? ''}
+                                            />
+                                        </View>
+                                    </View>
                                 </View>
                             </View>
                         </View>

@@ -1,5 +1,4 @@
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
-import { HabitController } from 'src/controller/habit/HabitController';
 import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import {
     CreateEditHabitMode,
@@ -38,6 +37,7 @@ export const CreateEditHabitSaveButton = ({
         quantity,
         completedQuantity,
         unit,
+        iconUrl,
         timeOfDayEnabled,
         repeatingScheduleEnabled,
         detailsEnabled,
@@ -55,6 +55,7 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity,
             completedQuantity: completedQuantity,
+            iconUrl: iconUrl
         };
 
         if (unit) {
@@ -75,6 +76,7 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity,
             completedQuantity: completedQuantity,
+            iconUrl: iconUrl
         };
 
         if (unit) {
@@ -177,6 +179,7 @@ export const CreateEditHabitSaveButton = ({
             case CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT:
                 updatePlannedHabit();
                 break;
+
             case CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT:
                 createPlannedHabit();
                 break;
