@@ -25,6 +25,7 @@ import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { UnitUtility } from 'src/util/UnitUtility';
 import Svg, { Circle, SvgUri } from 'react-native-svg';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
+import { CachedSvg } from '../common/images/CachedSvg';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -401,7 +402,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                 {/* RIGHT SIDE ICONS */}
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <View style={{ paddingRight: TIMELINE_CARD_PADDING }}>
-                                        <SvgUri
+                                        <CachedSvg
                                             width={30}
                                             height={30}
                                             uri={TimeOfDayUtility.getTimeOfDayIcon(
@@ -446,7 +447,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                 height: 28,
                                             }}
                                         >
-                                            <SvgUri
+                                            <CachedSvg
                                                 width={15}
                                                 height={15}
                                                 uri={initialPlannedTask.iconUrl ?? ''}
