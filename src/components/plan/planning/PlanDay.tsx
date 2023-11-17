@@ -92,8 +92,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
         arrayToAddTo.push(
             <View
                 key={key}
-                style={{
-                    alignItems: 'center',
+                style={{ alignItems: 'center',
                     paddingBottom: TIMELINE_CARD_PADDING
                 }}
             >

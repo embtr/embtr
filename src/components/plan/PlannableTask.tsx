@@ -356,7 +356,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                     </View>
 
                                     {/* GOAL/ COMPLETED */}
-                                    <View>
+                                    <View style={{}}>
                                         <View
                                             style={{
                                                 flex: 1,
@@ -370,6 +370,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                     color: colors.secondary_text,
                                                     fontFamily: POPPINS_REGULAR,
                                                     fontSize: 12,
+                                                    lineHeight: 15,
                                                 }}
                                             >
                                                 goal: {initialPlannedTask.quantity} {unitPretty}
@@ -388,10 +389,10 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                     color: colors.goal_primary_font,
                                                     fontFamily: POPPINS_REGULAR,
                                                     fontSize: 12,
+                                                    lineHeight: 15,
                                                 }}
                                             >
-                                                completed: {initialPlannedTask.completedQuantity}{' '}
-                                                Miles
+                                                completed: {initialPlannedTask.completedQuantity}{' '}{unitPretty}
                                             </Text>
                                         </View>
                                     </View>
