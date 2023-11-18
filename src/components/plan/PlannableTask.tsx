@@ -23,8 +23,7 @@ import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { EditHabitModal } from './habit/EditHabitModal';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { UnitUtility } from 'src/util/UnitUtility';
-import Svg, { Circle, SvgUri } from 'react-native-svg';
-import { Image } from 'expo-image';
+import Svg, { Circle } from 'react-native-svg';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { CachedImage } from '../common/images/CachedImage';
 
@@ -403,12 +402,16 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
 
                                 {/* RIGHT SIDE ICONS */}
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <View style={{ paddingRight: TIMELINE_CARD_PADDING }}>
-                                        <Image
-                                            style={{ width: 30, height: 30 }}
-                                            source={TimeOfDayUtility.getTimeOfDayIcon(
+                                    <View
+                                        style={{
+                                            paddingRight: TIMELINE_CARD_PADDING,
+                                        }}
+                                    >
+                                        <CachedImage
+                                            uri={TimeOfDayUtility.getTimeOfDayIcon(
                                                 initialPlannedTask.timeOfDay
                                             )}
+                                            style={{ height: 30, width: 30 }}
                                         />
                                     </View>
 
@@ -453,7 +456,10 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                             }}
                                         >
                                             <CachedImage
-                                                style={{ width: 15, height: 15 }}
+                                                style={{
+                                                    width: 15,
+                                                    height: 15,
+                                                }}
                                                 uri={initialPlannedTask.iconUrl ?? ''}
                                             />
                                         </View>

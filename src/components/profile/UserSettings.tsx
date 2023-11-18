@@ -13,6 +13,7 @@ import { SettingsMembership } from '../settings/SettingsMembership';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentUser, setUserProfileImage } from 'src/redux/user/GlobalState';
 import { SettingsSignOut } from '../settings/SettingsSignOut';
+import { SettingsClearCache } from '../settings/SettingsClearCache';
 
 export const UserSettings = () => {
     const dispatch = useAppDispatch();
@@ -40,6 +41,10 @@ export const UserSettings = () => {
 
                 <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <SettingsMembership />
+                </View>
+
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <SettingsClearCache />
                 </View>
 
                 <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
