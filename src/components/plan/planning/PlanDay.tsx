@@ -73,7 +73,9 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
         // id from template
         // id from planned task
         const key =
-            'plannedTask' +
+            'plannedDay' +
+            plannedTask.plannedDayId +
+            '_plannedTask' +
             plannedTask.id +
             '_scheduledHabit' +
             plannedTask.scheduledHabitId +
@@ -90,12 +92,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
         }
 
         arrayToAddTo.push(
-            <View
-                key={key}
-                style={{ alignItems: 'center',
-                    paddingBottom: TIMELINE_CARD_PADDING
-                }}
-            >
+            <View key={key} style={{ alignItems: 'center', paddingBottom: TIMELINE_CARD_PADDING }}>
                 <PlannableTask
                     plannedDay={plannedDay.data!}
                     challengeRewards={challengeRewards}

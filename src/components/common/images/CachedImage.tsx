@@ -1,8 +1,6 @@
-import React from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import { View, Image, StyleProp, ImageStyle } from 'react-native';
-import CacheManager from 'src/controller/image/ImageCacheController';
+import { StyleProp, ImageStyle } from 'react-native';
 import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
+import { Image } from 'expo-image';
 
 interface Props {
     uri: string;
@@ -14,24 +12,5 @@ export const CachedImage = ({ uri, style }: Props) => {
         return <Image source={{ uri }} style={style} />;
     }
 
-    const [localUrl, setLocalUrl] = React.useState('');
-
-    const getCachedImage = async (url: string) => {
-        const localPath = await CacheManager.get(url, { md5: false }).getPath();
-        if (localPath) {
-            setLocalUrl(localPath);
-        }
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            getCachedImage(uri);
-        }, [uri])
-    );
-
-    if (!localUrl) {
-        return <View style={style} />;
-    }
-
-    return <Image source={{ uri: localUrl }} style={style} />;
+    return <Image source={uri} style={style} />;
 };

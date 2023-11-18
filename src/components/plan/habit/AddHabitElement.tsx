@@ -3,6 +3,7 @@ import { SvgUri } from 'react-native-svg';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
+import { CachedImage } from 'src/components/common/images/CachedImage';
 
 interface Props {
     imageUrl: string;
@@ -35,7 +36,7 @@ export const AddHabitElement = ({ imageUrl, name, description }: Props) => {
                 ]}
             >
                 <View style={{ height: 40, width: 40 }}>
-                    <SvgUri width={40} height={40} uri={imageUrl} />
+                    <CachedImage uri={imageUrl} style={{ height: 40, width: 40 }} />
                 </View>
                 <View style={{ paddingLeft: 15, flex: 1 }}>
                     <Text

@@ -24,8 +24,9 @@ import { EditHabitModal } from './habit/EditHabitModal';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { UnitUtility } from 'src/util/UnitUtility';
 import Svg, { Circle, SvgUri } from 'react-native-svg';
+import { Image } from 'expo-image';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
-import { CachedSvg } from '../common/images/CachedSvg';
+import { CachedImage } from '../common/images/CachedImage';
 
 interface Props {
     plannedDay: PlannedDay;
@@ -255,7 +256,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
     // Calculate the circumference of the circle
     const radius = 13;
     const progress =
-        ((initialPlannedTask.completedQuantity ?? 0) / (initialPlannedTask.quantity ?? 1) * 100);
+        ((initialPlannedTask.completedQuantity ?? 0) / (initialPlannedTask.quantity ?? 1)) * 100;
     const circumference = 2 * Math.PI * radius;
 
     // Calculate the dash offset to represent the progress
@@ -393,7 +394,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                     lineHeight: 15,
                                                 }}
                                             >
-                                                completed: {initialPlannedTask.completedQuantity}{' '}{unitPretty}
+                                                completed: {initialPlannedTask.completedQuantity}{' '}
+                                                {unitPretty}
                                             </Text>
                                         </View>
                                     </View>
@@ -402,17 +404,20 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                 {/* RIGHT SIDE ICONS */}
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                     <View style={{ paddingRight: TIMELINE_CARD_PADDING }}>
-                                        <CachedSvg
-                                            width={30}
-                                            height={30}
-                                            uri={TimeOfDayUtility.getTimeOfDayIcon(
+                                        <Image
+                                            style={{ width: 30, height: 30 }}
+                                            source={TimeOfDayUtility.getTimeOfDayIcon(
                                                 initialPlannedTask.timeOfDay
                                             )}
                                         />
                                     </View>
 
                                     <View style={{ paddingRight: TIMELINE_CARD_PADDING }}>
-                                        <Svg width={28} height={28} transform={[{ rotate: '-90deg' }]} >
+                                        <Svg
+                                            width={28}
+                                            height={28}
+                                            transform={[{ rotate: '-90deg' }]}
+                                        >
                                             {/* Background Circle */}
                                             <Circle
                                                 cx={14}
@@ -447,9 +452,8 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                 height: 28,
                                             }}
                                         >
-                                            <CachedSvg
-                                                width={15}
-                                                height={15}
+                                            <CachedImage
+                                                style={{ width: 15, height: 15 }}
                                                 uri={initialPlannedTask.iconUrl ?? ''}
                                             />
                                         </View>
