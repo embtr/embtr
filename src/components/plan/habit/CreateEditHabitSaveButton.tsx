@@ -13,6 +13,11 @@ import PlannedTaskController from 'src/controller/planning/PlannedTaskController
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { Logger } from 'src/util/GeneralUtility';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getSelectedDayKey } from 'src/redux/user/GlobalState';
+import PlannedDayController, {
+    getDateFromDayKey,
+} from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     habitId?: number;
@@ -47,6 +52,8 @@ export const CreateEditHabitSaveButton = ({
         editMode,
     } = useCreateEditScheduleHabit();
 
+    const selectedDayKey = useAppSelector(getSelectedDayKey);
+
     const createUpdatedPlannedTask = (id: number) => {
         const plannedTask: PlannedTask = {
             id: id,
@@ -55,7 +62,7 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity,
             completedQuantity: completedQuantity,
-            iconUrl: iconUrl
+            iconUrl: iconUrl,
         };
 
         if (unit) {
@@ -76,7 +83,7 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity,
             completedQuantity: completedQuantity,
-            iconUrl: iconUrl
+            iconUrl: iconUrl,
         };
 
         if (unit) {
@@ -107,6 +114,19 @@ export const CreateEditHabitSaveButton = ({
             });
             scheduledHabit.startDate = startDate;
             scheduledHabit.endDate = endDate;
+        } else {
+            //adding for just the selected day
+            const selectedDate = getDateFromDayKey(selectedDayKey);
+            const dayOfWeek = selectedDate.getDay() + 1;
+
+            scheduledHabit.daysOfWeek = [
+                {
+                    id: dayOfWeek,
+                },
+            ];
+
+            scheduledHabit.startDate = selectedDate;
+            scheduledHabit.endDate = selectedDate;
         }
 
         if (detailsEnabled) {
@@ -129,6 +149,7 @@ export const CreateEditHabitSaveButton = ({
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.create(scheduledHabit);
+        PlannedDayController.prefetchPlannedDayData(selectedDayKey);
 
         navigation.popToTop();
     };
