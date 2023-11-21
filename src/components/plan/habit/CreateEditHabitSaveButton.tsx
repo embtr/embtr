@@ -190,21 +190,23 @@ export const CreateEditHabitSaveButton = ({
     const onPress = async () => {
         switch (editMode) {
             case CreateEditHabitMode.CREATE_NEW_HABIT:
-                createHabit();
+                await createHabit();
                 break;
 
             case CreateEditHabitMode.EDIT_EXISTING_HABIT:
-                updateHabit();
+                await updateHabit();
                 break;
 
             case CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT:
-                updatePlannedHabit();
+                await updatePlannedHabit();
                 break;
 
             case CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT:
-                createPlannedHabit();
+                await createPlannedHabit();
                 break;
         }
+
+        PlannedDayController.prefetchPlannedDayData(selectedDayKey);
     };
 
     const buttonText = editMode === CreateEditHabitMode.CREATE_NEW_HABIT ? 'Create' : 'Update';
