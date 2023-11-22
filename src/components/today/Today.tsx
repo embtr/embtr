@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, ListRenderItemInfo } from 'react-native';
-import { RefreshControl } from 'react-native-gesture-handler';
+import { View, Text, FlatList, ListRenderItemInfo, RefreshControl } from 'react-native';
 import { WidgetType } from 'resources/schema';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
@@ -123,7 +122,6 @@ export const Today = () => {
         <Screen>
             <View style={{ flex: 1 }}>
                 <EmbtrMenuCustom />
-                <ConfettiView />
 
                 <View style={{ height: '100%', width: '100%' }}>
                     <Banner name="Today" />

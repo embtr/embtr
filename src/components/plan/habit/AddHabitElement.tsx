@@ -1,5 +1,4 @@
 import { View, Text } from 'react-native';
-import { SvgUri } from 'react-native-svg';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,10 +8,12 @@ interface Props {
     imageUrl: string;
     name: string;
     description: string;
+    isCustomHabits?: boolean;
 }
 
-export const AddHabitElement = ({ imageUrl, name, description }: Props) => {
+export const AddHabitElement = ({ imageUrl, name, description, isCustomHabits }: Props) => {
     const { colors } = useTheme();
+
     return (
         <View
             style={{
@@ -25,7 +26,7 @@ export const AddHabitElement = ({ imageUrl, name, description }: Props) => {
             <View
                 style={[
                     {
-                        backgroundColor: colors.timeline_card_background,
+                        backgroundColor: isCustomHabits ? '#484848' : '#282828',
                         borderRadius: 9,
                         flex: 1,
                         flexDirection: 'row',

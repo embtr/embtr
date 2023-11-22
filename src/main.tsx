@@ -150,7 +150,11 @@ export const Main = () => {
     }, []);
 
     const checkForUpdates = async () => {
-        const currentVersion = Constants!.manifest!.version!;
+        const currentVersion = Constants.expoConfig?.version;
+        if (!currentVersion) {
+            return;
+        }
+
         const latestVersion =
             (await MetadataController.getMetadata(MetadataKey.VERSION)) ?? currentVersion;
 

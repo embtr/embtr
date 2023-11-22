@@ -12,25 +12,43 @@ export const AddHabitCategory = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'AddHabitCategory'>>();
 
     const habitCategory = HabitCustomHooks.useHabitCategory(Number(route.params.id));
+    const isCustomHabits = route.params.isCustomHabits;
 
-    const elements: JSX.Element[] = [];
-    habitCategory?.tasks?.forEach((task) => {
-        elements.push(
-            <View key={task.id}>
+    const createCreateCustomHabitOption = () => {
+        return createOption(
+            'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fadd.svg?alt=media',
+            'Create A New Custom Habit',
+            'Create a habit to start working towards your goals!'
+        );
+    };
+
+    const createOption = (icon: string, title: string, description: string, taskId?: number) => {
+        const isCreateCustomHabit = !taskId;
+
+        return (
+            <View key={taskId}>
                 <Pressable
                     onPress={() => {
                         navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
-                            habitId: task.id,
+                            habitId: taskId,
+                            isCreateCustomHabit,
                         });
                     }}
                 >
-                    <AddHabitElement
-                        imageUrl={task.iconUrl ?? ''}
-                        name={task.title ?? ''}
-                        description={task.description ?? ''}
-                    />
+                    <AddHabitElement imageUrl={icon} name={title} description={description} />
                 </Pressable>
             </View>
+        );
+    };
+
+    const elements: JSX.Element[] = [];
+    if (isCustomHabits) {
+        elements.push(createCreateCustomHabitOption());
+    }
+
+    habitCategory?.tasks?.forEach((task) => {
+        elements.push(
+            createOption(task.iconUrl ?? '', task.title ?? '', task.description ?? '', task.id)
         );
     });
 

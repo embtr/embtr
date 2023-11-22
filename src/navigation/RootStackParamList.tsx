@@ -63,10 +63,11 @@ export type RootStackParamList = {
     Loading: undefined;
 
     // in-app screens without tab bar
-    AddHabitCategory: { id: number };
+    AddHabitCategory: { id: number, isCustomHabits?: boolean };
     AddHabitCategories: undefined;
     CreateEditScheduledHabit: {
         habitId?: number;
+        isCreateCustomHabit?: boolean;
         scheduledHabitId?: number;
     };
 

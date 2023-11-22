@@ -18,6 +18,7 @@ import { getSelectedDayKey } from 'src/redux/user/GlobalState';
 import PlannedDayController, {
     getDateFromDayKey,
 } from 'src/controller/planning/PlannedDayController';
+import TaskController from 'src/controller/planning/TaskController';
 
 interface Props {
     habitId?: number;
@@ -99,10 +100,10 @@ export const CreateEditHabitSaveButton = ({
         return plannedTask;
     };
 
-    const createScheduledHabitRequest = () => {
+    const createScheduledHabitRequest = (customHabitId?: number) => {
         const scheduledHabit: ScheduledHabit = {
             id: scheduledHabitId,
-            taskId: habitId,
+            taskId: customHabitId ?? habitId,
             description: description,
         };
 
@@ -143,6 +144,23 @@ export const CreateEditHabitSaveButton = ({
         }
 
         return scheduledHabit;
+    };
+
+    const createCustomHabit = async () => {
+        Keyboard.dismiss();
+
+        //create habit
+        const habit = await TaskController.createViaApi(title, description);
+        if (!habit.id) {
+            navigation.popToTop();
+            return;
+        }
+
+        const scheduledHabit: ScheduledHabit = createScheduledHabitRequest(habit.id);
+        await ScheduledHabitController.create(scheduledHabit);
+        PlannedDayController.prefetchPlannedDayData(selectedDayKey);
+
+        navigation.popToTop();
     };
 
     const createHabit = async () => {
@@ -188,7 +206,12 @@ export const CreateEditHabitSaveButton = ({
     };
 
     const onPress = async () => {
+        console.log("on press for", editMode)
         switch (editMode) {
+            case CreateEditHabitMode.CREATE_CUSTOM_HABIT:
+                await createCustomHabit();
+                break;
+
             case CreateEditHabitMode.CREATE_NEW_HABIT:
                 await createHabit();
                 break;

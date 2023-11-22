@@ -46,12 +46,16 @@ export const CreateEditScheduledHabit = () => {
 
     const habitId = route.params.habitId; // creating a new habit from a template
     const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
+    const isCreateCustomHabit = route.params.isCreateCustomHabit; // creating a new custom habit
 
-    const editMode = habitId
+    const editMode = isCreateCustomHabit
+        ? CreateEditHabitMode.CREATE_CUSTOM_HABIT
+        : habitId
         ? CreateEditHabitMode.CREATE_NEW_HABIT
         : scheduledHabitId
         ? CreateEditHabitMode.EDIT_EXISTING_HABIT
         : CreateEditHabitMode.INVALID;
+
     const isCreatingNewHabit = editMode === CreateEditHabitMode.CREATE_NEW_HABIT;
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
@@ -59,7 +63,11 @@ export const CreateEditScheduledHabit = () => {
     const dispatch = useDispatch();
 
     return (
-        <CreateEditScheduledHabitProvider habitId={habitId} scheduledHabitId={scheduledHabitId}>
+        <CreateEditScheduledHabitProvider
+            isCreateCustomHabit={isCreateCustomHabit}
+            habitId={habitId}
+            scheduledHabitId={scheduledHabitId}
+        >
             <Screen>
                 {!isCreatingNewHabit && (
                     <ArchiveScheduledHabitModal
@@ -86,7 +94,9 @@ export const CreateEditScheduledHabit = () => {
                         name={'Schedule Habit'}
                         leftRoute={'BACK'}
                         leftIcon={'arrow-back'}
-                        rightText={!isCreatingNewHabit ? 'archive' : undefined}
+                        rightText={
+                            !isCreatingNewHabit && !isCreateCustomHabit ? 'archive' : undefined
+                        }
                         rightColor={colors.archive}
                         rightOnClick={
                             !isCreatingNewHabit

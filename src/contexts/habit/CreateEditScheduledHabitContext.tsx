@@ -6,6 +6,7 @@ import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { ScheduledHabitCustomHooks } from 'src/controller/habit/ScheduledHabitController';
 
 export enum CreateEditHabitMode {
+    CREATE_CUSTOM_HABIT = 'CREATE_CUSTOM_HABIT',
     CREATE_NEW_HABIT = 'CREATE_NEW_HABIT',
     EDIT_EXISTING_HABIT = 'EDIT_EXISTING_HABIT',
     EDIT_EXISTING_PLANNED_HABIT = 'EDIT_EXISTING_PLANNED_HABIT',
@@ -14,12 +15,15 @@ export enum CreateEditHabitMode {
 }
 
 export const getEditMode = (
+    isCreateCustomHabit?: boolean,
     habit?: Task,
     plannedTask?: PlannedTask,
     scheduledHabit?: ScheduledHabit,
     newPlannedHabitScheduledHabit?: ScheduledHabit
 ) => {
-    const editMode: CreateEditHabitMode = habit
+    const editMode: CreateEditHabitMode = isCreateCustomHabit
+        ? CreateEditHabitMode.CREATE_CUSTOM_HABIT
+        : habit
         ? CreateEditHabitMode.CREATE_NEW_HABIT
         : scheduledHabit
         ? CreateEditHabitMode.EDIT_EXISTING_HABIT
@@ -84,6 +88,7 @@ export const useCreateEditScheduleHabit = (): CreateEditScheduledHabitType => {
 interface Props {
     children: React.ReactNode;
     habitId?: number;
+    isCreateCustomHabit?: boolean;
     scheduledHabitId?: number;
     plannedTaskId?: number;
     newPlannedHabitData?: NewPlannedHabitData;
@@ -92,6 +97,7 @@ interface Props {
 export const CreateEditScheduledHabitProvider = ({
     children,
     habitId,
+    isCreateCustomHabit,
     scheduledHabitId,
     plannedTaskId,
     newPlannedHabitData,
@@ -126,7 +132,7 @@ export const CreateEditScheduledHabitProvider = ({
      * creating new scheduled habit
      */
     React.useEffect(() => {
-        if (habit.data) {
+        if (!isCreateCustomHabit && habit.data) {
             setIcon(habit.data.iconUrl ?? '');
             setTitle(habit.data.title ?? '');
             setDescription(habit.data.description ?? '');
@@ -247,6 +253,7 @@ export const CreateEditScheduledHabitProvider = ({
         loading: habit.isLoading || plannedHabit.isLoading || scheduledHabit.isLoading,
 
         editMode: getEditMode(
+            isCreateCustomHabit,
             habit.data,
             plannedHabit.data,
             scheduledHabit.data,

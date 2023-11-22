@@ -1,5 +1,4 @@
 import { StyleProp, ImageStyle } from 'react-native';
-import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
 import { Image } from 'expo-image';
 
 interface Props {
@@ -8,9 +7,5 @@ interface Props {
 }
 
 export const CachedImage = ({ uri, style }: Props) => {
-    if (isDesktopBrowser() || isMobileBrowser()) {
-        return <Image source={{ uri }} style={style} />;
-    }
-
     return <Image source={uri} style={style} />;
 };

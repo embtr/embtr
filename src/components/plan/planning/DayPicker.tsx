@@ -30,7 +30,7 @@ export const DayPicker = () => {
     const dispatch = useDispatch();
 
     const selectedDayKey = useAppSelector(getSelectedDayKey);
-    let selected = 0;
+    let selected = -1;
     if (typeof selectedDayKey === 'string') {
         const date = getDateFromDayKey(selectedDayKey);
         selected = date.getDate() - 1;
@@ -53,6 +53,10 @@ export const DayPicker = () => {
             />
         );
     };
+
+    if (selected === -1) {
+        return <View />;
+    }
 
     return (
         <View>

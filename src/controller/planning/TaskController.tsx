@@ -103,9 +103,10 @@ export const FAKE_HABIT: TaskModel = {
 };
 
 class TaskController {
-    public static async createViaApi(title: string): Promise<NewTaskModel> {
+    public static async createViaApi(title: string, description?: string): Promise<NewTaskModel> {
         const request: CreateTaskRequest = {
             title,
+            description,
         };
 
         return await axiosInstance
