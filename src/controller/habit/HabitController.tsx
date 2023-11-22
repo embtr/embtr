@@ -8,6 +8,7 @@ import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -42,11 +43,27 @@ export class HabitController {
             .get(`/task/${id}`)
             .then((success) => {
                 const result: GetTaskResponse = success.data;
-                return result.task;
+                                return result.task;
             })
             .catch((error) => {
                 return undefined;
             });
+    }
+
+    public static async prefetchHabitCategory(id: number) {
+        reactQueryClient.prefetchQuery({
+            queryKey: ['habit', id],
+            queryFn: () => HabitController.getHabit(id),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+    }
+
+    public static async prefetchHabitCategories() {
+        reactQueryClient.prefetchQuery({
+            queryKey: ['habitCategories'],
+            queryFn: () => HabitController.getHabitCategories(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
     }
 }
 
@@ -70,7 +87,7 @@ export namespace HabitCustomHooks {
         const { status, error, data } = useQuery({
             queryKey: ['habitCategories'],
             queryFn: HabitController.getHabitCategories,
-            staleTime: ReactQueryStaleTimes.HABIT_CATEGORIES,
+            staleTime: ReactQueryStaleTimes.INFINITY,
         });
 
         return data ?? [];
@@ -80,7 +97,7 @@ export namespace HabitCustomHooks {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['habit', id],
             queryFn: () => HabitController.getHabit(id),
-            staleTime: ReactQueryStaleTimes.HABIT,
+            staleTime: ReactQueryStaleTimes.INFINITY,
             enabled: !!id,
         });
 

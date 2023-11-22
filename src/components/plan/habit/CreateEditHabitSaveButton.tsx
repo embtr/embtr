@@ -19,6 +19,7 @@ import PlannedDayController, {
     getDateFromDayKey,
 } from 'src/controller/planning/PlannedDayController';
 import TaskController from 'src/controller/planning/TaskController';
+import { HabitController } from 'src/controller/habit/HabitController';
 
 interface Props {
     habitId?: number;
@@ -155,6 +156,8 @@ export const CreateEditHabitSaveButton = ({
             navigation.popToTop();
             return;
         }
+
+        HabitController.prefetchHabitCategories();
 
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest(habit.id);
         await ScheduledHabitController.create(scheduledHabit);
