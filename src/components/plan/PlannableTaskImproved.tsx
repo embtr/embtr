@@ -23,7 +23,6 @@ interface Styles {
     goalText: TextStyle;
     completedText: TextStyle;
     timeIconContainer: ViewStyle;
-    svgContainer: ViewStyle;
     svgIcon: any;
     svgProgress: ViewStyle;
 }
@@ -58,14 +57,14 @@ const generateStyles = (colors: any): Styles => {
         timeIconContainer: {
             flexDirection: 'row',
             alignItems: 'center',
-        },
-        svgContainer: {
+            justifyContent: 'flex-end',
             paddingRight: TIMELINE_CARD_PADDING,
+            flex: 1
         },
         svgIcon: {
             height: 30,
             width: 30,
-            paddingRight: TIMELINE_CARD_PADDING,
+            right: TIMELINE_CARD_PADDING,
         },
         svgProgress: {
             position: 'absolute',
@@ -96,8 +95,6 @@ export const PlannableTaskImproved = ({ plannedTask }: Props) => {
     const circumference = 2 * Math.PI * radius;
     const dashOffset = circumference * (1 - progress / 100);
 
-    console.log('rendering ', plannedTask.title);
-
     const unitPretty = plannedTask.unit
         ? UnitUtility.getReadableUnit(plannedTask.unit, plannedTask.quantity ?? 0)
         : '';
@@ -123,11 +120,12 @@ export const PlannableTaskImproved = ({ plannedTask }: Props) => {
             </View>
 
             <View style={styles.timeIconContainer}>
-                <View style={styles.svgContainer}>
-                    <CachedImage
-                        uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
-                        style={styles.svgIcon}
-                    />
+                <CachedImage
+                    uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
+                    style={styles.svgIcon}
+                />
+
+                <View>
                     <Svg width={28} height={28} transform={[{ rotate: '-90deg' }]}>
                         {/* Background Circle */}
                         <Circle
