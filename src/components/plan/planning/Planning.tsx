@@ -18,6 +18,8 @@ export const Planning = () => {
                     <DayPicker />
                 </View>
 
+                <PlanDay onSharePlannedDayResults={() => {}} />
+
             </View>
         </View>
     );

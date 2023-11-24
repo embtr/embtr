@@ -357,7 +357,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                     </View>
 
                                     {/* GOAL/ COMPLETED */}
-                                    <View style={{}}>
+                                    <View>
                                         <View
                                             style={{
                                                 flex: 1,

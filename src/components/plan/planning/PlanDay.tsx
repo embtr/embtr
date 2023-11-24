@@ -5,6 +5,7 @@ import { PlannableTask } from '../PlannableTask';
 import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
+import { MemoizedPlannableTaskImproved, PlannableTaskImproved } from '../PlannableTaskImproved';
 
 interface Props {
     onSharePlannedDayResults: Function;
@@ -35,10 +36,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
     //     fetch();
     // }, []);
 
-    let morningTaskViews: JSX.Element[] = [];
-    let afternoonTaskViews: JSX.Element[] = [];
-    let eveningTaskViews: JSX.Element[] = [];
-    let nightTaskViews: JSX.Element[] = [];
+    let taskViews: JSX.Element[] = [];
 
     let allTasksAreComplete = true;
 
@@ -82,22 +80,16 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
             '_timeOfDay' +
             plannedTask.timeOfDayId;
 
-        let arrayToAddTo = morningTaskViews;
-        if (TimeOfDayUtility.isAfternoon(plannedTask.timeOfDay)) {
-            arrayToAddTo = afternoonTaskViews;
-        } else if (TimeOfDayUtility.isEvening(plannedTask.timeOfDay)) {
-            arrayToAddTo = eveningTaskViews;
-        } else if (TimeOfDayUtility.isNight(plannedTask.timeOfDay)) {
-            arrayToAddTo = nightTaskViews;
-        }
-
-        arrayToAddTo.push(
-            <View key={key} style={{ alignItems: 'center', paddingBottom: TIMELINE_CARD_PADDING }}>
-                <PlannableTask
-                    plannedDay={plannedDay.data!}
-                    challengeRewards={challengeRewards}
-                    initialPlannedTask={plannedTask}
-                />
+        taskViews.push(
+            <View
+                key={key}
+                style={{
+                    alignItems: 'center',
+                    width: '100%',
+                    paddingBottom: TIMELINE_CARD_PADDING,
+                }}
+            >
+                <MemoizedPlannableTaskImproved plannedTask={plannedTask} />
             </View>
         );
     });
@@ -108,12 +100,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
         dayIsComplete = plannedDayResult.active ?? false;
     }
 
-    if (
-        morningTaskViews.length === 0 &&
-        afternoonTaskViews.length === 0 &&
-        eveningTaskViews.length === 0 &&
-        nightTaskViews.length === 0
-    ) {
+    if (taskViews === undefined) {
         return (
             <View
                 style={{
@@ -144,37 +131,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
                         width: '100%',
                     }}
                 >
-                    {morningTaskViews}
-                </View>
-
-                {/* Afternoon */}
-                <View
-                    style={{
-                        alignItems: 'center',
-                        width: '100%',
-                    }}
-                >
-                    {afternoonTaskViews}
-                </View>
-
-                {/* Evening */}
-                <View
-                    style={{
-                        alignItems: 'center',
-                        width: '100%',
-                    }}
-                >
-                    {eveningTaskViews}
-                </View>
-
-                {/* Night */}
-                <View
-                    style={{
-                        alignItems: 'center',
-                        width: '100%',
-                    }}
-                >
-                    {nightTaskViews}
+                    {taskViews}
                 </View>
 
                 {!dayIsComplete && (
