@@ -16,16 +16,14 @@ const scrollToSelected = (flatListRef: React.RefObject<FlatList>, day: number) =
     });
 };
 
+const itemWidth = Dimensions.get('window').width / 9.5;
+
+const currentDate = new Date();
+const dateElements = Array.from(
+    Array(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() + 1).keys()
+).slice(1);
+
 export const DayPicker = () => {
-    const itemWidth = Dimensions.get('window').width / 9.5;
-
-    const currentDate = new Date();
-    const dateElements = Array.from(
-        Array(
-            new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate() + 1
-        ).keys()
-    ).slice(1);
-
     const flatListRef = useRef<FlatList>(null);
     const dispatch = useDispatch();
 
@@ -64,6 +62,10 @@ export const DayPicker = () => {
                 ref={flatListRef}
                 data={dateElements}
                 horizontal
+                removeClippedSubviews={true}
+                maxToRenderPerBatch={8}
+                windowSize={11}
+                initialNumToRender={dateElements.length}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item) => item.toString()}
                 renderItem={renderItem}
