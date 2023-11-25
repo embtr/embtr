@@ -11,7 +11,7 @@ import { UnitUtility } from 'src/util/UnitUtility';
 import React from 'react';
 import { CachedImage } from '../common/images/CachedImage';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
-import Svg, { Circle } from 'react-native-svg';
+import { ProgressSvg } from './task/progress/ProgressSvg';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -19,6 +19,7 @@ interface Props {
 
 interface Styles {
     container: ViewStyle;
+    innerContainer: ViewStyle;
     text: TextStyle;
     goalText: TextStyle;
     completedText: TextStyle;
@@ -31,11 +32,14 @@ const generateStyles = (colors: any): Styles => {
     return {
         container: {
             backgroundColor: '#404040',
-            padding: TIMELINE_CARD_PADDING / 2,
             borderRadius: 5,
-            width: '100%',
             flexDirection: 'row',
             ...CARD_SHADOW,
+        },
+        innerContainer: {
+            padding: TIMELINE_CARD_PADDING / 2,
+            width: '100%',
+            flexDirection: 'row',
         },
         text: {
             color: colors.goal_primary_font,
@@ -59,7 +63,7 @@ const generateStyles = (colors: any): Styles => {
             alignItems: 'center',
             justifyContent: 'flex-end',
             paddingRight: TIMELINE_CARD_PADDING,
-            flex: 1
+            flex: 1,
         },
         svgIcon: {
             height: 30,
@@ -89,77 +93,68 @@ export const PlannableTaskImproved = ({ plannedTask }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
 
-    // Calculate the circumference of the circle
-    const radius = 13;
-    const progress = ((plannedTask.completedQuantity ?? 0) / (plannedTask.quantity ?? 1)) * 100;
-    const circumference = 2 * Math.PI * radius;
-    const dashOffset = circumference * (1 - progress / 100);
-
     const unitPretty = plannedTask.unit
         ? UnitUtility.getReadableUnit(plannedTask.unit, plannedTask.quantity ?? 0)
         : '';
 
+    const completedQuantity = plannedTask.completedQuantity ?? 0;
+    const targetQuantity = plannedTask.quantity ?? 1;
+
     return (
         <View style={styles.container}>
-            <View>
-                <Text style={styles.text} numberOfLines={1}>
-                    {plannedTask.title}
-                </Text>
+            <View
+                style={{
+                    width: '3%',
+                    borderTopLeftRadius: 5,
+                    borderBottomLeftRadius: 5,
+                    backgroundColor:
+                        plannedTask?.status === 'FAILED'
+                            ? colors.progress_bar_failed
+                            : 'SKIPPED'
+                            ? colors.trophy_icon
+                            : completedQuantity >= targetQuantity
+                            ? colors.progress_bar_complete
+                            : 'gray',
+                }}
+            />
+
+            <View style={styles.innerContainer}>
                 <View>
-                    <View style={styles.goalText}>
-                        <Text numberOfLines={1}>
+                    <Text style={styles.text} numberOfLines={1}>
+                        {plannedTask.title}
+                    </Text>
+                    <View>
+                        <Text style={styles.goalText} numberOfLines={1}>
                             goal: {plannedTask.quantity} {unitPretty}
                         </Text>
-                    </View>
-                    <View style={styles.completedText}>
-                        <Text numberOfLines={1}>
+                        <Text style={styles.completedText} numberOfLines={1}>
                             completed: {plannedTask.completedQuantity} {unitPretty}
                         </Text>
                     </View>
                 </View>
-            </View>
 
-            <View style={styles.timeIconContainer}>
-                <CachedImage
-                    uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
-                    style={styles.svgIcon}
-                />
+                <View style={styles.timeIconContainer}>
+                    <CachedImage
+                        uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
+                        style={styles.svgIcon}
+                    />
 
-                <View>
-                    <Svg width={28} height={28} transform={[{ rotate: '-90deg' }]}>
-                        {/* Background Circle */}
-                        <Circle
-                            cx={14}
-                            cy={14}
-                            r={radius}
-                            stroke={colors.secondary_text}
-                            strokeWidth={2}
-                            fill="transparent"
+                    <View>
+                        <ProgressSvg
+                            targetQuantity={plannedTask.quantity ?? 1}
+                            completedQuantity={plannedTask.completedQuantity ?? 0}
                         />
 
-                        {/* Progress Circle */}
-                        <Circle
-                            cx={14}
-                            cy={14}
-                            r={radius}
-                            stroke={colors.progress_bar_complete}
-                            strokeWidth={2}
-                            fill="transparent"
-                            strokeDasharray={circumference}
-                            strokeDashoffset={dashOffset}
-                            strokeLinecap="round"
-                        />
-                    </Svg>
-
-                    {/* SVG Icon */}
-                    <View style={styles.svgProgress}>
-                        <CachedImage
-                            style={{
-                                width: 15,
-                                height: 15,
-                            }}
-                            uri={plannedTask.iconUrl ?? ''}
-                        />
+                        {/* SVG Icon */}
+                        <View style={styles.svgProgress}>
+                            <CachedImage
+                                style={{
+                                    width: 15,
+                                    height: 15,
+                                }}
+                                uri={plannedTask.iconUrl ?? ''}
+                            />
+                        </View>
                     </View>
                 </View>
             </View>

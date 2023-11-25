@@ -350,6 +350,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                 color: colors.goal_primary_font,
                                                 fontFamily: POPPINS_SEMI_BOLD,
                                                 fontSize: 14,
+                                                backgroundColor: 'yellow'
                                             }}
                                         >
                                             {initialPlannedTask.title}
@@ -372,6 +373,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                     fontFamily: POPPINS_REGULAR,
                                                     fontSize: 12,
                                                     lineHeight: 15,
+                                                    backgroundColor: 'blue'
                                                 }}
                                             >
                                                 goal: {initialPlannedTask.quantity} {unitPretty}
@@ -391,6 +393,7 @@ export const PlannableTask = ({ plannedDay, initialPlannedTask, challengeRewards
                                                     fontFamily: POPPINS_REGULAR,
                                                     fontSize: 12,
                                                     lineHeight: 15,
+                                                    backgroundColor: "red"
                                                 }}
                                             >
                                                 completed: {initialPlannedTask.completedQuantity}{' '}
