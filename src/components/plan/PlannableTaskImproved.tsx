@@ -1,4 +1,4 @@
-import { View, Text, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, ViewStyle, TextStyle, Pressable } from 'react-native';
 import { PlannedTask } from 'resources/schema';
 import {
     CARD_SHADOW,
@@ -12,6 +12,8 @@ import React from 'react';
 import { CachedImage } from '../common/images/CachedImage';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { setGlobalPlannedTaskToUpdate } from 'src/redux/user/GlobalState';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -100,7 +102,12 @@ export const PlannableTaskImproved = ({ plannedTask }: Props) => {
     const completedQuantity = plannedTask.completedQuantity ?? 0;
     const targetQuantity = plannedTask.quantity ?? 1;
 
+    const dispatch = useAppDispatch();
+
     return (
+        <Pressable onPress={() => {
+            dispatch(setGlobalPlannedTaskToUpdate(plannedTask));
+        }}>
         <View style={styles.container}>
             <View
                 style={{
@@ -159,5 +166,6 @@ export const PlannableTaskImproved = ({ plannedTask }: Props) => {
                 </View>
             </View>
         </View>
+</Pressable>
     );
 };

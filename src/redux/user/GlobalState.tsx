@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { PlannedDay, Unit, User } from 'resources/schema';
+import { PlannedDay, PlannedTask, Unit, User } from 'resources/schema';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -21,6 +21,7 @@ const INITIAL_STATE: GlobalState = {
     globalBlurBackground: false,
     showQuickAddModal: false,
     globalLoading: false,
+    globalPlannedTaskToUpdate: {}, 
 };
 
 interface GlobalState {
@@ -40,6 +41,7 @@ interface GlobalState {
     globalBlurBackground: boolean;
     showQuickAddModal: boolean;
     globalLoading: boolean;
+    globalPlannedTaskToUpdate: PlannedTask
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -114,6 +116,9 @@ export const GlobalState = createSlice({
             state.userProfileImage = '';
             state.selectedDayKey = '';
         },
+        setGlobalPlannedTaskToUpdate(state, action) {
+            state.globalPlannedTaskToUpdate = action.payload;
+        }
     },
 });
 
@@ -245,6 +250,14 @@ export const getGlobalLoading = (state: RootState): boolean => {
     return state.globalState.globalLoading;
 };
 
+export const getGlobalPlannedTaskToUpdate = (state: RootState): PlannedTask => {
+    if (state?.globalState.globalPlannedTaskToUpdate === undefined) {
+        return INITIAL_STATE.globalPlannedTaskToUpdate;
+    }
+
+    return state.globalState.globalPlannedTaskToUpdate;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -263,5 +276,6 @@ export const {
     setGlobalBlurBackground,
     setShowQuickAddModal,
     setGlobalLoading,
-    resetToDefault
+    resetToDefault,
+    setGlobalPlannedTaskToUpdate
 } = GlobalState.actions;

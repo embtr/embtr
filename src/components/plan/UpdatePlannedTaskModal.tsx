@@ -13,36 +13,30 @@ import {
 } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { PlannedTask } from 'resources/schema';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
 import { SvgUri } from 'react-native-svg';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getGlobalPlannedTaskToUpdate, setGlobalPlannedTaskToUpdate } from 'src/redux/user/GlobalState';
+import { set } from 'lodash';
 
-interface Props {
-    plannedTask: PlannedTask;
-    visible: boolean;
-    skip: Function;
-    edit: Function;
-    complete: Function;
-    update: Function;
-    fail: Function;
-    dismiss: Function;
-    remove: Function;
-}
 
-export const UpdatePlannedTaskModal = ({
-    plannedTask,
-    visible,
-    skip,
-    edit,
-    complete,
-    update,
-    fail,
-    dismiss,
-    remove,
-}: Props) => {
+export const UpdatePlannedTaskModal = () => {
+    const plannedTask = useAppSelector(getGlobalPlannedTaskToUpdate);
+    const dispatch = useAppDispatch();
+
+    const skip = () => {};
+    const edit = () => {};
+    const complete = () => {};
+    const update = () => {};
+    const fail = () => {};
+    const dismiss = () => {
+        dispatch(setGlobalPlannedTaskToUpdate({}));
+    };
+    const remove = () => {};
+
     const { colors } = useTheme();
     const MAX_OPTIONS_HEIGHT = 20 + TIMELINE_CARD_PADDING;
 
@@ -114,13 +108,12 @@ export const UpdatePlannedTaskModal = ({
         setKeyboardFocused(false);
         complete();
         setInputWasFocused(false);
-        
     };
 
     const onUpdateWrapper = () => {
         setMenuVisible(false);
         setKeyboardFocused(false);
-        update(selectedValue ?? 0);
+        //update(selectedValue ?? 0);
         setInputWasFocused(false);
     };
 
@@ -584,7 +577,7 @@ export const UpdatePlannedTaskModal = ({
     );
 
     return (
-        <Modal visible={visible} transparent={true} animationType={'fade'}>
+        <Modal visible={!!plannedTask.title} transparent={true} animationType={'fade'}>
             {/* <View style={{height: "100%", width: 1, backgroundColor: "yellow", zIndex: 100, position: 'absolute', right: 50}}></View> */}
             <Pressable
                 onPress={() => {

@@ -49,6 +49,7 @@ import PlannedDayController, {
     getNextDayKey,
     getTodayKey,
 } from './controller/planning/PlannedDayController';
+import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
