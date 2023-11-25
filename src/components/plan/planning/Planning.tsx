@@ -16,7 +16,7 @@ export const Planning = () => {
         <View>
             <UpdatePlannedTaskModal />
 
-            <View style={{ flex: 1 }}>
+            <View>
                 <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
                     <DayPicker />
                 </View>

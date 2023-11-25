@@ -87,7 +87,26 @@ export const MemoizedPlannableTaskImproved = React.memo(
         return <PlannableTaskImproved plannedTask={plannedTask} />;
     },
     (prevProps, nextProps) => {
-        return prevProps.plannedTask.title === nextProps.plannedTask.title;
+        const prevKey =
+            'plannedDay' +
+            prevProps.plannedTask.plannedDayId +
+            '_plannedTask' +
+            prevProps.plannedTask.id +
+            '_scheduledHabit' +
+            prevProps.plannedTask.scheduledHabitId +
+            '_timeOfDay' +
+            prevProps.plannedTask.timeOfDayId;
+        const nextKey =
+            'plannedDay' +
+            nextProps.plannedTask.plannedDayId +
+            '_plannedTask' +
+            nextProps.plannedTask.id +
+            '_scheduledHabit' +
+            nextProps.plannedTask.scheduledHabitId +
+            '_timeOfDay' +
+            nextProps.plannedTask.timeOfDayId;
+
+        return prevKey === nextKey;
     }
 );
 
@@ -104,68 +123,78 @@ export const PlannableTaskImproved = ({ plannedTask }: Props) => {
 
     const dispatch = useAppDispatch();
 
-    return (
-        <Pressable onPress={() => {
-            dispatch(setGlobalPlannedTaskToUpdate(plannedTask));
-        }}>
-        <View style={styles.container}>
-            <View
-                style={{
-                    width: '3%',
-                    borderTopLeftRadius: 5,
-                    borderBottomLeftRadius: 5,
-                    backgroundColor:
-                        plannedTask?.status === 'FAILED'
-                            ? colors.progress_bar_failed
-                            : 'SKIPPED'
-                            ? colors.trophy_icon
-                            : completedQuantity >= targetQuantity
-                            ? colors.progress_bar_complete
-                            : 'gray',
-                }}
+    const memoizedTimeOfDayImage = React.useMemo(() => {
+        return (
+            <CachedImage
+                uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
+                style={styles.svgIcon}
             />
+        );
+    }, [plannedTask.timeOfDay]);
 
-            <View style={styles.innerContainer}>
-                <View>
-                    <Text style={styles.text} numberOfLines={1}>
-                        {plannedTask.title}
-                    </Text>
+    const memoizedProgressSvg = React.useMemo(() => {
+        return (
+            <ProgressSvg
+                targetQuantity={plannedTask.quantity ?? 1}
+                completedQuantity={plannedTask.completedQuantity ?? 0}
+            />
+        );
+    }, [plannedTask.quantity, plannedTask.completedQuantity]);
+
+    const memoizedHabitIcon = React.useMemo(() => {
+        return <CachedImage uri={plannedTask.iconUrl ?? ''} style={styles.svgIcon} />;
+    }, [plannedTask.iconUrl]);
+
+    return (
+        <Pressable
+            onPress={() => {
+                dispatch(setGlobalPlannedTaskToUpdate(plannedTask));
+            }}
+        >
+            <View style={styles.container}>
+                <View
+                    style={{
+                        width: '3%',
+                        borderTopLeftRadius: 5,
+                        borderBottomLeftRadius: 5,
+                        backgroundColor:
+                            plannedTask?.status === 'FAILED'
+                                ? colors.progress_bar_failed
+                                : 'SKIPPED'
+                                  ? colors.trophy_icon
+                                  : completedQuantity >= targetQuantity
+                                    ? colors.progress_bar_complete
+                                    : 'gray',
+                    }}
+                />
+
+                <View style={styles.innerContainer}>
                     <View>
-                        <Text style={styles.goalText} numberOfLines={1}>
-                            goal: {plannedTask.quantity} {unitPretty}
+                        <Text style={styles.text} numberOfLines={1}>
+                            {plannedTask.title}
                         </Text>
-                        <Text style={styles.completedText} numberOfLines={1}>
-                            completed: {plannedTask.completedQuantity} {unitPretty}
-                        </Text>
+                        <View>
+                            <Text style={styles.goalText} numberOfLines={1}>
+                                goal: {plannedTask.quantity} {unitPretty}
+                            </Text>
+                            <Text style={styles.completedText} numberOfLines={1}>
+                                completed: {plannedTask.completedQuantity} {unitPretty}
+                            </Text>
+                        </View>
                     </View>
-                </View>
 
-                <View style={styles.timeIconContainer}>
-                    <CachedImage
-                        uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
-                        style={styles.svgIcon}
-                    />
+                    <View style={styles.timeIconContainer}>
+                        {memoizedTimeOfDayImage}
 
-                    <View>
-                        <ProgressSvg
-                            targetQuantity={plannedTask.quantity ?? 1}
-                            completedQuantity={plannedTask.completedQuantity ?? 0}
-                        />
+                        <View>
+                            {memoizedProgressSvg}
 
-                        {/* SVG Icon */}
-                        <View style={styles.svgProgress}>
-                            <CachedImage
-                                style={{
-                                    width: 15,
-                                    height: 15,
-                                }}
-                                uri={plannedTask.iconUrl ?? ''}
-                            />
+                            {/* SVG Icon */}
+                            <View style={styles.svgProgress}>{memoizedHabitIcon}</View>
                         </View>
                     </View>
                 </View>
             </View>
-        </View>
-</Pressable>
+        </Pressable>
     );
 };

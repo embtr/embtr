@@ -19,6 +19,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
 import { useTheme } from '../theme/ThemeProvider';
+import { QuickAddModal } from '../home/tabmenu/QuickAddModal';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -125,16 +126,12 @@ export const Today = () => {
 
                 <View style={{ height: '100%', width: '100%' }}>
                     <Banner name="Today" />
-                    <FlatList
-                        keyboardShouldPersistTaps={'always'}
-                        data={TODAY_PAGE_WIDGETS}
-                        showsVerticalScrollIndicator={false}
-                        keyExtractor={(item) => item.toString()}
-                        renderItem={renderItem}
-                        refreshControl={
-                            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                        }
-                    />
+
+                    <TodaysCountdownWidget />
+                    <View style={{ height: 7.5 }} />
+                    <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
+                    <View style={{ height: 7.5 }} />
+                    <PlanningWidget />
                 </View>
             </View>
         </Screen>

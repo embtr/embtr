@@ -1,16 +1,15 @@
 import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
-import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
+import { MemoizedPlannableTaskImproved, PlannableTaskImproved } from '../PlannableTaskImproved';
 import { FlashList } from '@shopify/flash-list';
 import { PlannedTask } from 'resources/schema';
 import { Dimensions, View } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { PlannableTask } from '../PlannableTask';
 
 interface Props {
     onSharePlannedDayResults: Function;
 }
 
-const keyExtractor = (plannedTask: PlannedTask, index: number) => {
+export const keyExtractor = (plannedTask: PlannedTask, index: number) => {
     const key =
         'plannedDay' +
         plannedTask.plannedDayId +
@@ -34,7 +33,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
 
         return (
             <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
-                <MemoizedPlannableTaskImproved plannedTask={item} />
+                <PlannableTaskImproved plannedTask={item} />
                 {/* <PlannableTask
                     plannedDay={plannedDay.data}
                     initialPlannedTask={item}
@@ -44,10 +43,13 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
         );
     };
 
+    console.log("plan day rerenddering!")
+
     return (
+        <View style={{height: 300}}>
         <FlashList
             estimatedFirstItemOffset={0}
-            estimatedItemSize={10}
+            estimatedItemSize={300}
             estimatedListSize={{
                 height: 80 * (plannedDay.data?.plannedTasks?.length ?? 1),
                 width: Dimensions.get('window').width - TIMELINE_CARD_PADDING * 2,
@@ -57,5 +59,7 @@ export const PlanDay = ({ onSharePlannedDayResults }: Props) => {
             keyExtractor={keyExtractor}
             removeClippedSubviews={true}
         />
+
+        </View>
     );
 };

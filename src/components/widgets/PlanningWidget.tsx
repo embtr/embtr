@@ -9,7 +9,7 @@ export const PlanningWidget = () => {
 
     return (
         <WidgetBase>
-            <View style={{ flex: 1 }}>
+            <View>
                 <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
                     Planning
                 </Text>
