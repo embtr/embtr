@@ -11,24 +11,30 @@ import {
 } from 'src/util/constants';
 import { PlannedHabitService } from 'src/service/PlannedHabitService';
 import { SvgUri } from 'react-native-svg';
-import { PlannedDay, PlannedTask } from 'resources/schema';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { PlannedTask } from 'resources/schema';
+import {
+    getRemovalModalPlannedTask,
+    getSelectedDayKey,
+    setRemovalModalPlannedTask,
+} from 'src/redux/user/GlobalState';
+import { Dispatch } from 'react';
+import { AnyAction } from '@reduxjs/toolkit';
+import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 
-interface Props {
-    visible: boolean;
-    onDismiss: (removed: boolean) => void;
-    plannedHabit: PlannedTask;
-    plannedDay: PlannedDay;
-}
+const isLargerScreen = getWindowHeight() > 800;
+const buttonPadding = isLargerScreen ? 3 : 2;
+const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
+const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
 
-export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay }: Props) => {
-    const { colors } = useTheme();
-
+const getBody = (
+    plannedHabit: PlannedTask,
+    dayKey: string,
+    colors: any,
+    onDismiss: (plannedTask?: PlannedTask) => void
+) => {
     const svgUri = plannedHabit.iconUrl ?? '';
-
-    const isLargerScreen = getWindowHeight() > 800;
-    const buttonPadding = isLargerScreen ? 3 : 2;
-    const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
-    const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
 
     const body = (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -111,7 +117,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                         CARD_SHADOW,
                     ]}
                     onPress={() => {
-                        onDismiss(false);
+                        onDismiss();
                     }}
                 >
                     <Text
@@ -140,13 +146,18 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                         CARD_SHADOW,
                     ]}
                     onPress={async () => {
-                        PlannedHabitService.deactivate(
+                        const clone = { ...plannedHabit };
+                        clone.active = false;
+                        onDismiss(clone);
+
+                        await PlannedHabitService.deactivate(
                             {
                                 ...plannedHabit,
                             },
-                            plannedDay
+                            dayKey
                         );
-                        onDismiss(true);
+
+                        PlannedDayController.prefetchPlannedDayData(dayKey);
                     }}
                 >
                     <Text
@@ -162,11 +173,33 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                     </Text>
                 </TouchableOpacity>
 
-
                 <View style={{ height: TIMELINE_CARD_PADDING }} />
             </View>
         </View>
     );
+
+    return body;
+};
+
+export const RemoveHabitModal = () => {
+    const { colors } = useTheme();
+
+    const dayKey = useAppSelector(getSelectedDayKey);
+    const plannedHabitData = useAppSelector(getRemovalModalPlannedTask);
+    const plannedHabit = plannedHabitData.plannedTask;
+    const onUpdateCallback = plannedHabitData.callback;
+
+    const dismiss = (updatedPlannedTask?: PlannedTask) => {
+        dispatch(setRemovalModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
+
+        if (updatedPlannedTask) {
+            onUpdateCallback(updatedPlannedTask);
+        }
+    };
+
+    const dispatch = useAppDispatch();
+
+    const visible = !!plannedHabit.title;
 
     return (
         <ModalBase visible={visible}>
@@ -181,7 +214,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                     }}
                     onPress={(event) => {
                         if (event.target === event.currentTarget) {
-                            onDismiss(false);
+                            dismiss();
                         }
                     }}
                 >
@@ -194,7 +227,7 @@ export const RemoveHabitModal = ({ visible, onDismiss, plannedHabit, plannedDay 
                             justifyContent: 'space-around',
                         }}
                     >
-                        {body}
+                        {getBody(plannedHabit, dayKey, colors, dismiss)}
                     </View>
                 </Pressable>
             </Modal>

@@ -384,7 +384,7 @@ export namespace PlannedDayCustomHooks {
         const dayKey = useAppSelector(getSelectedDayKey);
         const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, dayKey);
 
-        return plannedDay;
+        return {dayKey, plannedDay};
     };
 
     export const useTodaysPlannedDay = () => {

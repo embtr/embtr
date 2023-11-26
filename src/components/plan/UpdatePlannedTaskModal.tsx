@@ -19,37 +19,85 @@ import { Ionicons } from '@expo/vector-icons';
 import { SvgUri } from 'react-native-svg';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getGlobalPlannedTaskToUpdate, setGlobalPlannedTaskToUpdate } from 'src/redux/user/GlobalState';
-import { set } from 'lodash';
+import {
+    getSelectedDayKey,
+    getUpdateModalPlannedTask,
+    setRemovalModalPlannedTask,
+    setUpdateModalPlannedTask,
+} from 'src/redux/user/GlobalState';
+import PlannedTaskController, {
+    DEFAULT_PLANNED_TASK,
+} from 'src/controller/planning/PlannedTaskController';
+import { PlannedTask } from 'resources/schema';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 
+const refreshPlannedDay = async (dayKey: string) => {
+    PlannedDayController.prefetchPlannedDayData(dayKey);
+};
+
+const createUpdatePlannedTask = async (clone: PlannedTask, dayKey: string) => {
+    if (clone.id) {
+        await PlannedTaskController.update(clone);
+    } else {
+        await PlannedTaskController.create(clone, dayKey);
+    }
+};
+
+const fontSize = 14;
+const fontFamily = POPPINS_REGULAR;
+
+const MAX_OPTIONS_HEIGHT = 20 + TIMELINE_CARD_PADDING;
 
 export const UpdatePlannedTaskModal = () => {
-    const plannedTask = useAppSelector(getGlobalPlannedTaskToUpdate);
-    const dispatch = useAppDispatch();
-
-    const skip = () => {};
-    const edit = () => {};
-    const complete = () => {};
-    const update = () => {};
-    const fail = () => {};
-    const dismiss = () => {
-        dispatch(setGlobalPlannedTaskToUpdate({}));
-    };
-    const remove = () => {};
-
     const { colors } = useTheme();
-    const MAX_OPTIONS_HEIGHT = 20 + TIMELINE_CARD_PADDING;
+
+    const plannedTaskData = useAppSelector(getUpdateModalPlannedTask);
+    const plannedTask = plannedTaskData.plannedTask;
+    const onUpdateCallback = plannedTaskData.callback;
+    const dayKey = useAppSelector(getSelectedDayKey);
+    const dispatch = useAppDispatch();
 
     const [menuVisible, setMenuVisible] = React.useState(false);
     const [inputWasFocused, setInputWasFocused] = React.useState(false);
     const [keyboardFocused, setKeyboardFocused] = React.useState(false);
-
+    const [selectedValue, setSelectedValue] = React.useState<number | null>(
+        plannedTask.completedQuantity ?? 0
+    );
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
         new Animated.Value(MAX_OPTIONS_HEIGHT)
     );
 
-    const fontSize = 14;
-    const fontFamily = POPPINS_REGULAR;
+    const dismiss = () => {
+        dispatch(
+            setUpdateModalPlannedTask({
+                plannedTask: DEFAULT_PLANNED_TASK,
+                callback: () => {},
+            })
+        );
+    };
+
+    const remove = () => {
+        dismiss();
+        setTimeout(() => {
+            dispatch(setRemovalModalPlannedTask(plannedTaskData));
+        }, 200);
+    };
+
+    const skip = async () => {
+        const clone = { ...plannedTask };
+        clone.status = 'SKIPPED';
+
+        onUpdateCallback(clone);
+        dismiss();
+
+        await createUpdatePlannedTask(clone, dayKey);
+        refreshPlannedDay(dayKey);
+    };
+
+    const edit = () => {};
+    const complete = () => {};
+    const update = () => {};
+    const fail = () => {};
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
         Animated.timing(viewHeight, {
@@ -116,10 +164,6 @@ export const UpdatePlannedTaskModal = () => {
         //update(selectedValue ?? 0);
         setInputWasFocused(false);
     };
-
-    const [selectedValue, setSelectedValue] = React.useState<number | null>(
-        plannedTask.completedQuantity ?? 0
-    );
 
     const top = getWindowHeight() / 2 - 150;
 

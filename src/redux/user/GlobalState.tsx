@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { PlannedDay, PlannedTask, Unit, User } from 'resources/schema';
+import { PlannedTask, Unit, User } from 'resources/schema';
+import { DEFAULT_UPDATE_MODAL_PLANNED_TASK, UpdateModalPlannedTask } from 'src/model/GlobalState';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -21,7 +22,8 @@ const INITIAL_STATE: GlobalState = {
     globalBlurBackground: false,
     showQuickAddModal: false,
     globalLoading: false,
-    globalPlannedTaskToUpdate: {}, 
+    updateModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
+    removalModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
 };
 
 interface GlobalState {
@@ -41,7 +43,8 @@ interface GlobalState {
     globalBlurBackground: boolean;
     showQuickAddModal: boolean;
     globalLoading: boolean;
-    globalPlannedTaskToUpdate: PlannedTask
+    updateModalPlannedTask: UpdateModalPlannedTask;
+    removalModalPlannedTask: UpdateModalPlannedTask;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -115,10 +118,16 @@ export const GlobalState = createSlice({
             state.currentUser = {};
             state.userProfileImage = '';
             state.selectedDayKey = '';
+            state.globalLoading = false;
+            state.updateModalPlannedTask = DEFAULT_UPDATE_MODAL_PLANNED_TASK;
+            state.removalModalPlannedTask = DEFAULT_UPDATE_MODAL_PLANNED_TASK;
         },
-        setGlobalPlannedTaskToUpdate(state, action) {
-            state.globalPlannedTaskToUpdate = action.payload;
-        }
+        setUpdateModalPlannedTask(state, action) {
+            state.updateModalPlannedTask = action.payload;
+        },
+        setRemovalModalPlannedTask(state, action) {
+            state.removalModalPlannedTask = action.payload;
+        },
     },
 });
 
@@ -250,12 +259,20 @@ export const getGlobalLoading = (state: RootState): boolean => {
     return state.globalState.globalLoading;
 };
 
-export const getGlobalPlannedTaskToUpdate = (state: RootState): PlannedTask => {
-    if (state?.globalState.globalPlannedTaskToUpdate === undefined) {
-        return INITIAL_STATE.globalPlannedTaskToUpdate;
+export const getUpdateModalPlannedTask = (state: RootState): UpdateModalPlannedTask => {
+    if (state?.globalState.updateModalPlannedTask === undefined) {
+        return INITIAL_STATE.updateModalPlannedTask;
     }
 
-    return state.globalState.globalPlannedTaskToUpdate;
+    return state.globalState.updateModalPlannedTask;
+};
+
+export const getRemovalModalPlannedTask = (state: RootState): UpdateModalPlannedTask => {
+    if (state?.globalState.removalModalPlannedTask === undefined) {
+        return INITIAL_STATE.removalModalPlannedTask;
+    }
+
+    return state.globalState.removalModalPlannedTask;
 };
 
 export const {
@@ -277,5 +294,6 @@ export const {
     setShowQuickAddModal,
     setGlobalLoading,
     resetToDefault,
-    setGlobalPlannedTaskToUpdate
+    setUpdateModalPlannedTask,
+    setRemovalModalPlannedTask,
 } = GlobalState.actions;

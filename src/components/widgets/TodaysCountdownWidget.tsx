@@ -13,7 +13,7 @@ export const TodaysCountdownWidget = () => {
 
     return (
         <WidgetBase>
-            <View style={{ flex: 1 }}>
+            <View>
                 <Text style={{ color: colors.text, fontFamily: 'Poppins_500Medium', fontSize: 16 }}>
                     Happy
                     <Text style={{ color: colors.accent_color }}> {dayCapitalized}</Text>!

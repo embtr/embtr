@@ -13,15 +13,17 @@ import { CachedImage } from '../common/images/CachedImage';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { setGlobalPlannedTaskToUpdate } from 'src/redux/user/GlobalState';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 
 interface Props {
-    plannedTask: PlannedTask;
+    initialPlannedTask: PlannedTask;
 }
 
 interface Styles {
     container: ViewStyle;
     innerContainer: ViewStyle;
+    statusContainer: ViewStyle;
     text: TextStyle;
     goalText: TextStyle;
     completedText: TextStyle;
@@ -42,6 +44,11 @@ const generateStyles = (colors: any): Styles => {
             padding: TIMELINE_CARD_PADDING / 2,
             width: '100%',
             flexDirection: 'row',
+        },
+        statusContainer: {
+            width: '3%',
+            borderTopLeftRadius: 5,
+            borderBottomLeftRadius: 5,
         },
         text: {
             color: colors.goal_primary_font,
@@ -83,118 +90,120 @@ const generateStyles = (colors: any): Styles => {
 };
 
 export const MemoizedPlannableTaskImproved = React.memo(
-    ({ plannedTask }: Props) => {
-        return <PlannableTaskImproved plannedTask={plannedTask} />;
+    ({ initialPlannedTask }: Props) => {
+        return <PlannableTaskImproved initialPlannedTask={initialPlannedTask} />;
     },
     (prevProps, nextProps) => {
         const prevKey =
             'plannedDay' +
-            prevProps.plannedTask.plannedDayId +
+            prevProps.initialPlannedTask.plannedDayId +
             '_plannedTask' +
-            prevProps.plannedTask.id +
+            prevProps.initialPlannedTask.id +
             '_scheduledHabit' +
-            prevProps.plannedTask.scheduledHabitId +
+            prevProps.initialPlannedTask.scheduledHabitId +
             '_timeOfDay' +
-            prevProps.plannedTask.timeOfDayId;
+            prevProps.initialPlannedTask.timeOfDayId;
         const nextKey =
             'plannedDay' +
-            nextProps.plannedTask.plannedDayId +
+            nextProps.initialPlannedTask.plannedDayId +
             '_plannedTask' +
-            nextProps.plannedTask.id +
+            nextProps.initialPlannedTask.id +
             '_scheduledHabit' +
-            nextProps.plannedTask.scheduledHabitId +
+            nextProps.initialPlannedTask.scheduledHabitId +
             '_timeOfDay' +
-            nextProps.plannedTask.timeOfDayId;
+            nextProps.initialPlannedTask.timeOfDayId;
 
         return prevKey === nextKey;
     }
 );
 
-export const PlannableTaskImproved = ({ plannedTask }: Props) => {
+const getStatusColor = (colors: any, status?: string) => {
+    switch (status) {
+        case 'FAILED':
+            return colors.progress_bar_failed;
+        case 'SKIPPED':
+            return colors.trophy_icon;
+        case 'COMPLETE':
+            return colors.progress_bar_complete;
+        default:
+            return 'gray';
+    }
+};
+
+export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
+
+    const [plannedTask, setPlannedTask] = React.useState<PlannedTask>(initialPlannedTask);
 
     const unitPretty = plannedTask.unit
         ? UnitUtility.getReadableUnit(plannedTask.unit, plannedTask.quantity ?? 0)
         : '';
 
+    const statusColor = getStatusColor(colors, plannedTask.status);
     const completedQuantity = plannedTask.completedQuantity ?? 0;
     const targetQuantity = plannedTask.quantity ?? 1;
 
     const dispatch = useAppDispatch();
 
-    const memoizedTimeOfDayImage = React.useMemo(() => {
-        return (
-            <CachedImage
-                uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
-                style={styles.svgIcon}
-            />
-        );
-    }, [plannedTask.timeOfDay]);
-
-    const memoizedProgressSvg = React.useMemo(() => {
-        return (
-            <ProgressSvg
-                targetQuantity={plannedTask.quantity ?? 1}
-                completedQuantity={plannedTask.completedQuantity ?? 0}
-            />
-        );
-    }, [plannedTask.quantity, plannedTask.completedQuantity]);
-
-    const memoizedHabitIcon = React.useMemo(() => {
-        return <CachedImage uri={plannedTask.iconUrl ?? ''} style={styles.svgIcon} />;
-    }, [plannedTask.iconUrl]);
+    if (!plannedTask.active) {
+        return <View />;
+    }
 
     return (
-        <Pressable
+        <TouchableOpacity
+            style={styles.container}
             onPress={() => {
-                dispatch(setGlobalPlannedTaskToUpdate(plannedTask));
+                dispatch(
+                    setUpdateModalPlannedTask({
+                        plannedTask: plannedTask,
+                        callback: (plannedTask: PlannedTask) => {
+                            setPlannedTask(plannedTask);
+                        },
+                    })
+                );
             }}
         >
-            <View style={styles.container}>
-                <View
-                    style={{
-                        width: '3%',
-                        borderTopLeftRadius: 5,
-                        borderBottomLeftRadius: 5,
-                        backgroundColor:
-                            plannedTask?.status === 'FAILED'
-                                ? colors.progress_bar_failed
-                                : 'SKIPPED'
-                                  ? colors.trophy_icon
-                                  : completedQuantity >= targetQuantity
-                                    ? colors.progress_bar_complete
-                                    : 'gray',
-                    }}
-                />
+            {/* STATUS INDICATOR */}
+            <View style={[styles.statusContainer, { backgroundColor: statusColor }]} />
 
-                <View style={styles.innerContainer}>
+            <View style={styles.innerContainer}>
+                <View>
+                    <Text style={styles.text} numberOfLines={1}>
+                        {plannedTask.title}
+                    </Text>
                     <View>
-                        <Text style={styles.text} numberOfLines={1}>
-                            {plannedTask.title}
+                        <Text style={styles.goalText} numberOfLines={1}>
+                            goal: {targetQuantity} {unitPretty}
                         </Text>
-                        <View>
-                            <Text style={styles.goalText} numberOfLines={1}>
-                                goal: {plannedTask.quantity} {unitPretty}
-                            </Text>
-                            <Text style={styles.completedText} numberOfLines={1}>
-                                completed: {plannedTask.completedQuantity} {unitPretty}
-                            </Text>
-                        </View>
+                        <Text style={styles.completedText} numberOfLines={1}>
+                            completed: {completedQuantity} {unitPretty}
+                        </Text>
                     </View>
+                </View>
 
-                    <View style={styles.timeIconContainer}>
-                        {memoizedTimeOfDayImage}
+                <View style={styles.timeIconContainer}>
+                    <CachedImage
+                        uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
+                        style={styles.svgIcon}
+                    />
 
-                        <View>
-                            {memoizedProgressSvg}
+                    <View>
+                        <ProgressSvg
+                            targetQuantity={targetQuantity ?? 1}
+                            completedQuantity={completedQuantity ?? 0}
+                        />
 
-                            {/* SVG Icon */}
-                            <View style={styles.svgProgress}>{memoizedHabitIcon}</View>
+                        {/* SVG Icon */}
+                        <View style={styles.svgProgress}>
+                            <CachedImage
+                                uri={plannedTask.iconUrl ?? ''}
+                                style={{ height: 16, width: 16 }}
+                            />
                         </View>
                     </View>
                 </View>
             </View>
-        </Pressable>
+        </TouchableOpacity>
     );
 };

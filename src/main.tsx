@@ -23,11 +23,8 @@ import {
     getCurrentUser,
     resetToDefault,
     setCurrentUser,
-    setGlobalLoading,
-    setSelectedDayKey,
     setTimelineDays,
     setUnits,
-    setUserProfileImage,
 } from 'src/redux/user/GlobalState';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { User as UserModel } from 'resources/schema';
@@ -43,13 +40,7 @@ import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert
 import { AnyAction } from '@reduxjs/toolkit';
 import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
 import { LoadingOverlay } from './components/common/loading/LoadingOverlay';
-import PlannedDayController, {
-    PlannedDayCustomHooks,
-    getDayKey,
-    getNextDayKey,
-    getTodayKey,
-} from './controller/planning/PlannedDayController';
-import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
+import PlannedDayController from './controller/planning/PlannedDayController';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -183,11 +174,8 @@ export const Main = () => {
     LogBox.ignoreAllLogs();
 
     const resetGlobalState = async (userToReset: UserModel) => {
-        dispatch(setUserProfileImage(userToReset.photoUrl));
+        dispatch(resetToDefault());
         dispatch(setCurrentUser(userToReset));
-        dispatch(setGlobalLoading(false));
-        dispatch(setSelectedDayKey(getTodayKey()));
-
         PlannedDayController.prefetchAllPlannedDayData();
     };
 
@@ -225,6 +213,7 @@ export const Main = () => {
     });
 
     const userIsLoggedIn = Object.keys(currentUser ?? {}).length !== 0;
+    console.log("user is logged in", userIsLoggedIn)
 
     React.useEffect(() => {
         if (!user || !userIsLoggedIn) {
@@ -259,7 +248,7 @@ export const Main = () => {
                     <ModalContainingComponent />
                     <QuickAddModal />
                     <ConfettiView />
-                    <DropDownAlert />
+<DropDownAlert />
                     <LoadingOverlay />
                     <NewVersionModal
                         visible={showUpdateAvailableModal}

@@ -7,9 +7,7 @@ import {
     UpdatePlannedTaskRequest,
     UpdatePlannedTaskResponse,
 } from 'resources/types/requests/PlannedTaskTypes';
-import { PlannedDay } from 'resources/schema';
 import { PlannedTask } from 'resources/schema';
-import { Logger } from 'src/util/GeneralUtility';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -25,14 +23,14 @@ export interface PlannedTaskModel {
     modified: Timestamp;
 }
 
-class PlannedTaskController {
-    public static async create(plannedDay: PlannedDay, plannedTask: PlannedTask) {
-        if (!plannedDay.dayKey) {
-            Logger.log('no day key found');
-            return;
-        }
+export const DEFAULT_PLANNED_TASK: PlannedTask = {
+    completedQuantity: 0,
+    quantity: 0,
+};
 
-        return await this.createWithDayKey(plannedTask, plannedDay.dayKey);
+class PlannedTaskController {
+    public static async create(plannedTask: PlannedTask, dayKey: string) {
+        return await this.createWithDayKey(plannedTask, dayKey);
     }
 
     public static async createWithDayKey(plannedTask: PlannedTask, dayKey: string) {

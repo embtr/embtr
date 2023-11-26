@@ -1,14 +1,15 @@
+import { da } from 'date-fns/locale';
 import { PlannedDay, PlannedTask } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 
 export class PlannedHabitService {
-    public static async deactivate(plannedHabit: PlannedTask, plannedDay: PlannedDay) {
+    public static async deactivate(plannedHabit: PlannedTask, dayKey: string) {
         plannedHabit.active = false;
 
         if (plannedHabit.id) {
             await PlannedTaskController.update(plannedHabit);
         } else {
-            await PlannedTaskController.create(plannedDay, plannedHabit);
+            await PlannedTaskController.create(plannedHabit, dayKey);
         }
     }
 }
