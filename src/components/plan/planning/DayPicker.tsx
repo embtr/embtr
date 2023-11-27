@@ -10,7 +10,7 @@ import { setSelectedDayKey } from 'src/redux/user/GlobalState';
  * I had to use an imperial handle to access the setSelected and clearSelected methods.
  * This allows me to access several refs from the DayPickerElement component.
  * It also allows me to avoid rendering ontouched elements, including this parent element.
-*/ 
+ */
 
 const SCROLL_CENTER = 0.5;
 
@@ -47,6 +47,9 @@ export const DayPicker = () => {
     };
 
     const onSelectionChange = (day: number) => {
+        const newDayKey = getDayKey(day + 1);
+        dispatch(setSelectedDayKey(newDayKey));
+
         scrollToSelected(day);
 
         const previousRef = itemRefs.current[previouslySelectedRef.current];
@@ -56,9 +59,6 @@ export const DayPicker = () => {
         ref.current.setSelected();
 
         previouslySelectedRef.current = day;
-
-        const newDayKey = getDayKey(day + 1);
-        dispatch(setSelectedDayKey(newDayKey));
     };
 
     const renderDayPickerElement = ({ item, index }: { item: number; index: number }) => {

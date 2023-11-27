@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, ListRenderItemInfo, RefreshControl } from 'react-native';
+import { View, Text, ListRenderItemInfo } from 'react-native';
 import { WidgetType } from 'resources/schema';
 import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
@@ -10,7 +10,6 @@ import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { TodaysActivitiesWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
-import { ConfettiView } from '../common/animated_view/ConfettiView';
 import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
 import { PlanningWidget } from '../widgets/PlanningWidget';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
@@ -19,7 +18,6 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
 import { useTheme } from '../theme/ThemeProvider';
-import { QuickAddModal } from '../home/tabmenu/QuickAddModal';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -131,7 +129,9 @@ export const Today = () => {
                     <View style={{ height: 7.5 }} />
                     <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
                     <View style={{ height: 7.5 }} />
-                    <PlanningWidget />
+                    <View style={{ flex: 1 }}>
+                        <PlanningWidget />
+                    </View>
                 </View>
             </View>
         </Screen>

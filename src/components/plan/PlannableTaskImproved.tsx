@@ -15,6 +15,7 @@ import { ProgressSvg } from './task/progress/ProgressSvg';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
+import { Image } from 'react-native';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -183,8 +184,8 @@ export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
                 </View>
 
                 <View style={styles.timeIconContainer}>
-                    <CachedImage
-                        uri={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
+                    <Image
+                        source={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
                         style={styles.svgIcon}
                     />
 
@@ -194,10 +195,9 @@ export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
                             completedQuantity={completedQuantity ?? 0}
                         />
 
-                        {/* SVG Icon */}
                         <View style={styles.svgProgress}>
-                            <CachedImage
-                                uri={plannedTask.iconUrl ?? ''}
+                            <Image
+                                source={require('assets/habit/trophy.png')}
                                 style={{ height: 16, width: 16 }}
                             />
                         </View>

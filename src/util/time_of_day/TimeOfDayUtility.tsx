@@ -1,14 +1,10 @@
 import { TimeOfDay } from 'resources/schema';
 
 export namespace TimeOfDayUtility {
-    export const MORNING_ICON =
-        'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/assets%2Ftime_of_day%2Fmorning.svg?alt=media';
-    export const AFTERNOON_ICON =
-        'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/assets%2Ftime_of_day%2Fafternoon.svg?alt=media';
-    export const EVENING_ICON =
-        'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/assets%2Ftime_of_day%2Fevening.svg?alt=media';
-    export const NIGHT_ICON =
-        'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/assets%2Ftime_of_day%2Fnight.svg?alt=media';
+    export const MORNING_ICON = require('assets/time_of_day/morning.png');
+    export const AFTERNOON_ICON = require('assets/time_of_day/afternoon.png');
+    export const EVENING_ICON = require('assets/time_of_day/evening.png');
+    export const NIGHT_ICON = require('assets/time_of_day/night.png');
 
     export function getTimeOfDayPretty(timeOfDay?: TimeOfDay): string {
         if (!timeOfDay) {

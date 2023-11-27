@@ -5,7 +5,6 @@ import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedTask } from 'resources/schema';
 import { FlashList } from '@shopify/flash-list';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { set } from 'lodash';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key =
@@ -46,16 +45,18 @@ export const PlanDay = () => {
     }, [plannedDay.data]);
 
     const renderItem = ({ item }: { item: PlannedTask }) => (
-        <MemoizedPlannableTaskImproved initialPlannedTask={item} key={keyExtractor(item)} />
+        <View style={{paddingBottom: TIMELINE_CARD_PADDING / 2}}>
+            <MemoizedPlannableTaskImproved initialPlannedTask={item} />
+        </View>
     );
 
     return (
         <View style={{ height: 300, width: '100%' }}>
             <FlashList
-                estimatedFirstItemOffset={TIMELINE_CARD_PADDING}
-                estimatedItemSize={300}
+                estimatedFirstItemOffset={0}
+                estimatedItemSize={61}
                 estimatedListSize={{
-                    height: 80 * Math.min(elements.length ?? 1, 5),
+                    height: 300,
                     width: Dimensions.get('window').width - TIMELINE_CARD_PADDING * 2,
                 }}
                 data={elements}

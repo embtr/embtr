@@ -213,7 +213,6 @@ export const Main = () => {
     });
 
     const userIsLoggedIn = Object.keys(currentUser ?? {}).length !== 0;
-    console.log("user is logged in", userIsLoggedIn)
 
     React.useEffect(() => {
         if (!user || !userIsLoggedIn) {
@@ -248,7 +247,7 @@ export const Main = () => {
                     <ModalContainingComponent />
                     <QuickAddModal />
                     <ConfettiView />
-<DropDownAlert />
+                    <DropDownAlert />
                     <LoadingOverlay />
                     <NewVersionModal
                         visible={showUpdateAvailableModal}

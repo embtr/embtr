@@ -11,7 +11,7 @@ export const Countdown = () => {
     useEffect(() => {
         const timerId = setInterval(() => {
             setDate(new Date());
-        }, 1000);
+        }, 500);
 
         return () => clearInterval(timerId);
     }, []);
