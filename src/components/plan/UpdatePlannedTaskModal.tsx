@@ -94,9 +94,31 @@ export const UpdatePlannedTaskModal = () => {
         refreshPlannedDay(dayKey);
     };
 
-    const edit = () => {};
-    const complete = () => {};
-    const update = () => {};
+    const complete = async () => {
+        const clone = { ...plannedTask };
+        clone.status = 'COMPLETE';
+        clone.completedQuantity = clone.quantity;
+
+        onUpdateCallback(clone);
+        dismiss();
+
+        await createUpdatePlannedTask(clone, dayKey);
+        refreshPlannedDay(dayKey);
+    };
+
+    const update = async () => {
+        const clone = { ...plannedTask };
+        clone.completedQuantity = selectedValue ?? 0;
+        clone.status = clone.completedQuantity >= (clone.quantity ?? 0) ? 'COMPLETE' : 'INCOMPLETE';
+
+        onUpdateCallback(clone);
+        dismiss();
+
+        await createUpdatePlannedTask(clone, dayKey);
+        refreshPlannedDay(dayKey);
+    };
+
+    const edit = async () => {};
     const fail = () => {};
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
@@ -161,7 +183,7 @@ export const UpdatePlannedTaskModal = () => {
     const onUpdateWrapper = () => {
         setMenuVisible(false);
         setKeyboardFocused(false);
-        //update(selectedValue ?? 0);
+        update();
         setInputWasFocused(false);
     };
 
