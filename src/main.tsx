@@ -1,5 +1,5 @@
 import React, { Dispatch } from 'react';
-import { LinkingOptions, NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, LinkingOptions, NavigationContainer } from '@react-navigation/native';
 import { registerAuthStateListener } from 'src/session/CurrentUserProvider';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { RootStackParamList } from 'src/navigation/RootStackParamList';
@@ -242,7 +242,7 @@ export const Main = () => {
     return (
         <Screen>
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
-                <NavigationContainer linking={linking} fallback={<LoadingPage />}>
+                <NavigationContainer theme={DarkTheme} linking={linking} fallback={<LoadingPage />}>
                     {/* TOP LEVEL COMPONENTS */}
                     <ModalContainingComponent />
                     <QuickAddModal />

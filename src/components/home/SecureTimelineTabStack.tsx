@@ -11,7 +11,6 @@ import { EditDailyResultDetails } from '../common/timeline/EditDailyResultDetail
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
-import { AddHabitCategories } from '../plan/habit/AddHabitCategories';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
 
