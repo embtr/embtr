@@ -42,7 +42,7 @@ export const EditHabitModal = () => {
     const buttonPadding = isLargerScreen ? 3 : 2;
     const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
     const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
-    const date = dayKey ? getDateFromDayKey(dayKey) : new Date();
+    const date = dayKey && typeof dayKey === 'string' ? getDateFromDayKey(dayKey) : new Date();
     const fullDatePretty = getDatePrettyFullMonth(date);
 
     const svgUri = plannedHabit.iconUrl;
