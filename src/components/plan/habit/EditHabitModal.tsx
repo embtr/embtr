@@ -10,38 +10,54 @@ import {
     TIMELINE_CARD_PADDING,
 } from 'src/util/constants';
 import { SvgUri } from 'react-native-svg';
-import { PlannedDay, PlannedTask } from 'resources/schema';
 import { getDatePrettyFullMonth } from 'src/util/DateUtility';
-import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import {
+    getEditModalPlannedTask,
+    getSelectedDayKey,
+    setEditModalPlannedTask,
+    setUpdateModalPlannedTask,
+} from 'src/redux/user/GlobalState';
+import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
+import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 
-interface Props {
-    visible: boolean;
-    editPlannedHabit: (id: number) => void;
-    editNewPlannedHabit: (newPlannedHabit: NewPlannedHabitData) => void;
-    editScheduledHabit: (id: number) => void;
-    dismiss: () => void;
-    plannedHabit: PlannedTask;
-    plannedDay: PlannedDay;
-}
-
-export const EditHabitModal = ({
-    visible,
-    editPlannedHabit,
-    editNewPlannedHabit,
-    editScheduledHabit,
-    dismiss,
-    plannedHabit,
-    plannedDay,
-}: Props) => {
+export const EditHabitModal = () => {
     const { colors } = useTheme();
+    const dispatch = useAppDispatch();
 
-    const svgUri = plannedHabit.iconUrl ?? '';
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const dayKey = useAppSelector(getSelectedDayKey);
+    const plannedHabitData = useAppSelector(getEditModalPlannedTask);
+    const plannedHabit = plannedHabitData.plannedTask;
+
+    const dismiss = () => {
+        dispatch(setEditModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
+    };
 
     const isLargerScreen = getWindowHeight() > 800;
     const buttonPadding = isLargerScreen ? 3 : 2;
     const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
     const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
-    const fullDatePretty = getDatePrettyFullMonth(plannedDay.date ?? new Date());
+    const date = dayKey ? getDateFromDayKey(dayKey) : new Date();
+    const fullDatePretty = getDatePrettyFullMonth(date);
+
+    const svgUri = plannedHabit.iconUrl;
+
+    const navigateToEditPlannedHabit = (id: number) => {};
+    const navigateToEditNewPlannedHabit = () => {};
+
+    const navigateToEditScheduledHabit = (id: number) => {
+        dismiss();
+
+        setTimeout(() => {
+            navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
+                scheduledHabitId: id,
+            });
+        }, 0);
+    };
 
     const body = (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -62,7 +78,7 @@ export const EditHabitModal = ({
                     }}
                 >
                     <View style={{ height: 25, width: 25 }}>
-                        <SvgUri width={25} height={25} uri={svgUri} />
+                        {svgUri && <SvgUri width={25} height={25} uri={svgUri} />}
                     </View>
                     <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
                     <View style={{ flex: 1 }}>
@@ -160,15 +176,15 @@ export const EditHabitModal = ({
                     onPress={async () => {
                         dismiss();
                         if (plannedHabit.id) {
-                            editPlannedHabit(plannedHabit.id);
-                        } else if (plannedHabit.scheduledHabitId && plannedDay.dayKey) {
-                            const newPlannedHabitData: NewPlannedHabitData = {
-                                timeOfDay: plannedHabit.timeOfDay,
-                                scheduledHabitId: plannedHabit.scheduledHabitId,
-                                originalTimeOfDayId: plannedHabit.originalTimeOfDayId,
-                                dayKey: plannedDay.dayKey,
-                            };
-                            editNewPlannedHabit(newPlannedHabitData);
+                            navigateToEditPlannedHabit(plannedHabit.id);
+                        // } else if (plannedHabit.scheduledHabitId && plannedDay.dayKey) {
+                        //     const newPlannedHabitData: NewPlannedHabitData = {
+                        //         timeOfDay: plannedHabit.timeOfDay,
+                        //         scheduledHabitId: plannedHabit.scheduledHabitId,
+                        //         originalTimeOfDayId: plannedHabit.originalTimeOfDayId,
+                        //         dayKey: plannedDay.dayKey,
+                        //     };
+                        //     navigateToEditNewPlannedHabit(newPlannedHabitData);
                         }
                     }}
                 >
@@ -193,7 +209,7 @@ export const EditHabitModal = ({
                         borderRadius: 6,
                     }}
                     onPress={() => {
-                        editScheduledHabit(plannedHabit.scheduledHabitId ?? 0);
+                        navigateToEditScheduledHabit(plannedHabit.scheduledHabitId ?? 0);
                     }}
                 >
                     <Text
@@ -212,6 +228,8 @@ export const EditHabitModal = ({
             </View>
         </View>
     );
+
+    const visible = !!plannedHabitData.plannedTask.title;
 
     return (
         <ModalBase visible={visible}>

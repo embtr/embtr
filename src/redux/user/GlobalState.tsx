@@ -24,6 +24,7 @@ const INITIAL_STATE: GlobalState = {
     globalLoading: false,
     updateModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     removalModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
+    editModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
 };
 
 interface GlobalState {
@@ -45,6 +46,7 @@ interface GlobalState {
     globalLoading: boolean;
     updateModalPlannedTask: UpdateModalPlannedTask;
     removalModalPlannedTask: UpdateModalPlannedTask;
+    editModalPlannedTask: UpdateModalPlannedTask;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -128,6 +130,9 @@ export const GlobalState = createSlice({
         setRemovalModalPlannedTask(state, action) {
             state.removalModalPlannedTask = action.payload;
         },
+        setEditModalPlannedTask(state, action) {
+            state.editModalPlannedTask = action.payload;
+        }
     },
 });
 
@@ -275,6 +280,14 @@ export const getRemovalModalPlannedTask = (state: RootState): UpdateModalPlanned
     return state.globalState.removalModalPlannedTask;
 };
 
+export const getEditModalPlannedTask = (state: RootState): UpdateModalPlannedTask => {
+    if (state?.globalState.editModalPlannedTask === undefined) {
+        return INITIAL_STATE.editModalPlannedTask;
+    }
+
+    return state.globalState.editModalPlannedTask;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -296,4 +309,5 @@ export const {
     resetToDefault,
     setUpdateModalPlannedTask,
     setRemovalModalPlannedTask,
+    setEditModalPlannedTask,
 } = GlobalState.actions;

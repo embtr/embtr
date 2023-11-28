@@ -37,28 +37,28 @@ export const PlanDay = () => {
 
         setElements(plannedDay.data.plannedTasks.slice(0, 7));
 
-        requestAnimationFrame(() => {
+        const id = requestAnimationFrame(() => {
             if (plannedDay.data?.plannedTasks) {
                 setElements(plannedDay.data.plannedTasks);
             }
         });
+
+        return () => {
+            cancelAnimationFrame(id);
+        };
     }, [plannedDay.data]);
 
     const renderItem = ({ item }: { item: PlannedTask }) => (
-        <View style={{paddingBottom: TIMELINE_CARD_PADDING / 2}}>
+        <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
             <MemoizedPlannableTaskImproved initialPlannedTask={item} />
         </View>
     );
 
     return (
-        <View style={{ height: 300, width: '100%' }}>
+        <View style={{ height: 400, width: '100%' }}>
             <FlashList
                 estimatedFirstItemOffset={0}
                 estimatedItemSize={61}
-                estimatedListSize={{
-                    height: 300,
-                    width: Dimensions.get('window').width - TIMELINE_CARD_PADDING * 2,
-                }}
                 data={elements}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}

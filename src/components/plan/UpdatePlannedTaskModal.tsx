@@ -22,6 +22,7 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getSelectedDayKey,
     getUpdateModalPlannedTask,
+    setEditModalPlannedTask,
     setRemovalModalPlannedTask,
     setUpdateModalPlannedTask,
 } from 'src/redux/user/GlobalState';
@@ -30,6 +31,7 @@ import PlannedTaskController, {
 } from 'src/controller/planning/PlannedTaskController';
 import { PlannedTask } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 
 const refreshPlannedDay = async (dayKey: string) => {
     PlannedDayController.prefetchPlannedDayData(dayKey);
@@ -68,18 +70,20 @@ export const UpdatePlannedTaskModal = () => {
     );
 
     const dismiss = () => {
-        dispatch(
-            setUpdateModalPlannedTask({
-                plannedTask: DEFAULT_PLANNED_TASK,
-                callback: () => {},
-            })
-        );
+        dispatch(setUpdateModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
     };
 
     const remove = () => {
         dismiss();
         setTimeout(() => {
             dispatch(setRemovalModalPlannedTask(plannedTaskData));
+        }, 200);
+    };
+
+    const edit = async () => {
+        dismiss();
+        setTimeout(() => {
+            dispatch(setEditModalPlannedTask(plannedTaskData));
         }, 200);
     };
 
@@ -118,7 +122,6 @@ export const UpdatePlannedTaskModal = () => {
         refreshPlannedDay(dayKey);
     };
 
-    const edit = async () => {};
     const fail = () => {};
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
