@@ -23,6 +23,7 @@ import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 
 export const EditHabitModal = () => {
     const { colors } = useTheme();
@@ -46,8 +47,24 @@ export const EditHabitModal = () => {
 
     const svgUri = plannedHabit.iconUrl;
 
-    const navigateToEditPlannedHabit = (id: number) => {};
-    const navigateToEditNewPlannedHabit = () => {};
+    const navigateToEditPlannedHabit = (id: number) => {
+        dismiss();
+
+        setTimeout(() => {
+            navigation.navigate(Routes.EDIT_PLANNED_HABIT, {
+                plannedTaskId: id,
+            });
+        }, 0);
+    };
+    const navigateToEditNewPlannedHabit = (data: NewPlannedHabitData) => {
+        dismiss();
+
+        setTimeout(() => {
+            navigation.navigate(Routes.EDIT_PLANNED_HABIT, {
+                newPlannedHabitData: data,
+            });
+        }, 0);
+    };
 
     const navigateToEditScheduledHabit = (id: number) => {
         dismiss();
@@ -173,18 +190,17 @@ export const EditHabitModal = () => {
                         },
                         CARD_SHADOW,
                     ]}
-                    onPress={async () => {
-                        dismiss();
+                    onPress={() => {
                         if (plannedHabit.id) {
                             navigateToEditPlannedHabit(plannedHabit.id);
-                        // } else if (plannedHabit.scheduledHabitId && plannedDay.dayKey) {
-                        //     const newPlannedHabitData: NewPlannedHabitData = {
-                        //         timeOfDay: plannedHabit.timeOfDay,
-                        //         scheduledHabitId: plannedHabit.scheduledHabitId,
-                        //         originalTimeOfDayId: plannedHabit.originalTimeOfDayId,
-                        //         dayKey: plannedDay.dayKey,
-                        //     };
-                        //     navigateToEditNewPlannedHabit(newPlannedHabitData);
+                        } else if (plannedHabit.scheduledHabitId && dayKey) {
+                            const newPlannedHabitData: NewPlannedHabitData = {
+                                timeOfDay: plannedHabit.timeOfDay,
+                                scheduledHabitId: plannedHabit.scheduledHabitId,
+                                originalTimeOfDayId: plannedHabit.originalTimeOfDayId,
+                                dayKey: dayKey,
+                            };
+                            navigateToEditNewPlannedHabit(newPlannedHabitData);
                         }
                     }}
                 >
