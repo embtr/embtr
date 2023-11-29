@@ -10,6 +10,7 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
+import { OptimalImageData } from '../images/OptimalImage';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -76,6 +77,11 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
 
     const statText = `${stats} ${units}`;
 
+    const optimalImageData: OptimalImageData = {
+        remoteImageUrl: plannedTask.remoteImageUrl,
+    };
+
+
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{}}>{icon}</View>
@@ -93,9 +99,9 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                         {plannedTask?.title}{' '}
                     </Text>
                     <View style={{ paddingLeft: 2.5 }}>
-                        {plannedTask.iconUrl && (
+                        {plannedTask.remoteImageUrl && (
                             <HabitIcon
-                                iconUrl={plannedTask.iconUrl}
+                                optimalImageData={optimalImageData}
                                 size={15}
                                 color={colors.tab_selected}
                             />

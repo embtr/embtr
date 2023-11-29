@@ -32,6 +32,7 @@ import PlannedTaskController, {
 import { PlannedTask } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
+import { LocalImageRepo } from '../common/images/LocalImageRepo';
 
 const refreshPlannedDay = async (dayKey: string) => {
     PlannedDayController.prefetchPlannedDayData(dayKey);
@@ -211,7 +212,7 @@ export const UpdatePlannedTaskModal = () => {
                 }}
             >
                 <View style={{ width: 20, height: 20 }}>
-                    <SvgUri width={20} height={20} uri={plannedTask.iconUrl ?? ''} />
+                    <SvgUri width={20} height={20} uri={plannedTask.remoteImageUrl ?? ''} />
                 </View>
                 <View style={{ flex: 1 }}>
                     <Text

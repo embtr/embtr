@@ -16,7 +16,6 @@ import {
     getEditModalPlannedTask,
     getSelectedDayKey,
     setEditModalPlannedTask,
-    setUpdateModalPlannedTask,
 } from 'src/redux/user/GlobalState';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
@@ -45,7 +44,7 @@ export const EditHabitModal = () => {
     const date = dayKey && typeof dayKey === 'string' ? getDateFromDayKey(dayKey) : new Date();
     const fullDatePretty = getDatePrettyFullMonth(date);
 
-    const svgUri = plannedHabit.iconUrl;
+    const svgUri = '';
 
     const navigateToEditPlannedHabit = (id: number) => {
         dismiss();

@@ -1,16 +1,11 @@
-import { View } from 'react-native';
-import { SvgUri } from 'react-native-svg';
+import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 
 interface Props {
-    iconUrl: string;
+    optimalImageData: OptimalImageData;
     size: number;
     color: string;
 }
 
-export const HabitIcon = ({ iconUrl, size, color }: Props) => {
-    return (
-        <View>
-            <SvgUri width={size} height={size} uri={iconUrl} />
-        </View>
-    );
+export const HabitIcon = ({ optimalImageData, size, color }: Props) => {
+    return <OptimalImage data={optimalImageData} style={{ height: size, width: size }} />;
 };

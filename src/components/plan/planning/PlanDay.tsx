@@ -3,8 +3,9 @@ import { Dimensions, View } from 'react-native';
 import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedTask } from 'resources/schema';
-import { FlashList } from '@shopify/flash-list';
+//import { FlashList } from '@shopify/flash-list';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { FlatList } from 'react-native-gesture-handler';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key =
@@ -56,9 +57,9 @@ export const PlanDay = () => {
 
     return (
         <View style={{ height: 400, width: '100%' }}>
-            <FlashList
-                estimatedFirstItemOffset={0}
-                estimatedItemSize={61}
+            <FlatList
+                //estimatedFirstItemOffset={0}
+                //estimatedItemSize={61}
                 data={elements}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}

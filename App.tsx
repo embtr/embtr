@@ -10,6 +10,10 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
+/*
+ * "ABANDON ALL HOPE YE WHO ENTER HERE" - loganmbutler - 2023-11-29
+ */
+
 export default function App() {
     return (
         <React.StrictMode>

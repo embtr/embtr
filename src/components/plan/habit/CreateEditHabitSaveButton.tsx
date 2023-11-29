@@ -44,7 +44,8 @@ export const CreateEditHabitSaveButton = ({
         quantity,
         completedQuantity,
         unit,
-        iconUrl,
+        remoteImageUrl,
+        localImage,
         timeOfDayEnabled,
         repeatingScheduleEnabled,
         detailsEnabled,
@@ -64,7 +65,8 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity,
             completedQuantity: completedQuantity,
-            iconUrl: iconUrl,
+            remoteImageUrl: remoteImageUrl,
+            localImage: localImage,
         };
 
         if (unit) {
@@ -85,7 +87,8 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity,
             completedQuantity: completedQuantity,
-            iconUrl: iconUrl,
+            remoteImageUrl: remoteImageUrl,
+            localImage: localImage,
         };
 
         if (unit) {

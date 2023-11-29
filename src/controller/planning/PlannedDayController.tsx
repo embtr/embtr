@@ -17,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { current } from '@reduxjs/toolkit';
 
 export interface PlannedDay {
     id?: string;
@@ -384,7 +385,7 @@ export namespace PlannedDayCustomHooks {
         const dayKey = useAppSelector(getSelectedDayKey);
         const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, dayKey);
 
-        return {dayKey, plannedDay};
+        return { dayKey, plannedDay };
     };
 
     export const useTodaysPlannedDay = () => {

@@ -6,6 +6,7 @@ import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { AddHabitElement } from './AddHabitElement';
+import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 
 export const AddHabitCategory = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -15,14 +16,23 @@ export const AddHabitCategory = () => {
     const isCustomHabits = route.params.isCustomHabits;
 
     const createCreateCustomHabitOption = () => {
+        const createOptionOptimalImage: OptimalImageData = {
+            remoteImageUrl:
+                'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fadd.svg?alt=media',
+        };
         return createOption(
-            'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fadd.svg?alt=media',
+            createOptionOptimalImage,
             'Create A New Custom Habit',
             'Create a habit to start working towards your goals!'
         );
     };
 
-    const createOption = (icon: string, title: string, description: string, taskId?: number) => {
+    const createOption = (
+        optimalImageData: OptimalImageData,
+        title: string,
+        description: string,
+        taskId?: number
+    ) => {
         const isCreateCustomHabit = !taskId;
 
         return (
@@ -35,7 +45,11 @@ export const AddHabitCategory = () => {
                         });
                     }}
                 >
-                    <AddHabitElement imageUrl={icon} name={title} description={description} />
+                    <AddHabitElement
+                        optimalImageData={optimalImageData}
+                        name={title}
+                        description={description}
+                    />
                 </Pressable>
             </View>
         );
@@ -47,8 +61,13 @@ export const AddHabitCategory = () => {
     }
 
     habitCategory?.tasks?.forEach((task) => {
+        const optimalImageData: OptimalImageData = {
+            localImage: task.localImage,
+            remoteImageUrl: task.remoteImageUrl,
+        };
+
         elements.push(
-            createOption(task.iconUrl ?? '', task.title ?? '', task.description ?? '', task.id)
+            createOption(optimalImageData, task.title ?? '', task.description ?? '', task.id)
         );
     });
 
@@ -60,6 +79,7 @@ export const AddHabitCategory = () => {
                     leftRoute="BACK"
                     leftIcon={'arrow-back'}
                 />
+
                 <View>{elements}</View>
             </View>
         </Screen>

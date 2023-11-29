@@ -4,6 +4,7 @@ import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 
 interface Props {
     habitCategory: HabitCategory;
@@ -24,10 +25,14 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
         });
     };
 
+    const optimalImageData: OptimalImageData = {
+        remoteImageUrl: habitCategory.remoteImageUrl,
+    };
+
     return (
         <Pressable onPress={navigateToAddHabitCategory}>
             <AddHabitElement
-                imageUrl={habitCategory.imageUrl ?? ''}
+                optimalImageData={optimalImageData}
                 name={habitCategory.name ?? ''}
                 description={habitCategory.description ?? ''}
                 isCustomHabits={isCustomHabits}

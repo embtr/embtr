@@ -9,13 +9,13 @@ import {
 import { useTheme } from '../theme/ThemeProvider';
 import { UnitUtility } from 'src/util/UnitUtility';
 import React from 'react';
-import { CachedImage } from '../common/images/CachedImage';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
+import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -151,6 +151,11 @@ export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
         return <View />;
     }
 
+    const habitIconImage: OptimalImageData = {
+        remoteImageUrl: plannedTask.remoteImageUrl,
+        localImage: plannedTask.localImage,
+    };
+
     return (
         <TouchableOpacity
             style={styles.container}
@@ -196,10 +201,7 @@ export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
                         />
 
                         <View style={styles.svgProgress}>
-                            <Image
-                                source={require('assets/habit/trophy.png')}
-                                style={{ height: 16, width: 16 }}
-                            />
+                            <OptimalImage data={habitIconImage} style={{ height: 16, width: 16 }} />
                         </View>
                     </View>
                 </View>

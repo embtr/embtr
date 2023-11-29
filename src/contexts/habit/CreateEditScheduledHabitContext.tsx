@@ -37,7 +37,8 @@ export const getEditMode = (
 };
 
 interface CreateEditScheduledHabitType {
-    iconUrl: string;
+    remoteImageUrl: string;
+    localImage: string;
     title: string;
     description: string;
     startDate?: Date;
@@ -48,7 +49,8 @@ interface CreateEditScheduledHabitType {
     completedQuantity?: number;
     unit?: Unit;
 
-    setIcon: (iconUrl: string) => void;
+    setRemoteImageUrl: (remoteImageUrl: string) => void;
+    setLocalImage: (localImage: string) => void;
     setTitle: (title: string) => void;
     setDescription: (description: string) => void;
     setStartDate: (startDate: Date) => void;
@@ -109,7 +111,8 @@ export const CreateEditScheduledHabitProvider = ({
         Number(newPlannedHabitData?.scheduledHabitId)
     );
 
-    const [icon, setIcon] = React.useState('');
+    const [remoteImageUrl, setRemoteImageUrl] = React.useState('');
+    const [localImage, setLocalImage] = React.useState('');
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [startDate, setStartDate] = React.useState<Date | undefined>(undefined);
@@ -133,7 +136,8 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (!isCreateCustomHabit && habit.data) {
-            setIcon(habit.data.iconUrl ?? '');
+            setRemoteImageUrl(habit.data.remoteImageUrl ?? '');
+            setLocalImage(habit.data.localImage ?? '');
             setTitle(habit.data.title ?? '');
             setDescription(habit.data.description ?? '');
             setDaysOfWeek([]);
@@ -149,7 +153,8 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (scheduledHabit.data) {
-            setIcon(scheduledHabit.data.task?.iconUrl ?? '');
+            setRemoteImageUrl(scheduledHabit.data.task?.remoteImageUrl ?? '');
+            setLocalImage(scheduledHabit.data.task?.localImage ?? '');
             setTitle(scheduledHabit.data.task?.title ?? '');
             setDescription(scheduledHabit.data.description ?? '');
             setStartDate(scheduledHabit.data.startDate ?? undefined);
@@ -173,7 +178,8 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (newPlannedHabitScheduledHabit.data) {
-            setIcon(newPlannedHabitScheduledHabit.data.task?.iconUrl ?? '');
+            setRemoteImageUrl(newPlannedHabitScheduledHabit.data.task?.remoteImageUrl ?? '');
+            setLocalImage(newPlannedHabitScheduledHabit.data.task?.localImage ?? '');
             setTitle(newPlannedHabitScheduledHabit.data.task?.title ?? '');
             setDescription(newPlannedHabitScheduledHabit.data.description ?? '');
             setStartDate(newPlannedHabitScheduledHabit.data.startDate ?? undefined);
@@ -200,7 +206,8 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (plannedHabit.data) {
-            setIcon(plannedHabit.data.iconUrl ?? '');
+            setRemoteImageUrl(plannedHabit.data.remoteImageUrl ?? '');
+            setLocalImage(plannedHabit.data.localImage ?? '');
             setTitle(plannedHabit.data.title ?? '');
             setDescription(plannedHabit.data.description ?? '');
             setDaysOfWeek([]);
@@ -217,7 +224,8 @@ export const CreateEditScheduledHabitProvider = ({
     }, [plannedHabit.data]);
 
     const contextValue: CreateEditScheduledHabitType = {
-        iconUrl: icon,
+        remoteImageUrl: remoteImageUrl,
+        localImage: localImage,
         title: title,
         description: description,
         startDate: startDate,
@@ -227,7 +235,8 @@ export const CreateEditScheduledHabitProvider = ({
         quantity: quantity,
         completedQuantity: completedQuantity,
         unit: unit,
-        setIcon: setIcon,
+        setRemoteImageUrl: setRemoteImageUrl,
+        setLocalImage: setLocalImage,
         setTitle: setTitle,
         setDescription: setDescription,
         setStartDate: setStartDate,

@@ -22,6 +22,7 @@ import { Dispatch } from 'react';
 import { AnyAction } from '@reduxjs/toolkit';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 
 const isLargerScreen = getWindowHeight() > 800;
 const buttonPadding = isLargerScreen ? 3 : 2;
@@ -34,7 +35,9 @@ const getBody = (
     colors: any,
     onDismiss: (plannedTask?: PlannedTask) => void
 ) => {
-    const svgUri = plannedHabit.iconUrl ?? '';
+    const optimalImageData: OptimalImageData = {
+        remoteImageUrl: plannedHabit.remoteImageUrl,
+    };
 
     const body = (
         <View style={{ flex: 1, alignItems: 'center' }}>
@@ -55,7 +58,7 @@ const getBody = (
                     }}
                 >
                     <View style={{ height: 25, width: 25 }}>
-                        <SvgUri width={25} height={25} uri={svgUri} />
+                        <OptimalImage data={optimalImageData} style={{ height: 25, width: 25 }} />
                     </View>
                     <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
                     <View style={{ flex: 1 }}>
