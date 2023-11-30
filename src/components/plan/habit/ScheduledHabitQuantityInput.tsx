@@ -1,4 +1,4 @@
-import { Text, TextInput, View } from 'react-native';
+import { Keyboard, Text, TextInput, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UI } from 'src/util/constants';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
@@ -9,11 +9,11 @@ export const ScheduledHabitQuantityInput = () => {
     const { quantity, setQuantity } = useCreateEditScheduleHabit();
 
     const handleTextChange = (text: string) => {
-        // remove all non numberic characters and only allow the first decimal point
-        let numericValue = text.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-        const asNumber = parseFloat(numericValue);
+        if (text.length > 0 && isNaN(parseInt(text))) {
+            return;
+        }
 
-        setQuantity(asNumber);
+        setQuantity(text.length === 0 ? null : parseInt(text));
     };
 
     return (
@@ -24,22 +24,24 @@ export const ScheduledHabitQuantityInput = () => {
             }}
         >
             <Text style={{ color: colors.text, flex: 1 }}>How Many?</Text>
+
             <TextInput
                 onChangeText={handleTextChange}
-                value={quantity.toString()}
+                value={quantity?.toString()}
                 keyboardType="numeric"
-                placeholder="0"
+                placeholderTextColor={colors.secondary_text}
                 style={{
                     color: colors.text,
                     height: 50,
                     width: UI.SCHEDULE_HABIT.DETAILS.DETAIL_WIDTH,
-                    alignContent: 'center',
-                    justifyContent: 'center',
                     borderRadius: 12,
                     backgroundColor: colors.text_input_background,
                     borderColor: colors.text_input_border,
                     borderWidth: 1,
                     textAlign: 'center', // Center the text horizontally
+                    alignItems: 'center',
+                    alignContent: 'center',
+                    justifyContent: 'center',
                 }}
             />
         </View>

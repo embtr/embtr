@@ -45,7 +45,7 @@ interface CreateEditScheduledHabitType {
     endDate?: Date;
     daysOfWeek: DayOfWeek[];
     timesOfDay: TimeOfDay[];
-    quantity: number;
+    quantity: number | null;
     completedQuantity?: number;
     unit?: Unit;
 
@@ -57,7 +57,7 @@ interface CreateEditScheduledHabitType {
     setEndDate: (endDate: Date) => void;
     setDaysOfWeek: (daysOfWeek: DayOfWeek[]) => void;
     setTimesOfDay: (timesOfDay: TimeOfDay[]) => void;
-    setQuantity: (quantity: number) => void;
+    setQuantity: (quantity: number | null) => void;
     setCompletedQuantity: (completedQuantity: number) => void;
     setUnit: (unit: Unit) => void;
 
@@ -119,7 +119,7 @@ export const CreateEditScheduledHabitProvider = ({
     const [endDate, setEndDate] = React.useState<Date | undefined>(undefined);
     const [daysOfWeek, setDaysOfWeek] = React.useState<DayOfWeek[]>([]);
     const [timesOfDay, setTimesOfDay] = React.useState<TimeOfDay[]>([]);
-    const [quantity, setQuantity] = React.useState(1);
+    const [quantity, setQuantity] = React.useState<number | null>(1);
     const [completedQuantity, setCompletedQuantity] = React.useState(0);
     const [unit, setUnit] = React.useState<Unit | undefined>(undefined);
 

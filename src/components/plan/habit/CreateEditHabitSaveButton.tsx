@@ -63,7 +63,7 @@ export const CreateEditHabitSaveButton = ({
             scheduledHabitId: scheduledHabitId,
             title: title,
             description: description,
-            quantity: quantity,
+            quantity: quantity ?? 1,
             completedQuantity: completedQuantity,
             remoteImageUrl: remoteImageUrl,
             localImage: localImage,
@@ -85,7 +85,7 @@ export const CreateEditHabitSaveButton = ({
             scheduledHabitId: newPlannedHabitData?.scheduledHabitId,
             title: title,
             description: description,
-            quantity: quantity,
+            quantity: quantity ?? 1,
             completedQuantity: completedQuantity,
             remoteImageUrl: remoteImageUrl,
             localImage: localImage,
@@ -135,7 +135,7 @@ export const CreateEditHabitSaveButton = ({
         }
 
         if (detailsEnabled) {
-            scheduledHabit.quantity = quantity;
+            scheduledHabit.quantity = quantity ?? 1;
             scheduledHabit.unitId = unit?.id ?? undefined;
         }
 
