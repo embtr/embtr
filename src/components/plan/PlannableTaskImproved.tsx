@@ -17,6 +17,7 @@ import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
 import { PlanningService } from 'src/util/planning/PlanningService';
+import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -105,11 +106,11 @@ export const MemoizedPlannableTaskImproved = React.memo(
 
 const getStatusColor = (colors: any, status?: string) => {
     switch (status) {
-        case 'FAILED':
+        case Constants.HabitStatus.FAILED:
             return colors.progress_bar_failed;
-        case 'SKIPPED':
+        case Constants.HabitStatus.SKIPPED:
             return colors.progress_bar_skipped;
-        case 'COMPLETE':
+        case Constants.HabitStatus.COMPLETE:
             return colors.progress_bar_complete;
         default:
             return 'gray';
@@ -183,7 +184,7 @@ export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
                         <ProgressSvg
                             targetQuantity={targetQuantity ?? 1}
                             completedQuantity={completedQuantity ?? 0}
-                            isSkipped={plannedTask.status === 'SKIPPED'}
+                            isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
                         />
 
                         <View style={styles.svgProgress}>

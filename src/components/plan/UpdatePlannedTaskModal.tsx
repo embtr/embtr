@@ -33,6 +33,7 @@ import { PlannedTask } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { LocalImageRepo } from '../common/images/LocalImageRepo';
+import { Constants } from 'resources/types/constants/constants';
 
 const refreshPlannedDay = async (dayKey: string) => {
     PlannedDayController.prefetchPlannedDayData(dayKey);
@@ -90,7 +91,7 @@ export const UpdatePlannedTaskModal = () => {
 
     const skip = async () => {
         const clone = { ...plannedTask };
-        clone.status = 'SKIPPED';
+        clone.status = Constants.HabitStatus.SKIPPED;
 
         onUpdateCallback(clone);
         dismiss();
@@ -101,7 +102,7 @@ export const UpdatePlannedTaskModal = () => {
 
     const complete = async () => {
         const clone = { ...plannedTask };
-        clone.status = 'COMPLETE';
+        clone.status = Constants.HabitStatus.COMPLETE;
         clone.completedQuantity = clone.quantity;
 
         onUpdateCallback(clone);
@@ -114,7 +115,10 @@ export const UpdatePlannedTaskModal = () => {
     const update = async () => {
         const clone = { ...plannedTask };
         clone.completedQuantity = selectedValue ?? 0;
-        clone.status = clone.completedQuantity >= (clone.quantity ?? 0) ? 'COMPLETE' : 'INCOMPLETE';
+        clone.status =
+            clone.completedQuantity >= (clone.quantity ?? 0)
+                ? Constants.HabitStatus.COMPLETE
+                : Constants.HabitStatus.INCOMPLETE;
 
         onUpdateCallback(clone);
         dismiss();

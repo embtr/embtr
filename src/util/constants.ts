@@ -1,5 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getSafeWindowWidth } from './GeneralUtility';
+import { Constants } from 'resources/types/constants/constants';
 
 export const USER_SEARCH_WIDTH = '95%';
 export const SETTINGS_MENU_ITEM_WIDTH = '95%';
@@ -70,12 +71,6 @@ export const DAILY_HISTORY_WIDGET_DESCRIPTION =
 
 export const PILLARS_WIDGET = 'Pillars Widget';
 export const PILLARS_WIDGET_DESCRIPTION = 'A snapshot of what you hold most important.';
-
-//STATUSES
-export const COMPLETE = 'COMPLETE';
-export const INCOMPLETE = 'INCOMPLETE';
-export const FAILED = 'FAILED';
-export const DELETED = 'DELETED';
 
 export const WIDGETS = [
     TIME_LEFT_IN_DAY_WIDGET,

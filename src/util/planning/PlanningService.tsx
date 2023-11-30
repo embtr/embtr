@@ -1,4 +1,5 @@
 import { PlannedDay, PlannedTask } from 'resources/schema';
+import { Constants } from 'resources/types/constants/constants';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
@@ -36,7 +37,7 @@ export class PlanningService {
 
         let allTasksAreComplete = true;
         plannedDay?.plannedTasks?.forEach((plannedTask) => {
-            if (!(plannedTask.status !== 'FAILED')) {
+            if (!(plannedTask.status !== Constants.HabitStatus.FAILED)) {
                 allTasksAreComplete = false;
                 return;
             }

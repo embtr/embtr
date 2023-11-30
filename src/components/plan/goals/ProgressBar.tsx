@@ -1,4 +1,5 @@
 import { View, Text } from 'react-native';
+import { Constants } from 'resources/types/constants/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
@@ -14,32 +15,21 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
     if (isNaN(currentProgress)) {
         currentProgress = 100;
     }
-    if (status === 'SKIPPED') {
+    if (status === Constants.HabitStatus.SKIPPED) {
         currentProgress = 100;
     }
 
     const percentProgess = '' + currentProgress + '%';
 
     let color = colors.progress_bar_complete;
-    if (status === 'SKIPPED') {
+    if (status === Constants.HabitStatus.SKIPPED) {
         color = colors.progress_bar_skipped;
-    } else if (status === 'FAILED') {
+    } else if (status === Constants.HabitStatus.FAILED) {
         color = colors.progress_bar_failed;
     }
 
     return (
         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ flex: 5, backgroundColor: colors.progress_bar_color, borderRadius: 10 }}>
-                <View
-                    style={{
-                        width: currentProgress + '%',
-                        height: 6,
-                        backgroundColor: color,
-                        borderRadius: 10,
-                    }}
-                ></View>
-            </View>
-
             {showPercent && (
                 <View style={{ flex: 1 }}>
                     <Text

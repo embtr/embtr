@@ -1,11 +1,10 @@
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM } from 'src/util/constants';
-import { ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
-import { ImageUtility } from 'src/util/images/ImageUtility';
+import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
     plannedDayResult: PlannedDayResultModel;
@@ -18,7 +17,7 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
     const challengeName = plannedDayResult.plannedDay?.challengeParticipant?.[0]?.challenge?.name;
     const svgUrl =
         plannedDayResult.plannedDay?.challengeParticipant?.[0]?.challenge?.challengeRewards?.[0]
-            ?.imageUrl;
+            ?.remoteImageUrl;
 
     let plannedTaskViews: JSX.Element[] = [];
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
@@ -31,7 +30,7 @@ export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) 
 
     let completedCount = 0;
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
-        if (plannedTask.status === 'COMPLETE') {
+        if (plannedTask.status === Constants.HabitStatus.COMPLETE) {
             completedCount++;
         }
     });

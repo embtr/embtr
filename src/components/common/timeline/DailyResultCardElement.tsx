@@ -11,6 +11,7 @@ import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { OptimalImageData } from '../images/OptimalImage';
+import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
     plannedTask: PlannedTaskModel;
@@ -21,7 +22,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     const { colors } = useTheme();
     const [temporaryStatus, setTemporaryStatus] = React.useState('');
 
-    const taskIsFailed = plannedTask.status === 'FAILED';
+    const taskIsFailed = plannedTask.status === Constants.HabitStatus.FAILED;
 
     const unit = plannedTask.unit;
     const quantity = plannedTask.quantity;
@@ -50,7 +51,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         status = temporaryStatus;
     }
     if (status === undefined) {
-        status = 'INCOMPLETE';
+        status = Constants.HabitStatus.INCOMPLETE;
     }
 
     //clear status once render catches up

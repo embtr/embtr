@@ -40,14 +40,6 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
         return <View />;
     }
 
-    const isSuccess = (s: string) => {
-        return 'COMPLETE' === s;
-    };
-
-    const isFailed = (s: string) => {
-        return 'FAILED' === s || 'INCOMPLETE' === s;
-    };
-
     let views: JSX.Element[] = [];
     for (let i = 0; i < history.length; i++) {
         const historyElement = history[i];
