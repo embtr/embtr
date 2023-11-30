@@ -6,6 +6,7 @@ import { PlannedTask } from 'resources/schema';
 //import { FlashList } from '@shopify/flash-list';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
+import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key =
@@ -24,6 +25,7 @@ export const keyExtractor = (plannedTask: PlannedTask) => {
 export const PlanDay = () => {
     const { dayKey, plannedDay } = PlannedDayCustomHooks.useSelectedPlannedDay();
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
+    const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
 
     React.useEffect(() => {
         if (!plannedDay.data?.plannedTasks || plannedDay.data.plannedTasks.length === 0) {
@@ -55,8 +57,13 @@ export const PlanDay = () => {
         </View>
     );
 
+    const listHeight =
+        todayPageLayoutContext.planningWidgetHeight -
+        todayPageLayoutContext.widgetTitleHeight -
+        todayPageLayoutContext.dayPickerHeight;
+
     return (
-        <View style={{ height: 400, width: '100%' }}>
+        <View style={{ height: listHeight, width: '100%' }}>
             <FlatList
                 //estimatedFirstItemOffset={0}
                 //estimatedItemSize={61}

@@ -1,10 +1,8 @@
 import React from 'react';
 import { View, Text, ListRenderItemInfo } from 'react-native';
 import { WidgetType } from 'resources/schema';
-import { wait } from 'src/util/GeneralUtility';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
-import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { TodaysActivitiesWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
@@ -17,40 +15,17 @@ import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
-import { useTheme } from '../theme/ThemeProvider';
+import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
-    const [refreshing, setRefreshing] = React.useState(false);
-
-    const { colors } = useTheme();
+    const [planningWidgetHeight, setPlanningWidgetHeight] = React.useState<number>(0);
 
     const user = useAppSelector(getCurrentUser);
 
-    const TODAY_PAGE_WIDGETS = [
-        WidgetType.TIME_LEFT_IN_DAY,
-        WidgetType.QUOTE_OF_THE_DAY,
-        WidgetType.PLANNING,
-        //WidgetType.TODAYS_TASKS,
-        //WidgetType.TODAYS_NOTES,
-    ];
-
     React.useEffect(() => {
         setRefreshedTimestamp(new Date());
-    }, []);
-
-    const refresh = () => {
-        setRefreshedTimestamp(new Date());
-    };
-
-    // may want to just directly call both to guarentee
-    // upon refresh that we have all new data
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        refresh();
-        wait(500).then(() => {
-            setRefreshing(false);
-        });
     }, []);
 
     if (!user) {
@@ -118,22 +93,30 @@ export const Today = () => {
     };
 
     return (
-        <Screen>
-            <View style={{ flex: 1 }}>
-                <EmbtrMenuCustom />
-
-                <View style={{ height: '100%', width: '100%' }}>
+        <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
+            <Screen>
+                <View style={{ flex: 1, paddingHorizontal: TIMELINE_CARD_PADDING / 2 }}>
                     <Banner name="Today" />
 
                     <TodaysCountdownWidget />
-                    <View style={{ height: 7.5 }} />
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
-                    <View style={{ height: 7.5 }} />
-                    <View style={{ flex: 1 }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+
+                    <View
+                        onLayout={(e) => {
+                            if (planningWidgetHeight === 0) {
+                                setPlanningWidgetHeight(e.nativeEvent.layout.height);
+                            }
+                        }}
+                        style={{ flex: 1 }}
+                    >
                         <PlanningWidget />
                     </View>
+
+                    <View style={{ height: TIMELINE_CARD_PADDING * 1.5 }} />
                 </View>
-            </View>
-        </Screen>
+            </Screen>
+        </TodayPageLayoutContextProvider>
     );
 };

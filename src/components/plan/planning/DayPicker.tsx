@@ -1,10 +1,12 @@
 import React, { useRef, createRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
-import { Dimensions } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { DayPickerElement } from './DayPickerElement';
 import { getDayKey } from 'src/controller/planning/PlannedDayController';
 import { useDispatch } from 'react-redux';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
+import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 /*
  * I had to use an imperial handle to access the setSelected and clearSelected methods.
@@ -35,6 +37,7 @@ export const DayPicker = () => {
     const flatListRef = useRef<FlatList>(null);
     const itemRefs = useRef<Array<any>>(createItemRefs(dateElements.length));
     const previouslySelectedRef = useRef<number>(initialSelectedDay);
+    const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
 
     const dispatch = useDispatch();
 
@@ -75,24 +78,34 @@ export const DayPicker = () => {
         );
     };
 
+    const onLayout = (event: any) => {
+        const { height } = event.nativeEvent.layout;
+
+        if (todayPageLayoutContext.dayPickerHeight < 1) {
+            todayPageLayoutContext.setDayPickerHeight(height);
+        }
+    };
+
     return (
-        <FlatList
-            ref={flatListRef}
-            data={dateElements}
-            horizontal
-            removeClippedSubviews={true}
-            maxToRenderPerBatch={8}
-            windowSize={11}
-            initialNumToRender={dateElements.length}
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => item.toString()}
-            renderItem={renderDayPickerElement}
-            initialScrollIndex={initialSelectedDay}
-            getItemLayout={(data, index) => ({
-                length: calculateItemWidth(),
-                offset: calculateItemWidth() * index,
-                index,
-            })}
-        />
+        <View onLayout={onLayout} style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
+            <FlatList
+                ref={flatListRef}
+                data={dateElements}
+                horizontal
+                removeClippedSubviews={true}
+                maxToRenderPerBatch={8}
+                windowSize={11}
+                initialNumToRender={dateElements.length}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.toString()}
+                renderItem={renderDayPickerElement}
+                initialScrollIndex={initialSelectedDay}
+                getItemLayout={(data, index) => ({
+                    length: calculateItemWidth(),
+                    offset: calculateItemWidth() * index,
+                    index,
+                })}
+            />
+        </View>
     );
 };
