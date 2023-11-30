@@ -156,7 +156,6 @@ export const CreateEditHabitSaveButton = ({
         //create habit
         const habit = await TaskController.createViaApi(title, description);
         if (!habit.id) {
-            navigation.popToTop();
             return;
         }
 
@@ -165,8 +164,6 @@ export const CreateEditHabitSaveButton = ({
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest(habit.id);
         await ScheduledHabitController.create(scheduledHabit);
         PlannedDayController.prefetchPlannedDayData(selectedDayKey);
-
-        navigation.popToTop();
     };
 
     const createHabit = async () => {
@@ -174,29 +171,22 @@ export const CreateEditHabitSaveButton = ({
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.create(scheduledHabit);
         PlannedDayController.prefetchPlannedDayData(selectedDayKey);
-
-        navigation.popToTop();
     };
 
     const updateHabit = async () => {
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.update(scheduledHabit);
-
-        navigation.popToTop();
     };
 
     const updatePlannedHabit = async () => {
         if (!plannedHabitId) {
             Logger.log('no planned habit id found');
-            navigation.popToTop();
             return;
         }
 
         const plannedTask: PlannedTask = createUpdatedPlannedTask(plannedHabitId);
         await PlannedTaskController.update(plannedTask);
-
-        navigation.popToTop();
     };
 
     const createPlannedHabit = async () => {
@@ -207,12 +197,9 @@ export const CreateEditHabitSaveButton = ({
 
         const plannedTask: PlannedTask = createCreatePlannedTask();
         await PlannedTaskController.createWithDayKey(plannedTask, newPlannedHabitData!.dayKey);
-
-        navigation.popToTop();
     };
 
     const onPress = async () => {
-        console.log("on press for", editMode)
         switch (editMode) {
             case CreateEditHabitMode.CREATE_CUSTOM_HABIT:
                 await createCustomHabit();
@@ -235,7 +222,8 @@ export const CreateEditHabitSaveButton = ({
                 break;
         }
 
-        PlannedDayController.prefetchPlannedDayData(selectedDayKey);
+        await PlannedDayController.prefetchPlannedDayData(selectedDayKey);
+        navigation.popToTop();
     };
 
     const buttonText = editMode === CreateEditHabitMode.CREATE_NEW_HABIT ? 'Create' : 'Update';

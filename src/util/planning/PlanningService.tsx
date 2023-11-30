@@ -1,4 +1,4 @@
-import { PlannedDay } from 'resources/schema';
+import { PlannedDay, PlannedTask } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
@@ -48,5 +48,31 @@ export class PlanningService {
         });
 
         return allTasksAreComplete;
+    }
+
+    public static getPlannedHabitUniqueKey(plannedHabit: PlannedTask) {
+        const key =
+            '' +
+            plannedHabit.plannedDayId +
+            '_' +
+            plannedHabit.id +
+            '_' +
+            plannedHabit.scheduledHabitId +
+            '_' +
+            plannedHabit.timeOfDayId +
+            '_' +
+            plannedHabit.completedQuantity +
+            '_' +
+            plannedHabit.quantity +
+            '_' +
+            plannedHabit.unitId +
+            '_' +
+            plannedHabit.timeOfDayId +
+            '_' +
+            plannedHabit.description +
+            '_' +
+            plannedHabit.title;
+
+        return key;
     }
 }

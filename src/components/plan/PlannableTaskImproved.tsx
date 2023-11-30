@@ -16,6 +16,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
+import { PlanningService } from 'src/util/planning/PlanningService';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -95,24 +96,8 @@ export const MemoizedPlannableTaskImproved = React.memo(
         return <PlannableTaskImproved initialPlannedTask={initialPlannedTask} />;
     },
     (prevProps, nextProps) => {
-        const prevKey =
-            'plannedDay' +
-            prevProps.initialPlannedTask.plannedDayId +
-            '_plannedTask' +
-            prevProps.initialPlannedTask.id +
-            '_scheduledHabit' +
-            prevProps.initialPlannedTask.scheduledHabitId +
-            '_timeOfDay' +
-            prevProps.initialPlannedTask.timeOfDayId;
-        const nextKey =
-            'plannedDay' +
-            nextProps.initialPlannedTask.plannedDayId +
-            '_plannedTask' +
-            nextProps.initialPlannedTask.id +
-            '_scheduledHabit' +
-            nextProps.initialPlannedTask.scheduledHabitId +
-            '_timeOfDay' +
-            nextProps.initialPlannedTask.timeOfDayId;
+        const prevKey = PlanningService.getPlannedHabitUniqueKey(prevProps.initialPlannedTask);
+        const nextKey = PlanningService.getPlannedHabitUniqueKey(nextProps.initialPlannedTask);
 
         return prevKey === nextKey;
     }

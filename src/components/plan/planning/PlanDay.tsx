@@ -7,18 +7,10 @@ import { PlannedTask } from 'resources/schema';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
+import { PlanningService } from 'src/util/planning/PlanningService';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
-    const key =
-        'plannedDay' +
-        plannedTask.plannedDayId +
-        '_plannedTask' +
-        plannedTask.id +
-        '_scheduledHabit' +
-        plannedTask.scheduledHabitId +
-        '_timeOfDay' +
-        plannedTask.timeOfDayId;
-
+    const key = PlanningService.getPlannedHabitUniqueKey(plannedTask);
     return key;
 };
 
