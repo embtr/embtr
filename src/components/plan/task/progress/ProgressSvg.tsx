@@ -5,10 +5,18 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 interface Props {
     targetQuantity: number;
     completedQuantity: number;
+    isSkipped?: boolean;
 }
 
-export const ProgressSvg = ({ targetQuantity, completedQuantity }: Props) => {
+export const ProgressSvg = ({ targetQuantity, completedQuantity, isSkipped }: Props) => {
     const { colors } = useTheme();
+
+    let progressColor = colors.progress_bar_complete;
+    if (isSkipped) {
+        completedQuantity = targetQuantity;
+        progressColor = colors.progress_bar_skipped;
+    }
+
     // Calculate the circumference of the circle
     const radius = 13;
     const progress = ((completedQuantity ?? 0) / (targetQuantity ?? 1)) * 100;
@@ -32,7 +40,7 @@ export const ProgressSvg = ({ targetQuantity, completedQuantity }: Props) => {
                 cx={14}
                 cy={14}
                 r={radius}
-                stroke={colors.progress_bar_complete}
+                stroke={progressColor}
                 strokeWidth={2}
                 fill="transparent"
                 strokeDasharray={circumference}

@@ -611,7 +611,7 @@ export const UpdatePlannedTaskModal = () => {
                                     style={{
                                         fontFamily,
                                         fontSize,
-                                        color: colors.trophy_icon,
+                                        color: colors.progress_bar_skipped,
                                     }}
                                 >
                                     skip

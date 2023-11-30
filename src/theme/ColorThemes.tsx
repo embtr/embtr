@@ -75,7 +75,7 @@ export const lightColors = {
     profile_pillar_separator: '#000000',
     link: '#5ba2dc',
 
-    trophy_icon: '#FFC100',
+    progress_bar_skipped: '#FFC100',
 
     google_login_background: '#FFFFFF',
     google_login_text: '#757575',
@@ -170,7 +170,7 @@ export const darkColors = {
     profile_pillar_separator: '#DFDFDF',
     link: '#5ba2dc',
 
-    trophy_icon: '#FFC100',
+    progress_bar_skipped: '#FFC100',
 
     google_login_background: '#4285F4',
     google_login_text: '#FFFFFF',

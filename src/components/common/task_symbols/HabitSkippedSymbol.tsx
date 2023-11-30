@@ -19,7 +19,7 @@ interface Props {
 export const HabitSkippedSymbol = ({ small }: Props) => {
     const { colors } = useTheme();
 
-    const color = colors.trophy_icon;
+    const color = colors.progress_bar_skipped;
 
     const borderSize = small === true ? SYMBOL_SIZE_SMALL : SYMBOL_SIZE_LARGE;
     const borderRadius = small === true ? SYMBOL_BORDER_RADIUS_SMALL : SYMBOL_BORDER_RADIUS_LARGE;

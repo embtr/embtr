@@ -56,10 +56,14 @@ export const DayPicker = () => {
         scrollToSelected(day);
 
         const previousRef = itemRefs.current[previouslySelectedRef.current];
-        previousRef.current.clearSelected();
+        if (previousRef?.current) {
+            previousRef.current.clearSelected();
+        }
 
-        const ref = itemRefs.current[day];
-        ref.current.setSelected();
+        const currentRef = itemRefs.current[day];
+        if (currentRef?.current) {
+            currentRef.current.setSelected();
+        }
 
         previouslySelectedRef.current = day;
     };

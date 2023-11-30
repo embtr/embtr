@@ -22,7 +22,7 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
 
     let color = colors.progress_bar_complete;
     if (status === 'SKIPPED') {
-        color = colors.trophy_icon;
+        color = colors.progress_bar_skipped;
     } else if (status === 'FAILED') {
         color = colors.progress_bar_failed;
     }

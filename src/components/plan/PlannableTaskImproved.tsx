@@ -123,7 +123,7 @@ const getStatusColor = (colors: any, status?: string) => {
         case 'FAILED':
             return colors.progress_bar_failed;
         case 'SKIPPED':
-            return colors.trophy_icon;
+            return colors.progress_bar_skipped;
         case 'COMPLETE':
             return colors.progress_bar_complete;
         default:
@@ -198,6 +198,7 @@ export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
                         <ProgressSvg
                             targetQuantity={targetQuantity ?? 1}
                             completedQuantity={completedQuantity ?? 0}
+                            isSkipped={plannedTask.status === 'SKIPPED'}
                         />
 
                         <View style={styles.svgProgress}>
