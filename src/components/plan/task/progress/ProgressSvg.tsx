@@ -17,9 +17,13 @@ export const ProgressSvg = ({ targetQuantity, completedQuantity, isSkipped }: Pr
         progressColor = colors.progress_bar_skipped;
     }
 
+    if (completedQuantity > targetQuantity) {
+        completedQuantity = targetQuantity;
+    }
+
     // Calculate the circumference of the circle
     const radius = 13;
-    const progress = ((completedQuantity ?? 0) / (targetQuantity ?? 1)) * 100;
+    const progress = (completedQuantity / targetQuantity) * 100;
     const circumference = 2 * Math.PI * radius;
     const dashOffset = circumference * (1 - progress / 100);
 

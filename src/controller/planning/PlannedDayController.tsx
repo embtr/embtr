@@ -18,6 +18,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { current } from '@reduxjs/toolkit';
+import { getMonth } from 'date-fns';
 
 export interface PlannedDay {
     id?: string;
@@ -144,6 +145,11 @@ export const getDayKeyForTheFirstOfTheMonth = () => {
 
 export const getTomorrowKey = () => {
     return getKey(new Date().getDate() + 1);
+};
+
+export const getMonthFromDayKey = (dayKey: string) => {
+    const date = getDateFromDayKey(dayKey);
+    return getMonthFromDate(date);
 };
 
 export const getDateStringFromDate = (date: Date) => {

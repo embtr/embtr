@@ -5,9 +5,11 @@ import { POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { Planning } from '../plan/planning/Planning';
 import React from 'react';
 import { TodayPageLayoutContext } from '../today/TodayPageLayoutContext';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getSelectedDayKey } from 'src/redux/user/GlobalState';
+import { getMonthFromDayKey } from 'src/controller/planning/PlannedDayController';
 
 export const PlanningWidget = () => {
-    const { colors } = useTheme();
     const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
 
     const WIDGET_PADDING_HEIGHT = 16;
@@ -20,15 +22,24 @@ export const PlanningWidget = () => {
     return (
         <WidgetBase>
             <View>
-                <Text
-                    onLayout={onLayout}
-                    style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}
-                >
-                    Planning
-                </Text>
-
+                <View onLayout={onLayout}>
+                    <MonthView />
+                </View>
                 <Planning />
             </View>
         </WidgetBase>
+    );
+};
+
+export const MonthView = () => {
+    const { colors } = useTheme();
+
+    const selectedDayKey = useAppSelector(getSelectedDayKey);
+    const month = getMonthFromDayKey(selectedDayKey);
+
+    return (
+        <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+            Planning for <Text style={{ color: colors.accent_color }}>{month}</Text>
+        </Text>
     );
 };
