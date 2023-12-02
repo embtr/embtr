@@ -2,11 +2,12 @@ import React, { useRef, createRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Dimensions, View } from 'react-native';
 import { DayPickerElement } from './DayPickerElement';
-import { getDayKey } from 'src/controller/planning/PlannedDayController';
+import { getDayKey, getDayKeyForSelectedDay } from 'src/controller/planning/PlannedDayController';
 import { useDispatch } from 'react-redux';
-import { setSelectedDayKey } from 'src/redux/user/GlobalState';
+import { getSelectedDayKey, setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { useAppSelector } from 'src/redux/Hooks';
 
 /*
  * I had to use an imperial handle to access the setSelected and clearSelected methods.
@@ -38,6 +39,7 @@ export const DayPicker = () => {
     const itemRefs = useRef<Array<any>>(createItemRefs(dateElements.length));
     const previouslySelectedRef = useRef<number>(initialSelectedDay);
     const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
+    const dayKey = useAppSelector(getSelectedDayKey);
 
     const dispatch = useDispatch();
 
@@ -50,7 +52,7 @@ export const DayPicker = () => {
     };
 
     const onSelectionChange = (day: number) => {
-        const newDayKey = getDayKey(day + 1);
+        const newDayKey = getDayKeyForSelectedDay(dayKey, day + 1);
         dispatch(setSelectedDayKey(newDayKey));
 
         scrollToSelected(day);

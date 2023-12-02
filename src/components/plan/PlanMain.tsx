@@ -19,10 +19,8 @@ import { PlanningService } from 'src/util/planning/PlanningService';
  */
 
 export const PlanMain = () => {
-    const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
     const [plannedDay, setPlannedDay] = React.useState<PlannedDay>();
     const [selectedDayKey, setSelectedDayKey] = React.useState<string>(getTodayKey());
-    const [refreshTimestamp, setRefreshTimestamp] = React.useState(new Date());
 
     const fetchPlannedDay = async () => {
         const plannedDay = await PlannedDayController.getForCurrentUserViaApi(selectedDayKey);
@@ -32,15 +30,6 @@ export const PlanMain = () => {
     React.useEffect(() => {
         fetchPlannedDay();
     }, [selectedDayKey]);
-
-    const onDayChanged = (day: number) => {
-        const newDayKey = getDayKey(day);
-        setSelectedDayKey(newDayKey);
-    };
-
-    const navigateToTomorrowCreateTask = () => {
-        setShowAddTaskModal(true);
-    };
 
     const closeMenu = useAppSelector(getCloseMenu);
     const menuItems: EmbtrMenuOption[] = [
@@ -63,7 +52,7 @@ export const PlanMain = () => {
                     name={'Planning'}
                     leftIcon={'add'}
                     leftRoute={'CreateTask'}
-                    leftOnClick={navigateToTomorrowCreateTask}
+                    leftOnClick={() => {}}
                     rightIcon={'ellipsis-horizontal'}
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />

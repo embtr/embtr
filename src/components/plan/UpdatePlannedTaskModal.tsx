@@ -26,13 +26,10 @@ import {
     setRemovalModalPlannedTask,
     setUpdateModalPlannedTask,
 } from 'src/redux/user/GlobalState';
-import PlannedTaskController, {
-    DEFAULT_PLANNED_TASK,
-} from 'src/controller/planning/PlannedTaskController';
+import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { PlannedTask } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
-import { LocalImageRepo } from '../common/images/LocalImageRepo';
 import { Constants } from 'resources/types/constants/constants';
 
 const refreshPlannedDay = async (dayKey: string) => {
@@ -126,8 +123,6 @@ export const UpdatePlannedTaskModal = () => {
         await createUpdatePlannedTask(clone, dayKey);
         refreshPlannedDay(dayKey);
     };
-
-    const fail = () => {};
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
         Animated.timing(viewHeight, {

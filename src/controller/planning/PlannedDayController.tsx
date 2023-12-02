@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { COMPLETE, FAILED, INCOMPLETE, ReactQueryStaleTimes } from 'src/util/constants';
+import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
 import { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
@@ -19,6 +19,7 @@ import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { current } from '@reduxjs/toolkit';
 import { getMonth } from 'date-fns';
+import { Constants } from 'resources/types/constants/constants';
 
 export interface PlannedDay {
     id?: string;
@@ -35,14 +36,14 @@ export interface PlannedDayMetadata {
 
 export const getPlannedDayStatus = (plannedDay: PlannedDay): string => {
     if (plannedDayIsComplete(plannedDay)) {
-        return COMPLETE;
+        return Constants.HabitStatus.COMPLETE;
     }
 
     if (plannedDayIsFailed(plannedDay)) {
-        return FAILED;
+        return Constants.HabitStatus.FAILED;
     }
 
-    return INCOMPLETE;
+    return Constants.HabitStatus.INCOMPLETE;
 };
 
 export const plannedDayIsComplete = (plannedDay: PlannedDay): boolean => {
@@ -70,11 +71,11 @@ export const plannedDayIsIncomplete = (plannedDay: PlannedDay): boolean => {
 };
 
 export const plannedTaskIsComplete = (plannedTask: PlannedTaskModel): boolean => {
-    return plannedTask.status === COMPLETE;
+    return plannedTask.status === Constants.HabitStatus.COMPLETE;
 };
 
 export const plannedTaskIsFailed = (plannedTask: PlannedTaskModel): boolean => {
-    return plannedTask.status === FAILED;
+    return plannedTask.status === Constants.HabitStatus.FAILED;
 };
 
 export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean => {
@@ -105,6 +106,19 @@ export const getKey = (dayOfMonth: number) => {
 export const getKeyFromDate = (date: Date) => {
     const dateString = getDateFormatted(date);
     return dateString;
+};
+export const getDayKeyForSelectedMonth = (dayKey: string, month: number) => {
+    const monthString = month < 10 ? `0${month}` : `${month}`;
+    const newSelectedDayKey = dayKey.replace(/-\d\d-/, `-${monthString}-`);
+
+    return newSelectedDayKey;
+};
+
+export const getDayKeyForSelectedDay = (dayKey: string, day: number) => {
+    const dayString = day < 10 ? `0${day}` : `${day}`;
+    const newSelectedDayKey = dayKey.substring(0, dayKey.length - 2) + dayString;
+
+    return newSelectedDayKey;
 };
 
 export const getDayKey = (day: number) => {

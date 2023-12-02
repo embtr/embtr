@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { PlannedTask, Unit, User } from 'resources/schema';
+import { Unit, User } from 'resources/schema';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK, UpdateModalPlannedTask } from 'src/model/GlobalState';
 
 const INITIAL_STATE: GlobalState = {
@@ -15,7 +15,7 @@ const INITIAL_STATE: GlobalState = {
     cardRefreshRequests: [],
     fireConfetti: () => {},
     displayDropDownAlert: () => {},
-    selectedDayKey: '2023-01-01',
+    selectedDayKey: '2019-01-01',
     units: [],
     currentUser: {},
     timelineDays: 0,
@@ -96,7 +96,7 @@ export const GlobalState = createSlice({
             state.displayDropDownAlert = action.payload;
         },
         setSelectedDayKey(state, action) {
-            console.log('setSelectedDayKey: ' + action.payload)
+            console.log("new selected daykey:", action.payload)
             state.selectedDayKey = action.payload;
         },
         setUnits(state, action) {
@@ -133,7 +133,7 @@ export const GlobalState = createSlice({
         },
         setEditModalPlannedTask(state, action) {
             state.editModalPlannedTask = action.payload;
-        }
+        },
     },
 });
 
