@@ -2,7 +2,7 @@ import React, { useRef, createRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Dimensions, View } from 'react-native';
 import { DayPickerElement } from './DayPickerElement';
-import { getDayKey, getDayKeyForSelectedDay } from 'src/controller/planning/PlannedDayController';
+import { getDayKeyForSelectedDay } from 'src/controller/planning/PlannedDayController';
 import { useDispatch } from 'react-redux';
 import { getSelectedDayKey, setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
@@ -34,12 +34,15 @@ const createItemRefs = (length: number) => {
         .map(() => createRef<any>());
 };
 
-export const DayPicker = () => {
+interface Props {
+    dayKeyRef: React.MutableRefObject<string>;
+}
+
+export const DayPicker = ({ dayKeyRef }: Props) => {
     const flatListRef = useRef<FlatList>(null);
     const itemRefs = useRef<Array<any>>(createItemRefs(dateElements.length));
     const previouslySelectedRef = useRef<number>(initialSelectedDay);
     const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
-    const dayKey = useAppSelector(getSelectedDayKey);
 
     const dispatch = useDispatch();
 
@@ -52,7 +55,8 @@ export const DayPicker = () => {
     };
 
     const onSelectionChange = (day: number) => {
-        const newDayKey = getDayKeyForSelectedDay(dayKey, day + 1);
+        const newDayKey = getDayKeyForSelectedDay(dayKeyRef.current, day + 1);
+        dayKeyRef.current = newDayKey;
         dispatch(setSelectedDayKey(newDayKey));
 
         scrollToSelected(day);

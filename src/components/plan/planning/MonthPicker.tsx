@@ -1,14 +1,11 @@
 import React, { useRef, createRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Animated, Easing, View, Text, TouchableOpacity } from 'react-native';
-import {
-    getDayKeyForSelectedMonth,
-    getMonthFromDayKey,
-} from 'src/controller/planning/PlannedDayController';
-import { getSelectedDayKey, setSelectedDayKey } from 'src/redux/user/GlobalState';
+import { getDayKeyForSelectedMonth } from 'src/controller/planning/PlannedDayController';
+import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { MonthPickerElement } from './MonthPickerElement';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { useAppDispatch } from 'src/redux/Hooks';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -48,7 +45,11 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
     }).start();
 };
 
-export const MonthPicker = () => {
+interface Props {
+    dayKeyRef: React.MutableRefObject<string>;
+}
+
+export const MonthPicker = ({ dayKeyRef }: Props) => {
     const flatListRef = useRef<FlatList>(null);
     const itemRefs = useRef<Array<any>>(createItemRefs(monthElements.length));
     const previouslySelectedRef = useRef<number>(initialSelectedDay);
@@ -57,8 +58,6 @@ export const MonthPicker = () => {
         React.useState<number>(initialSelectedDay);
     const { colors } = useTheme();
     const dispatch = useAppDispatch();
-
-    const selectedDayKey = useAppSelector(getSelectedDayKey);
 
     const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(MAX_HEIGHT));
 
@@ -75,9 +74,8 @@ export const MonthPicker = () => {
     };
 
     const onMonthChange = (monthIndex: number) => {
-        setCurrentlySelectedIndex(monthIndex);
-
-        const newSelectedDayKey = getDayKeyForSelectedMonth(selectedDayKey, monthIndex + 1);
+        const newSelectedDayKey = getDayKeyForSelectedMonth(dayKeyRef.current, monthIndex + 1);
+        dayKeyRef.current = newSelectedDayKey;
         dispatch(setSelectedDayKey(newSelectedDayKey));
     };
 
@@ -161,7 +159,6 @@ export const MonthPicker = () => {
                     horizontal
                     removeClippedSubviews={true}
                     maxToRenderPerBatch={8}
-                    windowSize={11}
                     initialNumToRender={monthElements.length}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item}
