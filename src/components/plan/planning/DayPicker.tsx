@@ -4,10 +4,9 @@ import { Dimensions, View } from 'react-native';
 import { DayPickerElement } from './DayPickerElement';
 import { getDayKeyForSelectedDay } from 'src/controller/planning/PlannedDayController';
 import { useDispatch } from 'react-redux';
-import { getSelectedDayKey, setSelectedDayKey } from 'src/redux/user/GlobalState';
+import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { useAppSelector } from 'src/redux/Hooks';
 
 /*
  * I had to use an imperial handle to access the setSelected and clearSelected methods.

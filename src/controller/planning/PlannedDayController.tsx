@@ -100,10 +100,10 @@ export const getKey = (dayOfMonth: number) => {
     const date = new Date();
     date.setDate(dayOfMonth);
 
-    return getKeyFromDate(date);
+    return getDayKeyFromDate(date);
 };
 
-export const getKeyFromDate = (date: Date) => {
+export const getDayKeyFromDate = (date: Date) => {
     const dateString = getDateFormatted(date);
     return dateString;
 };
@@ -136,7 +136,7 @@ export const getPreviousDayKey = (dayKey: string) => {
     const yesterday = date;
     yesterday.setDate(date.getDate() - 1);
 
-    const result = getKeyFromDate(yesterday);
+    const result = getDayKeyFromDate(yesterday);
     return result;
 };
 
@@ -146,7 +146,7 @@ export const getNextDayKey = (dayKey: string) => {
     const today = date;
     today.setDate(date.getDate() + 1);
 
-    const result = getKeyFromDate(today);
+    const result = getDayKeyFromDate(today);
     return result;
 };
 
@@ -154,7 +154,7 @@ export const getDayKeyForTheFirstOfTheMonth = () => {
     const date = new Date();
     date.setDate(1);
 
-    return getKeyFromDate(date);
+    return getDayKeyFromDate(date);
 };
 
 export const getTomorrowKey = () => {

@@ -1,13 +1,12 @@
 import React, { useRef, createRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
-import { Animated, Easing, View, Text, TouchableOpacity } from 'react-native';
+import { Animated, Easing, View } from 'react-native';
 import { getDayKeyForSelectedMonth } from 'src/controller/planning/PlannedDayController';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { MonthPickerElement } from './MonthPickerElement';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { useTheme } from 'src/components/theme/ThemeProvider';
-import { Ionicons } from '@expo/vector-icons';
+import { CurrentMonthText } from './CurrentMonthText';
 
 const SCROLL_CENTER = 0.5;
 
@@ -26,7 +25,7 @@ const monthElements = [
     'November',
     'December',
 ];
-const initialSelectedDay = currentDate.getDate() - 1;
+const initialSelectedMonth = currentDate.getMonth();
 
 const createItemRefs = (length: number) => {
     return Array(length)
@@ -52,12 +51,10 @@ interface Props {
 export const MonthPicker = ({ dayKeyRef }: Props) => {
     const flatListRef = useRef<FlatList>(null);
     const itemRefs = useRef<Array<any>>(createItemRefs(monthElements.length));
-    const previouslySelectedRef = useRef<number>(initialSelectedDay);
+    const previouslySelectedRef = useRef<number>(initialSelectedMonth);
     const [advancedVisible, setAdvancedVisible] = React.useState(false);
-    const [currentlySelectedIndex, setCurrentlySelectedIndex] =
-        React.useState<number>(initialSelectedDay);
-    const { colors } = useTheme();
     const dispatch = useAppDispatch();
+    const childRef = useRef<any>();
 
     const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(MAX_HEIGHT));
 
@@ -81,6 +78,7 @@ export const MonthPicker = ({ dayKeyRef }: Props) => {
 
     const onSelectionChange = (monthIndex: number) => {
         scrollToSelected(monthIndex);
+        childRef.current?.changeMonth(monthElements[monthIndex]);
 
         const previousRef = itemRefs.current[previouslySelectedRef.current];
         if (previousRef?.current) {
@@ -104,7 +102,7 @@ export const MonthPicker = ({ dayKeyRef }: Props) => {
                     ref={ref}
                     item={item}
                     index={index}
-                    isSelected={index === initialSelectedDay}
+                    isSelected={index === initialSelectedMonth}
                     onSelectionChange={onSelectionChange}
                 />
             </View>
@@ -113,37 +111,12 @@ export const MonthPicker = ({ dayKeyRef }: Props) => {
 
     return (
         <View>
-            <View style={{ flexDirection: 'row' }}>
-                <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
-                    Planning for{' '}
-                </Text>
-                <TouchableOpacity onPress={() => setAdvancedVisible(!advancedVisible)}>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text
-                            style={{
-                                color: colors.accent_color,
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 15,
-                            }}
-                        >
-                            {monthElements[currentlySelectedIndex]}
-                        </Text>
-                        <View
-                            style={{
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                paddingLeft: TIMELINE_CARD_PADDING / 4,
-                            }}
-                        >
-                            <Ionicons
-                                name={advancedVisible ? 'chevron-up' : 'chevron-down'}
-                                size={16}
-                                color={colors.text}
-                            />
-                        </View>
-                    </View>
-                </TouchableOpacity>
-            </View>
+            <CurrentMonthText
+                ref={childRef}
+                onPress={() => setAdvancedVisible(!advancedVisible)}
+                initialMonth={monthElements[initialSelectedMonth]}
+                advancedVisible={advancedVisible}
+            />
 
             <Animated.View
                 style={{
@@ -163,7 +136,6 @@ export const MonthPicker = ({ dayKeyRef }: Props) => {
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => item}
                     renderItem={renderDayPickerElement}
-                    initialScrollIndex={initialSelectedDay}
                 />
             </Animated.View>
         </View>
