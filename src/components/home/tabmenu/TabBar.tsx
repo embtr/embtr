@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW } from 'src/util/constants';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setShowQuickAddModal } from 'src/redux/user/GlobalState';
+import { Image } from 'react-native';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();

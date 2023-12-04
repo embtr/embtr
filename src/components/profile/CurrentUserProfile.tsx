@@ -42,27 +42,6 @@ export const CurrentUserProfile = () => {
         });
     }, []);
 
-    const animatedHeaderContentsScale = useSharedValue(1);
-    const animatedBannerScale = useSharedValue(1);
-
-    const shrinkHeader = () => {
-        animatedHeaderContentsScale.value = 0;
-        animatedBannerScale.value = 0.66;
-    };
-
-    const growHeader = () => {
-        animatedHeaderContentsScale.value = 1;
-        animatedBannerScale.value = 1;
-    };
-
-    if (!user) {
-        return (
-            <Screen>
-                <View />
-            </Screen>
-        );
-    }
-
     if (!user) {
         return (
             <Screen>

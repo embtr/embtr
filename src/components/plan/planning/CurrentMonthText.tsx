@@ -35,7 +35,7 @@ export const CurrentMonthText = React.forwardRef(
         return (
             <View style={{ flexDirection: 'row' }}>
                 <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
-                    Planning for{' '}
+                    Habits for{' '}
                 </Text>
                 <TouchableOpacity onPress={onPress}>
                     <View style={{ flexDirection: 'row' }}>

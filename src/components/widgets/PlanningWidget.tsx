@@ -22,7 +22,7 @@ export const PlanningWidget = () => {
             <EditHabitModal />
 
             <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
-                <MonthPicker dayKeyRef={dayKeyRef} />
+                <MonthPicker />
             </View>
 
             <DayPicker dayKeyRef={dayKeyRef} />

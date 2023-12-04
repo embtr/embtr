@@ -47,7 +47,7 @@ export const CreateUserPost = () => {
                 leftText="close"
                 leftRoute="BACK"
             />
-            <LoadingOverlay active={enableSubmit === false} />
+            <LoadingOverlay />
             <CreateEditUserPostBase
                 title={title}
                 setTitle={setTitle}
