@@ -2,7 +2,10 @@ import React, { useRef, createRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { Dimensions, View } from 'react-native';
 import { DayPickerElement } from './DayPickerElement';
-import { getDayKeyForSelectedDay } from 'src/controller/planning/PlannedDayController';
+import {
+    getDateFromDayKey,
+    getDayKeyForSelectedDay,
+} from 'src/controller/planning/PlannedDayController';
 import { useDispatch } from 'react-redux';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
@@ -18,14 +21,14 @@ const SCROLL_CENTER = 0.5;
 
 const calculateItemWidth = () => Dimensions.get('window').width / 9.5;
 
-const currentDate = new Date();
-const numberOfDaysInMonth = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth() + 1,
-    0
-).getDate();
-const dateElements = Array.from(Array(numberOfDaysInMonth).keys()).slice(1);
-const initialSelectedDay = currentDate.getDate() - 1;
+const initialSelectedDay = new Date().getDate() - 1;
+
+const getDateElements = (date: Date) => {
+    const numberOfDaysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate() + 1;
+    const dateElements = Array.from(Array(numberOfDaysInMonth).keys()).slice(1);
+
+    return dateElements;
+};
 
 const createItemRefs = (length: number) => {
     return Array(length)
@@ -37,8 +40,24 @@ interface Props {
     dayKeyRef: React.MutableRefObject<string>;
 }
 
+export const MemoizedDayPicker = React.memo(
+    ({
+        dayKeyRef,
+        selectedDayKey,
+    }: {
+        dayKeyRef: React.MutableRefObject<string>;
+        selectedDayKey: string;
+    }) => {
+        return <DayPicker dayKeyRef={dayKeyRef} />;
+    },
+    (prevProps, nextProps) => {
+        return prevProps.selectedDayKey.split('-')[1] === nextProps.selectedDayKey.split('-')[1];
+    }
+);
+
 export const DayPicker = ({ dayKeyRef }: Props) => {
     const flatListRef = useRef<FlatList>(null);
+    const dateElements = getDateElements(getDateFromDayKey(dayKeyRef.current));
     const itemRefs = useRef<Array<any>>(createItemRefs(dateElements.length));
     const previouslySelectedRef = useRef<number>(initialSelectedDay);
     const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
@@ -83,6 +102,7 @@ export const DayPicker = ({ dayKeyRef }: Props) => {
                 isSelected={index === initialSelectedDay}
                 itemWidth={calculateItemWidth()}
                 onSelectionChange={onSelectionChange}
+                selectedDate={getDateFromDayKey(dayKeyRef.current)}
             />
         );
     };

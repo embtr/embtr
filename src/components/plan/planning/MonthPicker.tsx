@@ -46,9 +46,10 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
 
 interface Props {
     dayKeyRef: React.MutableRefObject<string>;
+    forceRerender: Function;
 }
 
-export const MonthPicker = ({ dayKeyRef }: Props) => {
+export const MonthPicker = ({ dayKeyRef, forceRerender}: Props) => {
     const flatListRef = useRef<FlatList>(null);
     const itemRefs = useRef<Array<any>>(createItemRefs(monthElements.length));
     const previouslySelectedRef = useRef<number>(initialSelectedMonth);
@@ -73,6 +74,7 @@ export const MonthPicker = ({ dayKeyRef }: Props) => {
     const onMonthChange = (monthIndex: number) => {
         const newSelectedDayKey = getDayKeyForSelectedMonth(dayKeyRef.current, monthIndex + 1);
         dayKeyRef.current = newSelectedDayKey;
+        forceRerender();
         dispatch(setSelectedDayKey(newSelectedDayKey));
     };
 

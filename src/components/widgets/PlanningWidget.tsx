@@ -1,6 +1,6 @@
 import React from 'react';
 import { WidgetBase } from './WidgetBase';
-import { DayPicker } from 'src/components/plan/planning/DayPicker';
+import { DayPicker, MemoizedDayPicker } from 'src/components/plan/planning/DayPicker';
 import { UpdatePlannedTaskModal } from '../plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from '../plan/habit/EditHabitModal';
 import { RemoveHabitModal } from '../plan/habit/RemoveHabitModal';
@@ -12,8 +12,9 @@ import { getDayKeyFromDate } from 'src/controller/planning/PlannedDayController'
 
 export const PlanningWidget = () => {
     const currentDate = new Date();
-    const dayKey = getDayKeyFromDate(currentDate);
-    const dayKeyRef = React.useRef(dayKey);
+    const dayKeyRef = React.useRef(getDayKeyFromDate(currentDate));
+
+    const [rerenderTimestamp, setRerenderTimestamp] = React.useState(Date.now());
 
     return (
         <WidgetBase>
@@ -22,10 +23,16 @@ export const PlanningWidget = () => {
             <EditHabitModal />
 
             <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
-                <MonthPicker dayKeyRef={dayKeyRef} />
+                <MonthPicker
+                    dayKeyRef={dayKeyRef}
+                    forceRerender={() => {
+                        setRerenderTimestamp(Date.now());
+                    }}
+                />
             </View>
 
-            <DayPicker dayKeyRef={dayKeyRef} />
+            <MemoizedDayPicker dayKeyRef={dayKeyRef} selectedDayKey={dayKeyRef.current} />
+
             <PlanDay />
         </WidgetBase>
     );

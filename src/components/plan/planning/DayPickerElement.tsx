@@ -5,7 +5,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { getDayKey, getTodayKey } from 'src/controller/planning/PlannedDayController';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const CURRENT_DATE = new Date();
 
 interface Props {
     item: any;
@@ -13,10 +12,11 @@ interface Props {
     isSelected: boolean;
     itemWidth: number;
     onSelectionChange: Function;
+    selectedDate: Date;
 }
 
 export const DayPickerElement = React.forwardRef(
-    ({ item, index, isSelected, itemWidth, onSelectionChange }: Props, ref) => {
+    ({ item, index, isSelected, itemWidth, onSelectionChange, selectedDate }: Props, ref) => {
         const { colors } = useTheme();
 
         const dayRef = React.useRef<Text>(null);
@@ -120,8 +120,8 @@ export const DayPickerElement = React.forwardRef(
                         {
                             DAYS[
                                 new Date(
-                                    CURRENT_DATE.getFullYear(),
-                                    CURRENT_DATE.getMonth(),
+                                    selectedDate.getFullYear(),
+                                    selectedDate.getMonth(),
                                     index % 7
                                 ).getDay()
                             ]
