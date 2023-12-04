@@ -7,6 +7,7 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { MonthPickerElement } from './MonthPickerElement';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { CurrentMonthText } from './CurrentMonthText';
+import { FlashList } from '@shopify/flash-list';
 
 const SCROLL_CENTER = 0.5;
 
@@ -49,7 +50,17 @@ interface Props {
     forceRerender: Function;
 }
 
-export const MonthPicker = ({ dayKeyRef, forceRerender}: Props) => {
+export const MemoizedMonthPicker = React.memo(
+    ({ dayKeyRef, forceRerender }: Props) => {
+        return <MonthPicker dayKeyRef={dayKeyRef} forceRerender={forceRerender} />;
+    },
+    (prevProps, nextProps) => {
+        return true;
+    }
+);
+
+export const MonthPicker = ({ dayKeyRef, forceRerender }: Props) => {
+    console.log('RERENDERING MONTHP ICKER');
     const flatListRef = useRef<FlatList>(null);
     const itemRefs = useRef<Array<any>>(createItemRefs(monthElements.length));
     const previouslySelectedRef = useRef<number>(initialSelectedMonth);
@@ -74,8 +85,9 @@ export const MonthPicker = ({ dayKeyRef, forceRerender}: Props) => {
     const onMonthChange = (monthIndex: number) => {
         const newSelectedDayKey = getDayKeyForSelectedMonth(dayKeyRef.current, monthIndex + 1);
         dayKeyRef.current = newSelectedDayKey;
-        forceRerender();
+
         dispatch(setSelectedDayKey(newSelectedDayKey));
+        forceRerender();
     };
 
     const onSelectionChange = (monthIndex: number) => {
