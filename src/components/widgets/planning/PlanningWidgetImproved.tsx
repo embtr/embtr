@@ -6,6 +6,7 @@ import { PlanDay } from 'src/components/plan/planning/PlanDay';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { WidgetBase } from '../WidgetBase';
 
 export const PlanningWidgetImproved = () => {
     const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(1);
@@ -33,7 +34,7 @@ export const PlanningWidgetImproved = () => {
     };
 
     return (
-        <View>
+        <WidgetBase>
             <MonthPickerImproved
                 selectedIndex={selectedMonthIndex}
                 onSelectionChange={onMonthChanged}
@@ -50,6 +51,6 @@ export const PlanningWidgetImproved = () => {
             <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
                 <PlanDay />
             </View>
-        </View>
+        </WidgetBase>
     );
 };
