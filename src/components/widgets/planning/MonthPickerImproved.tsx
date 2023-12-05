@@ -46,7 +46,7 @@ interface Props {
 
 export const MonthPickerImproved = ({ selectedIndex, onSelectionChange }: Props) => {
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
-        new Animated.Value(ANIMATION_HEIGHT)
+        new Animated.Value(0)
     );
     const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
 
