@@ -96,7 +96,6 @@ export const GlobalState = createSlice({
             state.displayDropDownAlert = action.payload;
         },
         setSelectedDayKey(state, action) {
-            console.log("new selected daykey:", action.payload)
             state.selectedDayKey = action.payload;
         },
         setUnits(state, action) {

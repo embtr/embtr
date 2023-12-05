@@ -49,13 +49,8 @@ export const PlanDay = () => {
         </View>
     );
 
-    const listHeight =
-        todayPageLayoutContext.planningWidgetHeight -
-        todayPageLayoutContext.widgetTitleHeight -
-        todayPageLayoutContext.dayPickerHeight;
-
     return (
-        <View style={{ height: listHeight, width: '100%' }}>
+        <View style={{ width: '100%' }}>
             <FlatList
                 //estimatedFirstItemOffset={0}
                 //estimatedItemSize={61}

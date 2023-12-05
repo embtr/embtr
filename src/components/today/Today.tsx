@@ -17,6 +17,7 @@ import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
 import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -81,17 +82,6 @@ export const Today = () => {
         return <View />;
     };
 
-    const renderItem = ({ item, index }: ListRenderItemInfo<WidgetType>) => {
-        return (
-            <View>
-                <View style={{ paddingHorizontal: 12, paddingBottom: 12 }}>
-                    {index === 0 && <View style={{ height: 7.5 }} />}
-                    {getWidgetFromType(item)}
-                </View>
-            </View>
-        );
-    };
-
     return (
         <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
             <Screen>
@@ -111,7 +101,7 @@ export const Today = () => {
                         }}
                         style={{ flex: 1 }}
                     >
-                        <PlanningWidget />
+                        <PlanningWidgetImproved />
                     </View>
 
                     <View style={{ height: TIMELINE_CARD_PADDING * 1.5 }} />

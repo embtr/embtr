@@ -41,6 +41,7 @@ import { AnyAction } from '@reduxjs/toolkit';
 import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
 import { LoadingOverlay } from './components/common/loading/LoadingOverlay';
 import PlannedDayController from './controller/planning/PlannedDayController';
+import { PlanningWidgetImproved } from './components/widgets/planning/PlanningWidgetImproved';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],

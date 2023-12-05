@@ -7,7 +7,6 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { MonthPickerElement } from './MonthPickerElement';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { CurrentMonthText } from './CurrentMonthText';
-import { FlashList } from '@shopify/flash-list';
 
 const SCROLL_CENTER = 0.5;
 
