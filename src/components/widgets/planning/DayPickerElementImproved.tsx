@@ -1,9 +1,15 @@
 import React from 'react';
 import { Pressable, View, Text, StyleSheet } from 'react-native';
-import { DayPickerElement } from 'src/components/plan/planning/DayPickerElement';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+
+interface MemoizedProps {
+    elementData: DayPickerElementData;
+    isSelected: boolean;
+    monthIndex: number;
+    onSelect: Function;
+}
 
 interface Props {
     elementData: DayPickerElementData;
@@ -33,7 +39,7 @@ const styles = StyleSheet.create({
 });
 
 export const MemoizedDayPickerElementImproved = React.memo(
-    ({ elementData, isSelected, onSelect }: Props) => {
+    ({ elementData, isSelected, onSelect, monthIndex }: MemoizedProps) => {
         return (
             <DayPickerElementImproved
                 elementData={elementData}
@@ -43,12 +49,15 @@ export const MemoizedDayPickerElementImproved = React.memo(
         );
     },
     (prevProps, nextProps) => {
-        return prevProps.isSelected === nextProps.isSelected;
+        return (
+            prevProps.isSelected === nextProps.isSelected &&
+            prevProps.monthIndex === nextProps.monthIndex
+        );
     }
 );
 
 export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: Props) => {
-    console.log("rendering element", elementData.index)
+    console.log('rendering element', elementData.index);
 
     const { colors } = useTheme();
     const textColor = isSelected ? colors.accent_color : colors.today_calendar_picker_unselected;

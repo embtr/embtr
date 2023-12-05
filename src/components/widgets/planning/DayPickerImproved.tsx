@@ -1,10 +1,6 @@
 import { FlatList } from 'react-native';
-//import { FlashList } from '@shopify/flash-list';
 import { View } from 'react-native';
-import {
-    DayPickerElementImproved,
-    MemoizedDayPickerElementImproved,
-} from './DayPickerElementImproved';
+import { MemoizedDayPickerElementImproved } from './DayPickerElementImproved';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
 
 const getMonthFirstDay = (month: number) => {
@@ -87,23 +83,26 @@ const getDaysInMonth = (month: number): DayPickerElementData[] => {
 };
 
 interface Props {
+    selectedDayIndex: number;
     selectedMonthIndex: number;
-    selectedIndex: number;
     onSelectionChange: Function;
 }
 
 const render = ({
     item,
-    selectedIndex,
+    selectedDayIndex,
+    selectedMonthIndex,
     onSelectionChange,
 }: {
     item: DayPickerElementData;
-    selectedIndex: number;
+    selectedDayIndex: number;
+    selectedMonthIndex: number;
     onSelectionChange: Function;
 }) => (
     <MemoizedDayPickerElementImproved
         elementData={item}
-        isSelected={selectedIndex === item.index}
+        isSelected={selectedDayIndex === item.index}
+        monthIndex={selectedMonthIndex}
         onSelect={(index: number) => {
             onSelectionChange(index);
         }}
@@ -111,8 +110,8 @@ const render = ({
 );
 
 export const DayPickerImproved = ({
+    selectedDayIndex,
     selectedMonthIndex,
-    selectedIndex,
     onSelectionChange,
 }: Props) => {
     const days = getDaysInMonth(selectedMonthIndex + 1);
@@ -120,17 +119,18 @@ export const DayPickerImproved = ({
     return (
         <View>
             <FlatList
+                horizontal
+                showsHorizontalScrollIndicator={false}
                 data={days}
                 renderItem={(item) =>
                     render({
                         item: item.item,
-                        selectedIndex,
+                        selectedDayIndex,
+                        selectedMonthIndex,
                         onSelectionChange,
                     })
                 }
                 keyExtractor={(item) => item.index.toString()}
-                horizontal
-                showsHorizontalScrollIndicator={false}
             />
         </View>
     );

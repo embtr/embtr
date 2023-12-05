@@ -42,7 +42,7 @@ export const PlanningWidgetImproved = () => {
             <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
                 <DayPickerImproved
                     selectedMonthIndex={selectedMonthIndex}
-                    selectedIndex={selectedDayIndex}
+                    selectedDayIndex={selectedDayIndex}
                     onSelectionChange={onDayChanged}
                 />
             </View>
