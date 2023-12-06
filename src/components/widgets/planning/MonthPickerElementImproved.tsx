@@ -1,4 +1,5 @@
 import { View, Pressable, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { MonthPickerElementData } from 'src/model/PlanningWidget';
 import { POPPINS_MEDIUM } from 'src/util/constants';
@@ -25,7 +26,7 @@ export const MonthPickerElementImproved = ({ elementData, isSelected, onSelect }
     const textColor = isSelected ? colors.accent_color : colors.today_calendar_picker_unselected;
 
     return (
-        <Pressable
+        <TouchableOpacity
             onPress={() => {
                 onSelect(elementData);
             }}
@@ -42,6 +43,6 @@ export const MonthPickerElementImproved = ({ elementData, isSelected, onSelect }
                     {elementData.monthString}
                 </Text>
             </View>
-        </Pressable>
+        </TouchableOpacity>
     );
 };

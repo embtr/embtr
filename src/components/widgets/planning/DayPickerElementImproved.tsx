@@ -1,5 +1,6 @@
 import React from 'react';
-import { Pressable, View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
@@ -63,7 +64,7 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: 
     const underscoreColor = isSelected ? colors.accent_color : colors.timeline_card_background;
 
     return (
-        <Pressable
+        <TouchableOpacity
             style={{ width: DAY_PICKER_ELEMENT_WIDTH }}
             onPress={() => {
                 onSelect(elementData);
@@ -76,6 +77,6 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: 
                 </Text>
                 <View style={[styles.underscore, { backgroundColor: underscoreColor }]} />
             </View>
-        </Pressable>
+        </TouchableOpacity>
     );
 };

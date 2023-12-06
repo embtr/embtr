@@ -57,7 +57,6 @@ export const PlanningWidgetImproved = () => {
             />
 
             <View style={{ height: TIMELINE_CARD_PADDING }} />
-
             <DayPickerImproved
                 selectedDay={selectedDay}
                 selectedMonth={selectedMonth}
