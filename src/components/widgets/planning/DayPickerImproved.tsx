@@ -5,7 +5,7 @@ import {
     MemoizedDayPickerElementImproved,
 } from './DayPickerElementImproved';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
-import { SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
+import React from 'react';
 
 const getFirstDayOfTheMonth = (month: number) => {
     switch (month) {
@@ -114,16 +114,31 @@ const render = ({
     />
 );
 
+const scrollToSelected = (flatListRef: React.RefObject<FlatList>, monthIndex: number) => {
+    flatListRef.current?.scrollToIndex({
+        index: monthIndex,
+        animated: true,
+        viewPosition: 0.5, // Centers the selected item
+    });
+};
+
 export const DayPickerImproved = ({
     selectedDayIndex,
     selectedMonthIndex,
     onSelectionChange,
 }: Props) => {
+    const onSelectionChangeWrapper = (index: number) => {
+        scrollToSelected(flatListRef, index);
+        onSelectionChange(index);
+    };
+
     const days = getDaysInMonth(selectedMonthIndex);
+    const flatListRef = React.useRef<FlatList>(null);
 
     return (
         <View>
             <FlatList
+                ref={flatListRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 data={days}
@@ -132,7 +147,7 @@ export const DayPickerImproved = ({
                         item: item.item,
                         selectedDayIndex,
                         selectedMonthIndex,
-                        onSelectionChange,
+                        onSelectionChange: onSelectionChangeWrapper,
                     })
                 }
                 keyExtractor={(item) => item.index.toString()}
@@ -141,6 +156,7 @@ export const DayPickerImproved = ({
                     offset: DAY_PICKER_ELEMENT_WIDTH * index,
                     index,
                 })}
+                initialScrollIndex={selectedDayIndex - 3}
             />
         </View>
     );

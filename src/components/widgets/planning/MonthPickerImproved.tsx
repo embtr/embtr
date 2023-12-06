@@ -7,7 +7,7 @@ import { MonthPickerElementImproved } from './MonthPickerElementImproved';
 import { MONTHS, MonthPickerElementData } from 'src/model/PlanningWidget';
 
 const styles = StyleSheet.create({
-    animatedContainer: { overflow: 'hidden', alignItems: 'flex-end', justifyContent: 'flex-end' },
+    animatedContainer: { overflow: 'hidden', width: '100%' },
 });
 
 const ANIMATION_HEIGHT = TIMELINE_CARD_PADDING * 3 - TIMELINE_CARD_PADDING / 2;
@@ -39,6 +39,14 @@ const renderItem = ({
     />
 );
 
+const scrollToSelected = (flatListRef: React.RefObject<FlatList>, monthIndex: number) => {
+    flatListRef.current?.scrollToIndex({
+        index: monthIndex,
+        animated: true,
+        viewPosition: 0.5, // Centers the selected item
+    });
+};
+
 interface Props {
     selectedMonthIndex: number;
     onSelectionChange: Function;
@@ -49,9 +57,15 @@ export const MonthPickerImproved = ({ selectedMonthIndex, onSelectionChange }: P
         new Animated.Value(0)
     );
     const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
+    const flatListRef = React.useRef<FlatList>(null);
+
+    const onSelectionChangeWrapper = (index: number) => {
+        scrollToSelected(flatListRef, index);
+        onSelectionChange(index);
+    };
 
     return (
-        <View>
+        <View style={{ width: '100%' }}>
             {/* display the current month */}
             <CurrentMonthText
                 onPress={() => {
@@ -66,11 +80,16 @@ export const MonthPickerImproved = ({ selectedMonthIndex, onSelectionChange }: P
             <Animated.View style={[styles.animatedContainer, { height: advancedOptionsHeight }]}>
                 <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
                     <FlatList
-                    showsHorizontalScrollIndicator={false}
+                        ref={flatListRef}
+                        showsHorizontalScrollIndicator={false}
                         horizontal
                         data={MONTHS}
                         renderItem={(item) =>
-                            renderItem({ item: item.item, selectedMonthIndex, onSelectionChange })
+                            renderItem({
+                                item: item.item,
+                                selectedMonthIndex,
+                                onSelectionChange: onSelectionChangeWrapper,
+                            })
                         }
                         keyExtractor={(item) => item.index.toString()}
                     />

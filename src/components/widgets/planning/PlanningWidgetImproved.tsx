@@ -12,9 +12,6 @@ const CURRENT_DATE = new Date();
 const CURRENT_MONTH_INDEX = CURRENT_DATE.getMonth();
 const CURRENT_DAY_INDEX = CURRENT_DATE.getDate() - 1;
 
-console.log('CURRENT_MONTH_INDEX', CURRENT_MONTH_INDEX);
-console.log('CURRENT_DAY_INDEX', CURRENT_DAY_INDEX)
-
 export const PlanningWidgetImproved = () => {
     const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(CURRENT_MONTH_INDEX);
     const [selectedDayIndex, setSelectedDayIndex] = React.useState(CURRENT_DAY_INDEX);
@@ -33,8 +30,8 @@ export const PlanningWidgetImproved = () => {
     const onDayChanged = (dayIndex: number) => {
         setSelectedDayIndex(dayIndex);
 
-        const day = dayIndex.toString().padStart(2, '0');
-        const month = selectedMonthIndex.toString().padStart(2, '0');
+        const day = (dayIndex + 1).toString().padStart(2, '0');
+        const month = (selectedMonthIndex + 1).toString().padStart(2, '0');
 
         const dayKey = '2023' + '-' + month + '-' + day;
         dispatch(setSelectedDayKey(dayKey));

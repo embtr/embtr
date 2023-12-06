@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, View, Text, StyleSheet, Dimensions } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface MemoizedProps {
     elementData: DayPickerElementData;
@@ -18,12 +18,9 @@ interface Props {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        paddingHorizontal: 10,
-    },
     wordText: {
         textAlign: 'center',
-        fontSize: 14,
+        fontSize: 13,
         fontFamily: POPPINS_REGULAR,
     },
     numberText: {
@@ -38,7 +35,8 @@ const styles = StyleSheet.create({
     },
 });
 
-export const DAY_PICKER_ELEMENT_WIDTH = Dimensions.get('window').width / 7;
+export const DAY_PICKER_ELEMENT_WIDTH =
+    (Dimensions.get('window').width - TIMELINE_CARD_PADDING * 3) / 7;
 
 export const MemoizedDayPickerElementImproved = React.memo(
     ({ elementData, isSelected, onSelect, monthIndex }: MemoizedProps) => {
@@ -71,7 +69,7 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: 
                 onSelect(elementData.index);
             }}
         >
-            <View style={styles.container}>
+            <View>
                 <Text style={[styles.wordText, { color: textColor }]}>{elementData.day}</Text>
                 <Text style={[styles.numberText, { color: textColor }]}>
                     {elementData.displayNumber}

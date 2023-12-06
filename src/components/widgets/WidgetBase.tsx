@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getShowCardShadow, setMenuOptions } from 'src/redux/user/GlobalState';
-import { CARD_SHADOW, IoniconName } from 'src/util/constants';
+import { CARD_SHADOW, IoniconName, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,7 +36,7 @@ export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Pro
                     backgroundColor: colors.timeline_card_background,
                     paddingTop: 8,
                     paddingBottom: 8,
-                    paddingHorizontal: 12,
+                    paddingHorizontal: TIMELINE_CARD_PADDING,
                 },
                 useCardShadow ? CARD_SHADOW : {},
             ]}
