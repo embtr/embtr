@@ -1,22 +1,50 @@
 export interface MonthPickerElementData {
-    month: string;
+    monthString: string;
+    month: number;
+    year: number;
     index: number;
 }
 
-export const MONTHS: Array<MonthPickerElementData> = [
-    { month: 'January', index: 0 },
-    { month: 'February', index: 1 },
-    { month: 'March', index: 2 },
-    { month: 'April', index: 3 },
-    { month: 'May', index: 4 },
-    { month: 'June', index: 5 },
-    { month: 'July', index: 6 },
-    { month: 'August', index: 7 },
-    { month: 'September', index: 8 },
-    { month: 'October', index: 9 },
-    { month: 'November', index: 10 },
-    { month: 'December', index: 11 },
-];
+export const getMonthData = (): MonthPickerElementData[] => {
+    const now = new Date();
+
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(now.getMonth() - 6);
+
+    const months: MonthPickerElementData[] = [];
+    for (let i = 0; i < 13; i++) {
+        const currentMonth = sixMonthsAgo.getMonth();
+        const currentYear = sixMonthsAgo.getFullYear();
+        const month = {
+            monthString: MONTHS[sixMonthsAgo.getMonth()],
+            month: currentMonth,
+            year: currentYear,
+            index: i,
+        };
+        months.push(month);
+
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() + 1);
+    }
+
+    return months;
+};
+
+const MONTHS: {
+    [key: number]: string;
+} = {
+    0: 'January',
+    1: 'February',
+    2: 'March',
+    3: 'April',
+    4: 'May',
+    5: 'June',
+    6: 'July',
+    7: 'August',
+    8: 'September',
+    9: 'October',
+    10: 'November',
+    11: 'December',
+};
 
 export interface DayPickerElementData {
     day: string;

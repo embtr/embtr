@@ -1,60 +1,71 @@
 import React from 'react';
-import { View } from 'react-native';
 import { MonthPickerImproved } from './MonthPickerImproved';
 import { DayPickerImproved } from './DayPickerImproved';
 import { PlanDay } from 'src/components/plan/planning/PlanDay';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { setSelectedDayKey } from 'src/redux/user/GlobalState';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
+import {
+    DayPickerElementData,
+    MonthPickerElementData,
+    getMonthData,
+} from 'src/model/PlanningWidget';
+import { View } from 'react-native';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 
-const CURRENT_DATE = new Date();
-const CURRENT_MONTH_INDEX = CURRENT_DATE.getMonth();
-const CURRENT_DAY_INDEX = CURRENT_DATE.getDate() - 1;
+const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerElementData) => {
+    const year = monthData.year;
+    const month = (monthData.month + 1).toString().padStart(2, '0');
+    const day = (dayData.index + 1).toString().padStart(2, '0');
 
+    return `${year}-${month}-${day}`;
+};
+
+const months: MonthPickerElementData[] = getMonthData();
 export const PlanningWidgetImproved = () => {
-    const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(CURRENT_MONTH_INDEX);
-    const [selectedDayIndex, setSelectedDayIndex] = React.useState(CURRENT_DAY_INDEX);
-
     const dispatch = useAppDispatch();
-    const onMonthChanged = (monthIndex: number) => {
-        const day = (selectedDayIndex + 1).toString().padStart(2, '0');
-        const month = (monthIndex + 1).toString().padStart(2, '0');
 
-        const dayKey = '2023' + '-' + month + '-' + day;
-        dispatch(setSelectedDayKey(dayKey));
+    const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(
+        months[Math.floor(months.length / 2)]
+    );
+    const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>({
+        day: '',
+        index: 0,
+        displayNumber: 0,
+    });
 
-        setSelectedMonthIndex(monthIndex);
+    const onMonthSelected = (monthData: MonthPickerElementData) => {
+        setSelectedMonth(monthData);
+
+        const newDayKey = generateDayKey(selectedDay, monthData);
+        dispatch(setSelectedDayKey(newDayKey));
     };
 
-    const onDayChanged = (dayIndex: number) => {
-        setSelectedDayIndex(dayIndex);
+    const onDaySelected = (dayData: DayPickerElementData) => {
+        setSelectedDay(dayData);
 
-        const day = (dayIndex + 1).toString().padStart(2, '0');
-        const month = (selectedMonthIndex + 1).toString().padStart(2, '0');
-
-        const dayKey = '2023' + '-' + month + '-' + day;
-        dispatch(setSelectedDayKey(dayKey));
+        const newDayKey = generateDayKey(dayData, selectedMonth);
+        dispatch(setSelectedDayKey(newDayKey));
     };
 
     return (
         <WidgetBase>
             <MonthPickerImproved
-                selectedMonthIndex={selectedMonthIndex}
-                onSelectionChange={onMonthChanged}
+                allMonths={months}
+                selectedMonth={selectedMonth}
+                onSelectionChange={onMonthSelected}
             />
 
-            <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
-                <DayPickerImproved
-                    selectedMonthIndex={selectedMonthIndex}
-                    selectedDayIndex={selectedDayIndex}
-                    onSelectionChange={onDayChanged}
-                />
-            </View>
+            <View style={{ height: TIMELINE_CARD_PADDING }} />
 
-            <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
-                <PlanDay />
-            </View>
+            <DayPickerImproved
+                selectedDay={selectedDay}
+                selectedMonth={selectedMonth}
+                onSelectionChange={onDaySelected}
+            />
+
+            <View style={{ height: TIMELINE_CARD_PADDING }} />
+            <PlanDay />
         </WidgetBase>
     );
 };

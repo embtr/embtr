@@ -6,7 +6,7 @@ import { POPPINS_MEDIUM } from 'src/util/constants';
 interface Props {
     elementData: MonthPickerElementData;
     isSelected: boolean;
-    onSelect: Function;
+    onSelect: (monthData: MonthPickerElementData) => void;
 }
 
 const styles = StyleSheet.create({
@@ -27,7 +27,7 @@ export const MonthPickerElementImproved = ({ elementData, isSelected, onSelect }
     return (
         <Pressable
             onPress={() => {
-                onSelect(elementData.index);
+                onSelect(elementData);
             }}
         >
             <View style={styles.container}>
@@ -39,7 +39,7 @@ export const MonthPickerElementImproved = ({ elementData, isSelected, onSelect }
                         },
                     ]}
                 >
-                    {elementData.month}
+                    {elementData.monthString}
                 </Text>
             </View>
         </Pressable>

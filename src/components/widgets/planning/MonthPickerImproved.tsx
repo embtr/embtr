@@ -4,7 +4,7 @@ import { View, StyleSheet } from 'react-native';
 import { CurrentMonthText } from 'src/components/plan/planning/CurrentMonthText';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { MonthPickerElementImproved } from './MonthPickerElementImproved';
-import { MONTHS, MonthPickerElementData } from 'src/model/PlanningWidget';
+import { MonthPickerElementData } from 'src/model/PlanningWidget';
 
 const styles = StyleSheet.create({
     animatedContainer: { overflow: 'hidden', width: '100%' },
@@ -23,45 +23,47 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
 
 const renderItem = ({
     item,
-    selectedMonthIndex,
+    selectedMonth,
     onSelectionChange,
 }: {
     item: MonthPickerElementData;
-    selectedMonthIndex: number;
+    selectedMonth: MonthPickerElementData;
     onSelectionChange: Function;
 }) => (
     <MonthPickerElementImproved
         elementData={item}
-        isSelected={selectedMonthIndex === item.index}
-        onSelect={(index: number) => {
-            onSelectionChange(index);
+        isSelected={selectedMonth.index === item.index}
+        onSelect={(item: MonthPickerElementData) => {
+            onSelectionChange(item);
         }}
     />
 );
 
-const scrollToSelected = (flatListRef: React.RefObject<FlatList>, monthIndex: number) => {
+const scrollToSelected = (
+    flatListRef: React.RefObject<FlatList>,
+    month: MonthPickerElementData
+) => {
     flatListRef.current?.scrollToIndex({
-        index: monthIndex,
+        index: month.index,
         animated: true,
         viewPosition: 0.5, // Centers the selected item
     });
 };
 
 interface Props {
-    selectedMonthIndex: number;
+    allMonths: MonthPickerElementData[];
+    selectedMonth: MonthPickerElementData;
     onSelectionChange: Function;
 }
 
-export const MonthPickerImproved = ({ selectedMonthIndex, onSelectionChange }: Props) => {
-    const [advancedOptionsHeight] = React.useState<Animated.Value>(
-        new Animated.Value(0)
-    );
+export const MonthPickerImproved = ({ allMonths, selectedMonth, onSelectionChange }: Props) => {
+    const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(0));
     const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
     const flatListRef = React.useRef<FlatList>(null);
 
-    const onSelectionChangeWrapper = (index: number) => {
-        scrollToSelected(flatListRef, index);
-        onSelectionChange(index);
+    const onSelectionChangeWrapper = (month: MonthPickerElementData) => {
+        scrollToSelected(flatListRef, month);
+        onSelectionChange(month);
     };
 
     return (
@@ -72,7 +74,7 @@ export const MonthPickerImproved = ({ selectedMonthIndex, onSelectionChange }: P
                     runAnimation(!advancedVisible, advancedOptionsHeight);
                     setAdvancedVisible(!advancedVisible);
                 }}
-                month={MONTHS[selectedMonthIndex].month}
+                month={selectedMonth.monthString}
                 advancedVisible={advancedVisible}
             />
 
@@ -83,11 +85,11 @@ export const MonthPickerImproved = ({ selectedMonthIndex, onSelectionChange }: P
                         ref={flatListRef}
                         showsHorizontalScrollIndicator={false}
                         horizontal
-                        data={MONTHS}
+                        data={allMonths}
                         renderItem={(item) =>
                             renderItem({
                                 item: item.item,
-                                selectedMonthIndex,
+                                selectedMonth,
                                 onSelectionChange: onSelectionChangeWrapper,
                             })
                         }

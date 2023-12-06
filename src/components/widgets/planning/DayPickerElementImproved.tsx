@@ -8,13 +8,13 @@ interface MemoizedProps {
     elementData: DayPickerElementData;
     isSelected: boolean;
     monthIndex: number;
-    onSelect: Function;
+    onSelect: (day: DayPickerElementData) => void;
 }
 
 interface Props {
     elementData: DayPickerElementData;
     isSelected: boolean;
-    onSelect: Function;
+    onSelect: (day: DayPickerElementData) => void;
 }
 
 const styles = StyleSheet.create({
@@ -66,7 +66,7 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: 
         <Pressable
             style={{ width: DAY_PICKER_ELEMENT_WIDTH }}
             onPress={() => {
-                onSelect(elementData.index);
+                onSelect(elementData);
             }}
         >
             <View>
