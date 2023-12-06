@@ -7,11 +7,20 @@ import { WidgetBase } from '../WidgetBase';
 import {
     DayPickerElementData,
     MonthPickerElementData,
+    getDaysForMonth,
     getMonthData,
 } from 'src/model/PlanningWidget';
 import { View } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
+
+const months: MonthPickerElementData[] = getMonthData();
+const daysOfMonth = getDaysForMonth();
+const currentMonth = months[Math.floor(months.length / 2)];
+const zeroPaddedMonth = currentMonth.month.toString().padStart(2, '0');
+const currentDay: DayPickerElementData = daysOfMonth.get(currentMonth.year + zeroPaddedMonth)![
+    new Date().getDate() - 1
+];
 
 const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerElementData) => {
     const year = monthData.year;
@@ -21,18 +30,11 @@ const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerEle
     return `${year}-${month}-${day}`;
 };
 
-const months: MonthPickerElementData[] = getMonthData();
 export const PlanningWidgetImproved = () => {
     const dispatch = useAppDispatch();
 
-    const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(
-        months[Math.floor(months.length / 2)]
-    );
-    const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>({
-        day: '',
-        index: 0,
-        displayNumber: 0,
-    });
+    const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(currentMonth);
+    const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>(currentDay);
 
     const onMonthSelected = (monthData: MonthPickerElementData) => {
         setSelectedMonth(monthData);
@@ -61,6 +63,7 @@ export const PlanningWidgetImproved = () => {
                 selectedDay={selectedDay}
                 selectedMonth={selectedMonth}
                 onSelectionChange={onDaySelected}
+                daysOfTheMonth={daysOfMonth}
             />
 
             <View style={{ height: TIMELINE_CARD_PADDING }} />

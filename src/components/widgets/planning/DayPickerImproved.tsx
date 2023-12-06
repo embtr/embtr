@@ -10,11 +10,12 @@ import {
     getDaysForMonth,
 } from 'src/model/PlanningWidget';
 import React from 'react';
-
+//import { FlashList } from '@shopify/flash-list';
 interface Props {
     selectedDay: DayPickerElementData;
     selectedMonth: MonthPickerElementData;
     onSelectionChange: Function;
+    daysOfTheMonth: Map<string, DayPickerElementData[]>;
 }
 
 const render = ({
@@ -46,9 +47,7 @@ const scrollToSelected = (flatListRef: React.RefObject<FlatList>, index: number)
     });
 };
 
-const daysOfMonth = getDaysForMonth();
-
-export const DayPickerImproved = ({ selectedDay, selectedMonth, onSelectionChange }: Props) => {
+export const DayPickerImproved = ({ selectedDay, selectedMonth, onSelectionChange, daysOfTheMonth}: Props) => {
     const flatListRef = React.useRef<FlatList>(null);
     const onSelectionChangeWrapper = (day: DayPickerElementData) => {
         scrollToSelected(flatListRef, day.index);
@@ -57,10 +56,11 @@ export const DayPickerImproved = ({ selectedDay, selectedMonth, onSelectionChang
 
     const zeroPaddedMonth = selectedMonth.month.toString().padStart(2, '0');
     const key = `${selectedMonth.year}${zeroPaddedMonth}`;
-    const days = daysOfMonth.get(key);
+    const days = daysOfTheMonth.get(key);
 
     return (
         <View>
+            {/* <FlashList */}
             <FlatList
                 ref={flatListRef}
                 horizontal

@@ -71,6 +71,7 @@ export const MonthPickerImproved = ({ allMonths, selectedMonth, onSelectionChang
             {/* display the current month */}
             <CurrentMonthText
                 onPress={() => {
+                    scrollToSelected(flatListRef, selectedMonth);
                     runAnimation(!advancedVisible, advancedOptionsHeight);
                     setAdvancedVisible(!advancedVisible);
                 }}
