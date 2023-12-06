@@ -42,6 +42,9 @@ import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
 import { LoadingOverlay } from './components/common/loading/LoadingOverlay';
 import PlannedDayController from './controller/planning/PlannedDayController';
 import { PlanningWidgetImproved } from './components/widgets/planning/PlanningWidgetImproved';
+import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
+import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
+import { EditHabitModal } from './components/plan/habit/EditHabitModal';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -250,6 +253,9 @@ export const Main = () => {
                     <ConfettiView />
                     <DropDownAlert />
                     <LoadingOverlay />
+                    <RemoveHabitModal />
+                    <UpdatePlannedTaskModal />
+                    <EditHabitModal />
                     <NewVersionModal
                         visible={showUpdateAvailableModal}
                         onDismiss={() => {
