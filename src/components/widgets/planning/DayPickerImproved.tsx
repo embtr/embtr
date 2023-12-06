@@ -1,33 +1,37 @@
 import { FlatList } from 'react-native';
 import { View } from 'react-native';
-import { MemoizedDayPickerElementImproved } from './DayPickerElementImproved';
+import {
+    DAY_PICKER_ELEMENT_WIDTH,
+    MemoizedDayPickerElementImproved,
+} from './DayPickerElementImproved';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
+import { SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
 
-const getMonthFirstDay = (month: number) => {
+const getFirstDayOfTheMonth = (month: number) => {
     switch (month) {
-        case 1:
+        case 0:
             return 'Sun';
+        case 1:
+            return 'Wed';
         case 2:
             return 'Wed';
         case 3:
-            return 'Wed';
+            return 'Sat';
         case 4:
-            return 'Sat';
-        case 5:
             return 'Mon';
-        case 6:
+        case 5:
             return 'Thu';
-        case 7:
+        case 6:
             return 'Sat';
-        case 8:
+        case 7:
             return 'Tue';
-        case 9:
+        case 8:
             return 'Fri';
-        case 10:
+        case 9:
             return 'Sun';
-        case 11:
+        case 10:
             return 'Wed';
-        case 12:
+        case 11:
             return 'Fri';
         default:
             return 'Mon';
@@ -36,45 +40,46 @@ const getMonthFirstDay = (month: number) => {
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-const getDaysInOrder = (month: number) => {
-    const firstDay = getMonthFirstDay(month);
+const getOrderedDaysOfTheMonth = (monthIndex: number) => {
+    const firstDay = getFirstDayOfTheMonth(monthIndex);
     const firstDayIndex = DAYS.indexOf(firstDay);
     const daysInOrder = DAYS.slice(firstDayIndex).concat(DAYS.slice(0, firstDayIndex));
 
     return daysInOrder;
 };
 
-const getNumberOfDaysInMonth = (month: number) => {
-    switch (month) {
-        case 1:
-        case 3:
-        case 5:
-        case 7:
-        case 8:
-        case 10:
-        case 12:
-            return 31;
+const getNumberOfDaysInMonth = (monthIndex: number) => {
+    switch (monthIndex) {
+        case 0:
         case 2:
-            return 28;
         case 4:
         case 6:
+        case 7:
         case 9:
         case 11:
+            return 31;
+        case 1:
+            return 28;
+        case 3:
+        case 5:
+        case 8:
+        case 10:
             return 30;
         default:
             return 31;
     }
 };
 
-const getDaysInMonth = (month: number): DayPickerElementData[] => {
-    const daysInOrder = getDaysInOrder(month);
-    const numberOfDaysInMonth = getNumberOfDaysInMonth(month);
+const getDaysInMonth = (monthIndex: number): DayPickerElementData[] => {
+    const daysInOrder = getOrderedDaysOfTheMonth(monthIndex);
+    const numberOfDaysInMonth = getNumberOfDaysInMonth(monthIndex);
 
     const days: DayPickerElementData[] = [];
     for (let i = 0; i < numberOfDaysInMonth; i++) {
         const dayType = {
             day: daysInOrder[i % 7],
-            index: i + 1,
+            displayNumber: i + 1,
+            index: i,
         };
         days.push(dayType);
     }
@@ -114,7 +119,7 @@ export const DayPickerImproved = ({
     selectedMonthIndex,
     onSelectionChange,
 }: Props) => {
-    const days = getDaysInMonth(selectedMonthIndex + 1);
+    const days = getDaysInMonth(selectedMonthIndex);
 
     return (
         <View>
@@ -131,6 +136,11 @@ export const DayPickerImproved = ({
                     })
                 }
                 keyExtractor={(item) => item.index.toString()}
+                getItemLayout={(data, index) => ({
+                    length: DAY_PICKER_ELEMENT_WIDTH,
+                    offset: DAY_PICKER_ELEMENT_WIDTH * index,
+                    index,
+                })}
             />
         </View>
     );

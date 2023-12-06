@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Pressable, Text, StyleSheet } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { MonthPickerElementData } from 'src/model/PlanningWidget';

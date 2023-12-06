@@ -8,14 +8,21 @@ import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
 
+const CURRENT_DATE = new Date();
+const CURRENT_MONTH_INDEX = CURRENT_DATE.getMonth();
+const CURRENT_DAY_INDEX = CURRENT_DATE.getDate() - 1;
+
+console.log('CURRENT_MONTH_INDEX', CURRENT_MONTH_INDEX);
+console.log('CURRENT_DAY_INDEX', CURRENT_DAY_INDEX)
+
 export const PlanningWidgetImproved = () => {
-    const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(1);
-    const [selectedDayIndex, setSelectedDayIndex] = React.useState(1);
+    const [selectedMonthIndex, setSelectedMonthIndex] = React.useState(CURRENT_MONTH_INDEX);
+    const [selectedDayIndex, setSelectedDayIndex] = React.useState(CURRENT_DAY_INDEX);
 
     const dispatch = useAppDispatch();
     const onMonthChanged = (monthIndex: number) => {
-        const day = selectedDayIndex.toString().padStart(2, '0');
-        const month = monthIndex.toString().padStart(2, '0');
+        const day = (selectedDayIndex + 1).toString().padStart(2, '0');
+        const month = (monthIndex + 1).toString().padStart(2, '0');
 
         const dayKey = '2023' + '-' + month + '-' + day;
         dispatch(setSelectedDayKey(dayKey));
@@ -36,7 +43,7 @@ export const PlanningWidgetImproved = () => {
     return (
         <WidgetBase>
             <MonthPickerImproved
-                selectedIndex={selectedMonthIndex}
+                selectedMonthIndex={selectedMonthIndex}
                 onSelectionChange={onMonthChanged}
             />
 

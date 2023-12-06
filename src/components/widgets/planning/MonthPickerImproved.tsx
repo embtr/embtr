@@ -23,16 +23,16 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
 
 const renderItem = ({
     item,
-    selectedIndex,
+    selectedMonthIndex,
     onSelectionChange,
 }: {
     item: MonthPickerElementData;
-    selectedIndex: number;
+    selectedMonthIndex: number;
     onSelectionChange: Function;
 }) => (
     <MonthPickerElementImproved
         elementData={item}
-        isSelected={selectedIndex === item.index}
+        isSelected={selectedMonthIndex === item.index}
         onSelect={(index: number) => {
             onSelectionChange(index);
         }}
@@ -40,11 +40,11 @@ const renderItem = ({
 );
 
 interface Props {
-    selectedIndex: number;
+    selectedMonthIndex: number;
     onSelectionChange: Function;
 }
 
-export const MonthPickerImproved = ({ selectedIndex, onSelectionChange }: Props) => {
+export const MonthPickerImproved = ({ selectedMonthIndex, onSelectionChange }: Props) => {
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
         new Animated.Value(0)
     );
@@ -58,7 +58,7 @@ export const MonthPickerImproved = ({ selectedIndex, onSelectionChange }: Props)
                     runAnimation(!advancedVisible, advancedOptionsHeight);
                     setAdvancedVisible(!advancedVisible);
                 }}
-                month={MONTHS[selectedIndex].month}
+                month={MONTHS[selectedMonthIndex].month}
                 advancedVisible={advancedVisible}
             />
 
@@ -70,7 +70,7 @@ export const MonthPickerImproved = ({ selectedIndex, onSelectionChange }: Props)
                         horizontal
                         data={MONTHS}
                         renderItem={(item) =>
-                            renderItem({ item: item.item, selectedIndex, onSelectionChange })
+                            renderItem({ item: item.item, selectedMonthIndex, onSelectionChange })
                         }
                         keyExtractor={(item) => item.index.toString()}
                     />

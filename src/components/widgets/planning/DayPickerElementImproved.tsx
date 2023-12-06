@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, View, Text, StyleSheet } from 'react-native';
+import { Pressable, View, Text, StyleSheet, Dimensions } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
@@ -38,6 +38,8 @@ const styles = StyleSheet.create({
     },
 });
 
+export const DAY_PICKER_ELEMENT_WIDTH = Dimensions.get('window').width / 7;
+
 export const MemoizedDayPickerElementImproved = React.memo(
     ({ elementData, isSelected, onSelect, monthIndex }: MemoizedProps) => {
         return (
@@ -57,21 +59,23 @@ export const MemoizedDayPickerElementImproved = React.memo(
 );
 
 export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: Props) => {
-    console.log('rendering element', elementData.index);
-
     const { colors } = useTheme();
+
     const textColor = isSelected ? colors.accent_color : colors.today_calendar_picker_unselected;
     const underscoreColor = isSelected ? colors.accent_color : colors.timeline_card_background;
 
     return (
         <Pressable
+            style={{ width: DAY_PICKER_ELEMENT_WIDTH }}
             onPress={() => {
                 onSelect(elementData.index);
             }}
         >
             <View style={styles.container}>
                 <Text style={[styles.wordText, { color: textColor }]}>{elementData.day}</Text>
-                <Text style={[styles.numberText, { color: textColor }]}>{elementData.index}</Text>
+                <Text style={[styles.numberText, { color: textColor }]}>
+                    {elementData.displayNumber}
+                </Text>
                 <View style={[styles.underscore, { backgroundColor: underscoreColor }]} />
             </View>
         </Pressable>

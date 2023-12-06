@@ -20,5 +20,6 @@ export const MONTHS: Array<MonthPickerElementData> = [
 
 export interface DayPickerElementData {
     day: string;
+    displayNumber: number;
     index: number;
 }
