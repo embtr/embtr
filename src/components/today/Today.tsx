@@ -9,7 +9,6 @@ import { TodaysActivitiesWidget, WidgetSource } from '../widgets/TodaysTasksWidg
 import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
-import { PlanningWidget } from '../widgets/PlanningWidget';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { useAppSelector } from 'src/redux/Hooks';
@@ -70,7 +69,7 @@ export const Today = () => {
                 return <HabitJourneyWidget user={user} />;
 
             case WidgetType.PLANNING:
-                return <PlanningWidget />;
+                return <PlanningWidgetImproved />;
 
             case WidgetType.ACTIVE_CHALLENGES:
                 return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;

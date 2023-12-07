@@ -54,9 +54,10 @@ interface Props {
     allMonths: MonthPickerElementData[];
     selectedMonth: MonthPickerElementData;
     onSelectionChange: Function;
+    scrollToToday: () => void;
 }
 
-export const MonthPickerImproved = ({ allMonths, selectedMonth, onSelectionChange }: Props) => {
+export const MonthPickerImproved = ({ allMonths, selectedMonth, onSelectionChange, scrollToToday }: Props) => {
     const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(0));
     const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
     const flatListRef = React.useRef<FlatList>(null);
@@ -77,6 +78,7 @@ export const MonthPickerImproved = ({ allMonths, selectedMonth, onSelectionChang
                 }}
                 month={selectedMonth.monthString}
                 advancedVisible={advancedVisible}
+                scrollToToday={scrollToToday}
             />
 
             {/* collapsable month selector */}

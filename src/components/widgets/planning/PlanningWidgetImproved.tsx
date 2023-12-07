@@ -50,12 +50,20 @@ export const PlanningWidgetImproved = () => {
         dispatch(setSelectedDayKey(newDayKey));
     };
 
+    const scrollToToday = () => {
+        setSelectedMonth(currentMonth);
+        setSelectedDay(currentDay);
+    };
+
     return (
         <WidgetBase>
             <MonthPickerImproved
                 allMonths={months}
                 selectedMonth={selectedMonth}
                 onSelectionChange={onMonthSelected}
+                scrollToToday={() => {
+                    scrollToToday();
+                }}
             />
 
             <View style={{ height: TIMELINE_CARD_PADDING }} />

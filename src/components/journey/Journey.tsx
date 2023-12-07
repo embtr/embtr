@@ -16,9 +16,9 @@ import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget'
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { ConfettiView } from '../common/animated_view/ConfettiView';
 import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
-import { PlanningWidget } from '../widgets/PlanningWidget';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
+import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 
 export const Journey = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -111,7 +111,7 @@ export const Journey = () => {
                 return <HabitJourneyWidget user={user} />;
 
             case WidgetType.PLANNING:
-                return <PlanningWidget />;
+                return <PlanningWidgetImproved />;
 
             case WidgetType.ACTIVE_CHALLENGES:
                 return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;
