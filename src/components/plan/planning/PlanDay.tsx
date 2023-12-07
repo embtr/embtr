@@ -1,13 +1,14 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedTask } from 'resources/schema';
 //import { FlashList } from '@shopify/flash-list';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
 import { PlanningService } from 'src/util/planning/PlanningService';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key = PlanningService.getPlannedHabitUniqueKey(plannedTask);
@@ -15,6 +16,8 @@ export const keyExtractor = (plannedTask: PlannedTask) => {
 };
 
 export const PlanDay = () => {
+    const { colors } = useTheme();
+
     const { dayKey, plannedDay } = PlannedDayCustomHooks.useSelectedPlannedDay();
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
     const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
@@ -48,6 +51,16 @@ export const PlanDay = () => {
             <MemoizedPlannableTaskImproved initialPlannedTask={item} />
         </View>
     );
+
+    if (elements.length === 0) {
+        return (
+            <View style={{ paddingVertical: TIMELINE_CARD_PADDING }}>
+                <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR }}>
+                    Nothing planned for today.
+                </Text>
+            </View>
+        );
+    }
 
     return (
         <View style={{ width: '100%' }}>

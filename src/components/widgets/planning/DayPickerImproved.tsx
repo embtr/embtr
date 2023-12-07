@@ -1,5 +1,5 @@
 import { FlatList } from 'react-native';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import {
     DAY_PICKER_ELEMENT_WIDTH,
     MemoizedDayPickerElementImproved,
@@ -10,6 +10,7 @@ import {
     getDaysForMonth,
 } from 'src/model/PlanningWidget';
 import React from 'react';
+import { POPPINS_REGULAR } from 'src/util/constants';
 //import { FlashList } from '@shopify/flash-list';
 interface Props {
     selectedDay: DayPickerElementData;
@@ -47,7 +48,12 @@ const scrollToSelected = (flatListRef: React.RefObject<FlatList>, index: number)
     });
 };
 
-export const DayPickerImproved = ({ selectedDay, selectedMonth, onSelectionChange, daysOfTheMonth}: Props) => {
+export const DayPickerImproved = ({
+    selectedDay,
+    selectedMonth,
+    onSelectionChange,
+    daysOfTheMonth,
+}: Props) => {
     const flatListRef = React.useRef<FlatList>(null);
     const onSelectionChangeWrapper = (day: DayPickerElementData) => {
         scrollToSelected(flatListRef, day.index);
