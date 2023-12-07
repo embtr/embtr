@@ -17,6 +17,7 @@ import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/
 import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
+import { TodaysTasksWidgetImproved } from '../widgets/planning/TodaysTasksWidgetImproved';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -100,7 +101,7 @@ export const Today = () => {
                         }}
                         style={{ flex: 1 }}
                     >
-                        <PlanningWidgetImproved />
+                        <TodaysTasksWidgetImproved />
                     </View>
 
                     <View style={{ height: TIMELINE_CARD_PADDING * 1.5 }} />

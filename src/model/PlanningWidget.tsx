@@ -33,8 +33,11 @@ export const generateDaysOfMonth = (month: MonthPickerElementData): DayPickerEle
     const date = new Date(month.year, month.month, 1);
     const days: DayPickerElementData[] = [];
     while (date.getMonth() === month.month) {
-        const day = {
-            day: DAYS[date.getDay()],
+        const dayData = DAYS[date.getDay()];
+
+        const day: DayPickerElementData = {
+            dayShort: dayData.dayShort,
+            dayFull: dayData.dayFull,
             displayNumber: date.getDate(),
             index: date.getDate() - 1,
         };
@@ -147,7 +150,19 @@ export const getDaysForMonth = () => {
     return daysOfMonthMap;
 };
 
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+interface DayData {
+    dayShort: string;
+    dayFull: string;
+}
+const DAYS: DayData[] = [
+    { dayShort: 'Sun', dayFull: 'Sunday' },
+    { dayShort: 'Mon', dayFull: 'Monday' },
+    { dayShort: 'Tue', dayFull: 'Tuesday' },
+    { dayShort: 'Wed', dayFull: 'Wednesday' },
+    { dayShort: 'Thu', dayFull: 'Thursday' },
+    { dayShort: 'Fri', dayFull: 'Friday' },
+    { dayShort: 'Sat', dayFull: 'Saturday' },
+];
 
 const MONTHS: {
     [key: number]: string;
@@ -167,7 +182,8 @@ const MONTHS: {
 };
 
 export interface DayPickerElementData {
-    day: string;
+    dayFull: string;
+    dayShort: string;
     displayNumber: number;
     index: number;
 }

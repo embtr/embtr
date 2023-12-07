@@ -73,7 +73,7 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: 
         >
             <View style={{ alignContent: 'center', alignItems: 'center' }}>
                 <Ionicons name={'checkmark'} size={12} color={colors.accent_color} />
-                <Text style={[styles.wordText, { color: textColor }]}>{elementData.day}</Text>
+                <Text style={[styles.wordText, { color: textColor }]}>{elementData.dayShort}</Text>
                 <Text style={[styles.numberText, { color: textColor }]}>
                     {elementData.displayNumber}
                 </Text>

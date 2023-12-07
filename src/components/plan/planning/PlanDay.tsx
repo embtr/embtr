@@ -15,36 +15,59 @@ export const keyExtractor = (plannedTask: PlannedTask) => {
     return key;
 };
 
-export const PlanDay = () => {
+interface Props {
+    hideComplete?: boolean;
+}
+
+export const PlanDay = ({ hideComplete }: Props) => {
     const { colors } = useTheme();
 
     const { dayKey, plannedDay } = PlannedDayCustomHooks.useSelectedPlannedDay();
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
-    const todayPageLayoutContext = React.useContext(TodayPageLayoutContext);
 
     React.useEffect(() => {
+        console.log('hideComplete', hideComplete);
         if (!plannedDay.data?.plannedTasks || plannedDay.data.plannedTasks.length === 0) {
             setElements([]);
             return;
         }
 
         if (plannedDay.data.plannedTasks.length < 7) {
-            setElements(plannedDay.data.plannedTasks);
+            if (hideComplete) {
+                setElements(
+                    plannedDay.data.plannedTasks.filter(
+                        (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
+                    )
+                );
+            } else {
+                setElements(plannedDay.data.plannedTasks);
+            }
+
             return;
         }
 
-        setElements(plannedDay.data.plannedTasks.slice(0, 7));
+        hideComplete
+            ? plannedDay.data.plannedTasks
+                  .slice(0, 7)
+                  .filter((task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1))
+            : plannedDay.data.plannedTasks.slice(0, 7);
 
         const id = requestAnimationFrame(() => {
             if (plannedDay.data?.plannedTasks) {
-                setElements(plannedDay.data.plannedTasks);
+                setElements(
+                    hideComplete
+                        ? plannedDay.data.plannedTasks.filter(
+                              (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
+                          )
+                        : plannedDay.data.plannedTasks
+                );
             }
         });
 
         return () => {
             cancelAnimationFrame(id);
         };
-    }, [plannedDay.data]);
+    }, [plannedDay.data, hideComplete]);
 
     const renderItem = ({ item }: { item: PlannedTask }) => (
         <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
