@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { Ionicons } from '@expo/vector-icons';
 
 interface MemoizedProps {
     elementData: DayPickerElementData;
@@ -70,7 +71,8 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: 
                 onSelect(elementData);
             }}
         >
-            <View>
+            <View style={{ alignContent: 'center', alignItems: 'center' }}>
+                <Ionicons name={'checkmark'} size={12} color={colors.accent_color} />
                 <Text style={[styles.wordText, { color: textColor }]}>{elementData.day}</Text>
                 <Text style={[styles.numberText, { color: textColor }]}>
                     {elementData.displayNumber}
