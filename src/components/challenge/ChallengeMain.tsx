@@ -3,10 +3,10 @@ import { View, Text } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Banner } from '../common/Banner';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { UpcomingChallenges } from './UpcomingChallenges';
-import { Journey } from '../journey/Journey';
 import { Screen } from '../common/Screen';
+import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 
 export const ChallengeMain = () => {
     const { colors } = useTheme();
@@ -14,10 +14,10 @@ export const ChallengeMain = () => {
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
-            case 'journey':
+            case 'planning':
                 return (
-                    <View style={{ height: '100%' }}>
-                        <Journey />
+                    <View style={{ height: '100%', padding: TIMELINE_CARD_PADDING / 2 }}>
+                        <PlanningWidgetImproved />
                     </View>
                 );
 
@@ -59,7 +59,7 @@ export const ChallengeMain = () => {
     };
 
     const [routes] = React.useState([
-        { key: 'journey', title: 'Journey' },
+        { key: 'planning', title: 'Planning' },
         { key: 'challenges', title: 'Challenges' },
         { key: 'achievements', title: 'Achievements' },
     ]);
@@ -85,6 +85,7 @@ export const ChallengeMain = () => {
                                     return (
                                         <Text
                                             style={{
+                                                fontSize: 13,
                                                 color: colors.planning_focused_text,
                                                 fontFamily: POPPINS_MEDIUM,
                                                 opacity: focused ? 1.0 : 0.35,

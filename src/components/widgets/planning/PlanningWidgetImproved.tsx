@@ -13,6 +13,7 @@ import {
 import { View } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
+import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
 
 const months: MonthPickerElementData[] = getMonthData();
 const daysOfMonth = getDaysForMonth();
@@ -57,25 +58,27 @@ export const PlanningWidgetImproved = () => {
 
     return (
         <WidgetBase>
-            <MonthPickerImproved
-                allMonths={months}
-                selectedMonth={selectedMonth}
-                onSelectionChange={onMonthSelected}
-                scrollToToday={() => {
-                    scrollToToday();
-                }}
-            />
+            <View style={{ height: '100%' }}>
+                <MonthPickerImproved
+                    allMonths={months}
+                    selectedMonth={selectedMonth}
+                    onSelectionChange={onMonthSelected}
+                    scrollToToday={() => {
+                        scrollToToday();
+                    }}
+                />
 
-            <View style={{ height: TIMELINE_CARD_PADDING }} />
-            <DayPickerImproved
-                selectedDay={selectedDay}
-                selectedMonth={selectedMonth}
-                onSelectionChange={onDaySelected}
-                daysOfTheMonth={daysOfMonth}
-            />
+                <View style={{ height: TIMELINE_CARD_PADDING }} />
+                <DayPickerImproved
+                    selectedDay={selectedDay}
+                    selectedMonth={selectedMonth}
+                    onSelectionChange={onDaySelected}
+                    daysOfTheMonth={daysOfMonth}
+                />
 
-            <View style={{ height: TIMELINE_CARD_PADDING }} />
-            <PlanDay />
+                <View style={{ height: TIMELINE_CARD_PADDING }} />
+                <PlanSelectedDay />
+            </View>
         </WidgetBase>
     );
 };

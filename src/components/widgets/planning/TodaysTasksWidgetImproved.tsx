@@ -17,6 +17,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { PlanToday } from 'src/components/plan/planning/PlanToday';
 
 const months: MonthPickerElementData[] = getMonthData();
 const daysOfMonth = getDaysForMonth();
@@ -45,7 +46,7 @@ export const TodaysTasksWidgetImproved = () => {
                         fontSize: 12,
                     }}
                 >
-                    hide complete 
+                    hide complete
                 </Text>
                 <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
 
@@ -73,7 +74,7 @@ export const TodaysTasksWidgetImproved = () => {
 
             <View style={{ paddingTop: TIMELINE_CARD_PADDING }} />
 
-            <PlanDay hideComplete={hideComplete} />
+            <PlanToday hideComplete={hideComplete} />
         </WidgetBase>
     );
 };

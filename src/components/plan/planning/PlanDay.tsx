@@ -2,11 +2,10 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
-import { PlannedTask } from 'resources/schema';
+import { PlannedDay, PlannedTask } from 'resources/schema';
 //import { FlashList } from '@shopify/flash-list';
 import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
-import { TodayPageLayoutContext } from 'src/components/today/TodayPageLayoutContext';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
@@ -16,50 +15,50 @@ export const keyExtractor = (plannedTask: PlannedTask) => {
 };
 
 interface Props {
+    plannedDay: PlannedDay;
     hideComplete?: boolean;
 }
 
-export const PlanDay = ({ hideComplete }: Props) => {
+export const PlanDay = ({ plannedDay, hideComplete }: Props) => {
     const { colors } = useTheme();
 
-    const { dayKey, plannedDay } = PlannedDayCustomHooks.useSelectedPlannedDay();
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
 
     React.useEffect(() => {
         console.log('hideComplete', hideComplete);
-        if (!plannedDay.data?.plannedTasks || plannedDay.data.plannedTasks.length === 0) {
+        if (!plannedDay.plannedTasks || plannedDay.plannedTasks.length === 0) {
             setElements([]);
             return;
         }
 
-        if (plannedDay.data.plannedTasks.length < 7) {
+        if (plannedDay.plannedTasks.length < 7) {
             if (hideComplete) {
                 setElements(
-                    plannedDay.data.plannedTasks.filter(
+                    plannedDay.plannedTasks.filter(
                         (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
                     )
                 );
             } else {
-                setElements(plannedDay.data.plannedTasks);
+                setElements(plannedDay.plannedTasks);
             }
 
             return;
         }
 
         hideComplete
-            ? plannedDay.data.plannedTasks
+            ? plannedDay.plannedTasks
                   .slice(0, 7)
                   .filter((task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1))
-            : plannedDay.data.plannedTasks.slice(0, 7);
+            : plannedDay.plannedTasks.slice(0, 7);
 
         const id = requestAnimationFrame(() => {
-            if (plannedDay.data?.plannedTasks) {
+            if (plannedDay.plannedTasks) {
                 setElements(
                     hideComplete
-                        ? plannedDay.data.plannedTasks.filter(
+                        ? plannedDay.plannedTasks.filter(
                               (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
                           )
-                        : plannedDay.data.plannedTasks
+                        : plannedDay.plannedTasks
                 );
             }
         });
@@ -67,7 +66,7 @@ export const PlanDay = ({ hideComplete }: Props) => {
         return () => {
             cancelAnimationFrame(id);
         };
-    }, [plannedDay.data, hideComplete]);
+    }, [plannedDay, hideComplete]);
 
     const renderItem = ({ item }: { item: PlannedTask }) => (
         <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
