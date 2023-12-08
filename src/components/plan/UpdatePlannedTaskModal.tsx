@@ -20,6 +20,8 @@ import { SvgUri } from 'react-native-svg';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
+    getCurrentUser,
+    getFireConfetti,
     getSelectedDayKey,
     getUpdateModalPlannedTask,
     setEditModalPlannedTask,
@@ -31,6 +33,7 @@ import { PlannedTask } from 'resources/schema';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { Constants } from 'resources/types/constants/constants';
+import { PlannedDayService } from 'src/service/PlannedDayService';
 
 const refreshPlannedDay = async (dayKey: string) => {
     PlannedDayController.prefetchPlannedDayData(dayKey);
@@ -67,6 +70,9 @@ export const UpdatePlannedTaskModal = () => {
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
         new Animated.Value(MAX_OPTIONS_HEIGHT)
     );
+
+    const currentUser = useAppSelector(getCurrentUser);
+    const fireConfetti = useAppSelector(getFireConfetti);
 
     const dismiss = () => {
         dispatch(setUpdateModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
@@ -120,8 +126,15 @@ export const UpdatePlannedTaskModal = () => {
         onUpdateCallback(clone);
         dismiss();
 
+        const wasCompleteBefore = await PlannedDayService.isComplete(currentUser.id ?? 0, dayKey);
         await createUpdatePlannedTask(clone, dayKey);
         refreshPlannedDay(dayKey);
+        if (!wasCompleteBefore) {
+            const isCompleteAfter = await PlannedDayService.isComplete(currentUser.id ?? 0, dayKey);
+            if (isCompleteAfter) {
+                fireConfetti();
+            }
+        }
     };
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {

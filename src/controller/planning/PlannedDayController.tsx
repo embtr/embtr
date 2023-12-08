@@ -17,9 +17,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
-import { current } from '@reduxjs/toolkit';
-import { getMonth } from 'date-fns';
 import { Constants } from 'resources/types/constants/constants';
+import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
 
 export interface PlannedDay {
     id?: string;
@@ -107,6 +106,7 @@ export const getDayKeyFromDate = (date: Date) => {
     const dateString = getDateFormatted(date);
     return dateString;
 };
+
 export const getDayKeyForSelectedMonth = (dayKey: string, month: number) => {
     const monthString = month < 10 ? `0${month}` : `${month}`;
     const newSelectedDayKey = dayKey.replace(/-\d\d-/, `-${monthString}-`);
@@ -329,6 +329,18 @@ class PlannedDayController {
             })
             .catch((error) => {
                 return undefined;
+            });
+    }
+
+    public static async isComplete(userId: number, dayKey: string): Promise<boolean> {
+        return await axiosInstance
+            .get(`${PLANNED_DAY}${userId}/${dayKey}/isComplete`)
+            .then((success) => {
+                const result = success.data as GetBooleanResponse;
+                return result.result;
+            })
+            .catch((error) => {
+                return false;
             });
     }
 

@@ -25,7 +25,6 @@ export const PlanDay = ({ plannedDay, hideComplete }: Props) => {
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
 
     React.useEffect(() => {
-        console.log('hideComplete', hideComplete);
         if (!plannedDay.plannedTasks || plannedDay.plannedTasks.length === 0) {
             setElements([]);
             return;

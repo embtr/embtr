@@ -1,9 +1,8 @@
-import { da } from 'date-fns/locale';
-import { PlannedDay, PlannedTask } from 'resources/schema';
+import { PlannedTask } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 
-export class PlannedHabitService {
-    public static async deactivate(plannedHabit: PlannedTask, dayKey: string) {
+export namespace PlannedTaskService {
+    export const deactivate = async (plannedHabit: PlannedTask, dayKey: string) => {
         plannedHabit.active = false;
 
         if (plannedHabit.id) {
@@ -11,5 +10,5 @@ export class PlannedHabitService {
         } else {
             await PlannedTaskController.create(plannedHabit, dayKey);
         }
-    }
+    };
 }
