@@ -14,12 +14,14 @@ import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { Logger } from 'src/util/GeneralUtility';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getSelectedDayKey } from 'src/redux/user/GlobalState';
+import { getCurrentTab, getSelectedDayKey } from 'src/redux/user/GlobalState';
 import PlannedDayController, {
     getDateFromDayKey,
+    getTodayKey,
 } from 'src/controller/planning/PlannedDayController';
 import TaskController from 'src/controller/planning/TaskController';
 import { HabitController } from 'src/controller/habit/HabitController';
+import { TABS } from 'src/components/home/Dashboard';
 
 interface Props {
     habitId?: number;
@@ -55,7 +57,10 @@ export const CreateEditHabitSaveButton = ({
         editMode,
     } = useCreateEditScheduleHabit();
 
+    const currentTab = useAppSelector(getCurrentTab);
+    const todayKey = useAppSelector(getTodayKey);
     const selectedDayKey = useAppSelector(getSelectedDayKey);
+    const dayKeyToUse = currentTab === TABS.TODAY ? todayKey : selectedDayKey;
 
     const createUpdatedPlannedTask = (id: number) => {
         const plannedTask: PlannedTask = {
@@ -121,7 +126,7 @@ export const CreateEditHabitSaveButton = ({
             scheduledHabit.endDate = endDate;
         } else {
             //adding for just the selected day
-            const selectedDate = getDateFromDayKey(selectedDayKey);
+            const selectedDate = getDateFromDayKey(dayKeyToUse);
             const dayOfWeek = selectedDate.getDay() + 1;
 
             scheduledHabit.daysOfWeek = [
@@ -163,14 +168,14 @@ export const CreateEditHabitSaveButton = ({
 
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest(habit.id);
         await ScheduledHabitController.create(scheduledHabit);
-        PlannedDayController.prefetchPlannedDayData(selectedDayKey);
+        PlannedDayController.prefetchPlannedDayData(dayKeyToUse);
     };
 
     const createHabit = async () => {
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.create(scheduledHabit);
-        PlannedDayController.prefetchPlannedDayData(selectedDayKey);
+        PlannedDayController.prefetchPlannedDayData(dayKeyToUse);
     };
 
     const updateHabit = async () => {
@@ -222,7 +227,7 @@ export const CreateEditHabitSaveButton = ({
                 break;
         }
 
-        await PlannedDayController.prefetchPlannedDayData(selectedDayKey);
+        await PlannedDayController.prefetchPlannedDayData(dayKeyToUse);
         navigation.popToTop();
     };
 
