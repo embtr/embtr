@@ -5,7 +5,7 @@ import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';
 import { PlannedTask as PlannedTaskModel } from 'resources/schema';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { UnitUtility } from 'src/util/UnitUtility';
@@ -22,28 +22,13 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
     const { colors } = useTheme();
     const [temporaryStatus, setTemporaryStatus] = React.useState('');
 
-    const taskIsFailed = plannedTask.status === Constants.HabitStatus.FAILED;
-
     const unit = plannedTask.unit;
     const quantity = plannedTask.quantity;
     const completedQuantity = plannedTask.completedQuantity;
 
     let taskIsComplete = false;
-    let progress = 0;
     if (quantity && completedQuantity) {
-        progress = completedQuantity / quantity;
         taskIsComplete = completedQuantity >= quantity;
-    }
-
-    let icon: JSX.Element = <TaskFailedSymbol />;
-    if (taskIsComplete) {
-        icon = <TaskCompleteSymbol />;
-    } else if (
-        plannedTask.plannedDay?.dayKey === getTodayKey() &&
-        !taskIsComplete &&
-        !taskIsFailed
-    ) {
-        icon = <TaskInProgressSymbol />;
     }
 
     let status = plannedTask.status;
@@ -84,9 +69,15 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
 
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{}}>{icon}</View>
+            {plannedTask.remoteImageUrl && (
+                <HabitIcon
+                    optimalImageData={optimalImageData}
+                    size={30}
+                    color={colors.tab_selected}
+                />
+            )}
 
-            <View style={{ flex: 1, paddingLeft: 7.5 }}>
+            <View style={{ height: 30, paddingLeft: TIMELINE_CARD_PADDING / 2 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text
                         style={{
@@ -98,36 +89,16 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                     >
                         {plannedTask?.title}{' '}
                     </Text>
-                    <View style={{ paddingLeft: 2.5 }}>
-                        {plannedTask.remoteImageUrl && (
-                            <HabitIcon
-                                optimalImageData={optimalImageData}
-                                size={15}
-                                color={colors.tab_selected}
-                            />
-                        )}
-                    </View>
                 </View>
 
                 <View
                     style={{
                         flexDirection: 'row',
                         width: '100%',
-                        paddingTop: 2.5,
                     }}
                 >
-                    <View
-                        style={{
-                            flex: 1.5,
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <ProgressBar progress={Math.min(100, progress * 100)} showPercent={false} />
-                    </View>
                     <Text
                         style={{
-                            paddingLeft: 5,
                             color: colors.secondary_text,
                             fontFamily: POPPINS_REGULAR,
                             fontSize: 10,
@@ -136,8 +107,6 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                     >
                         {statText}
                     </Text>
-
-                    <View style={{ flex: 2 }} />
                 </View>
             </View>
         </View>
