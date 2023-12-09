@@ -22,7 +22,6 @@ import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
     getFireConfetti,
-    getSelectedDayKey,
     getUpdateModalPlannedTask,
     setEditModalPlannedTask,
     setRemovalModalPlannedTask,
@@ -58,7 +57,7 @@ export const UpdatePlannedTaskModal = () => {
     const plannedTaskData = useAppSelector(getUpdateModalPlannedTask);
     const plannedTask = plannedTaskData.plannedTask;
     const onUpdateCallback = plannedTaskData.callback;
-    const dayKey = useAppSelector(getSelectedDayKey);
+    const dayKey = plannedTaskData.dayKey;
     const dispatch = useAppDispatch();
 
     const [menuVisible, setMenuVisible] = React.useState(false);

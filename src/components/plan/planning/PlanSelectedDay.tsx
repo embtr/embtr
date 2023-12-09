@@ -8,5 +8,5 @@ export const PlanSelectedDay = () => {
         return <View />;
     }
 
-    return <PlanDay plannedDay={plannedDay.data} />;
+    return <PlanDay plannedDay={plannedDay.data} dayKey={dayKey} />;
 };

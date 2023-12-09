@@ -15,7 +15,7 @@ const INITIAL_STATE: GlobalState = {
     cardRefreshRequests: [],
     fireConfetti: () => {},
     displayDropDownAlert: () => {},
-    selectedDayKey: '2019-01-01',
+    selectedDayKey: '',
     units: [],
     currentUser: {},
     timelineDays: 0,
@@ -124,7 +124,7 @@ export const GlobalState = createSlice({
             state.updateModalPlannedTask = DEFAULT_UPDATE_MODAL_PLANNED_TASK;
             state.removalModalPlannedTask = DEFAULT_UPDATE_MODAL_PLANNED_TASK;
         },
-        setUpdateModalPlannedTask(state, action) {
+        setUpdateModalPlannedTask(state, action: { payload: UpdateModalPlannedTask }) {
             state.updateModalPlannedTask = action.payload;
         },
         setRemovalModalPlannedTask(state, action) {

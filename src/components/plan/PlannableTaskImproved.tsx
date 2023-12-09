@@ -21,6 +21,7 @@ import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
     initialPlannedTask: PlannedTask;
+    dayKey: string;
 }
 
 interface Styles {
@@ -93,8 +94,8 @@ const generateStyles = (colors: any): Styles => {
 };
 
 export const MemoizedPlannableTaskImproved = React.memo(
-    ({ initialPlannedTask }: Props) => {
-        return <PlannableTaskImproved initialPlannedTask={initialPlannedTask} />;
+    ({ initialPlannedTask, dayKey }: Props) => {
+        return <PlannableTaskImproved initialPlannedTask={initialPlannedTask} dayKey={dayKey} />;
     },
     (prevProps, nextProps) => {
         const prevKey = PlanningService.getPlannedHabitUniqueKey(prevProps.initialPlannedTask);
@@ -117,7 +118,7 @@ const getStatusColor = (colors: any, status?: string) => {
     }
 };
 
-export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
+export const PlannableTaskImproved = ({ initialPlannedTask, dayKey }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
 
@@ -152,6 +153,7 @@ export const PlannableTaskImproved = ({ initialPlannedTask }: Props) => {
                         callback: (plannedTask: PlannedTask) => {
                             setPlannedTask(plannedTask);
                         },
+                        dayKey: dayKey,
                     })
                 );
             }}

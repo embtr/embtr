@@ -4,7 +4,6 @@ import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { User } from 'resources/schema';
 import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
-import { PlanDay } from '../plan/planning/PlanDay';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 

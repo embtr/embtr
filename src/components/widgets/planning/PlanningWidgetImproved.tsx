@@ -1,7 +1,6 @@
 import React from 'react';
 import { MonthPickerImproved } from './MonthPickerImproved';
 import { DayPickerImproved } from './DayPickerImproved';
-import { PlanDay } from 'src/components/plan/planning/PlanDay';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { WidgetBase } from '../WidgetBase';
 import {

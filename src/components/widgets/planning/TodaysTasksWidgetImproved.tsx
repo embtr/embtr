@@ -1,11 +1,4 @@
-import { PlanDay } from 'src/components/plan/planning/PlanDay';
 import { WidgetBase } from '../WidgetBase';
-import {
-    DayPickerElementData,
-    MonthPickerElementData,
-    getDaysForMonth,
-    getMonthData,
-} from 'src/model/PlanningWidget';
 import { View, Text } from 'react-native';
 import {
     CARD_SHADOW,
@@ -18,14 +11,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { PlanToday } from 'src/components/plan/planning/PlanToday';
-
-const months: MonthPickerElementData[] = getMonthData();
-const daysOfMonth = getDaysForMonth();
-const currentMonth = months[Math.floor(months.length / 2)];
-const zeroPaddedMonth = currentMonth.month.toString().padStart(2, '0');
-const currentDay: DayPickerElementData = daysOfMonth.get(currentMonth.year + zeroPaddedMonth)![
-    new Date().getDate() - 1
-];
 
 export const TodaysTasksWidgetImproved = () => {
     const colors = useTheme().colors;
