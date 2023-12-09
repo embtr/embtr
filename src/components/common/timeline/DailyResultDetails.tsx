@@ -12,6 +12,8 @@ import Toast from 'react-native-root-toast';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { pl } from 'date-fns/locale';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
@@ -86,6 +88,11 @@ export const DailyResultDetails = () => {
                         const clone: PlannedDayResultModel = { ...plannedDayResult, active: false };
                         await DailyResultController.updateViaApi(clone);
                         setPlannedDayResult(clone);
+                        if (plannedDayResult?.plannedDay?.dayKey) {
+                            PlannedDayController.prefetchPlannedDayData(
+                                plannedDayResult.plannedDay.dayKey
+                            );
+                        }
                         navigation.goBack();
                     },
                 },

@@ -120,7 +120,7 @@ export function hydrateDates<T>(data: T): T {
     } else if (typeof data === 'object' && data !== null) {
         for (const key in data) {
             // do not convert these
-            if (key === 'selectedDayKey') {
+            if (key === 'selectedDayKey' ||  key === 'dayKey') {
                 continue;
             }
 

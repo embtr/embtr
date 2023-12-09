@@ -3,6 +3,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { PlannedDay } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING, POPPINS_REGULAR } from 'src/util/constants';
@@ -54,9 +55,10 @@ export const PlanDayHeader = ({ plannedDay, dayKey, hideComplete }: Props) => {
                 <View style={{ height: TIMELINE_CARD_PADDING }} />
                 {!plannedDayResultsAreShared ? (
                     <TouchableOpacity
-                        onPress={() => {
+                        onPress={async () => {
                             if (plannedDay.id) {
-                                DailyResultController.create(plannedDay.id);
+                                await DailyResultController.create(plannedDay.id);
+                                PlannedDayController.prefetchPlannedDayData(dayKey);
                             }
                         }}
                         style={{
