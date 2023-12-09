@@ -74,26 +74,78 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
         };
     }, [plannedDay, hideComplete]);
 
-    let footer = undefined;
+    let header = undefined;
     if (allHabitsAreComplete) {
-        footer = (
-            <View style={{ paddingVertical: TIMELINE_CARD_PADDING }}>
-                <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR }}>
+        header = (
+            <View
+                style={{
+                    padding: TIMELINE_CARD_PADDING / 2,
+                    marginBottom: TIMELINE_CARD_PADDING,
+                    borderColor: '#404040',
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    borderRadius: 5,
+                }}
+            >
+                <Text
+                    style={{
+                        lineHeight: 20,
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_REGULAR,
+                        textAlign: 'center',
+                    }}
+                >
+                    All of today's habits are complete 🎉
+                </Text>
+
+                <View style={{ height: TIMELINE_CARD_PADDING }} />
+
+                <View
+                    style={{
+                        backgroundColor: colors.accent_color,
+                        borderRadius: 2.5,
+                    }}
+                >
+                    <Text
+                        style={{
+                            paddingVertical: TIMELINE_CARD_PADDING / 8,
+                            lineHeight: 20,
+                            color: colors.text,
+                            textAlign: 'center',
+                            fontFamily: POPPINS_REGULAR,
+                        }}
+                    >
+                        Share your results
+                    </Text>
+                </View>
+            </View>
+        );
+    } else if (!hasPlannedTasks) {
+        header = (
+            <View
+                style={{
+                    padding: TIMELINE_CARD_PADDING / 2,
+                    marginBottom: TIMELINE_CARD_PADDING,
+                    borderColor: '#404040',
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    borderRadius: 5,
+                }}
+            >
+                <Text
+                    style={{
+                        lineHeight: 20,
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_REGULAR,
+                    }}
+                >
                     All of today's habits are complete 🎉
                 </Text>
             </View>
         );
-    } else if (!hasPlannedTasks) {
-        footer = (
-            <View style={{ paddingVertical: TIMELINE_CARD_PADDING }}>
-                <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR }}>
-                    'Nothing planned for today.'
-                </Text>
-            </View>
-        );
     }
-
-    console.log(footer);
 
     const renderItem = ({ item }: { item: PlannedTask }) => (
         <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
@@ -103,7 +155,10 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
 
     return (
         <View style={{ width: '100%' }}>
+            {header}
+
             <FlatList
+                scrollEnabled={false}
                 //estimatedFirstItemOffset={0}
                 //estimatedItemSize={61}
                 data={elements}
@@ -111,8 +166,6 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                 keyExtractor={keyExtractor}
                 removeClippedSubviews={true}
             />
-
-            {footer}
         </View>
     );
 };

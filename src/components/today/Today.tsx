@@ -18,6 +18,7 @@ import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { TodaysTasksWidgetImproved } from '../widgets/planning/TodaysTasksWidgetImproved';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
@@ -88,23 +89,25 @@ export const Today = () => {
                 <View style={{ flex: 1, paddingHorizontal: TIMELINE_CARD_PADDING / 2 }}>
                     <Banner name="Today" />
 
-                    <TodaysCountdownWidget />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-                    <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <ScrollView>
+                        <TodaysCountdownWidget />
+                        <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                        <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
+                        <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
 
-                    <View
-                        onLayout={(e) => {
-                            if (planningWidgetHeight === 0) {
-                                setPlanningWidgetHeight(e.nativeEvent.layout.height);
-                            }
-                        }}
-                        style={{ flex: 1 }}
-                    >
-                        <TodaysTasksWidgetImproved />
-                    </View>
+                        <View
+                            onLayout={(e) => {
+                                if (planningWidgetHeight === 0) {
+                                    setPlanningWidgetHeight(e.nativeEvent.layout.height);
+                                }
+                            }}
+                            style={{ flex: 1 }}
+                        >
+                            <TodaysTasksWidgetImproved />
+                        </View>
 
-                    <View style={{ height: TIMELINE_CARD_PADDING * 1.5 }} />
+                        <View style={{ height: TIMELINE_CARD_PADDING * 1.5 }} />
+                    </ScrollView>
                 </View>
             </Screen>
         </TodayPageLayoutContextProvider>
