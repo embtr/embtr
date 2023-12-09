@@ -6,6 +6,8 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getFireConfetti } from 'src/redux/user/GlobalState';
 import { TIMELINE_CARD_PADDING, POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
@@ -25,6 +27,7 @@ export const PlanDayHeader = ({ plannedDay, dayKey, hideComplete }: Props) => {
         );
     const plannedDayResultsAreShared = (plannedDay.plannedDayResults?.length ?? 0) > 0;
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const fireConfetti = useAppSelector(getFireConfetti);
 
     let header = undefined;
     if (allHabitsAreComplete) {
@@ -58,7 +61,8 @@ export const PlanDayHeader = ({ plannedDay, dayKey, hideComplete }: Props) => {
                         onPress={async () => {
                             if (plannedDay.id) {
                                 await DailyResultController.create(plannedDay.id);
-                                PlannedDayController.prefetchPlannedDayData(dayKey);
+                                await PlannedDayController.prefetchPlannedDayData(dayKey);
+                                fireConfetti();
                             }
                         }}
                         style={{
