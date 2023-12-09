@@ -78,6 +78,7 @@ export type RootStackParamList = {
 };
 
 export namespace Routes {
+    export const DAILY_RESULT_DETAILS = 'DailyResultDetails';
     export const ADD_HABIT_CATEGORY = 'AddHabitCategory';
     export const ADD_HABIT_CATEGORIES = 'AddHabitCategories';
     export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';

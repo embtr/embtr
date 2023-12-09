@@ -5,7 +5,7 @@ import { TaskFailedSymbol } from '../task_symbols/TaskFailedSymbol';
 import { TaskCompleteSymbol } from '../task_symbols/TaskCompleteSymbol';
 import { TaskInProgressSymbol } from '../task_symbols/TaskInProgressSymbol';
 import { PlannedTask as PlannedTaskModel } from 'resources/schema';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { UnitUtility } from 'src/util/UnitUtility';
@@ -82,7 +82,6 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
         remoteImageUrl: plannedTask.remoteImageUrl,
     };
 
-
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={{}}>{icon}</View>
@@ -92,7 +91,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                     <Text
                         style={{
                             color: colors.goal_primary_font,
-                            fontFamily: 'Poppins_600SemiBold',
+                            fontFamily: POPPINS_SEMI_BOLD,
                             fontSize: 12,
                             includeFontPadding: false,
                         }}
@@ -124,10 +123,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                             alignItems: 'center',
                         }}
                     >
-                        <ProgressBar
-                            progress={Math.min(100, progress * 100)}
-                            showPercent={false}
-                        />
+                        <ProgressBar progress={Math.min(100, progress * 100)} showPercent={false} />
                     </View>
                     <Text
                         style={{

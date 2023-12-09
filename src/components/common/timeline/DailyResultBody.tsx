@@ -8,10 +8,9 @@ import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
     plannedDayResult: PlannedDayResultModel;
-    navigateToDetails?: Function;
 }
 
-export const DailyResultBody = ({ plannedDayResult, navigateToDetails }: Props) => {
+export const DailyResultBody = ({ plannedDayResult }: Props) => {
     const { colors } = useTheme();
 
     const challengeName = plannedDayResult.plannedDay?.challengeParticipant?.[0]?.challenge?.name;
