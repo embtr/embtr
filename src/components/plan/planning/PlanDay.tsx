@@ -82,6 +82,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                     padding: TIMELINE_CARD_PADDING / 2,
                     marginBottom: TIMELINE_CARD_PADDING,
                     borderColor: '#404040',
+                    backgroundColor: '#343434',
                     borderWidth: 1,
                     justifyContent: 'center',
                     alignContent: 'center',
@@ -141,7 +142,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                         fontFamily: POPPINS_REGULAR,
                     }}
                 >
-                    All of today's habits are complete 🎉
+                    No habits planned for today
                 </Text>
             </View>
         );
