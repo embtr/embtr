@@ -4,7 +4,6 @@ import {
     CreatePlannedDayResultRequest,
     CreatePlannedDayResultResponse,
     GetPlannedDayResultResponse,
-    GetPlannedDayResultSummariesRequest,
     GetPlannedDayResultSummariesResponse,
     GetPlannedDayResultSummaryResponse,
     GetPlannedDayResultsResponse,
@@ -16,28 +15,8 @@ import axiosInstance from 'src/axios/axios';
 import { LikeController } from 'src/controller/api/general/LikeController';
 import ImageController from 'src/controller/image/ImageController';
 import { CommentController } from 'src/controller/api/general/CommentController';
-import { Timestamp } from 'firebase/firestore';
-import { TimelinePostModel } from 'src/model/OldModels';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
-
-export interface DailyResultModel extends TimelinePostModel {
-    data: {
-        status: string;
-        dayKey: string;
-        plannedDayId?: string | null;
-        description?: string;
-        hasTasks: boolean;
-        imageUrls?: string[];
-        completionDate?: Timestamp;
-    };
-}
-
-export interface DayResultTimelinePost extends TimelinePostModel {
-    data: {
-        plannedDayResultSummary: PlannedDayResultSummary;
-    };
-}
 
 class DailyResultController {
     public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {

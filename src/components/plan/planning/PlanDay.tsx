@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedDay, PlannedTask } from 'resources/schema';
 //import { FlashList } from '@shopify/flash-list';
@@ -7,6 +7,7 @@ import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key = PlanningService.getPlannedHabitUniqueKey(plannedTask);
@@ -102,7 +103,12 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
 
                 <View style={{ height: TIMELINE_CARD_PADDING }} />
 
-                <View
+                <TouchableOpacity
+                    onPress={() => {
+                        if (plannedDay.id) {
+                            DailyResultController.create(plannedDay.id);
+                        }
+                    }}
                     style={{
                         backgroundColor: colors.accent_color,
                         borderRadius: 2.5,
@@ -119,7 +125,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                     >
                         Share your results
                     </Text>
-                </View>
+                </TouchableOpacity>
             </View>
         );
     } else if (!hasPlannedTasks) {
