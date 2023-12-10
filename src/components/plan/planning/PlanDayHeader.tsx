@@ -104,7 +104,7 @@ export const PlanDayHeader = ({ plannedDay, dayKey, hideComplete }: Props) => {
                                     id,
                                 });
                             }}
-                            style={{ color: colors.link, fontFamily: POPPINS_REGULAR }}
+                            style={{ color: colors.accent_color_light, fontFamily: POPPINS_REGULAR }}
                         >
                             View today's results
                         </Text>
