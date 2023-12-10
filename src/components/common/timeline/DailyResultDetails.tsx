@@ -4,24 +4,23 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { Alert, View } from 'react-native';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { DailyResultBody } from './DailyResultBody';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
-import { Comment, PlannedDayResult as PlannedDayResultModel, User } from 'resources/schema';
+import { Comment, PlannedDayResult, User } from 'resources/schema';
 import Toast from 'react-native-root-toast';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { PostUtility } from 'src/util/post/PostUtility';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
     const dispatch = useAppDispatch();
 
-    const [plannedDayResult, setPlannedDayResult] = React.useState<
-        PlannedDayResultModel | undefined
-    >(undefined);
+    const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResult | undefined>(
+        undefined
+    );
 
     const fetchData = async () => {
         const plannedDayResult = await DailyResultController.getViaApi(route.params.id);
@@ -49,15 +48,6 @@ export const DailyResultDetails = () => {
             dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
             fetchData();
         }
-
-        //DailyResultController.addComment(dailyResult.id, user.uid, text, () => {
-        // send notification to post owner
-        //    NotificationController.addNotification(user.uid, dailyResult.uid, NotificationType.DAILY_RESULT_COMMENT, dailyResult!.id!);
-
-        // send notification to tagged users
-        //    NotificationController.addNotifications(getAuth().currentUser!.uid, taggedUsers, NotificationType.DAILY_RESULT_TAG, route.params.id);
-        //    DailyResultController.get(route.params.id, setDailyResult);
-        //});
     };
 
     const deleteComment = async (comment: Comment) => {
@@ -83,7 +73,7 @@ export const DailyResultDetails = () => {
                 {
                     text: 'I am sure. Delete it.',
                     onPress: async () => {
-                        const clone: PlannedDayResultModel = { ...plannedDayResult, active: false };
+                        const clone: PlannedDayResult = { ...plannedDayResult, active: false };
                         await DailyResultController.updateViaApi(clone);
                         setPlannedDayResult(clone);
                         if (plannedDayResult?.plannedDay?.dayKey) {
@@ -116,24 +106,18 @@ export const DailyResultDetails = () => {
         );
     }
 
+    const timelinePostModel = PostUtility.createDayResultTimelineModel(plannedDayResult);
+
     return (
         <View style={{ width: '100%', height: '100%' }}>
             <PostDetails
-                type={'Daily Result'}
-                author={plannedDayResult!.plannedDay?.user!}
-                added={plannedDayResult!.plannedDay?.createdAt!}
-                likes={plannedDayResult.likes || []}
-                comments={plannedDayResult.comments || []}
+                timelinePostModel={timelinePostModel}
                 onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}
                 onEdit={onEdit}
                 onDelete={onDelete}
-            >
-                <View style={{ paddingLeft: 10 }}>
-                    <DailyResultBody plannedDayResult={plannedDayResult} />
-                </View>
-            </PostDetails>
+            />
         </View>
     );
 };

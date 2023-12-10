@@ -50,7 +50,9 @@ export const FilteredTimeline = ({
 
         const dayResultTimelinePosts: TimelinePostModel[] = plannedDayResultSummaries.map(
             (plannedDayResultSummary) => {
-                return PostUtility.createDayResultTimelineModel(plannedDayResultSummary);
+                return PostUtility.createDayResultTimelineModel(
+                    plannedDayResultSummary.plannedDayResult
+                );
             }
         );
 

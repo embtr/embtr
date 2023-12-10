@@ -10,9 +10,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment, UserPost } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
-import { TimelinePostModel, UserProfileModel } from 'src/model/OldModels';
+import { UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
-import { TimelineType } from 'resources/types/Types';
 import { PostUtility } from 'src/util/post/PostUtility';
 
 export const UserPostDetails = () => {

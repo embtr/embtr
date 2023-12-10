@@ -1,4 +1,4 @@
-import { UserPost } from 'resources/schema';
+import { PlannedDayResult, UserPost } from 'resources/schema';
 import { TimelineType } from 'resources/types/Types';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 import { getDateStringFromDate } from 'src/controller/planning/PlannedDayController';
@@ -25,27 +25,23 @@ export namespace PostUtility {
     };
 
     export const createDayResultTimelineModel = (
-        plannedDayResultSummary: PlannedDayResultSummary
+        plannedDayResult: PlannedDayResult
     ): TimelinePostModel => {
         const timelinePostModel = {
-            title: plannedDayResultSummary.plannedDayResult.title,
+            title: plannedDayResult.title,
             body:
-                plannedDayResultSummary.plannedDayResult.description ??
+                plannedDayResult.description ??
                 'Results for ' +
-                    getDateStringFromDate(
-                        plannedDayResultSummary.plannedDayResult.plannedDay?.date ?? new Date()
-                    ),
-            user: plannedDayResultSummary.plannedDayResult.plannedDay?.user!,
+                    getDateStringFromDate(plannedDayResult.plannedDay?.date ?? new Date()),
+            user: plannedDayResult.plannedDay?.user!,
             type: TimelineType.PLANNED_DAY_RESULT,
-            id: plannedDayResultSummary.plannedDayResult.id!,
-            sortDate: plannedDayResultSummary.plannedDayResult.createdAt!,
-            comments: plannedDayResultSummary.plannedDayResult.comments ?? [],
-            likes: plannedDayResultSummary.plannedDayResult.likes ?? [],
-            images: plannedDayResultSummary.plannedDayResult.images ?? [],
-            plannedDayResult: plannedDayResultSummary.plannedDayResult,
-            data: {
-                plannedDayResultSummary,
-            },
+            id: plannedDayResult.id!,
+            sortDate: plannedDayResult.createdAt!,
+            comments: plannedDayResult.comments ?? [],
+            likes: plannedDayResult.likes ?? [],
+            images: plannedDayResult.images ?? [],
+            plannedDayResult: plannedDayResult,
+            data: {},
         };
 
         return timelinePostModel;
