@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComment';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import SwipeableDeleteCard from '../swipeable/SwipeableDeleteCard';
@@ -11,6 +11,8 @@ interface Props {
     comments: CommentModel[];
     limit?: number;
 }
+
+const INDENT_WIDTH = Dimensions.get('window').width * 0.1;
 
 export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) => {
     const colors = useTheme().colors;
@@ -39,14 +41,27 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
                             paddingBottom: TIMELINE_CARD_PADDING / 1.5,
                         }}
                     >
-                        <CommentBoxComment comment={comment} index={index} />
+                        <CommentBoxComment
+                            comment={comment}
+                            index={index}
+                            isOwnPost={isCurrentUsersComment}
+                        />
                     </View>
                 </SwipeableDeleteCard>
             );
         } else {
             return (
-                <View key={comment.id} style={{ paddingTop: TIMELINE_CARD_PADDING }}>
-                    <CommentBoxComment comment={comment} index={index} />
+                <View
+                    key={comment.id}
+                    style={{
+                        paddingBottom: TIMELINE_CARD_PADDING / 1.5,
+                    }}
+                >
+                    <CommentBoxComment
+                        comment={comment}
+                        index={index}
+                        isOwnPost={isCurrentUsersComment}
+                    />
                 </View>
             );
         }
@@ -60,7 +75,7 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
                     fontFamily: POPPINS_MEDIUM,
                     fontSize: 14,
                     paddingVertical: TIMELINE_CARD_PADDING / 2,
-                    paddingLeft: TIMELINE_CARD_PADDING
+                    paddingLeft: TIMELINE_CARD_PADDING,
                 }}
             >
                 Comments
