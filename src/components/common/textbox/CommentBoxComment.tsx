@@ -35,8 +35,8 @@ export const CommentBoxComment = ({ comment, index }: Props) => {
                 style={{
                     flexDirection: 'row',
                     borderRadius: 5,
-                    // backgroundColor: '#322C30',
-                    backgroundColor: '#362B35',
+                    backgroundColor: '#322C30',
+                    //backgroundColor: '#362B35',
                 }}
             >
                 <View style={{ flexDirection: 'row', padding: TIMELINE_CARD_PADDING / 2, flex: 1 }}>

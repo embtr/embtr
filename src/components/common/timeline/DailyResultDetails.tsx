@@ -13,7 +13,6 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
-import { pl } from 'date-fns/locale';
 
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
@@ -23,7 +22,6 @@ export const DailyResultDetails = () => {
     const [plannedDayResult, setPlannedDayResult] = React.useState<
         PlannedDayResultModel | undefined
     >(undefined);
-    const { setScheme, isDark } = useTheme();
 
     const fetchData = async () => {
         const plannedDayResult = await DailyResultController.getViaApi(route.params.id);
@@ -32,8 +30,8 @@ export const DailyResultDetails = () => {
         } else {
             Toast.show('Post no longer exists!', {
                 duration: Toast.durations.LONG,
-                containerStyle: { backgroundColor: isDark ? 'white' : 'black', marginBottom: 80 },
-                textStyle: { color: isDark ? 'black' : 'white' },
+                containerStyle: { backgroundColor: 'white', marginBottom: 80 },
+                textStyle: { color: 'black' },
             });
             navigation.goBack();
         }

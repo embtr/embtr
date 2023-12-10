@@ -6,7 +6,6 @@ import { PostDetails } from 'src/components/common/comments/PostDetails';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { Alert, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { UserPostBody } from 'src/components/common/comments/UserPostBody';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment, UserPost } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
@@ -14,7 +13,7 @@ import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 import { TimelinePostModel, UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
 import { TimelineType } from 'resources/types/Types';
-import { TimelineCard } from 'src/components/timeline/TimelineCard';
+import { PostUtility } from 'src/util/post/PostUtility';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
@@ -43,22 +42,7 @@ export const UserPostDetails = () => {
         );
     }
 
-    //TODO - finish migrating this over
-    const userPostTimelinePost: TimelinePostModel = {
-        user: userPost.user!,
-        type: TimelineType.USER_POST,
-        id: userPost.id!,
-        sortDate: userPost?.createdAt!,
-        comments: userPost?.comments ?? [],
-        likes: userPost?.likes ?? [],
-        images: userPost?.images ?? [],
-        title: userPost?.title ?? '',
-        body: userPost?.body ?? '',
-        data: {
-            userPost,
-        },
-    };
-
+    const userPostTimelinePost = PostUtility.createUserPostTimelineModel(userPost);
     const userIsPostOwner = userPost?.user?.uid === getAuth().currentUser?.uid;
 
     const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
@@ -134,23 +118,12 @@ export const UserPostDetails = () => {
         <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
             <PostDetails
                 timelinePostModel={userPostTimelinePost}
-                type={'Post'}
-                author={userPost.user!}
-                added={userPost.createdAt ?? new Date()}
-                likes={userPost.likes ?? []}
-                comments={userPost.comments ?? []}
                 onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}
                 onEdit={navigateToEdit}
                 onDelete={deletePost}
-            >
-                <UserPostBody
-                    title={userPost.title ?? ''}
-                    post={userPost.body ?? ''}
-                    images={userPost.images ?? []}
-                />
-            </PostDetails>
+            />
         </View>
     );
 };

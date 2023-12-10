@@ -5,10 +5,11 @@ import { TimelinePostModel } from 'src/model/OldModels';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 import { TimelineType } from 'resources/types/Types';
 import { TimelineCard } from './TimelineCard';
-import { getDateStringFromDate } from 'src/controller/planning/PlannedDayController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useNavigation } from '@react-navigation/native';
+import { PostUtility } from 'src/util/post/PostUtility';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface Props {
     userPosts: UserPost[];
@@ -28,11 +29,6 @@ export const FilteredTimeline = ({
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const { colors } = useTheme();
-    const card = {
-        width: '100%',
-        paddingTop: 12,
-        paddingHorizontal: 12,
-    };
 
     const getRecentlyJoinedMessage = (joinedChallenge: JoinedChallenge) => {
         const participants = joinedChallenge.participants;
@@ -48,42 +44,14 @@ export const FilteredTimeline = ({
     };
 
     const createTimelineModels = (): TimelinePostModel[] => {
-        const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost) => ({
-            user: userPost.user!,
-            type: TimelineType.USER_POST,
-            id: userPost.id!,
-            sortDate: userPost.createdAt!,
-            comments: userPost.comments ?? [],
-            likes: userPost.likes ?? [],
-            images: userPost.images ?? [],
-            title: userPost.title ?? '',
-            body: userPost.body ?? '',
-            data: {
-                userPost,
-            },
-        }));
+        const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost) => {
+            return PostUtility.createUserPostTimelineModel(userPost);
+        });
 
         const dayResultTimelinePosts: TimelinePostModel[] = plannedDayResultSummaries.map(
-            (plannedDayResultSummary) => ({
-                title: plannedDayResultSummary.plannedDayResult.title,
-                body:
-                    plannedDayResultSummary.plannedDayResult.description ??
-                    'Results for ' +
-                        getDateStringFromDate(
-                            plannedDayResultSummary.plannedDayResult.plannedDay?.date ?? new Date()
-                        ),
-                user: plannedDayResultSummary.plannedDayResult.plannedDay?.user!,
-                type: TimelineType.PLANNED_DAY_RESULT,
-                id: plannedDayResultSummary.plannedDayResult.id!,
-                sortDate: plannedDayResultSummary.plannedDayResult.createdAt!,
-                comments: plannedDayResultSummary.plannedDayResult.comments ?? [],
-                likes: plannedDayResultSummary.plannedDayResult.likes ?? [],
-                images: plannedDayResultSummary.plannedDayResult.images ?? [],
-                plannedDayResult: plannedDayResultSummary.plannedDayResult,
-                data: {
-                    plannedDayResultSummary,
-                },
-            })
+            (plannedDayResultSummary) => {
+                return PostUtility.createDayResultTimelineModel(plannedDayResultSummary);
+            }
         );
 
         const joinedChallengesTimelinePosts = joinedChallenges.map((joinedChallenge) => ({
@@ -128,7 +96,14 @@ export const FilteredTimeline = ({
     const createTimelineView = (timelinePostModel: TimelinePostModel) => {
         const key = timelinePostModel.id;
         return (
-            <View key={key} style={[card]}>
+            <View
+                key={key}
+                style={{
+                    width: '100%',
+                    paddingTop: TIMELINE_CARD_PADDING,
+                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                }}
+            >
                 <TimelineCard
                     timelinePostModel={timelinePostModel}
                     navigateToDetails={() => {
