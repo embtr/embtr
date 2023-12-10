@@ -28,7 +28,7 @@ export const EmbtrToggle = ({ text, onToggle, value }: Props) => {
         <View
             style={[
                 {
-                    backgroundColor: colors.button_background,
+                    backgroundColor: colors.accent_color_faint,
                     width: SETTINGS_MENU_ITEM_WIDTH,
                     height: 75,
                     borderRadius: 3,
@@ -63,7 +63,7 @@ export const EmbtrToggle = ({ text, onToggle, value }: Props) => {
                     style={{ transform: [{ scaleX: 0.65 }, { scaleY: 0.65 }] }}
                     trackColor={{
                         false: colors.toggle_background_unselected,
-                        true: colors.toggle_background_selected,
+                        true: colors.accent_color,
                     }}
                     thumbColor={colors.toggle}
                     ios_backgroundColor={colors.toggle_background_unselected}

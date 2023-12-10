@@ -37,7 +37,7 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
                     borderRadius: 5,
                     //backgroundColor: isOwnPost ? '#362B35' : '#322C30',
                     //backgroundColor: isOwnPost ? '#322C30' : colors.timeline_card_background,
-                    backgroundColor: isOwnPost ? '#362B35' : colors.timeline_card_background,
+                    backgroundColor: isOwnPost ? colors.accent_color_dim : colors.timeline_card_background,
                     //backgroundColor: '',
                     padding: TIMELINE_CARD_PADDING / 2,
                 }}

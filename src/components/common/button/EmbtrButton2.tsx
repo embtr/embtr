@@ -18,7 +18,7 @@ export const EmbtrButton2 = ({ text, icon, onPress }: Props) => {
         <View
             style={[
                 {
-                    backgroundColor: colors.button_background,
+                    backgroundColor: colors.accent_color_faint,
                     width: SETTINGS_MENU_ITEM_WIDTH,
                     height: 75,
                     borderRadius: 3,
