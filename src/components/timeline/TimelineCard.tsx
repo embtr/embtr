@@ -1,8 +1,8 @@
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { TouchableWithoutFeedback } from 'react-native';
-import React from 'react';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { ImageUtility } from 'src/util/images/ImageUtility';

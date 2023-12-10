@@ -11,8 +11,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment, UserPost } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
-import { UserProfileModel } from 'src/model/OldModels';
+import { TimelinePostModel, UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
+import { TimelineType } from 'resources/types/Types';
+import { TimelineCard } from 'src/components/timeline/TimelineCard';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
@@ -32,6 +34,30 @@ export const UserPostDetails = () => {
             fetch();
         }, [])
     );
+
+    if (!userPost) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
+
+    //TODO - finish migrating this over
+    const userPostTimelinePost: TimelinePostModel = {
+        user: userPost.user!,
+        type: TimelineType.USER_POST,
+        id: userPost.id!,
+        sortDate: userPost?.createdAt!,
+        comments: userPost?.comments ?? [],
+        likes: userPost?.likes ?? [],
+        images: userPost?.images ?? [],
+        title: userPost?.title ?? '',
+        body: userPost?.body ?? '',
+        data: {
+            userPost,
+        },
+    };
 
     const userIsPostOwner = userPost?.user?.uid === getAuth().currentUser?.uid;
 
@@ -104,17 +130,10 @@ export const UserPostDetails = () => {
         fetch();
     };
 
-    if (!userPost) {
-        return (
-            <Screen>
-                <View />
-            </Screen>
-        );
-    }
-
     return (
         <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
             <PostDetails
+                timelinePostModel={userPostTimelinePost}
                 type={'Post'}
                 author={userPost.user!}
                 added={userPost.createdAt ?? new Date()}

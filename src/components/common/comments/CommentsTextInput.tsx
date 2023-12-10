@@ -3,8 +3,9 @@ import { Keyboard, TextInput, View } from 'react-native';
 import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { UserProfileModel } from 'src/firebase/firestore/profile/ProfileDao';
+import { UserProfileModel } from 'src/model/OldModels';
 import { isIosApp } from 'src/util/DeviceUtil';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
@@ -59,8 +60,8 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
         <View
             style={{
                 width: '100%',
-                paddingLeft: focused ? 0 : 5,
-                paddingRight: focused ? 0 : 5,
+                paddingLeft: focused ? 0 : TIMELINE_CARD_PADDING / 2,
+                paddingRight: focused ? 0 : TIMELINE_CARD_PADDING / 2,
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingBottom: focused ? 0 : 3,
@@ -70,7 +71,7 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
                 style={{
                     backgroundColor: colors.text_input_background,
 
-                    borderRadius: focused ? 0 : 15,
+                    borderRadius: focused ? 0 : 5,
                     paddingTop: focused ? 0 : 8,
                     paddingBottom: 8,
                     flex: 1,

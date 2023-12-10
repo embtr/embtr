@@ -16,10 +16,10 @@ export const EmbtrButton = ({ image, icon, buttonText, height, callback, color }
     const { colors } = useTheme();
 
     const containerStyle = {
-        backgroundColor: color ?? colors.push_button_background,
+        backgroundColor: color ?? colors.accent_color,
         height: height ? height : 45,
         width: '100%',
-        borderRadius: 4,
+        borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
     } as ViewStyle;
