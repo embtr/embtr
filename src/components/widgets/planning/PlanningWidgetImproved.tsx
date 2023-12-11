@@ -13,6 +13,7 @@ import { View } from 'react-native';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
+import { useFocusEffect } from '@react-navigation/native';
 
 const months: MonthPickerElementData[] = getMonthData();
 const daysOfMonth = getDaysForMonth();
@@ -35,6 +36,13 @@ export const PlanningWidgetImproved = () => {
 
     const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(currentMonth);
     const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>(currentDay);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const newDayKey = generateDayKey(selectedDay, selectedMonth);
+            dispatch(setSelectedDayKey(newDayKey));
+        }, [])
+    );
 
     const onMonthSelected = (monthData: MonthPickerElementData) => {
         setSelectedMonth(monthData);

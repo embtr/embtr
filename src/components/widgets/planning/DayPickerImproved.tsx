@@ -1,17 +1,13 @@
 import { FlatList } from 'react-native';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import {
     DAY_PICKER_ELEMENT_WIDTH,
     MemoizedDayPickerElementImproved,
 } from './DayPickerElementImproved';
-import {
-    DayPickerElementData,
-    MonthPickerElementData,
-    getDaysForMonth,
-} from 'src/model/PlanningWidget';
+import { DayPickerElementData, MonthPickerElementData } from 'src/model/PlanningWidget';
 import React from 'react';
-import { POPPINS_REGULAR } from 'src/util/constants';
 //import { FlashList } from '@shopify/flash-list';
+
 interface Props {
     selectedDay: DayPickerElementData;
     selectedMonth: MonthPickerElementData;

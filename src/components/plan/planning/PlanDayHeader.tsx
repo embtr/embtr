@@ -56,7 +56,6 @@ interface Props {
     hasPlannedTasks: boolean;
     allHabitsAreComplete: boolean;
     dayKey: string;
-    hideComplete?: boolean;
 }
 
 export const PlanDayHeader = ({
@@ -64,7 +63,6 @@ export const PlanDayHeader = ({
     hasPlannedTasks,
     allHabitsAreComplete,
     dayKey,
-    hideComplete,
 }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
