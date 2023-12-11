@@ -29,6 +29,8 @@ interface Props {
     rightOnClick?: Function;
     rightIconNotificationCount?: number;
 
+    rightEnabled?: boolean;
+
     menuOptions?: EmbtrMenuOptions;
 }
 
@@ -49,6 +51,7 @@ export const Banner = ({
     menuOptions,
     innerRightIcon,
     innerRightOnClick,
+    rightEnabled,
 }: Props) => {
     const { colors } = useTheme();
 
@@ -97,16 +100,16 @@ export const Banner = ({
         leftOnClick
             ? leftOnClick()
             : leftRoute === 'BACK'
-            ? navigation.goBack()
-            : navigation.navigate(leftRoute as keyof RootStackParamList);
+              ? navigation.goBack()
+              : navigation.navigate(leftRoute as keyof RootStackParamList);
     };
 
     const rightOnPress = () => {
         rightOnClick
             ? rightOnClick()
             : rightRoute === 'BACK'
-            ? navigation.goBack()
-            : navigation.navigate(leftRoute as keyof RootStackParamList);
+              ? navigation.goBack()
+              : navigation.navigate(leftRoute as keyof RootStackParamList);
     };
 
     return (
@@ -246,9 +249,13 @@ export const Banner = ({
                                 }}
                             >
                                 <Text
-                                    onPress={() => {
-                                        rightOnPress();
-                                    }}
+                                    onPress={
+                                        rightEnabled === false
+                                            ? undefined
+                                            : () => {
+                                                  rightOnPress();
+                                              }
+                                    }
                                     style={{
                                         textAlign: 'center',
                                         fontFamily: 'Poppins_400Regular',

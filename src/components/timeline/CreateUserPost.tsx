@@ -17,6 +17,10 @@ export const CreateUserPost = () => {
     const [enableSubmit, setEnableSubmit] = React.useState<boolean>();
 
     const submitStory = async () => {
+        if (!title) {
+            return;
+        }
+
         if (enableSubmit === false) {
             return;
         }
@@ -38,12 +42,16 @@ export const CreateUserPost = () => {
         };
     });
 
+    const titleHasData = title.length > 0;
+
     return (
         <Screen>
             <Banner
                 name="Share A Story"
                 rightOnClick={submitStory}
                 rightText="submit"
+                rightColor={titleHasData ? undefined : 'grey'}
+                rightEnabled={titleHasData}
                 leftText="close"
                 leftRoute="BACK"
             />
