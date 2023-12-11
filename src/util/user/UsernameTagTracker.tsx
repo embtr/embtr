@@ -44,7 +44,7 @@ export class UsernameTagTracker {
     public static dencodeTaggedUsers(commentText: string, colors: any, callback: Function) {
         const uids: string[] = this.getUidsFromEncodedComment(commentText);
         if (uids.length === 0) {
-            callback(<Text style={{ color: colors.text, fontWeight: 'normal' }}>{commentText}</Text>);
+            callback(<Text style={{ fontWeight: 'normal' }}>{commentText}</Text>);
             return;
         }
     }

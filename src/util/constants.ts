@@ -1,6 +1,5 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getSafeWindowWidth } from './GeneralUtility';
-import { Constants } from 'resources/types/constants/constants';
 
 export const USER_SEARCH_WIDTH = '95%';
 export const SETTINGS_MENU_ITEM_WIDTH = '95%';
@@ -21,12 +20,12 @@ export const CARD_SHADOW = {
     shadowColor: '#000',
     shadowOffset: {
         width: 0,
-        height: 1,
+        height: 2,
     },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
 
-    elevation: 3,
+    elevation: 5,
 };
 
 //SyMBOLS

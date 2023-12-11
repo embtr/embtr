@@ -37,54 +37,62 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
                     borderRadius: 5,
                     //backgroundColor: isOwnPost ? '#362B35' : '#322C30',
                     //backgroundColor: isOwnPost ? '#322C30' : colors.timeline_card_background,
-                    backgroundColor: isOwnPost ? colors.accent_color_dim : colors.timeline_card_background,
+                    backgroundColor: isOwnPost
+                        ? colors.accent_color_dim
+                        : colors.timeline_card_background,
                     //backgroundColor: '',
                     padding: TIMELINE_CARD_PADDING / 2,
                 }}
             >
                 <View style={{ flexDirection: 'row', flex: 1 }}>
-                    <NavigatableUserImage user={comment.user!} size={30} />
+                    <NavigatableUserImage user={comment.user!} size={35} />
 
                     <View
                         style={{
-                            marginRight: TIMELINE_CARD_PADDING * 2,
                             paddingLeft: 5,
+                            flex: 1,
                         }}
                     >
-                        <Text
+                        <View
                             style={{
-                                color: colors.timeline_card_header,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 12,
+                                flex: 1,
+                                flexDirection: 'row',
                             }}
                         >
-                            {comment.user?.displayName}
-                        </Text>
-                        {decodedComment && (
                             <Text
                                 style={{
-                                    fontFamily: POPPINS_REGULAR,
-                                    fontSize: 10,
-                                    color: colors.timeline_card_header,
+                                    color: colors.secondary_text,
+                                    fontFamily: POPPINS_MEDIUM,
+                                    fontSize: 14,
                                 }}
                             >
-                                {decodedComment}
+                                {comment.user?.displayName}
                             </Text>
-                        )}
+                            <View style={{ flex: 1 }} />
+                            <Text
+                                style={{
+                                    textAlign: 'right',
+                                    color: colors.secondary_text,
+                                    fontSize: 8,
+                                }}
+                            >
+                                {time}
+                            </Text>
+                        </View>
+
+                        <Text
+                            style={{
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 12,
+                                color: colors.text,
+                            }}
+                        >
+                            {decodedComment}
+                        </Text>
                     </View>
                 </View>
 
                 <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-                <Text
-                    style={{
-                        width: '100%',
-                        textAlign: 'right',
-                        color: colors.secondary_text,
-                        fontSize: 8,
-                    }}
-                >
-                    {time}
-                </Text>
                 {/* <View style={{ paddingRight: 30, justifyContent: 'center' }}>
                 <Ionicons name={heartPressed ? 'heart' : 'heart-outline'} size={COMMENT_ICON_SIZE} color={heartPressed ? 'red' : colors.timeline_card_header} />
             </View> */}

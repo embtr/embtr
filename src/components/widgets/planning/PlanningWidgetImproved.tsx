@@ -57,27 +57,25 @@ export const PlanningWidgetImproved = () => {
 
     return (
         <WidgetBase>
-            <View style={{ height: '100%' }}>
-                <MonthPickerImproved
-                    allMonths={months}
-                    selectedMonth={selectedMonth}
-                    onSelectionChange={onMonthSelected}
-                    scrollToToday={() => {
-                        scrollToToday();
-                    }}
-                />
+            <MonthPickerImproved
+                allMonths={months}
+                selectedMonth={selectedMonth}
+                onSelectionChange={onMonthSelected}
+                scrollToToday={() => {
+                    scrollToToday();
+                }}
+            />
 
-                <View style={{ height: TIMELINE_CARD_PADDING }} />
-                <DayPickerImproved
-                    selectedDay={selectedDay}
-                    selectedMonth={selectedMonth}
-                    onSelectionChange={onDaySelected}
-                    daysOfTheMonth={daysOfMonth}
-                />
+            <View style={{ height: TIMELINE_CARD_PADDING }} />
+            <DayPickerImproved
+                selectedDay={selectedDay}
+                selectedMonth={selectedMonth}
+                onSelectionChange={onDaySelected}
+                daysOfTheMonth={daysOfMonth}
+            />
 
-                <View style={{ height: TIMELINE_CARD_PADDING }} />
-                <PlanSelectedDay />
-            </View>
+            <View style={{ height: TIMELINE_CARD_PADDING }} />
+            <PlanSelectedDay />
         </WidgetBase>
     );
 };

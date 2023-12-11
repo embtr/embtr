@@ -57,7 +57,12 @@ interface Props {
     scrollToToday: () => void;
 }
 
-export const MonthPickerImproved = ({ allMonths, selectedMonth, onSelectionChange, scrollToToday }: Props) => {
+export const MonthPickerImproved = ({
+    allMonths,
+    selectedMonth,
+    onSelectionChange,
+    scrollToToday,
+}: Props) => {
     const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(0));
     const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
     const flatListRef = React.useRef<FlatList>(null);

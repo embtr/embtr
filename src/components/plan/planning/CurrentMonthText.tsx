@@ -49,7 +49,6 @@ export const CurrentMonthText = ({ onPress, advancedVisible, month, scrollToToda
                     flex: 1,
                     justifyContent: 'center',
                     alignItems: 'flex-end',
-                    paddingRight: TIMELINE_CARD_PADDING,
                 }}
             >
                 <TouchableOpacity
@@ -59,7 +58,6 @@ export const CurrentMonthText = ({ onPress, advancedVisible, month, scrollToToda
                     style={[
                         {
                             flexDirection: 'row',
-
                             backgroundColor: '#404040',
                             borderRadius: 5,
                             paddingHorizontal: 4,

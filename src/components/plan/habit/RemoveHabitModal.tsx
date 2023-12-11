@@ -9,8 +9,6 @@ import {
     POPPINS_SEMI_BOLD,
     TIMELINE_CARD_PADDING,
 } from 'src/util/constants';
-import { PlannedHabitService } from 'src/service/PlannedHabitService';
-import { SvgUri } from 'react-native-svg';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { PlannedTask } from 'resources/schema';
 import {
@@ -23,6 +21,8 @@ import { AnyAction } from '@reduxjs/toolkit';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { PlannedHabitController } from 'src/controller/habit/PlannedHabitController';
+import { PlannedTaskService } from 'src/service/PlannedHabitService';
 
 const isLargerScreen = getWindowHeight() > 800;
 const buttonPadding = isLargerScreen ? 3 : 2;
@@ -149,11 +149,12 @@ const getBody = (
                         CARD_SHADOW,
                     ]}
                     onPress={async () => {
+                        console.log('hello world');
                         const clone = { ...plannedHabit };
                         clone.active = false;
                         onDismiss(clone);
 
-                        await PlannedHabitService.deactivate(
+                        await PlannedTaskService.deactivate(
                             {
                                 ...plannedHabit,
                             },

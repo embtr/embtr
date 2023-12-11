@@ -7,6 +7,7 @@ import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util
 import { UpcomingChallenges } from './UpcomingChallenges';
 import { Screen } from '../common/Screen';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const ChallengeMain = () => {
     const { colors } = useTheme();
@@ -67,7 +68,12 @@ export const ChallengeMain = () => {
     return (
         <Screen>
             <Banner name="Planning" />
-            <PlanningWidgetImproved />
+
+            <ScrollView>
+                <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING / 2 }}>
+                    <PlanningWidgetImproved />
+                </View>
+            </ScrollView>
         </Screen>
     );
 };
