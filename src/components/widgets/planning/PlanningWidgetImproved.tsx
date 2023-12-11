@@ -14,6 +14,7 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
 import { useFocusEffect } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
 
 const months: MonthPickerElementData[] = getMonthData();
 const daysOfMonth = getDaysForMonth();
@@ -33,6 +34,8 @@ const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerEle
 
 export const PlanningWidgetImproved = () => {
     const dispatch = useAppDispatch();
+    const monthScrollRef = React.useRef<FlatList>(null);
+    const dayScrollRef = React.useRef<FlatList>(null);
 
     const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(currentMonth);
     const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>(currentDay);
@@ -61,21 +64,35 @@ export const PlanningWidgetImproved = () => {
     const scrollToToday = () => {
         setSelectedMonth(currentMonth);
         setSelectedDay(currentDay);
+
+        dispatch(setSelectedDayKey(generateDayKey(currentDay, currentMonth)));
+
+        dayScrollRef.current?.scrollToIndex({
+            index: currentDay.index,
+            animated: true,
+            viewPosition: 0.5, // Centers the selected item
+        });
+
+        monthScrollRef.current?.scrollToIndex({
+            index: currentMonth.index,
+            animated: true,
+            viewPosition: 0.5, // Centers the selected item
+        });
     };
 
     return (
         <WidgetBase>
             <MonthPickerImproved
+                ref={monthScrollRef}
                 allMonths={months}
                 selectedMonth={selectedMonth}
                 onSelectionChange={onMonthSelected}
-                scrollToToday={() => {
-                    scrollToToday();
-                }}
+                onScrollToToday={scrollToToday}
             />
 
             <View style={{ height: TIMELINE_CARD_PADDING }} />
             <DayPickerImproved
+                ref={dayScrollRef}
                 selectedDay={selectedDay}
                 selectedMonth={selectedMonth}
                 onSelectionChange={onDaySelected}

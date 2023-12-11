@@ -44,46 +44,42 @@ const scrollToSelected = (flatListRef: React.RefObject<FlatList>, index: number)
     });
 };
 
-export const DayPickerImproved = ({
-    selectedDay,
-    selectedMonth,
-    onSelectionChange,
-    daysOfTheMonth,
-}: Props) => {
-    const flatListRef = React.useRef<FlatList>(null);
-    const onSelectionChangeWrapper = (day: DayPickerElementData) => {
-        scrollToSelected(flatListRef, day.index);
-        onSelectionChange(day);
-    };
+export const DayPickerImproved = React.forwardRef(
+    ({ selectedDay, selectedMonth, onSelectionChange, daysOfTheMonth }: Props, ref: any) => {
+        const onSelectionChangeWrapper = (day: DayPickerElementData) => {
+            scrollToSelected(ref, day.index);
+            onSelectionChange(day);
+        };
 
-    const zeroPaddedMonth = selectedMonth.month.toString().padStart(2, '0');
-    const key = `${selectedMonth.year}${zeroPaddedMonth}`;
-    const days = daysOfTheMonth.get(key);
+        const zeroPaddedMonth = selectedMonth.month.toString().padStart(2, '0');
+        const key = `${selectedMonth.year}${zeroPaddedMonth}`;
+        const days = daysOfTheMonth.get(key);
 
-    return (
-        <View>
-            {/* <FlashList */}
-            <FlatList
-                ref={flatListRef}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={days}
-                renderItem={(item) =>
-                    render({
-                        item: item.item,
-                        selectedDay,
-                        selectedMonth,
-                        onSelectionChange: onSelectionChangeWrapper,
-                    })
-                }
-                keyExtractor={(item) => item.index.toString()}
-                getItemLayout={(data, index) => ({
-                    length: DAY_PICKER_ELEMENT_WIDTH,
-                    offset: DAY_PICKER_ELEMENT_WIDTH * index,
-                    index,
-                })}
-                initialScrollIndex={selectedDay.index - 3}
-            />
-        </View>
-    );
-};
+        return (
+            <View>
+                {/* <FlashList */}
+                <FlatList
+                    ref={ref}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    data={days}
+                    renderItem={(item) =>
+                        render({
+                            item: item.item,
+                            selectedDay,
+                            selectedMonth,
+                            onSelectionChange: onSelectionChangeWrapper,
+                        })
+                    }
+                    keyExtractor={(item) => item.index.toString()}
+                    getItemLayout={(data, index) => ({
+                        length: DAY_PICKER_ELEMENT_WIDTH,
+                        offset: DAY_PICKER_ELEMENT_WIDTH * index,
+                        index,
+                    })}
+                    initialScrollIndex={selectedDay.index - 3}
+                />
+            </View>
+        );
+    }
+);

@@ -54,57 +54,55 @@ interface Props {
     allMonths: MonthPickerElementData[];
     selectedMonth: MonthPickerElementData;
     onSelectionChange: Function;
-    scrollToToday: () => void;
+    onScrollToToday: () => void;
 }
 
-export const MonthPickerImproved = ({
-    allMonths,
-    selectedMonth,
-    onSelectionChange,
-    scrollToToday,
-}: Props) => {
-    const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(0));
-    const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
-    const flatListRef = React.useRef<FlatList>(null);
+export const MonthPickerImproved = React.forwardRef(
+    ({ allMonths, selectedMonth, onSelectionChange, onScrollToToday }: Props, ref: any) => {
+        const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(0));
+        const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
 
-    const onSelectionChangeWrapper = (month: MonthPickerElementData) => {
-        scrollToSelected(flatListRef, month);
-        onSelectionChange(month);
-    };
+        const onSelectionChangeWrapper = (month: MonthPickerElementData) => {
+            scrollToSelected(ref, month);
+            onSelectionChange(month);
+        };
 
-    return (
-        <View style={{ width: '100%' }}>
-            {/* display the current month */}
-            <CurrentMonthText
-                onPress={() => {
-                    scrollToSelected(flatListRef, selectedMonth);
-                    runAnimation(!advancedVisible, advancedOptionsHeight);
-                    setAdvancedVisible(!advancedVisible);
-                }}
-                month={selectedMonth.monthString}
-                advancedVisible={advancedVisible}
-                scrollToToday={scrollToToday}
-            />
+        return (
+            <View style={{ width: '100%' }}>
+                {/* display the current month */}
+                <CurrentMonthText
+                    onPress={() => {
+                        scrollToSelected(ref, selectedMonth);
+                        runAnimation(!advancedVisible, advancedOptionsHeight);
+                        setAdvancedVisible(!advancedVisible);
+                    }}
+                    month={selectedMonth.monthString}
+                    advancedVisible={advancedVisible}
+                    scrollToToday={onScrollToToday}
+                />
 
-            {/* collapsable month selector */}
-            <Animated.View style={[styles.animatedContainer, { height: advancedOptionsHeight }]}>
-                <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
-                    <FlatList
-                        ref={flatListRef}
-                        showsHorizontalScrollIndicator={false}
-                        horizontal
-                        data={allMonths}
-                        renderItem={(item) =>
-                            renderItem({
-                                item: item.item,
-                                selectedMonth,
-                                onSelectionChange: onSelectionChangeWrapper,
-                            })
-                        }
-                        keyExtractor={(item) => item.index.toString()}
-                    />
-                </View>
-            </Animated.View>
-        </View>
-    );
-};
+                {/* collapsable month selector */}
+                <Animated.View
+                    style={[styles.animatedContainer, { height: advancedOptionsHeight }]}
+                >
+                    <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                        <FlatList
+                            ref={ref}
+                            showsHorizontalScrollIndicator={false}
+                            horizontal
+                            data={allMonths}
+                            renderItem={(item) =>
+                                renderItem({
+                                    item: item.item,
+                                    selectedMonth,
+                                    onSelectionChange: onSelectionChangeWrapper,
+                                })
+                            }
+                            keyExtractor={(item) => item.index.toString()}
+                        />
+                    </View>
+                </Animated.View>
+            </View>
+        );
+    }
+);
