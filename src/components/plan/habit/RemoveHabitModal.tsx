@@ -149,7 +149,6 @@ const getBody = (
                         CARD_SHADOW,
                     ]}
                     onPress={async () => {
-                        console.log('hello world');
                         const clone = { ...plannedHabit };
                         clone.active = false;
                         onDismiss(clone);

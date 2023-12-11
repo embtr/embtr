@@ -1,20 +1,18 @@
 import { Timestamp } from 'firebase/firestore';
 import { NOTIFICATION } from 'resources/endpoints';
 import { Notification } from 'resources/schema';
-import { ClearNotificationsRequest, GetNotificationsResponse } from 'resources/types/requests/NotificationTypes';
+import {
+    ClearNotificationsRequest,
+    GetNotificationsResponse,
+    GetUnreadNotificationCountResponse,
+} from 'resources/types/requests/NotificationTypes';
 import axiosInstance from 'src/axios/axios';
 import { Notification as ApiNotificationModel } from 'resources/schema';
-
-export interface NotificationModel {
-    id?: string;
-    added: Timestamp;
-    read: boolean;
-    summary: string;
-    uid: string;
-    notifier_uid: string;
-    target_uid: string;
-    target_page: string;
-}
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { ReactQueryStaleTimes } from 'src/util/constants';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 
 export enum NotificationType {
     TIMELINE_COMMENT,
@@ -43,7 +41,19 @@ export const getUnreadNotificationCount = (notifications: ApiNotificationModel[]
     return count;
 };
 
-class NotificationController {
+export class NotificationController {
+    public static async getUnreadNotificationCount(): Promise<number> {
+        return await axiosInstance
+            .get(`${NOTIFICATION}count`)
+            .then((success) => {
+                const response = success.data as GetUnreadNotificationCountResponse;
+                return response.count ?? 0;
+            })
+            .catch((error) => {
+                return 0;
+            });
+    }
+
     public static async getNotificationsViaApi(): Promise<Notification[]> {
         return await axiosInstance
             .get(`${NOTIFICATION}`)
@@ -52,25 +62,13 @@ class NotificationController {
                 return response.notifications ?? [];
             })
             .catch((error) => {
-                console.log(error);
                 return [];
             });
     }
 
-    public static async clearNotificationsViaApi(notifications: Notification[]) {
-        const notificationIds: number[] = [];
-        notifications.forEach((notification) => {
-            if (notification.id) {
-                notificationIds.push(notification.id);
-            }
-        });
-
-        const request: ClearNotificationsRequest = {
-            notificationIds,
-        };
-
+    public static async clearAll() {
         return await axiosInstance
-            .post(`${NOTIFICATION}clear`, request)
+            .post(`${NOTIFICATION}clear`)
             .then((success) => {
                 //todo do something here
             })
@@ -78,6 +76,47 @@ class NotificationController {
                 //
             });
     }
+
+    public static async prefetchNotificationData() {
+        await NotificationController.prefetchNotifications();
+        await NotificationController.prefetchUnreadNotificationCount();
+    }
+
+    public static async prefetchNotifications() {
+        reactQueryClient.prefetchQuery({
+            queryKey: ['notifications'],
+            queryFn: () => NotificationController.getNotificationsViaApi(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+    }
+
+    public static async prefetchUnreadNotificationCount() {
+        reactQueryClient.prefetchQuery({
+            queryKey: ['unreadNotificationCount'],
+            queryFn: () => NotificationController.getUnreadNotificationCount(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+    }
 }
 
-export default NotificationController;
+export namespace NotificationCustomHooks {
+    export const useNotifications = () => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['notifications'],
+            queryFn: () => NotificationController.getNotificationsViaApi(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useUnreadNotificationCount = () => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['unreadNotificationCount'],
+            queryFn: () => NotificationController.getUnreadNotificationCount(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+}

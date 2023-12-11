@@ -20,7 +20,6 @@ interface Props {
 }
 
 const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: number) => {
-    console.log('running animation', maxHeight);
     Animated.timing(viewHeight, {
         toValue: expand ? maxHeight : 0, // Set the desired height
         duration: 125, // Adjust the duration as needed
