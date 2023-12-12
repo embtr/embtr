@@ -16,7 +16,7 @@ export const AddHabitCategory = () => {
 
     const habitCategory = HabitCustomHooks.useHabitCategory(Number(route.params.id));
     const isCustomHabits = route.params.type === HabitCategoryType.CUSTOM_HABITS;
-    const isActiveHabits = route.params.type === HabitCategoryType.ACTIVE_HABITS;
+    const isActiveHabits = route.params.type === HabitCategoryType.RECENT_HABITS;
 
     const createCreateCustomHabitOption = () => {
         const createOptionOptimalImage: OptimalImageData = {
