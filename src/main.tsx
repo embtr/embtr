@@ -45,6 +45,7 @@ import { PlanningWidgetImproved } from './components/widgets/planning/PlanningWi
 import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
 import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
+import { About } from './static/About';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],

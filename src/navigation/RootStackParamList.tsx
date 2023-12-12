@@ -1,5 +1,6 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
+import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility';
 
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>;
@@ -63,7 +64,7 @@ export type RootStackParamList = {
     Loading: undefined;
 
     // in-app screens without tab bar
-    AddHabitCategory: { id: number, isCustomHabits?: boolean };
+    AddHabitCategory: { id: number; type: HabitCategoryType };
     AddHabitCategories: undefined;
     CreateEditScheduledHabit: {
         habitId?: number;

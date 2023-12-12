@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import { OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility';
 
 interface Props {
     habitCategory: HabitCategory;
@@ -13,15 +14,23 @@ interface Props {
 export const HabitCategoryElement = ({ habitCategory }: Props) => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const isCustomHabits = habitCategory.name === 'Custom Habits';
+    const isActiveHabits = habitCategory.name === 'Active Habits';
+    const highlightElement = isCustomHabits || isActiveHabits;
 
     const navigateToAddHabitCategory = () => {
         if (!habitCategory.id) {
             return;
         }
 
+        const type: HabitCategoryType = isCustomHabits
+            ? HabitCategoryType.CUSTOM_HABITS
+            : isActiveHabits
+              ? HabitCategoryType.ACTIVE_HABITS
+              : HabitCategoryType.HABIT_CATEGORY;
+
         navigation.navigate(Routes.ADD_HABIT_CATEGORY, {
             id: habitCategory.id,
-            isCustomHabits: isCustomHabits,
+            type: type,
         });
     };
 
@@ -35,7 +44,7 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
                 optimalImageData={optimalImageData}
                 name={habitCategory.name ?? ''}
                 description={habitCategory.description ?? ''}
-                isCustomHabits={isCustomHabits}
+                highlightElement={highlightElement}
             />
         </Pressable>
     );

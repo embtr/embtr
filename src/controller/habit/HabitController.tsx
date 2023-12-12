@@ -43,7 +43,7 @@ export class HabitController {
             .get(`/task/${id}`)
             .then((success) => {
                 const result: GetTaskResponse = success.data;
-                                return result.task;
+                return result.task;
             })
             .catch((error) => {
                 return undefined;
@@ -87,7 +87,7 @@ export namespace HabitCustomHooks {
         const { status, error, data } = useQuery({
             queryKey: ['habitCategories'],
             queryFn: HabitController.getHabitCategories,
-            staleTime: ReactQueryStaleTimes.INFINITY,
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
         return data ?? [];
@@ -97,7 +97,7 @@ export namespace HabitCustomHooks {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['habit', id],
             queryFn: () => HabitController.getHabit(id),
-            staleTime: ReactQueryStaleTimes.INFINITY,
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
             enabled: !!id,
         });
 

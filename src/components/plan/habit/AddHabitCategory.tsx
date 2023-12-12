@@ -7,13 +7,16 @@ import { Screen } from 'src/components/common/Screen';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { AddHabitElement } from './AddHabitElement';
 import { OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const AddHabitCategory = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'AddHabitCategory'>>();
 
     const habitCategory = HabitCustomHooks.useHabitCategory(Number(route.params.id));
-    const isCustomHabits = route.params.isCustomHabits;
+    const isCustomHabits = route.params.type === HabitCategoryType.CUSTOM_HABITS;
+    const isActiveHabits = route.params.type === HabitCategoryType.ACTIVE_HABITS;
 
     const createCreateCustomHabitOption = () => {
         const createOptionOptimalImage: OptimalImageData = {
@@ -80,7 +83,10 @@ export const AddHabitCategory = () => {
                     leftIcon={'arrow-back'}
                 />
 
-                <View>{elements}</View>
+                <ScrollView>
+                    <View>{elements}</View>
+                    <View style={{ height: 100 }} />
+                </ScrollView>
             </View>
         </Screen>
     );
