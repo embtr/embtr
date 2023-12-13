@@ -13,6 +13,7 @@ import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
+import { MyHabitsCategoryElement } from 'src/components/plan/habit/MyHabitsCategoryElement';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +37,7 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="DailyResults" component={DailyResults} />
             <Stack.Screen name="ChallengeDetails" component={ChallengeDetails} />
             <Stack.Screen name="AddHabit" component={AddHabitCategory} />
+            <Stack.Screen name="MyHabitsCategoryElement" component={MyHabitsCategoryElement} />
         </Stack.Navigator>
     );
 };

@@ -8,12 +8,12 @@ import {
     getShowQuickAddModal,
     setShowQuickAddModal,
 } from 'src/redux/user/GlobalState';
-import { Ionicons } from '@expo/vector-icons';
 import * as NavigationBar from 'expo-navigation-bar';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { useNavigation } from '@react-navigation/core';
-import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import { MasterScreens, Routes } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { QuickAddElement } from './QuickAddElement';
 
 interface Props {}
 
@@ -24,9 +24,9 @@ export const QuickAddModal = () => {
     const dispatch = useAppDispatch();
 
     const currentTab = useAppSelector(getCurrentTab);
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
-    const onHandleDismiss = () => {
+    const dismiss = () => {
         dispatch(setShowQuickAddModal(false));
     };
 
@@ -37,11 +37,6 @@ export const QuickAddModal = () => {
         }
     }, [showModal]);
 
-    const backgroundColor = 'white';
-    const coreHeight = 200;
-    const circleSize = 70;
-    const imageSize = 27.5;
-
     return (
         <ModalBase visible={showModal}>
             <Modal
@@ -51,115 +46,64 @@ export const QuickAddModal = () => {
                 visible={showModal}
                 transparent={true}
             >
-                <Pressable
-                    style={{ flex: 1, backgroundColor: 'transparent' }}
-                    onPress={() => {
-                        onHandleDismiss();
-                    }}
-                >
+                <Pressable style={{ flex: 1, backgroundColor: 'transparent' }} onPress={dismiss}>
                     <View
                         style={{
                             flex: 1,
-                            flexDirection: 'row',
-                            alignItems: 'flex-end',
+                            justifyContent: 'flex-end',
                         }}
                     >
-                        <View style={{ flex: 1, height: coreHeight, alignItems: 'center' }}>
-                            <Pressable
-                                onPress={() => {
-                                    navigation.navigate('CreateUserPost');
-                                    onHandleDismiss();
-                                }}
-                                style={{
-                                    backgroundColor: backgroundColor,
-                                    height: circleSize,
-                                    width: circleSize,
-                                    borderRadius: 50,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Ionicons
-                                    name="image-outline"
-                                    size={imageSize}
-                                    color={colors.accent_color}
-                                />
-                            </Pressable>
-                        </View>
-                        <View
-                            style={{
-                                flex: 1,
-                                alignItems: 'center',
-                                height: coreHeight,
-                            }}
-                        >
-                            <Pressable
-                                onPress={() => {
-                                    navigation.navigate('CreateUserPost');
-                                    onHandleDismiss();
-                                }}
-                                style={{
-                                    backgroundColor: backgroundColor,
-                                    height: circleSize,
-                                    width: circleSize,
-                                    borderRadius: 50,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Ionicons
-                                    name="pencil-outline"
-                                    size={imageSize}
-                                    color={colors.accent_color}
-                                />
-                            </Pressable>
+                        {/* bottom row options */}
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 0.5 }} />
 
+                            <QuickAddElement
+                                imageString="image-outline"
+                                text="My Habits"
+                                onPress={() => {
+                                    navigation.navigate(Routes.MY_HABITS_CATEGORY_ELEMENT);
+                                    dismiss();
+                                }}
+                            />
                             <View style={{ flex: 1 }} />
-
-                            <Pressable
+                            <QuickAddElement
+                                imageString="pencil-outline"
+                                text="Add Post"
                                 onPress={() => {
-                                    onHandleDismiss();
+                                    navigation.navigate(Routes.CREATE_USER_POST);
+                                    dismiss();
                                 }}
-                                style={{
-                                    backgroundColor: colors.tab_selected,
-                                    height: circleSize,
-                                    width: circleSize,
-                                    borderRadius: 50,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    bottom: isAndroidDevice() ? 5 : 20,
-                                }}
-                            >
-                                <Ionicons
-                                    name="close-outline"
-                                    size={imageSize}
-                                    color={backgroundColor}
-                                />
-                            </Pressable>
-                        </View>
-                        <View style={{ flex: 1, alignItems: 'center', height: coreHeight }}>
-                            <Pressable
+                            />
+                            <View style={{ flex: 1 }} />
+                            <QuickAddElement
+                                imageString="checkbox-outline"
+                                text="Add Habit"
                                 onPress={() => {
                                     navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
-                                    onHandleDismiss();
+                                    dismiss();
                                 }}
-                                style={{
-                                    backgroundColor: backgroundColor,
-                                    height: circleSize,
-                                    width: circleSize,
-                                    borderRadius: 50,
-                                    left: 5,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Ionicons
-                                    name="checkbox-outline"
-                                    size={imageSize}
-                                    color={colors.accent_color}
-                                />
-                            </Pressable>
+                            />
+
+                            <View style={{ flex: 0.5 }} />
                         </View>
+
+                        <View style={{ height: 15 }} />
+
+                        {/* Close Section */}
+                        <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flex: 1 }} />
+                            <View style={{ top: 10 }}>
+                                <QuickAddElement
+                                    isClose={true}
+                                    imageString="close-outline"
+                                    onPress={dismiss}
+                                    text=""
+                                />
+                            </View>
+                            <View style={{ flex: 1 }} />
+                        </View>
+
+                        <View style={{ height: 15 }} />
                     </View>
                 </Pressable>
             </Modal>

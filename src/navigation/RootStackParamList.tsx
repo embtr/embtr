@@ -43,6 +43,8 @@ export type MasterScreens = {
     Profile: undefined;
     UserSettings: undefined;
     EditUserProfile: undefined;
+    AddHabitCategories: undefined;
+    MyHabitsCategoryElement: undefined;
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -64,7 +66,7 @@ export type RootStackParamList = {
     Loading: undefined;
 
     // in-app screens without tab bar
-    AddHabitCategory: { id: number; type: HabitCategoryType };
+    AddHabitCategory: { id?: number; type?: HabitCategoryType };
     AddHabitCategories: undefined;
     CreateEditScheduledHabit: {
         habitId?: number;
@@ -79,9 +81,11 @@ export type RootStackParamList = {
 };
 
 export namespace Routes {
+    export const CREATE_USER_POST = 'CreateUserPost';
     export const DAILY_RESULT_DETAILS = 'DailyResultDetails';
     export const ADD_HABIT_CATEGORY = 'AddHabitCategory';
     export const ADD_HABIT_CATEGORIES = 'AddHabitCategories';
     export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';
     export const EDIT_PLANNED_HABIT = 'EditPlannedHabit';
+    export const MY_HABITS_CATEGORY_ELEMENT = 'MyHabitsCategoryElement';
 }

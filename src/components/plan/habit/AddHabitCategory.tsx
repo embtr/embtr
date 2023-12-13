@@ -10,13 +10,21 @@ import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export const AddHabitCategory = () => {
+interface Props {
+    id?: number;
+    type?: HabitCategoryType;
+}
+
+export const AddHabitCategory = ({ id, type }: Props) => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'AddHabitCategory'>>();
+    const habitCategoryId = id ?? Number(route.params.id);
+    const habitCategoryType = type ?? Number(route.params.type);
 
-    const habitCategory = HabitCustomHooks.useHabitCategory(Number(route.params.id));
-    const isCustomHabits = route.params.type === HabitCategoryType.CUSTOM_HABITS;
-    const isActiveHabits = route.params.type === HabitCategoryType.RECENT_HABITS;
+    const currentHabitCategory = HabitCustomHooks.useHabitCategory(habitCategoryId);
+
+    const isCustomHabits = habitCategoryType === HabitCategoryType.CUSTOM_HABITS;
+    const isMyHabits = habitCategoryType === HabitCategoryType.RECENT_HABITS;
 
     const createCreateCustomHabitOption = () => {
         const createOptionOptimalImage: OptimalImageData = {
@@ -63,7 +71,7 @@ export const AddHabitCategory = () => {
         elements.push(createCreateCustomHabitOption());
     }
 
-    habitCategory?.tasks?.forEach((task) => {
+    currentHabitCategory?.tasks?.forEach((task) => {
         const optimalImageData: OptimalImageData = {
             localImage: task.localImage,
             remoteImageUrl: task.remoteImageUrl,
@@ -78,7 +86,7 @@ export const AddHabitCategory = () => {
         <Screen>
             <View style={{ height: '100%', width: '100%' }}>
                 <Banner
-                    name={habitCategory?.name ?? 'unfound'}
+                    name={currentHabitCategory?.name ?? 'unfound'}
                     leftRoute="BACK"
                     leftIcon={'arrow-back'}
                 />

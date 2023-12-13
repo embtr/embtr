@@ -15,7 +15,8 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const isCustomHabits = habitCategory.name === 'Custom Habits';
     const isRecentHabits = habitCategory.name === 'Recent Habits';
-    const highlightElement = isCustomHabits || isRecentHabits;
+    const isMyHabits = habitCategory.name === 'My Habits';
+    const highlightElement = isCustomHabits || isRecentHabits || isMyHabits;
 
     const navigateToAddHabitCategory = () => {
         if (!habitCategory.id) {
@@ -26,7 +27,9 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
             ? HabitCategoryType.CUSTOM_HABITS
             : isRecentHabits
               ? HabitCategoryType.RECENT_HABITS
-              : HabitCategoryType.HABIT_CATEGORY;
+              : isMyHabits
+                ? HabitCategoryType.MY_HABITS
+                : HabitCategoryType.HABIT_CATEGORY;
 
         navigation.navigate(Routes.ADD_HABIT_CATEGORY, {
             id: habitCategory.id,

@@ -6,6 +6,7 @@ import { DailyResultDetails } from '../common/timeline/DailyResultDetails';
 import { CreateUserPost } from '../timeline/CreateUserPost';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import React from 'react';
+import { MyHabitsCategoryElement } from 'src/components/plan/habit/MyHabitsCategoryElement';
 
 const Stack = createStackNavigator();
 export const SecureTodayTabStack = () => {
@@ -20,6 +21,11 @@ export const SecureTodayTabStack = () => {
             <Stack.Screen
                 name="CreateUserPost"
                 component={CreateUserPost}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name="MyHabitsCategoryElement"
+                component={MyHabitsCategoryElement}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
         </Stack.Navigator>
