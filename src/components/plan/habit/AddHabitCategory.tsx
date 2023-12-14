@@ -20,6 +20,7 @@ export const AddHabitCategory = ({ id, type }: Props) => {
     const route = useRoute<RouteProp<RootStackParamList, 'AddHabitCategory'>>();
     const habitCategoryId = id ?? Number(route.params.id);
     const habitCategoryType = type ?? Number(route.params.type);
+    const needsBanner = !id;
 
     const currentHabitCategory = HabitCustomHooks.useHabitCategory(habitCategoryId);
 
@@ -85,11 +86,13 @@ export const AddHabitCategory = ({ id, type }: Props) => {
     return (
         <Screen>
             <View style={{ height: '100%', width: '100%' }}>
-                <Banner
-                    name={currentHabitCategory?.name ?? 'unfound'}
-                    leftRoute="BACK"
-                    leftIcon={'arrow-back'}
-                />
+                {needsBanner && (
+                    <Banner
+                        name={currentHabitCategory?.name ?? ''}
+                        leftRoute="BACK"
+                        leftIcon={'arrow-back'}
+                    />
+                )}
 
                 <ScrollView>
                     <View>{elements}</View>

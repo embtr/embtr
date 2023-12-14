@@ -44,7 +44,6 @@ export type MasterScreens = {
     UserSettings: undefined;
     EditUserProfile: undefined;
     AddHabitCategories: undefined;
-    MyHabitsCategoryElement: undefined;
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -78,6 +77,7 @@ export type RootStackParamList = {
         plannedTaskId?: number;
         newPlannedHabitData?: NewPlannedHabitData;
     };
+    MyHabitsCategoryElement: undefined;
 };
 
 export namespace Routes {

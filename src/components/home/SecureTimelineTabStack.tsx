@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { UserSearch } from 'src/components/profile/search/UserSearch';
 import { UserProfile } from 'src/components/profile/UserProfile';
 import { Timeline } from 'src/components/timeline/Timeline';
-import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
 import { Notifications } from 'src/components/notification/Notifications';
 import { DailyResultDetails } from 'src/components/common/timeline/DailyResultDetails';
 import { UserPostDetails } from 'src/components/common/timeline/UserPostDetails';
@@ -11,9 +10,8 @@ import { EditDailyResultDetails } from '../common/timeline/EditDailyResultDetail
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
-import { MyHabitsCategoryElement } from 'src/components/plan/habit/MyHabitsCategoryElement';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
@@ -21,11 +19,6 @@ export const SecureTimelineTabStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Timeline" component={Timeline} />
-            <Stack.Screen
-                name="CreateUserPost"
-                component={CreateUserPost}
-                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            />
             <Stack.Screen name="UserSearch" component={UserSearch} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name="EditUserPostDetails" component={EditUserPostDetails} />
@@ -37,7 +30,6 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="DailyResults" component={DailyResults} />
             <Stack.Screen name="ChallengeDetails" component={ChallengeDetails} />
             <Stack.Screen name="AddHabit" component={AddHabitCategory} />
-            <Stack.Screen name="MyHabitsCategoryElement" component={MyHabitsCategoryElement} />
         </Stack.Navigator>
     );
 };

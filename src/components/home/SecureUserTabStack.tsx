@@ -6,8 +6,7 @@ import { UserProfile } from '../profile/UserProfile';
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { DailyResultDetails } from '../common/timeline/DailyResultDetails';
-import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { CreateUserPost } from '../timeline/CreateUserPost';
+import { createStackNavigator } from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
@@ -22,11 +21,6 @@ export const SecureUserTabStack = () => {
             <Stack.Screen name="UserPosts" component={UserPosts} />
             <Stack.Screen name="DailyResults" component={DailyResults} />
             <Stack.Screen name="DailyResultDetails" component={DailyResultDetails} />
-            <Stack.Screen
-                name="CreateUserPost"
-                component={CreateUserPost}
-                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            />
         </Stack.Navigator>
     );
 };
