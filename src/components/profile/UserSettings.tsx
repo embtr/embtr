@@ -8,6 +8,7 @@ import { SettingsAccount } from '../settings/SettingsAccount';
 import { SettingsMembership } from '../settings/SettingsMembership';
 import { SettingsSignOut } from '../settings/SettingsSignOut';
 import { SettingsClearCache } from '../settings/SettingsClearCache';
+import { SettingsAdvancedButton } from '../settings/SettingsAdvancedButton';
 
 export const UserSettings = () => {
 
@@ -42,6 +43,10 @@ export const UserSettings = () => {
 
                 <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
                     <SettingsSignOut />
+                </View>
+
+                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <SettingsAdvancedButton />
                 </View>
 
                 <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>

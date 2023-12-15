@@ -9,6 +9,8 @@ import { CreateEditScheduledHabit } from '../plan/habit/CreateEditScheduledHabit
 import { EditPlannedHabit } from '../plan/habit/EditPlannedHabit';
 import { MyHabitsCategoryElement } from 'src/components/plan/habit/MyHabitsCategoryElement';
 import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
+import { UserSettings } from '../profile/UserSettings';
+import { AdvancedUserSettings } from '../settings/advanced/AdvancedUserSettings';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +39,8 @@ export const SecureMainStack = () => {
                 component={CreateUserPost}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
+            <Stack.Screen name="UserSettings" component={UserSettings} />
+            <Stack.Screen name="AdvancedUserSettings" component={AdvancedUserSettings} />
         </Stack.Navigator>
     );
 };

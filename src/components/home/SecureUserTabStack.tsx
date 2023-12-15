@@ -1,4 +1,3 @@
-import { UserSettings } from 'src/components/profile/UserSettings';
 import { CurrentUserProfile } from 'src/components/profile/CurrentUserProfile';
 import { EditUserProfile } from 'src/components/profile/EditUserProfile';
 import { UserPostDetails } from '../common/timeline/UserPostDetails';
@@ -14,7 +13,6 @@ export const SecureUserTabStack = () => {
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Profile" component={CurrentUserProfile} />
-            <Stack.Screen name="UserSettings" component={UserSettings} />
             <Stack.Screen name="EditUserProfile" component={EditUserProfile} />
             <Stack.Screen name="UserPostDetails" component={UserPostDetails} />
             <Stack.Screen name="UserProfile" component={UserProfile} />
