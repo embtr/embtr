@@ -1,7 +1,6 @@
 import { Text, View, Switch } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
-import { CARD_SHADOW, SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface Props {
     text: string;
@@ -16,20 +15,12 @@ export const EmbtrToggle = ({ text, onToggle, value }: Props) => {
         onToggle(!value);
     };
 
-    let [fontsLoaded] = useFonts({
-        Poppins_500Medium,
-    });
-
-    if (!fontsLoaded) {
-        return <View />;
-    }
-
     return (
         <View
             style={[
                 {
                     backgroundColor: colors.accent_color_faint,
-                    width: SETTINGS_MENU_ITEM_WIDTH,
+                    width: '100%',
                     height: 75,
                     borderRadius: 3,
                     flexDirection: 'row',
@@ -41,10 +32,10 @@ export const EmbtrToggle = ({ text, onToggle, value }: Props) => {
                 <Text
                     style={{
                         color: colors.button_text,
-                        fontFamily: 'Poppins_500Medium',
+                        fontFamily: POPPINS_MEDIUM,
                         fontSize: 15,
                         alignItems: 'flex-start',
-                        paddingLeft: 30,
+                        paddingLeft: TIMELINE_CARD_PADDING * 2,
                     }}
                 >
                     {text}

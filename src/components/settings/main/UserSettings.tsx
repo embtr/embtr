@@ -9,50 +9,43 @@ import { SettingsAdvancedButton } from './SettingsAdvancedButton';
 import { NotificationsToggle } from './NotificationsToggle';
 import { EditProfileSettingsButton } from './EditProfileSettingsButton';
 import { SettingsVersion } from './SettingsVersion';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export const UserSettings = () => {
-
     return (
         <Screen>
             <Banner name="Settings" leftIcon={'arrow-back'} leftRoute="BACK" />
 
-            <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', width: '100%' }}>
-                {/* <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
-                    <ThemeToggle />
-                </View> */}
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+            <ScrollView>
+                <View
+                    style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        width: '100%',
+                        paddingHorizontal: TIMELINE_CARD_PADDING / 2,
+                    }}
+                >
+                    <View style={{ height: TIMELINE_CARD_PADDING }} />
                     <NotificationsToggle />
-                </View>
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <EditProfileSettingsButton />
-                </View>
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsAccount />
-                </View>
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsMembership />
-                </View>
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsClearCache />
-                </View>
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsSignOut />
-                </View>
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsAdvancedButton />
-                </View>
-
-                <View style={{ paddingTop: 7.5, width: '98%', alignItems: 'center' }}>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsVersion />
+                    <View style={{ height: TIMELINE_CARD_PADDING }} />
                 </View>
-            </View>
+            </ScrollView>
         </Screen>
     );
 };

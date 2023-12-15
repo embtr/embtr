@@ -1,17 +1,21 @@
-import * as React from 'react';
 import { TouchableOpacity, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { useFonts, Poppins_500Medium } from '@expo-google-fonts/poppins';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { CARD_SHADOW, SETTINGS_MENU_ITEM_WIDTH } from 'src/util/constants';
+import {
+    CARD_SHADOW,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    TIMELINE_CARD_PADDING,
+} from 'src/util/constants';
 
 interface Props {
     text: string;
+    secondaryText?: string;
     icon?: any;
     onPress: Function;
 }
 
-export const EmbtrButton2 = ({ text, icon, onPress }: Props) => {
+export const EmbtrButton2 = ({ text, secondaryText, icon, onPress }: Props) => {
     const { colors } = useTheme();
 
     return (
@@ -19,7 +23,6 @@ export const EmbtrButton2 = ({ text, icon, onPress }: Props) => {
             style={[
                 {
                     backgroundColor: colors.accent_color_faint,
-                    width: SETTINGS_MENU_ITEM_WIDTH,
                     height: 75,
                     borderRadius: 3,
                     flexDirection: 'row',
@@ -34,23 +37,40 @@ export const EmbtrButton2 = ({ text, icon, onPress }: Props) => {
                         onPress();
                     }}
                 >
-                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            paddingLeft: TIMELINE_CARD_PADDING * 2,
+                            justifyContent: 'center',
+                        }}
+                    >
                         <Text
                             style={{
                                 color: colors.button_text,
-                                fontFamily: 'Poppins_500Medium',
+                                fontFamily: POPPINS_MEDIUM,
                                 fontSize: 15,
                                 alignItems: 'flex-start',
-                                paddingLeft: 30,
                             }}
                         >
                             {text}
                         </Text>
+
+                        {secondaryText && (
+                            <Text
+                                style={{
+                                    color: colors.secondary_text,
+                                    fontFamily: POPPINS_REGULAR,
+                                    fontSize: 12,
+                                    top: 2,
+                                }}
+                            >
+                                {secondaryText}
+                            </Text>
+                        )}
                     </View>
 
                     <View
                         style={{
-                            flex: 1,
                             alignItems: 'flex-end',
                             justifyContent: 'center',
                             paddingRight: 30,

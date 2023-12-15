@@ -1,5 +1,5 @@
 import { Timestamp } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { deleteUser, getAuth } from 'firebase/auth';
 import axiosInstance from 'src/axios/axios';
 import {
     CreateAccountRequest,
@@ -13,7 +13,6 @@ import {
 } from 'resources/types/requests/UserTypes';
 import { Response } from 'resources/types/requests/RequestTypes';
 import { USER } from 'resources/endpoints';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { ImagePickerResult } from 'expo-image-picker';
 import { pickImage } from 'src/util/ImagePickerUtil';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
@@ -119,6 +118,17 @@ class UserController {
             });
     }
 
+    public static async deleteUser() {
+        await axiosInstance
+            .post(`/${ACCOUNT_ENDPOINT}/delete`)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     public static async updateUserViaApi(request: UpdateUserRequest) {
         return await axiosInstance
             .patch(`${USER}`, request)
@@ -170,6 +180,10 @@ class UserController {
         }
 
         return undefined;
+    }
+
+    public static async logoutUser() {
+        await getAuth().signOut();
     }
 
     private static async forceRefreshIdToken() {
