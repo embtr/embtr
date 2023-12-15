@@ -24,6 +24,7 @@ export const EmbtrButton2 = ({ text, secondaryText, icon, onPress }: Props) => {
                 {
                     backgroundColor: colors.accent_color_faint,
                     height: 75,
+                    width: "100%",
                     borderRadius: 3,
                     flexDirection: 'row',
                 },
