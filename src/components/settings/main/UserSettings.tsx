@@ -1,14 +1,14 @@
 import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { NotificationsToggle } from 'src/components/settings/NotificationsToggle';
-import { SettingsVersion } from 'src/components/settings/SettingsVersion';
-import { EditProfileSettingsButton } from 'src/components/settings/EditProfileSettingsButton';
-import { SettingsAccount } from '../settings/SettingsAccount';
-import { SettingsMembership } from '../settings/SettingsMembership';
-import { SettingsSignOut } from '../settings/SettingsSignOut';
-import { SettingsClearCache } from '../settings/SettingsClearCache';
-import { SettingsAdvancedButton } from '../settings/SettingsAdvancedButton';
+import { SettingsAccount } from './SettingsAccount';
+import { SettingsMembership } from './SettingsMembership';
+import { SettingsSignOut } from './SettingsSignOut';
+import { SettingsClearCache } from './SettingsClearCache';
+import { SettingsAdvancedButton } from './SettingsAdvancedButton';
+import { NotificationsToggle } from './NotificationsToggle';
+import { EditProfileSettingsButton } from './EditProfileSettingsButton';
+import { SettingsVersion } from './SettingsVersion';
 
 export const UserSettings = () => {
 

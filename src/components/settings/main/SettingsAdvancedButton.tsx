@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
-import { SettingsButtonElement } from './SettingsButtonElement';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MasterScreens, RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import { MasterScreens, Routes } from 'src/navigation/RootStackParamList';
+import { SettingsButtonElement } from '../generic/SettingsButtonElement';
 
 export const SettingsAdvancedButton = () => {
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();

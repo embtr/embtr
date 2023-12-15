@@ -1,8 +1,8 @@
 import Constants from 'expo-constants';
 import React from 'react';
-import { SettingsTextElement } from 'src/components/settings/SettingsTextElement';
 import { MetadataController, MetadataKey } from 'src/controller/metadata/MetadataController';
 import { UpdateUtility } from 'src/util/updates/UpdateUtility';
+import { SettingsTextElement } from '../generic/SettingsTextElement';
 
 export const SettingsVersion = () => {
     const [latestReleasedVersion, setLatestReleasedVersion] = React.useState<string>('');

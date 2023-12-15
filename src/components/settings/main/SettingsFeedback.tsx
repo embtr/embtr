@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { SettingsButtonElement } from 'src/components/settings/SettingsButtonElement';
 import { FeedbackModal } from 'src/components/feedback/FeedbackModal';
 import { View } from 'react-native';
+import { SettingsButtonElement } from '../generic/SettingsButtonElement';
 
 export const SettingsFeedback = () => {
     const [isVisible, setIsVisible] = React.useState(false);

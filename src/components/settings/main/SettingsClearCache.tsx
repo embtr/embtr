@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
-import { SettingsButtonElement } from './SettingsButtonElement';
 import Toast from 'react-native-root-toast';
+import { SettingsButtonElement } from '../generic/SettingsButtonElement';
 
 export const SettingsClearCache = () => {
     const clearCache = async () => {

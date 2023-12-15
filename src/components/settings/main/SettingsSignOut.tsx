@@ -1,8 +1,8 @@
 import { getAuth } from 'firebase/auth';
-import { SettingsButtonElement } from './SettingsButtonElement';
 import UserController from 'src/controller/user/UserController';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { resetToDefault } from 'src/redux/user/GlobalState';
+import { SettingsButtonElement } from '../generic/SettingsButtonElement';
 
 export const SettingsSignOut = () => {
     const dispatch = useAppDispatch();

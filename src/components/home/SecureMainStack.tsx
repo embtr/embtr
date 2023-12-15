@@ -9,8 +9,8 @@ import { CreateEditScheduledHabit } from '../plan/habit/CreateEditScheduledHabit
 import { EditPlannedHabit } from '../plan/habit/EditPlannedHabit';
 import { MyHabitsCategoryElement } from 'src/components/plan/habit/MyHabitsCategoryElement';
 import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
-import { UserSettings } from '../profile/UserSettings';
 import { AdvancedUserSettings } from '../settings/advanced/AdvancedUserSettings';
+import { UserSettings } from '../settings/main/UserSettings';
 
 const Stack = createStackNavigator();
 
