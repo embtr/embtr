@@ -16,9 +16,7 @@
         "updates": {
             "fallbackToCacheTimeout": 0
         },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
+        "assetBundlePatterns": ["**/*"],
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.brentryczak.embtr",
@@ -48,6 +46,7 @@
             }
         },
         "plugins": [
+            "expo-apple-authentication",
             [
                 "expo-build-properties",
                 {

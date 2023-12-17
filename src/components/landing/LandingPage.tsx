@@ -10,6 +10,9 @@ import { ModalContainingComponent } from '../common/modal/ModalContainingCompone
 import { RegisterModal } from '../login/RegisterModal';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { DesktopLandingPage } from './DesktopLandingPage';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as Crypto from 'expo-crypto';
+import { OAuthProvider, getAuth, signInWithCredential } from 'firebase/auth';
 
 export const LandingPage = () => {
     const { colors } = useTheme();
@@ -86,6 +89,91 @@ export const LandingPage = () => {
                         </View>
 
                         <View style={{ flex: 2, alignItems: 'center' }}>
+                            <View>
+                                <View
+                                    style={{
+                                        width: 300,
+                                        height: 50,
+                                        borderRadius: 5,
+                                        backgroundColor: 'black',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <AppleAuthentication.AppleAuthenticationButton
+                                        buttonType={
+                                            AppleAuthentication.AppleAuthenticationButtonType
+                                                .SIGN_IN
+                                        }
+                                        buttonStyle={
+                                            AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
+                                        }
+                                        cornerRadius={5}
+                                        style={{
+                                            width: 300,
+                                            height: 50,
+                                            borderRadius: 5,
+                                            backgroundColor: 'black',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                        }}
+                                        onPress={async () => {
+                                            try {
+                                                const nonce = Math.random()
+                                                    .toString(36)
+                                                    .substring(2, 10);
+                                                return Crypto.digestStringAsync(
+                                                    Crypto.CryptoDigestAlgorithm.SHA256,
+                                                    nonce
+                                                )
+                                                    .then((hashedNonce) =>
+                                                        AppleAuthentication.signInAsync({
+                                                            requestedScopes: [
+                                                                AppleAuthentication
+                                                                    .AppleAuthenticationScope
+                                                                    .FULL_NAME,
+                                                                AppleAuthentication
+                                                                    .AppleAuthenticationScope.EMAIL,
+                                                            ],
+                                                            nonce: hashedNonce,
+                                                        })
+                                                    )
+                                                    .then((appleCredential) => {
+                                                        const { identityToken } = appleCredential;
+                                                        const provider = new OAuthProvider(
+                                                            'apple.com'
+                                                        );
+                                                        const credential = provider.credential({
+                                                            idToken: identityToken!,
+                                                            rawNonce: nonce,
+                                                        });
+                                                        signInWithCredential(getAuth(), credential);
+                                                        // Successful sign in is handled by firebase.auth().onAuthStateChanged
+                                                    })
+                                                    .catch((error) => {
+                                                        // ...
+                                                    });
+
+                                                // signed in
+                                            } catch (e: any) {
+                                                if (e.code === 'ERR_REQUEST_CANCELED') {
+                                                    // handle that the user canceled the sign-in flow
+                                                } else {
+                                                    // handle other errors
+                                                }
+                                            }
+                                        }}
+                                    />
+                                </View>
+
+                                <Text
+                                    style={{
+                                        color: colors.text,
+                                        textAlign: 'center',
+                                        fontFamily: POPPINS_REGULAR,
+                                    }}
+                                ></Text>
+                            </View>
                             <View style={{ width: 300 }}>
                                 <FirebaseAuthenticate buttonText="Login With Google" />
                             </View>
