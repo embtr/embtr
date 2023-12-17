@@ -3,6 +3,11 @@ import { SettingsButtonElement } from '../generic/SettingsButtonElement';
 import UserController from 'src/controller/user/UserController';
 
 export const SettingsDeleteAccount = () => {
+    const handleOnDelete = async () => {
+        await UserController.deleteUser();
+        await UserController.logoutUser();
+    };
+
     const onDelete = () => {
         Alert.alert(
             'Delete Acccount And Data',
@@ -12,10 +17,7 @@ export const SettingsDeleteAccount = () => {
                 {
                     text: 'I am sure. Delete it.',
                     style: 'destructive',
-                    onPress: async () => {
-                        await UserController.deleteUser();
-                        await UserController.logoutUser();
-                    },
+                    onPress: handleOnDelete,
                 },
             ]
         );

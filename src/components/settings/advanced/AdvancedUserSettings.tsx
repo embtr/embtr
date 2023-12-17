@@ -4,6 +4,7 @@ import { Banner } from 'src/components/common/Banner';
 import { SettingsDeleteAccount } from './SettingsDeleteAccount';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SettingsTextDetailedElement } from '../generic/SettingsTextDetailedElement';
 
 export const AdvancedUserSettings = () => {
     return (
@@ -22,6 +23,13 @@ export const AdvancedUserSettings = () => {
                 >
                     <View style={{ height: TIMELINE_CARD_PADDING }} />
                     <SettingsDeleteAccount />
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <SettingsTextDetailedElement
+                        firstaryText={'Request Data'}
+                        secondaryText={
+                            'To request a copy of your data, please email gdpr@embtr.com'
+                        }
+                    />
                     <View style={{ height: TIMELINE_CARD_PADDING }} />
                 </View>
             </ScrollView>
