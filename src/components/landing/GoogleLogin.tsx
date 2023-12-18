@@ -1,63 +1,35 @@
-import { TouchableOpacity, Text, View, Image } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
+import { TouchableOpacity, View } from 'react-native';
+import { Image } from 'expo-image';
 
 interface Props {
     onPress: Function;
 }
 
 export const GoogleLogin = ({ onPress }: Props) => {
-    const { colors } = useTheme();
-    const image = require('assets/google_logo.png');
+    const height = 40 * 1.035;
+    const width = 175 * 1.035;
 
     return (
         <TouchableOpacity
-            style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                backgroundColor: colors.google_login_background,
-                borderRadius: 4,
-                paddingHorizontal: 16,
-                shadowColor: '#000',
-                height: 45,
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.3,
-                shadowRadius: 4,
-                elevation: 3,
-            }}
             onPress={() => {
                 onPress();
             }}
         >
             <View
                 style={{
-                    flex: 1,
+                    height: 45,
+                    width: 300,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: '#F2F2F2',
+                    borderRadius: 5,
                 }}
             >
-                <View
-                    style={{
-                        backgroundColor: '#fff',
-                        borderRadius: 4,
-                        width: 28,
-                        height: 28,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Image source={image} style={{ width: 18, height: 18 }} />
-                </View>
+                <Image
+                    source={require('../../../assets/google_login.svg')}
+                    style={{ height, width }}
+                />
             </View>
-            <Text
-                style={{
-                    marginLeft: 16,
-                    fontSize: 14,
-                    color: colors.google_login_text,
-                    fontFamily: 'Roboto_500Medium',
-                    flex: 3,
-                }}
-            >
-                Sign in with Google
-            </Text>
-            <View style={{ flex: 1 }} />
         </TouchableOpacity>
     );
 };

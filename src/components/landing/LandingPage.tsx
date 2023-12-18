@@ -3,16 +3,15 @@ import { Text, TextStyle, Image, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { EmbtrButton } from '../common/button/EmbtrButton';
 import { LoginModal } from '../login/LoginModal';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
 import { RegisterModal } from '../login/RegisterModal';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { DesktopLandingPage } from './DesktopLandingPage';
-import * as AppleAuthentication from 'expo-apple-authentication';
-import * as Crypto from 'expo-crypto';
-import { OAuthProvider, getAuth, signInWithCredential } from 'firebase/auth';
+import { AppleAuthenticate } from '../login/apple/AppleAuthenticate';
+import { isIosApp } from 'src/util/DeviceUtil';
 
 export const LandingPage = () => {
     const { colors } = useTheme();
@@ -89,98 +88,24 @@ export const LandingPage = () => {
                         </View>
 
                         <View style={{ flex: 2, alignItems: 'center' }}>
-                            <View>
-                                <View
-                                    style={{
-                                        width: 300,
-                                        height: 50,
-                                        borderRadius: 5,
-                                        backgroundColor: 'black',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <AppleAuthentication.AppleAuthenticationButton
-                                        buttonType={
-                                            AppleAuthentication.AppleAuthenticationButtonType
-                                                .SIGN_IN
-                                        }
-                                        buttonStyle={
-                                            AppleAuthentication.AppleAuthenticationButtonStyle.BLACK
-                                        }
-                                        cornerRadius={5}
-                                        style={{
-                                            width: 300,
-                                            height: 50,
-                                            borderRadius: 5,
-                                            backgroundColor: 'black',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                        }}
-                                        onPress={async () => {
-                                            try {
-                                                const nonce = Math.random()
-                                                    .toString(36)
-                                                    .substring(2, 10);
-                                                return Crypto.digestStringAsync(
-                                                    Crypto.CryptoDigestAlgorithm.SHA256,
-                                                    nonce
-                                                )
-                                                    .then((hashedNonce) =>
-                                                        AppleAuthentication.signInAsync({
-                                                            requestedScopes: [
-                                                                AppleAuthentication
-                                                                    .AppleAuthenticationScope
-                                                                    .FULL_NAME,
-                                                                AppleAuthentication
-                                                                    .AppleAuthenticationScope.EMAIL,
-                                                            ],
-                                                            nonce: hashedNonce,
-                                                        })
-                                                    )
-                                                    .then((appleCredential) => {
-                                                        const { identityToken } = appleCredential;
-                                                        const provider = new OAuthProvider(
-                                                            'apple.com'
-                                                        );
-                                                        const credential = provider.credential({
-                                                            idToken: identityToken!,
-                                                            rawNonce: nonce,
-                                                        });
-                                                        signInWithCredential(getAuth(), credential);
-                                                        // Successful sign in is handled by firebase.auth().onAuthStateChanged
-                                                    })
-                                                    .catch((error) => {
-                                                        // ...
-                                                    });
-
-                                                // signed in
-                                            } catch (e: any) {
-                                                if (e.code === 'ERR_REQUEST_CANCELED') {
-                                                    // handle that the user canceled the sign-in flow
-                                                } else {
-                                                    // handle other errors
-                                                }
-                                            }
-                                        }}
-                                    />
+                            {isIosApp() && (
+                                <View style={{ width: 300, height: 45 }}>
+                                    <AppleAuthenticate />
                                 </View>
+                            )}
 
-                                <Text
-                                    style={{
-                                        color: colors.text,
-                                        textAlign: 'center',
-                                        fontFamily: POPPINS_REGULAR,
-                                    }}
-                                ></Text>
-                            </View>
-                            <View style={{ width: 300 }}>
+                            <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+
+                            <View style={{ width: 300, height: 45 }}>
                                 <FirebaseAuthenticate buttonText="Login With Google" />
                             </View>
 
-                            <View style={{ width: 300, paddingTop: 6 }}>
+                            <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+
+                            <View style={{ width: 300, height: 45 }}>
                                 <EmbtrButton
                                     color={'#e300ef'}
+                                    height={45}
                                     buttonText="Login With Email"
                                     callback={() => {
                                         setDisplayLoginModal(true);
