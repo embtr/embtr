@@ -12,6 +12,8 @@ import { isDesktopBrowser } from 'src/util/DeviceUtil';
 import { DesktopLandingPage } from './DesktopLandingPage';
 import { AppleAuthenticate } from '../login/apple/AppleAuthenticate';
 import { isIosApp } from 'src/util/DeviceUtil';
+import { HorizontalLine } from '../common/HorizontalLine';
+import { getWindowWidth } from 'src/util/GeneralUtility';
 
 export const LandingPage = () => {
     const { colors } = useTheme();
@@ -26,6 +28,7 @@ export const LandingPage = () => {
     const [displayLoginModal, setDisplayLoginModal] = React.useState(false);
     const [displayRegisterModal, setDisplayRegisterModal] = React.useState(false);
     const [continueToDesktopBrowserLogin, setContinueToDesktopBrowserLogin] = React.useState(false);
+    const [useAlternativeLoginMethods, setUseAlternativeLoginMethods] = React.useState(false);
 
     const onLoginModalCancel = () => {
         setDisplayLoginModal(false);
@@ -45,6 +48,47 @@ export const LandingPage = () => {
         );
     }
 
+    const socialLoginOptions = (
+        <View>
+            <View>
+                <View style={{ width: 300, height: 45 }}>
+                    {isIosApp() && <AppleAuthenticate />}
+                </View>
+
+                <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+            </View>
+
+            <View style={{ width: 300, height: 45 }}>
+                <FirebaseAuthenticate buttonText="Login With Google" />
+            </View>
+        </View>
+    );
+
+    const alternativeLoginMethods = (
+        <View>
+            <View style={{ width: 300, height: 45 }}>
+                <EmbtrButton
+                    color={'#e300ef'}
+                    height={45}
+                    buttonText="Login With Email"
+                    callback={() => {
+                        setDisplayLoginModal(true);
+                    }}
+                />
+            </View>
+
+            <View style={{ width: 300, paddingTop: 6 }}>
+                <EmbtrButton
+                    color="#b50017"
+                    buttonText="Register With Email"
+                    callback={() => {
+                        setDisplayRegisterModal(true);
+                    }}
+                />
+            </View>
+        </View>
+    );
+
     return (
         <Screen>
             <ModalContainingComponent />
@@ -63,7 +107,13 @@ export const LandingPage = () => {
             <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
                 {/* FLEX 1 LOGO */}
 
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                <View
+                    style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                    }}
+                >
                     <View style={{ bottom: '10%' }}>
                         <Image
                             source={require('assets/logo.png')}
@@ -88,50 +138,36 @@ export const LandingPage = () => {
                         </View>
 
                         <View style={{ flex: 2, alignItems: 'center' }}>
-                            {isIosApp() && (
-                                <View style={{ width: 300, height: 45 }}>
-                                    <AppleAuthenticate />
-                                </View>
-                            )}
+                            {useAlternativeLoginMethods
+                                ? alternativeLoginMethods
+                                : socialLoginOptions}
 
-                            <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-
-                            <View style={{ width: 300, height: 45 }}>
-                                <FirebaseAuthenticate buttonText="Login With Google" />
-                            </View>
-
-                            <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-
-                            <View style={{ width: 300, height: 45 }}>
-                                <EmbtrButton
-                                    color={'#e300ef'}
-                                    height={45}
-                                    buttonText="Login With Email"
-                                    callback={() => {
-                                        setDisplayLoginModal(true);
-                                    }}
-                                />
+                            <View
+                                style={{
+                                    width: getWindowWidth() * 0.9,
+                                    paddingTop: TIMELINE_CARD_PADDING * 1.5,
+                                    paddingBottom: TIMELINE_CARD_PADDING,
+                                }}
+                            >
+                                <HorizontalLine />
                             </View>
 
                             <Text
+                                onPress={() => {
+                                    setUseAlternativeLoginMethods(!useAlternativeLoginMethods);
+                                }}
                                 style={{
-                                    color: colors.text,
+                                    color: colors.link,
                                     textAlign: 'center',
                                     fontFamily: POPPINS_REGULAR,
-                                    paddingTop: 20,
                                 }}
                             >
-                                New to embtr? Sign up.
+                                {useAlternativeLoginMethods
+                                    ? isIosApp()
+                                        ? 'Login with social accounts'
+                                        : 'Login with Google'
+                                    : 'Alternative login methods'}
                             </Text>
-                            <View style={{ width: 300, paddingTop: 6 }}>
-                                <EmbtrButton
-                                    color="#b50017"
-                                    buttonText="Register With Email"
-                                    callback={() => {
-                                        setDisplayRegisterModal(true);
-                                    }}
-                                />
-                            </View>
                         </View>
                     </View>
                 </View>
