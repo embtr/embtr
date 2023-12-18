@@ -87,7 +87,7 @@ export const PostDetails = ({
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
             ) : (
-                <Banner name={'Popst Details'} leftIcon={'arrow-back'} leftRoute="BACK" />
+                <Banner name={'Post Details'} leftIcon={'arrow-back'} leftRoute="BACK" />
             )}
 
             {userIsAuthor && <EmbtrMenuCustom />}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_MEDIUM, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
@@ -59,7 +59,6 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                 >
                     <View
                         style={{
-                            paddingBottom: 16,
                             flex: 1,
                         }}
                     >
@@ -92,6 +91,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
             </Pressable>
         );
 
+        elements.push(<View style={{ height: TIMELINE_CARD_PADDING }} />);
         elements.push(element);
     }
 
@@ -101,29 +101,26 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                 Daily Results
             </Text>
 
-            <View style={{ width: '100%', paddingTop: 12 }}>
-                {elements.length > 0 && (
-                    <View>
-                        <View style={{}}>{elements}</View>
-                        <View style={{ width: '100%', paddingLeft: 12 }}>
-                            <Text
-                                onPress={() => {
-                                    //@ts-ignore
-                                    navigation.navigate('DailyResults', { userId: userId });
-                                }}
-                                style={{ color: colors.secondary_text, fontSize: 12 }}
-                            >
-                                view all..
-                            </Text>
-                        </View>
+            {elements.length > 0 ? (
+                <View>
+                    {elements}
+                    <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING }}>
+                        <Text
+                            onPress={() => {
+                                //@ts-ignore
+                                navigation.navigate('DailyResults', { userId: userId });
+                            }}
+                            style={{ color: colors.link, fontSize: 12 }}
+                        >
+                            view all..
+                        </Text>
                     </View>
-                )}
-                {elements.length === 0 && (
-                    <Text style={{ color: colors.secondary_text, paddingLeft: 5 }}>
-                        no recent daily results...
-                    </Text>
-                )}
-            </View>
+                </View>
+            ) : (
+                <Text style={{ color: colors.secondary_text, paddingLeft: 5 }}>
+                    no recent daily results...
+                </Text>
+            )}
         </WidgetBase>
     );
 };

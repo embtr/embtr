@@ -102,7 +102,7 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
                     current streak:
                     <Text
                         style={{
-                            color: colors.tab_selected,
+                            color: colors.accent_color_light,
                             fontFamily: POPPINS_REGULAR,
                             fontSize: 12,
                             paddingTop: 5,
@@ -126,7 +126,7 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
                     longest streak:
                     <Text
                         style={{
-                            color: colors.tab_selected,
+                            color: colors.accent_color_light,
                             fontFamily: POPPINS_REGULAR,
                             fontSize: 12,
                             paddingTop: 5,
@@ -166,7 +166,9 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
                         {twoWeeksAgoFormatted}
                     </Text>
                 </View>
-                <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                
+                {/* date on the right */}
+                <View style={{ flex: 1, paddingTop: 2, alignItems: 'flex-end' }}>
                     <Text
                         style={{
                             color: colors.secondary_text,

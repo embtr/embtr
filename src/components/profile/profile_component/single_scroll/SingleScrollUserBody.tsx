@@ -10,6 +10,7 @@ import { ActiveChallengesWidget } from 'src/components/widgets/challenges/Active
 import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
 import React from 'react';
 import { Context, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface Props {
     user: User;
@@ -37,41 +38,47 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
 
     return (
         <Screen>
-            <View style={{ height: '100%' }}>
-                <View style={{ paddingTop: 6, paddingHorizontal: 12 }}>
-                    <View style={{ width: '100%' }}>{<DailyHistoryWidget userId={user.id} />}</View>
+            <View style={{ height: '100%', paddingHorizontal: TIMELINE_CARD_PADDING }}>
+                <View style={{ paddingTop: 6 }}>
+                    <DailyHistoryWidget userId={user.id} />
                 </View>
 
-                {context.completedChallenges.length > 0 && (
-                    <View style={{ paddingTop: 6, paddingHorizontal: 12 }}>
-                        {<TrophyCaseWidget completedChallenges={context.completedChallenges} />}
-                    </View>
-                )}
-
-                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
-                    <HabitJourneyWidget user={user} />
-                </View>
-
-                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
+                <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
                     <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />
                 </View>
 
-                {context.activeChallenges.length > 0 && (
-                    <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
-                        <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />
-                    </View>
-                )}
-
-                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
-                    <View style={{ width: '100%' }}>{<UserPostsWidget userId={user.id} />}</View>
+                <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                    <UserPostsWidget userId={user.id} />
                 </View>
 
-                <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
+                <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
                     <UserDailyResultsWidget userId={user.id} />
                 </View>
 
-                <View style={{ height: 10 }} />
+                <View style={{ height: TIMELINE_CARD_PADDING }} />
             </View>
         </Screen>
     );
 };
+
+{
+    /* {context.completedChallenges.length > 0 && (
+                    <View style={{ paddingTop: 6, paddingHorizontal: 12 }}>
+                        {<TrophyCaseWidget completedChallenges={context.completedChallenges} />}
+                    </View>
+                )} */
+}
+
+{
+    /* <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
+                    <HabitJourneyWidget user={user} />
+                </View> */
+}
+
+{
+    /* {context.activeChallenges.length > 0 && (
+                    <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
+                        <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />
+                    </View>
+                )} */
+}

@@ -41,10 +41,10 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
                 Today's Activities
             </Text>
 
-                <View style={{ paddingTop: 10, flexDirection: 'row' }}>
-                    <Text style={{ color: colors.text }}>It looks like today is a </Text>
-                    <Text style={{ color: colors.tab_selected }}>rest day.</Text>
-                </View>
+            <View style={{ paddingTop: 10, flexDirection: 'row' }}>
+                <Text style={{ color: colors.text }}>It looks like today is a </Text>
+                <Text style={{ color: colors.accent_color_light }}>rest day.</Text>
+            </View>
         </WidgetBase>
     );
 };

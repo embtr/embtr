@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { UserPost } from 'resources/schema';
@@ -50,8 +50,6 @@ export const UserPostsWidget = ({ userId }: Props) => {
                 <View
                     key={i}
                     style={{
-                        padding: 10,
-                        paddingTop: 12,
                         flexDirection: 'row',
                     }}
                 >
@@ -80,7 +78,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
                         </View>
                     </View>
 
-                    <View style={{ justifyContent: 'center', paddingLeft: 10 }}>
+                    <View style={{ justifyContent: 'center' }}>
                         <View>
                             <Ionicons name={'chevron-forward'} size={14} color={colors.text} />
                         </View>
@@ -89,6 +87,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
             </Pressable>
         );
 
+        postElements.push(<View style={{ height: TIMELINE_CARD_PADDING }} />);
         postElements.push(element);
     }
 
@@ -102,27 +101,22 @@ export const UserPostsWidget = ({ userId }: Props) => {
                 {postElements.length > 0 && (
                     <View>
                         <View>{postElements}</View>
-                        <View style={{ width: '100%', paddingLeft: 10 }}>
+                        <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING }}>
                             <Text
                                 onPress={() => {
                                     //@ts-ignore
                                     navigation.navigate('UserPosts', { userId: userId });
                                 }}
-                                style={{ color: colors.secondary_text, fontSize: 12 }}
+                                style={{ color: colors.link, fontSize: 12 }}
                             >
                                 view all..
                             </Text>
                         </View>
                     </View>
                 )}
+
                 {postElements.length === 0 && (
-                    <View>
-                        {
-                            <Text style={{ color: colors.secondary_text, paddingLeft: 5 }}>
-                                no recent posts...
-                            </Text>
-                        }
-                    </View>
+                    <Text style={{ color: colors.secondary_text }}>no recent posts...</Text>
                 )}
             </View>
         </WidgetBase>
