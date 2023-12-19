@@ -21,7 +21,6 @@ export const getDateMinusDays = (date: Date, days: number): Date => {
 };
 
 export const formatDate = (date: Date): string => {
-    return format(date, 'MMM dd, yyyy');
     const formatted = format(addMinutes(date, date.getTimezoneOffset()), 'MMM dd, yyyy');
     return formatted;
 };
@@ -120,7 +119,7 @@ export function hydrateDates<T>(data: T): T {
     } else if (typeof data === 'object' && data !== null) {
         for (const key in data) {
             // do not convert these
-            if (key === 'selectedDayKey' ||  key === 'dayKey') {
+            if (key === 'selectedDayKey' || key === 'dayKey') {
                 continue;
             }
 

@@ -5,13 +5,13 @@ import { Timeline } from 'src/components/timeline/Timeline';
 import { Notifications } from 'src/components/notification/Notifications';
 import { DailyResultDetails } from 'src/components/common/timeline/DailyResultDetails';
 import { UserPostDetails } from 'src/components/common/timeline/UserPostDetails';
-import { EditUserPostDetails } from '../timeline/EditUserPostDetails';
-import { EditDailyResultDetails } from '../common/timeline/EditDailyResultDetails';
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
-import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
-import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
 import { createStackNavigator } from '@react-navigation/stack';
+import { ChallengeDetails } from 'src/components/common/timeline/challenges/ChallengeDetails';
+import { AddHabitCategory } from 'src/components/plan/habit/AddHabitCategory';
+import { EditUserPostDetails } from 'src/components/timeline/EditUserPostDetails';
+import { EditDailyResultDetails } from 'src/components/common/timeline/EditDailyResultDetails';
 
 const Stack = createStackNavigator();
 

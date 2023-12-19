@@ -29,7 +29,7 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
 
         views.push(
             <View
-                key={history.dayKey + historyElement.complete + i}
+                key={i}
                 style={{
                     backgroundColor: historyElement.complete
                         ? colors.progress_bar_complete

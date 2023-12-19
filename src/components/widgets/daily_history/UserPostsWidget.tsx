@@ -17,6 +17,7 @@ import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { NestedImages } from 'src/components/common/images/NestedImages';
 
 interface Props {
     userId: number;
@@ -31,7 +32,6 @@ export const UserPostsWidget = ({ userId }: Props) => {
     const diameter = 9;
     const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
 
-    const [imageSize, setImageSize] = React.useState(0);
     const [posts, setPosts] = React.useState<UserPost[]>([]);
 
     const fetch = async () => {
@@ -49,12 +49,18 @@ export const UserPostsWidget = ({ userId }: Props) => {
     for (let i = 0; i < (posts.length < 3 ? posts.length : 3); i++) {
         const post = posts[i];
 
-        const image = post.images?.[0];
-        const optimalImageData: OptimalImageData = {
-            remoteImageUrl:
-                image?.url ??
-                'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fpost_placeholder.svg?alt=media',
-        };
+        const imageData: OptimalImageData[] = [];
+        post.images?.forEach((image) => {
+            imageData.push({
+                remoteImageUrl: image.url,
+            });
+        });
+        if (imageData.length === 0) {
+            imageData.push({
+                remoteImageUrl:
+                    'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fpost_placeholder.svg?alt=media',
+            });
+        }
 
         const element = (
             <TouchableOpacity
@@ -81,36 +87,15 @@ export const UserPostsWidget = ({ userId }: Props) => {
                             flexDirection: 'row',
                         }}
                     >
-                        <View
-                            style={{
-                                height: imageSize,
-                                width: imageSize,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <OptimalImage
-                                data={optimalImageData}
-                                style={{
-                                    height: imageSize * 0.9,
-                                    width: imageSize * 0.9,
-                                    borderRadius: 5,
-                                }}
-                            />
-                        </View>
+                        <NestedImages imageData={imageData} size={60} padSize={0} />
                         <View style={{ width: TIMELINE_CARD_PADDING }} />
-                        <View
-                            style={{ flex: 1 }}
-                            onLayout={(e) => {
-                                setImageSize(e.nativeEvent.layout.height);
-                            }}
-                        >
+                        <View style={{ flex: 1 }}>
                             <View>
                                 <Text
                                     style={{
                                         color: colors.text,
                                         fontFamily: POPPINS_SEMI_BOLD,
-                                        fontSize: 12,
+                                        fontSize: 15,
                                     }}
                                 >
                                     {post.title}
@@ -118,11 +103,11 @@ export const UserPostsWidget = ({ userId }: Props) => {
                             </View>
                             <View>
                                 <Text
-                                    numberOfLines={1}
+                                    numberOfLines={2}
                                     style={{
                                         color: colors.secondary_text,
                                         fontFamily: POPPINS_REGULAR,
-                                        fontSize: 12,
+                                        fontSize: 13,
                                     }}
                                 >
                                     {post.body}
@@ -133,7 +118,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
 
                     <View style={{ justifyContent: 'center' }}>
                         <View>
-                            <Ionicons name={'chevron-forward'} size={14} color={colors.text} />
+                            <Ionicons name={'chevron-forward'} size={16} color={colors.text} />
                         </View>
                     </View>
                 </View>

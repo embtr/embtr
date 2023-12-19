@@ -2,15 +2,14 @@ import React from 'react';
 import { Text, View, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { Ionicons } from '@expo/vector-icons';
+import { CARD_SHADOW, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
-import { CompletedHabits } from 'src/components/timeline/card_components/CompletedHabits';
-import { getDatePretty } from 'src/util/DateUtility';
+import { OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { NestedImages } from 'src/components/common/images/NestedImages';
 
 interface Props {
     userId: number;
@@ -42,6 +41,13 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
         i++
     ) {
         const summary = plannedDayResultSummaries[i];
+        const imageData: OptimalImageData[] = [];
+        summary.completedHabits.forEach((completedHabit) => {
+            imageData.push({
+                localImage: completedHabit.localImage,
+                remoteImageUrl: completedHabit.remoteImageUrl,
+            });
+        });
 
         const element = (
             <Pressable
@@ -52,41 +58,17 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                 }}
             >
                 <View
-                    key={i}
-                    style={{
-                        flexDirection: 'row',
-                    }}
+                    style={[
+                        {
+                            flexDirection: 'row',
+                            backgroundColor: '#404040',
+                            borderRadius: 5,
+                            padding: TIMELINE_CARD_PADDING / 2,
+                        },
+                        CARD_SHADOW,
+                    ]}
                 >
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
-                        <View style={{ paddingLeft: 12 }}>
-                            <Text
-                                style={{
-                                    color: colors.text,
-                                    fontFamily: POPPINS_SEMI_BOLD,
-                                    fontSize: 12,
-                                }}
-                            >
-                                {summary.plannedDayResult.title ??
-                                    getDatePretty(
-                                        summary.plannedDayResult.plannedDay?.date ?? new Date()
-                                    ) + ' Results'}
-                            </Text>
-                            <View style={{ height: 6 }} />
-                            <CompletedHabits completedHabits={summary.completedHabits} limit={3} />
-                        </View>
-                    </View>
-                    <View
-                        style={{
-                            paddingRight: 12,
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Ionicons name={'chevron-forward'} size={14} color={colors.text} />
-                    </View>
+                    <NestedImages imageData={imageData} size={60} padSize={15} />
                 </View>
             </Pressable>
         );
