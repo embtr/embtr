@@ -1,8 +1,13 @@
 import React from 'react';
-import { Text, View, Pressable } from 'react-native';
+import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import {
+    CARD_SHADOW,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+    TIMELINE_CARD_PADDING,
+} from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { UserPost } from 'resources/schema';
@@ -10,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
+import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     userId: number;
@@ -24,6 +31,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
     const diameter = 9;
     const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
 
+    const [imageSize, setImageSize] = React.useState(0);
     const [posts, setPosts] = React.useState<UserPost[]>([]);
 
     const fetch = async () => {
@@ -40,8 +48,16 @@ export const UserPostsWidget = ({ userId }: Props) => {
     const postElements: JSX.Element[] = [];
     for (let i = 0; i < (posts.length < 3 ? posts.length : 3); i++) {
         const post = posts[i];
+
+        const image = post.images?.[0];
+        const optimalImageData: OptimalImageData = {
+            remoteImageUrl:
+                image?.url ??
+                'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fpost_placeholder.svg?alt=media',
+        };
+
         const element = (
-            <Pressable
+            <TouchableOpacity
                 onPress={() => {
                     //@ts-ignore
                     navigation.navigate('UserPostDetails', { id: post.id });
@@ -49,32 +65,69 @@ export const UserPostsWidget = ({ userId }: Props) => {
             >
                 <View
                     key={i}
-                    style={{
-                        flexDirection: 'row',
-                    }}
+                    style={[
+                        {
+                            flexDirection: 'row',
+                            backgroundColor: '#404040',
+                            borderRadius: 5,
+                            padding: TIMELINE_CARD_PADDING / 2,
+                        },
+                        CARD_SHADOW,
+                    ]}
                 >
-                    <View style={{ flex: 1 }}>
-                        <View>
-                            <Text
+                    <View
+                        style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                        }}
+                    >
+                        <View
+                            style={{
+                                height: imageSize,
+                                width: imageSize,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <OptimalImage
+                                data={optimalImageData}
                                 style={{
-                                    color: colors.text,
-                                    fontFamily: POPPINS_SEMI_BOLD,
-                                    fontSize: 12,
+                                    height: imageSize * 0.9,
+                                    width: imageSize * 0.9,
+                                    borderRadius: 5,
                                 }}
-                            >
-                                {post.title}
-                            </Text>
+                            />
                         </View>
-                        <View>
-                            <Text
-                                style={{
-                                    color: colors.secondary_text,
-                                    fontFamily: POPPINS_REGULAR,
-                                    fontSize: 12,
-                                }}
-                            >
-                                {(post.body ? post.body.substring(0, 100) : 'view more') + '...'}
-                            </Text>
+                        <View style={{ width: TIMELINE_CARD_PADDING }} />
+                        <View
+                            style={{ flex: 1 }}
+                            onLayout={(e) => {
+                                setImageSize(e.nativeEvent.layout.height);
+                            }}
+                        >
+                            <View>
+                                <Text
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_SEMI_BOLD,
+                                        fontSize: 12,
+                                    }}
+                                >
+                                    {post.title}
+                                </Text>
+                            </View>
+                            <View>
+                                <Text
+                                    numberOfLines={1}
+                                    style={{
+                                        color: colors.secondary_text,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 12,
+                                    }}
+                                >
+                                    {post.body}
+                                </Text>
+                            </View>
                         </View>
                     </View>
 
@@ -84,10 +137,10 @@ export const UserPostsWidget = ({ userId }: Props) => {
                         </View>
                     </View>
                 </View>
-            </Pressable>
+            </TouchableOpacity>
         );
 
-        postElements.push(<View style={{ height: TIMELINE_CARD_PADDING }} />);
+        postElements.push(<View style={{ height: TIMELINE_CARD_PADDING / 2 }} />);
         postElements.push(element);
     }
 
@@ -101,7 +154,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
                 {postElements.length > 0 && (
                     <View>
                         <View>{postElements}</View>
-                        <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING }}>
+                        <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING / 2 }}>
                             <Text
                                 onPress={() => {
                                     //@ts-ignore

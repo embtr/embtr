@@ -1,5 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
 import { GetDailyHistoryResponse } from 'resources/types/requests/DailyHistoryTypes';
 import axiosInstance from 'src/axios/axios';
+import { ReactQueryStaleTimes } from 'src/util/constants';
 
 export class DailyHistoryController {
     public static async get(userId: number) {
@@ -18,4 +20,16 @@ export class DailyHistoryController {
                 return error.response.data;
             });
     }
+}
+
+export namespace DailyHistoryCustomHooks {
+    export const useDailyHistory = (userId: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['dailyHistory', userId],
+            queryFn: () => DailyHistoryController.get(userId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
 }

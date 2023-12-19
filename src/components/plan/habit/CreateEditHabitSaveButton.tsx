@@ -127,7 +127,7 @@ export const CreateEditHabitSaveButton = ({
         } else {
             //adding for just the selected day
             const selectedDate = getDateFromDayKey(dayKeyToUse);
-            const dayOfWeek = selectedDate.getDay() + 1;
+            const dayOfWeek = selectedDate.getUTCDay() + 1;
 
             scheduledHabit.daysOfWeek = [
                 {
@@ -172,6 +172,7 @@ export const CreateEditHabitSaveButton = ({
     };
 
     const createHabit = async () => {
+        console.log("day of week: ", daysOfWeek)
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.create(scheduledHabit);

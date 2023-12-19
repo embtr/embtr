@@ -1,10 +1,7 @@
-import { useFocusEffect } from '@react-navigation/native';
-import React from 'react';
 import { Text, View } from 'react-native';
-import { DayResult } from 'resources/types/widget/DailyHistory';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { DailyHistoryController } from 'src/controller/daily_history/DailyHistoryController';
+import { DailyHistoryCustomHooks } from 'src/controller/daily_history/DailyHistoryController';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 import { getWindowWidth } from 'src/util/GeneralUtility';
@@ -18,27 +15,13 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
     const diameter = 9;
     const margin = ((getWindowWidth() - 40) / 30 - diameter) / 2;
 
-    const [history, setHistory] = React.useState<DayResult[]>([]);
+    const dailyHistory = DailyHistoryCustomHooks.useDailyHistory(userId);
 
-    const fetch = async () => {
-        if (!userId) {
-            return;
-        }
-
-        const dailyHistory = await DailyHistoryController.get(userId);
-        setHistory(dailyHistory.history);
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            setHistory([]);
-            fetch();
-        }, [userId])
-    );
-
-    if (!history) {
+    if (!dailyHistory.data) {
         return <View />;
     }
+
+    const history = dailyHistory.data.history;
 
     let views: JSX.Element[] = [];
     for (let i = 0; i < history.length; i++) {
@@ -46,7 +29,7 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
 
         views.push(
             <View
-                key={historyElement.dayKey + historyElement.complete + i}
+                key={history.dayKey + historyElement.complete + i}
                 style={{
                     backgroundColor: historyElement.complete
                         ? colors.progress_bar_complete
@@ -166,7 +149,7 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
                         {twoWeeksAgoFormatted}
                     </Text>
                 </View>
-                
+
                 {/* date on the right */}
                 <View style={{ flex: 1, paddingTop: 2, alignItems: 'flex-end' }}>
                     <Text

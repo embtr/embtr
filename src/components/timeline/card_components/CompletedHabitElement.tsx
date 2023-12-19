@@ -12,10 +12,6 @@ interface Props {
     color?: string;
 }
 
-/*
- * THIS IS FOR PROFILE PAGE
-*/
-
 export const CompletedHabitElement = ({ completedHabit, color }: Props) => {
     const { colors } = useTheme();
     const scheduledHabit = ScheduledHabitCustomHooks.useScheduledHabit(completedHabit.scheduledHabitId);
