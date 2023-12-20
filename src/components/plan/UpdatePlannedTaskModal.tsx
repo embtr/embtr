@@ -247,12 +247,18 @@ export const UpdatePlannedTaskModal = () => {
                         marginRight: TIMELINE_CARD_PADDING,
                     }}
                 >
-                    <Ionicons
-                        style={{ alignItems: 'flex-end', left: 5, bottom: 5 }}
-                        name={'close'}
-                        size={20}
-                        color={colors.secondary_text}
-                    />
+                    <Pressable
+                        onPress={() => {
+                            onDismissWrapper();
+                        }}
+                    >
+                        <Ionicons
+                            style={{ alignItems: 'flex-end', left: 5, bottom: 5 }}
+                            name={'close'}
+                            size={20}
+                            color={colors.secondary_text}
+                        />
+                    </Pressable>
                 </View>
             </View>
 
