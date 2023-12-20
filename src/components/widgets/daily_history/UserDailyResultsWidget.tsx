@@ -1,15 +1,16 @@
 import React from 'react';
-import { Text, View, Pressable } from 'react-native';
+import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { CARD_SHADOW, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 import { OptimalImageData } from 'src/components/common/images/OptimalImage';
-import { NestedImages } from 'src/components/common/images/NestedImages';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { PostWidgetElement } from 'src/components/widgets/post_widget_commons/PostWidgetElement';
 
 interface Props {
     userId: number;
@@ -49,37 +50,43 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
             });
         });
 
+        const completedHabits = summary.completedHabits.length;
+        const body = `${completedHabits} habit${completedHabits === 1 ? '' : 's'} completed`;
+
         const element = (
-            <Pressable
+            <TouchableOpacity
+                key={i}
                 onPress={() => {
                     navigation.navigate('DailyResultDetails', {
                         id: summary.plannedDayResult.id ?? 0,
                     });
                 }}
             >
-                <View
-                    style={[
-                        {
-                            flexDirection: 'row',
-                            backgroundColor: '#404040',
-                            borderRadius: 5,
-                            padding: TIMELINE_CARD_PADDING / 2,
-                        },
-                        CARD_SHADOW,
-                    ]}
-                >
-                    <NestedImages imageData={imageData} size={60} padSize={15} paddingStep={5} />
-                </View>
-            </Pressable>
+                <PostWidgetElement
+                    title={summary.plannedDayResult.title ?? ''}
+                    body={body}
+                    commentCount={summary.plannedDayResult.comments?.length ?? 0}
+                    likeCount={summary.plannedDayResult.likes?.length ?? 0}
+                    date={summary.plannedDayResult.plannedDay?.date ?? new Date()}
+                    imageData={imageData}
+                />
+            </TouchableOpacity>
         );
 
-        elements.push(<View style={{ height: TIMELINE_CARD_PADDING }} />);
+        elements.push(<View style={{ height: TIMELINE_CARD_PADDING / 2 }} />);
         elements.push(element);
     }
 
     return (
         <WidgetBase>
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+            <Text
+                style={{
+                    color: colors.text,
+                    fontFamily: POPPINS_SEMI_BOLD,
+                    fontSize: 15,
+                    lineHeight: 17,
+                }}
+            >
                 Daily Results
             </Text>
 

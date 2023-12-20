@@ -2,22 +2,16 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import {
-    CARD_SHADOW,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-    TIMELINE_CARD_PADDING,
-} from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { UserPost } from 'resources/schema';
-import { Ionicons } from '@expo/vector-icons';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
-import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { NestedImages } from 'src/components/common/images/NestedImages';
+import { PostWidgetElement } from 'src/components/widgets/post_widget_commons/PostWidgetElement';
 
 interface Props {
     userId: number;
@@ -28,9 +22,6 @@ export const UserPostsWidget = ({ userId }: Props) => {
 
     const currentTab = useAppSelector(getCurrentTab);
     const navigation = getNavigationHook(currentTab)();
-
-    const diameter = 9;
-    const margin = ((getWindowWidth() - 25) / 30 - diameter) / 2;
 
     const [posts, setPosts] = React.useState<UserPost[]>([]);
 
@@ -64,64 +55,20 @@ export const UserPostsWidget = ({ userId }: Props) => {
 
         const element = (
             <TouchableOpacity
+                key={i}
                 onPress={() => {
                     //@ts-ignore
                     navigation.navigate('UserPostDetails', { id: post.id });
                 }}
             >
-                <View
-                    key={i}
-                    style={[
-                        {
-                            flexDirection: 'row',
-                            backgroundColor: '#404040',
-                            borderRadius: 5,
-                            padding: TIMELINE_CARD_PADDING / 2,
-                        },
-                        CARD_SHADOW,
-                    ]}
-                >
-                    <View
-                        style={{
-                            flex: 1,
-                            flexDirection: 'row',
-                        }}
-                    >
-                        <NestedImages imageData={imageData} size={50} padSize={0} paddingStep={3} />
-                        <View style={{ width: TIMELINE_CARD_PADDING }} />
-                        <View style={{ flex: 1 }}>
-                            <View>
-                                <Text
-                                    style={{
-                                        color: colors.text,
-                                        fontFamily: POPPINS_SEMI_BOLD,
-                                        fontSize: 15,
-                                    }}
-                                >
-                                    {post.title}
-                                </Text>
-                            </View>
-                            <View>
-                                <Text
-                                    numberOfLines={2}
-                                    style={{
-                                        color: colors.secondary_text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 13,
-                                    }}
-                                >
-                                    {post.body}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-
-                    <View style={{ justifyContent: 'center' }}>
-                        <View>
-                            <Ionicons name={'chevron-forward'} size={16} color={colors.text} />
-                        </View>
-                    </View>
-                </View>
+                <PostWidgetElement
+                    title={post.title ?? ''}
+                    body={post.body ?? ''}
+                    commentCount={post.comments?.length ?? 0}
+                    likeCount={post.likes?.length ?? 0}
+                    date={post.createdAt ?? new Date()}
+                    imageData={imageData}
+                />
             </TouchableOpacity>
         );
 
@@ -131,7 +78,14 @@ export const UserPostsWidget = ({ userId }: Props) => {
 
     return (
         <WidgetBase>
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+            <Text
+                style={{
+                    color: colors.text,
+                    fontFamily: POPPINS_SEMI_BOLD,
+                    fontSize: 15,
+                    lineHeight: 17,
+                }}
+            >
                 User Posts
             </Text>
 
