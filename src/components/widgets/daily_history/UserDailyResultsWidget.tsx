@@ -69,6 +69,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                     likeCount={summary.plannedDayResult.likes?.length ?? 0}
                     date={summary.plannedDayResult.plannedDay?.date ?? new Date()}
                     imageData={imageData}
+                    imagePadSize={10}
                 />
             </TouchableOpacity>
         );

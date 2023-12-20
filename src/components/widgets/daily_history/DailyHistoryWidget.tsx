@@ -67,7 +67,14 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
 
     return (
         <WidgetBase>
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+            <Text
+                style={{
+                    color: colors.text,
+                    fontFamily: POPPINS_SEMI_BOLD,
+                    fontSize: 15,
+                    lineHeight: 17,
+                }}
+            >
                 Daily History
             </Text>
 

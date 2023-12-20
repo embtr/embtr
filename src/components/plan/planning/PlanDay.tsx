@@ -29,6 +29,8 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: nu
 };
 
 export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
+    const isCurrentUser = false;
+
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
 

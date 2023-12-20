@@ -6,7 +6,7 @@ import { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PLANNED_DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
-import { PlannedDay as PlannedDayModel } from 'resources/schema';
+import { PlannedDay as PlannedDayModel, User } from 'resources/schema';
 import {
     CreatePlannedDayRequest,
     CreatePlannedDayResponse,
@@ -430,6 +430,13 @@ export namespace PlannedDayCustomHooks {
         const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, todayDayKey);
 
         return plannedDay;
+    };
+
+    export const useTodaysPlannedDayForUser = (user: User) => {
+        const todayDayKey = getTodayKey();
+        const plannedDay = PlannedDayCustomHooks.usePlannedDay(user.id ?? 0, todayDayKey);
+
+        return { todayDayKey, plannedDay };
     };
 }
 

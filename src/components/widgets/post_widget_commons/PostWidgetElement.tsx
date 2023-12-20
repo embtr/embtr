@@ -13,6 +13,7 @@ interface Props {
     likeCount: number;
     date: Date;
     imageData: OptimalImageData[];
+    imagePadSize?: number;
 }
 
 export const PostWidgetElement = ({
@@ -22,6 +23,7 @@ export const PostWidgetElement = ({
     likeCount,
     date,
     imageData,
+    imagePadSize,
 }: Props) => {
     const colors = useTheme().colors;
 
@@ -44,7 +46,12 @@ export const PostWidgetElement = ({
                     flexDirection: 'row',
                 }}
             >
-                <NestedImages imageData={imageData} size={50} padSize={0} paddingStep={3} />
+                <NestedImages
+                    imageData={imageData}
+                    size={50}
+                    padSize={imagePadSize ?? 0}
+                    paddingStep={3}
+                />
                 <View style={{ width: TIMELINE_CARD_PADDING }} />
                 <View style={{ flex: 1 }}>
                     <View>
@@ -66,6 +73,7 @@ export const PostWidgetElement = ({
                                     color: colors.secondary_text,
                                     fontFamily: POPPINS_REGULAR,
                                     fontSize: 10,
+                                    paddingLeft: TIMELINE_CARD_PADDING / 2,
                                 }}
                             >
                                 {daysAgo}
