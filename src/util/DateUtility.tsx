@@ -1,4 +1,5 @@
 import { addMinutes, differenceInDays, differenceInWeeks, format } from 'date-fns';
+import { daysOfWeek, daysOfWeekAbbreviated, humanDates, monthsAbbreviated } from "src/util/DateConsts";
 
 export const getDaysOld = (then: any, now: any): number => {
     const dateDiff = now - then;
@@ -35,22 +36,7 @@ export const getDatePretty = (date: Date): string => {
 };
 
 export const formatUtcDate = (date: Date) => {
-    const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-    ];
-
-    const month = months[date.getUTCMonth()];
+    const month = monthsAbbreviated[date.getUTCMonth()];
     const day = date.getUTCDate();
 
     return `${month} ${day}`;
@@ -69,8 +55,8 @@ export const getDatePrettyWithTime = (date: Date): string => {
 
 export const getDateFormatted = (date: Date) => {
     let month = '' + (date.getMonth() + 1),
-        day = '' + date.getDate(),
-        year = date.getFullYear();
+      day = '' + date.getDate(),
+      year = date.getFullYear();
 
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
@@ -80,7 +66,7 @@ export const getDateFormatted = (date: Date) => {
 
 export const getMonthDayFormatted = (date: Date) => {
     let month = '' + (date.getMonth() + 1),
-        day = '' + date.getDate();
+      day = '' + date.getDate();
 
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
@@ -137,4 +123,25 @@ function isDateString(value: any): boolean {
     // Use a regular expression to check if the string matches the format of a date string
     const dateRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2}))?$/;
     return dateRegex.test(value);
+}
+
+export function getHumanReadableDate(d: Date): string {
+    // Ensure we're getting a date object
+    d  = new Date(d);
+    const now = new Date();
+
+    // Check if date is today
+    if (d.toDateString() === now.toDateString()) {
+        // Check if the time is now
+        if (d.getHours() === now.getHours()) {
+            return humanDates.now;
+        }
+        return humanDates.today;
+    } else if (d.toDateString() === getDateMinusDays(now, 1).toDateString()) {
+        return humanDates.yesterday;
+    } else if (differenceInDays(now, d) < 7) {
+        return daysOfWeek[d.getDay()];
+    } else {
+        return `${daysOfWeekAbbreviated[d.getDay()]}. ${d.getDate() + 1}. ${monthsAbbreviated[d.getMonth()]}.`;
+    }
 }

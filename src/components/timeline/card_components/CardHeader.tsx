@@ -3,7 +3,7 @@ import { User } from 'resources/schema';
 import { TimelineType } from 'resources/types/Types';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDatePrettyWithTime } from 'src/util/DateUtility';
+import { getDatePrettyWithTime, getHumanReadableDate } from "src/util/DateUtility";
 import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 interface Props {
@@ -16,10 +16,8 @@ interface Props {
 export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
     const { colors } = useTheme();
 
-    let datePretty = getDatePrettyWithTime(date);
-    while (datePretty.length < 16) {
-        datePretty = ' ' + datePretty;
-    }
+    let datePretty = getHumanReadableDate(date);
+
 
     const label =
         type === TimelineType.USER_POST
