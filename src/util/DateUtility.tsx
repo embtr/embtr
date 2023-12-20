@@ -142,6 +142,6 @@ export function getHumanReadableDate(d: Date): string {
     } else if (differenceInDays(now, d) < 7) {
         return daysOfWeek[d.getDay()];
     } else {
-        return `${daysOfWeekAbbreviated[d.getDay()]}. ${d.getDate() + 1}. ${monthsAbbreviated[d.getMonth()]}.`;
+        return `${daysOfWeekAbbreviated[d.getDay()]}. ${d.getDate()}. ${monthsAbbreviated[d.getMonth()]}.`;
     }
 }
