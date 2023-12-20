@@ -16,7 +16,7 @@ interface Props {
 export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
     const { colors } = useTheme();
 
-    let datePretty = getHumanReadableDate(date) + date;
+    let datePretty = getHumanReadableDate(date);
 
 
     const label =
