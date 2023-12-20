@@ -68,7 +68,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                         CARD_SHADOW,
                     ]}
                 >
-                    <NestedImages imageData={imageData} size={60} padSize={15} />
+                    <NestedImages imageData={imageData} size={60} padSize={15} paddingStep={5} />
                 </View>
             </Pressable>
         );

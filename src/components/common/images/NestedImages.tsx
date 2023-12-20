@@ -6,10 +6,10 @@ interface Props {
     imageData: OptimalImageData[];
     size: number;
     padSize: number;
+    paddingStep: number;
 }
 
-const paddingStep = 2.5;
-export const NestedImages = ({ imageData, size, padSize }: Props) => {
+export const NestedImages = ({ imageData, size, padSize, paddingStep }: Props) => {
     const elements: JSX.Element[] = [];
     for (let i = 0; i < Math.min(imageData.length, 3); i++) {
         const image = imageData[i];
@@ -21,27 +21,22 @@ export const NestedImages = ({ imageData, size, padSize }: Props) => {
         elements.push(element);
     }
 
-    const paddingLeft = 0; //; imageData.length === 1 ? 5 : imageData.length === 2 ? 2.5 : 0;
-    const paddingTop = 0; // imageData.length === 1 ? 2.5 : imageData.length === 2 ? 1.25 : 0;
+    const paddingLeft =
+        imageData.length === 1 ? paddingStep : imageData.length === 2 ? paddingStep / 2 : 0;
+    const paddingTop =
+        imageData.length === 1 ? paddingStep : imageData.length === 2 ? paddingStep / 2 : 0;
 
     return (
         <View
             style={{
-                height: 65,
-                width: 70,
-                backgroundColor: 'pink',
+                height: size + paddingStep * 2,
+                width: size + paddingStep * 2,
+                flexDirection: 'row',
+                paddingLeft: paddingLeft,
+                paddingTop: paddingTop,
             }}
         >
-            <View
-                style={{
-                    flexDirection: 'row',
-                    paddingLeft: paddingLeft,
-                    paddingTop: paddingTop,
-                    backgroundColor: 'orange',
-                }}
-            >
-                {elements}
-            </View>
+            {elements}
         </View>
     );
 };

@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { CARD_SHADOW } from 'src/util/constants';
+import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 interface Props {
     image: OptimalImageData;
@@ -8,9 +9,15 @@ interface Props {
     padSize?: number;
 }
 
+const SHADOW = ShadowUtility.getShadow(55);
+
 export const NestedImage = ({ image, size, padSize }: Props) => {
     return (
-        <View style={CARD_SHADOW}>
+        <View
+            style={{
+                ...SHADOW,
+            }}
+        >
             <View
                 style={{
                     borderRadius: 5,
@@ -25,8 +32,6 @@ export const NestedImage = ({ image, size, padSize }: Props) => {
                     data={image}
                     style={{
                         borderRadius: 5,
-                        borderColor: 'black',
-                        borderWidth: 0.4,
                         height: size - (padSize ?? 0),
                         width: size - (padSize ?? 0),
                     }}

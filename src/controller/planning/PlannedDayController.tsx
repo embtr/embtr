@@ -241,7 +241,11 @@ export const getDateFromDayKey = (dayKey: string) => {
     date.setMonth(month);
     date.setDate(day);
 
-    return date;
+    const dateAsUtc = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+    );
+
+    return dateAsUtc;
 };
 
 export const getDayKeyDaysOld = (dayKey: string) => {

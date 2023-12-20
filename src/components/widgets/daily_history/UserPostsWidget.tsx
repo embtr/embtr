@@ -87,7 +87,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
                             flexDirection: 'row',
                         }}
                     >
-                        <NestedImages imageData={imageData} size={60} padSize={0} />
+                        <NestedImages imageData={imageData} size={50} padSize={0} paddingStep={3} />
                         <View style={{ width: TIMELINE_CARD_PADDING }} />
                         <View style={{ flex: 1 }}>
                             <View>
@@ -139,7 +139,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
                 {postElements.length > 0 && (
                     <View>
                         <View>{postElements}</View>
-                        <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                        <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING }}>
                             <Text
                                 onPress={() => {
                                     //@ts-ignore
