@@ -139,12 +139,12 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
                                 fontFamily: POPPINS_REGULAR,
                             }}
                         >
-                            Share
+
                         </Text>
                         <Ionicons
                             name={'share-outline'}
                             size={TIMELINE_CARD_ICON_SIZE}
-                            color={colors.timeline_card_footer}
+                            color={colors.secondary_text}
                         />
                     </Pressable>
                 </View>
