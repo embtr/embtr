@@ -1,18 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { PlannedDay } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import PlannedDayController from 'src/controller/planning/PlannedDayController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getFireConfetti } from 'src/redux/user/GlobalState';
-import { TIMELINE_CARD_PADDING, POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
 interface Styles {
     container: ViewStyle;
     topText: TextStyle;
+    noTasksText: TextStyle;
     bottomTextContainer: ViewStyle;
     bottomText: TextStyle;
 }
@@ -35,6 +32,10 @@ const generateStyles = (colors: any): Styles => {
             fontFamily: POPPINS_REGULAR,
             textAlign: 'center',
         },
+        noTasksText: {
+            color: colors.secondary_text,
+            fontFamily: POPPINS_REGULAR,
+        },
         bottomTextContainer: {
             flex: 1,
             flexDirection: 'row',
@@ -56,7 +57,7 @@ interface Props {
     dayKey: string;
 }
 
-export const PlanDayHeader = ({
+export const PlanDayHeaderGuest = ({
     plannedDay,
     hasPlannedTasks,
     allHabitsAreComplete,
@@ -67,15 +68,6 @@ export const PlanDayHeader = ({
 
     const plannedDayResultsAreShared = (plannedDay.plannedDayResults?.length ?? 0) > 0;
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
-    const fireConfetti = useAppSelector(getFireConfetti);
-
-    const onShare = async () => {
-        if (plannedDay.id) {
-            await DailyResultController.create(plannedDay.id);
-            await PlannedDayController.prefetchPlannedDayData(dayKey);
-            fireConfetti();
-        }
-    };
 
     const onNavigateToDailyResult = () => {
         if (
@@ -96,31 +88,7 @@ export const PlanDayHeader = ({
         header = (
             <View style={styles.container}>
                 <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
-                {!plannedDayResultsAreShared ? (
-                    <View style={{ flex: 1 }}>
-                        <TouchableOpacity
-                            onPress={onShare}
-                            style={{
-                                top: 2,
-                                backgroundColor: colors.accent_color,
-                                borderRadius: 2.5,
-                                marginHorizontal: TIMELINE_CARD_PADDING,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    paddingVertical: TIMELINE_CARD_PADDING / 8,
-                                    lineHeight: 20,
-                                    color: colors.text,
-                                    textAlign: 'center',
-                                    fontFamily: POPPINS_REGULAR,
-                                }}
-                            >
-                                Share your results
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                ) : (
+                {plannedDayResultsAreShared && (
                     <View style={styles.bottomTextContainer}>
                         <Text onPress={onNavigateToDailyResult} style={styles.bottomText}>
                             View today's results
@@ -131,12 +99,7 @@ export const PlanDayHeader = ({
         );
     } else if (!hasPlannedTasks) {
         header = (
-            <View style={styles.container}>
-                <Text style={styles.topText}>No habits planned for today...</Text>
-                <View style={styles.bottomTextContainer}>
-                    <Text style={styles.bottomText}>let's change that!</Text>
-                </View>
-            </View>
+                <Text style={styles.noTasksText}>Things are quiet... too quiet...</Text>
         );
     }
 

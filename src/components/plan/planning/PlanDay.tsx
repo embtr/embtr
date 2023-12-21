@@ -7,6 +7,7 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
+import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key = PlanningService.getPlannedHabitUniqueKey(plannedTask);
@@ -92,6 +93,29 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
         };
     }, [plannedDay, hideComplete]);
 
+    const header = isCurrentUser ? (
+        <Animated.View
+            style={{
+                height: detailsViewHeight,
+                overflow: 'hidden',
+            }}
+        >
+            <PlanDayHeader
+                plannedDay={plannedDay}
+                hasPlannedTasks={hasPlannedTasks ?? false}
+                allHabitsAreComplete={allHabitsAreComplete ?? false}
+                dayKey={dayKey}
+            />
+        </Animated.View>
+    ) : (
+        <PlanDayHeaderGuest
+            plannedDay={plannedDay}
+            hasPlannedTasks={hasPlannedTasks ?? false}
+            allHabitsAreComplete={allHabitsAreComplete ?? false}
+            dayKey={dayKey}
+        />
+    );
+
     const renderItem = ({ item }: { item: PlannedTask }) => (
         <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
             <MemoizedPlannableTaskImproved initialPlannedTask={item} dayKey={dayKey} />
@@ -100,19 +124,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
 
     return (
         <View style={{ width: '100%' }}>
-            <Animated.View
-                style={{
-                    height: detailsViewHeight,
-                    overflow: 'hidden',
-                }}
-            >
-                <PlanDayHeader
-                    plannedDay={plannedDay}
-                    hasPlannedTasks={hasPlannedTasks ?? false}
-                    allHabitsAreComplete={allHabitsAreComplete ?? false}
-                    dayKey={dayKey}
-                />
-            </Animated.View>
+            {header}
 
             <FlatList
                 scrollEnabled={false}
