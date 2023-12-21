@@ -11,12 +11,14 @@ interface MemoizedProps {
     isSelected: boolean;
     monthIndex: number;
     onSelect: (day: DayPickerElementData) => void;
+    isToday: boolean;
 }
 
 interface Props {
     elementData: DayPickerElementData;
     isSelected: boolean;
     onSelect: (day: DayPickerElementData) => void;
+    isToday: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -41,12 +43,13 @@ export const DAY_PICKER_ELEMENT_WIDTH =
     (Dimensions.get('window').width - TIMELINE_CARD_PADDING * 3) / 7;
 
 export const MemoizedDayPickerElementImproved = React.memo(
-    ({ elementData, isSelected, onSelect, monthIndex }: MemoizedProps) => {
+    ({ elementData, isSelected, onSelect, monthIndex, isToday }: MemoizedProps) => {
         return (
             <DayPickerElementImproved
                 elementData={elementData}
                 isSelected={isSelected}
                 onSelect={onSelect}
+                isToday={isToday}
             />
         );
     },
@@ -58,7 +61,7 @@ export const MemoizedDayPickerElementImproved = React.memo(
     }
 );
 
-export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: Props) => {
+export const DayPickerElementImproved = ({ elementData, isSelected, onSelect, isToday }: Props) => {
     const { colors } = useTheme();
 
     const textColor = isSelected ? colors.accent_color : colors.today_calendar_picker_unselected;
@@ -72,7 +75,9 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect }: 
             }}
         >
             <View style={{ alignContent: 'center', alignItems: 'center' }}>
-                <Ionicons name={'checkmark'} size={12} color={colors.accent_color} />
+                <View style={{ height: 12 }}>
+                    {isToday && <Ionicons name={'sunny-outline'} size={12} color={textColor} />}
+                </View>
                 <Text style={[styles.wordText, { color: textColor }]}>{elementData.dayShort}</Text>
                 <Text style={[styles.numberText, { color: textColor }]}>
                     {elementData.displayNumber}

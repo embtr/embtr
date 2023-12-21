@@ -6,7 +6,6 @@ import {
 } from './DayPickerElementImproved';
 import { DayPickerElementData, MonthPickerElementData } from 'src/model/PlanningWidget';
 import React from 'react';
-//import { FlashList } from '@shopify/flash-list';
 
 interface Props {
     selectedDay: DayPickerElementData;
@@ -20,11 +19,13 @@ const render = ({
     selectedDay,
     selectedMonth,
     onSelectionChange,
+    isToday,
 }: {
     item: DayPickerElementData;
     selectedDay: DayPickerElementData;
     selectedMonth: MonthPickerElementData;
     onSelectionChange: Function;
+    isToday: boolean;
 }) => (
     <MemoizedDayPickerElementImproved
         elementData={item}
@@ -33,6 +34,7 @@ const render = ({
         onSelect={(day: DayPickerElementData) => {
             onSelectionChange(day);
         }}
+        isToday={isToday}
     />
 );
 
@@ -43,6 +45,9 @@ const scrollToSelected = (flatListRef: React.RefObject<FlatList>, index: number)
         viewPosition: 0.5, // Centers the selected item
     });
 };
+
+const currentMonth = new Date().getMonth() + 1;
+const currentDay = new Date().getDate();
 
 export const DayPickerImproved = React.forwardRef(
     ({ selectedDay, selectedMonth, onSelectionChange, daysOfTheMonth }: Props, ref: any) => {
@@ -63,14 +68,19 @@ export const DayPickerImproved = React.forwardRef(
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={days}
-                    renderItem={(item) =>
-                        render({
+                    renderItem={(item) => {
+                        const isToday =
+                            selectedMonth.month + 1 === currentMonth &&
+                            item.item.displayNumber === currentDay;
+
+                        return render({
                             item: item.item,
                             selectedDay,
                             selectedMonth,
                             onSelectionChange: onSelectionChangeWrapper,
-                        })
-                    }
+                            isToday: isToday,
+                        });
+                    }}
                     keyExtractor={(item) => item.index.toString()}
                     getItemLayout={(data, index) => ({
                         length: DAY_PICKER_ELEMENT_WIDTH,

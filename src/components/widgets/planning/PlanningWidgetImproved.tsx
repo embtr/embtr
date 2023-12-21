@@ -90,7 +90,7 @@ export const PlanningWidgetImproved = () => {
                 onScrollToToday={scrollToToday}
             />
 
-            <View style={{ height: TIMELINE_CARD_PADDING }} />
+            <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
             <DayPickerImproved
                 ref={dayScrollRef}
                 selectedDay={selectedDay}
