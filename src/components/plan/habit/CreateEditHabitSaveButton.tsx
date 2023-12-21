@@ -129,6 +129,7 @@ export const CreateEditHabitSaveButton = ({
             const selectedDate = getDateFromDayKey(dayKeyToUse);
             const dayOfWeek = selectedDate.getUTCDay() + 1;
 
+            console.log('day key to use', dayKeyToUse);
             console.log('selected date', selectedDate);
             console.log('day of week', dayOfWeek);
 
