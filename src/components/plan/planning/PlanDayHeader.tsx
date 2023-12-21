@@ -97,11 +97,15 @@ export const PlanDayHeader = ({
             <View style={styles.container}>
                 <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
                 {!plannedDayResultsAreShared ? (
-                    <View style={{ flex: 1 }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                        }}
+                    >
                         <TouchableOpacity
                             onPress={onShare}
                             style={{
-                                top: 2,
                                 backgroundColor: colors.accent_color,
                                 borderRadius: 2.5,
                                 marginHorizontal: TIMELINE_CARD_PADDING,

@@ -2,7 +2,6 @@ import React from 'react';
 import { Animated, Easing, View } from 'react-native';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedDay, PlannedTask } from 'resources/schema';
-//import { FlashList } from '@shopify/flash-list';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
@@ -119,7 +118,11 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
 
     const renderItem = ({ item }: { item: PlannedTask }) => (
         <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
-            <MemoizedPlannableTaskImproved initialPlannedTask={item} dayKey={dayKey} />
+            <MemoizedPlannableTaskImproved
+                initialPlannedTask={item}
+                dayKey={dayKey}
+                isGuest={!isCurrentUser}
+            />
         </View>
     );
 
