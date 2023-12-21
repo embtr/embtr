@@ -4,10 +4,12 @@ import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { PlannedDay } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface Styles {
-    container: ViewStyle;
+    containerShared: ViewStyle;
+    containerUnshared: ViewStyle;
+    containerNoTasks: ViewStyle;
     topText: TextStyle;
     noTasksText: TextStyle;
     bottomTextContainer: ViewStyle;
@@ -16,7 +18,7 @@ interface Styles {
 
 const generateStyles = (colors: any): Styles => {
     return {
-        container: {
+        containerShared: {
             height: 60,
             borderColor: '#404040',
             backgroundColor: '#343434',
@@ -24,6 +26,27 @@ const generateStyles = (colors: any): Styles => {
             justifyContent: 'center',
             alignContent: 'center',
             borderRadius: 5,
+            marginBottom: TIMELINE_CARD_PADDING,
+        },
+        containerUnshared: {
+            borderColor: '#404040',
+            backgroundColor: '#343434',
+            borderWidth: 1,
+            justifyContent: 'center',
+            alignContent: 'center',
+            borderRadius: 5,
+            paddingVertical: TIMELINE_CARD_PADDING,
+            marginBottom: TIMELINE_CARD_PADDING,
+        },
+
+        containerNoTasks: {
+            borderColor: '#404040',
+            backgroundColor: '#343434',
+            borderWidth: 1,
+            justifyContent: 'center',
+            alignContent: 'center',
+            borderRadius: 5,
+            paddingVertical: TIMELINE_CARD_PADDING,
         },
         topText: {
             flex: 1,
@@ -35,6 +58,7 @@ const generateStyles = (colors: any): Styles => {
         noTasksText: {
             color: colors.secondary_text,
             fontFamily: POPPINS_REGULAR,
+            textAlign: 'center',
         },
         bottomTextContainer: {
             flex: 1,
@@ -85,23 +109,35 @@ export const PlanDayHeaderGuest = ({
 
     let header = undefined;
     if (allHabitsAreComplete) {
-        header = (
-            <View style={styles.container}>
-                <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
-                {plannedDayResultsAreShared && (
-                    <View style={styles.bottomTextContainer}>
-                        <Text onPress={onNavigateToDailyResult} style={styles.bottomText}>
-                            View today's results
-                        </Text>
-                    </View>
-                )}
-            </View>
-        );
+        if (plannedDayResultsAreShared) {
+            header = (
+                <View style={styles.containerShared}>
+                    <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
+                    {plannedDayResultsAreShared && (
+                        <View style={styles.bottomTextContainer}>
+                            <Text onPress={onNavigateToDailyResult} style={styles.bottomText}>
+                                View today's results
+                            </Text>
+                        </View>
+                    )}
+                </View>
+            );
+        } else {
+            header = (
+                <View style={styles.containerUnshared}>
+                    <Text style={styles.noTasksText}>All of today's habits are complete 🎉</Text>
+                </View>
+            );
+        }
     } else if (!hasPlannedTasks) {
         header = (
+            <View style={styles.containerNoTasks}>
                 <Text style={styles.noTasksText}>Things are quiet... too quiet...</Text>
+            </View>
         );
+    } else {
+        header = <View />;
     }
 
-    return header;
+    return <View>{header}</View>;
 };

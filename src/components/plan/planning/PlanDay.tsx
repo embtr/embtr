@@ -8,6 +8,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
 import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key = PlanningService.getPlannedHabitUniqueKey(plannedTask);
@@ -30,10 +31,10 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: nu
 };
 
 export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
-    const isCurrentUser = false;
-
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
+
+    const isCurrentUser = plannedDay.user?.uid === getCurrentUid();
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
     const allHabitsAreComplete =
