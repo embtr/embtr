@@ -24,14 +24,14 @@ export const getEditMode = (
     const editMode: CreateEditHabitMode = isCreateCustomHabit
         ? CreateEditHabitMode.CREATE_CUSTOM_HABIT
         : habit
-        ? CreateEditHabitMode.CREATE_NEW_HABIT
-        : scheduledHabit
-        ? CreateEditHabitMode.EDIT_EXISTING_HABIT
-        : plannedTask
-        ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
-        : newPlannedHabitScheduledHabit
-        ? CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT
-        : CreateEditHabitMode.INVALID;
+          ? CreateEditHabitMode.CREATE_NEW_HABIT
+          : scheduledHabit
+            ? CreateEditHabitMode.EDIT_EXISTING_HABIT
+            : plannedTask
+              ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
+              : newPlannedHabitScheduledHabit
+                ? CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT
+                : CreateEditHabitMode.INVALID;
 
     return editMode;
 };
@@ -145,6 +145,11 @@ export const CreateEditScheduledHabitProvider = ({
             setQuantity(1);
             setCompletedQuantity(0);
             setUnit(undefined);
+        } else if (isCreateCustomHabit) {
+            setRemoteImageUrl(
+                'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habits%2Fcustom_habits_placeholder.svg?alt=media'
+            );
+            setLocalImage('HABIT.CUSTOM_HABITS_PLACEHOLDER');
         }
     }, [habit.data]);
 
