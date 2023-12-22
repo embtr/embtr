@@ -1,32 +1,13 @@
-import {
-  Challenge,
-  ChallengeCalculationType,
-  Habit,
-  Task,
-  Unit,
-} from "../../schema";
+import { ChallengeRequirement } from "../../schema";
 
-interface ChallengeCompletionData {
+export interface ChallengeCompletionData {
   amountComplete: number;
   amountRequired: number;
   percentComplete: number;
 }
 
-export interface ChallengeRequirement {
-  id?: number;
-  challenge?: Challenge;
-  challengeId?: number;
-  task?: Task;
-  taskId?: number;
-  habit?: Habit;
-  habitId?: number;
-  unit?: Unit;
-  unitId?: number;
-  calculationType?: ChallengeCalculationType;
-  calculationIntervalDays?: number;
-  requiredIntervalQuantity?: number;
-  requiredTaskQuantity?: number;
-  active?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+export interface ChallengeRequirementDto extends ChallengeRequirement {
+  custom: {
+    completionData: ChallengeCompletionData;
+  };
 }
