@@ -8,15 +8,20 @@ import { getAuth } from 'firebase/auth';
 import { useSharedValue } from 'react-native-reanimated';
 import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SingleScrollUserBody } from 'src/components/profile/profile_component/single_scroll/SingleScrollUserBody';
 import { NotificationController, NotificationCustomHooks } from 'src/controller/notification/NotificationController';
+
+import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { StackNavigationProp } from '@react-navigation/stack/lib/typescript/src/types';
 
 export const CurrentUserProfile = () => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [user, setUser] = React.useState<User>();
     const [random, setRandom] = React.useState<number>(0);
+    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+
 
     const unreadNotificationCount = NotificationCustomHooks.useUnreadNotificationCount();
 
@@ -62,6 +67,9 @@ export const CurrentUserProfile = () => {
         <Screen>
             <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" 
                   innerRightIcon={'notifications-outline'}
+                  innerRightOnClick={() => {
+                    navigation.navigate('Notifications');
+                }}
                   leftRoute={'Notifications'}
                   rightIconNotificationCount={unreadNotificationCount.data ?? 0}/>
             <EmbtrMenuCustom />
