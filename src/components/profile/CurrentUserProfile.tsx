@@ -11,12 +11,20 @@ import UserController from 'src/controller/user/UserController';
 import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SingleScrollUserBody } from 'src/components/profile/profile_component/single_scroll/SingleScrollUserBody';
+import { NotificationController, NotificationCustomHooks } from 'src/controller/notification/NotificationController';
 
 export const CurrentUserProfile = () => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [user, setUser] = React.useState<User>();
     const [random, setRandom] = React.useState<number>(0);
 
+    const unreadNotificationCount = NotificationCustomHooks.useUnreadNotificationCount();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            NotificationController.prefetchUnreadNotificationCount();
+        }, [])
+    );
     // used for profile header scroll animation
     useFocusEffect(
         React.useCallback(() => {
@@ -52,7 +60,10 @@ export const CurrentUserProfile = () => {
 
     return (
         <Screen>
-            <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
+            <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" 
+                  innerRightIcon={'notifications-outline'}
+                  leftRoute={'Notifications'}
+                  rightIconNotificationCount={unreadNotificationCount.data ?? 0}/>
             <EmbtrMenuCustom />
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

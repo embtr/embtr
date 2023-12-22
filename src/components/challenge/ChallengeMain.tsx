@@ -8,11 +8,20 @@ import { UpcomingChallenges } from './UpcomingChallenges';
 import { Screen } from '../common/Screen';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
+import { NotificationController, NotificationCustomHooks } from 'src/controller/notification/NotificationController';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const ChallengeMain = () => {
     const { colors } = useTheme();
     const [index, setIndex] = React.useState(0);
 
+    const unreadNotificationCount = NotificationCustomHooks.useUnreadNotificationCount();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            NotificationController.prefetchUnreadNotificationCount();
+        }, [])
+    );
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
         switch (props.route.key) {
             case 'planning':
@@ -67,7 +76,17 @@ export const ChallengeMain = () => {
 
     return (
         <Screen>
-            <Banner name="Planning" />
+            <Banner name="Planning"
+            //     leftIcon={'people-outline'}
+            //     leftRoute={'UserSearch'}
+            //     innerLeftIcon={'add-outline'}
+            //     innerLeftOnClick={() => {
+            //         navigation.navigate('CreateUserPost');
+            //     }}
+                rightIcon={'notifications-outline'}
+                rightRoute={'Notifications'}
+                rightIconNotificationCount={unreadNotificationCount.data ?? 0}
+                />
 
             <ScrollView>
                 <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING / 2 }}>
