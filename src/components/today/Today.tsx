@@ -19,12 +19,21 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { TodaysTasksWidgetImproved } from '../widgets/planning/TodaysTasksWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
+import { NotificationController, NotificationCustomHooks } from 'src/controller/notification/NotificationController';
+import { useFocusEffect } from '@react-navigation/native';
 
 export const Today = () => {
     const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [planningWidgetHeight, setPlanningWidgetHeight] = React.useState<number>(0);
 
     const user = useAppSelector(getCurrentUser);
+    const unreadNotificationCount = NotificationCustomHooks.useUnreadNotificationCount();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            NotificationController.prefetchUnreadNotificationCount();
+        }, [])
+    );
 
     React.useEffect(() => {
         setRefreshedTimestamp(new Date());
@@ -87,7 +96,18 @@ export const Today = () => {
         <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
             <Screen>
                 <View style={{ flex: 1, paddingHorizontal: TIMELINE_CARD_PADDING / 2 }}>
-                    <Banner name="Today" />
+                <Banner
+                name="Today"
+            //     leftIcon={'people-outline'}
+            //     leftRoute={'UserSearch'}
+            //     innerLeftIcon={'add-outline'}
+            //     innerLeftOnClick={() => {
+            //         navigation.navigate('CreateUserPost');
+            //     }}
+                rightIcon={'notifications-outline'}
+                rightRoute={'Notifications'}
+                rightIconNotificationCount={unreadNotificationCount.data ?? 0}
+            />
 
                     <ScrollView>
                         <TodaysCountdownWidget />
