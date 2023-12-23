@@ -138,7 +138,14 @@ export const PlanDayHeader = ({
             <View style={styles.container}>
                 <Text style={styles.topText}>No habits planned for today...</Text>
                 <View style={styles.bottomTextContainer}>
-                    <Text style={styles.bottomText}>let's change that!</Text>
+                    <Text
+                        onPress={() => {
+                            navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
+                        }}
+                        style={styles.bottomText}
+                    >
+                        let's change that!
+                    </Text>
                 </View>
             </View>
         );
