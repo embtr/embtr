@@ -4,7 +4,6 @@ import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import { DailyHistoryCustomHooks } from 'src/controller/daily_history/DailyHistoryController';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
-import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
     userId: number;
@@ -13,7 +12,6 @@ interface Props {
 export const DailyHistoryWidget = ({ userId }: Props) => {
     const { colors } = useTheme();
     const diameter = 9;
-    const margin = ((getWindowWidth() - 40) / 30 - diameter) / 2;
 
     const dailyHistory = DailyHistoryCustomHooks.useDailyHistory(userId);
 

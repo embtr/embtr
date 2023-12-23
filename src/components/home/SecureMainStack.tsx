@@ -11,6 +11,7 @@ import { MyHabitsCategoryElement } from 'src/components/plan/habit/MyHabitsCateg
 import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
 import { AdvancedUserSettings } from '../settings/advanced/AdvancedUserSettings';
 import { UserSettings } from '../settings/main/UserSettings';
+import { AddQuoteOfTheDay } from 'src/components/widgets/quote_of_the_day/AddQuoteOfTheDay';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,11 @@ export const SecureMainStack = () => {
             />
             <Stack.Screen name="UserSettings" component={UserSettings} />
             <Stack.Screen name="AdvancedUserSettings" component={AdvancedUserSettings} />
+            <Stack.Screen
+                name="AddQuoteOfTheDay"
+                component={AddQuoteOfTheDay}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
         </Stack.Navigator>
     );
 };

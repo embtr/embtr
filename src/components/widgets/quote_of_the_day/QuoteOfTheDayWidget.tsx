@@ -9,6 +9,7 @@ import { TodayTab } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import {
+    CARD_SHADOW,
     POPPINS_REGULAR,
     POPPINS_REGULAR_ITALIC,
     POPPINS_SEMI_BOLD,
@@ -22,6 +23,7 @@ import { QuoteOfTheDayController } from 'src/controller/widget/quote_of_the_day/
 import { LikeController } from 'src/controller/api/general/LikeController';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     refreshedTimestamp: Date;
@@ -88,10 +90,29 @@ export const QuoteOfTheDayWidget = ({ refreshedTimestamp }: Props) => {
     };
 
     return (
-        <WidgetBase menuOptions={[]} onPressSymbol={onAdd} symbol="add-outline">
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
-                Quote Of The Day
-            </Text>
+        <WidgetBase>
+            <View style={{ flexDirection: 'row' }}>
+                <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
+                    Quote Of The Day
+                </Text>
+
+                <View style={{ flex: 1 }} />
+
+                <TouchableOpacity
+                    onPress={onAdd}
+                    style={[
+                        {
+                            backgroundColor: '#404040',
+                            borderRadius: 5,
+                            paddingHorizontal: 4,
+                            paddingVertical: 2,
+                        },
+                        CARD_SHADOW,
+                    ]}
+                >
+                    <Ionicons name={'add-outline'} size={18} color={colors.secondary_text} />
+                </TouchableOpacity>
+            </View>
             <Text
                 style={{
                     color: colors.text,
