@@ -102,7 +102,7 @@ export const AddQuoteOfTheDay = () => {
                                     style={{
                                         marginTop: 3,
                                         width: '100%',
-                                        height: 200,
+                                        height: 180,
                                         borderRadius: 5,
                                         backgroundColor: '#282828',
                                         color: colors.text,
