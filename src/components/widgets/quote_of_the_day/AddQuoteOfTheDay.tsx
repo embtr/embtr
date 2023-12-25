@@ -61,7 +61,7 @@ export const AddQuoteOfTheDay = () => {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
                 <View style={{ height: 'auto', width: 'auto', margin: TIMELINE_CARD_PADDING }}>
              
-                        <View style={{ borderWidth: 1, borderRadius: 5, borderColor: 'rgba(255,255,255,.05)',  backgroundColor:'#282828',marginBottom:40}}>
+                        <View style={{ backgroundColor:'#282828', marginBottom:40}}>
                             <Text style={{ fontFamily: POPPINS_REGULAR, color: colors.text, fontSize: 13, padding: TIMELINE_CARD_PADDING }}>
                                 Add a quote that inspires you! Once a day we randomly select a
                                 quote to inspire the entire community.{' '}
