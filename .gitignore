@@ -26,3 +26,4 @@ node_modules/react-native-reanimated/src/reanimated1/core/AnimatedValue.js
 .idea/vcs.xml
 .env
 resources/types/custom_schema/challengeDto.tsx
+src/components/widgets/quote_of_the_day/AddQuoteOfTheDay.tsx
