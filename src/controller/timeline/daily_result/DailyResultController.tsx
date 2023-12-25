@@ -17,8 +17,26 @@ import ImageController from 'src/controller/image/ImageController';
 import { CommentController } from 'src/controller/api/general/CommentController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
+import { GetTimelineResponse, TimelineRequestCursor } from 'resources/types/requests/Timeline';
 
 class DailyResultController {
+    public static async fetch(cursor: TimelineRequestCursor) {
+        return await axiosInstance
+            .get(`/timeline`, {
+                params: {
+                    cursor: cursor.cursor,
+                    limit: cursor.limit,
+                },
+            })
+            .then((success) => {
+                const results: GetTimelineResponse = success.data;
+                return results;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
     public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {
         return await axiosInstance
             .get(`/user/${userId}/day-results`)

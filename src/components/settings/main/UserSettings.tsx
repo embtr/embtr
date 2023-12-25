@@ -11,6 +11,7 @@ import { EditProfileSettingsButton } from './EditProfileSettingsButton';
 import { SettingsVersion } from './SettingsVersion';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SettingsPing } from './SettingsPing';
 
 export const UserSettings = () => {
     return (
@@ -37,6 +38,8 @@ export const UserSettings = () => {
                     <SettingsMembership />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsClearCache />
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <SettingsPing />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsSignOut />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />

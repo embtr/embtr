@@ -16,99 +16,26 @@ import {
     NotificationController,
     NotificationCustomHooks,
 } from 'src/controller/notification/NotificationController';
+import { Button, View, Text } from 'react-native';
+import { TimelineRequestCursor } from 'resources/types/requests/Timeline';
 
 export const Timeline = () => {
-    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
-
-    const [userPosts, setUserPosts] = React.useState<UserPost[]>([]);
-    const [dayResults, setDayResults] = React.useState<PlannedDayResultSummary[]>([]);
-    const [joinedChallenges, setJoinedChallenges] = React.useState<JoinedChallenge[]>([]);
-    const [refreshing, setRefreshing] = React.useState(false);
-
-    const unreadNotificationCount = NotificationCustomHooks.useUnreadNotificationCount();
-
-    useFocusEffect(
-        React.useCallback(() => {
-            NotificationController.prefetchUnreadNotificationCount();
-        }, [])
-    );
-
-    const refreshDays = useAppSelector(getTimelineDays);
-    const getDateMinusDays = (date: Date, days: number) => {
-        date.setDate(date.getDate() - days);
-        return date;
-    };
-
-    const [bounds, setBounds] = React.useState<{ upperBound: Date; lowerBound: Date }>({
-        upperBound: getDateMinusDays(new Date(), 0),
-        lowerBound: getDateMinusDays(new Date(), refreshDays),
+    const [cursor, setCursor] = React.useState<TimelineRequestCursor>({
+        cursor: new Date(),
+        limit: 15,
     });
-
-    React.useEffect(() => {
-        loadMore(false);
-    }, []);
-
-    const loadMore = (refresh: boolean): Promise<void> => {
-        if (refresh) {
-            setRefreshing(true);
-        }
-
-        NotificationController.prefetchNotificationData();
-
-        const upperBound = refresh ? new Date() : bounds.upperBound;
-        const lowerBound = refresh ? getDateMinusDays(new Date(), refreshDays) : bounds.lowerBound;
-
-        const userPostsPromise = StoryController.getAllViaApi(upperBound, lowerBound);
-        const dailyResultsPromise = DailyResultController.getAllSummaries(upperBound, lowerBound);
-        const joinedChallengesPromise = ChallengeController.getAllRecentJoined(
-            upperBound,
-            lowerBound
-        );
-
-        const combinedPromise = Promise.all([
-            dailyResultsPromise,
-            userPostsPromise,
-            joinedChallengesPromise,
-        ]).then(([newDayResults, newUserPosts, newJoinedChallenges]) => {
-            setUserPosts(!refresh ? [...userPosts, ...newUserPosts] : newUserPosts);
-            setDayResults(!refresh ? [...dayResults, ...newDayResults] : newDayResults);
-            setJoinedChallenges(
-                !refresh ? [...joinedChallenges, ...newJoinedChallenges] : newJoinedChallenges
-            );
-
-            const newUpperBound = getDateMinusDays(upperBound, refreshDays);
-            const newLowerBound = getDateMinusDays(lowerBound, refreshDays);
-            setBounds({ upperBound: newUpperBound, lowerBound: newLowerBound });
-
-            if (refresh) {
-                setRefreshing(false);
-            }
-        });
-
-        return combinedPromise;
+    const fetchData = async () => {
+        const result = await DailyResultController.fetch(cursor);
+        setCursor(result?.nextCursor ?? cursor);
+        console.log('fetching data');
     };
 
     return (
-        <Screen>
-            <Banner
-                name="Timeline"
-                leftIcon={'people-outline'}
-                leftRoute={'UserSearch'}
-                innerLeftIcon={'add-outline'}
-                innerLeftOnClick={() => {
-                    navigation.navigate('CreateUserPost');
-                }}
-                rightIcon={'notifications-outline'}
-                rightRoute={'Notifications'}
-                rightIconNotificationCount={unreadNotificationCount.data ?? 0}
-            />
-            <FilteredTimeline
-                userPosts={userPosts}
-                plannedDayResultSummaries={dayResults}
-                joinedChallenges={joinedChallenges}
-                refreshing={refreshing}
-                loadMore={loadMore}
-            />
-        </Screen>
+        <View>
+            <Button onPress={fetchData} title="Fetch Data" />
+            <Text style={{ color: 'white', textAlign: 'center', paddingTop: 50 }}>
+                {cursor.cursor.toString()}
+            </Text>
+        </View>
     );
 };
