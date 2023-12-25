@@ -44,7 +44,7 @@ export const AddQuoteOfTheDay = () => {
 
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={isIosApp() ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ paddingHorizontal: 20,  flex: 1 }}>
+        <View style={{ padding: 20,  flex: 1 }}>
         {/* <View style={{ padding: 24, flex: 1, justifyContent: 'space-around' }}> 
          Justify content will add a ton of whitespace around each view which will collapse the view. */}
             <View style={{paddingBottom: 40}}>
