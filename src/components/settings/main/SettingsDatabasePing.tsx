@@ -2,12 +2,11 @@ import Toast from 'react-native-root-toast';
 import { SettingsButtonElement } from '../generic/SettingsButtonElement';
 import { AdminController } from 'src/controller/admin/AdminController';
 
-export const SettingsPing = () => {
+export const SettingsDatabasePing = () => {
     const runTest = async () => {
-        //time api call
         const start = new Date().getTime();
         for (let i = 0; i < 100; i++) {
-            const pingTest = await AdminController.pingTest();
+            const pingTest = await AdminController.databasePingTest();
         }
         const end = new Date().getTime();
         const timeInMs = (end - start) / 100;
@@ -19,5 +18,5 @@ export const SettingsPing = () => {
         });
     };
 
-    return <SettingsButtonElement text={'Ping Test'} icon={'clock-outline'} onPress={runTest} />;
+    return <SettingsButtonElement text={'Database Ping Test'} icon={'clock-outline'} onPress={runTest} />;
 };
