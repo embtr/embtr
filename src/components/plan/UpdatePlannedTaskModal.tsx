@@ -98,8 +98,9 @@ export const UpdatePlannedTaskModal = () => {
         onUpdateCallback(clone);
         dismiss();
 
-        await createUpdatePlannedTask(clone, dayKey);
-        refreshPlannedDay(dayKey);
+        await applyChangesAndFireConfetti(async () => {
+            await createUpdatePlannedTask(clone, dayKey);
+        });
     };
 
     const complete = async () => {
@@ -110,8 +111,9 @@ export const UpdatePlannedTaskModal = () => {
         onUpdateCallback(clone);
         dismiss();
 
-        await createUpdatePlannedTask(clone, dayKey);
-        refreshPlannedDay(dayKey);
+        await applyChangesAndFireConfetti(async () => {
+            await createUpdatePlannedTask(clone, dayKey);
+        });
     };
 
     const update = async () => {
@@ -125,8 +127,14 @@ export const UpdatePlannedTaskModal = () => {
         onUpdateCallback(clone);
         dismiss();
 
+        await applyChangesAndFireConfetti(async () => {
+            await createUpdatePlannedTask(clone, dayKey);
+        });
+    };
+
+    const applyChangesAndFireConfetti = async (applyFunction: Function) => {
         const wasCompleteBefore = await PlannedDayService.isComplete(currentUser.id ?? 0, dayKey);
-        await createUpdatePlannedTask(clone, dayKey);
+        await applyFunction();
         refreshPlannedDay(dayKey);
         if (!wasCompleteBefore) {
             const isCompleteAfter = await PlannedDayService.isComplete(currentUser.id ?? 0, dayKey);

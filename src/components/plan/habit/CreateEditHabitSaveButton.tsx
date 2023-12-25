@@ -22,6 +22,7 @@ import PlannedDayController, {
 import TaskController from 'src/controller/planning/TaskController';
 import { HabitController } from 'src/controller/habit/HabitController';
 import { TABS } from 'src/components/home/Dashboard';
+import { CreateTaskRequest } from 'resources/types/requests/TaskTypes';
 
 interface Props {
     habitId?: number;
@@ -129,9 +130,6 @@ export const CreateEditHabitSaveButton = ({
             const selectedDate = getDateFromDayKey(dayKeyToUse);
             const dayOfWeek = selectedDate.getUTCDay() + 1;
 
-            console.log('selected date', selectedDate);
-            console.log('day of week', dayOfWeek);
-
             scheduledHabit.daysOfWeek = [
                 {
                     id: dayOfWeek,
@@ -162,7 +160,14 @@ export const CreateEditHabitSaveButton = ({
         Keyboard.dismiss();
 
         //create habit
-        const habit = await TaskController.createViaApi(title, description);
+        const createTaskRequest: CreateTaskRequest = {
+            title,
+            description,
+            localImage: localImage,
+            removeImageUrl: remoteImageUrl,
+        };
+
+        const habit = await TaskController.createViaApi(createTaskRequest);
         if (!habit.id) {
             return;
         }
@@ -171,14 +176,12 @@ export const CreateEditHabitSaveButton = ({
 
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest(habit.id);
         await ScheduledHabitController.create(scheduledHabit);
-        PlannedDayController.prefetchPlannedDayData(dayKeyToUse);
     };
 
     const createHabit = async () => {
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.create(scheduledHabit);
-        PlannedDayController.prefetchPlannedDayData(dayKeyToUse);
     };
 
     const updateHabit = async () => {

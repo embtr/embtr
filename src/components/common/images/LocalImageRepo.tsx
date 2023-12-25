@@ -23,10 +23,13 @@ export namespace LocalImageRepo {
 
     export namespace Habit {
         export const TROPHY = require('assets/habit/trophy.png');
+        export const CUSTOM_HABITS_PLACEHOLDER = require('assets/habit/custom_habits_placeholder.png');
         export const get = (key: string) => {
             switch (key) {
                 case 'TROPHY':
                     return TROPHY;
+                case 'CUSTOM_HABITS_PLACEHOLDER':
+                    return CUSTOM_HABITS_PLACEHOLDER;
                 default:
                     return null;
             }

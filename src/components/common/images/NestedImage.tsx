@@ -1,6 +1,5 @@
 import { View } from 'react-native';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
-import { CARD_SHADOW } from 'src/util/constants';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 interface Props {

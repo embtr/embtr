@@ -9,6 +9,7 @@ import { TabBar } from 'src/components/home/tabmenu/TabBar';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
 import { ChallengeTab } from 'src/components/challenge/ChallengeTab';
+import React from 'react';
 
 const Tab = createBottomTabNavigator();
 
@@ -22,6 +23,10 @@ export const TABS = {
 
 export const Dashboard = () => {
     const dispatch = useAppDispatch();
+
+    React.useEffect(() => {
+        dispatch(setCurrentTab(TABS.TODAY));
+    }, []);
 
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>

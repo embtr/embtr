@@ -2,9 +2,8 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import { DailyHistoryCustomHooks } from 'src/controller/daily_history/DailyHistoryController';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
-import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
     userId: number;
@@ -13,7 +12,6 @@ interface Props {
 export const DailyHistoryWidget = ({ userId }: Props) => {
     const { colors } = useTheme();
     const diameter = 9;
-    const margin = ((getWindowWidth() - 40) / 30 - diameter) / 2;
 
     const dailyHistory = DailyHistoryCustomHooks.useDailyHistory(userId);
 
@@ -36,13 +34,14 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
                         : colors.progress_bar_color,
                     height: diameter,
                     width: diameter,
-                    borderRadius: 2.7,
-                    marginLeft: margin,
-                    marginRight: margin,
+                    borderRadius: 1,
                 }}
             />
         );
+
+        views.push(<View style={{ flex: 1 }} />);
     }
+    views.pop();
 
     let streak = 0;
     for (let i = history.length - 1; i >= 0; i--) {
@@ -67,68 +66,50 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
 
     return (
         <WidgetBase>
-            <Text
-                style={{
-                    color: colors.text,
-                    fontFamily: POPPINS_SEMI_BOLD,
-                    fontSize: 15,
-                    lineHeight: 17,
-                }}
-            >
-                Daily History
-            </Text>
-
-            <View style={{ width: '100%', flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row' }}>
                 <Text
                     style={{
-                        textAlign: 'center',
                         color: colors.text,
-                        flex: 1,
-                        fontFamily: POPPINS_REGULAR,
-                        fontSize: 12,
-                        paddingTop: 5,
+                        fontFamily: POPPINS_SEMI_BOLD,
+                        fontSize: 15,
+                        lineHeight: 17,
+                        bottom: 2,
                     }}
                 >
-                    current streak:
-                    <Text
-                        style={{
-                            color: colors.accent_color_light,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 12,
-                            paddingTop: 5,
-                        }}
-                    >
-                        {' '}
-                        {streak} {streak == 1 ? 'day' : 'days'}
-                    </Text>
+                    Daily History
                 </Text>
 
-                <Text
-                    style={{
-                        textAlign: 'center',
-                        flex: 1,
-                        color: colors.text,
-                        fontFamily: POPPINS_REGULAR,
-                        fontSize: 12,
-                        paddingTop: 5,
-                    }}
-                >
-                    longest streak:
+                <View style={{ flex: 1 }} />
+
+                <View>
                     <Text
                         style={{
-                            color: colors.accent_color_light,
+                            color: colors.text,
                             fontFamily: POPPINS_REGULAR,
                             fontSize: 12,
-                            paddingTop: 5,
+                            lineHeight: 14,
+                            bottom: 3,
                         }}
                     >
-                        {' '}
-                        {streak} {streak == 1 ? 'day' : 'days'}
+                        current streak:
+                        <Text
+                            style={{
+                                color: colors.accent_color_light,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 12,
+                                paddingTop: 5,
+                            }}
+                        >
+                            {' '}
+                            {streak} {streak == 1 ? 'day' : 'days'}
+                        </Text>
                     </Text>
-                </Text>
+                </View>
             </View>
 
-            <View style={{ flexDirection: 'row', paddingTop: 5 }}>{views}</View>
+            <View style={{ flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING / 4 }}>
+                {views}
+            </View>
 
             <View style={{ flexDirection: 'row', paddingTop: 1 }}>
                 <View style={{ flex: 1, paddingTop: 2 }}>

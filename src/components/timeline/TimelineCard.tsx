@@ -172,47 +172,6 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                         />
                     </View>
                 </View>
-                {/*
-
-                <View style={{ paddingTop: 10 }}>
-                    <View>
-                        <Text style={headerTextStyle}>{timelinePostModel.title}</Text>
-                    </View>
-
-                    <View
-                        style={{
-                            paddingLeft: TIMELINE_CARD_PADDING,
-                            paddingRight: TIMELINE_CARD_PADDING,
-                            paddingTop: 10,
-                        }}
-                    >
-                        <Text style={[bodyTextStyle, { textAlign: 'left' }]}>
-                            {timelinePostModel.body}
-                        </Text>
-                    </View>
-                </View>
-
-
-                {carouselImages.length > 0 && (
-                    <View
-                        style={{
-                            paddingLeft: TIMELINE_CARD_PADDING,
-                            paddingRight: TIMELINE_CARD_PADDING,
-                            paddingTop: 10,
-                        }}
-                    >
-                        <CarouselCards images={carouselImages} />
-                    </View>
-                )}
-
-                <PostDetailsActionBar
-                    isLiked={isLiked}
-                    likeCount={timelinePostModel.likes.length}
-                    commentCount={timelinePostModel.comments.length}
-                    onLike={handleOnLike}
-                />
-
-*/}
             </View>
         </TouchableWithoutFeedback>
     );

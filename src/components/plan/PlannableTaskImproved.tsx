@@ -22,6 +22,7 @@ import { Constants } from 'resources/types/constants/constants';
 interface Props {
     initialPlannedTask: PlannedTask;
     dayKey: string;
+    isGuest?: boolean;
 }
 
 interface Styles {
@@ -94,8 +95,14 @@ const generateStyles = (colors: any): Styles => {
 };
 
 export const MemoizedPlannableTaskImproved = React.memo(
-    ({ initialPlannedTask, dayKey }: Props) => {
-        return <PlannableTaskImproved initialPlannedTask={initialPlannedTask} dayKey={dayKey} />;
+    ({ initialPlannedTask, dayKey, isGuest }: Props) => {
+        return (
+            <PlannableTaskImproved
+                initialPlannedTask={initialPlannedTask}
+                dayKey={dayKey}
+                isGuest={isGuest}
+            />
+        );
     },
     (prevProps, nextProps) => {
         const prevKey = PlanningService.getPlannedHabitUniqueKey(prevProps.initialPlannedTask);
@@ -118,7 +125,7 @@ const getStatusColor = (colors: any, status?: string) => {
     }
 };
 
-export const PlannableTaskImproved = ({ initialPlannedTask, dayKey }: Props) => {
+export const PlannableTaskImproved = ({ initialPlannedTask, dayKey, isGuest }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
 
@@ -145,6 +152,7 @@ export const PlannableTaskImproved = ({ initialPlannedTask, dayKey }: Props) => 
 
     return (
         <TouchableOpacity
+            disabled={isGuest === true}
             style={styles.container}
             onPress={() => {
                 dispatch(

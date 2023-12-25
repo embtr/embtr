@@ -2,11 +2,12 @@ import React from 'react';
 import { Animated, Easing, View } from 'react-native';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedDay, PlannedTask } from 'resources/schema';
-//import { FlashList } from '@shopify/flash-list';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
+import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const keyExtractor = (plannedTask: PlannedTask) => {
     const key = PlanningService.getPlannedHabitUniqueKey(plannedTask);
@@ -29,10 +30,10 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: nu
 };
 
 export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
-    const isCurrentUser = false;
-
     const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
+
+    const isCurrentUser = plannedDay.user?.uid === getCurrentUid();
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
     const allHabitsAreComplete =
@@ -92,27 +93,42 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
         };
     }, [plannedDay, hideComplete]);
 
+    const header = isCurrentUser ? (
+        <Animated.View
+            style={{
+                height: detailsViewHeight,
+                overflow: 'hidden',
+            }}
+        >
+            <PlanDayHeader
+                plannedDay={plannedDay}
+                hasPlannedTasks={hasPlannedTasks ?? false}
+                allHabitsAreComplete={allHabitsAreComplete ?? false}
+                dayKey={dayKey}
+            />
+        </Animated.View>
+    ) : (
+        <PlanDayHeaderGuest
+            plannedDay={plannedDay}
+            hasPlannedTasks={hasPlannedTasks ?? false}
+            allHabitsAreComplete={allHabitsAreComplete ?? false}
+            dayKey={dayKey}
+        />
+    );
+
     const renderItem = ({ item }: { item: PlannedTask }) => (
         <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
-            <MemoizedPlannableTaskImproved initialPlannedTask={item} dayKey={dayKey} />
+            <MemoizedPlannableTaskImproved
+                initialPlannedTask={item}
+                dayKey={dayKey}
+                isGuest={!isCurrentUser}
+            />
         </View>
     );
 
     return (
         <View style={{ width: '100%' }}>
-            <Animated.View
-                style={{
-                    height: detailsViewHeight,
-                    overflow: 'hidden',
-                }}
-            >
-                <PlanDayHeader
-                    plannedDay={plannedDay}
-                    hasPlannedTasks={hasPlannedTasks ?? false}
-                    allHabitsAreComplete={allHabitsAreComplete ?? false}
-                    dayKey={dayKey}
-                />
-            </Animated.View>
+            {header}
 
             <FlatList
                 scrollEnabled={false}

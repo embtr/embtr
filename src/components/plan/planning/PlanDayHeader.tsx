@@ -97,11 +97,15 @@ export const PlanDayHeader = ({
             <View style={styles.container}>
                 <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
                 {!plannedDayResultsAreShared ? (
-                    <View style={{ flex: 1 }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                        }}
+                    >
                         <TouchableOpacity
                             onPress={onShare}
                             style={{
-                                top: 2,
                                 backgroundColor: colors.accent_color,
                                 borderRadius: 2.5,
                                 marginHorizontal: TIMELINE_CARD_PADDING,
@@ -134,7 +138,14 @@ export const PlanDayHeader = ({
             <View style={styles.container}>
                 <Text style={styles.topText}>No habits planned for today...</Text>
                 <View style={styles.bottomTextContainer}>
-                    <Text style={styles.bottomText}>let's change that!</Text>
+                    <Text
+                        onPress={() => {
+                            navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
+                        }}
+                        style={styles.bottomText}
+                    >
+                        let's change that!
+                    </Text>
                 </View>
             </View>
         );

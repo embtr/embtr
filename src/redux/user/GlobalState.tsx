@@ -209,7 +209,7 @@ export const getDisplayDropDownAlert = (state: RootState): Function => {
 };
 
 export const getSelectedDayKey = (state: RootState): string => {
-        if (!state?.globalState.selectedDayKey) {
+    if (!state?.globalState.selectedDayKey) {
         return INITIAL_STATE.selectedDayKey;
     }
 
