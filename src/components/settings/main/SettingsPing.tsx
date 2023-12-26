@@ -6,11 +6,9 @@ export const SettingsPing = () => {
     const runTest = async () => {
         //time api call
         const start = new Date().getTime();
-        for (let i = 0; i < 100; i++) {
-            const pingTest = await AdminController.pingTest();
-        }
+        const pingTest = await AdminController.pingTest();
         const end = new Date().getTime();
-        const timeInMs = (end - start) / 100;
+        const timeInMs = end - start;
 
         Toast.show('ping: ' + timeInMs + 'ms', {
             duration: Toast.durations.LONG,
@@ -19,5 +17,5 @@ export const SettingsPing = () => {
         });
     };
 
-    return <SettingsButtonElement text={'Ping Test'} icon={'clock-outline'} onPress={runTest} />;
+    return <SettingsButtonElement text={'Ping Test'} icon={'time'} onPress={runTest} />;
 };

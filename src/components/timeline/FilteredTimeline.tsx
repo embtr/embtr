@@ -1,6 +1,6 @@
 import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { JoinedChallenge, UserPost } from 'resources/schema';
+import { JoinedChallenge, PlannedDayResult, UserPost } from 'resources/schema';
 import { TimelinePostModel } from 'src/model/OldModels';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 import { TimelineType } from 'resources/types/Types';
@@ -13,72 +13,35 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 
 interface Props {
     userPosts: UserPost[];
-    plannedDayResultSummaries: PlannedDayResultSummary[];
-    joinedChallenges: JoinedChallenge[];
-    refreshing: boolean;
+    plannedDayResults: PlannedDayResult[];
+    hasMore: boolean;
+    pullToRefresh: Function;
     loadMore: Function;
 }
 
 export const FilteredTimeline = ({
     userPosts,
-    plannedDayResultSummaries,
-    joinedChallenges,
-    refreshing,
+    plannedDayResults,
+    hasMore,
+    pullToRefresh,
     loadMore,
 }: Props) => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
     const { colors } = useTheme();
 
-    const getRecentlyJoinedMessage = (joinedChallenge: JoinedChallenge) => {
-        const participants = joinedChallenge.participants;
-        if (participants.length === 1) {
-            return 'recently joined';
-        }
-
-        if (participants.length === 2) {
-            return '+ ' + (participants.length - 1) + ' other recently joined';
-        }
-
-        return '+ ' + (participants.length - 1) + ' others recently joined';
-    };
-
     const createTimelineModels = (): TimelinePostModel[] => {
         const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost) => {
             return PostUtility.createUserPostTimelineModel(userPost);
         });
 
-        const dayResultTimelinePosts: TimelinePostModel[] = plannedDayResultSummaries.map(
-            (plannedDayResultSummary) => {
-                return PostUtility.createDayResultTimelineModel(
-                    plannedDayResultSummary.plannedDayResult
-                );
+        const dayResultTimelinePosts: TimelinePostModel[] = plannedDayResults.map(
+            (plannedDayResult) => {
+                return PostUtility.createDayResultTimelineModel(plannedDayResult);
             }
         );
 
-        const joinedChallengesTimelinePosts = joinedChallenges.map((joinedChallenge) => ({
-            user: joinedChallenge.participants?.[0]?.user!,
-            secondaryHeaderText: getRecentlyJoinedMessage(joinedChallenge),
-            title: joinedChallenge.challenge.name,
-            body: joinedChallenge.challenge.description ?? '',
-            type: TimelineType.JOINED_CHALLENGE,
-            id: joinedChallenge.challenge.id!,
-            sortDate: joinedChallenge.participants?.[0]?.createdAt!,
-            comments: joinedChallenge.challenge.comments ?? [],
-            likes: joinedChallenge.challenge.likes ?? [],
-            images: joinedChallenge.challenge.images ?? [],
-            joinedChallenge,
-
-            data: {
-                joinedChallenge,
-            },
-        }));
-
-        return [
-            ...userPostTimelinePosts,
-            ...dayResultTimelinePosts,
-            ...joinedChallengesTimelinePosts,
-        ];
+        return [...userPostTimelinePosts, ...dayResultTimelinePosts];
     };
 
     const createTimelineViews = () => {
@@ -134,22 +97,26 @@ export const FilteredTimeline = ({
             style={{ backgroundColor: colors.background }}
             refreshControl={
                 <RefreshControl
-                    refreshing={refreshing}
+                    refreshing={false}
                     onRefresh={() => {
-                        loadMore(true);
+                        pullToRefresh();
                     }}
                 />
             }
             onEndReachedThreshold={0.5}
             onEndReached={() => {
-                loadMore(false);
+                loadMore();
             }}
             ListFooterComponent={
-                <ActivityIndicator
-                    size="large"
-                    color={colors.secondary_text}
-                    style={{ marginVertical: 20 }}
-                />
+                hasMore ? (
+                    <ActivityIndicator
+                        size="large"
+                        color={colors.secondary_text}
+                        style={{ marginVertical: 20 }}
+                    />
+                ) : (
+                    <View />
+                )
             }
         />
     );

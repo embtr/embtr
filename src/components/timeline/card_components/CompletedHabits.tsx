@@ -9,7 +9,6 @@ interface Props {
 }
 
 export const CompletedHabits = ({ completedHabits, limit }: Props) => {
-    console.log(completedHabits)
     const renderItem = ({ item }: { item: CompletedHabit }) => {
         return (
             <View style={{ paddingRight: 18 }}>

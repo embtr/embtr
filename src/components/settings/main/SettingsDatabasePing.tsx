@@ -5,11 +5,9 @@ import { AdminController } from 'src/controller/admin/AdminController';
 export const SettingsDatabasePing = () => {
     const runTest = async () => {
         const start = new Date().getTime();
-        for (let i = 0; i < 100; i++) {
-            const pingTest = await AdminController.databasePingTest();
-        }
+        const pingTest = await AdminController.databasePingTest();
         const end = new Date().getTime();
-        const timeInMs = (end - start) / 100;
+        const timeInMs = end - start;
 
         Toast.show('ping: ' + timeInMs + 'ms', {
             duration: Toast.durations.LONG,
@@ -18,5 +16,11 @@ export const SettingsDatabasePing = () => {
         });
     };
 
-    return <SettingsButtonElement text={'Database Ping Test'} icon={'clock-outline'} onPress={runTest} />;
+    return (
+        <SettingsButtonElement
+            text={'Database Ping Test'}
+            icon={'timer-outline'}
+            onPress={runTest}
+        />
+    );
 };
