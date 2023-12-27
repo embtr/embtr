@@ -101,7 +101,7 @@ export const FilteredTimeline = ({ timelineElements, hasMore, pullToRefresh, loa
         <FlatList
             overScrollMode="always"
             data={data}
-            keyExtractor={(item, index) => `timeline_${index}`}
+            keyExtractor={(item, index) => `${item.type}${item.id}`}
             renderItem={({ item }) => createTimelineView(item, navigation)}
             keyboardShouldPersistTaps={'handled'}
             style={{ backgroundColor: colors.background }}
