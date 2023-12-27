@@ -1,5 +1,12 @@
 import * as React from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    KeyboardAvoidingView,
+    Keyboard,
+    TouchableWithoutFeedback,
+} from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -64,7 +71,6 @@ export const CreateEditUserPostBase = ({
         onDeleteImage
     );
 
-
     const styles = {
         container: {
             backgroundColor: '#282828',
@@ -88,53 +94,59 @@ export const CreateEditUserPostBase = ({
     };
 
     return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior={isIosApp() ? 'padding' : 'height'}>
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView>
-            <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={isIosApp() ? 'padding' : 'height'}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <ScrollView>
+                    <ImagesUploadingOverlay
+                        active={imagesUploading}
+                        progress={imageUploadProgess}
+                    />
 
-            <View style= {[styles.layout]}>
-                    <View style={[ styles.container, {marginBottom:10} ]}>
-                        <Text style={[styles.header, {marginBottom:5}]}>
-                            Something on your mind?
-                        </Text>
-                        <Text style={[styles.text]}>
-                            The journey to being better than you were yesterday is filled with many
-                            highs and lows. Someone out there needs to read what you're thinking.
-                        </Text>
-                    </View>
+                    <View style={[styles.layout]}>
+                        <View style={[styles.container, { marginBottom: 10 }]}>
+                            <Text style={[styles.header, { marginBottom: 5 }]}>
+                                Something on your mind?
+                            </Text>
+                            <Text style={[styles.text]}>
+                                The journey to being better than you were yesterday is filled with
+                                many highs and lows. Someone out there needs to read what you're
+                                thinking.
+                            </Text>
+                        </View>
 
-                    <View style={{marginBottom:10}}>
-                        <Text style={[styles.header]}> Title </Text>
-                        <TextInput style={[styles.container]}
-                        placeholder={'Enter your story title here.'}
-                        placeholderTextColor={colors.secondary_text}
-                        onChangeText={setT}
-                        value={title}/>
-                    </View>
+                        <View style={{ marginBottom: 10 }}>
+                            <Text style={[styles.header]}> Title </Text>
+                            <TextInput
+                                style={[styles.container]}
+                                placeholder={'Enter your story title here.'}
+                                placeholderTextColor={colors.secondary_text}
+                                onChangeText={setT}
+                                value={title}
+                            />
+                        </View>
 
-                    <View style={{marginBottom:10}}>
-                        <Text style={[styles.header]}> Story </Text>
-                        <TextInput style={[styles.container,{height:150}]}
-                            textAlignVertical="top"
-                            multiline={true}
-                            placeholder={"Be someone's inspiration."}
-                            placeholderTextColor={colors.secondary_text}
-                            onChangeText={setB}
-                            value={body}/>
-                    </View>
+                        <View style={{ marginBottom: 10 }}>
+                            <Text style={[styles.header]}> Story </Text>
+                            <TextInput
+                                style={[styles.container, { height: 150 }]}
+                                textAlignVertical="top"
+                                multiline={true}
+                                placeholder={"Be someone's inspiration."}
+                                placeholderTextColor={colors.secondary_text}
+                                onChangeText={setB}
+                                value={body}
+                            />
+                        </View>
 
-                    <View>
-                        <Text style={[styles.header]}>
-                            Photos
-                        </Text>
                         <View>
-                            <CarouselCards images={carouselImages} />
+                            <Text style={[styles.header]}>Photos</Text>
+                            <View>
+                                <CarouselCards images={carouselImages} />
+                            </View>
                         </View>
                     </View>
-            </View>
-        </ScrollView>
-    </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+                </ScrollView>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 };
