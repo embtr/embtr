@@ -1,7 +1,6 @@
 import {
   Challenge,
   ChallengeCalculationType,
-  Habit,
   Task,
   Unit,
 } from "../../schema";
@@ -18,7 +17,6 @@ export interface ChallengeRequirement {
   challengeId?: number;
   task?: Task;
   taskId?: number;
-  habit?: Habit;
   habitId?: number;
   unit?: Unit;
   unitId?: number;
