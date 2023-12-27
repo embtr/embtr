@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput, KeyboardAvoidingView, Keyboard } from 'react-native';
+import {View, Text, TextInput, KeyboardAvoidingView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -7,7 +7,7 @@ import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarouse
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { Image } from 'resources/schema';
 import { ImageUtility } from 'src/util/images/ImageUtility';
 
@@ -64,160 +64,82 @@ export const CreateEditUserPostBase = ({
         onDeleteImage
     );
 
+    const styles = {
+        container: {
+            backgroundColor: '#282828',
+            padding: TIMELINE_CARD_PADDING,
+            borderRadius: 5,
+        },
+        layout: {
+            flex: 1,
+            padding: 20,
+        },
+        text: {
+            color: colors.secondary_text,
+            fontFamily: POPPINS_REGULAR,
+            fontSize: 13,
+        },
+        header: {
+            color: colors.text,
+            fontSize: 17,
+            fontFamily: POPPINS_REGULAR,
+        },
+    };
+
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={{}}>
-            <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={isIosApp() ? 'padding' : 'height'}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <ScrollView>
+                    <ImagesUploadingOverlay
+                        active={imagesUploading}
+                        progress={imageUploadProgess}
+                    />
 
-            <View style={{ height: '100%', width: '100%' }}>
-                <KeyboardAvoidingView
-                    style={{ height: '100%' }}
-                    keyboardVerticalOffset={isIosApp() ? -10 : 111}
-                    behavior={isIosApp() ? 'padding' : 'height'}
-                >
-                    {/* TOP SUMMARY */}
-                    <View style={{ paddingTop: 5 }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{
-                                color: colors.text,
-                                fontFamily: 'Poppins_600SemiBold',
-                                fontSize: 17,
-                                paddingTop: 10,
-                                paddingLeft: 15,
-                            }}
-                        >
-                            Something on your mind?
-                        </Text>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{
-                                color: colors.secondary_text,
-                                fontFamily: 'Poppins_400Regular',
-                                paddingTop: 10,
-                                fontSize: 12,
-                                paddingLeft: 15,
-                                paddingRight: 15,
-                            }}
-                        >
-                            The journey to being better than you were yesterday is filled with many
-                            highs and lows. Someone out there needs to read what you're thinking.
-                        </Text>
-                    </View>
-
-                    {/* TITLE */}
-                    <View style={{ paddingTop: 10, paddingLeft: 10 }}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text
-                                onPress={() => {
-                                    Keyboard.dismiss();
-                                }}
-                                style={{
-                                    color: colors.text,
-                                    paddingTop: 15,
-                                    paddingLeft: 5,
-                                    fontFamily: POPPINS_REGULAR,
-                                }}
-                            >
-                                Title
+                    <View style={[styles.layout]}>
+                        <View style={[styles.container, { marginBottom: 10 }]}>
+                            <Text style={[styles.header, { marginBottom: 5 }]}>
+                                Something on your mind?
                             </Text>
-
-                            {title.length < 1 && (
-                                <Text
-                                    onPress={() => {
-                                        Keyboard.dismiss();
-                                    }}
-                                    style={{
-                                        alignSelf: 'flex-end',
-                                        color: colors.tab_selected,
-                                        paddingLeft: 5,
-                                        paddingBottom: 3,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 10,
-                                    }}
-                                >
-                                    cannot be blank
-                                </Text>
-                            )}
+                            <Text style={[styles.text]}>
+                                The journey to being better than you were yesterday is filled with
+                                many highs and lows. Someone out there needs to read what you're
+                                thinking.
+                            </Text>
                         </View>
-                        <TextInput
-                            style={{
-                                padding: 15,
-                                color: colors.text,
-                                borderRadius: 12,
-                                backgroundColor: colors.text_input_background,
-                                borderColor: colors.text_input_border,
-                                borderWidth: 1,
-                                width: '95%',
-                            }}
-                            placeholder={'Enter Your Story Title'}
-                            placeholderTextColor={colors.secondary_text}
-                            onChangeText={setT}
-                            value={title}
-                        />
-                    </View>
 
-                    {/* STORY */}
-                    <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{
-                                color: colors.text,
-                                paddingLeft: 5,
-                                width: '95%',
-                                paddingBottom: 10,
-                            }}
-                        >
-                            Story
-                        </Text>
-                        <TextInput
-                            textAlignVertical="top"
-                            style={{
-                                width: '95%',
-                                height: 200,
-                                borderRadius: 12,
-                                backgroundColor: colors.text_input_background,
-                                borderColor: colors.text_input_border,
-                                borderWidth: 1,
-                                color: colors.text,
-                                paddingTop: 10,
-                                paddingLeft: 10,
-                                paddingRight: 10,
-                            }}
-                            multiline={true}
-                            placeholder={"Be someone's inspiration."}
-                            placeholderTextColor={colors.secondary_text}
-                            onChangeText={setB}
-                            value={body}
-                        />
-                    </View>
+                        <View style={{ marginBottom: 10 }}>
+                            <Text style={[styles.header]}> Title </Text>
+                            <TextInput
+                                style={[styles.container]}
+                                placeholder={'Enter your story title here.'}
+                                placeholderTextColor={colors.secondary_text}
+                                onChangeText={setT}
+                                value={title}
+                            />
+                        </View>
 
-                    {/* PHOTOS */}
-                    <View style={{ paddingTop: 10, alignItems: 'center' }}>
-                        <Text
-                            onPress={() => {
-                                Keyboard.dismiss();
-                            }}
-                            style={{
-                                color: colors.text,
-                                paddingLeft: 5,
-                                width: '95%',
-                                paddingBottom: 10,
-                            }}
-                        >
-                            Photos
-                        </Text>
+                        <View style={{ marginBottom: 10 }}>
+                            <Text style={[styles.header]}> Story </Text>
+                            <TextInput
+                                style={[styles.container, { height: 150 }]}
+                                textAlignVertical="top"
+                                multiline={true}
+                                placeholder={"Be someone's inspiration."}
+                                placeholderTextColor={colors.secondary_text}
+                                onChangeText={setB}
+                                value={body}
+                            />
+                        </View>
+
                         <View>
-                            <CarouselCards images={carouselImages} />
+                            <Text style={[styles.header]}>Photos</Text>
+                            <View>
+                                <CarouselCards images={carouselImages} />
+                            </View>
                         </View>
                     </View>
-                </KeyboardAvoidingView>
-            </View>
-        </ScrollView>
+                </ScrollView>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
     );
 };
