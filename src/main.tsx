@@ -25,6 +25,7 @@ import {
     setCurrentUser,
     setTimelineDays,
     setUnits,
+    setUserProfileImage,
 } from 'src/redux/user/GlobalState';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { User as UserModel } from 'resources/schema';
@@ -41,11 +42,9 @@ import { AnyAction } from '@reduxjs/toolkit';
 import { QuickAddModal } from './components/home/tabmenu/QuickAddModal';
 import { LoadingOverlay } from './components/common/loading/LoadingOverlay';
 import PlannedDayController from './controller/planning/PlannedDayController';
-import { PlanningWidgetImproved } from './components/widgets/planning/PlanningWidgetImproved';
 import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
 import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
-import { About } from './static/About';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -181,6 +180,7 @@ export const Main = () => {
     const resetGlobalState = async (userToReset: UserModel) => {
         dispatch(resetToDefault());
         dispatch(setCurrentUser(userToReset));
+        dispatch(setUserProfileImage(userToReset.photoUrl ?? ''));
         PlannedDayController.prefetchAllPlannedDayData();
     };
 
