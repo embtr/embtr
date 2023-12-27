@@ -1,13 +1,13 @@
 import { Timestamp } from 'firebase/firestore';
 import { Comment, Like, Image, User, JoinedChallenge, PlannedDayResult } from 'resources/schema';
 import { TimelineType } from 'resources/types/Types';
+import { TimelineElementType } from 'resources/types/requests/Timeline';
 
 export interface TimelinePostModel {
     user: User;
-    type: TimelineType;
+    type: TimelineElementType;
     id: number;
     sortDate: Date;
-
     comments: Comment[];
     likes: Like[];
     images: Image[];

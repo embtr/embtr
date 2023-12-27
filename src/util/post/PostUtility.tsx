@@ -1,14 +1,13 @@
 import { PlannedDayResult, UserPost } from 'resources/schema';
-import { TimelineType } from 'resources/types/Types';
-import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 import { getDateStringFromDate } from 'src/controller/planning/PlannedDayController';
 import { TimelinePostModel } from 'src/model/OldModels';
+import { TimelineElementType } from 'resources/types/requests/Timeline';
 
 export namespace PostUtility {
     export const createUserPostTimelineModel = (userPost: UserPost): TimelinePostModel => {
         const userPostTimelinePost: TimelinePostModel = {
             user: userPost.user!,
-            type: TimelineType.USER_POST,
+            type: TimelineElementType.USER_POST,
             id: userPost.id!,
             sortDate: userPost.createdAt!,
             comments: userPost.comments ?? [],
@@ -34,7 +33,7 @@ export namespace PostUtility {
                 'Results for ' +
                     getDateStringFromDate(plannedDayResult.plannedDay?.date ?? new Date()),
             user: plannedDayResult.plannedDay?.user!,
-            type: TimelineType.PLANNED_DAY_RESULT,
+            type: TimelineElementType.PLANNED_DAY_RESULT,
             id: plannedDayResult.id!,
             sortDate: plannedDayResult.createdAt!,
             comments: plannedDayResult.comments ?? [],

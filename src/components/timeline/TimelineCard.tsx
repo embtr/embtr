@@ -1,8 +1,7 @@
 import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
-import { TouchableWithoutFeedback } from 'react-native';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { ImageUtility } from 'src/util/images/ImageUtility';
@@ -11,12 +10,10 @@ import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarouse
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
 import { JoinedChallengeDetails } from './card_components/JoinedChallengeDetails';
-import { TimelineType } from 'resources/types/Types';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { DailyResultBody } from '../common/timeline/DailyResultBody';
-import { TimelineElement } from 'resources/types/requests/Timeline';
+import { TimelineElementType } from 'resources/types/requests/Timeline';
 
 interface Props {
     timelinePostModel: TimelinePostModel;
@@ -42,11 +39,11 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
         setIsLiked(true);
         setLikeCount(likeCount + 1);
 
-        if (timelinePostModel.type === TimelineType.USER_POST) {
+        if (timelinePostModel.type === TimelineElementType.USER_POST) {
             StoryController.addLikeViaApi(timelinePostModel.id);
-        } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
-            ChallengeController.like(timelinePostModel.id);
-        } else if (timelinePostModel.type === TimelineType.PLANNED_DAY_RESULT) {
+            // } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
+            //     ChallengeController.like(timelinePostModel.id);
+        } else if (timelinePostModel.type === TimelineElementType.PLANNED_DAY_RESULT) {
             DailyResultController.addLikeViaApi(timelinePostModel.id);
         }
     };

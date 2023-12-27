@@ -46,7 +46,6 @@ export type MasterScreens = {
     EditUserProfile: undefined;
     AddHabitCategories: undefined;
     MyHabitsCategoryElement: undefined;
-
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -83,6 +82,7 @@ export type RootStackParamList = {
 };
 
 export namespace Routes {
+    export const USER_POST_DETAILS = 'UserPostDetails';
     export const CREATE_USER_POST = 'CreateUserPost';
     export const DAILY_RESULT_DETAILS = 'DailyResultDetails';
     export const ADD_HABIT_CATEGORY = 'AddHabitCategory';

@@ -1,16 +1,16 @@
-import { View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { User } from 'resources/schema';
-import { TimelineType } from 'resources/types/Types';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDatePrettyWithTime, getHumanReadableDate } from 'src/util/DateUtility';
+import { getHumanReadableDate } from 'src/util/DateUtility';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { TimelineElementType } from 'resources/types/requests/Timeline';
 
 interface Props {
     date: Date;
     user: User;
     secondaryText?: string;
-    type: TimelineType;
+    type: TimelineElementType;
 }
 
 export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
@@ -19,16 +19,16 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
     let datePretty = getHumanReadableDate(date);
 
     const label =
-        type === TimelineType.USER_POST
+        type === TimelineElementType.USER_POST
             ? 'Post'
-            : type === TimelineType.PLANNED_DAY_RESULT
+            : type === TimelineElementType.PLANNED_DAY_RESULT
               ? 'Daily Update'
               : 'Challenge';
 
     const color =
-        type === TimelineType.USER_POST
+        type === TimelineElementType.USER_POST
             ? colors.timeline_label_user_post
-            : type === TimelineType.PLANNED_DAY_RESULT
+            : type === TimelineElementType.PLANNED_DAY_RESULT
               ? colors.timeline_label_daily_results
               : colors.timeline_label_challenge;
 
