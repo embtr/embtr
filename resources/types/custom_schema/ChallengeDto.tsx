@@ -1,7 +1,27 @@
-import { ChallengeRequirement } from "../../schema";
+import {
+  Challenge,
+  ChallengeCalculationType,
+  Task,
+  Unit,
+} from "../../schema";
 
-
-
+export interface ChallengeRequirement {
+  id?: number;
+  challenge?: Challenge;
+  challengeId?: number;
+  task?: Task;
+  taskId?: number;
+  habitId?: number;
+  unit?: Unit;
+  unitId?: number;
+  calculationType?: ChallengeCalculationType;
+  calculationIntervalDays?: number;
+  requiredIntervalQuantity?: number;
+  requiredTaskQuantity?: number;
+  active?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
 
 export interface ChallengeCompletionData {
   amountComplete: number;
