@@ -190,4 +190,5 @@ export const darkColors = {
     timeline_label_daily_results: '#DF5A6E',
     timeline_label_challenge: '#9154FF',
     timeline_label_user_post: '#27B24A',
+    shiny: 'linear-gradient(83.25deg, #00FEC6 5.29%, #A2FE98 25.2%, #DCF07D 44.78%, #FEB2D9 65.82%, #B4001A 88.68%)',
 };
