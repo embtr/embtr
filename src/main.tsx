@@ -46,6 +46,7 @@ import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
 import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
 import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfilePopulation';
+import { LandingPage } from './components/landing/LandingPage';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -265,7 +266,7 @@ export const Main = () => {
                         }}
                     />
                     {/* END TOP LEVEL COMPONENTS */}
-                    <NewUserProfilePopulation />
+                    {view}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

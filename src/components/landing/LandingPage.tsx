@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, TextStyle, Image, View } from 'react-native';
+import { Text, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
@@ -14,6 +14,7 @@ import { AppleAuthenticate } from '../login/apple/AppleAuthenticate';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { HorizontalLine } from '../common/HorizontalLine';
 import { getWindowWidth } from 'src/util/GeneralUtility';
+import { Image } from 'expo-image';
 
 export const LandingPage = () => {
     const { colors } = useTheme();
@@ -121,8 +122,11 @@ export const LandingPage = () => {
                         />
                     </View>
                     <Image
-                        source={require('assets/logo_text.png')}
-                        style={{ width: 150, height: 50 }}
+                        source={require('assets/embtr_title.svg')}
+                        style={{
+                            width: 410 / 2,
+                            height: 97 / 2,
+                        }}
                     />
                 </View>
 
