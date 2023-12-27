@@ -16,6 +16,7 @@ import StoryController from 'src/controller/timeline/story/StoryController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { DailyResultBody } from '../common/timeline/DailyResultBody';
+import { TimelineElement } from 'resources/types/requests/Timeline';
 
 interface Props {
     timelinePostModel: TimelinePostModel;

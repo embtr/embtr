@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FilteredTimeline } from './FilteredTimeline';
-import { TimelineElementType, TimelineRequestCursor } from 'resources/types/requests/Timeline';
+import { TimelineElement, TimelineElementType } from 'resources/types/requests/Timeline';
 import { Banner } from 'src/components/common/Banner';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -28,29 +28,15 @@ export const Timeline = () => {
 
     const timelineElements = TimelineCustomHooks.useTimelineData();
 
-    const userPosts: UserPost[] = [];
-    const plannedDayResults: PlannedDayResult[] = [];
+    const timelineData: TimelineElement[] = [];
     timelineElements.data?.pages.forEach((page) => {
-        if (!page?.results) {
-            return;
-        }
-
-        page.results.forEach((result) => {
-            if (result.type === TimelineElementType.USER_POST && result.userPost) {
-                userPosts.push(result.userPost);
-            } else if (
-                result.type === TimelineElementType.PLANNED_DAY_RESULT &&
-                result.plannedDayResult
-            ) {
-                plannedDayResults.push(result.plannedDayResult);
-            }
-        });
+        timelineData.push(...(page?.results ?? []));
     });
 
     return (
         <Screen>
             <Banner
-                name={'Timeline' + ': ' + userPosts.length}
+                name={'Timeline'}
                 leftIcon={'people-outline'}
                 leftRoute={'UserSearch'}
                 innerLeftIcon={'add-outline'}
@@ -62,11 +48,10 @@ export const Timeline = () => {
                 rightIconNotificationCount={unreadNotificationCount.data ?? 0}
             />
             <FilteredTimeline
-                userPosts={userPosts}
-                plannedDayResults={plannedDayResults}
+                timelineElements={timelineData}
                 hasMore={timelineElements?.hasNextPage ?? false}
                 pullToRefresh={async () => {
-                    await TimelineController.invalidate();
+                    await TimelineController.invalidateCache();
                 }}
                 loadMore={timelineElements.fetchNextPage}
             />

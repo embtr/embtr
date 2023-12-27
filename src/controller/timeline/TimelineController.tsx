@@ -26,7 +26,11 @@ export class TimelineController {
             });
     }
 
-    public static async invalidate() {
+    public static async clearCache() {
+        reactQueryClient.removeQueries(['timelineData']);
+    }
+
+    public static async invalidateCache() {
         await reactQueryClient.invalidateQueries(['timelineData']);
     }
 }

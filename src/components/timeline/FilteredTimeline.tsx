@@ -1,91 +1,87 @@
-import { ActivityIndicator, FlatList, RefreshControl, View } from 'react-native';
+import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { JoinedChallenge, PlannedDayResult, UserPost } from 'resources/schema';
 import { TimelinePostModel } from 'src/model/OldModels';
-import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
-import { TimelineType } from 'resources/types/Types';
 import { TimelineCard } from './TimelineCard';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useNavigation } from '@react-navigation/native';
 import { PostUtility } from 'src/util/post/PostUtility';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { TimelineElement, TimelineElementType } from 'resources/types/requests/Timeline';
+
+const createTimelineModels = (timelineElements: TimelineElement[]): TimelinePostModel[] => {
+    const models: TimelinePostModel[] = [];
+
+    timelineElements.forEach((timelineElement) => {
+        if (timelineElement.type == TimelineElementType.USER_POST && timelineElement.userPost) {
+            models.push(PostUtility.createUserPostTimelineModel(timelineElement.userPost));
+        } else if (
+            timelineElement.type == TimelineElementType.PLANNED_DAY_RESULT &&
+            timelineElement.plannedDayResult
+        ) {
+            models.push(PostUtility.createDayResultTimelineModel(timelineElement.plannedDayResult));
+        }
+    });
+
+    return models;
+};
+
+const createTimelineView = (timelinePostModel: TimelinePostModel) => {
+    const key = timelinePostModel.id;
+    return (
+        <View
+            style={{
+                width: '100%',
+                paddingTop: TIMELINE_CARD_PADDING,
+                paddingHorizontal: TIMELINE_CARD_PADDING,
+            }}
+        >
+            <TimelineCard timelinePostModel={timelinePostModel} navigateToDetails={() => {}} />
+        </View>
+    );
+};
+
+const createFooter = (hasMore: boolean, colors: any) => {
+    const footer = hasMore ? (
+        <ActivityIndicator
+            size="large"
+            color={colors.secondary_text}
+            style={{ marginVertical: 20 }}
+        />
+    ) : (
+        <View
+            style={{
+                paddingTop: TIMELINE_CARD_PADDING,
+                paddingBottom: TIMELINE_CARD_PADDING * 2.5,
+            }}
+        >
+            <Text
+                style={{
+                    fontFamily: POPPINS_REGULAR,
+                    color: colors.secondary_text,
+                    textAlign: 'center',
+                }}
+            >
+                welp... you've hit the bottom.
+            </Text>
+        </View>
+    );
+
+    return footer;
+};
 
 interface Props {
-    userPosts: UserPost[];
-    plannedDayResults: PlannedDayResult[];
+    timelineElements: TimelineElement[];
     hasMore: boolean;
     pullToRefresh: Function;
     loadMore: Function;
 }
 
-export const FilteredTimeline = ({
-    userPosts,
-    plannedDayResults,
-    hasMore,
-    pullToRefresh,
-    loadMore,
-}: Props) => {
+export const FilteredTimeline = ({ timelineElements, hasMore, pullToRefresh, loadMore }: Props) => {
+    const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
-    const { colors } = useTheme();
-
-    const createTimelineModels = (): TimelinePostModel[] => {
-        const userPostTimelinePosts: TimelinePostModel[] = userPosts.map((userPost) => {
-            return PostUtility.createUserPostTimelineModel(userPost);
-        });
-
-        const dayResultTimelinePosts: TimelinePostModel[] = plannedDayResults.map(
-            (plannedDayResult) => {
-                return PostUtility.createDayResultTimelineModel(plannedDayResult);
-            }
-        );
-
-        return [...userPostTimelinePosts, ...dayResultTimelinePosts];
-    };
-
-    const createTimelineViews = () => {
-        let timelinePosts: TimelinePostModel[] = createTimelineModels();
-        const handleSort = (postA: TimelinePostModel, postB: TimelinePostModel): number => {
-            let postADate = postA.sortDate;
-            let postBDate = postB.sortDate;
-
-            return postBDate.getTime() - postADate.getTime();
-        };
-
-        timelinePosts.sort((a, b) => handleSort(a, b));
-
-        return timelinePosts;
-    };
-
-    const createTimelineView = (timelinePostModel: TimelinePostModel) => {
-        const key = timelinePostModel.id;
-        return (
-            <View
-                key={key}
-                style={{
-                    width: '100%',
-                    paddingTop: TIMELINE_CARD_PADDING,
-                    paddingHorizontal: TIMELINE_CARD_PADDING,
-                }}
-            >
-                <TimelineCard
-                    timelinePostModel={timelinePostModel}
-                    navigateToDetails={() => {
-                        if (timelinePostModel.type === TimelineType.USER_POST) {
-                            navigation.navigate('UserPostDetails', { id: timelinePostModel.id });
-                        } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
-                            navigation.navigate('ChallengeDetails', { id: timelinePostModel.id });
-                        } else if (timelinePostModel.type === TimelineType.PLANNED_DAY_RESULT) {
-                            navigation.navigate('DailyResultDetails', { id: timelinePostModel.id });
-                        }
-                    }}
-                />
-            </View>
-        );
-    };
-
-    const data = createTimelineViews();
+    const data = createTimelineModels(timelineElements);
 
     return (
         <FlatList
@@ -107,17 +103,7 @@ export const FilteredTimeline = ({
             onEndReached={() => {
                 loadMore();
             }}
-            ListFooterComponent={
-                hasMore ? (
-                    <ActivityIndicator
-                        size="large"
-                        color={colors.secondary_text}
-                        style={{ marginVertical: 20 }}
-                    />
-                ) : (
-                    <View />
-                )
-            }
+            ListFooterComponent={createFooter(hasMore, colors)}
         />
     );
 };
