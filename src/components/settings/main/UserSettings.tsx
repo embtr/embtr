@@ -13,6 +13,7 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SettingsPing } from './SettingsPing';
 import { SettingsDatabasePing } from './SettingsDatabasePing';
+import { ThemeToggle } from 'src/components/theme/ThemeToggle';
 
 export const UserSettings = () => {
     return (

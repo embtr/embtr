@@ -7,7 +7,7 @@ import { SecureMainStack } from 'src/components/home/SecureMainStack';
 import { InsecureMainStack } from 'src/components/home/InsecureMainStack';
 import { Screen } from 'src/components/common/Screen';
 import SafeAreaView from 'react-native-safe-area-view';
-import { LogBox } from 'react-native';
+import { LogBox, Text, View } from 'react-native';
 import { Roboto_500Medium } from '@expo-google-fonts/roboto';
 import {
     useFonts,
@@ -45,6 +45,7 @@ import PlannedDayController from './controller/planning/PlannedDayController';
 import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
 import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
+import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfilePopulation';
 
 const linking: LinkingOptions<RootStackParamList> = {
     prefixes: ['https://embtr.com', 'embtr://'],
@@ -264,8 +265,7 @@ export const Main = () => {
                         }}
                     />
                     {/* END TOP LEVEL COMPONENTS */}
-
-                    {view}
+                    <NewUserProfilePopulation />
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

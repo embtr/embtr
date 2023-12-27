@@ -84,7 +84,7 @@ export const lightColors = {
     timeline_card_background: '#FFFFFF',
     background: '#f6f6f6',
     accent_color_dark: '##673cb5',
-    accent_color: '#7D44E4',
+    accent_color: 'orange',
     accent_color_light: '#9F78E7',
     accent_color_dim: '#362B35',
     accent_color_faint: '#322C30',
@@ -179,7 +179,7 @@ export const darkColors = {
 
     // REAL COLORS
     timeline_card_background: '#282828',
-    accent_color_dark: '##673cb5',
+    accent_color_dark: '#673cb5',
     accent_color: '#9154FF',
     accent_color_light: '#9F78E7',
     accent_color_dim: '#362B35',
