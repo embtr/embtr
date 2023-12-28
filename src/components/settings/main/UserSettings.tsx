@@ -27,7 +27,7 @@ export const UserSettings = () => {
                         flexDirection: 'column',
                         alignItems: 'center',
                         width: '100%',
-                        paddingHorizontal: TIMELINE_CARD_PADDING *2,
+                        paddingHorizontal: TIMELINE_CARD_PADDING,
                     }}
                 >
                     <View style={{ height: TIMELINE_CARD_PADDING }} />
