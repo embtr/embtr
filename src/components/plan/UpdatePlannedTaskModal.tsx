@@ -326,6 +326,7 @@ export const UpdatePlannedTaskModal = () => {
                             borderWidth: 1,
                             borderRadius: 5,
                             flex: 1,
+                            backgroundColor: colors.background_light,
                         }}
                     >
                         <TextInput
@@ -335,6 +336,7 @@ export const UpdatePlannedTaskModal = () => {
                                 textAlign: 'center',
                                 fontSize: 18,
                                 paddingVertical: TIMELINE_CARD_PADDING / 2,
+
                             }}
                             numberOfLines={1}
                             keyboardType={'numeric'}
@@ -376,7 +378,7 @@ export const UpdatePlannedTaskModal = () => {
                                 zIndex: 1,
                                 position: 'absolute',
                                 bottom: -5.5,
-                                backgroundColor: colors.modal_background,
+                                backgroundColor: colors.background_light,
                                 right: 5,
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -398,7 +400,7 @@ export const UpdatePlannedTaskModal = () => {
                                         color:
                                             (selectedValue ?? 0) >= (plannedTask.quantity ?? 0)
                                                 ? colors.progress_bar_complete
-                                                : colors.accent_color,
+                                                : colors.secondary_text,
                                     }}
                                 >
                                     Goal: {plannedTask.quantity}
@@ -467,6 +469,7 @@ export const UpdatePlannedTaskModal = () => {
                             borderWidth: 1,
                             borderRadius: 5,
                             flex: 1,
+                            backgroundColor: colors.background_light,
                         }}
                     >
                         <Text
