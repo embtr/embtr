@@ -24,9 +24,7 @@ export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue, size }: Prop
                 alignContent: 'center',
                 justifyContent: 'center',
                 borderRadius: 12,
-                backgroundColor: value ? colors.accent_color : colors.text_input_background,
-                borderColor: colors.text_input_border,
-                borderWidth: 1,
+                backgroundColor: value ? colors.accent_color : colors.background_light,
             }}
             onPress={toggle}
         >

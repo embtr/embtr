@@ -51,10 +51,10 @@ export const CreateEditScheduledHabit = () => {
     const editMode = isCreateCustomHabit
         ? CreateEditHabitMode.CREATE_CUSTOM_HABIT
         : habitId
-        ? CreateEditHabitMode.CREATE_NEW_HABIT
-        : scheduledHabitId
-        ? CreateEditHabitMode.EDIT_EXISTING_HABIT
-        : CreateEditHabitMode.INVALID;
+          ? CreateEditHabitMode.CREATE_NEW_HABIT
+          : scheduledHabitId
+            ? CreateEditHabitMode.EDIT_EXISTING_HABIT
+            : CreateEditHabitMode.INVALID;
 
     const isCreatingNewHabit = editMode === CreateEditHabitMode.CREATE_NEW_HABIT;
 

@@ -39,14 +39,11 @@ export const HabitDateView = ({ dateType, prettyDate, onPress }: Props) => {
                     }}
                     style={{
                         height: 50,
-                        width:
-                            UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DATE_WIDTH,
+                        width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DATE_WIDTH,
                         alignContent: 'center',
                         justifyContent: 'center',
                         borderRadius: 12,
-                        backgroundColor: colors.text_input_background,
-                        borderColor: colors.text_input_border,
-                        borderWidth: 1,
+                        backgroundColor: colors.background_light,
                     }}
                 >
                     <Text

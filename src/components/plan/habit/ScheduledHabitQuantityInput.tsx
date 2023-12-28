@@ -35,9 +35,8 @@ export const ScheduledHabitQuantityInput = () => {
                     height: 50,
                     width: UI.SCHEDULE_HABIT.DETAILS.DETAIL_WIDTH,
                     borderRadius: 12,
-                    backgroundColor: colors.text_input_background,
-                    borderColor: colors.text_input_border,
-                    borderWidth: 1,
+                    backgroundColor: colors.background_light,
+
                     textAlign: 'center', // Center the text horizontally
                     alignItems: 'center',
                     alignContent: 'center',
