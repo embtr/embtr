@@ -26,9 +26,7 @@ export const ScheduleHabitDescription = () => {
                         height: 150,
                         borderRadius: 12,
                         padding: TIMELINE_CARD_PADDING,
-                        backgroundColor: colors.text_input_background,
-                        borderColor: colors.text_input_border,
-                        borderWidth: 1,
+                        backgroundColor: colors.background_light,
                         color: colors.text,
                         fontFamily: POPPINS_REGULAR,
                     }}

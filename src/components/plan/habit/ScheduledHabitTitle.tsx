@@ -51,11 +51,8 @@ export const ScheduledHabitTitle = () => {
                     style={{
                         height: 50,
                         width: 50,
-
                         borderRadius: 12,
-                        backgroundColor: colors.text_input_background,
-                        borderColor: colors.text_input_border,
-                        borderWidth: 1,
+                        backgroundColor: colors.background_light,
                         alignItems: 'center',
                         justifyContent: 'center',
                     }}
@@ -70,9 +67,7 @@ export const ScheduledHabitTitle = () => {
                         flex: 1,
                         color: colors.text,
                         borderRadius: 12,
-                        backgroundColor: colors.text_input_background,
-                        borderColor: colors.text_input_border,
-                        borderWidth: 1,
+                        backgroundColor: colors.background_light,
                         fontFamily: POPPINS_REGULAR,
                     }}
                     placeholder={'Give your habit a title'}
