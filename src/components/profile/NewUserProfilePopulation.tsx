@@ -32,7 +32,7 @@ const PROFILE_IMAGE =
 
 const PADDING = TIMELINE_CARD_PADDING * 0.6;
 
-const getUsernameValidationMessage = (username: string) => {
+const getUsernameValidationMessage = async (username: string) => {
     const empty = username.length === 0;
     if (empty) {
         return 'required';
@@ -49,6 +49,11 @@ const getUsernameValidationMessage = (username: string) => {
         return invalidCharacterCount === 1 ? 'invalid character' : `invalid characters`;
     }
 
+    const exists = await UserController.usernameExists(username);
+    if (exists) {
+        return 'username in use';
+    }
+
     return 'available';
 };
 
@@ -63,6 +68,7 @@ export const NewUserProfilePopulation = () => {
     const [displayName, setDisplayName] = React.useState('');
     const [bio, setBio] = React.useState('');
     const [userProfileUrl, setUserProfileUrl] = React.useState(PROFILE_IMAGE);
+    const [validationMessage, setValidationMessage] = React.useState('available');
 
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
@@ -116,21 +122,26 @@ export const NewUserProfilePopulation = () => {
         }
     };
 
-    const setUsernameWrapper = (username: string) => {
+    const setValidationMessageWrapper = async (username: string) => {
+        if (currentUser.data && username === currentUser.data.username) {
+            setValidationMessage('available');
+            return;
+        }
+
+        const validationMessage = await getUsernameValidationMessage(username);
+        setValidationMessage(validationMessage);
+    };
+
+    const setUsernameWrapper = async (username: string) => {
         const onlyAlphaNumericOrUnderscore = /^[a-zA-Z0-9_]*$/.test(username);
         const tooLong = username.length > 20;
         if (onlyAlphaNumericOrUnderscore && !tooLong) {
+            setValidationMessageWrapper(username);
             setServerError('');
             setUsername(username);
         }
     };
 
-    let validationMessage;
-    if (serverError.length) {
-        validationMessage = serverError;
-    } else {
-        validationMessage = getUsernameValidationMessage(username);
-    }
     const formValid = validationMessage === 'available';
 
     return (

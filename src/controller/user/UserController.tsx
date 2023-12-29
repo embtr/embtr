@@ -24,6 +24,7 @@ import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { AxiosError } from 'axios';
+import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
 
 export interface UserModel {
     uid: string;
@@ -208,6 +209,18 @@ class UserController {
 
     public static async logoutUser() {
         await getAuth().signOut();
+    }
+
+    public static async usernameExists(username: string): Promise<boolean> {
+        return await axiosInstance
+            .get(`/user/exists`, { params: { username } })
+            .then((success) => {
+                const response: GetBooleanResponse = success.data;
+                return response.result;
+            })
+            .catch((error) => {
+                return false;
+            });
     }
 
     private static async forceRefreshIdToken() {
