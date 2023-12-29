@@ -45,7 +45,7 @@ class PushNotificationController {
             pushNotificationTokens: [{ token }],
         };
 
-        await UserController.updateUserViaApi(updateUserRequest);
+        await UserController.update(updateUserRequest);
     }
 
     private static async openNotificationsSettings() {

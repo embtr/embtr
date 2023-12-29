@@ -10,6 +10,7 @@ import {
     GetUserResponse,
     GetUsersResponse,
     UpdateUserRequest,
+    UpdateUserResponse,
 } from 'resources/types/requests/UserTypes';
 import { Response } from 'resources/types/requests/RequestTypes';
 import { USER } from 'resources/endpoints';
@@ -20,6 +21,7 @@ import { User } from 'resources/schema';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 export interface UserModel {
     uid: string;
@@ -92,7 +94,8 @@ class UserController {
         return await axiosInstance
             .get(`/${USER_ENDPOINT}`)
             .then((success) => {
-                return success.data;
+                const data: GetUserResponse = success.data;
+                return data.user;
             })
             .catch((error) => {
                 return error.response.data;
@@ -132,14 +135,32 @@ class UserController {
             });
     }
 
-    public static async updateUserViaApi(request: UpdateUserRequest) {
+    public static async setup(
+        request: UpdateUserRequest
+    ): Promise<UpdateUserResponse | undefined> {
+        return await axiosInstance
+            .patch(`${USER}setup`, request)
+            .then((success) => {
+                const data: UpdateUserResponse = success.data;
+                return data;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
+
+    public static async update(
+        request: UpdateUserRequest
+    ): Promise<UpdateUserResponse | undefined> {
         return await axiosInstance
             .patch(`${USER}`, request)
             .then((success) => {
-                return success.data;
+                const data: UpdateUserResponse = success.data;
+                return data;
             })
             .catch((error) => {
-                return error.response.data;
+                return undefined;
             });
     }
 
@@ -219,6 +240,16 @@ class UserController {
 }
 
 export namespace UserCustomHooks {
+    export const useCurrentUser = () => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['currentUser'],
+            queryFn: () => UserController.getCurrentUser(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
     export const useCurrentUserId = () => {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['currentUserId'],

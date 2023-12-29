@@ -153,7 +153,7 @@ export const EditUserProfile = () => {
 
         dispatch(setUserProfileImage(photoUrl));
 
-        await UserController.updateUserViaApi(updatedUser);
+        await UserController.update(updatedUser);
         navigation.navigate('Profile');
     };
 

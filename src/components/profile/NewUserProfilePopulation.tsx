@@ -14,6 +14,11 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import { getWindowHeight } from 'src/util/GeneralUtility';
+import { useNavigation } from '@react-navigation/core';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MasterScreens } from 'src/navigation/RootStackParamList';
+import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
+import { Code } from 'resources/codes';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -51,10 +56,51 @@ export const NewUserProfilePopulation = () => {
     const { colors } = useTheme();
 
     const [imageHeight, setImageHeight] = React.useState(0);
+    const [serverError, setServerError] = React.useState(false);
 
     const [username, setUsername] = React.useState('');
     const [displayName, setDisplayName] = React.useState('');
     const [bio, setBio] = React.useState('');
+    const [userProfileUrl, setUserProfileUrl] = React.useState(PROFILE_IMAGE);
+
+    const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
+
+    const currentUser = UserCustomHooks.useCurrentUser();
+    React.useEffect(() => {
+        if (currentUser.data) {
+            if (currentUser.data.username !== 'new user') {
+                setUsername(currentUser.data.username);
+            }
+
+            if (currentUser.data.displayName !== 'new user') {
+                setDisplayName(currentUser.data.displayName);
+            }
+
+            if (currentUser.data.bio !== 'welcome to embtr!') {
+                setBio(currentUser.data.bio);
+            }
+
+            if (currentUser.data.photoUrl) {
+                setUserProfileUrl(currentUser.data.photoUrl);
+            }
+        }
+    }, [currentUser.data]);
+
+    const submitProfileData = async () => {
+        const userClone = { ...currentUser.data };
+        userClone.username = username;
+        userClone.displayName = displayName;
+        userClone.bio = bio;
+        userClone.photoUrl = userProfileUrl;
+
+        const updateUserResponse = await UserController.setup(userClone);
+        if (updateUserResponse === undefined || updateUserResponse.internalCode !== Code.SUCCESS) {
+            setServerError(true);
+        } else {
+            // invalidate current user
+            navigation.popToTop();
+        }
+    };
 
     const setUsernameWrapper = (username: string) => {
         const onlyAlphaNumericOrUnderscore = /^[a-zA-Z0-9_]*$/.test(username);
@@ -69,16 +115,12 @@ export const NewUserProfilePopulation = () => {
 
     return (
         <Pressable
-            style={{ flex: 1 }}
+            style={{ flex: 1, backgroundColor: colors.background }}
             onPress={() => {
                 Keyboard.dismiss();
             }}
         >
-            <KeyboardAvoidingView
-                behavior={'position'}
-                keyboardVerticalOffset={100}
-                style={{ backgroundColor: colors.background }}
-            >
+            <KeyboardAvoidingView behavior={'position'} keyboardVerticalOffset={100}>
                 <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
                 <View style={{ alignItems: 'center', paddingTop: TIMELINE_CARD_PADDING * 2 }}>
                     <Image
@@ -111,7 +153,7 @@ export const NewUserProfilePopulation = () => {
                     yourself!
                 </Text>
 
-                <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
+                <View style={{ height: TIMELINE_CARD_PADDING * 4 }} />
                 <View style={{ alignItems: 'center', paddingHorizontal: TIMELINE_CARD_PADDING }}>
                     <View
                         style={{
@@ -137,7 +179,7 @@ export const NewUserProfilePopulation = () => {
                                                 height: imageHeight,
                                                 borderRadius: 50,
                                             }}
-                                            uri={PROFILE_IMAGE}
+                                            uri={userProfileUrl}
                                         />
                                     </View>
                                 </TouchableOpacity>
@@ -159,6 +201,7 @@ export const NewUserProfilePopulation = () => {
                                         }}
                                         placeholder={'username'}
                                         placeholderTextColor={colors.secondary_text}
+                                        autoCapitalize={'none'}
                                         onChangeText={setUsernameWrapper}
                                         value={username}
                                     />
@@ -170,8 +213,8 @@ export const NewUserProfilePopulation = () => {
                                             fontSize: 12,
                                             position: 'absolute',
                                             zIndex: 2,
-                                            right: 1,
-                                            bottom: 0,
+                                            right: 2,
+                                            bottom: 1,
                                         }}
                                     >
                                         {usernameValidationMessage}
@@ -216,7 +259,7 @@ export const NewUserProfilePopulation = () => {
                                     }}
                                     textAlignVertical="top"
                                     multiline={true}
-                                    placeholder={'what makes you, you?'}
+                                    placeholder={'what makes you... you?'}
                                     placeholderTextColor={colors.secondary_text}
                                     onChangeText={setBio}
                                     value={bio}
@@ -228,8 +271,9 @@ export const NewUserProfilePopulation = () => {
                     <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
 
                     <TouchableOpacity
-                        onPress={() => {
+                        onPress={async () => {
                             Keyboard.dismiss();
+                            await submitProfileData();
                         }}
                         disabled={!formValid}
                         style={{

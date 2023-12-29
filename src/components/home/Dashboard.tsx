@@ -10,6 +10,11 @@ import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
 import { ChallengeTab } from 'src/components/challenge/ChallengeTab';
 import React from 'react';
+import { useNavigation } from '@react-navigation/core';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { MasterScreens, Routes } from 'src/navigation/RootStackParamList';
+import NEW_USER_PROFILE_POPULATION = Routes.NEW_USER_PROFILE_POPULATION;
+import { UserCustomHooks } from 'src/controller/user/UserController';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,10 +28,21 @@ export const TABS = {
 
 export const Dashboard = () => {
     const dispatch = useAppDispatch();
+    const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
+
+    const currentUser = UserCustomHooks.useCurrentUser();
 
     React.useEffect(() => {
         dispatch(setCurrentTab(TABS.TODAY));
     }, []);
+
+    React.useEffect(() => {
+        setTimeout(() => {
+            if (currentUser.data && !currentUser.data.accountSetup) {
+                navigation.navigate(NEW_USER_PROFILE_POPULATION);
+            }
+        }, 250);
+    }, [currentUser.data]);
 
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>

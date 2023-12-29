@@ -5,7 +5,7 @@ import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 import { User } from 'resources/schema';
-import { POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -105,8 +105,8 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                         >
                             <Text
                                 style={{
-                                    fontSize: 18,
-                                    fontFamily: 'Poppins_600SemiBold',
+                                    fontSize: 16,
+                                    fontFamily: POPPINS_MEDIUM,
                                     color: colors.profile_name_text,
                                 }}
                             >
@@ -118,7 +118,22 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                         style={{
                             flexDirection: 'row',
                         }}
+                    ></View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                        }}
                     >
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                includeFontPadding: false,
+                                fontFamily: POPPINS_MEDIUM,
+                                color: colors.secondary_text,
+                            }}
+                        >
+                            {'@' + user.username}
+                        </Text>
                         <View
                             style={{
                                 justifyContent: 'center',
@@ -130,7 +145,7 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                             style={{
                                 fontSize: 12,
                                 includeFontPadding: false,
-                                fontFamily: 'Poppins_500Medium',
+                                fontFamily: POPPINS_MEDIUM,
                                 color: colors.secondary_text,
                             }}
                         >

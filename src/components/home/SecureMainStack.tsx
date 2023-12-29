@@ -12,6 +12,7 @@ import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
 import { AdvancedUserSettings } from '../settings/advanced/AdvancedUserSettings';
 import { UserSettings } from '../settings/main/UserSettings';
 import { AddQuoteOfTheDay } from 'src/components/widgets/quote_of_the_day/AddQuoteOfTheDay';
+import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfilePopulation';
 
 const Stack = createStackNavigator();
 
@@ -45,6 +46,12 @@ export const SecureMainStack = () => {
             <Stack.Screen
                 name="AddQuoteOfTheDay"
                 component={AddQuoteOfTheDay}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+
+            <Stack.Screen
+                name="NewUserProfilePopulation"
+                component={NewUserProfilePopulation}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
         </Stack.Navigator>
