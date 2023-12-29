@@ -22,6 +22,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export interface UserModel {
     uid: string;
@@ -135,9 +136,7 @@ class UserController {
             });
     }
 
-    public static async setup(
-        request: UpdateUserRequest
-    ): Promise<UpdateUserResponse | undefined> {
+    public static async setup(request: UpdateUserRequest): Promise<UpdateUserResponse | undefined> {
         return await axiosInstance
             .patch(`${USER}setup`, request)
             .then((success) => {
@@ -148,7 +147,6 @@ class UserController {
                 return undefined;
             });
     }
-
 
     public static async update(
         request: UpdateUserRequest
@@ -236,6 +234,10 @@ class UserController {
         }
 
         return undefined;
+    }
+
+    public static async invalidateCurrentUser() {
+        await reactQueryClient.invalidateQueries(['currentUser']);
     }
 }
 

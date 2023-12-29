@@ -1,12 +1,21 @@
 import React from 'react';
-import { View, Text, TextInput, Keyboard, KeyboardAvoidingView, ActivityIndicator, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    Keyboard,
+    KeyboardAvoidingView,
+    ActivityIndicator,
+    StyleSheet,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+} from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { EmbtrButton } from 'src/components/common/button/EmbtrButton';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { ScrollView } from 'react-native-gesture-handler';
 import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
@@ -15,35 +24,38 @@ import { BannerInfoModal } from 'src/components/profile/profile_component/Banner
 import { CachedImage } from '../common/images/CachedImage';
 import { getRandomInt } from 'src/util/GeneralUtility';
 import { User } from 'resources/schema';
-import UserController from 'src/controller/user/UserController';
+import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
-import { setUserProfileImage } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
+import { current } from '@reduxjs/toolkit';
+import { POPPINS_REGULAR } from 'src/util/constants';
+
+const placeholderOptions: string[] = [
+    'I love pringles <3',
+    'Smarter than your average',
+    'Do people read these?',
+    'Top 10 Horseshoe player on my street.',
+    'Work Hard, Train Harder.',
+];
 
 export const EditUserProfile = () => {
     const { colors } = useTheme();
 
     const navigation = useNavigation<StackNavigationProp<ProfileTabScreens>>();
 
-    const [user, setUser] = React.useState<User>();
     const [photoUrl, setPhotoUrl] = React.useState('');
     const [bannerUrl, setBannerUrl] = React.useState('');
     const [username, setUsername] = React.useState('');
     const [displayName, setDisplayName] = React.useState('');
     const [location, setLocation] = React.useState('');
     const [bio, setBio] = React.useState('');
-
     const [imageUploading, setImageUploading] = React.useState(false);
     const [showBannerInfoModal, setShowBannerInfoModal] = React.useState(false);
+    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(
+        placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]
+    );
 
-    const placeholderOptions: string[] = [
-        'I love pringles <3',
-        'Smarter than your average',
-        'Do people read these?',
-        'Top 10 Horseshoe player on my street.',
-        'Work Hard, Train Harder.',
-    ];
-    const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]);
+    const currentUser = UserCustomHooks.useCurrentUser();
 
     const displayBannerInfoModal = () => {
         setShowBannerInfoModal(true);
@@ -52,8 +64,6 @@ export const EditUserProfile = () => {
     const hideBannerInfoModal = () => {
         setShowBannerInfoModal(false);
     };
-
-    const dispatch = useAppDispatch();
 
     useFocusEffect(
         React.useCallback(() => {
@@ -70,33 +80,18 @@ export const EditUserProfile = () => {
         }, [bioPlaceholder])
     );
 
-    const fetch = async () => {
-        const currentUser = await UserController.getCurrentUser();
-        if (!currentUser.user) {
-            return;
-        }
-
-        setUser(currentUser.user);
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            fetch();
-        }, [])
-    );
-
     React.useEffect(() => {
-        if (!user) {
+        if (!currentUser.data) {
             return;
         }
 
-        setPhotoUrl(user.photoUrl ?? '');
-        setBannerUrl(user.bannerUrl ?? '');
-        setUsername(user.username ?? '');
-        setDisplayName(user.displayName ?? '');
-        setLocation(user.location ?? '');
-        setBio(user.bio ?? '');
-    }, [user]);
+        setPhotoUrl(currentUser.data.photoUrl ?? '');
+        setBannerUrl(currentUser.data.bannerUrl ?? '');
+        setUsername(currentUser.data.username ?? '');
+        setDisplayName(currentUser.data.displayName ?? '');
+        setLocation(currentUser.data.location ?? '');
+        setBio(currentUser.data.bio ?? '');
+    }, [currentUser.data]);
 
     const uploadProfilePhoto = async () => {
         setImageUploading(true);
@@ -137,12 +132,12 @@ export const EditUserProfile = () => {
     };
 
     const saveProfile = async () => {
-        if (!user) {
+        if (!currentUser.data) {
             return;
         }
 
         const updatedUser: UpdateUserRequest = {
-            ...user,
+            ...currentUser.data,
             photoUrl,
             bannerUrl,
             username,
@@ -151,15 +146,20 @@ export const EditUserProfile = () => {
             bio,
         };
 
-        dispatch(setUserProfileImage(photoUrl));
-
         await UserController.update(updatedUser);
-        navigation.navigate('Profile');
+        await UserController.invalidateCurrentUser();
+        navigation.pop();
     };
 
     return (
         <Screen>
-            <Banner name={'Edit Profile'} leftText="cancel" leftRoute={'BACK'} rightText="save" rightOnClick={saveProfile} />
+            <Banner
+                name={'Edit Profile'}
+                leftText="cancel"
+                leftRoute={'BACK'}
+                rightText="save"
+                rightOnClick={saveProfile}
+            />
 
             {_maybeRenderUploadingOverlay()}
             <BannerInfoModal visible={showBannerInfoModal} dismiss={hideBannerInfoModal} />
@@ -172,7 +172,14 @@ export const EditUserProfile = () => {
                         behavior={isIosApp() ? 'padding' : 'height'}
                     >
                         <TouchableWithoutFeedback onPress={uploadProfileBanner}>
-                            <View style={{ width: '100%', height: 180, alignItems: 'flex-end', justifyContent: 'flex-end' }}>
+                            <View
+                                style={{
+                                    width: '100%',
+                                    height: 180,
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
                                 <View
                                     style={{
                                         zIndex: 3,
@@ -193,19 +200,52 @@ export const EditUserProfile = () => {
                                             justifyContent: 'center',
                                         }}
                                     >
-                                        <Ionicons name={'information-circle-outline'} size={22} color={colors.background} onPress={displayBannerInfoModal} />
+                                        <Ionicons
+                                            name={'information-circle-outline'}
+                                            size={22}
+                                            color={colors.background}
+                                            onPress={displayBannerInfoModal}
+                                        />
                                     </View>
                                 </View>
-                                <View style={{ width: '100%', height: '100%', alignItems: 'center', paddingTop: 10 }}>
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        alignItems: 'center',
+                                        paddingTop: 10,
+                                    }}
+                                >
                                     <ProfileBannerImage sourceUrl={bannerUrl} />
                                 </View>
 
                                 <View
-                                    style={{ width: '100%', height: '100%', position: 'absolute', zIndex: 2, alignItems: 'center', justifyContent: 'flex-end' }}
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'absolute',
+                                        zIndex: 2,
+                                        alignItems: 'center',
+                                        justifyContent: 'flex-end',
+                                    }}
                                 >
                                     <TouchableOpacity onPress={uploadProfilePhoto}>
-                                        <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                                            {photoUrl && <CachedImage style={{ width: 100, height: 100, borderRadius: 50 }} uri={photoUrl} />}
+                                        <View
+                                            style={{
+                                                alignItems: 'flex-end',
+                                                justifyContent: 'flex-end',
+                                            }}
+                                        >
+                                            {photoUrl && (
+                                                <CachedImage
+                                                    style={{
+                                                        width: 100,
+                                                        height: 100,
+                                                        borderRadius: 50,
+                                                    }}
+                                                    uri={photoUrl}
+                                                />
+                                            )}
                                         </View>
                                     </TouchableOpacity>
                                 </View>
@@ -224,7 +264,7 @@ export const EditUserProfile = () => {
                                     paddingLeft: 5,
                                     width: '95%',
                                     paddingBottom: 10,
-                                    fontFamily: 'Poppins_400Regular',
+                                    fontFamily: POPPINS_REGULAR,
                                 }}
                             >
                                 Username
@@ -326,7 +366,13 @@ export const EditUserProfile = () => {
                                 onPress={() => {
                                     Keyboard.dismiss();
                                 }}
-                                style={{ color: colors.goal_primary_font, paddingLeft: 5, width: '95%', paddingBottom: 10, fontFamily: 'Poppins_400Regular' }}
+                                style={{
+                                    color: colors.goal_primary_font,
+                                    paddingLeft: 5,
+                                    width: '95%',
+                                    paddingBottom: 10,
+                                    fontFamily: 'Poppins_400Regular',
+                                }}
                             >
                                 Bio
                             </Text>

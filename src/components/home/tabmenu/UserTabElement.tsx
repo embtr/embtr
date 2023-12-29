@@ -1,7 +1,6 @@
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { View, Image } from 'react-native';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getUserProfileImage } from 'src/redux/user/GlobalState';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import { UserCustomHooks } from 'src/controller/user/UserController';
 
 interface Props {
     size: number;
@@ -9,8 +8,7 @@ interface Props {
 
 export const UserTabElement = ({ size }: Props) => {
     const { colors } = useTheme();
-
-    const userProfileImage = useAppSelector(getUserProfileImage);
+    const currentUser = UserCustomHooks.useCurrentUser();
 
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
@@ -24,7 +22,10 @@ export const UserTabElement = ({ size }: Props) => {
                     justifyContent: 'center',
                 }}
             >
-                <Image style={{ width: size, height: size, borderRadius: 50 }} source={{ uri: userProfileImage }} />
+                <Image
+                    style={{ width: size, height: size, borderRadius: 50 }}
+                    source={{ uri: currentUser.data?.photoUrl }}
+                />
             </View>
         </View>
     );

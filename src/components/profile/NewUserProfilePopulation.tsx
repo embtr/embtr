@@ -57,6 +57,7 @@ export const NewUserProfilePopulation = () => {
 
     const [imageHeight, setImageHeight] = React.useState(0);
     const [serverError, setServerError] = React.useState(false);
+    const [imageUploading, setImageUploading] = React.useState(false);
 
     const [username, setUsername] = React.useState('');
     const [displayName, setDisplayName] = React.useState('');
@@ -86,6 +87,15 @@ export const NewUserProfilePopulation = () => {
         }
     }, [currentUser.data]);
 
+    const uploadProfilePhoto = async () => {
+        setImageUploading(true);
+        const url = await UserController.uploadProfilePhoto();
+        if (url) {
+            setUserProfileUrl(url);
+        }
+        setImageUploading(false);
+    };
+
     const submitProfileData = async () => {
         const userClone = { ...currentUser.data };
         userClone.username = username;
@@ -97,7 +107,7 @@ export const NewUserProfilePopulation = () => {
         if (updateUserResponse === undefined || updateUserResponse.internalCode !== Code.SUCCESS) {
             setServerError(true);
         } else {
-            // invalidate current user
+            await UserController.invalidateCurrentUser();
             navigation.popToTop();
         }
     };
@@ -171,7 +181,7 @@ export const NewUserProfilePopulation = () => {
                             }}
                         >
                             <View>
-                                <TouchableOpacity onPress={() => {}}>
+                                <TouchableOpacity onPress={uploadProfilePhoto}>
                                     <View>
                                         <CachedImage
                                             style={{
