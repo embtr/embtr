@@ -23,11 +23,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { BannerInfoModal } from 'src/components/profile/profile_component/BannerInfoModal';
 import { CachedImage } from '../common/images/CachedImage';
 import { getRandomInt } from 'src/util/GeneralUtility';
-import { User } from 'resources/schema';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
-import { useAppDispatch } from 'src/redux/Hooks';
-import { current } from '@reduxjs/toolkit';
 import { POPPINS_REGULAR } from 'src/util/constants';
 
 const placeholderOptions: string[] = [

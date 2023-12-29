@@ -56,7 +56,7 @@ export const NewUserProfilePopulation = () => {
     const { colors } = useTheme();
 
     const [imageHeight, setImageHeight] = React.useState(0);
-    const [serverError, setServerError] = React.useState(false);
+    const [serverError, setServerError] = React.useState('');
     const [imageUploading, setImageUploading] = React.useState(false);
 
     const [username, setUsername] = React.useState('');
@@ -104,8 +104,12 @@ export const NewUserProfilePopulation = () => {
         userClone.photoUrl = userProfileUrl;
 
         const updateUserResponse = await UserController.setup(userClone);
-        if (updateUserResponse === undefined || updateUserResponse.internalCode !== Code.SUCCESS) {
-            setServerError(true);
+        if (updateUserResponse === undefined) {
+            setServerError('an error occurred');
+        } else if (updateUserResponse.internalCode === Code.USERNAME_IN_USE) {
+            setServerError('username in use');
+        } else if (updateUserResponse.internalCode !== Code.SUCCESS) {
+            setServerError('an error occurred');
         } else {
             await UserController.invalidateCurrentUser();
             navigation.popToTop();
@@ -116,12 +120,18 @@ export const NewUserProfilePopulation = () => {
         const onlyAlphaNumericOrUnderscore = /^[a-zA-Z0-9_]*$/.test(username);
         const tooLong = username.length > 20;
         if (onlyAlphaNumericOrUnderscore && !tooLong) {
+            setServerError('');
             setUsername(username);
         }
     };
 
-    const usernameValidationMessage = getUsernameValidationMessage(username);
-    const formValid = usernameValidationMessage === 'available';
+    let validationMessage;
+    if (serverError.length) {
+        validationMessage = serverError;
+    } else {
+        validationMessage = getUsernameValidationMessage(username);
+    }
+    const formValid = validationMessage === 'available';
 
     return (
         <Pressable
@@ -227,7 +237,7 @@ export const NewUserProfilePopulation = () => {
                                             bottom: 1,
                                         }}
                                     >
-                                        {usernameValidationMessage}
+                                        {validationMessage}
                                     </Text>
                                 </View>
                                 <View style={{ height: PADDING }} />

@@ -23,6 +23,7 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { AxiosError } from 'axios';
 
 export interface UserModel {
     uid: string;
@@ -136,15 +137,16 @@ class UserController {
             });
     }
 
-    public static async setup(request: UpdateUserRequest): Promise<UpdateUserResponse | undefined> {
+    public static async setup(request: UpdateUserRequest): Promise<UpdateUserResponse> {
         return await axiosInstance
             .patch(`${USER}setup`, request)
             .then((success) => {
                 const data: UpdateUserResponse = success.data;
                 return data;
             })
-            .catch((error) => {
-                return undefined;
+            .catch((error: AxiosError) => {
+                const data: UpdateUserResponse = error.response?.data as UpdateUserResponse;
+                return data;
             });
     }
 
