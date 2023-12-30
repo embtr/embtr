@@ -19,6 +19,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MasterScreens } from 'src/navigation/RootStackParamList';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { Code } from 'resources/codes';
+import { getCurrentTab } from 'src/redux/user/GlobalState';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -75,21 +76,33 @@ export const NewUserProfilePopulation = () => {
     const currentUser = UserCustomHooks.useCurrentUser();
     React.useEffect(() => {
         if (currentUser.data) {
-            if (currentUser.data.username !== 'new user') {
+            if (currentUser.data.username?.length && currentUser.data.username !== 'new user') {
                 setUsername(currentUser.data.username);
             }
 
-            if (currentUser.data.displayName !== 'new user') {
+            if (
+                currentUser.data.displayName?.length &&
+                currentUser.data.displayName !== 'new user'
+            ) {
                 setDisplayName(currentUser.data.displayName);
             }
 
-            if (currentUser.data.bio !== 'welcome to embtr!') {
+            if (currentUser.data.bio?.length && currentUser.data.bio !== 'welcome to embtr!') {
                 setBio(currentUser.data.bio);
             }
 
-            if (currentUser.data.photoUrl) {
+            if (currentUser.data.photoUrl?.length && currentUser.data.photoUrl) {
                 setUserProfileUrl(currentUser.data.photoUrl);
             }
+
+            let usernameToValidate = currentUser.data.username?.length
+                ? currentUser.data.username
+                : '';
+            if (usernameToValidate === 'new user') {
+                usernameToValidate = '';
+            }
+
+            setValidationMessageWrapper(usernameToValidate);
         }
     }, [currentUser.data]);
 
@@ -123,6 +136,8 @@ export const NewUserProfilePopulation = () => {
     };
 
     const setValidationMessageWrapper = async (username: string) => {
+        console.log('SETTING VALIDATION WRAPPER');
+        console.log(username);
         if (currentUser.data && username === currentUser.data.username) {
             setValidationMessage('available');
             return;
