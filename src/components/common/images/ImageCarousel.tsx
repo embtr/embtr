@@ -26,24 +26,6 @@ export const CarouselCards = ({ images }: Props) => {
 
     const [activeSlide, setActiveSlide] = React.useState<number>(0);
 
-    const renderArrow = (direction: 'left' | 'right') => {
-        return (
-            <TouchableOpacity
-                onPress={() => {
-                    if (isCarousel.current) {
-                        const newSlide = direction === 'left' ? activeSlide - 1 : activeSlide + 1;
-                        isCarousel.current.snapToItem(newSlide);
-                    }
-                }}
-                style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}
-            >
-                <Text style={{ color: colors.secondary_text }}>
-                    {direction === 'left' ? '<' : '>'}
-                </Text>
-            </TouchableOpacity>
-        );
-    };
-
     return (
         <View style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT }}>
             <Carousel
@@ -54,7 +36,7 @@ export const CarouselCards = ({ images }: Props) => {
                 renderItem={CarouselCardItem}
                 sliderWidth={Dimensions.get('window').width * 0.9}
                 itemWidth={CAROUSEL_IMAGE_HEIGHT}
-                onSnapToItem={(index) => setActiveSlide(index)}
+                onScrollIndexChanged={(index) => setActiveSlide(index)}
                 vertical={false}
             />
             <View
@@ -64,22 +46,20 @@ export const CarouselCards = ({ images }: Props) => {
                     paddingHorizontal: TIMELINE_CARD_PADDING*2,
                 }}
             >
-                {renderArrow('left')}
                 <Pagination
                     dotsLength={images.length}
                     activeDotIndex={activeSlide}
-                    containerStyle={{ backgroundColor: 'transparent', paddingVertical: 0 }}
+                    containerStyle={{ backgroundColor: 'transparent', paddingVertical: TIMELINE_CARD_PADDING / 2 }}
                     dotStyle={{
-                        width: TIMELINE_CARD_PADDING,
-                        height: TIMELINE_CARD_PADDING,
-                        borderRadius: 5,
-                        marginHorizontal: 8,
-                        backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                        width: TIMELINE_CARD_PADDING * .3,
+                        height: TIMELINE_CARD_PADDING * .3,
+                        borderRadius: 50,
+                        marginHorizontal: TIMELINE_CARD_PADDING / 6,
+                        backgroundColor: colors.accent_color_light
                     }}
                     inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.6}
+                    inactiveDotScale={0.85}
                 />
-                {renderArrow('right')}
             </View>
         </View>
     );
