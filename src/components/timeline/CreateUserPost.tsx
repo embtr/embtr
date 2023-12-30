@@ -44,6 +44,13 @@ export const CreateUserPost = () => {
 
     const titleHasData = title.length > 0;
 
+    const onDeleteImage = (deletedImageUrl: string) => {
+        const updatedImageUrls = imageUrls.filter((imageUrl) => {
+            return imageUrl !== deletedImageUrl;
+        });
+        setImageUrls(updatedImageUrls);
+    };
+
     return (
         <Screen>
             <Banner
@@ -63,6 +70,7 @@ export const CreateUserPost = () => {
                 setBody={setBody}
                 images={images}
                 onImagesUploaded={onImagesUploaded}
+                onDeleteImage={onDeleteImage}
             />
         </Screen>
     );

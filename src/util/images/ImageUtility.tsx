@@ -1,3 +1,4 @@
+import { ca } from 'date-fns/locale';
 import { Image } from 'resources/schema';
 import { ImageCarouselImage } from 'src/components/common/images/ImageCarousel';
 
@@ -26,7 +27,7 @@ export class ImageUtility {
     ) {
         let carouselImages: ImageCarouselImage[] = [];
         images.forEach((image) => {
-            if (!image.url || !image.active) {
+            if (!image.url || image.active === false) {
                 return;
             }
 
