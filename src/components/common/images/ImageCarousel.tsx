@@ -3,7 +3,7 @@ import { Dimensions, View, TouchableOpacity, Text } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CarouselCardItem, CAROUSEL_IMAGE_HEIGHT } from './ImageCarouselItem';
-
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 export interface ImageCarouselImage {
     url: string;
     format: string;
@@ -35,7 +35,7 @@ export const CarouselCards = ({ images }: Props) => {
                         isCarousel.current.snapToItem(newSlide);
                     }
                 }}
-                style={{ paddingHorizontal: 10 }}
+                style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}
             >
                 <Text style={{ color: colors.secondary_text }}>
                     {direction === 'left' ? '<' : '>'}
@@ -61,7 +61,7 @@ export const CarouselCards = ({ images }: Props) => {
                 style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    paddingHorizontal: 20,
+                    paddingHorizontal: TIMELINE_CARD_PADDING*2,
                 }}
             >
                 {renderArrow('left')}
@@ -70,8 +70,8 @@ export const CarouselCards = ({ images }: Props) => {
                     activeDotIndex={activeSlide}
                     containerStyle={{ backgroundColor: 'transparent', paddingVertical: 0 }}
                     dotStyle={{
-                        width: 10,
-                        height: 10,
+                        width: TIMELINE_CARD_PADDING,
+                        height: TIMELINE_CARD_PADDING,
                         borderRadius: 5,
                         marginHorizontal: 8,
                         backgroundColor: 'rgba(255, 255, 255, 0.92)',
