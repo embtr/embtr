@@ -6,8 +6,10 @@ export const getAuthTokenId = async () => {
 };
 
 export const getUserIdFromToken = async (): Promise<number | null> => {
+    userIsAdmin();
     const decodedToken = await getAuth().currentUser?.getIdTokenResult();
     if (decodedToken) {
+        console.log(decodedToken.claims);
         const id = decodedToken.claims.userId;
         if (typeof id === 'number') {
             return id;
@@ -15,4 +17,14 @@ export const getUserIdFromToken = async (): Promise<number | null> => {
     }
 
     return null;
+};
+
+export const userIsAdmin = async (): Promise<boolean | null> => {
+    const decodedToken = await getAuth().currentUser?.getIdTokenResult();
+    if (decodedToken) {
+        const roles = decodedToken.claims.roles as string[];
+        return roles && roles.includes('admin');
+    }
+
+    return false;
 };

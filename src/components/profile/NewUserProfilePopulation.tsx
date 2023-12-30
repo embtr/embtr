@@ -19,7 +19,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MasterScreens } from 'src/navigation/RootStackParamList';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { Code } from 'resources/codes';
-import { getCurrentTab } from 'src/redux/user/GlobalState';
+import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -33,43 +33,18 @@ const PROFILE_IMAGE =
 
 const PADDING = TIMELINE_CARD_PADDING * 0.6;
 
-const getUsernameValidationMessage = async (username: string) => {
-    const empty = username.length === 0;
-    if (empty) {
-        return 'required';
-    }
-
-    const tooShort = username.length < 3;
-    if (tooShort) {
-        return 'too short';
-    }
-
-    const onlyAlphaNumericOrUnderscore = /^[a-zA-Z0-9_]*$/.test(username);
-    if (!onlyAlphaNumericOrUnderscore) {
-        const invalidCharacterCount = username.replace(/[a-zA-Z0-9_]/g, '').length;
-        return invalidCharacterCount === 1 ? 'invalid character' : `invalid characters`;
-    }
-
-    const exists = await UserController.usernameExists(username);
-    if (exists) {
-        return 'username in use';
-    }
-
-    return 'available';
-};
-
 export const NewUserProfilePopulation = () => {
     const { colors } = useTheme();
 
     const [imageHeight, setImageHeight] = React.useState(0);
-    const [serverError, setServerError] = React.useState('');
     const [imageUploading, setImageUploading] = React.useState(false);
 
     const [username, setUsername] = React.useState('');
     const [displayName, setDisplayName] = React.useState('');
     const [bio, setBio] = React.useState('');
     const [userProfileUrl, setUserProfileUrl] = React.useState(PROFILE_IMAGE);
-    const [validationMessage, setValidationMessage] = React.useState('available');
+    const [usernameAvailabilityResult, setUsernameAvailabilityResult] =
+        React.useState<UsernameAvailabilityResult>({ message: 'available', available: true });
 
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
@@ -102,7 +77,7 @@ export const NewUserProfilePopulation = () => {
                 usernameToValidate = '';
             }
 
-            setValidationMessageWrapper(usernameToValidate);
+            setUsernameAvailability(usernameToValidate);
         }
     }, [currentUser.data]);
 
@@ -124,38 +99,49 @@ export const NewUserProfilePopulation = () => {
 
         const updateUserResponse = await UserController.setup(userClone);
         if (updateUserResponse === undefined) {
-            setServerError('an error occurred');
+            setUsernameAvailabilityResult({
+                message: 'an error occurred',
+                available: false,
+            });
         } else if (updateUserResponse.internalCode === Code.USERNAME_IN_USE) {
-            setServerError('username in use');
+            setUsernameAvailabilityResult({
+                message: 'username in use',
+                available: false,
+            });
         } else if (updateUserResponse.internalCode !== Code.SUCCESS) {
-            setServerError('an error occurred');
+            setUsernameAvailabilityResult({
+                message: 'an error occurred',
+                available: false,
+            });
         } else {
             await UserController.invalidateCurrentUser();
             navigation.popToTop();
         }
     };
 
-    const setValidationMessageWrapper = async (username: string) => {
-        if (currentUser.data && username === currentUser.data.username) {
-            setValidationMessage('available');
+    const setUsernameAvailability = async (targetUsername: string) => {
+        if (!currentUser.data?.username) {
+            setUsernameAvailabilityResult({ message: 'loading', available: false });
             return;
         }
 
-        const validationMessage = await getUsernameValidationMessage(username);
-        setValidationMessage(validationMessage);
+        const currentUsername = currentUser.data.username;
+
+        const usernameAvailabilityResult = await UserService.usernameIsAvailable(
+            currentUsername,
+            targetUsername
+        );
+        setUsernameAvailabilityResult(usernameAvailabilityResult);
     };
 
     const setUsernameWrapper = async (username: string) => {
-        const onlyAlphaNumericOrUnderscore = /^[a-zA-Z0-9_]*$/.test(username);
-        const tooLong = username.length > 20;
-        if (onlyAlphaNumericOrUnderscore && !tooLong) {
-            setValidationMessageWrapper(username);
-            setServerError('');
-            setUsername(username);
+        if (!UserService.usernameIsValid(username)) {
+            return;
         }
-    };
 
-    const formValid = validationMessage === 'available';
+        setUsernameAvailability(username);
+        setUsername(username);
+    };
 
     return (
         <Pressable
@@ -251,7 +237,7 @@ export const NewUserProfilePopulation = () => {
                                     />
                                     <Text
                                         style={{
-                                            color: formValid
+                                            color: usernameAvailabilityResult.available
                                                 ? colors.progress_bar_complete
                                                 : colors.error,
                                             fontSize: 12,
@@ -261,7 +247,7 @@ export const NewUserProfilePopulation = () => {
                                             bottom: 1,
                                         }}
                                     >
-                                        {validationMessage}
+                                        {usernameAvailabilityResult.message}
                                     </Text>
                                 </View>
                                 <View style={{ height: PADDING }} />
@@ -319,10 +305,10 @@ export const NewUserProfilePopulation = () => {
                             Keyboard.dismiss();
                             await submitProfileData();
                         }}
-                        disabled={!formValid}
+                        disabled={!usernameAvailabilityResult.available}
                         style={{
                             width: '100%',
-                            backgroundColor: formValid
+                            backgroundColor: usernameAvailabilityResult.available
                                 ? colors.accent_color
                                 : colors.accent_color_dim,
                             borderRadius: 5,
@@ -330,7 +316,9 @@ export const NewUserProfilePopulation = () => {
                     >
                         <Text
                             style={{
-                                color: formValid ? colors.text : colors.secondary_text,
+                                color: usernameAvailabilityResult.available
+                                    ? colors.text
+                                    : colors.secondary_text,
                                 textAlign: 'center',
                                 fontFamily: POPPINS_MEDIUM,
                                 paddingVertical: TIMELINE_CARD_PADDING / 2,

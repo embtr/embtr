@@ -26,6 +26,8 @@ import { getRandomInt } from 'src/util/GeneralUtility';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
 import { POPPINS_REGULAR } from 'src/util/constants';
+import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
+import { Code } from 'resources/codes';
 
 const placeholderOptions: string[] = [
     'I love pringles <3',
@@ -51,6 +53,9 @@ export const EditUserProfile = () => {
     const [bioPlaceholder, setBioPlaceholder] = React.useState<string>(
         placeholderOptions[getRandomInt(0, placeholderOptions.length - 1)]
     );
+
+    const [usernameAvailabilityResult, setUsernameAvailabilityResult] =
+        React.useState<UsernameAvailabilityResult>({ message: 'available', available: true });
 
     const currentUser = UserCustomHooks.useCurrentUser();
 
@@ -89,6 +94,30 @@ export const EditUserProfile = () => {
         setLocation(currentUser.data.location ?? '');
         setBio(currentUser.data.bio ?? '');
     }, [currentUser.data]);
+
+    const setUsernameAvailability = async (targetUsername: string) => {
+        if (!currentUser.data?.username) {
+            setUsernameAvailabilityResult({ message: 'loading', available: false });
+            return;
+        }
+
+        const currentUsername = currentUser.data.username;
+
+        const usernameAvailabilityResult = await UserService.usernameIsAvailable(
+            currentUsername,
+            targetUsername
+        );
+        setUsernameAvailabilityResult(usernameAvailabilityResult);
+    };
+
+    const setUsernameWrapper = async (username: string) => {
+        if (!UserService.usernameIsValid(username)) {
+            return;
+        }
+
+        setUsernameAvailability(username);
+        setUsername(username);
+    };
 
     const uploadProfilePhoto = async () => {
         setImageUploading(true);
@@ -143,9 +172,26 @@ export const EditUserProfile = () => {
             bio,
         };
 
-        await UserController.update(updatedUser);
-        await UserController.invalidateCurrentUser();
-        navigation.pop();
+        const updateUserResponse = await UserController.setup(updatedUser);
+        if (updateUserResponse === undefined) {
+            setUsernameAvailabilityResult({
+                message: 'an error occurred',
+                available: false,
+            });
+        } else if (updateUserResponse.internalCode === Code.USERNAME_IN_USE) {
+            setUsernameAvailabilityResult({
+                message: 'username in use',
+                available: false,
+            });
+        } else if (updateUserResponse.internalCode !== Code.SUCCESS) {
+            setUsernameAvailabilityResult({
+                message: 'an error occurred',
+                available: false,
+            });
+        } else {
+            await UserController.invalidateCurrentUser();
+            navigation.popToTop();
+        }
     };
 
     return (
@@ -155,7 +201,9 @@ export const EditUserProfile = () => {
                 leftText="cancel"
                 leftRoute={'BACK'}
                 rightText="save"
+                rightColor= {usernameAvailabilityResult.available ? colors.link: colors.secondary_text}
                 rightOnClick={saveProfile}
+                rightEnabled={usernameAvailabilityResult.available}
             />
 
             {_maybeRenderUploadingOverlay()}
@@ -266,23 +314,39 @@ export const EditUserProfile = () => {
                             >
                                 Username
                             </Text>
-                            <TextInput
-                                style={{
-                                    padding: 15,
-                                    fontFamily: 'Poppins_400Regular',
-                                    color: colors.goal_primary_font,
-                                    borderRadius: 12,
-                                    backgroundColor: colors.text_input_background,
-                                    borderColor: colors.text_input_border,
-                                    borderWidth: 1,
-                                    width: '95%',
-                                }}
-                                placeholder={'Username'}
-                                placeholderTextColor={colors.secondary_text}
-                                onChangeText={setUsername}
-                                value={username}
-                                autoCorrect={false}
-                            />
+                            <View style={{ width: '95%' }}>
+                                <Text
+                                    style={{
+                                        color: usernameAvailabilityResult.available
+                                            ? colors.progress_bar_complete
+                                            : colors.error,
+                                        fontSize: 12,
+                                        position: 'absolute',
+                                        zIndex: 2,
+                                        right: 4,
+                                        bottom: 3,
+                                    }}
+                                >
+                                    {usernameAvailabilityResult.message}
+                                </Text>
+                                <TextInput
+                                    style={{
+                                        padding: 15,
+                                        fontFamily: 'Poppins_400Regular',
+                                        color: colors.goal_primary_font,
+                                        borderRadius: 12,
+                                        backgroundColor: colors.text_input_background,
+                                        borderColor: colors.text_input_border,
+                                        borderWidth: 1,
+                                        width: '100%',
+                                    }}
+                                    placeholder={'Username'}
+                                    placeholderTextColor={colors.secondary_text}
+                                    onChangeText={setUsernameWrapper}
+                                    value={username}
+                                    autoCorrect={false}
+                                />
+                            </View>
                         </View>
 
                         {/* Display Name */}

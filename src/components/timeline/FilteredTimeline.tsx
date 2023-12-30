@@ -113,8 +113,9 @@ export const FilteredTimeline = ({ timelineElements, hasMore, pullToRefresh, loa
                     }}
                 />
             }
-            onEndReachedThreshold={0.5}
+            onEndReachedThreshold={1}
             onEndReached={() => {
+                console.log("LOADING MORE")
                 loadMore();
             }}
             ListFooterComponent={createFooter(hasMore, colors)}

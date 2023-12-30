@@ -97,13 +97,28 @@ export const CreateEditUserPostBase = ({
                     <View style={[styles.layout]}>
                         <View style={{ marginBottom: TIMELINE_CARD_PADDING }}>
                             <Text style={[styles.header]}> Title </Text>
-                            <TextInput
-                                style={[styles.container, { color: colors.text }]}
-                                placeholder={'Enter your story title here.'}
-                                placeholderTextColor={colors.secondary_text}
-                                onChangeText={setTitle}
-                                value={title}
-                            />
+                            <View>
+                                <Text
+                                    style={{
+                                        zIndex: 1,
+                                        position: 'absolute',
+                                        right: 2,
+                                        bottom: 1,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 12,
+                                        color: colors.progress_bar_failed,
+                                    }}
+                                >
+                                    {title.length > 0 ? '' : 'required'}
+                                </Text>
+                                <TextInput
+                                    style={[styles.container, { color: colors.text }]}
+                                    placeholder={'Something on your mind?'}
+                                    placeholderTextColor={colors.secondary_text}
+                                    onChangeText={setTitle}
+                                    value={title}
+                                />
+                            </View>
                         </View>
 
                         <View style={{ marginBottom: 10 }}>
@@ -112,7 +127,7 @@ export const CreateEditUserPostBase = ({
                                 style={[styles.container, { color: colors.text, height: 150 }]}
                                 textAlignVertical="top"
                                 multiline={true}
-                                placeholder={"Be someone's inspiration."}
+                                placeholder={"Let's hear it!"}
                                 placeholderTextColor={colors.secondary_text}
                                 onChangeText={setBody}
                                 value={body}
