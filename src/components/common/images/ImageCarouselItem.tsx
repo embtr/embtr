@@ -25,8 +25,8 @@ export const CarouselCardItem = ({ item }: Props) => {
             >
                 <View
                     style={{
-                        height: CAROUSEL_IMAGE_HEIGHT * 0.92,
-                        width: CAROUSEL_IMAGE_HEIGHT,
+                        height: CAROUSEL_IMAGE_HEIGHT,
+                        width: CAROUSEL_IMAGE_HEIGHT ,
                         alignItems: 'center',
                         justifyContent: 'center',
                         borderColor: color,

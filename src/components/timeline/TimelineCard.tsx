@@ -119,9 +119,6 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                 {carouselImages.length > 0 && (
                     <View
                         style={{
-                            marginLeft: 10,
-                            marginRight: 10,
-                            overflow: 'hidden',
                             paddingTop: 10,
                             alignItems: 'center',
                         }}

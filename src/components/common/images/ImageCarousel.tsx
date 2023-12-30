@@ -42,7 +42,7 @@ export const CarouselCards = ({ images }: Props) => {
                 data={images}
                 inactiveSlideScale={1}
                 renderItem={CarouselCardItem}
-                sliderWidth={Dimensions.get('window').width * 0.9}
+                sliderWidth={CAROUSEL_IMAGE_HEIGHT}
                 itemWidth={CAROUSEL_IMAGE_HEIGHT}
                 onScrollIndexChanged={(index) => setActiveSlide(index)}
                 vertical={false}
@@ -53,7 +53,7 @@ export const CarouselCards = ({ images }: Props) => {
                 activeDotIndex={activeSlide}
                 containerStyle={{
                     backgroundColor: 'transparent',
-                    paddingTop: TIMELINE_CARD_PADDING,
+                    paddingTop: 0,
                     paddingBottom: 0,
                 }}
                 dotStyle={{
