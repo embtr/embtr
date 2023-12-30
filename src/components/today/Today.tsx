@@ -86,14 +86,14 @@ export const Today = () => {
     return (
         <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
             <Screen>
-                <View style={{ flex: 1, paddingHorizontal: TIMELINE_CARD_PADDING / 2 }}>
+                <View style={{ flex: 1, paddingHorizontal: TIMELINE_CARD_PADDING  }}>
                     <Banner name="Today" />
 
                     <ScrollView>
                         <TodaysCountdownWidget />
-                        <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                        <View style={{ height: TIMELINE_CARD_PADDING  }} />
                         <QuoteOfTheDayWidget />
-                        <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                        <View style={{ height: TIMELINE_CARD_PADDING  }} />
 
                         <View
                             onLayout={(e) => {

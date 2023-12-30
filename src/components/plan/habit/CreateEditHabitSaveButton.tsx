@@ -240,16 +240,16 @@ export const CreateEditHabitSaveButton = ({
     const buttonText = editMode === CreateEditHabitMode.CREATE_NEW_HABIT ? 'Create' : 'Update';
 
     return (
-        <View
-            style={{
-                height: 50 - TIMELINE_CARD_PADDING,
-                marginHorizontal: TIMELINE_CARD_PADDING / 2,
-                backgroundColor: colors.accent_color,
-                justifyContent: 'center',
-                borderRadius: 3,
-            }}
-        >
-            <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress}>
+            <View
+                style={{
+                    height: 50 - TIMELINE_CARD_PADDING,
+                    marginHorizontal: TIMELINE_CARD_PADDING / 2,
+                    backgroundColor: colors.accent_color,
+                    justifyContent: 'center',
+                    borderRadius: 3,
+                }}
+            >
                 <Text
                     style={{
                         textAlign: 'center',
@@ -260,7 +260,7 @@ export const CreateEditHabitSaveButton = ({
                 >
                     {buttonText}
                 </Text>
-            </TouchableOpacity>
-        </View>
+            </View>
+        </TouchableOpacity>
     );
 };
