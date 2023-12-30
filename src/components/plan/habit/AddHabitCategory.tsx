@@ -25,7 +25,6 @@ export const AddHabitCategory = ({ id, type }: Props) => {
     const currentHabitCategory = HabitCustomHooks.useHabitCategory(habitCategoryId);
 
     const isCustomHabits = habitCategoryType === HabitCategoryType.CUSTOM_HABITS;
-    const isMyHabits = habitCategoryType === HabitCategoryType.RECENT_HABITS;
 
     const createCreateCustomHabitOption = () => {
         const createOptionOptimalImage: OptimalImageData = {
