@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View, TouchableOpacity, Text } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CarouselCardItem, CAROUSEL_IMAGE_HEIGHT } from './ImageCarouselItem';
@@ -14,6 +14,8 @@ export interface ImageCarouselImage {
     isDarkTheme?: boolean;
 }
 
+const PAGINATION_DOT_SIZE = TIMELINE_CARD_PADDING * 0.5;
+
 interface Props {
     images: ImageCarouselImage[];
 }
@@ -27,7 +29,13 @@ export const CarouselCards = ({ images }: Props) => {
     const [activeSlide, setActiveSlide] = React.useState<number>(0);
 
     return (
-        <View style={{ overflow: 'hidden', alignItems: 'center', height: CAROUSEL_IMAGE_HEIGHT }}>
+        <View
+            style={{
+                overflow: 'hidden',
+                alignItems: 'center',
+                height: CAROUSEL_IMAGE_HEIGHT + PAGINATION_DOT_SIZE + TIMELINE_CARD_PADDING,
+            }}
+        >
             <Carousel
                 layout="default"
                 ref={isCarousel}
@@ -39,28 +47,24 @@ export const CarouselCards = ({ images }: Props) => {
                 onScrollIndexChanged={(index) => setActiveSlide(index)}
                 vertical={false}
             />
-            <View
-                style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    paddingHorizontal: TIMELINE_CARD_PADDING*2,
+
+            <Pagination
+                dotsLength={images.length}
+                activeDotIndex={activeSlide}
+                containerStyle={{
+                    backgroundColor: 'transparent',
+                    paddingTop: TIMELINE_CARD_PADDING,
+                    paddingBottom: 0,
                 }}
-            >
-                <Pagination
-                    dotsLength={images.length}
-                    activeDotIndex={activeSlide}
-                    containerStyle={{ backgroundColor: 'transparent', paddingVertical: TIMELINE_CARD_PADDING / 2 }}
-                    dotStyle={{
-                        width: TIMELINE_CARD_PADDING * .3,
-                        height: TIMELINE_CARD_PADDING * .3,
-                        borderRadius: 50,
-                        marginHorizontal: TIMELINE_CARD_PADDING / 6,
-                        backgroundColor: colors.accent_color_light
-                    }}
-                    inactiveDotOpacity={0.4}
-                    inactiveDotScale={0.85}
-                />
-            </View>
+                dotStyle={{
+                    width: PAGINATION_DOT_SIZE,
+                    height: PAGINATION_DOT_SIZE,
+                    borderRadius: 50,
+                    backgroundColor: colors.accent_color_light,
+                }}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={1}
+            />
         </View>
     );
 };
