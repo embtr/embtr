@@ -9,7 +9,7 @@ interface Props {
 
 export const PlanToday = ({ hideComplete }: Props) => {
     const plannedDay = PlannedDayCustomHooks.useTodaysPlannedDay();
-    if (!plannedDay.data) {
+    if (!plannedDay?.data) {
         return <View />;
     }
 

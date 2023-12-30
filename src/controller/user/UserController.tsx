@@ -21,7 +21,6 @@ import { User } from 'resources/schema';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
-import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { AxiosError } from 'axios';
 import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
@@ -98,10 +97,14 @@ class UserController {
             .get(`/${USER_ENDPOINT}`)
             .then((success) => {
                 const data: GetUserResponse = success.data;
+                if (!data.user) {
+                    return undefined;
+                }
+
                 return data.user;
             })
             .catch((error) => {
-                return error.response.data;
+                return undefined;
             });
     }
 
@@ -189,18 +192,18 @@ class UserController {
     }
 
     public static async loginUser(): Promise<User | undefined> {
-        let userResponse: GetUserResponse = await this.getCurrentUser();
-        if (userResponse.success && userResponse.user) {
-            return userResponse.user;
+        let user: User | undefined = await this.getCurrentUser();
+        if (user) {
+            return user;
         }
 
         const result = await this.createUser();
         if (result.success) {
             await this.forceRefreshIdToken();
 
-            userResponse = await this.getCurrentUser();
-            if (userResponse.success && userResponse.user) {
-                return userResponse.user;
+            user = await this.getCurrentUser();
+            if (user) {
+                return user;
             }
         }
 

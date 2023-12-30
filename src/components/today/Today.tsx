@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ListRenderItemInfo } from 'react-native';
+import { View, Text } from 'react-native';
 import { WidgetType } from 'resources/schema';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
@@ -62,7 +62,7 @@ export const Today = () => {
                 return <TodaysNotesWidget />;
 
             case WidgetType.QUOTE_OF_THE_DAY:
-                return <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />;
+                return <QuoteOfTheDayWidget />;
 
             case WidgetType.DAILY_HISTORY:
                 return <DailyHistoryWidget userId={user.id!} />;
@@ -92,7 +92,7 @@ export const Today = () => {
                     <ScrollView>
                         <TodaysCountdownWidget />
                         <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-                        <QuoteOfTheDayWidget refreshedTimestamp={refreshedTimestamp!} />
+                        <QuoteOfTheDayWidget />
                         <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
 
                         <View

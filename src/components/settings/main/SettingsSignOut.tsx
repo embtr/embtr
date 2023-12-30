@@ -10,7 +10,7 @@ export const SettingsSignOut = () => {
     const onSignOut = async () => {
         await UserController.refreshToken();
         await getAuth().signOut();
-        dispatch(resetToDefault);
+        dispatch(resetToDefault());
     };
 
     return <SettingsButtonElement text={'Sign Out'} icon={'exit-outline'} onPress={onSignOut} />;

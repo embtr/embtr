@@ -136,8 +136,6 @@ export const NewUserProfilePopulation = () => {
     };
 
     const setValidationMessageWrapper = async (username: string) => {
-        console.log('SETTING VALIDATION WRAPPER');
-        console.log(username);
         if (currentUser.data && username === currentUser.data.username) {
             setValidationMessage('available');
             return;
