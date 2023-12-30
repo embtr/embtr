@@ -60,7 +60,7 @@ export const CarouselCards = ({ images }: Props) => {
                     width: PAGINATION_DOT_SIZE,
                     height: PAGINATION_DOT_SIZE,
                     borderRadius: 50,
-                    backgroundColor: colors.accent_color_light,
+                    backgroundColor: colors.accent_color
                 }}
                 inactiveDotOpacity={0.4}
                 inactiveDotScale={1}
