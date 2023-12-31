@@ -3,6 +3,7 @@ import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { Unit, User } from 'resources/schema';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK, UpdateModalPlannedTask } from 'src/model/GlobalState';
+import { DayKey } from 'resources/types/custom_schema/DayKey';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -37,7 +38,7 @@ interface GlobalState {
     cardRefreshRequests: string[];
     fireConfetti: Function;
     displayDropDownAlert: Function;
-    selectedDayKey: string;
+    selectedDayKey: DayKey;
     units: Unit[];
     currentUser: User;
     timelineDays: number;

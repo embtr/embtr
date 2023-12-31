@@ -1,5 +1,11 @@
 import { addMinutes, differenceInDays, differenceInWeeks, format } from 'date-fns';
-import { daysOfWeek, daysOfWeekAbbreviated, humanDates, monthsAbbreviated } from "src/util/DateConsts";
+import {
+    daysOfWeek,
+    daysOfWeekAbbreviated,
+    humanDates,
+    monthsAbbreviated,
+} from 'src/util/DateConsts';
+import { PureDate } from 'resources/types/custom_schema/DayKey';
 
 export const getDaysOld = (then: any, now: any): number => {
     const dateDiff = now - then;
@@ -10,6 +16,14 @@ export const getDaysOld = (then: any, now: any): number => {
     }
 
     return Math.round(daysOld);
+};
+
+export const getTodayPureDate = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const pureDate: PureDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    return pureDate;
 };
 
 export const getYesterday = () => {
@@ -55,8 +69,8 @@ export const getDatePrettyWithTime = (date: Date): string => {
 
 export const getDateFormatted = (date: Date) => {
     let month = '' + (date.getMonth() + 1),
-      day = '' + date.getDate(),
-      year = date.getFullYear();
+        day = '' + date.getDate(),
+        year = date.getFullYear();
 
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
@@ -66,7 +80,7 @@ export const getDateFormatted = (date: Date) => {
 
 export const getMonthDayFormatted = (date: Date) => {
     let month = '' + (date.getMonth() + 1),
-      day = '' + date.getDate();
+        day = '' + date.getDate();
 
     if (month.length < 2) month = '0' + month;
     if (day.length < 2) day = '0' + day;
@@ -127,7 +141,7 @@ function isDateString(value: any): boolean {
 
 export function getHumanReadableDate(d: Date): string {
     // Ensure we're getting a date object
-    d  = new Date(d);
+    d = new Date(d);
     const now = new Date();
 
     // Check if date is today
@@ -142,6 +156,8 @@ export function getHumanReadableDate(d: Date): string {
     } else if (differenceInDays(now, d) < 7) {
         return daysOfWeek[d.getDay()];
     } else {
-        return `${daysOfWeekAbbreviated[d.getDay()]}. ${d.getDate()}. ${monthsAbbreviated[d.getMonth()]}.`;
+        return `${daysOfWeekAbbreviated[d.getDay()]}. ${d.getDate()}. ${
+            monthsAbbreviated[d.getMonth()]
+        }.`;
     }
 }
