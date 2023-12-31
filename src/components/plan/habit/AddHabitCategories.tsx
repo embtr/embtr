@@ -11,10 +11,10 @@ import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 export const AddHabitCategories = () => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
-    const habitCategories = HabitCustomHooks.useHabitCategories();
+    const allHabitCategories = HabitCustomHooks.useAllHabitCategories();
 
     const elements: JSX.Element[] = [];
-    habitCategories.forEach((habitCategory) => {
+    allHabitCategories.forEach((habitCategory) => {
         elements.push(
             <HabitCategoryElement key={habitCategory.id} habitCategory={habitCategory} />
         );

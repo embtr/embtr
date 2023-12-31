@@ -2,6 +2,7 @@ import React from 'react';
 import { HabitCategory, Task } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
+    GetHabitCategoryResponse,
     GetHabitJourneyResponse,
 } from 'resources/types/requests/HabitTypes';
 import axiosInstance from 'src/axios/axios';
@@ -9,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { Logger } from 'src/util/GeneralUtility';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -23,19 +25,98 @@ export class HabitController {
             });
     }
 
-    public static async getHabitCategories(): Promise<HabitCategory[]> {
+    public static async getAllGenericHabitCategories(): Promise<HabitCategory[] | undefined> {
         return await axiosInstance
-            .get<GetHabitCategoriesResponse>('/habit/categories/')
+            .get<GetHabitCategoriesResponse>('/habit/categories/generic')
             .then((success) => {
                 if (success.data.habitCategories) {
                     return success.data.habitCategories;
                 } else {
-                    return [];
+                    return undefined;
                 }
             })
             .catch((error) => {
-                return [];
+                Logger.titledLog('error from /habit/categories/generic', error);
+                return undefined;
             });
+    }
+
+    public static async getCustomHabitsCategory(): Promise<HabitCategory | undefined> {
+        return await axiosInstance
+            .get<GetHabitCategoriesResponse>('/habit/categories/custom')
+            .then((success) => {
+                const response: GetHabitCategoryResponse = success.data;
+                if (response.habitCategory) {
+                    return response.habitCategory;
+                } else {
+                    return undefined;
+                }
+            })
+            .catch((error) => {
+                Logger.titledLog('error from /habit/categories/custom', error);
+                return undefined;
+            });
+    }
+
+    public static async getRecentHabitsCategory(): Promise<HabitCategory | undefined> {
+        return await axiosInstance
+            .get<GetHabitCategoriesResponse>('/habit/categories/recent')
+            .then((success) => {
+                const response: GetHabitCategoryResponse = success.data;
+                if (response.habitCategory) {
+                    return response.habitCategory;
+                } else {
+                    return undefined;
+                }
+            })
+            .catch((error) => {
+                Logger.titledLog('error from /habit/categories/recent', error);
+                return undefined;
+            });
+    }
+
+    public static async getActiveHabitsCategory(): Promise<HabitCategory | undefined> {
+        return await axiosInstance
+            .get<GetHabitCategoriesResponse>('/habit/categories/active')
+            .then((success) => {
+                const response: GetHabitCategoryResponse = success.data;
+                if (response.habitCategory) {
+                    return response.habitCategory;
+                } else {
+                    return undefined;
+                }
+            })
+            .catch((error) => {
+                Logger.titledLog('error from /habit/categories/active', error);
+                return undefined;
+            });
+    }
+
+    public static async getAllHabitCategories(): Promise<HabitCategory[]> {
+        const requests = [
+            HabitController.getActiveHabitsCategory(),
+            HabitController.getCustomHabitsCategory(),
+            HabitController.getRecentHabitsCategory(),
+            HabitController.getAllGenericHabitCategories(),
+        ];
+
+        // consider using Promise.allSettled
+        const [active, custom, recent, generic] = await Promise.all(requests);
+        const allCategories: HabitCategory[] = [];
+        if (active) {
+            allCategories.push(active as HabitCategory);
+        }
+        if (custom) {
+            allCategories.push(custom as HabitCategory);
+        }
+        if (recent) {
+            allCategories.push(recent as HabitCategory);
+        }
+        if (generic) {
+            allCategories.push(...(generic as HabitCategory[]));
+        }
+
+        return allCategories;
     }
 
     public static async getHabit(id: number): Promise<Task | undefined> {
@@ -61,7 +142,7 @@ export class HabitController {
     public static async prefetchHabitCategories() {
         reactQueryClient.prefetchQuery({
             queryKey: ['habitCategories'],
-            queryFn: () => HabitController.getHabitCategories(),
+            queryFn: () => HabitController.getAllHabitCategories(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
     }
@@ -70,7 +151,7 @@ export class HabitController {
 export namespace HabitCustomHooks {
     export const useHabitCategory = (id: number) => {
         const [habitCategory, setHabitCategory] = React.useState<HabitCategory | undefined>();
-        const habitCategories = HabitCustomHooks.useHabitCategories();
+        const habitCategories = HabitCustomHooks.useAllHabitCategories();
 
         React.useEffect(() => {
             for (const habitCategory of habitCategories) {
@@ -83,10 +164,10 @@ export namespace HabitCustomHooks {
         return habitCategory;
     };
 
-    export const useHabitCategories = () => {
+    export const useAllHabitCategories = () => {
         const { status, error, data } = useQuery({
-            queryKey: ['habitCategories'],
-            queryFn: HabitController.getHabitCategories,
+            queryKey: ['allHabitCategories'],
+            queryFn: HabitController.getAllHabitCategories,
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
