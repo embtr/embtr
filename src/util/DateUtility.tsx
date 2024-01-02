@@ -1,11 +1,11 @@
 import { addMinutes, differenceInDays, differenceInWeeks, format } from 'date-fns';
+import { PureDate } from 'resources/types/date/PureDate';
 import {
     daysOfWeek,
     daysOfWeekAbbreviated,
     humanDates,
     monthsAbbreviated,
 } from 'src/util/DateConsts';
-import { PureDate } from 'resources/types/custom_schema/DayKey';
 
 export const getDaysOld = (then: any, now: any): number => {
     const dateDiff = now - then;
@@ -22,7 +22,7 @@ export const getTodayPureDate = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const pureDate: PureDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    const pureDate = getDateFormatted(today);
     return pureDate;
 };
 
@@ -125,6 +125,14 @@ export function hydrateDates<T>(data: T): T {
 
             if (typeof data[key] === 'string' && isDateString(data[key])) {
                 (data as any)[key] = new Date(data[key] as string) as any;
+            } else if (isPureDate(data[key])) {
+                (data as any)[key] = PureDate.fromString(
+                    (data as any)[key]['year'] +
+                        '-' +
+                        (data as any)[key]['month'] +
+                        '-' +
+                        (data as any)[key]['day']
+                );
             } else {
                 (data as any)[key] = hydrateDates((data as any)[key]) as any;
             }
@@ -137,6 +145,14 @@ function isDateString(value: any): boolean {
     // Use a regular expression to check if the string matches the format of a date string
     const dateRegex = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?(Z|[+-]\d{2}:\d{2}))?$/;
     return dateRegex.test(value);
+}
+
+function isPureDate(value: any): boolean {
+    if (value && value['year'] && value['month'] && value['day']) {
+        return true;
+    }
+
+    return false;
 }
 
 export function getHumanReadableDate(d: Date): string {

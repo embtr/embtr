@@ -6,10 +6,8 @@ export const getAuthTokenId = async () => {
 };
 
 export const getUserIdFromToken = async (): Promise<number | null> => {
-    userIsAdmin();
     const decodedToken = await getAuth().currentUser?.getIdTokenResult();
     if (decodedToken) {
-        console.log(decodedToken.claims);
         const id = decodedToken.claims.userId;
         if (typeof id === 'number') {
             return id;

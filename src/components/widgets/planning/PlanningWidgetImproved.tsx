@@ -22,7 +22,6 @@ const zeroPaddedMonth = currentMonth.month.toString().padStart(2, '0');
 const currentDay: DayPickerElementData = daysOfMonth.get(currentMonth.year + zeroPaddedMonth)![
     new Date().getDate() - 1
 ];
-
 const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerElementData) => {
     const year = monthData.year;
     const month = (monthData.month + 1).toString().padStart(2, '0');

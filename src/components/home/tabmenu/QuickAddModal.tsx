@@ -3,11 +3,7 @@ import { Modal, View, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import {
-    getCurrentTab,
-    getShowQuickAddModal,
-    setShowQuickAddModal,
-} from 'src/redux/user/GlobalState';
+import { getShowQuickAddModal, setShowQuickAddModal } from 'src/redux/user/GlobalState';
 import * as NavigationBar from 'expo-navigation-bar';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { useNavigation } from '@react-navigation/core';
@@ -23,7 +19,6 @@ export const QuickAddModal = () => {
     const showModal = useAppSelector(getShowQuickAddModal);
     const dispatch = useAppDispatch();
 
-    const currentTab = useAppSelector(getCurrentTab);
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
     const dismiss = () => {
@@ -61,7 +56,7 @@ export const QuickAddModal = () => {
                                 imageString="image-outline"
                                 text="My Habits"
                                 onPress={() => {
-                                    navigation.navigate(Routes.MY_HABITS_CATEGORY_ELEMENT);
+                                    navigation.navigate(Routes.MANAGE_HABITS);
                                     dismiss();
                                 }}
                             />

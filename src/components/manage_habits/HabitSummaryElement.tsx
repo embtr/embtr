@@ -1,6 +1,9 @@
 import { HabitSummary } from 'resources/types/habit/Habit';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { CARD_SHADOW, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     habitSummary: HabitSummary;
@@ -9,9 +12,91 @@ interface Props {
 export const HabitSummaryElement = ({ habitSummary }: Props) => {
     const colors = useTheme().colors;
 
+    const optimalImageData: OptimalImageData = {
+        localImage: habitSummary.task.localImage,
+        remoteImageUrl: habitSummary.task.remoteImageUrl,
+    };
+
+    const nextActiveDays = habitSummary.nextActiveDays;
+
     return (
-        <View>
-            <Text style={{ color: colors.text }}>{habitSummary.task.title}</Text>
+        <View
+            style={{
+                width: '100%',
+                paddingHorizontal: 12,
+                paddingTop: 12,
+                flexDirection: 'row',
+            }}
+        >
+            <View
+                style={[
+                    {
+                        backgroundColor: '#282828',
+                        borderRadius: 9,
+                        flex: 1,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        padding: 12,
+                    },
+                    CARD_SHADOW,
+                ]}
+            >
+                <View style={{ height: 40, width: 40 }}>
+                    <OptimalImage data={optimalImageData} style={{ height: 40, width: 40 }} />
+                </View>
+                <View style={{ paddingLeft: 15, flex: 1 }}>
+                    <Text
+                        style={{
+                            color: colors.text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 18,
+                        }}
+                    >
+                        {habitSummary.task.title}
+                    </Text>
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text
+                            style={{
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 10,
+                            }}
+                        >
+                            {habitSummary.activeScheduledCount}{' '}
+                            {habitSummary.activeScheduledCount > 1 ? 'habits' : 'habit'} scheduled
+                        </Text>
+
+                        <View style={{ flex: 1 }} />
+
+                        <Text
+                            style={{
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 10,
+                            }}
+                        >
+                            next habit in
+                            <Text
+                                style={{
+                                    color: colors.accent_color,
+                                }}
+                            >
+                                {' '}
+                                {nextActiveDays ?? ''} days
+                            </Text>
+                        </Text>
+                    </View>
+                </View>
+                <View>
+                    <Ionicons
+                        name={'chevron-forward-outline'}
+                        size={18}
+                        color={colors.secondary_text}
+                    />
+                </View>
+            </View>
         </View>
     );
 };

@@ -12,6 +12,7 @@ import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { Logger } from 'src/util/GeneralUtility';
 import { getTodayPureDate } from 'src/util/DateUtility';
+import { PureDate } from 'resources/types/custom_schema/DayKey';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -77,7 +78,7 @@ export class HabitController {
     }
 
     public static async getActiveHabitsCategory(): Promise<HabitCategory | undefined> {
-        const today = getTodayPureDate();
+        const today: PureDate = getTodayPureDate();
 
         return await axiosInstance
             .get<GetHabitCategoriesResponse>('/habit/categories/active', {

@@ -47,6 +47,7 @@ export type MasterScreens = {
     AddHabitCategories: undefined;
     MyHabitsCategoryElement: undefined;
     NewUserProfilePopulation: undefined;
+    ManageHabits: undefined;
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -93,4 +94,5 @@ export namespace Routes {
     export const MY_HABITS_CATEGORY_ELEMENT = 'MyHabitsCategoryElement';
     export const ADVANCED_USER_SETTINGS = 'AdvancedUserSettings';
     export const NEW_USER_PROFILE_POPULATION = 'NewUserProfilePopulation';
+    export const MANAGE_HABITS = 'ManageHabits';
 }

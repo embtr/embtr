@@ -13,6 +13,8 @@ import { AdvancedUserSettings } from '../settings/advanced/AdvancedUserSettings'
 import { UserSettings } from '../settings/main/UserSettings';
 import { AddQuoteOfTheDay } from 'src/components/widgets/quote_of_the_day/AddQuoteOfTheDay';
 import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfilePopulation';
+import { Routes } from 'src/navigation/RootStackParamList';
+import { ManageHabits } from 'src/components/manage_habits/ManageHabits';
 
 const Stack = createStackNavigator();
 
@@ -48,10 +50,14 @@ export const SecureMainStack = () => {
                 component={AddQuoteOfTheDay}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
-
             <Stack.Screen
                 name="NewUserProfilePopulation"
                 component={NewUserProfilePopulation}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name={Routes.MANAGE_HABITS}
+                component={ManageHabits}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
         </Stack.Navigator>
