@@ -40,10 +40,7 @@ export const ManageHabits = () => {
                 />
             </View>
 
-            <HabitSummaries
-                habitSummaries={habitSummaries.data ?? []}
-                hideInactive={!showExpired}
-            />
+            <HabitSummaries habitSummaries={habitSummaries.data ?? []} showExpired={showExpired} />
         </Screen>
     );
 };

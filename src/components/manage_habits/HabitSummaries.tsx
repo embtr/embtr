@@ -1,27 +1,30 @@
-import { View, Text } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { HabitSummary } from 'resources/types/habit/Habit';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { HabitSummaryElement } from 'src/components/manage_habits/HabitSummaryElement';
 
 interface Props {
     habitSummaries: HabitSummary[];
-    hideInactive: boolean;
+    showExpired?: boolean;
 }
 
-export const HabitSummaries = ({ habitSummaries, hideInactive }: Props) => {
-    const colors = useTheme().colors;
+export const HabitSummaries = ({ habitSummaries, showExpired }: Props) => {
+    const habits = showExpired
+        ? habitSummaries
+        : habitSummaries.filter((habitSummary) => {
+              return habitSummary.nextHabitDays != undefined && habitSummary.nextHabitDays >= 0;
+          });
 
-    const habits = hideInactive
-        ? habitSummaries.filter((habitSummary) => {
-              return habitSummary.nextHabitDays && habitSummary.nextHabitDays > 0;
-          })
-        : habitSummaries;
+    const renderItem = ({ item }: { item: HabitSummary }) => {
+        return <HabitSummaryElement habitSummary={item} />;
+    };
+
+    const keyExtractor = (item: HabitSummary, index: number) => {
+        return item.task.id ? item.task.id.toString() : '';
+    };
 
     return (
-        <View>
-            {habits.map((habitSummary) => {
-                return <HabitSummaryElement habitSummary={habitSummary} />;
-            })}
+        <View style={{ flex: 1 }}>
+            <FlatList data={habits} renderItem={renderItem} keyExtractor={keyExtractor} />
         </View>
     );
 };
