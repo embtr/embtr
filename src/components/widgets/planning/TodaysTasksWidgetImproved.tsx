@@ -1,16 +1,10 @@
 import { WidgetBase } from '../WidgetBase';
 import { View, Text } from 'react-native';
-import {
-    CARD_SHADOW,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-    TIMELINE_CARD_PADDING,
-} from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { PlanToday } from 'src/components/plan/planning/PlanToday';
+import { Checkbox } from 'src/components/checkbox/Checkbox';
 
 export const TodaysTasksWidgetImproved = () => {
     const colors = useTheme().colors;
@@ -24,37 +18,13 @@ export const TodaysTasksWidgetImproved = () => {
                 </Text>
                 <View style={{ flex: 1 }} />
 
-                <Text
-                    style={{
-                        color: colors.secondary_text,
-                        fontFamily: POPPINS_REGULAR,
-                        fontSize: 12,
-                    }}
-                >
-                    hide complete
-                </Text>
-                <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
-
-                <TouchableOpacity
-                    onPress={() => {
+                <Checkbox
+                    text={'Hide Complete'}
+                    checked={hideComplete}
+                    onCheck={() => {
                         setHideComplete(!hideComplete);
                     }}
-                    style={[
-                        {
-                            backgroundColor: '#404040',
-                            borderRadius: 5,
-                            paddingHorizontal: 4,
-                            paddingVertical: 2,
-                        },
-                        CARD_SHADOW,
-                    ]}
-                >
-                    <Ionicons
-                        name={'checkmark-done-sharp'}
-                        size={20}
-                        color={hideComplete ? colors.accent_color : colors.secondary_text}
-                    />
-                </TouchableOpacity>
+                />
             </View>
 
             <View style={{ paddingTop: TIMELINE_CARD_PADDING }} />

@@ -17,7 +17,74 @@ export const HabitSummaryElement = ({ habitSummary }: Props) => {
         remoteImageUrl: habitSummary.task.remoteImageUrl,
     };
 
-    const nextActiveDays = habitSummary.nextActiveDays;
+    const nextHabitDays = habitSummary.nextHabitDays;
+    const lastHabitDays = habitSummary.lastHabitDays;
+
+    const nextHabitInFuture = nextHabitDays && nextHabitDays > 0;
+    const nextHabitIsToday =
+        (nextHabitDays !== undefined && nextHabitDays === 0) ||
+        (lastHabitDays !== undefined && lastHabitDays === 0);
+    const lastHabitInPast = lastHabitDays && lastHabitDays > 0;
+
+    let habitView: JSX.Element = <View />;
+    if (nextHabitInFuture) {
+        habitView = (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                    style={{
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 10,
+                    }}
+                >
+                    next habit in
+                    <Text
+                        style={{
+                            color: colors.accent_color,
+                        }}
+                    >
+                        {' '}
+                        {nextHabitDays} day{nextHabitDays === 1 ? '' : 's'}
+                    </Text>
+                </Text>
+            </View>
+        );
+    } else if (nextHabitIsToday) {
+        habitView = (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                    style={{
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 10,
+                    }}
+                >
+                    next habit is
+                    <Text
+                        style={{
+                            color: colors.accent_color,
+                        }}
+                    >
+                        {' today'}
+                    </Text>
+                </Text>
+            </View>
+        );
+    } else if (lastHabitInPast) {
+        habitView = (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text
+                    style={{
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 10,
+                    }}
+                >
+                    last habit {lastHabitDays} day{lastHabitDays === 1 ? '' : 's'} ago
+                </Text>
+            </View>
+        );
+    }
 
     return (
         <View
@@ -67,26 +134,8 @@ export const HabitSummaryElement = ({ habitSummary }: Props) => {
                             {habitSummary.activeScheduledCount}{' '}
                             {habitSummary.activeScheduledCount > 1 ? 'habits' : 'habit'} scheduled
                         </Text>
-
                         <View style={{ flex: 1 }} />
-
-                        <Text
-                            style={{
-                                color: colors.secondary_text,
-                                fontFamily: POPPINS_REGULAR,
-                                fontSize: 10,
-                            }}
-                        >
-                            next habit in
-                            <Text
-                                style={{
-                                    color: colors.accent_color,
-                                }}
-                            >
-                                {' '}
-                                {nextActiveDays ?? ''} days
-                            </Text>
-                        </Text>
+                        {habitView}
                     </View>
                 </View>
                 <View>
