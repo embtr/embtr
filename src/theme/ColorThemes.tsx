@@ -81,7 +81,7 @@ export const lightColors = {
     google_login_text: '#757575',
 
     // REAL COLORS
-    timeline_card_background: '#FFFFFF',
+    card_background: '#FFFFFF',
     background: '#f6f6f6',
     accent_color_dark: '##673cb5',
     accent_color: 'orange',
@@ -178,7 +178,7 @@ export const darkColors = {
     google_login_text: '#FFFFFF',
 
     // REAL COLORS
-    timeline_card_background: '#282828',
+    card_background: '#282828',
     accent_color_dark: '#673cb5',
     accent_color: '#9154FF',
     accent_color_light: '#9F78E7',

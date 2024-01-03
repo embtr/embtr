@@ -187,7 +187,7 @@ export const NewUserProfilePopulation = () => {
                 <View style={{ alignItems: 'center', paddingHorizontal: TIMELINE_CARD_PADDING }}>
                     <View
                         style={{
-                            backgroundColor: colors.timeline_card_background,
+                            backgroundColor: colors.card_background,
                             height: getWindowHeight() / 4,
                             width: '100%',
                             borderRadius: 10,

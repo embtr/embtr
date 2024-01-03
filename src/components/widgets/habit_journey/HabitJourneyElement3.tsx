@@ -125,8 +125,8 @@ export const HabitJourneyElement3 = ({ habitJourney }: Props) => {
                     fillShadowGradientFromOpacity: 0.1,
                     fillShadowGradientToOpacity: 1,
                     decimalPlaces: 0,
-                    backgroundGradientFrom: colors.timeline_card_background,
-                    backgroundGradientTo: colors.timeline_card_background,
+                    backgroundGradientFrom: colors.card_background,
+                    backgroundGradientTo: colors.card_background,
                     color: (opacity = 1) =>
                         isDark ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
                     labelColor: (opacity = 1) =>

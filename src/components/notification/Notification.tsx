@@ -51,7 +51,7 @@ export const Notification = ({ notification }: Props) => {
             <View style={{ width: '100%', alignContent: 'center', alignItems: 'center' }}>
                 <View
                     style={{
-                        backgroundColor: colors.timeline_card_background,
+                        backgroundColor: colors.card_background,
                         width: '95%',
                         borderRadius: 15,
                     }}
@@ -97,7 +97,7 @@ export const Notification = ({ notification }: Props) => {
                                         size={16}
                                         color={
                                             notification.read
-                                                ? colors.timeline_card_background
+                                                ? colors.card_background
                                                 : colors.notification_dot
                                         }
                                     />

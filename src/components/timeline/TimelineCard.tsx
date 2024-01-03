@@ -61,7 +61,7 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
             <View
                 style={[
                     {
-                        backgroundColor: colors.timeline_card_background,
+                        backgroundColor: colors.card_background,
                         borderRadius: 9,
                         padding: 12,
                     },

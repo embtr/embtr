@@ -48,6 +48,12 @@ export type MasterScreens = {
     MyHabitsCategoryElement: undefined;
     NewUserProfilePopulation: undefined;
     ManageHabits: undefined;
+    HabitSummaryDetails: { id: number };
+    CreateEditScheduledHabit: {
+        habitId?: number;
+        isCreateCustomHabit?: boolean;
+        scheduledHabitId?: number;
+    };
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -84,6 +90,7 @@ export type RootStackParamList = {
 };
 
 export namespace Routes {
+    export const GOALS: keyof MasterScreens = 'Goals';
     export const USER_POST_DETAILS = 'UserPostDetails';
     export const CREATE_USER_POST = 'CreateUserPost';
     export const DAILY_RESULT_DETAILS = 'DailyResultDetails';
@@ -95,4 +102,5 @@ export namespace Routes {
     export const ADVANCED_USER_SETTINGS = 'AdvancedUserSettings';
     export const NEW_USER_PROFILE_POPULATION = 'NewUserProfilePopulation';
     export const MANAGE_HABITS = 'ManageHabits';
+    export const HABIT_SUMMARY_DETAILS = 'HabitSummaryDetails';
 }

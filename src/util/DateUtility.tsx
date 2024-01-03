@@ -40,6 +40,11 @@ export const formatDate = (date: Date): string => {
     return formatted;
 };
 
+export const getDateNumeric = (date: Date): string => {
+    const formatted = format(addMinutes(date, date.getTimezoneOffset()), 'yyyy-MM-dd');
+    return formatted;
+};
+
 export const getDatePrettyFullMonth = (date: Date): string => {
     const formatted = format(addMinutes(date, date.getTimezoneOffset()), 'MMMM dd');
     return formatted;

@@ -79,7 +79,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
     return (
         <View
             style={{
-                backgroundColor: colors.timeline_card_background,
+                backgroundColor: colors.card_background,
                 width: '100%',
                 height: 280,
                 borderRadius: 9,

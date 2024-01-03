@@ -15,6 +15,7 @@ import { AddQuoteOfTheDay } from 'src/components/widgets/quote_of_the_day/AddQuo
 import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfilePopulation';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { ManageHabits } from 'src/components/manage_habits/ManageHabits';
+import { HabitSummaryDetails } from '../manage_habits/HabitSummaryDetails';
 
 const Stack = createStackNavigator();
 
@@ -60,6 +61,7 @@ export const SecureMainStack = () => {
                 component={ManageHabits}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
+            <Stack.Screen name={Routes.HABIT_SUMMARY_DETAILS} component={HabitSummaryDetails} />
         </Stack.Navigator>
     );
 };

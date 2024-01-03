@@ -5,6 +5,7 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 import {
     CreateScheduledHabitRequest,
     GetScheduledHabitResponse,
+    GetScheduledHabitsResponse,
 } from 'resources/types/requests/ScheduledHabitTypes';
 
 export class ScheduledHabitController {
@@ -48,9 +49,33 @@ export class ScheduledHabitController {
             return undefined;
         }
     }
+
+    public static async getScheduledHabitsByHabit(
+        habitId: number
+    ): Promise<ScheduledHabit[] | undefined> {
+        try {
+            const success = await axiosInstance.get<GetScheduledHabitResponse>(
+                `/habit/${habitId}/schedules`
+            );
+            const data: GetScheduledHabitsResponse = success.data;
+            return data.scheduledHabits;
+        } catch (error) {
+            return undefined;
+        }
+    }
 }
 
 export namespace ScheduledHabitCustomHooks {
+    export const useScheduledHabitsByHabit = (habitId: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['scheduledHabitsByHabit', habitId],
+            queryFn: async () => await ScheduledHabitController.getScheduledHabitsByHabit(habitId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            enabled: !!habitId,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
     export const useScheduledHabit = (id: number) => {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['scheduledHabit', id],

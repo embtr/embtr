@@ -1,9 +1,11 @@
 import { HabitSummary } from 'resources/types/habit/Habit';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { Ionicons } from '@expo/vector-icons';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Routes } from 'src/navigation/RootStackParamList';
 
 interface Props {
     habitSummary: HabitSummary;
@@ -98,7 +100,7 @@ export const HabitSummaryElement = ({ habitSummary }: Props) => {
             <View
                 style={[
                     {
-                        backgroundColor: '#282828',
+                        backgroundColor: colors.card_background,
                         borderRadius: 9,
                         flex: 1,
                         flexDirection: 'row',
@@ -111,7 +113,7 @@ export const HabitSummaryElement = ({ habitSummary }: Props) => {
                 <View style={{ height: 40, width: 40 }}>
                     <OptimalImage data={optimalImageData} style={{ height: 40, width: 40 }} />
                 </View>
-                <View style={{ paddingLeft: 15, flex: 1 }}>
+                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, flex: 1 }}>
                     <Text
                         style={{
                             color: colors.text,
