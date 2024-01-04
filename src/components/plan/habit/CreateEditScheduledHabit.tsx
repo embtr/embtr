@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -22,6 +22,7 @@ import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { useDispatch } from 'react-redux';
 import { setGlobalLoading } from 'src/redux/user/GlobalState';
+import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -42,11 +43,12 @@ export const runCreateEditScheduledHabitAnimation = (
 
 export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
-    const route = useRoute<RouteProp<RootStackParamList, 'CreateEditScheduledHabit'>>();
+    const route = useEmbtrRoute(Routes.CREATE_EDIT_SCHEDULED_HABIT);
 
     const habitId = route.params.habitId; // creating a new habit from a template
     const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
     const isCreateCustomHabit = route.params.isCreateCustomHabit; // creating a new custom habit
+    const onExit = route.params.onExit;
 
     const editMode = isCreateCustomHabit
         ? CreateEditHabitMode.CREATE_CUSTOM_HABIT
@@ -127,6 +129,7 @@ export const CreateEditScheduledHabit = () => {
                     <CreateEditHabitSaveButton
                         habitId={habitId}
                         scheduledHabitId={scheduledHabitId}
+                        onExit={onExit}
                     />
                 </SafeAreaView>
             </Screen>

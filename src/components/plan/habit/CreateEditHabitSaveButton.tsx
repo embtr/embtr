@@ -7,7 +7,7 @@ import {
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import { PlannedTask, ScheduledHabit } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
@@ -29,6 +29,7 @@ interface Props {
     scheduledHabitId?: number;
     plannedHabitId?: number;
     newPlannedHabitData?: NewPlannedHabitData;
+    onExit?: () => void;
 }
 
 export const CreateEditHabitSaveButton = ({
@@ -36,6 +37,7 @@ export const CreateEditHabitSaveButton = ({
     scheduledHabitId,
     plannedHabitId,
     newPlannedHabitData,
+    onExit,
 }: Props) => {
     const { colors } = useTheme();
 
@@ -62,6 +64,11 @@ export const CreateEditHabitSaveButton = ({
     const todayKey = useAppSelector(getTodayKey);
     const selectedDayKey = useAppSelector(getSelectedDayKey);
     const dayKeyToUse = currentTab === TABS.TODAY ? todayKey : selectedDayKey;
+
+    const routes = navigation.getState().routes;
+    const previousRoute = routes[routes.length - 2];
+    const isFromHabitSummaryDetails =
+        previousRoute.name.toString() === Routes.HABIT_SUMMARY_DETAILS;
 
     const createUpdatedPlannedTask = (id: number) => {
         const plannedTask: PlannedTask = {
@@ -234,7 +241,16 @@ export const CreateEditHabitSaveButton = ({
         }
 
         await PlannedDayController.prefetchPlannedDayData(dayKeyToUse);
-        navigation.popToTop();
+
+        if (isFromHabitSummaryDetails) {
+            if (onExit) {
+                onExit();
+            }
+
+            navigation.goBack();
+        } else {
+            navigation.popToTop();
+        }
     };
 
     const buttonText = editMode === CreateEditHabitMode.CREATE_NEW_HABIT ? 'Create' : 'Update';

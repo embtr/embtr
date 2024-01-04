@@ -6,9 +6,10 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
+import { getOpenMenu, getCloseMenu, setMenuOptions, getShowCardShadow } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 interface Props {
     name: string;
@@ -270,6 +271,7 @@ export const Banner = ({
                     )}
                 </View>
             </View>
+
         </View>
     );
 };

@@ -7,6 +7,7 @@ import {
     GetScheduledHabitResponse,
     GetScheduledHabitsResponse,
 } from 'resources/types/requests/ScheduledHabitTypes';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export class ScheduledHabitController {
     public static async create(scheduledHabit: ScheduledHabit) {
@@ -62,6 +63,10 @@ export class ScheduledHabitController {
         } catch (error) {
             return undefined;
         }
+    }
+
+    public static async invalidateScheduledHabitsByHabit(habitId: number) {
+        await reactQueryClient.invalidateQueries(['scheduledHabitsByHabit', habitId]);
     }
 }
 

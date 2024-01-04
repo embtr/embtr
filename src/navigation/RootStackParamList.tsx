@@ -1,6 +1,7 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility';
+import { QueryKey } from '@tanstack/react-query';
 
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>;
@@ -50,6 +51,7 @@ export type MasterScreens = {
     ManageHabits: undefined;
     HabitSummaryDetails: { id: number };
     CreateEditScheduledHabit: {
+        onExit?: () => void;
         habitId?: number;
         isCreateCustomHabit?: boolean;
         scheduledHabitId?: number;
@@ -77,11 +79,6 @@ export type RootStackParamList = {
     // in-app screens without tab bar
     AddHabitCategory: { id?: number; type?: HabitCategoryType };
     AddHabitCategories: undefined;
-    CreateEditScheduledHabit: {
-        habitId?: number;
-        isCreateCustomHabit?: boolean;
-        scheduledHabitId?: number;
-    };
 
     EditPlannedHabit: {
         plannedTaskId?: number;
