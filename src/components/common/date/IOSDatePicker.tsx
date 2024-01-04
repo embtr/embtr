@@ -18,6 +18,14 @@ export const IOSDatePicker = ({ date, onConfirm, onCancel, visible }: Props) => 
     const [currentDate, setCurrentDate] = React.useState(date);
     const [pickerWidth, setPickerWidth] = React.useState(0);
 
+    // need this to refresh date while loading data
+    // so the actual date is displayed, not new Date()
+    React.useEffect(() => {
+        setCurrentDate(date);
+    }, [date]);
+
+    console.log('date', currentDate);
+
     return (
         <ModalBase visible={visible}>
             <Modal visible={visible} transparent={true} animationType="fade">
@@ -39,6 +47,7 @@ export const IOSDatePicker = ({ date, onConfirm, onCancel, visible }: Props) => 
                         }}
                     >
                         <RNDateTimePicker
+                            timeZoneOffsetInMinutes={0}
                             onLayout={(event) => {
                                 setPickerWidth(event.nativeEvent.layout.width);
                             }}

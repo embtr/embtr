@@ -54,7 +54,7 @@ export const ScheduleHabitRepeatingSchedule = () => {
                 }}
             />
         );
-    }, [startDateDatePickerModalVisible]);
+    }, [startDate, startDateDatePickerModalVisible]);
 
     const endDateDatePickerMemo = React.useMemo(() => {
         return (
@@ -70,10 +70,10 @@ export const ScheduleHabitRepeatingSchedule = () => {
                 }}
             />
         );
-    }, [endDateDatePickerModalVisible]);
+    }, [endDate, endDateDatePickerModalVisible]);
 
     return (
-        <View style={{paddingBottom: TIMELINE_CARD_PADDING}}>
+        <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
             {startDateDatePickerMemo}
             {endDateDatePickerMemo}
 
