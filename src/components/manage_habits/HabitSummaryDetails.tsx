@@ -1,4 +1,4 @@
-import { View, Pressable } from 'react-native';
+import { View, Pressable, FlatList } from 'react-native';
 import { HabitSummaryCustomHooks } from 'src/controller/habit/HabitSummaryController';
 import {
     ScheduledHabitController,
@@ -11,6 +11,7 @@ import { Routes } from 'src/navigation/RootStackParamList';
 import { HabitSummaryDetailsElement } from './HabitSummaryDetailsElement';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { HabitSummaryDetailsHeader } from './HabitSummaryDetailsHeader';
+import { ScheduledHabit } from 'resources/schema';
 
 export const HabitSummaryDetails = () => {
     const navigation = useEmbtrNavigation();
@@ -24,55 +25,52 @@ export const HabitSummaryDetails = () => {
     if (!habitSummary.data || !scheduledHabits.data) {
         return (
             <Screen>
-                <Banner
-                    name={'Habit Summary'}
-                    leftText={'close'}
-                    leftOnClick={() => navigation.goBack()}
-                />
+                <Banner leftRoute="BACK" leftIcon={'arrow-back'} name={'Manage Habit'} />
             </Screen>
         );
     }
 
-    const elements = scheduledHabits.data.map((scheduledHabit) => {
+    const renderItem = ({ item }: { item: ScheduledHabit }) => {
         return (
-            <View key={scheduledHabit.id}>
-                <Pressable
-                    onPress={() => {
-                        if (!scheduledHabit.id) {
-                            return;
-                        }
+            <Pressable
+                onPress={() => {
+                    if (!item.id) {
+                        return;
+                    }
 
-                        navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
-                            scheduledHabitId: scheduledHabit.id,
-                            onExit: () => {
-                                if (!scheduledHabit.id) {
-                                    return;
-                                }
+                    navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
+                        scheduledHabitId: item.id,
+                        onExit: () => {
+                            if (!item.id) {
+                                return;
+                            }
 
-                                ScheduledHabitController.invalidateScheduledHabitsByHabit(habitId);
-                            },
-                        });
-                    }}
-                >
-                    <HabitSummaryDetailsElement scheduledHabit={scheduledHabit} />
-                </Pressable>
-            </View>
+                            ScheduledHabitController.invalidateScheduledHabitsByHabit(habitId);
+                        },
+                    });
+                }}
+            >
+                <HabitSummaryDetailsElement scheduledHabit={item} />
+            </Pressable>
         );
-    });
+    };
+
+    const keyExtractor = (item: ScheduledHabit, index: number) => {
+        return item.id ? item.id.toString() : '';
+    };
 
     return (
         <Screen>
-            <Banner
-                name={'Manage Habit'}
-                leftText={'close'}
-                leftOnClick={() => navigation.goBack()}
-            />
+            <Banner leftRoute="BACK" leftIcon={'arrow-back'} name={'Manage Habit'} />
 
             <View style={{ padding: TIMELINE_CARD_PADDING }}>
                 <HabitSummaryDetailsHeader habitSummary={habitSummary.data} />
             </View>
-            <View style={{ height: TIMELINE_CARD_PADDING }} />
-            <View>{elements}</View>
+            <FlatList
+                data={scheduledHabits.data}
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
+            />
         </Screen>
     );
 };

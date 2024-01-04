@@ -24,8 +24,6 @@ export const IOSDatePicker = ({ date, onConfirm, onCancel, visible }: Props) => 
         setCurrentDate(date);
     }, [date]);
 
-    console.log('date', currentDate);
-
     return (
         <ModalBase visible={visible}>
             <Modal visible={visible} transparent={true} animationType="fade">
