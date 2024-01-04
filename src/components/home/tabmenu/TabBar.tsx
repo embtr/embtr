@@ -10,6 +10,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { CARD_SHADOW } from 'src/util/constants';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setShowQuickAddModal } from 'src/redux/user/GlobalState';
+import { Image } from 'expo-image';
+import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
@@ -96,7 +98,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             element = <UserTabElement size={iconSize} />;
         } else {
             element = (
-                <Pressable
+                <TouchableOpacity
                     onPress={() => {
                         dispatch(setShowQuickAddModal(true));
                     }}
@@ -112,22 +114,27 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
                 >
                     <View
                         style={[
-                            CARD_SHADOW,
                             {
-                                backgroundColor: colors.accent_color,
+                                backgroundColor: '#404040',
                                 borderRadius: 50,
                                 height: 60,
                                 width: 60,
-
                                 bottom: 25,
                                 justifyContent: 'center',
                                 alignItems: 'center',
+                                ...ShadowUtility.getShadow(65),
                             },
                         ]}
                     >
-                        <Ionicons name="add" size={40} color={colors.text} style={{ left: 1.5 }} />
+                        <Image
+                            source={require('assets/logo.png')}
+                            style={{
+                                width: 40,
+                                height: 40,
+                            }}
+                        />
                     </View>
-                </Pressable>
+                </TouchableOpacity>
             );
         }
 

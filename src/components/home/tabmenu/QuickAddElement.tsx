@@ -23,8 +23,8 @@ export const QuickAddElement = ({ imageString, isClose, text, onPress }: Props) 
                 onPress={onPress}
                 style={{
                     backgroundColor: isClose ? colors.tab_selected : backgroundColor,
-                    height: circleSize,
-                    width: circleSize,
+                    height: isClose ? 60 : circleSize,
+                    width: isClose ? 60 : circleSize,
                     borderRadius: 50,
                     alignItems: 'center',
                     justifyContent: 'center',

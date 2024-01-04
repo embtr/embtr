@@ -5,7 +5,7 @@ export namespace ShadowUtility {
 
     export const getShadow = (intensity: number) => {
         const shadow = {
-            shadowColor: '#FFF',
+            shadowColor: '#000',
             shadowOffset: {
                 width: 0,
                 height: 2,

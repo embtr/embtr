@@ -107,9 +107,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                     </View>
                 </View>
             ) : (
-                <Text style={{ color: colors.secondary_text, paddingLeft: 5 }}>
-                    no recent daily results...
-                </Text>
+                <Text style={{ color: colors.secondary_text }}>no recent daily results...</Text>
             )}
         </WidgetBase>
     );
