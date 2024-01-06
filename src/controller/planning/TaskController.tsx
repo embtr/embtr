@@ -142,17 +142,6 @@ class TaskController {
             });
     }
 
-    public static async getRecommended(): Promise<NewTaskModel[]> {
-        return await axiosInstance
-            .get(`${TASK}recommended`)
-            .then((success) => {
-                return success.data.tasks;
-            })
-            .catch((error) => {
-                return [];
-            });
-    }
-
     public static async updatePreference(task: Task, unit?: Unit, quantity?: number) {
         const request: TaskPreferenceRequest = {
             unitId: unit?.id,
