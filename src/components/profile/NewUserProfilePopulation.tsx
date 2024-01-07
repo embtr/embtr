@@ -22,6 +22,10 @@ import UserController, { UserCustomHooks } from 'src/controller/user/UserControl
 import { Code } from 'resources/codes';
 import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
 import { Checkbox } from 'src/components/checkbox/Checkbox';
+import {
+    MetadataController,
+    MetadataCustomHooks,
+} from 'src/controller/metadata/MetadataController';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -51,6 +55,7 @@ export const NewUserProfilePopulation = () => {
 
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
+    const termsVersion = MetadataCustomHooks.useTermsVersionMetadata();
     const currentUser = UserCustomHooks.useCurrentUser();
     React.useEffect(() => {
         if (currentUser.data) {
@@ -94,11 +99,13 @@ export const NewUserProfilePopulation = () => {
     };
 
     const submitProfileData = async () => {
+        const terms = termsVersion.data ? Number(termsVersion.data) : 0;
         const userClone = { ...currentUser.data };
         userClone.username = username;
         userClone.displayName = displayName;
         userClone.bio = bio;
         userClone.photoUrl = userProfileUrl;
+        userClone.termsVersion = terms;
 
         const updateUserResponse = await UserController.setup(userClone);
         if (updateUserResponse === undefined) {
@@ -146,7 +153,7 @@ export const NewUserProfilePopulation = () => {
         setUsername(username);
     };
 
-    const formValid = termsApproved && usernameAvailabilityResult.available;
+    const formValid = !!termsVersion.data && termsApproved && usernameAvailabilityResult.available;
 
     return (
         <Pressable
