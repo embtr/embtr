@@ -36,9 +36,27 @@ const createFooter = (hasMore: boolean, colors: any) => {
 
 const renderItem = (item: TimelineElement) => {
     if (item.type === TimelineElementType.USER_POST && item.userPost) {
-        return <UserPostTimelineElement initialUserPost={item.userPost} />;
+        return (
+            <View
+                style={{
+                    paddingTop: TIMELINE_CARD_PADDING,
+                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                }}
+            >
+                <UserPostTimelineElement initialUserPost={item.userPost} />
+            </View>
+        );
     } else if (item.type === TimelineElementType.PLANNED_DAY_RESULT && item.plannedDayResult) {
-        return <PlannedDayResultTimelineElement initialPlannedDayResult={item.plannedDayResult} />;
+        return (
+            <View
+                style={{
+                    paddingTop: TIMELINE_CARD_PADDING,
+                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                }}
+            >
+                <PlannedDayResultTimelineElement initialPlannedDayResult={item.plannedDayResult} />
+            </View>
+        );
     }
 
     return <View />;

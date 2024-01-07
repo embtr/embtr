@@ -1,24 +1,30 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
-import { PostDetails } from 'src/components/common/comments/PostDetails';
 import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story/StoryController';
 import { Alert, View } from 'react-native';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment } from 'resources/schema';
-import { useAppDispatch } from 'src/redux/Hooks';
-import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { addTimelineCardRefreshRequest, getCloseMenu } from 'src/redux/user/GlobalState';
 import { UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
-import { PostUtility } from 'src/util/post/PostUtility';
-import { TimelineController } from 'src/controller/timeline/TimelineController';
+import { Banner } from 'src/components/common/Banner';
+import {
+    createEmbtrMenuOptions,
+    EmbtrMenuOption,
+} from 'src/components/common/menu/EmbtrMenuOption';
+import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
+import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableTextInputBox';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
+import * as React from 'react';
+import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
 
 export const UserPostDetails = () => {
-    const { colors } = useTheme();
-
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const closeMenu = useAppSelector(getCloseMenu);
 
     const dispatch = useAppDispatch();
     const userPost = StoryCustomHooks.useStory(route.params.id);
@@ -31,8 +37,6 @@ export const UserPostDetails = () => {
         );
     }
 
-    const userPostTimelinePost = PostUtility.createUserPostTimelineModel(userPost.data);
-    console.log(userPostTimelinePost.id, userPostTimelinePost.likes.length);
     const userIsPostOwner = userPost.data?.user?.uid === getAuth().currentUser?.uid;
 
     const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
@@ -63,7 +67,7 @@ export const UserPostDetails = () => {
             return;
         }
 
-        navigation.navigate('EditUserPostDetails', { id: userPost.data.id });
+        navigation.navigate(Routes.EDIT_USER_POST_DETAILS, { id: userPost.data.id });
     };
 
     const deletePost = () => {
@@ -95,19 +99,54 @@ export const UserPostDetails = () => {
                         navigation.navigate('Timeline');
                     },
                 },
-            ]
+            ],
+            { cancelable: true }
         );
     };
 
+    const menuItems: EmbtrMenuOption[] = [
+        {
+            name: 'Edit',
+            onPress: () => {
+                navigateToEdit();
+                closeMenu();
+            },
+        },
+        {
+            name: 'Delete',
+            onPress: () => {
+                deletePost();
+                closeMenu();
+            },
+            destructive: true,
+        },
+    ];
+
+    const comments = userPost.data?.comments ?? [];
+
     return (
-        <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
-            <PostDetails
-                timelinePostModel={userPostTimelinePost}
-                submitComment={submitComment}
-                deleteComment={deleteComment}
-                onEdit={navigateToEdit}
-                onDelete={deletePost}
-            />
-        </View>
+        <Screen>
+            {userIsPostOwner ? (
+                <Banner
+                    name={'Post Details'}
+                    leftIcon={'arrow-back'}
+                    leftRoute="BACK"
+                    rightIcon={'ellipsis-horizontal'}
+                    menuOptions={createEmbtrMenuOptions(menuItems)}
+                />
+            ) : (
+                <Banner name={'Post Details'} leftIcon={'arrow-back'} leftRoute="BACK" />
+            )}
+
+            {userIsPostOwner && <EmbtrMenuCustom />}
+
+            <ScrollableTextInputBox submitComment={submitComment}>
+                <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
+                    <UserPostTimelineElement initialUserPost={userPost.data} />
+                </View>
+
+                <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
+            </ScrollableTextInputBox>
+        </Screen>
     );
 };

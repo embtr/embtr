@@ -15,6 +15,7 @@ import { TimelinePostModel } from 'src/model/OldModels';
 import { TimelineCard } from 'src/components/timeline/TimelineCard';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { View } from 'react-native';
+import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
 
 interface Props {
     timelinePostModel: TimelinePostModel;

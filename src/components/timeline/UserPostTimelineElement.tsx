@@ -49,7 +49,6 @@ export const UserPostTimelineElement = ({ initialUserPost }: Props) => {
         }
 
         await StoryController.addLikeViaApi(userPost.id);
-        StoryController.invalidate(userPost.id);
         setModified(true);
     };
 

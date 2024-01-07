@@ -1,66 +1,63 @@
 import * as React from 'react';
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { PostDetails } from 'src/components/common/comments/PostDetails';
 import { Alert, View } from 'react-native';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, {
+    PlannedDayResultCustomHooks,
+} from 'src/controller/timeline/daily_result/DailyResultController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import { Comment, PlannedDayResult, User } from 'resources/schema';
-import Toast from 'react-native-root-toast';
-import { useAppDispatch } from 'src/redux/Hooks';
-import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { addTimelineCardRefreshRequest, getCloseMenu } from 'src/redux/user/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
-import { PostUtility } from 'src/util/post/PostUtility';
+import { Banner } from 'src/components/common/Banner';
+import {
+    createEmbtrMenuOptions,
+    EmbtrMenuOption,
+} from 'src/components/common/menu/EmbtrMenuOption';
+import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
+import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableTextInputBox';
+import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { PlannedDayResultTimelineElement } from 'src/components/timeline/PlannedDayResultTimelineElement';
 
+//TODO delete PostDetails.tsx
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const closeMenu = useAppSelector(getCloseMenu);
     const dispatch = useAppDispatch();
 
-    const [plannedDayResult, setPlannedDayResult] = React.useState<PlannedDayResult | undefined>(
-        undefined
-    );
+    const plannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(route.params.id);
 
-    const fetchData = async () => {
-        const plannedDayResult = await DailyResultController.getViaApi(route.params.id);
-        if (plannedDayResult) {
-            setPlannedDayResult(plannedDayResult);
-        } else {
-            Toast.show('Post no longer exists!', {
-                duration: Toast.durations.LONG,
-                containerStyle: { backgroundColor: 'white', marginBottom: 80 },
-                textStyle: { color: 'black' },
-            });
-            navigation.goBack();
-        }
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchData();
-        }, [])
-    );
+    if (!plannedDayResult.data) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
 
     const submitComment = async (text: string, taggedUsers: User[]) => {
-        if (plannedDayResult?.id) {
-            await DailyResultController.addCommentViaApi(plannedDayResult.id, text);
-            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
-            fetchData();
+        if (plannedDayResult.data?.id) {
+            await DailyResultController.addCommentViaApi(plannedDayResult.data.id, text);
+            //TODO - make sure this works
+            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.data.id));
         }
     };
 
     const deleteComment = async (comment: Comment) => {
-        if (plannedDayResult?.id) {
+        if (plannedDayResult.data?.id) {
             await DailyResultController.deleteCommentViaApi(comment);
-            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
-            fetchData();
+            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.data.id));
         }
     };
 
     const onEdit = () => {
-        if (plannedDayResult?.id) {
-            navigation.navigate('EditDailyResultDetails', { id: plannedDayResult.id });
+        if (plannedDayResult.data?.id) {
+            navigation.navigate('EditDailyResultDetails', { id: plannedDayResult.data.id });
         }
     };
 
@@ -69,16 +66,23 @@ export const DailyResultDetails = () => {
             'Delete Daily Result',
             'Are you sure you want to delete this Daily Result? Any future modifications to this day will restore it..',
             [
-                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+                {
+                    text: 'Cancel',
+                    onPress: () => {},
+                    style: 'cancel',
+                },
                 {
                     text: 'I am sure. Delete it.',
                     onPress: async () => {
-                        const clone: PlannedDayResult = { ...plannedDayResult, active: false };
+                        if (!plannedDayResult.data?.id) {
+                            return;
+                        }
+
+                        const clone: PlannedDayResult = { ...plannedDayResult.data, active: false };
                         await DailyResultController.updateViaApi(clone);
-                        setPlannedDayResult(clone);
-                        if (plannedDayResult?.plannedDay?.dayKey) {
+                        if (plannedDayResult.data?.plannedDay?.dayKey) {
                             PlannedDayController.prefetchPlannedDayData(
-                                plannedDayResult.plannedDay.dayKey
+                                plannedDayResult.data.plannedDay.dayKey
                             );
                         }
                         navigation.goBack();
@@ -88,15 +92,23 @@ export const DailyResultDetails = () => {
         );
     };
 
-    const onLike = async () => {
-        if (!plannedDayResult?.id) {
-            return;
-        }
-
-        await DailyResultController.addLikeViaApi(plannedDayResult!.id);
-        dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
-        fetchData();
-    };
+    const menuItems: EmbtrMenuOption[] = [
+        {
+            name: 'Edit',
+            onPress: () => {
+                onEdit();
+                closeMenu();
+            },
+        },
+        {
+            name: 'Delete',
+            onPress: () => {
+                onDelete();
+                closeMenu();
+            },
+            destructive: true,
+        },
+    ];
 
     if (!plannedDayResult) {
         return (
@@ -106,18 +118,33 @@ export const DailyResultDetails = () => {
         );
     }
 
-    const timelinePostModel = PostUtility.createDayResultTimelineModel(plannedDayResult);
+    const userIsAuthor = plannedDayResult.data?.plannedDay?.user?.uid === getCurrentUid();
+    const comments = plannedDayResult.data?.comments ?? [];
 
     return (
-        <View style={{ width: '100%', height: '100%' }}>
-            <PostDetails
-                timelinePostModel={timelinePostModel}
-                onLike={onLike}
-                submitComment={submitComment}
-                deleteComment={deleteComment}
-                onEdit={onEdit}
-                onDelete={onDelete}
-            />
-        </View>
+        <Screen>
+            {userIsAuthor ? (
+                <Banner
+                    name={'Post Details'}
+                    leftIcon={'arrow-back'}
+                    leftRoute="BACK"
+                    rightIcon={'ellipsis-horizontal'}
+                    menuOptions={createEmbtrMenuOptions(menuItems)}
+                />
+            ) : (
+                <Banner name={'Post Details'} leftIcon={'arrow-back'} leftRoute="BACK" />
+            )}
+
+            {userIsAuthor && <EmbtrMenuCustom />}
+
+            <ScrollableTextInputBox submitComment={submitComment}>
+                <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
+                    <PlannedDayResultTimelineElement
+                        initialPlannedDayResult={plannedDayResult.data}
+                    />
+                </View>
+                <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
+            </ScrollableTextInputBox>
+        </Screen>
     );
 };

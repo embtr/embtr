@@ -88,6 +88,7 @@ export type RootStackParamList = {
 
 export namespace Routes {
     export const GOALS: keyof MasterScreens = 'Goals';
+    export const EDIT_USER_POST_DETAILS = 'EditUserPostDetails';
     export const USER_POST_DETAILS = 'UserPostDetails';
     export const CREATE_USER_POST = 'CreateUserPost';
     export const DAILY_RESULT_DETAILS = 'DailyResultDetails';
