@@ -4,54 +4,69 @@ import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/consta
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { ImageUtility } from 'src/util/images/ImageUtility';
-import { TimelinePostModel } from 'src/model/OldModels';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
-import { JoinedChallengeDetails } from './card_components/JoinedChallengeDetails';
-import StoryController from 'src/controller/timeline/story/StoryController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { DailyResultBody } from '../common/timeline/DailyResultBody';
+import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story/StoryController';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import React from 'react';
+import { UserPost } from 'resources/schema';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Routes } from 'src/navigation/RootStackParamList';
+import USER_POST_DETAILS = Routes.USER_POST_DETAILS;
 
 interface Props {
-    timelinePostModel: TimelinePostModel;
-    navigateToDetails: Function;
+    initialUserPost: UserPost;
 }
 
-export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) => {
+export const UserPostTimelineElement = ({ initialUserPost }: Props) => {
     const { colors } = useTheme();
+
+    const navigation = useEmbtrNavigation();
+    const [modified, setModified] = React.useState(false);
+
+    const idToUse = !modified ? 0 : initialUserPost.id;
+    const updatedUserPost = StoryCustomHooks.useStory(idToUse);
+    const userPost = updatedUserPost.data ?? initialUserPost;
 
     const currentUser = useAppSelector(getCurrentUser);
 
-    const likeCount = timelinePostModel.likes.length;
-    const commentCount = timelinePostModel.comments.length;
-    const isLiked = timelinePostModel.likes.some((like) => like.userId === currentUser.id);
+    if (!userPost.createdAt || !userPost.user) {
+        return <View />;
+    }
+
+    const likeCount = userPost.likes?.length ?? 0;
+    const commentCount = userPost.comments?.length ?? 0;
+    const isLiked = userPost.likes?.some((like) => like.userId === currentUser.id) ?? false;
+
+    const sortDate = userPost.createdAt;
+    const user = userPost.user;
+    const secondaryHeader = 'secondary header';
 
     const handleOnLike = async () => {
-        if (isLiked) {
+        if (isLiked || !userPost.id) {
             return;
         }
 
-        if (timelinePostModel.type === TimelineElementType.USER_POST) {
-            await StoryController.addLikeViaApi(timelinePostModel.id);
-            StoryController.invalidate(timelinePostModel.id);
-            // } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
-            //     ChallengeController.like(timelinePostModel.id);
-        } else if (timelinePostModel.type === TimelineElementType.PLANNED_DAY_RESULT) {
-            DailyResultController.addLikeViaApi(timelinePostModel.id);
-        }
+        await StoryController.addLikeViaApi(userPost.id);
+        StoryController.invalidate(userPost.id);
+        setModified(true);
     };
 
     let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(
-        timelinePostModel.images
+        userPost.images ?? []
     );
 
     return (
         <TouchableWithoutFeedback
             onPress={() => {
-                navigateToDetails();
+                if (!userPost.id) {
+                    return;
+                }
+
+                navigation.navigate(USER_POST_DETAILS, {
+                    id: userPost.id,
+                });
             }}
         >
             <View
@@ -68,16 +83,16 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                 {/* HEADER */}
                 {/**********/}
                 <CardHeader
-                    date={timelinePostModel.sortDate}
-                    user={timelinePostModel.user}
-                    secondaryText={timelinePostModel.secondaryHeaderText}
-                    type={timelinePostModel.type}
+                    date={sortDate}
+                    user={user}
+                    secondaryText={secondaryHeader}
+                    type={TimelineElementType.USER_POST}
                 />
 
                 {/**********/}
                 {/* TITLE */}
                 {/**********/}
-                {timelinePostModel.title && (
+                {userPost.title && (
                     <View style={{ paddingTop: 12 }}>
                         <Text
                             style={{
@@ -86,7 +101,7 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                                 color: colors.text,
                             }}
                         >
-                            {timelinePostModel.title}
+                            {userPost.title}
                         </Text>
                     </View>
                 )}
@@ -94,7 +109,7 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                {timelinePostModel.body && (
+                {userPost.body && (
                     <View style={{ paddingTop: 12 }}>
                         <Text
                             numberOfLines={3}
@@ -104,7 +119,7 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                                 color: colors.text,
                             }}
                         >
-                            {timelinePostModel.body}
+                            {userPost.body}
                         </Text>
                     </View>
                 )}
@@ -120,26 +135,6 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                         }}
                     >
                         <CarouselCards images={carouselImages} />
-                    </View>
-                )}
-
-                {/*********************/}
-                {/* Challenge Details */}
-                {/*********************/}
-                {timelinePostModel.joinedChallenge && (
-                    <View style={{ paddingTop: 12 }}>
-                        <JoinedChallengeDetails
-                            joinedChallenge={timelinePostModel.joinedChallenge}
-                        />
-                    </View>
-                )}
-
-                {/********************/}
-                {/* COMPLETED HABITS */}
-                {/********************/}
-                {timelinePostModel.plannedDayResult && (
-                    <View style={{ paddingTop: 12 }}>
-                        <DailyResultBody plannedDayResult={timelinePostModel.plannedDayResult} />
                     </View>
                 )}
 

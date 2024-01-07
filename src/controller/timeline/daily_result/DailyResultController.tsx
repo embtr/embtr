@@ -18,6 +18,9 @@ import { CommentController } from 'src/controller/api/general/CommentController'
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 import { GetTimelineResponse, TimelineRequestCursor } from 'resources/types/requests/Timeline';
+import { useQuery } from '@tanstack/react-query';
+import { ReactQueryStaleTimes } from 'src/util/constants';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 class DailyResultController {
     public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {
@@ -210,6 +213,23 @@ class DailyResultController {
         );
         return imgUrls;
     }
+
+    public static async invalidate(id: number) {
+        reactQueryClient.removeQueries(['plannedDayResult', id]);
+    }
 }
 
 export default DailyResultController;
+
+export namespace PlannedDayResultCustomHooks {
+    export const usePlannedDayResult = (id?: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['plannedDayResult', id],
+            queryFn: async () => await DailyResultController.getViaApi(id ?? 0),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            enabled: !!id && id > 0,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+}

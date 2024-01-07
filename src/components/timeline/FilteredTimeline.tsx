@@ -1,59 +1,9 @@
 import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { TimelinePostModel } from 'src/model/OldModels';
-import { TimelineCard } from './TimelineCard';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { useNavigation } from '@react-navigation/native';
-import { PostUtility } from 'src/util/post/PostUtility';
 import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { TimelineElement, TimelineElementType } from 'resources/types/requests/Timeline';
-import USER_POST_DETAILS = Routes.USER_POST_DETAILS;
-import DAILY_RESULT_DETAILS = Routes.DAILY_RESULT_DETAILS;
-
-const createTimelineModels = (timelineElements: TimelineElement[]): TimelinePostModel[] => {
-    const models: TimelinePostModel[] = [];
-
-    timelineElements.forEach((timelineElement) => {
-        if (timelineElement.type == TimelineElementType.USER_POST && timelineElement.userPost) {
-            models.push(PostUtility.createUserPostTimelineModel(timelineElement.userPost));
-        } else if (
-            timelineElement.type == TimelineElementType.PLANNED_DAY_RESULT &&
-            timelineElement.plannedDayResult
-        ) {
-            models.push(PostUtility.createDayResultTimelineModel(timelineElement.plannedDayResult));
-        }
-    });
-
-    return models;
-};
-
-const createTimelineView = (timelinePostModel: TimelinePostModel, navigation: any) => {
-    return (
-        <View
-            style={{
-                width: '100%',
-                paddingTop: TIMELINE_CARD_PADDING,
-                paddingHorizontal: TIMELINE_CARD_PADDING,
-            }}
-        >
-            <TimelineCard
-                timelinePostModel={timelinePostModel}
-                navigateToDetails={() => {
-                    if (timelinePostModel.type === TimelineElementType.USER_POST) {
-                        navigation.navigate(USER_POST_DETAILS, {
-                            id: timelinePostModel.id,
-                        });
-                    } else if (timelinePostModel.type === TimelineElementType.PLANNED_DAY_RESULT) {
-                        navigation.navigate(DAILY_RESULT_DETAILS, {
-                            id: timelinePostModel.id,
-                        });
-                    }
-                }}
-            />
-        </View>
-    );
-};
+import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
+import { PlannedDayResultTimelineElement } from './PlannedDayResultTimelineElement';
 
 const createFooter = (hasMore: boolean, colors: any) => {
     const footer = hasMore ? (
@@ -84,6 +34,16 @@ const createFooter = (hasMore: boolean, colors: any) => {
     return footer;
 };
 
+const renderItem = (item: TimelineElement) => {
+    if (item.type === TimelineElementType.USER_POST && item.userPost) {
+        return <UserPostTimelineElement initialUserPost={item.userPost} />;
+    } else if (item.type === TimelineElementType.PLANNED_DAY_RESULT && item.plannedDayResult) {
+        return <PlannedDayResultTimelineElement initialPlannedDayResult={item.plannedDayResult} />;
+    }
+
+    return <View />;
+};
+
 interface Props {
     timelineElements: TimelineElement[];
     hasMore: boolean;
@@ -93,16 +53,18 @@ interface Props {
 
 export const FilteredTimeline = ({ timelineElements, hasMore, pullToRefresh, loadMore }: Props) => {
     const { colors } = useTheme();
-    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
-    const data = createTimelineModels(timelineElements);
+    const keyExtractor = (item: TimelineElement) => {
+        const key = `${item.type}_post_${item.userPost?.id}_result_${item.plannedDayResult?.id}`;
+        return key;
+    };
 
     return (
         <FlatList
             overScrollMode="always"
-            data={data}
-            keyExtractor={(item, index) => `${item.type}${item.id}`}
-            renderItem={({ item }) => createTimelineView(item, navigation)}
+            data={timelineElements}
+            keyExtractor={keyExtractor}
+            renderItem={({ item }) => renderItem(item)}
             keyboardShouldPersistTaps={'handled'}
             style={{ backgroundColor: colors.background }}
             refreshControl={

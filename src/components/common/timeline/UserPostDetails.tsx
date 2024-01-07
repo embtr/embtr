@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import { PostDetails } from 'src/components/common/comments/PostDetails';
-import StoryController from 'src/controller/timeline/story/StoryController';
+import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story/StoryController';
 import { Alert, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Comment, UserPost } from 'resources/schema';
+import { Comment } from 'resources/schema';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { addTimelineCardRefreshRequest } from 'src/redux/user/GlobalState';
 import { UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
 import { PostUtility } from 'src/util/post/PostUtility';
+import { TimelineController } from 'src/controller/timeline/TimelineController';
 
 export const UserPostDetails = () => {
     const { colors } = useTheme();
@@ -20,20 +20,10 @@ export const UserPostDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
 
-    const [userPost, setUserPost] = React.useState<UserPost>();
+    const dispatch = useAppDispatch();
+    const userPost = StoryCustomHooks.useStory(route.params.id);
 
-    const fetch = async () => {
-        const userPost = await StoryController.getViaApi(route.params.id);
-        setUserPost(userPost);
-    };
-
-    useFocusEffect(
-        React.useCallback(() => {
-            fetch();
-        }, [])
-    );
-
-    if (!userPost) {
+    if (!userPost.data) {
         return (
             <Screen>
                 <View />
@@ -41,31 +31,31 @@ export const UserPostDetails = () => {
         );
     }
 
-    const userPostTimelinePost = PostUtility.createUserPostTimelineModel(userPost);
-    const userIsPostOwner = userPost?.user?.uid === getAuth().currentUser?.uid;
+    const userPostTimelinePost = PostUtility.createUserPostTimelineModel(userPost.data);
+    console.log(userPostTimelinePost.id, userPostTimelinePost.likes.length);
+    const userIsPostOwner = userPost.data?.user?.uid === getAuth().currentUser?.uid;
 
     const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
-        if (!userPost?.id) {
+        if (!userPost.data?.id) {
             return;
         }
 
-        await StoryController.addCommentViaApi(userPost.id, text);
-        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.id));
-        fetch();
+        await StoryController.addCommentViaApi(userPost.data.id, text);
+        StoryController.invalidate(userPost.data.id);
     };
 
     const deleteComment = async (comment: Comment) => {
-        if (!userPost?.id) {
+        if (!userPost.data?.id) {
             return;
         }
 
         await StoryController.deleteCommentViaApi(comment);
-        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.id));
-        fetch();
+        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.data.id));
+        StoryController.invalidate(userPost.data.id);
     };
 
     const navigateToEdit = () => {
-        if (!userPost?.id) {
+        if (!userPost.data?.id) {
             return;
         }
 
@@ -73,11 +63,11 @@ export const UserPostDetails = () => {
             return;
         }
 
-        navigation.navigate('EditUserPostDetails', { id: userPost.id });
+        navigation.navigate('EditUserPostDetails', { id: userPost.data.id });
     };
 
     const deletePost = () => {
-        if (!userPost?.id) {
+        if (!userPost.data?.id) {
             return;
         }
 
@@ -89,11 +79,19 @@ export const UserPostDetails = () => {
             'Delete Post',
             'Are you sure you want to delete this post? This cannot be undone.',
             [
-                { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+                {
+                    text: 'Cancel',
+                    onPress: () => {},
+                    style: 'cancel',
+                },
                 {
                     text: 'I am sure. Delete it.',
                     onPress: async () => {
-                        await StoryController.deleteViaApi(userPost);
+                        if (!userPost.data) {
+                            return;
+                        }
+
+                        await StoryController.deleteViaApi(userPost.data);
                         navigation.navigate('Timeline');
                     },
                 },
@@ -101,23 +99,10 @@ export const UserPostDetails = () => {
         );
     };
 
-    const dispatch = useAppDispatch();
-
-    const onLike = async () => {
-        if (!userPost?.id) {
-            return;
-        }
-
-        await StoryController.addLikeViaApi(userPost.id);
-        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.id));
-        fetch();
-    };
-
     return (
         <View style={{ width: '100%', height: '100%', backgroundColor: colors.background }}>
             <PostDetails
                 timelinePostModel={userPostTimelinePost}
-                onLike={onLike}
                 submitComment={submitComment}
                 deleteComment={deleteComment}
                 onEdit={navigateToEdit}

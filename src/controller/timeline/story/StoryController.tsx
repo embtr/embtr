@@ -14,6 +14,10 @@ import { LikeController } from 'src/controller/api/general/LikeController';
 import ImageController from 'src/controller/image/ImageController';
 import { CommentController } from 'src/controller/api/general/CommentController';
 import { TimelinePostModel } from 'src/model/OldModels';
+import { useQuery } from '@tanstack/react-query';
+import { ReactQueryStaleTimes } from 'src/util/constants';
+import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export interface StoryModel extends TimelinePostModel {
     data: {
@@ -23,67 +27,6 @@ export interface StoryModel extends TimelinePostModel {
         images: string[];
     };
 }
-
-export const timelineEntryWasLikedBy = (likes: LikeModel[], uid: string): boolean => {
-    let isLiked = false;
-    likes.forEach((like) => {
-        if (like.user?.uid === uid) {
-            isLiked = true;
-            return;
-        }
-    });
-
-    return isLiked;
-};
-
-export const copyStory = (story: StoryModel): StoryModel => {
-    const newStory: StoryModel = {
-        id: story.id,
-        added: story.added,
-        modified: story.modified,
-        type: story.type,
-        uid: story.uid,
-        active: story.active,
-        public: {
-            comments: story.public.comments,
-            likes: story.public.likes,
-        },
-        data: {
-            userPost: story.data.userPost,
-            title: story.data.title,
-            story: story.data.story,
-            images: [...story.data.images],
-        },
-    };
-
-    return newStory;
-};
-
-export const createStory = (
-    uid: string,
-    title: string,
-    story: string,
-    images: string[]
-): StoryModel => {
-    return {
-        id: '',
-        added: Timestamp.now(),
-        modified: Timestamp.now(),
-        type: 'STORY',
-        uid: uid,
-        active: true,
-        public: {
-            comments: [],
-            likes: [],
-        },
-        data: {
-            userPost: {},
-            title: title,
-            story: story,
-            images: images,
-        },
-    };
-};
 
 class StoryController {
     public static async getAllForUser(userId: number): Promise<UserPost[]> {
@@ -191,6 +134,29 @@ class StoryController {
         );
         return imgUrls;
     }
+
+    public static async invalidate(id: number) {
+        reactQueryClient.invalidateQueries(['story', id]);
+    }
+
+    public static async setCache(id: number, story: StoryModel) {
+        reactQueryClient.setQueryData(['story', id], story);
+    }
 }
 
 export default StoryController;
+
+export namespace StoryCustomHooks {
+    export const useStory = (id?: number) => {
+        const enabled = !!id && id > 0;
+        console.log('enabled', enabled);
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['story', id],
+            queryFn: async () => await StoryController.getViaApi(id ?? 0),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            enabled: enabled,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+}

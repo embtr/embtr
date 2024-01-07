@@ -18,7 +18,6 @@ import { View } from 'react-native';
 
 interface Props {
     timelinePostModel: TimelinePostModel;
-    onLike: Function;
     submitComment: Function;
     deleteComment: Function;
     onEdit?: Function;

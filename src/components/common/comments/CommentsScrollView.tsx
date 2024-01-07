@@ -12,15 +12,8 @@ interface Props {
     limit?: number;
 }
 
-const INDENT_WIDTH = Dimensions.get('window').width * 0.1;
-
 export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) => {
     const colors = useTheme().colors;
-    let max = limit ? limit : comments.length;
-    if (comments.length < max) {
-        max = comments.length;
-    }
-
     const currentUserUid = getCurrentUid();
 
     const commentViews = comments.map((comment, index) => {

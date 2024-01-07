@@ -4,54 +4,68 @@ import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/consta
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { ImageUtility } from 'src/util/images/ImageUtility';
-import { TimelinePostModel } from 'src/model/OldModels';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
-import { JoinedChallengeDetails } from './card_components/JoinedChallengeDetails';
-import StoryController from 'src/controller/timeline/story/StoryController';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController, {
+    PlannedDayResultCustomHooks,
+} from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultBody } from '../common/timeline/DailyResultBody';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
+import { PlannedDayResult } from 'resources/schema';
 import React from 'react';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Routes } from 'src/navigation/RootStackParamList';
+import DAILY_RESULT_DETAILS = Routes.DAILY_RESULT_DETAILS;
 
 interface Props {
-    timelinePostModel: TimelinePostModel;
-    navigateToDetails: Function;
+    initialPlannedDayResult: PlannedDayResult;
 }
 
-export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) => {
+export const PlannedDayResultTimelineElement = ({ initialPlannedDayResult }: Props) => {
     const { colors } = useTheme();
 
+    const navigation = useEmbtrNavigation();
     const currentUser = useAppSelector(getCurrentUser);
 
-    const likeCount = timelinePostModel.likes.length;
-    const commentCount = timelinePostModel.comments.length;
-    const isLiked = timelinePostModel.likes.some((like) => like.userId === currentUser.id);
+    const [modified, setModified] = React.useState(false);
+
+    const idToUse = !modified ? 0 : initialPlannedDayResult.id;
+    const updatedPlannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(idToUse);
+    const plannedDayResult = updatedPlannedDayResult.data ?? initialPlannedDayResult;
+
+    if (!plannedDayResult || !plannedDayResult.createdAt || !plannedDayResult.plannedDay?.user) {
+        return <View />;
+    }
+
+    const likeCount = plannedDayResult.likes?.length ?? 0;
+    const commentCount = plannedDayResult.comments?.length ?? 0;
+    const isLiked = plannedDayResult.likes?.some((like) => like.userId === currentUser.id) ?? false;
 
     const handleOnLike = async () => {
-        if (isLiked) {
+        if (isLiked || !plannedDayResult.id) {
             return;
         }
 
-        if (timelinePostModel.type === TimelineElementType.USER_POST) {
-            await StoryController.addLikeViaApi(timelinePostModel.id);
-            StoryController.invalidate(timelinePostModel.id);
-            // } else if (timelinePostModel.type === TimelineType.JOINED_CHALLENGE) {
-            //     ChallengeController.like(timelinePostModel.id);
-        } else if (timelinePostModel.type === TimelineElementType.PLANNED_DAY_RESULT) {
-            DailyResultController.addLikeViaApi(timelinePostModel.id);
-        }
+        await DailyResultController.addLikeViaApi(plannedDayResult.id);
+        DailyResultController.invalidate(plannedDayResult.id);
+        setModified(true);
     };
 
     let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(
-        timelinePostModel.images
+        plannedDayResult.images ?? []
     );
 
     return (
         <TouchableWithoutFeedback
             onPress={() => {
-                navigateToDetails();
+                if (!plannedDayResult.id) {
+                    return;
+                }
+
+                navigation.navigate(DAILY_RESULT_DETAILS, {
+                    id: plannedDayResult.id,
+                });
             }}
         >
             <View
@@ -68,16 +82,16 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                 {/* HEADER */}
                 {/**********/}
                 <CardHeader
-                    date={timelinePostModel.sortDate}
-                    user={timelinePostModel.user}
-                    secondaryText={timelinePostModel.secondaryHeaderText}
-                    type={timelinePostModel.type}
+                    date={plannedDayResult.createdAt}
+                    user={plannedDayResult.plannedDay?.user}
+                    secondaryText={'secondary text here'}
+                    type={TimelineElementType.PLANNED_DAY_RESULT}
                 />
 
                 {/**********/}
                 {/* TITLE */}
                 {/**********/}
-                {timelinePostModel.title && (
+                {plannedDayResult.title && (
                     <View style={{ paddingTop: 12 }}>
                         <Text
                             style={{
@@ -86,7 +100,7 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                                 color: colors.text,
                             }}
                         >
-                            {timelinePostModel.title}
+                            {plannedDayResult.title}
                         </Text>
                     </View>
                 )}
@@ -94,7 +108,7 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                 {/**********/}
                 {/*  BODY  */}
                 {/**********/}
-                {timelinePostModel.body && (
+                {plannedDayResult.description && (
                     <View style={{ paddingTop: 12 }}>
                         <Text
                             numberOfLines={3}
@@ -104,7 +118,7 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                                 color: colors.text,
                             }}
                         >
-                            {timelinePostModel.body}
+                            {plannedDayResult.description}
                         </Text>
                     </View>
                 )}
@@ -123,23 +137,12 @@ export const TimelineCard = ({ timelinePostModel, navigateToDetails }: Props) =>
                     </View>
                 )}
 
-                {/*********************/}
-                {/* Challenge Details */}
-                {/*********************/}
-                {timelinePostModel.joinedChallenge && (
-                    <View style={{ paddingTop: 12 }}>
-                        <JoinedChallengeDetails
-                            joinedChallenge={timelinePostModel.joinedChallenge}
-                        />
-                    </View>
-                )}
-
                 {/********************/}
                 {/* COMPLETED HABITS */}
                 {/********************/}
-                {timelinePostModel.plannedDayResult && (
+                {plannedDayResult && (
                     <View style={{ paddingTop: 12 }}>
-                        <DailyResultBody plannedDayResult={timelinePostModel.plannedDayResult} />
+                        <DailyResultBody plannedDayResult={plannedDayResult} />
                     </View>
                 )}
 

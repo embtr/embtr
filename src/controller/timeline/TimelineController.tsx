@@ -1,15 +1,17 @@
 import {
     GetTimelineResponse,
+    TimelineData,
     TimelineElement,
     TimelineRequestCursor,
 } from 'resources/types/requests/Timeline';
 import axiosInstance from 'src/axios/axios';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { UserPost } from 'resources/schema';
 
 export class TimelineController {
-    public static async fetch(cursor: TimelineRequestCursor) {
+    public static async fetch(cursor: TimelineRequestCursor): Promise<TimelineData | undefined> {
         return await axiosInstance
             .get(`/timeline`, {
                 params: {
@@ -18,8 +20,8 @@ export class TimelineController {
                 },
             })
             .then((success) => {
-                const results: GetTimelineResponse = success.data;
-                return results;
+                const response: GetTimelineResponse = success.data;
+                return response.timelineData;
             })
             .catch((error) => {
                 return undefined;
@@ -32,6 +34,11 @@ export class TimelineController {
 
     public static async invalidateCache() {
         await reactQueryClient.invalidateQueries(['timelineData']);
+    }
+
+    public static async likePostInCache(userPostId: number) {
+        const currentData = reactQueryClient.getQueryData(['timelineData']);
+        console.log(currentData);
     }
 }
 
@@ -54,11 +61,12 @@ export namespace TimelineCustomHooks {
                     return undefined;
                 }
 
-                if (lastPage.results.length == 0) {
+                if (lastPage.elements.length == 0) {
                     return undefined;
                 }
 
-                const lastElement: TimelineElement = lastPage.results[lastPage.results.length - 1];
+                const lastElement: TimelineElement =
+                    lastPage.elements[lastPage.elements.length - 1];
 
                 const cursor: TimelineRequestCursor = {
                     cursor: lastElement.createdAt,

@@ -30,8 +30,10 @@ export const Timeline = () => {
 
     const timelineData: TimelineElement[] = [];
     timelineElements.data?.pages.forEach((page) => {
-        timelineData.push(...(page?.results ?? []));
+        timelineData.push(...(page?.elements ?? []));
     });
+
+    console.log(timelineData[0]?.userPost?.comments?.length);
 
     return (
         <Screen>
