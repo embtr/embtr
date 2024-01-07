@@ -45,6 +45,7 @@ export const DailyResultDetails = () => {
             await DailyResultController.addCommentViaApi(plannedDayResult.data.id, text);
             //TODO - make sure this works
             dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.data.id));
+            DailyResultController.invalidate(route.params.id);
         }
     };
 
@@ -52,6 +53,7 @@ export const DailyResultDetails = () => {
         if (plannedDayResult.data?.id) {
             await DailyResultController.deleteCommentViaApi(comment);
             dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.data.id));
+            DailyResultController.invalidate(route.params.id);
         }
     };
 

@@ -12,7 +12,6 @@ import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { Logger } from 'src/util/GeneralUtility';
 import { getTodayPureDate } from 'src/util/DateUtility';
-import { PureDate } from 'resources/types/date/PureDate';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {

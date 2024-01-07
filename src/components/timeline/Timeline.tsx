@@ -33,8 +33,6 @@ export const Timeline = () => {
         timelineData.push(...(page?.elements ?? []));
     });
 
-    console.log(timelineData[0]?.userPost?.comments?.length);
-
     return (
         <Screen>
             <Banner

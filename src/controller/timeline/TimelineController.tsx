@@ -35,11 +35,6 @@ export class TimelineController {
     public static async invalidateCache() {
         await reactQueryClient.invalidateQueries(['timelineData']);
     }
-
-    public static async likePostInCache(userPostId: number) {
-        const currentData = reactQueryClient.getQueryData(['timelineData']);
-        console.log(currentData);
-    }
 }
 
 export namespace TimelineCustomHooks {

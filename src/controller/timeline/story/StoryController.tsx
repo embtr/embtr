@@ -149,7 +149,6 @@ export default StoryController;
 export namespace StoryCustomHooks {
     export const useStory = (id?: number) => {
         const enabled = !!id && id > 0;
-        console.log('enabled', enabled);
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['story', id],
             queryFn: async () => await StoryController.getViaApi(id ?? 0),

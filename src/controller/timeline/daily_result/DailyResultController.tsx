@@ -215,7 +215,7 @@ class DailyResultController {
     }
 
     public static async invalidate(id: number) {
-        reactQueryClient.removeQueries(['plannedDayResult', id]);
+        reactQueryClient.invalidateQueries(['plannedDayResult', id]);
     }
 }
 
