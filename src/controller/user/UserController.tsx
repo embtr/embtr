@@ -141,7 +141,11 @@ class UserController {
             });
     }
 
-    public static async setup(request: UpdateUserRequest): Promise<UpdateUserResponse> {
+    public static async setup(user: User): Promise<UpdateUserResponse> {
+        const request: UpdateUserRequest = {
+            user,
+        };
+
         return await axiosInstance
             .patch(`${USER}setup`, request)
             .then((success) => {
@@ -216,10 +220,9 @@ class UserController {
 
     public static async usernameExists(username: string): Promise<boolean> {
         return await axiosInstance
-            .get(`/user/exists`, { params: { username } })
+            .get<GetBooleanResponse>(`/user/exists`, { params: { username } })
             .then((success) => {
-                const response: GetBooleanResponse = success.data;
-                return response.result;
+                return success.data.result === true;
             })
             .catch((error) => {
                 return false;

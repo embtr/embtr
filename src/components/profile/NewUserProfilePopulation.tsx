@@ -4,6 +4,7 @@ import {
     Image,
     Keyboard,
     KeyboardAvoidingView,
+    Linking,
     Pressable,
     Text,
     TextInput,
@@ -20,6 +21,7 @@ import { MasterScreens } from 'src/navigation/RootStackParamList';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { Code } from 'resources/codes';
 import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
+import { Checkbox } from 'src/components/checkbox/Checkbox';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -43,6 +45,7 @@ export const NewUserProfilePopulation = () => {
     const [displayName, setDisplayName] = React.useState('');
     const [bio, setBio] = React.useState('');
     const [userProfileUrl, setUserProfileUrl] = React.useState(PROFILE_IMAGE);
+    const [termsApproved, setTermsApproved] = React.useState(false);
     const [usernameAvailabilityResult, setUsernameAvailabilityResult] =
         React.useState<UsernameAvailabilityResult>({ message: 'available', available: true });
 
@@ -143,6 +146,8 @@ export const NewUserProfilePopulation = () => {
         setUsername(username);
     };
 
+    const formValid = termsApproved && usernameAvailabilityResult.available;
+
     return (
         <Pressable
             style={{ flex: 1, backgroundColor: colors.background }}
@@ -183,7 +188,7 @@ export const NewUserProfilePopulation = () => {
                     yourself!
                 </Text>
 
-                <View style={{ height: TIMELINE_CARD_PADDING * 4 }} />
+                <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
                 <View style={{ alignItems: 'center', paddingHorizontal: TIMELINE_CARD_PADDING }}>
                     <View
                         style={{
@@ -300,15 +305,70 @@ export const NewUserProfilePopulation = () => {
 
                     <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
 
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            width: '100%',
+                        }}
+                    >
+                        <Checkbox
+                            checked={termsApproved}
+                            onCheck={() => {
+                                setTermsApproved(!termsApproved);
+                            }}
+                        />
+                        <View
+                            style={{
+                                flex: 1,
+                                paddingLeft: TIMELINE_CARD_PADDING,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: colors.secondary_text,
+                                    fontFamily: POPPINS_REGULAR,
+                                    fontSize: 14,
+                                }}
+                            >
+                                By continuing, you agree to our{' '}
+                                <Text
+                                    onPress={() => {
+                                        Linking.openURL('https://embtr.com/terms');
+                                    }}
+                                    style={{
+                                        color: colors.accent_color,
+                                        fontFamily: POPPINS_MEDIUM,
+                                    }}
+                                >
+                                    Terms of Service
+                                </Text>{' '}
+                                and{' '}
+                                <Text
+                                    onPress={() => {
+                                        Linking.openURL('https://embtr.com/privacy');
+                                    }}
+                                    style={{
+                                        color: colors.accent_color,
+                                        fontFamily: POPPINS_MEDIUM,
+                                    }}
+                                >
+                                    Privacy Policy
+                                </Text>
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
+
                     <TouchableOpacity
                         onPress={async () => {
                             Keyboard.dismiss();
                             await submitProfileData();
                         }}
-                        disabled={!usernameAvailabilityResult.available}
+                        disabled={!formValid}
                         style={{
                             width: '100%',
-                            backgroundColor: usernameAvailabilityResult.available
+                            backgroundColor: formValid
                                 ? colors.accent_color
                                 : colors.accent_color_dim,
                             borderRadius: 5,

@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
-    text: string;
+    text?: string;
     checked: boolean;
     onCheck: () => void;
 }
@@ -21,16 +21,20 @@ export const Checkbox = ({ text, checked, onCheck }: Props) => {
 
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
-                style={{
-                    color: colors.secondary_text,
-                    fontFamily: POPPINS_REGULAR,
-                    fontSize: 12,
-                }}
-            >
-                {text}
-            </Text>
-            <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
+            {text && (
+                <View>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 12,
+                        }}
+                    >
+                        {text}
+                    </Text>
+                    <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
+                </View>
+            )}
 
             <TouchableOpacity
                 onPress={() => {
