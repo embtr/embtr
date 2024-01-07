@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Text, TextStyle, View } from 'react-native';
+import { Linking, Text, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { EmbtrButton } from '../common/button/EmbtrButton';
 import { LoginModal } from '../login/LoginModal';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
@@ -172,6 +172,48 @@ export const LandingPage = () => {
                                         : 'Login with Google'
                                     : 'Alternative login methods'}
                             </Text>
+
+                            <View
+                                style={{
+                                    width: '100%',
+                                    paddingTop: TIMELINE_CARD_PADDING,
+                                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: colors.secondary_text,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 12,
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    By registering or logging in, you agree to our{' '}
+                                    <Text
+                                        onPress={() => {
+                                            Linking.openURL('https://embtr.com/terms');
+                                        }}
+                                        style={{
+                                            color: colors.accent_color,
+                                            fontFamily: POPPINS_MEDIUM,
+                                        }}
+                                    >
+                                        Terms of Service
+                                    </Text>{' '}
+                                    and{' '}
+                                    <Text
+                                        onPress={() => {
+                                            Linking.openURL('https://embtr.com/privacy');
+                                        }}
+                                        style={{
+                                            color: colors.accent_color,
+                                            fontFamily: POPPINS_MEDIUM,
+                                        }}
+                                    >
+                                        Privacy Policy
+                                    </Text>
+                                </Text>
+                            </View>
                         </View>
                     </View>
                 </View>

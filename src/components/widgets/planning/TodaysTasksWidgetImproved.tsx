@@ -19,7 +19,7 @@ export const TodaysTasksWidgetImproved = () => {
                 <View style={{ flex: 1 }} />
 
                 <Checkbox
-                    text={'Hide Complete'}
+                    text={'Hide Complete '}
                     checked={hideComplete}
                     onCheck={() => {
                         setHideComplete(!hideComplete);

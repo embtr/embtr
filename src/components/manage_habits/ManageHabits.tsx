@@ -32,7 +32,7 @@ export const ManageHabits = () => {
             >
                 <View style={{ flex: 1 }} />
                 <Checkbox
-                    text={'Show Expired'}
+                    text={'Show Expired '}
                     checked={showExpired}
                     onCheck={() => {
                         setShowExpired(!showExpired);
