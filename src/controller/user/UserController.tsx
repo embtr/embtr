@@ -92,6 +92,16 @@ class UserController {
             });
     }
 
+    public static async currentUserExists(): Promise<boolean> {
+        try {
+            const response = await axiosInstance.get(`/user/currentUserExists`);
+            const data: GetBooleanResponse = response.data;
+            return data.result === true;
+        } catch (error) {
+            return false;
+        }
+    }
+
     public static async getCurrentUser() {
         return await axiosInstance
             .get(`/${USER_ENDPOINT}`)
@@ -193,22 +203,16 @@ class UserController {
     }
 
     public static async loginUser(): Promise<User | undefined> {
-        let user: User | undefined = await this.getCurrentUser();
-        if (user) {
-            return user;
-        }
-
-        const result = await this.createUser();
-        if (result.success) {
-            await this.forceRefreshIdToken();
-
-            user = await this.getCurrentUser();
-            if (user) {
-                return user;
+        const exists = await this.currentUserExists();
+        if (!exists) {
+            const result = await this.createUser();
+            if (result.success) {
+                await this.forceRefreshIdToken();
             }
         }
 
-        return undefined;
+        const user = await this.getCurrentUser();
+        return user;
     }
 
     public static async logoutUser() {
@@ -227,7 +231,7 @@ class UserController {
     }
 
     private static async forceRefreshIdToken() {
-        const refreshedTOken = await getAuth().currentUser?.getIdToken(true);
+        await getAuth().currentUser?.getIdToken(true);
     }
 
     public static async uploadProfilePhoto(): Promise<string | undefined> {

@@ -99,7 +99,7 @@ export const NewUserProfilePopulation = () => {
         const terms = termsVersion.data ? Number(termsVersion.data) : 0;
         const userClone = { ...currentUser.data };
         userClone.username = username;
-        userClone.displayName = displayName;
+        userClone.displayName = displayName.length > 0 ? displayName : username;
         userClone.bio = bio;
         userClone.photoUrl = userProfileUrl;
         userClone.termsVersion = terms;

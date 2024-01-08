@@ -190,7 +190,6 @@ export const Main = () => {
         }
 
         const loggedInUser = await UserController.loginUser();
-
         return loggedInUser;
     };
 
