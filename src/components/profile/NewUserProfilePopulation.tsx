@@ -22,10 +22,7 @@ import UserController, { UserCustomHooks } from 'src/controller/user/UserControl
 import { Code } from 'resources/codes';
 import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
 import { Checkbox } from 'src/components/checkbox/Checkbox';
-import {
-    MetadataController,
-    MetadataCustomHooks,
-} from 'src/controller/metadata/MetadataController';
+import { MetadataCustomHooks } from 'src/controller/metadata/MetadataController';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -55,7 +52,7 @@ export const NewUserProfilePopulation = () => {
 
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
-    const termsVersion = MetadataCustomHooks.useTermsVersionMetadata();
+    const termsVersion = MetadataCustomHooks.useTermsVersion();
     const currentUser = UserCustomHooks.useCurrentUser();
     React.useEffect(() => {
         if (currentUser.data) {

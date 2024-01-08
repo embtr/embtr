@@ -8,6 +8,7 @@ import {
     UpdatePlannedTaskResponse,
 } from 'resources/types/requests/PlannedTaskTypes';
 import { PlannedTask } from 'resources/schema';
+import axios from 'axios';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -57,15 +58,25 @@ class PlannedTaskController {
             plannedTask,
         };
 
-        return await axiosInstance
-            .put(`${PLANNED_DAY}planned-task/`, request)
-            .then((success) => {
-                const updatedPlannedTask: UpdatePlannedTaskResponse = success.data;
-                return updatedPlannedTask;
-            })
-            .catch((error) => {
-                return undefined;
-            });
+        const startTimeA = Date.now();
+        await fetch("https://api.embtr.com/health/");
+        const endTimeA = Date.now();
+        const responseTimeA = endTimeA - startTimeA;
+        console.log(`health: ${responseTimeA}ms`);
+
+        const startTime = Date.now();
+        const response = await axiosInstance.get(`health/`);
+        const endTime = Date.now();
+        const responseTime = endTime - startTime;
+        console.log(`health: ${responseTime}ms`);
+
+        try {
+            const response = await axiosInstance.put(`${PLANNED_DAY}planned-task/`, request);
+            const updatedPlannedTask: UpdatePlannedTaskResponse = response.data;
+            return updatedPlannedTask;
+        } catch (error) {
+            return undefined;
+        }
     }
 }
 

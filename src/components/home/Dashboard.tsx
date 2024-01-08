@@ -13,8 +13,11 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MasterScreens, Routes } from 'src/navigation/RootStackParamList';
-import NEW_USER_PROFILE_POPULATION = Routes.NEW_USER_PROFILE_POPULATION;
 import { UserCustomHooks } from 'src/controller/user/UserController';
+import {
+    MetadataController,
+    MetadataCustomHooks,
+} from 'src/controller/metadata/MetadataController';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,6 +33,7 @@ export const Dashboard = () => {
     const dispatch = useAppDispatch();
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
+    const termsVersion = MetadataCustomHooks.useTermsVersion();
     const currentUser = UserCustomHooks.useCurrentUser();
 
     React.useEffect(() => {
@@ -37,11 +41,18 @@ export const Dashboard = () => {
     }, []);
 
     React.useEffect(() => {
-        setTimeout(() => {
-            if (currentUser.data && !currentUser.data.accountSetup) {
-                navigation.navigate(NEW_USER_PROFILE_POPULATION);
-            }
-        }, 250);
+        if (!currentUser.data || !termsVersion.data) {
+            return;
+        }
+
+        const userTermsVersion = currentUser.data?.termsVersion ?? 0;
+        const termsVersionNumber = Number(termsVersion.data);
+
+        if (currentUser.data && !currentUser.data.accountSetup) {
+            navigation.navigate(Routes.NEW_USER_PROFILE_POPULATION);
+        } else if (userTermsVersion < termsVersionNumber) {
+            navigation.navigate(Routes.TERMS_APPROVAL_MODAL);
+        }
     }, [currentUser.data]);
 
     return (

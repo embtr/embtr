@@ -16,6 +16,7 @@ import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfileP
 import { Routes } from 'src/navigation/RootStackParamList';
 import { ManageHabits } from 'src/components/manage_habits/ManageHabits';
 import { HabitSummaryDetails } from '../manage_habits/HabitSummaryDetails';
+import { TermsApprovalModal } from 'src/components/profile/TermsApprovalModal';
 
 const Stack = createStackNavigator();
 
@@ -52,8 +53,13 @@ export const SecureMainStack = () => {
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen
-                name="NewUserProfilePopulation"
+                name={Routes.NEW_USER_PROFILE_POPULATION}
                 component={NewUserProfilePopulation}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name={Routes.TERMS_APPROVAL_MODAL}
+                component={TermsApprovalModal}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen

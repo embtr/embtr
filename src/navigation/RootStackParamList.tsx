@@ -48,6 +48,7 @@ export type MasterScreens = {
     AddHabitCategories: undefined;
     MyHabitsCategoryElement: undefined;
     NewUserProfilePopulation: undefined;
+    TermsApprovalModal: undefined;
     ManageHabits: undefined;
     HabitSummaryDetails: { id: number };
     CreateEditScheduledHabit: {
@@ -99,6 +100,7 @@ export namespace Routes {
     export const MY_HABITS_CATEGORY_ELEMENT = 'MyHabitsCategoryElement';
     export const ADVANCED_USER_SETTINGS = 'AdvancedUserSettings';
     export const NEW_USER_PROFILE_POPULATION = 'NewUserProfilePopulation';
+    export const TERMS_APPROVAL_MODAL = 'TermsApprovalModal';
     export const MANAGE_HABITS = 'ManageHabits';
     export const HABIT_SUMMARY_DETAILS = 'HabitSummaryDetails';
 }

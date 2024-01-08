@@ -4,6 +4,7 @@ import { Linking } from 'react-native';
 import { isAndroidDevice, isPhysicalDevice } from 'src/util/DeviceUtil';
 import { darkColors } from 'src/theme/ColorThemes';
 import { UpdateUserRequest } from 'resources/types/requests/UserTypes';
+import { User } from 'resources/schema';
 
 class PushNotificationController {
     public static registerForPushNotificationsAsync = async () => {
@@ -41,11 +42,13 @@ class PushNotificationController {
     };
 
     private static async addPushNotificationTokenViaApi(token: string) {
-        const updateUserRequest: UpdateUserRequest = {
-            pushNotificationTokens: [{ token }],
-        };
+        const user: User | undefined = await UserController.getCurrentUser();
+        if (!user) {
+            return;
+        }
 
-        await UserController.update(updateUserRequest);
+        user.pushNotificationTokens = [{ token }];
+        UserController.update(user);
     }
 
     private static async openNotificationsSettings() {

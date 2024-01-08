@@ -31,10 +31,6 @@ export class MetadataController {
 }
 
 export namespace MetadataCustomHooks {
-    export const useTermsVersionMetadata = () => {
-        const terms = MetadataCustomHooks.useMetadata(MetadataKey.TERMS_VERSION);
-        return terms;
-    };
     export const useMetadata = (key: MetadataKey) => {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['metadata', key],
@@ -44,6 +40,11 @@ export namespace MetadataCustomHooks {
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
+
+    export const useTermsVersion = () => {
+        return MetadataCustomHooks.useMetadata(MetadataKey.TERMS_VERSION);
+    };
+
     export const useVersion = () => {
         return MetadataController.getMetadata(MetadataKey.VERSION);
     };
