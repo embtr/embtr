@@ -203,16 +203,22 @@ class UserController {
     }
 
     public static async loginUser(): Promise<User | undefined> {
-        const exists = await this.currentUserExists();
-        if (!exists) {
-            const result = await this.createUser();
-            if (result.success) {
-                await this.forceRefreshIdToken();
+        let user: User | undefined = await this.getCurrentUser();
+        if (user) {
+            return user;
+        }
+
+        const result = await this.createUser();
+        if (result.success) {
+            await this.forceRefreshIdToken();
+
+            user = await this.getCurrentUser();
+            if (user) {
+                return user;
             }
         }
 
-        const user = await this.getCurrentUser();
-        return user;
+        return undefined;
     }
 
     public static async logoutUser() {
@@ -231,7 +237,7 @@ class UserController {
     }
 
     private static async forceRefreshIdToken() {
-        await getAuth().currentUser?.getIdToken(true);
+        const refreshedTOken = await getAuth().currentUser?.getIdToken(true);
     }
 
     public static async uploadProfilePhoto(): Promise<string | undefined> {
