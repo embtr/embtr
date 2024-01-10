@@ -12,21 +12,13 @@ export enum MetadataKey {
 
 export class MetadataController {
     public static async getMetadata(key: MetadataKey) {
-        return await axiosInstance
-            .get('/metadata/')
-            .then((success) => {
-                const response = success.data as GetAllMetadataResponse;
-                for (const metadata of response.metadata) {
-                    if (metadata.key === key) {
-                        return metadata.value;
-                    }
-                }
-
-                return undefined;
-            })
-            .catch((error) => {
-                return undefined;
-            });
+        try {
+            const success = await axiosInstance.get<GetAllMetadataResponse>('/metadata/');
+            const response: GetAllMetadataResponse = success.data;
+            return response.metadata.find((metadata) => metadata.key === key)?.value;
+        } catch (error) {
+            return undefined;
+        }
     }
 }
 

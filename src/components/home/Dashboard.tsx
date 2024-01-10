@@ -17,6 +17,7 @@ import { UserCustomHooks } from 'src/controller/user/UserController';
 import {
     MetadataCustomHooks,
 } from 'src/controller/metadata/MetadataController';
+import { OnLoginHooks } from 'src/hooks/OnLoginHooks';
 
 const Tab = createBottomTabNavigator();
 
@@ -30,29 +31,13 @@ export const TABS = {
 
 export const Dashboard = () => {
     const dispatch = useAppDispatch();
-    const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
-    const termsVersion = MetadataCustomHooks.useTermsVersion();
-    const currentUser = UserCustomHooks.useCurrentUser();
+    OnLoginHooks.useOnLogin();
 
     React.useEffect(() => {
         dispatch(setCurrentTab(TABS.TODAY));
     }, []);
 
-    React.useEffect(() => {
-        if (!currentUser.data || !termsVersion.data) {
-            return;
-        }
-
-        const userTermsVersion = currentUser.data?.termsVersion ?? 0;
-        const termsVersionNumber = Number(termsVersion.data);
-
-        if (currentUser.data && !currentUser.data.accountSetup) {
-            navigation.navigate(Routes.NEW_USER_PROFILE_POPULATION);
-        } else if (userTermsVersion < termsVersionNumber) {
-            navigation.navigate(Routes.TERMS_APPROVAL_MODAL);
-        }
-    }, [currentUser.data]);
 
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>
@@ -86,7 +71,7 @@ export const Dashboard = () => {
                                     CommonActions.reset({
                                         index: 0,
                                         routes: [{ name: 'Timeline' }],
-                                    })
+                                    }),
                                 );
                             }
                         },
@@ -110,7 +95,7 @@ export const Dashboard = () => {
                             ) {
                                 e.preventDefault();
                                 navigation.dispatch(
-                                    CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] })
+                                    CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] }),
                                 );
                             }
                         },
@@ -137,7 +122,7 @@ export const Dashboard = () => {
                                     CommonActions.reset({
                                         index: 0,
                                         routes: [{ name: 'PlanMain' }],
-                                    })
+                                    }),
                                 );
                             }
                         },
@@ -164,7 +149,7 @@ export const Dashboard = () => {
                                     CommonActions.reset({
                                         index: 0,
                                         routes: [{ name: 'PlanMain' }],
-                                    })
+                                    }),
                                 );
                             }
                         },
@@ -188,7 +173,7 @@ export const Dashboard = () => {
                             ) {
                                 e.preventDefault();
                                 navigation.dispatch(
-                                    CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }] })
+                                    CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }] }),
                                 );
                             }
                         },
