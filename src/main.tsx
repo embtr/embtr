@@ -45,168 +45,32 @@ import PlannedDayController from './controller/planning/PlannedDayController';
 import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
 import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
-
-const linking: LinkingOptions<RootStackParamList> = {
-    prefixes: ['https://embtr.com', 'embtr://'],
-    config: {
-        screens: {
-            LandingPage: '',
-            Dashboard: {
-                screens: {
-                    CurrentUserTab: {
-                        screens: {
-                            Profile: 'profile',
-                            UserSettings: 'settings',
-                            PillarsConfiguration: 'configure',
-                            EditUserProfile: 'editUserProfile',
-                        },
-                    },
-                    TimelineTab: {
-                        screens: {
-                            UserSearch: 'search',
-                            Timeline: 'timeline',
-                            UserProfile: 'user',
-                            UserPostDetails: {
-                                path: 'timeline/:id/comments',
-                                parse: {
-                                    id: (id: string) => id,
-                                },
-                                //                                  stringify: {
-                                //                                    id: (id) => id.replace(/^user-/, ''),
-                                //                                  },
-                            },
-                            ChallengeDetails: {
-                                path: 'challenge/:id/comments',
-                                parse: {
-                                    id: (id: string) => id,
-                                },
-                                //                                  stringify: {
-                                //                                    id: (id) => id.replace(/^user-/, ''),
-                                //                                  },
-                            },
-                            GoalDetails: {
-                                path: 'goal/:uid/:id/comments',
-                                parse: {
-                                    id: (id: string) => id,
-                                    source: 'timeline',
-                                    uid: (uid: string) => uid,
-                                },
-                                //                                  stringify: {
-                                //                                    id: (id) => id.replace(/^user-/, ''),
-                                //                                  },
-                            },
-                            Notifications: 'notifications',
-                        },
-                    },
-                    TodayTab: {
-                        screens: {
-                            Today: 'today',
-                        },
-                    },
-                    PlanTab: {
-                        screens: {
-                            TaskDetails: {
-                                path: 'tasks/:id/details',
-                                parse: {
-                                    id: (id: string) => id,
-                                },
-                                //                                  stringify: {
-                                //                                    id: (id) => id.replace(/^user-/, ''),
-                                //                                  },
-                            },
-                            CreateGoal: 'createGoal',
-                            GoalDetails: {
-                                path: 'goals/:id',
-                                parse: { id: (id: string) => id },
-                            },
-                        },
-                    },
-                },
-            },
-            About: 'about',
-            ReleaseNotes: 'releaseNotes',
-            Contact: 'contact',
-            Logout: 'logout',
-        },
-    },
-};
+import { linking } from 'src/navigation/Linking';
 
 export const Main = () => {
-    const [user, setUser] = React.useState<User | undefined | null>(undefined);
-    const [showUpdateAvailableModal, setShowUpdateAvailableModal] = React.useState(false);
+    const dispatch = useAppDispatch();
 
     const currentUser = useAppSelector(getCurrentUser);
+    const userIsLoggedIn = Object.keys(currentUser ?? {}).length !== 0;
 
     React.useEffect(() => {
-        const loginUnsubscribe = registerAuthStateListener(setUser);
+        const loginUnsubscribe = registerAuthStateListener(async (firebaseUser) => {
+            if (!!firebaseUser) {
+                const loggedInUser = await UserController.loginUser();
+                if (loggedInUser) {
+                    dispatch(setCurrentUser(loggedInUser));
+                }
+            } else {
+                dispatch(setCurrentUser({}));
+            }
+        });
 
         return () => {
             loginUnsubscribe();
         };
     }, []);
 
-    const checkForUpdates = async () => {
-        const currentVersion = Constants.expoConfig?.version;
-        if (!currentVersion) {
-            return;
-        }
-
-        const latestVersion =
-            (await MetadataController.getMetadata(MetadataKey.VERSION)) ?? currentVersion;
-
-        let updateAvailable = UpdateUtility.updateIsAvailable(currentVersion, latestVersion);
-        setShowUpdateAvailableModal(updateAvailable);
-    };
-
-    const loadUnits = async () => {
-        const units = await UnitController.getAll();
-        dispatch(setUnits(units));
-    };
-
-    const loadTimelineDays = async () => {
-        const timelineDays = await MetadataController.getMetadata(MetadataKey.TIMELINE_DAYS);
-        if (!timelineDays) {
-            return;
-        }
-
-        dispatch(setTimelineDays(Number(timelineDays)));
-    };
-
-    const dispatch: Dispatch<AnyAction> = useAppDispatch();
     getFirebaseConnection('', '');
-
-    LogBox.ignoreAllLogs();
-
-    const resetGlobalState = async (userToReset: UserModel) => {
-        dispatch(resetToDefault());
-        dispatch(setCurrentUser(userToReset));
-        dispatch(setUserProfileImage(userToReset.photoUrl ?? ''));
-        PlannedDayController.prefetchAllPlannedDayData();
-    };
-
-    const createUserIfNew = async (user: User) => {
-        if (!user.uid || !user.email) {
-            return false;
-        }
-
-        const loggedInUser = await UserController.loginUser();
-        return loggedInUser;
-    };
-
-    React.useEffect(() => {
-        const blockingLoad = async () => {
-            if (!user) {
-                return;
-            }
-
-            const loggedInUser = await createUserIfNew(user);
-            if (loggedInUser) {
-                resetGlobalState(loggedInUser);
-            }
-        };
-
-        blockingLoad();
-    }, [user]);
 
     let [fontsLoaded] = useFonts({
         Poppins_400Regular_Italic,
@@ -216,32 +80,14 @@ export const Main = () => {
         Roboto_500Medium,
     });
 
-    const userIsLoggedIn = Object.keys(currentUser ?? {}).length !== 0;
-
-    React.useEffect(() => {
-        if (!user || !userIsLoggedIn) {
-            return;
-        }
-
-        const loads = [
-            checkForUpdates,
-            loadUnits,
-            loadTimelineDays,
-            PushNotificationController.registerForPushNotificationsAsync,
-        ];
-        Promise.all(loads.map((load) => load()));
-    }, [user, userIsLoggedIn]);
-
-    let view: JSX.Element = <LoadingPage />;
-    if (user === null || !userIsLoggedIn) {
-        view = <InsecureMainStack />;
-    } else if (user !== undefined && user !== null && userIsLoggedIn) {
-        view = <SecureMainStack />;
-    }
-
     if (!fontsLoaded) {
         return <LoadingPage />;
     }
+
+    // todo register push notifications
+
+    let view: JSX.Element = userIsLoggedIn ? <SecureMainStack /> : <InsecureMainStack />;
+
 
     return (
         <Screen>
@@ -256,12 +102,6 @@ export const Main = () => {
                     <RemoveHabitModal />
                     <UpdatePlannedTaskModal />
                     <EditHabitModal />
-                    <NewVersionModal
-                        visible={showUpdateAvailableModal}
-                        onDismiss={() => {
-                            setShowUpdateAvailableModal(false);
-                        }}
-                    />
                     {/* END TOP LEVEL COMPONENTS */}
                     {view}
                 </NavigationContainer>

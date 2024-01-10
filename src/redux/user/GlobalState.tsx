@@ -1,23 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { Unit, User } from 'resources/schema';
+import { User } from 'resources/schema';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK, UpdateModalPlannedTask } from 'src/model/GlobalState';
 import { DayKey } from 'resources/types/custom_schema/DayKey';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
-    openMenu: () => {},
-    closeMenu: () => {},
+    openMenu: () => {
+    },
+    closeMenu: () => {
+    },
     currentTab: '',
     userProfileImage:
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
     showCardShadow: true,
     cardRefreshRequests: [],
-    fireConfetti: () => {},
-    displayDropDownAlert: () => {},
+    fireConfetti: () => {
+    },
+    displayDropDownAlert: () => {
+    },
     selectedDayKey: '',
-    units: [],
     currentUser: {},
     timelineDays: 0,
     globalBlurBackground: false,
@@ -39,7 +42,6 @@ interface GlobalState {
     fireConfetti: Function;
     displayDropDownAlert: Function;
     selectedDayKey: DayKey;
-    units: Unit[];
     currentUser: User;
     timelineDays: number;
     globalBlurBackground: boolean;
@@ -81,13 +83,13 @@ export const GlobalState = createSlice({
             }
 
             updatedTimelineCardRefreshRequests = updatedTimelineCardRefreshRequests.concat(
-                action.payload
+                action.payload,
             );
             state.cardRefreshRequests = updatedTimelineCardRefreshRequests;
         },
         removeTimelineCardRefreshRequest(state, action) {
             state.cardRefreshRequests = state.cardRefreshRequests.filter(
-                (item) => item !== action.payload
+                (item) => item !== action.payload,
             );
         },
         setFireConfetti(state, action) {
@@ -98,9 +100,6 @@ export const GlobalState = createSlice({
         },
         setSelectedDayKey(state, action) {
             state.selectedDayKey = action.payload;
-        },
-        setUnits(state, action) {
-            state.units = action.payload;
         },
         setCurrentUser(state, action) {
             state.currentUser = action.payload;
@@ -217,14 +216,6 @@ export const getSelectedDayKey = (state: RootState): string => {
     return state.globalState.selectedDayKey;
 };
 
-export const getUnits = (state: RootState): Unit[] => {
-    if (!state?.globalState.units) {
-        return INITIAL_STATE.units;
-    }
-
-    return state.globalState.units;
-};
-
 export const getCurrentUser = (state: RootState): User => {
     if (!state?.globalState.currentUser) {
         return INITIAL_STATE.currentUser;
@@ -301,7 +292,6 @@ export const {
     setFireConfetti,
     setDisplayDropDownAlert,
     setSelectedDayKey,
-    setUnits,
     setCurrentUser,
     setTimelineDays,
     setGlobalBlurBackground,

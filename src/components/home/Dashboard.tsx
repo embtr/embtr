@@ -15,7 +15,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { MasterScreens, Routes } from 'src/navigation/RootStackParamList';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 import {
-    MetadataController,
     MetadataCustomHooks,
 } from 'src/controller/metadata/MetadataController';
 

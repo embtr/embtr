@@ -7,6 +7,7 @@ import {
     VerifyAccountEmailRequest,
 } from 'resources/types/requests/AccountTypes';
 import {
+    CreateUserResponse,
     GetUserResponse,
     GetUsersResponse,
     UpdateUserRequest,
@@ -33,14 +34,6 @@ export interface UserModel {
     today_widgets?: string[];
     timestamp: Timestamp;
 }
-
-export const FAKE_USER: UserModel = {
-    uid: '',
-    access_level: '',
-    email: '',
-    post_notification_token: '',
-    timestamp: Timestamp.now(),
-};
 
 const ACCOUNT_ENDPOINT = 'account';
 const USER_ENDPOINT = 'user';
@@ -102,42 +95,34 @@ class UserController {
         }
     }
 
-    public static async getCurrentUser() {
-        return await axiosInstance
-            .get(`/${USER_ENDPOINT}`)
-            .then((success) => {
-                const data: GetUserResponse = success.data;
-                if (!data.user) {
-                    return undefined;
-                }
-
-                return data.user;
-            })
-            .catch((error) => {
-                return undefined;
-            });
+    public static async getCurrentUser(): Promise<User | undefined> {
+        try {
+            const success = await axiosInstance.get<GetUserResponse>(`/${USER_ENDPOINT}`);
+            const response: GetUserResponse = success.data;
+            return response.user;
+        } catch (error) {
+            return undefined;
+        }
     }
 
     public static async getUserByUidViaApi(uid: string): Promise<GetUserResponse> {
-        return await axiosInstance
-            .get(`/${USER_ENDPOINT}/${uid}`)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+        try {
+            const success = await axiosInstance.get(`/${USER_ENDPOINT}/${uid}`);
+            return success.data;
+        } catch (error) {
+            return error.response.data;
+        }
     }
 
-    public static async createUser() {
-        return await axiosInstance
-            .post(`/${USER_ENDPOINT}/`)
-            .then(async (success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
+    public static async createUser(): Promise<User | undefined> {
+        try {
+
+            const success = await axiosInstance.post(`/${USER_ENDPOINT}/`);
+            const response: CreateUserResponse = success.data;
+            return response.user;
+        } catch (error) {
+            return undefined;
+        }
     }
 
     public static async deleteUser() {
@@ -204,21 +189,12 @@ class UserController {
 
     public static async loginUser(): Promise<User | undefined> {
         let user: User | undefined = await this.getCurrentUser();
-        if (user) {
-            return user;
-        }
-
-        const result = await this.createUser();
-        if (result.success) {
+        if (!user) {
+            user = await this.createUser();
             await this.forceRefreshIdToken();
-
-            user = await this.getCurrentUser();
-            if (user) {
-                return user;
-            }
         }
 
-        return undefined;
+        return user;
     }
 
     public static async logoutUser() {
@@ -237,7 +213,7 @@ class UserController {
     }
 
     private static async forceRefreshIdToken() {
-        const refreshedTOken = await getAuth().currentUser?.getIdToken(true);
+        await getAuth().currentUser?.getIdToken(true);
     }
 
     public static async uploadProfilePhoto(): Promise<string | undefined> {

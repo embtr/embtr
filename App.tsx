@@ -9,12 +9,15 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { LogBox } from 'react-native';
 
 /*
  * "ABANDON ALL HOPE YE WHO ENTER HERE" - loganmbutler - 2023-11-29
  */
 
 export default function App() {
+    LogBox.ignoreAllLogs();
+
     return (
         <React.StrictMode>
             <GestureHandlerRootView style={{ flex: 1 }}>

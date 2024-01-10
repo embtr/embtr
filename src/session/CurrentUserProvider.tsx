@@ -1,6 +1,6 @@
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 
-export const registerAuthStateListener = (callback: Function) => {
+export const registerAuthStateListener = (callback: (user: User | null) => void) => {
     const unsubscribe = onAuthStateChanged(getAuth(), (user) => {
         callback(user);
     });
@@ -21,7 +21,7 @@ export const getCurrentUserUid = (callback: Function) => {
     if (user) {
         callback(user.uid);
     } else {
-        registerAuthStateListener((user: User) => {
+        registerAuthStateListener((user) => {
             if (user) {
                 callback(user.uid);
             } else {
