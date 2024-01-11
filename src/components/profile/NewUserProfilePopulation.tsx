@@ -52,7 +52,7 @@ export const NewUserProfilePopulation = () => {
 
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
 
-    const termsVersion = MetadataCustomHooks.useTermsVersion();
+    const termsVersion = MetadataCustomHooks.useLatestTermsVersion();
     const currentUser = UserCustomHooks.useCurrentUser();
     React.useEffect(() => {
         if (currentUser.data) {

@@ -7,19 +7,15 @@ import { DayKey } from 'resources/types/custom_schema/DayKey';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
-    openMenu: () => {
-    },
-    closeMenu: () => {
-    },
+    openMenu: () => {},
+    closeMenu: () => {},
     currentTab: '',
     userProfileImage:
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
     showCardShadow: true,
     cardRefreshRequests: [],
-    fireConfetti: () => {
-    },
-    displayDropDownAlert: () => {
-    },
+    fireConfetti: () => {},
+    displayDropDownAlert: () => {},
     selectedDayKey: '',
     currentUser: {},
     timelineDays: 0,
@@ -29,6 +25,7 @@ const INITIAL_STATE: GlobalState = {
     updateModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     removalModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     editModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
+    acknowledgedVersion: '0.0.0',
 };
 
 interface GlobalState {
@@ -50,6 +47,7 @@ interface GlobalState {
     updateModalPlannedTask: UpdateModalPlannedTask;
     removalModalPlannedTask: UpdateModalPlannedTask;
     editModalPlannedTask: UpdateModalPlannedTask;
+    acknowledgedVersion: string;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -83,13 +81,13 @@ export const GlobalState = createSlice({
             }
 
             updatedTimelineCardRefreshRequests = updatedTimelineCardRefreshRequests.concat(
-                action.payload,
+                action.payload
             );
             state.cardRefreshRequests = updatedTimelineCardRefreshRequests;
         },
         removeTimelineCardRefreshRequest(state, action) {
             state.cardRefreshRequests = state.cardRefreshRequests.filter(
-                (item) => item !== action.payload,
+                (item) => item !== action.payload
             );
         },
         setFireConfetti(state, action) {
@@ -132,6 +130,9 @@ export const GlobalState = createSlice({
         },
         setEditModalPlannedTask(state, action) {
             state.editModalPlannedTask = action.payload;
+        },
+        setAcknowledgedVersion(state, action) {
+            state.acknowledgedVersion = action.payload;
         },
     },
 });
@@ -280,6 +281,14 @@ export const getEditModalPlannedTask = (state: RootState): UpdateModalPlannedTas
     return state.globalState.editModalPlannedTask;
 };
 
+export const getAcknowledgedVersion = (state: RootState): string => {
+    if (state?.globalState.acknowledgedVersion === undefined) {
+        return INITIAL_STATE.acknowledgedVersion;
+    }
+
+    return state.globalState.acknowledgedVersion;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -301,4 +310,5 @@ export const {
     setUpdateModalPlannedTask,
     setRemovalModalPlannedTask,
     setEditModalPlannedTask,
+    setAcknowledgedVersion,
 } = GlobalState.actions;

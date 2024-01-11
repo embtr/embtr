@@ -8,7 +8,7 @@ export const SettingsVersion = () => {
     const [latestReleasedVersion, setLatestReleasedVersion] = React.useState<string>('');
 
     const fetch = async () => {
-        const latestReleasedVersion = await MetadataController.getMetadata(MetadataKey.VERSION);
+        const latestReleasedVersion = await MetadataController.getMetadata(MetadataKey.LATEST_APP_VERSION);
         if (latestReleasedVersion) {
             setLatestReleasedVersion(latestReleasedVersion);
         }

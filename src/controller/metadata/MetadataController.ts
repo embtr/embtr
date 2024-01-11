@@ -4,7 +4,8 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 import { GetAllMetadataResponse } from 'resources/types/requests/MetadataTypes';
 
 export enum MetadataKey {
-    VERSION = 'VERSION',
+    LATEST_APP_VERSION = 'LATEST_APP_VERSION',
+    MINIMUM_APP_VERSION = 'MINIMUM_APP_VERSION',
     RECOMMENDED_TASKS = 'RECOMMENDED_TASKS',
     TIMELINE_DAYS = 'TIMELINE_DAYS',
     TERMS_VERSION = 'TERMS_VERSION',
@@ -33,11 +34,15 @@ export namespace MetadataCustomHooks {
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
 
-    export const useTermsVersion = () => {
+    export const useLatestTermsVersion = () => {
         return MetadataCustomHooks.useMetadata(MetadataKey.TERMS_VERSION);
     };
 
-    export const useVersion = () => {
-        return MetadataController.getMetadata(MetadataKey.VERSION);
+    export const useLatestAppVersion = () => {
+        return MetadataCustomHooks.useMetadata(MetadataKey.LATEST_APP_VERSION);
+    };
+
+    export const useMinimumAppVersion = () => {
+        return MetadataCustomHooks.useMetadata(MetadataKey.MINIMUM_APP_VERSION);
     };
 }

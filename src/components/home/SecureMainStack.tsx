@@ -17,6 +17,7 @@ import { Routes } from 'src/navigation/RootStackParamList';
 import { ManageHabits } from 'src/components/manage_habits/ManageHabits';
 import { HabitSummaryDetails } from '../manage_habits/HabitSummaryDetails';
 import { TermsApprovalModal } from 'src/components/profile/TermsApprovalModal';
+import { UpdateAvailableModal } from 'src/components/modal/UpdateAvailableModal';
 
 const Stack = createStackNavigator();
 
@@ -60,6 +61,11 @@ export const SecureMainStack = () => {
             <Stack.Screen
                 name={Routes.TERMS_APPROVAL_MODAL}
                 component={TermsApprovalModal}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name={Routes.UPDATE_AVAILABLE_MODAL}
+                component={UpdateAvailableModal}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen

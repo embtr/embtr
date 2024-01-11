@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Image, Keyboard, Linking, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Keyboard, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { useNavigation } from '@react-navigation/core';
@@ -16,7 +16,7 @@ export const TermsApprovalModal = () => {
 
     const [termsApproved, setTermsApproved] = React.useState(false);
 
-    const termsVersion = MetadataCustomHooks.useTermsVersion();
+    const termsVersion = MetadataCustomHooks.useLatestTermsVersion();
     const currentUser = UserCustomHooks.useCurrentUser();
 
     const agreeToTerms = async () => {

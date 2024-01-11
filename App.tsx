@@ -1,4 +1,4 @@
-import React from 'react';
+import React = require('react');
 import { ThemeProvider } from './src/components/theme/ThemeProvider';
 import { reactQueryClient } from './src/react_query/ReactQueryClient';
 import { Main } from './src/main';
