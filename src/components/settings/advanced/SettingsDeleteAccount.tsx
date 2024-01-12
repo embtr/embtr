@@ -10,7 +10,7 @@ export const SettingsDeleteAccount = () => {
 
     const onDelete = () => {
         Alert.alert(
-            'Delete Acccount And Data',
+            'Delete Account And Data',
             'Are you sure you want to delete your account and all associated data? This action cannot be undone.',
             [
                 { text: 'Cancel', onPress: () => {}, style: 'cancel' },

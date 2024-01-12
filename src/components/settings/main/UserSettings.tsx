@@ -4,16 +4,12 @@ import { Banner } from 'src/components/common/Banner';
 import { SettingsAccount } from './SettingsAccount';
 import { SettingsMembership } from './SettingsMembership';
 import { SettingsSignOut } from './SettingsSignOut';
-import { SettingsClearCache } from './SettingsClearCache';
 import { SettingsAdvancedButton } from './SettingsAdvancedButton';
 import { NotificationsToggle } from './NotificationsToggle';
 import { EditProfileSettingsButton } from './EditProfileSettingsButton';
 import { SettingsVersion } from './SettingsVersion';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
-import { SettingsPing } from './SettingsPing';
-import { SettingsDatabasePing } from './SettingsDatabasePing';
-import { ThemeToggle } from 'src/components/theme/ThemeToggle';
 
 export const UserSettings = () => {
     return (
@@ -38,12 +34,6 @@ export const UserSettings = () => {
                     <SettingsAccount />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsMembership />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-                    <SettingsClearCache />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-                    <SettingsDatabasePing />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
-                    <SettingsPing />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsSignOut />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />

@@ -5,6 +5,7 @@ import { SettingsDeleteAccount } from './SettingsDeleteAccount';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SettingsTextDetailedElement } from '../generic/SettingsTextDetailedElement';
+import { SettingsClearCache } from 'src/components/settings/main/SettingsClearCache';
 
 export const AdvancedUserSettings = () => {
     return (
@@ -22,6 +23,8 @@ export const AdvancedUserSettings = () => {
                     }}
                 >
                     <View style={{ height: TIMELINE_CARD_PADDING }} />
+                    <SettingsClearCache />
+                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsDeleteAccount />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsTextDetailedElement

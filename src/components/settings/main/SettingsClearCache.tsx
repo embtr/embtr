@@ -15,10 +15,6 @@ export const SettingsClearCache = () => {
     };
 
     return (
-        <SettingsButtonElement
-            text={'Clear Cache'}
-            icon={'trash-bin-outline'}
-            onPress={clearCache}
-        />
+        <SettingsButtonElement text={'Clear Cache'} icon={'folder-outline'} onPress={clearCache} />
     );
 };

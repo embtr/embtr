@@ -54,7 +54,7 @@ export const EmbtrToggle = ({ text, onToggle, value }: Props) => {
                     style={{ transform: [{ scaleX: 0.65 }, { scaleY: 0.65 }] }}
                     trackColor={{
                         false: colors.toggle_background_unselected,
-                        true: colors.accent_color,
+                        true: colors.accent_color_light,
                     }}
                     thumbColor={colors.toggle}
                     ios_backgroundColor={colors.toggle_background_unselected}

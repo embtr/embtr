@@ -71,8 +71,8 @@ export const SettingsTextElement = ({ text, secondaryText, thirdaryText, onPress
                         {thirdaryText && (
                             <Text
                                 style={{
-                                    color: 'red',
-                                    fontFamily: 'Poppins_500Medium',
+                                    color: colors.accent_color_light,
+                                    fontFamily: POPPINS_MEDIUM,
                                     fontSize: 15,
                                     alignItems: 'flex-start',
                                     paddingLeft: 30,
