@@ -283,7 +283,7 @@ class PlannedDayController {
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY_RESULT}`, body)
+            .post(`${PLANNED_DAY_RESULT}v1/`, body)
             .then((success) => {
                 return success.data as GetPlannedDayResponse;
             })
@@ -298,7 +298,7 @@ class PlannedDayController {
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY}`, body)
+            .post(`${PLANNED_DAY}v1/`, body)
             .then((success) => {
                 return success.data as CreatePlannedDayResponse;
             })
@@ -323,7 +323,7 @@ class PlannedDayController {
         dayKey: string
     ): Promise<PlannedDayModel | undefined> {
         return await axiosInstance
-            .get(`${PLANNED_DAY}${userId}/${dayKey}`)
+            .get(`${PLANNED_DAY}v1/${userId}/${dayKey}`)
             .then((success) => {
                 const result = success.data as GetPlannedDayResponse;
                 if (result.plannedDay) {
@@ -336,9 +336,9 @@ class PlannedDayController {
             });
     }
 
-    public static async isComplete(userId: number, dayKey: string): Promise<boolean> {
+    public static async isComplete(userId: number, dayKey: string): Promise<boolean | undefined> {
         return await axiosInstance
-            .get(`${PLANNED_DAY}${userId}/${dayKey}/isComplete`)
+            .get(`${PLANNED_DAY}v1/${userId}/${dayKey}/isComplete`)
             .then((success) => {
                 const result = success.data as GetBooleanResponse;
                 return result.result;

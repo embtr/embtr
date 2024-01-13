@@ -17,7 +17,6 @@ import ImageController from 'src/controller/image/ImageController';
 import { CommentController } from 'src/controller/api/general/CommentController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
-import { GetTimelineResponse, TimelineRequestCursor } from 'resources/types/requests/Timeline';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
@@ -25,7 +24,7 @@ import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 class DailyResultController {
     public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {
         return await axiosInstance
-            .get(`/user/${userId}/day-results`)
+            .get(`/user/v1/${userId}/day-results`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultSummariesResponse;
                 return response.plannedDayResultSummaries ?? [];
@@ -43,7 +42,7 @@ class DailyResultController {
         const lowerBoundDate = new Date(lowerBound).toISOString();
 
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}`, {
+            .get(`${PLANNED_DAY_RESULT}v1/`, {
                 params: {
                     upperBound: upperBoundDate,
                     lowerBound: lowerBoundDate,
@@ -70,7 +69,7 @@ class DailyResultController {
         const lowerBoundDate = new Date(lowerBound).toISOString();
 
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}summaries`, {
+            .get(`${PLANNED_DAY_RESULT}v1/summaries`, {
                 params: {
                     upperBound: upperBoundDate,
                     lowerBound: lowerBoundDate,
@@ -89,7 +88,7 @@ class DailyResultController {
         plannedDayResultId: number
     ): Promise<PlannedDayResultSummary | undefined> {
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}summary/${plannedDayResultId}`)
+            .get(`${PLANNED_DAY_RESULT}v1/summary/${plannedDayResultId}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultSummaryResponse;
                 return response.plannedDayResultSummary;
@@ -101,7 +100,7 @@ class DailyResultController {
 
     public static async get(id: number): Promise<PlannedDayResult | undefined> {
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}${id}`)
+            .get(`${PLANNED_DAY_RESULT}v1/${id}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultResponse;
                 return response.plannedDayResult!;
@@ -121,7 +120,7 @@ class DailyResultController {
         const userId = await getUserIdFromToken();
 
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}${userId}/${plannedDay.dayKey}`)
+            .get(`${PLANNED_DAY_RESULT}v1/${userId}/${plannedDay.dayKey}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultResponse;
                 return response.plannedDayResult;
@@ -137,7 +136,7 @@ class DailyResultController {
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY_RESULT}`, body)
+            .post(`${PLANNED_DAY_RESULT}v1/`, body)
             .then((success) => {
                 const results = success.data as CreatePlannedDayResultResponse;
                 return results.plannedDayResult;
@@ -169,7 +168,7 @@ class DailyResultController {
         };
 
         return await axiosInstance
-            .patch(`${PLANNED_DAY_RESULT}`, body)
+            .patch(`${PLANNED_DAY_RESULT}v1/`, body)
             .then((success) => {
                 const results = success.data as UpdatePlannedDayResultResponse;
                 return results.plannedDayResult;
@@ -193,7 +192,7 @@ class DailyResultController {
 
     public static async hideCreateRecommendation(dayKey: string) {
         return await axiosInstance
-            .post(`/planned-day-result/${dayKey}/hide-recommendation`)
+            .post(`/planned-day-result/v1/${dayKey}/hide-recommendation`)
             .then((success) => {
                 return success.data;
             })

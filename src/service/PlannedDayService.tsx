@@ -4,8 +4,8 @@ import PlannedDayController, {
 
 export namespace PlannedDayService {
     export const isComplete = async (userId: number, dayKey: string) => {
-        const result = PlannedDayController.isComplete(userId, dayKey);
-        return result;
+        const result = await PlannedDayController.isComplete(userId, dayKey);
+        return result === true;
     };
 
     export const getTodayDayKey = () => {

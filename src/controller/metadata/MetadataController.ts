@@ -14,7 +14,7 @@ export enum MetadataKey {
 export class MetadataController {
     public static async getMetadata(key: MetadataKey) {
         try {
-            const success = await axiosInstance.get<GetAllMetadataResponse>('/metadata/');
+            const success = await axiosInstance.get<GetAllMetadataResponse>('/metadata/v1/');
             const response: GetAllMetadataResponse = success.data;
             return response.metadata.find((metadata) => metadata.key === key)?.value;
         } catch (error) {

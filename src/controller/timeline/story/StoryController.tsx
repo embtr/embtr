@@ -1,6 +1,5 @@
-import { Timestamp } from 'firebase/firestore';
 import { USER_POST } from 'resources/endpoints';
-import { Like as LikeModel, UserPost, Comment as CommentModel, Image } from 'resources/schema';
+import { UserPost, Comment as CommentModel } from 'resources/schema';
 import {
     CreateUserPostRequest,
     CreateUserPostResponse,
@@ -16,7 +15,6 @@ import { CommentController } from 'src/controller/api/general/CommentController'
 import { TimelinePostModel } from 'src/model/OldModels';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
-import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export interface StoryModel extends TimelinePostModel {
@@ -31,7 +29,7 @@ export interface StoryModel extends TimelinePostModel {
 class StoryController {
     public static async getAllForUser(userId: number): Promise<UserPost[]> {
         return await axiosInstance
-            .get(`/user/${userId}/posts`)
+            .get(`/user/v1/${userId}/posts`)
             .then((success) => {
                 const response = success.data as GetAllUserPostResponse;
                 return response.userPosts ?? [];
@@ -43,7 +41,7 @@ class StoryController {
 
     public static async getAllViaApi(upperBound: Date, lowerBound: Date): Promise<UserPost[]> {
         return await axiosInstance
-            .get(`${USER_POST}`, {
+            .get(`${USER_POST}v1/`, {
                 params: {
                     upperBound: upperBound.toISOString(),
                     lowerBound: lowerBound.toISOString(),
@@ -60,7 +58,7 @@ class StoryController {
 
     public static async getViaApi(id: number) {
         return await axiosInstance
-            .get(`${USER_POST}${id}`)
+            .get(`${USER_POST}v1/${id}`)
             .then((success) => {
                 const response = success.data as GetUserPostResponse;
                 return response.userPost;
@@ -84,7 +82,7 @@ class StoryController {
         };
 
         return await axiosInstance
-            .post(`${USER_POST}`, request)
+            .post(`${USER_POST}v1`, request)
             .then((success) => {
                 const response: CreateUserPostResponse = success.data;
                 return response.userPost;
@@ -105,7 +103,7 @@ class StoryController {
         };
 
         return await axiosInstance
-            .patch(`${USER_POST}`, request)
+            .patch(`${USER_POST}v1`, request)
             .then((success) => {
                 const response: CreateUserPostResponse = success.data;
                 return response.userPost;

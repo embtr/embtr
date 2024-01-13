@@ -16,7 +16,7 @@ export class ScheduledHabitController {
         };
 
         return await axiosInstance
-            .post('/habit/schedule', createScheduledHabitRequest)
+            .post('/habit/v1/schedule', createScheduledHabitRequest)
             .then((success) => {
                 return true;
             })
@@ -31,7 +31,7 @@ export class ScheduledHabitController {
 
     public static async archive(id: number) {
         return await axiosInstance
-            .post(`/habit/schedule/${id}/archive`)
+            .post(`/habit/v1/schedule/${id}/archive`)
             .then((success) => {
                 return true;
             })
@@ -43,7 +43,7 @@ export class ScheduledHabitController {
     public static async getScheduledHabit(id: number) {
         try {
             const success = await axiosInstance.get<GetScheduledHabitResponse>(
-                `/habit/schedule/${id}`
+                `/habit/v1/schedule/${id}`
             );
             return success.data.scheduledHabit;
         } catch (error) {
@@ -56,7 +56,7 @@ export class ScheduledHabitController {
     ): Promise<ScheduledHabit[] | undefined> {
         try {
             const success = await axiosInstance.get<GetScheduledHabitResponse>(
-                `/habit/${habitId}/schedules`
+                `/habit/v1/${habitId}/schedules`
             );
             const data: GetScheduledHabitsResponse = success.data;
             return data.scheduledHabits;

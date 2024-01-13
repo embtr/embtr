@@ -6,7 +6,7 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 export class DayOfWeekController {
     public static async getAll() {
         return axiosInstance
-            .get<GetDaysOfWeekResponse>(`/day-of-week/`)
+            .get<GetDaysOfWeekResponse>(`/day-of-week/v1/`)
             .then((success) => {
                 return success.data.daysOfWeek ?? [];
             })

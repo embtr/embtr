@@ -5,14 +5,13 @@ import {
 import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
-import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { QuoteOfTheDay } from 'resources/schema';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export class QuoteOfTheDayController {
     public static async get(): Promise<QuoteOfTheDay> {
         return await axiosInstance
-            .get(`/quote-of-the-day/`)
+            .get(`/quote-of-the-day/v1/`)
             .then((success) => {
                 const response: GetQuoteOfTheDayResponse = success.data;
                 return response.quoteOfTheDay;
@@ -25,7 +24,7 @@ export class QuoteOfTheDayController {
     public static async create(quote: string, author: string) {
         const request: CreateQuoteOfTheDayRequest = { quote: quote, author: author };
         return await axiosInstance
-            .post(`/quote-of-the-day/`, request)
+            .post(`/quote-of-the-day/v1/`, request)
             .then((success) => {
                 return success.data.quoteOfTheDay;
             })

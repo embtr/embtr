@@ -9,7 +9,6 @@ import {
     TaskPreferenceRequest,
 } from 'resources/types/requests/TaskTypes';
 import { Timestamp } from 'firebase/firestore';
-import { MetadataController, MetadataKey } from '../metadata/MetadataController';
 
 export interface TaskModel {
     id?: string;
@@ -105,7 +104,7 @@ export const FAKE_HABIT: TaskModel = {
 class TaskController {
     public static async createViaApi(createTaskRequest: CreateTaskRequest): Promise<NewTaskModel> {
         return await axiosInstance
-            .post(`${TASK}`, createTaskRequest)
+            .post(`${TASK}v1/`, createTaskRequest)
             .then((success) => {
                 const response: CreateTaskResponse = success.data;
                 return response.task;
@@ -118,7 +117,7 @@ class TaskController {
     public static async search(query: string): Promise<NewTaskModel[]> {
         const startTime = Date.now();
         return await axiosInstance
-            .get(`${TASK}`, { params: { q: query } })
+            .get(`/habit/v1/`, { params: { q: query } })
             .then((success) => {
                 const endTime = Date.now();
                 const responseTime = endTime - startTime;
@@ -133,7 +132,7 @@ class TaskController {
 
     public static async getRecent(): Promise<NewTaskModel[]> {
         return await axiosInstance
-            .get(`${TASK}recent`)
+            .get(`${TASK}v1/recent`)
             .then((success) => {
                 return success.data.tasks;
             })
@@ -149,7 +148,7 @@ class TaskController {
         };
 
         return await axiosInstance
-            .put(`/task/${task.id}/preference`, request)
+            .put(`/task/v1/${task.id}/preference`, request)
             .then((success) => {
                 return success.data;
             })

@@ -29,13 +29,12 @@ export const SettingsTextDetailedElement = ({ firstaryText, secondaryText }: Pro
             ]}
         >
             <View style={{ flex: 1 }}>
-                <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'green' }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
                     <View
                         style={{
                             flex: 1,
                             paddingLeft: TIMELINE_CARD_PADDING * 2,
                             justifyContent: 'center',
-                            backgroundColor: 'red',
                         }}
                     >
                         <Text
