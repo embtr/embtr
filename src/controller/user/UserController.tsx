@@ -99,9 +99,9 @@ class UserController {
         try {
             const success = await axiosInstance.get<GetUserResponse>(`/${USER_ENDPOINT}/v1/`);
             const response: GetUserResponse = success.data;
-            return response.user;
+                        return response.user;
         } catch (error) {
-            return undefined;
+                        return undefined;
         }
     }
 
@@ -188,7 +188,7 @@ class UserController {
 
     public static async loginUser(): Promise<User | undefined> {
         let user: User | undefined = await this.getCurrentUser();
-        if (!user) {
+                if (!user) {
             user = await this.createUser();
             await this.forceRefreshIdToken();
         }

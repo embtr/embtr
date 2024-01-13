@@ -56,33 +56,23 @@ export const NewUserProfilePopulation = () => {
     const currentUser = UserCustomHooks.useCurrentUser();
     React.useEffect(() => {
         if (currentUser.data) {
-            if (currentUser.data.username?.length && currentUser.data.username !== 'new user') {
+            if (currentUser.data.username) {
                 setUsername(currentUser.data.username);
             }
 
-            if (
-                currentUser.data.displayName?.length &&
-                currentUser.data.displayName !== 'new user'
-            ) {
+            if (currentUser.data.displayName) {
                 setDisplayName(currentUser.data.displayName);
             }
 
-            if (currentUser.data.bio?.length && currentUser.data.bio !== 'welcome to embtr!') {
+            if (currentUser.data.bio) {
                 setBio(currentUser.data.bio);
             }
 
-            if (currentUser.data.photoUrl?.length && currentUser.data.photoUrl) {
+            if (currentUser.data.photoUrl) {
                 setUserProfileUrl(currentUser.data.photoUrl);
             }
 
-            let usernameToValidate = currentUser.data.username?.length
-                ? currentUser.data.username
-                : '';
-            if (usernameToValidate === 'new user') {
-                usernameToValidate = '';
-            }
-
-            setUsernameAvailability(usernameToValidate);
+            setUsernameAvailability(currentUser.data.username ?? '');
         }
     }, [currentUser.data]);
 
@@ -127,25 +117,25 @@ export const NewUserProfilePopulation = () => {
     };
 
     const setUsernameAvailability = async (targetUsername: string) => {
-        if (!currentUser.data?.username) {
-            setUsernameAvailabilityResult({ message: 'loading', available: false });
+        if (!targetUsername || targetUsername.length === 0) {
+            setUsernameAvailabilityResult({ message: 'required', available: false });
             return;
         }
-
-        const currentUsername = currentUser.data.username;
+        
+        const currentUsername = currentUser.data?.username;
 
         const usernameAvailabilityResult = await UserService.usernameIsAvailable(
-            currentUsername,
-            targetUsername
+            targetUsername,
+            currentUsername
         );
-        setUsernameAvailabilityResult(usernameAvailabilityResult);
+                setUsernameAvailabilityResult(usernameAvailabilityResult);
     };
 
     const setUsernameWrapper = async (username: string) => {
         if (!UserService.usernameIsValid(username)) {
-            return;
+                        return;
         }
-
+        
         setUsernameAvailability(username);
         setUsername(username);
     };

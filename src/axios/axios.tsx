@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getAuth } from 'firebase/auth';
+import { Code } from 'resources/codes';
 import { hydrateDates } from 'src/util/DateUtility';
 import { getApiUrl } from 'src/util/UrlUtility';
 import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
@@ -30,7 +31,7 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.response.status === 401 && error.response.internalCode === 1) {
+        if (error.response.status === 401 && error.response.internalCode === Code.REAUTHENTICATE) {
             getAuth().signOut();
         }
         return Promise.reject(error);

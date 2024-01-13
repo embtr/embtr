@@ -14,8 +14,8 @@ export class UserService {
     }
 
     public static async usernameIsAvailable(
-        currentUsername: string,
-        targetUsername: string
+        targetUsername: string,
+        currentUsername?: string
     ): Promise<UsernameAvailabilityResult> {
         if (currentUsername === targetUsername) {
             return { message: 'available', available: true };
