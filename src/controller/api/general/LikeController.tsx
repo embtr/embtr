@@ -7,7 +7,7 @@ export class LikeController {
         const endpoint = getInteractableEndpoint(interactable);
 
         return axiosInstance
-            .post(`${endpoint}${id}/like/`)
+            .post(`${endpoint}v1/${id}/like/`)
             .then((success) => {
                 return success.data;
             })

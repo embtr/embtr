@@ -8,7 +8,6 @@ import {
     UpdatePlannedTaskResponse,
 } from 'resources/types/requests/PlannedTaskTypes';
 import { PlannedTask } from 'resources/schema';
-import axios from 'axios';
 
 export interface PlannedTaskModel {
     id?: string;
@@ -24,11 +23,6 @@ export interface PlannedTaskModel {
     modified: Timestamp;
 }
 
-export const DEFAULT_PLANNED_TASK: PlannedTask = {
-    completedQuantity: 0,
-    quantity: 0,
-};
-
 class PlannedTaskController {
     public static async create(plannedTask: PlannedTask, dayKey: string) {
         return await this.createWithDayKey(plannedTask, dayKey);
@@ -40,7 +34,7 @@ class PlannedTaskController {
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY}${dayKey}/planned-task/`, request)
+            .post(`${PLANNED_DAY}v1/${dayKey}/planned-task/`, request)
             .then((success) => {
                 return success.data;
             })
@@ -58,20 +52,8 @@ class PlannedTaskController {
             plannedTask,
         };
 
-        const startTimeA = Date.now();
-        await fetch("https://api.embtr.com/health/");
-        const endTimeA = Date.now();
-        const responseTimeA = endTimeA - startTimeA;
-        console.log(`health: ${responseTimeA}ms`);
-
-        const startTime = Date.now();
-        const response = await axiosInstance.get(`health/`);
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
-        console.log(`health: ${responseTime}ms`);
-
         try {
-            const response = await axiosInstance.put(`${PLANNED_DAY}planned-task/`, request);
+            const response = await axiosInstance.put(`${PLANNED_DAY}v1/planned-task/`, request);
             const updatedPlannedTask: UpdatePlannedTaskResponse = response.data;
             return updatedPlannedTask;
         } catch (error) {

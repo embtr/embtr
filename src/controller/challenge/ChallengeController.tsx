@@ -1,4 +1,4 @@
-import { Challenge, Comment, JoinedChallenge } from 'resources/schema';
+import { Challenge, Comment } from 'resources/schema';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import {
     GetChallengeParticipationResponse,
@@ -7,15 +7,8 @@ import {
     GetJoinedChallengesResponse,
 } from 'resources/types/requests/ChallengeTypes';
 import axiosInstance from 'src/axios/axios';
-import { TimelinePostModel } from 'src/model/OldModels';
 import { CommentController } from '../api/general/CommentController';
 import React from 'react';
-
-export interface JoinedChallengeTimelinePost extends TimelinePostModel {
-    data: {
-        joinedChallenge: JoinedChallenge;
-    };
-}
 
 export class ChallengeController {
     public static async getAllRecentJoined(upperBound: Date, lowerBound: Date) {
@@ -23,7 +16,7 @@ export class ChallengeController {
         const lowerBoundDate = new Date(lowerBound).toISOString();
 
         return axiosInstance
-            .get(`/challenge/recently-joined/`, {
+            .get(`/challenge/v1/recently-joined/`, {
                 params: {
                     upperBound: upperBoundDate,
                     lowerBound: lowerBoundDate,
@@ -41,7 +34,7 @@ export class ChallengeController {
 
     public static async get(id: number) {
         return axiosInstance
-            .get(`/challenge/${id}`)
+            .get(`/challenge/v1/${id}`)
             .then((success) => {
                 const body: GetChallengeResponse = success.data;
                 return body.challenge;
@@ -53,7 +46,7 @@ export class ChallengeController {
 
     public static async getAll() {
         return axiosInstance
-            .get(`/challenge/`)
+            .get(`/challenge/v1/`)
             .then((success) => {
                 const body: GetChallengesResponse = success.data;
                 return body.challenges ?? [];
@@ -65,7 +58,7 @@ export class ChallengeController {
 
     public static async getAllActiveForUser(userId: number) {
         return axiosInstance
-            .get(`/user/${userId}/active-challenge-participation/`)
+            .get(`/user/v1/${userId}/active-challenge-participation/`)
             .then((success) => {
                 const body: GetChallengeParticipationResponse = success.data;
                 return body.challengeParticipation ?? [];
@@ -77,7 +70,7 @@ export class ChallengeController {
 
     public static async getAllForUser(userId: number) {
         return axiosInstance
-            .get(`/user/${userId}/challenge-participation/`)
+            .get(`/user/v1/${userId}/challenge-participation/`)
             .then((success) => {
                 const body: GetChallengeParticipationResponse = success.data;
                 return body.challengeParticipation ?? [];
@@ -89,7 +82,7 @@ export class ChallengeController {
 
     public static async getAllCompletedForUser(userId: number) {
         return axiosInstance
-            .get(`/user/${userId}/completed-challenges/`)
+            .get(`/user/v1/${userId}/completed-challenges/`)
             .then((success) => {
                 const body: GetChallengeParticipationResponse = success.data;
                 return body.challengeParticipation ?? [];
@@ -101,7 +94,7 @@ export class ChallengeController {
 
     public static async register(challengeId: number) {
         return axiosInstance
-            .post(`/challenge/${challengeId}/register`)
+            .post(`/challenge/v1/${challengeId}/register`)
             .then((success) => {
                 return true;
             })
@@ -112,7 +105,7 @@ export class ChallengeController {
 
     public static async like(challengeId: number) {
         return axiosInstance
-            .post(`/challenge/${challengeId}/like`)
+            .post(`/challenge/v1/${challengeId}/like`)
             .then((success) => {
                 return true;
             })

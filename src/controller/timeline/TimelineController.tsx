@@ -8,12 +8,11 @@ import axiosInstance from 'src/axios/axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
-import { UserPost } from 'resources/schema';
 
 export class TimelineController {
     public static async fetch(cursor: TimelineRequestCursor): Promise<TimelineData | undefined> {
         return await axiosInstance
-            .get(`/timeline`, {
+            .get(`/timeline/v1/`, {
                 params: {
                     cursor: cursor.cursor,
                     limit: cursor.limit,

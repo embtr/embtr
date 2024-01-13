@@ -14,7 +14,7 @@ export class HabitSummaryController {
         const now = getTodayPureDate();
 
         try {
-            const success = await axiosInstance.get(`/habit/summary`, {
+            const success = await axiosInstance.get(`/habit/v1/summary`, {
                 params: {
                     cutoffDate: now,
                 },
@@ -30,7 +30,7 @@ export class HabitSummaryController {
         try {
             const now = getTodayPureDate();
 
-            const success = await axiosInstance.get(`/habit/summary/${id}`, {
+            const success = await axiosInstance.get(`/habit/v1/summary/${id}`, {
                 params: {
                     cutoffDate: now,
                 },

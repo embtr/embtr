@@ -12,7 +12,7 @@ export class CommentController {
         };
 
         return await axiosInstance
-            .post(`${endpoint}${id}/comment/`, request)
+            .post(`${endpoint}v1/${id}/comment/`, request)
             .then((success) => {
                 const response: CreateCommentResponse = success.data;
                 return response.comment;
@@ -26,7 +26,7 @@ export class CommentController {
         const endpoint = getInteractableEndpoint(interactable);
 
         return await axiosInstance
-            .delete(`${endpoint}/comment/${comment.id}`)
+            .delete(`${endpoint}v1/comment/${comment.id}`)
             .then((success) => {
                 return success.data;
             })
