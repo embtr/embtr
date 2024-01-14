@@ -5,7 +5,10 @@ export namespace DebouncerCustomHook {
         const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
         useEffect(() => {
-            const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
+            const timer = setTimeout(() => {
+                console.log(value);
+                setDebouncedValue(value);
+            }, delay || 500);
 
             return () => {
                 clearTimeout(timer);

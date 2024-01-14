@@ -1,11 +1,9 @@
 import { HabitSummary } from 'resources/types/habit/Habit';
-import { Pressable, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { Ionicons } from '@expo/vector-icons';
-import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import { Routes } from 'src/navigation/RootStackParamList';
 
 interface Props {
     habitSummary: HabitSummary;

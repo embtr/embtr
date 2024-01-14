@@ -36,7 +36,6 @@ export namespace OnLoginHooks {
         }
 
         if (currentVersion && minimumAppVersion.data && latestAppVersion.data) {
-            console.log(currentVersion, minimumAppVersion, latestAppVersion, acknowledgeVersion);
             const softUpdateAvailable = UpdateUtility.updateIsAvailable(
                 currentVersion,
                 latestAppVersion.data
@@ -49,8 +48,6 @@ export namespace OnLoginHooks {
                 currentVersion,
                 minimumAppVersion.data
             );
-
-            console.log(softUpdateAvailable, softUpdateAcknowledged, hardUpdateAvailable);
 
             if (hardUpdateAvailable) {
                 console.log('Hard update available, navigating to update modal');

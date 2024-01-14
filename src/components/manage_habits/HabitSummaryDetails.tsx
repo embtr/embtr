@@ -12,15 +12,34 @@ import { HabitSummaryDetailsElement } from './HabitSummaryDetailsElement';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { HabitSummaryDetailsHeader } from './HabitSummaryDetailsHeader';
 import { ScheduledHabit } from 'resources/schema';
+import { Checkbox } from 'src/components/checkbox/Checkbox';
+import React from 'react';
+import { getDayKey, getTodayKey } from 'src/controller/planning/PlannedDayController';
+import { PureDate } from 'resources/types/date/PureDate';
 
 export const HabitSummaryDetails = () => {
     const navigation = useEmbtrNavigation();
     const route = useEmbtrRoute(Routes.HABIT_SUMMARY_DETAILS);
+    const [showExpired, setShowExpired] = React.useState<boolean>(false);
 
     const habitId = route.params.id;
 
     const habitSummary = HabitSummaryCustomHooks.useHabitSummary(habitId);
     const scheduledHabits = ScheduledHabitCustomHooks.useScheduledHabitsByHabit(habitId);
+    const currentDayKey = getTodayKey();
+    const filteredScheduledHabits = !showExpired
+        ? scheduledHabits.data?.filter((scheduledHabit) => {
+              if (!scheduledHabit.endDate) {
+                  return true;
+              }
+
+              const pureCurrentDayKey = PureDate.fromString(currentDayKey);
+              const pureScheduledHabitEndDate = PureDate.fromDateFromServer(scheduledHabit.endDate);
+              const isExpired = pureScheduledHabitEndDate < pureCurrentDayKey;
+
+              return !isExpired;
+          })
+        : scheduledHabits.data;
 
     if (!habitSummary.data || !scheduledHabits.data) {
         return (
@@ -66,8 +85,24 @@ export const HabitSummaryDetails = () => {
             <View style={{ padding: TIMELINE_CARD_PADDING }}>
                 <HabitSummaryDetailsHeader habitSummary={habitSummary.data} />
             </View>
+
+            <View
+                style={{
+                    width: '100%',
+                    alignItems: 'flex-end',
+                    paddingRight: TIMELINE_CARD_PADDING,
+                }}
+            >
+                <Checkbox
+                    text={'Show Expired '}
+                    checked={showExpired}
+                    onCheck={() => {
+                        setShowExpired(!showExpired);
+                    }}
+                />
+            </View>
             <FlatList
-                data={scheduledHabits.data}
+                data={filteredScheduledHabits}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
             />
