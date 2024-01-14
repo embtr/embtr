@@ -25,10 +25,9 @@ export namespace OnLoginHooks {
             return;
         }
 
-        if (termsVersion.data) {
-            const userTermsVersion = currentUser.data?.termsVersion ?? 0;
+        if (currentUser.data && termsVersion.data) {
+            const userTermsVersion = currentUser.data.termsVersion ?? 0;
             const termsVersionNumber = Number(termsVersion.data);
-            console.log(userTermsVersion, termsVersionNumber);
 
             if (userTermsVersion < termsVersionNumber) {
                 navigation.navigate(Routes.TERMS_APPROVAL_MODAL);
