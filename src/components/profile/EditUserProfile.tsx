@@ -104,9 +104,10 @@ export const EditUserProfile = () => {
         const currentUsername = currentUser.data.username;
 
         const usernameAvailabilityResult = await UserService.usernameIsAvailable(
-            currentUsername,
-            targetUsername
+            targetUsername,
+            currentUsername
         );
+        console.log(usernameAvailabilityResult);
         setUsernameAvailabilityResult(usernameAvailabilityResult);
     };
 
@@ -201,7 +202,9 @@ export const EditUserProfile = () => {
                 leftText="cancel"
                 leftRoute={'BACK'}
                 rightText="save"
-                rightColor= {usernameAvailabilityResult.available ? colors.link: colors.secondary_text}
+                rightColor={
+                    usernameAvailabilityResult.available ? colors.link : colors.secondary_text
+                }
                 rightOnClick={saveProfile}
                 rightEnabled={usernameAvailabilityResult.available}
             />
