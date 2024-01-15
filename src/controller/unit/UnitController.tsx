@@ -4,10 +4,9 @@ import { GetUnitsResponse } from 'resources/types/requests/UnitTypes';
 export class UnitController {
     public static async getAll() {
         return axiosInstance
-            .get(`/unit/v1/`)
+            .get<GetUnitsResponse>(`/unit/v1/`)
             .then((success) => {
-                const body: GetUnitsResponse = success.data;
-                return body.units ?? [];
+                return success.data.units ?? [];
             })
             .catch((error) => {
                 return [];

@@ -23,7 +23,7 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
-        "jsx": "react-jsx"
+        "jsx": "react-native"
     },
     "include": ["src", "resources", "./src/type.d.ts"],
     "extends": "expo/tsconfig.base"
