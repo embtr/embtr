@@ -1,7 +1,6 @@
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { getDateFromDayKey } from './PlannedDayController';
 import axiosInstance from 'src/axios/axios';
-import { TASK } from 'resources/endpoints';
 import { Task as NewTaskModel, Task, Unit } from 'resources/schema';
 import {
     CreateTaskRequest,
@@ -104,7 +103,7 @@ export const FAKE_HABIT: TaskModel = {
 class TaskController {
     public static async createViaApi(createTaskRequest: CreateTaskRequest): Promise<NewTaskModel> {
         return await axiosInstance
-            .post(`${TASK}v1/`, createTaskRequest)
+            .post('/habit/v1/', createTaskRequest)
             .then((success) => {
                 const response: CreateTaskResponse = success.data;
                 return response.task;
@@ -132,7 +131,7 @@ class TaskController {
 
     public static async getRecent(): Promise<NewTaskModel[]> {
         return await axiosInstance
-            .get(`${TASK}v1/recent`)
+            .get('/habit/v1/recent')
             .then((success) => {
                 return success.data.tasks;
             })

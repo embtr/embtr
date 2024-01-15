@@ -8,7 +8,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
-import { PlannedTask, ScheduledHabit } from 'resources/schema';
+import { PlannedTask, ScheduledHabit, Task } from 'resources/schema';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { Logger } from 'src/util/GeneralUtility';
@@ -166,12 +166,16 @@ export const CreateEditHabitSaveButton = ({
     const createCustomHabit = async () => {
         Keyboard.dismiss();
 
-        //create habit
-        const createTaskRequest: CreateTaskRequest = {
+        const task: Task = {
             title,
             description,
             localImage: localImage,
-            removeImageUrl: remoteImageUrl,
+            remoteImageUrl: remoteImageUrl,
+        };
+
+        //create habit
+        const createTaskRequest: CreateTaskRequest = {
+            task,
         };
 
         const habit = await TaskController.createViaApi(createTaskRequest);
@@ -253,7 +257,11 @@ export const CreateEditHabitSaveButton = ({
         }
     };
 
-    const buttonText = editMode === CreateEditHabitMode.CREATE_NEW_HABIT ? 'Create' : 'Update';
+    const createModes = [
+        CreateEditHabitMode.CREATE_NEW_HABIT,
+        CreateEditHabitMode.CREATE_CUSTOM_HABIT,
+    ];
+    const buttonText = createModes.includes(editMode) ? 'Create' : 'Update';
 
     return (
         <TouchableOpacity onPress={onPress}>
