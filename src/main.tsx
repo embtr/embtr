@@ -16,8 +16,8 @@ import {
 } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
-import { getCurrentUser, setCurrentUser } from 'src/redux/user/GlobalState';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { setCurrentUser } from 'src/redux/user/GlobalState';
+import { useAppDispatch } from 'src/redux/Hooks';
 import { ModalContainingComponent } from './components/common/modal/ModalContainingComponent';
 import { ConfettiView } from './components/common/animated_view/ConfettiView';
 import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';

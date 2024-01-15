@@ -12,10 +12,9 @@ interface Props {
 
 export const GoogleAuthenticate = ({ buttonText, callback }: Props) => {
     const [request, response, promptAsync] = Google.useAuthRequest({
-        expoClientId: '376803163073-nivsntdkkej9ltf8lm7o46u1m2o63hcg.apps.googleusercontent.com',
-        iosClientId: '376803163073-8pb7iligkf6p5ea4roucb23fe8v857r8.apps.googleusercontent.com',
-        androidClientId: '376803163073-dn4cpjpj65nn3fm5e2f6r6hqc5hp7agf.apps.googleusercontent.com',
-        webClientId: '376803163073-qle8k2tk1phjd3mmatmdknvafnivgcba.apps.googleusercontent.com',
+        expoClientId: process.env.EXPO_PUBLIC_AUTH_EXPO_CLIENT_ID,
+        iosClientId: process.env.EXPO_PUBLIC_AUTH_IOS_CLIENT_ID,
+        androidClientId: process.env.EXPO_PUBLIC_AUTH_ANDROID_CLIENT_ID,
     });
 
     //post google auth
