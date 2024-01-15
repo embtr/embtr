@@ -23,7 +23,6 @@ import { CommentsScrollView } from 'src/components/common/comments/CommentsScrol
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PlannedDayResultTimelineElement } from 'src/components/timeline/PlannedDayResultTimelineElement';
 
-//TODO delete PostDetails.tsx
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
