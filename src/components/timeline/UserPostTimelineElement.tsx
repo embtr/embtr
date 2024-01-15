@@ -41,7 +41,7 @@ export const UserPostTimelineElement = ({ initialUserPost }: Props) => {
 
     const sortDate = userPost.createdAt;
     const user = userPost.user;
-    const secondaryHeader = 'secondary header';
+    const secondaryHeader = user.location;
 
     const handleOnLike = async () => {
         if (isLiked || !userPost.id) {
