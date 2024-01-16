@@ -10,13 +10,6 @@ import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
 import { ChallengeTab } from 'src/components/challenge/ChallengeTab';
 import React from 'react';
-import { useNavigation } from '@react-navigation/core';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { MasterScreens, Routes } from 'src/navigation/RootStackParamList';
-import { UserCustomHooks } from 'src/controller/user/UserController';
-import {
-    MetadataCustomHooks,
-} from 'src/controller/metadata/MetadataController';
 import { OnLoginHooks } from 'src/hooks/OnLoginHooks';
 
 const Tab = createBottomTabNavigator();
@@ -37,7 +30,6 @@ export const Dashboard = () => {
     React.useEffect(() => {
         dispatch(setCurrentTab(TABS.TODAY));
     }, []);
-
 
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>
@@ -71,7 +63,7 @@ export const Dashboard = () => {
                                     CommonActions.reset({
                                         index: 0,
                                         routes: [{ name: 'Timeline' }],
-                                    }),
+                                    })
                                 );
                             }
                         },
@@ -95,7 +87,7 @@ export const Dashboard = () => {
                             ) {
                                 e.preventDefault();
                                 navigation.dispatch(
-                                    CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] }),
+                                    CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] })
                                 );
                             }
                         },
@@ -122,7 +114,7 @@ export const Dashboard = () => {
                                     CommonActions.reset({
                                         index: 0,
                                         routes: [{ name: 'PlanMain' }],
-                                    }),
+                                    })
                                 );
                             }
                         },
@@ -149,7 +141,7 @@ export const Dashboard = () => {
                                     CommonActions.reset({
                                         index: 0,
                                         routes: [{ name: 'PlanMain' }],
-                                    }),
+                                    })
                                 );
                             }
                         },
@@ -173,7 +165,7 @@ export const Dashboard = () => {
                             ) {
                                 e.preventDefault();
                                 navigation.dispatch(
-                                    CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }] }),
+                                    CommonActions.reset({ index: 0, routes: [{ name: 'Profile' }] })
                                 );
                             }
                         },

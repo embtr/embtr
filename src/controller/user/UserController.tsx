@@ -99,9 +99,9 @@ class UserController {
         try {
             const success = await axiosInstance.get<GetUserResponse>(`/${USER_ENDPOINT}/v1/`);
             const response: GetUserResponse = success.data;
-                        return response.user;
+            return response.user;
         } catch (error) {
-                        return undefined;
+            return undefined;
         }
     }
 
