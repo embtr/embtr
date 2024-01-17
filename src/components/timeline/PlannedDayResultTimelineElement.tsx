@@ -7,9 +7,7 @@ import { ImageUtility } from 'src/util/images/ImageUtility';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
-import DailyResultController, {
-    PlannedDayResultCustomHooks,
-} from 'src/controller/timeline/daily_result/DailyResultController';
+import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { DailyResultBody } from '../common/timeline/DailyResultBody';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { PlannedDayResult } from 'resources/schema';
@@ -19,37 +17,34 @@ import { Routes } from 'src/navigation/RootStackParamList';
 import DAILY_RESULT_DETAILS = Routes.DAILY_RESULT_DETAILS;
 
 interface Props {
-    initialPlannedDayResult: PlannedDayResult;
+    plannedDayResult: PlannedDayResult;
 }
 
-export const PlannedDayResultTimelineElement = ({ initialPlannedDayResult }: Props) => {
+export const PlannedDayResultTimelineElement = ({ plannedDayResult }: Props) => {
     const { colors } = useTheme();
 
     const navigation = useEmbtrNavigation();
     const currentUser = useAppSelector(getCurrentUser);
 
-    const [modified, setModified] = React.useState(false);
-
-    const idToUse = !modified ? 0 : initialPlannedDayResult.id;
-    const updatedPlannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(idToUse);
-    const plannedDayResult = updatedPlannedDayResult.data ?? initialPlannedDayResult;
-
-    if (!plannedDayResult || !plannedDayResult.createdAt || !plannedDayResult.plannedDay?.user) {
+    if (!plannedDayResult.createdAt || !plannedDayResult.plannedDay?.user) {
         return <View />;
     }
 
-    const likeCount = plannedDayResult.likes?.length ?? 0;
+    const [likedAfterRender, setLikedAfterRender] = React.useState(false);
+
+    const likeCount = (plannedDayResult.likes?.length ?? 0) + (likedAfterRender ? 1 : 0);
     const commentCount = plannedDayResult.comments?.length ?? 0;
-    const isLiked = plannedDayResult.likes?.some((like) => like.userId === currentUser.id) ?? false;
+    const isLiked =
+        likedAfterRender ||
+        (plannedDayResult.likes?.some((like) => like.userId === currentUser.id) ?? false);
 
     const handleOnLike = async () => {
         if (isLiked || !plannedDayResult.id) {
             return;
         }
 
+        setLikedAfterRender(true);
         await DailyResultController.addLikeViaApi(plannedDayResult.id);
-        DailyResultController.invalidate(plannedDayResult.id);
-        setModified(true);
     };
 
     let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(

@@ -141,7 +141,7 @@ export const UserPostDetails = () => {
 
             <ScrollableTextInputBox submitComment={submitComment}>
                 <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
-                    <UserPostTimelineElement initialUserPost={userPost.data} />
+                    <UserPostTimelineElement userPost={userPost.data} />
                 </View>
 
                 <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />

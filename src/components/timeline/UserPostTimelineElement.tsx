@@ -7,7 +7,7 @@ import { ImageUtility } from 'src/util/images/ImageUtility';
 import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarousel';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
-import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story/StoryController';
+import StoryController from 'src/controller/timeline/story/StoryController';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import React from 'react';
 import { UserPost } from 'resources/schema';
@@ -16,29 +16,24 @@ import { Routes } from 'src/navigation/RootStackParamList';
 import USER_POST_DETAILS = Routes.USER_POST_DETAILS;
 
 interface Props {
-    initialUserPost: UserPost;
+    userPost: UserPost;
 }
 
-export const UserPostTimelineElement = ({ initialUserPost }: Props) => {
+export const UserPostTimelineElement = ({ userPost }: Props) => {
     const { colors } = useTheme();
-
     const navigation = useEmbtrNavigation();
-    const [modified, setModified] = React.useState(false);
-
-    const idToUse = !modified ? 0 : initialUserPost.id;
-    const updatedUserPost = StoryCustomHooks.useStory(idToUse);
-    const userPost = updatedUserPost.data ?? initialUserPost;
-
     const currentUser = useAppSelector(getCurrentUser);
 
     if (!userPost.createdAt || !userPost.user) {
         return <View />;
     }
 
-    const likeCount = userPost.likes?.length ?? 0;
+    const [likedAfterRender, setLikedAfterRender] = React.useState(false);
+    const likeCount = (userPost.likes?.length ?? 0) + (likedAfterRender ? 1 : 0);
     const commentCount = userPost.comments?.length ?? 0;
-    const isLiked = userPost.likes?.some((like) => like.userId === currentUser.id) ?? false;
-
+    const isLiked =
+        likedAfterRender ||
+        (userPost.likes?.some((like) => like.userId === currentUser.id) ?? false);
     const sortDate = userPost.createdAt;
     const user = userPost.user;
     const secondaryHeader = user.location;
@@ -48,8 +43,8 @@ export const UserPostTimelineElement = ({ initialUserPost }: Props) => {
             return;
         }
 
+        setLikedAfterRender(true);
         await StoryController.addLikeViaApi(userPost.id);
-        setModified(true);
     };
 
     let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(

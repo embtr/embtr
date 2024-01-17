@@ -137,9 +137,7 @@ export const DailyResultDetails = () => {
 
             <ScrollableTextInputBox submitComment={submitComment}>
                 <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
-                    <PlannedDayResultTimelineElement
-                        initialPlannedDayResult={plannedDayResult.data}
-                    />
+                    <PlannedDayResultTimelineElement plannedDayResult={plannedDayResult.data} />
                 </View>
                 <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
             </ScrollableTextInputBox>

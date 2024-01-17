@@ -43,7 +43,7 @@ const renderItem = (item: TimelineElement) => {
                     paddingHorizontal: TIMELINE_CARD_PADDING,
                 }}
             >
-                <UserPostTimelineElement initialUserPost={item.userPost} />
+                <UserPostTimelineElement userPost={item.userPost} />
             </View>
         );
     } else if (item.type === TimelineElementType.PLANNED_DAY_RESULT && item.plannedDayResult) {
@@ -54,7 +54,7 @@ const renderItem = (item: TimelineElement) => {
                     paddingHorizontal: TIMELINE_CARD_PADDING,
                 }}
             >
-                <PlannedDayResultTimelineElement initialPlannedDayResult={item.plannedDayResult} />
+                <PlannedDayResultTimelineElement plannedDayResult={item.plannedDayResult} />
             </View>
         );
     }
