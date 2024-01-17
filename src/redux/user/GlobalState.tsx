@@ -74,22 +74,6 @@ export const GlobalState = createSlice({
         setShowCardShadow(state, action) {
             state.showCardShadow = action.payload;
         },
-        addTimelineCardRefreshRequest(state, action) {
-            let updatedTimelineCardRefreshRequests = state.cardRefreshRequests;
-            if (!updatedTimelineCardRefreshRequests) {
-                updatedTimelineCardRefreshRequests = [];
-            }
-
-            updatedTimelineCardRefreshRequests = updatedTimelineCardRefreshRequests.concat(
-                action.payload
-            );
-            state.cardRefreshRequests = updatedTimelineCardRefreshRequests;
-        },
-        removeTimelineCardRefreshRequest(state, action) {
-            state.cardRefreshRequests = state.cardRefreshRequests.filter(
-                (item) => item !== action.payload
-            );
-        },
         setFireConfetti(state, action) {
             state.fireConfetti = action.payload;
         },
@@ -183,14 +167,6 @@ export const getShowCardShadow = (state: RootState) => {
     }
 
     return state.globalState.showCardShadow;
-};
-
-export const getTimelineCardRefreshRequests = (state: RootState): string[] => {
-    if (!state?.globalState.cardRefreshRequests) {
-        return INITIAL_STATE.cardRefreshRequests;
-    }
-
-    return state.globalState.cardRefreshRequests;
 };
 
 export const getFireConfetti = (state: RootState): Function => {
@@ -296,8 +272,6 @@ export const {
     setCurrentTab,
     setUserProfileImage,
     setShowCardShadow,
-    addTimelineCardRefreshRequest,
-    removeTimelineCardRefreshRequest,
     setFireConfetti,
     setDisplayDropDownAlert,
     setSelectedDayKey,

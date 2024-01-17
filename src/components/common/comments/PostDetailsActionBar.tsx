@@ -33,18 +33,18 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
     }, [isLiked]);
 
     const onHeartPressed = () => {
-        if (!heartPressed) {
-            if (!(isMobileBrowser() || isDesktopBrowser())) {
-                animation.current?.play();
-                setIsAnimating(true);
-                wait(1000).then(() => {
-                    animation.current?.reset();
-                    setIsAnimating(false);
-                });
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-            }
-            onLike();
+        if (heartPressed) {
+            return;
         }
+
+        animation.current?.play();
+        setIsAnimating(true);
+        wait(1000).then(() => {
+            animation.current?.reset();
+            setIsAnimating(false);
+        });
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        onLike();
     };
 
     return (
@@ -138,9 +138,7 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
                                 fontSize: 12,
                                 fontFamily: POPPINS_REGULAR,
                             }}
-                        >
-
-                        </Text>
+                        ></Text>
                         <Ionicons
                             name={'share-outline'}
                             size={TIMELINE_CARD_ICON_SIZE}

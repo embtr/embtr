@@ -9,7 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
 import { Comment, PlannedDayResult, User } from 'resources/schema';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { addTimelineCardRefreshRequest, getCloseMenu } from 'src/redux/user/GlobalState';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { Banner } from 'src/components/common/Banner';
 import {
@@ -42,8 +42,6 @@ export const DailyResultDetails = () => {
     const submitComment = async (text: string, taggedUsers: User[]) => {
         if (plannedDayResult.data?.id) {
             await DailyResultController.addCommentViaApi(plannedDayResult.data.id, text);
-            //TODO - make sure this works
-            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.data.id));
             DailyResultController.invalidate(route.params.id);
         }
     };
@@ -51,7 +49,6 @@ export const DailyResultDetails = () => {
     const deleteComment = async (comment: Comment) => {
         if (plannedDayResult.data?.id) {
             await DailyResultController.deleteCommentViaApi(comment);
-            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.data.id));
             DailyResultController.invalidate(route.params.id);
         }
     };

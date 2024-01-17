@@ -109,7 +109,6 @@ export const ChallengeDetails = () => {
     const deleteComment = async (comment: Comment) => {
         if (challenge.id) {
             await ChallengeController.deleteComment(comment);
-            //dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
             const updatedComments = comments.filter((c) => c.id !== comment.id);
             setComments(updatedComments);
         }

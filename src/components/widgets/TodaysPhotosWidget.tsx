@@ -9,7 +9,6 @@ import { WidgetBase } from './WidgetBase';
 import { Image } from 'resources/schema';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { addTimelineCardRefreshRequest, getTodaysPlannedDay } from 'src/redux/user/GlobalState';
 import { ImageUtility } from 'src/util/images/ImageUtility';
 
 export const TodaysPhotosWidget = () => {
@@ -54,10 +53,6 @@ export const TodaysPhotosWidget = () => {
 
         setImageUploadProgress('');
         setImagesUploading(false);
-
-        if (plannedDayResult?.active) {
-            dispatch(addTimelineCardRefreshRequest('RESULT_' + plannedDayResult.id));
-        }
     };
 
     const deleteImage = async (imageUrl: string) => {

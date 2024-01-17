@@ -6,7 +6,7 @@ import { Alert, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment } from 'resources/schema';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { addTimelineCardRefreshRequest, getCloseMenu } from 'src/redux/user/GlobalState';
+import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
 import { Banner } from 'src/components/common/Banner';
@@ -54,7 +54,6 @@ export const UserPostDetails = () => {
         }
 
         await StoryController.deleteCommentViaApi(comment);
-        dispatch(addTimelineCardRefreshRequest('POST_' + userPost.data.id));
         StoryController.invalidate(userPost.data.id);
     };
 
