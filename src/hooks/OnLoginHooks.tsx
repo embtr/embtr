@@ -7,6 +7,7 @@ import Constants from 'expo-constants';
 import { UpdateUtility } from 'src/util/updates/UpdateUtility';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getAcknowledgedVersion } from 'src/redux/user/GlobalState';
+import PushNotificationController from 'src/controller/notification/PushNotificationController';
 
 const handleLoginModals = () => {
     const navigation = useEmbtrNavigation();
@@ -49,20 +50,20 @@ const handleLoginModals = () => {
         );
 
         if (hardUpdateAvailable) {
-            console.log('Hard update available, navigating to update modal');
             navigation.navigate(Routes.UPDATE_AVAILABLE_MODAL);
             return;
         }
 
         if (softUpdateAvailable && !softUpdateAcknowledged) {
-            console.log('Hard update available, navigating to update modal');
             navigation.navigate(Routes.UPDATE_AVAILABLE_MODAL);
             return;
         }
     }
 };
 
-const handlePushNotificationToken = () => {};
+const handlePushNotificationToken = () => {
+    PushNotificationController.registerPushNotificationToken();
+};
 
 export namespace OnLoginHooks {
     export const useOnLogin = () => {
