@@ -10,14 +10,13 @@ import axiosInstance from 'src/axios/axios';
 
 class PushNotificationController {
     public static registerPushNotificationToken = async () => {
-        await PushNotificationController.setAndroidNotificationChannel();
-
         const isAllowedToRequestNotificationToken =
             await PushNotificationController.isAllowedToRequestNotificationToken();
         if (!isAllowedToRequestNotificationToken) {
             return;
         }
 
+        await PushNotificationController.setAndroidNotificationChannel();
         const token = await PushNotificationController.getPushNotificationToken();
         await PushNotificationController.createPushNotificationToken(token);
     };
@@ -54,7 +53,7 @@ class PushNotificationController {
         };
 
         return await axiosInstance
-            .post(`/user/registerPushNotificationToken/v1/`, request)
+            .post(`/user/createPushNotificationToken/v1/`, request)
             .then((success) => {
                 return success.data;
             })
