@@ -17,9 +17,10 @@ import USER_POST_DETAILS = Routes.USER_POST_DETAILS;
 
 interface Props {
     userPost: UserPost;
+    onLike?: Function;
 }
 
-export const UserPostTimelineElement = ({ userPost }: Props) => {
+export const UserPostTimelineElement = ({ userPost, onLike }: Props) => {
     const { colors } = useTheme();
     const navigation = useEmbtrNavigation();
     const currentUser = useAppSelector(getCurrentUser);
@@ -44,6 +45,9 @@ export const UserPostTimelineElement = ({ userPost }: Props) => {
         }
 
         setLikedAfterRender(true);
+        if (onLike) {
+            onLike();
+        }
         await StoryController.addLikeViaApi(userPost.id);
     };
 
@@ -60,6 +64,12 @@ export const UserPostTimelineElement = ({ userPost }: Props) => {
 
                 navigation.navigate(USER_POST_DETAILS, {
                     id: userPost.id,
+                    onLike: () => {
+                        setLikedAfterRender(true);
+                    },
+                    onComment: () => {
+                        console.log('i was commented');
+                    },
                 });
             }}
         >

@@ -16,7 +16,7 @@ export type MasterScreens = {
     CreateUserPost: undefined;
     EditUserPostDetails: { id: number };
     EditDailyResultDetails: { id: number };
-    UserPostDetails: { id: number };
+    UserPostDetails: { id: number; onLike: Function; onComment: Function };
     DailyResultDetails: { id: number };
     UserProfile: { id: string };
     Notifications: undefined;
@@ -102,7 +102,7 @@ export namespace Routes {
     export const ADVANCED_USER_SETTINGS = 'AdvancedUserSettings';
     export const NEW_USER_PROFILE_POPULATION = 'NewUserProfilePopulation';
     export const TERMS_APPROVAL_MODAL = 'TermsApprovalModal';
-    export const UPDATE_AVAILABLE_MODAL= 'UpdateAvailableModal';
+    export const UPDATE_AVAILABLE_MODAL = 'UpdateAvailableModal';
     export const MANAGE_HABITS = 'ManageHabits';
     export const HABIT_SUMMARY_DETAILS = 'HabitSummaryDetails';
 }

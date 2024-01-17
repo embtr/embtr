@@ -5,7 +5,7 @@ import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story
 import { Alert, View } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Comment } from 'resources/schema';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import { UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
@@ -26,7 +26,8 @@ export const UserPostDetails = () => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
     const closeMenu = useAppSelector(getCloseMenu);
 
-    const dispatch = useAppDispatch();
+    const onLiked = route.params.onLike;
+    const onCommented = route.params.onComment;
     const userPost = StoryCustomHooks.useStory(route.params.id);
 
     if (!userPost.data) {
@@ -45,7 +46,7 @@ export const UserPostDetails = () => {
         }
 
         await StoryController.addCommentViaApi(userPost.data.id, text);
-        StoryController.invalidate(userPost.data.id);
+        onCommented();
     };
 
     const deleteComment = async (comment: Comment) => {
@@ -54,7 +55,6 @@ export const UserPostDetails = () => {
         }
 
         await StoryController.deleteCommentViaApi(comment);
-        StoryController.invalidate(userPost.data.id);
     };
 
     const navigateToEdit = () => {
@@ -141,7 +141,7 @@ export const UserPostDetails = () => {
 
             <ScrollableTextInputBox submitComment={submitComment}>
                 <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
-                    <UserPostTimelineElement userPost={userPost.data} />
+                    <UserPostTimelineElement userPost={userPost.data} onLike={onLiked} />
                 </View>
 
                 <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
