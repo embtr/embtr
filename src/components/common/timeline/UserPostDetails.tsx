@@ -2,7 +2,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story/StoryController';
-import { Alert, View } from 'react-native';
+import { Alert, DeviceEventEmitter, View } from 'react-native';
 import { UserPost } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -134,6 +134,14 @@ const UserPostDetailsImplementation = ({ userPost }: ImplementationProps) => {
 export const UserPostDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
     const userPost = StoryCustomHooks.useStory(route.params.id);
+
+    React.useEffect(() => {
+        return () => {
+            DeviceEventEmitter.removeAllListeners(`onLike_${route.params.id}`);
+            DeviceEventEmitter.removeAllListeners(`onCommentAdded_${route.params.id}`);
+            DeviceEventEmitter.removeAllListeners(`onCommentDeleted_${route.params.id}`);
+        };
+    }, []);
 
     if (!userPost.data) {
         return <UserPostDetailsPlaceholder />;

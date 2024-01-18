@@ -1,20 +1,21 @@
 import React from 'react';
 import { Comment, Like, PlannedDayResult, UserPost } from 'resources/schema';
 import StoryController from 'src/controller/timeline/story/StoryController';
-import { UserCustomHooks } from 'src/controller/user/UserController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
-import { HabitController } from 'src/controller/habit/HabitController';
-import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
+import { DeviceEventEmitter, NativeEventEmitter } from 'react-native';
 
 export interface InteractableData {
-    likes: Like[];
+    likeCount: number;
     onLike: () => {};
     isLiked: boolean;
     comments: Comment[];
     onCommentAdded: (comment: string) => void;
     onCommentDeleted: (comment: Comment) => void;
+    wasLiked: () => void;
+    commentWasAdded: () => void;
+    commentWasDeleted: () => void;
 }
 
 // Two Electric Boogaloo - CherkimHS - 2024-01-18 @ 5:39 AM
@@ -47,8 +48,7 @@ export namespace InteractableElementCustomHooks {
                 return;
             }
 
-            setIsLiked(true);
-            setLikeCount(likeCount + 1);
+            wasLiked();
             addLike();
         };
 
@@ -82,13 +82,30 @@ export namespace InteractableElementCustomHooks {
             deleteComment(comment);
         };
 
+        const wasLiked = () => {
+            setIsLiked(true);
+            setLikeCount((old) => old + 1);
+        };
+
+        const commentAdded = () => {
+            const dummyComment: Comment = {};
+            setCurrentComments((old) => [dummyComment, ...old]);
+        };
+
+        const commentDeleted = () => {
+            setCurrentComments((old) => old.slice(1));
+        };
+
         return {
-            likes,
+            likeCount,
             isLiked,
             onLike,
             onCommentAdded,
             onCommentDeleted,
             comments: currentComments,
+            wasLiked,
+            commentWasAdded: commentAdded,
+            commentWasDeleted: commentDeleted,
         };
     };
 
@@ -135,6 +152,7 @@ export namespace InteractableElementCustomHooks {
                 return;
             }
 
+            DeviceEventEmitter.emit(`onLike_${userPost.id}`);
             StoryController.addLikeViaApi(userPost.id);
         };
 
@@ -143,6 +161,7 @@ export namespace InteractableElementCustomHooks {
                 return;
             }
 
+            DeviceEventEmitter.emit(`onCommentAdded_${userPost.id}`);
             const comment = StoryController.addCommentViaApi(userPost.id, text);
             return comment;
         };
@@ -152,6 +171,7 @@ export namespace InteractableElementCustomHooks {
                 return;
             }
 
+            DeviceEventEmitter.emit(`onCommentDeleted_${userPost.id}`);
             StoryController.deleteCommentViaApi(comment);
         };
 

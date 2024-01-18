@@ -88,7 +88,7 @@ const PostDetailsActionBar = ({ interactableData, padding }: Props) => {
                                 fontFamily: 'Poppins_500Medium',
                             }}
                         >
-                            {interactableData.likes.length}
+                            {interactableData.likeCount}
                         </Text>
                     </View>
 
