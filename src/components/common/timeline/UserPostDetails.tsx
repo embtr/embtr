@@ -1,13 +1,11 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story/StoryController';
 import { Alert, View } from 'react-native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { Comment } from 'resources/schema';
+import { UserPost } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
-import { UserProfileModel } from 'src/model/OldModels';
 import { Screen } from '../Screen';
 import { Banner } from 'src/components/common/Banner';
 import {
@@ -17,47 +15,34 @@ import {
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableTextInputBox';
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import * as React from 'react';
-import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
 import { UserPostElement } from 'src/components/timeline/UserPostElement';
+import { InteractableElementCustomHooks } from 'src/components/timeline/InteractableElementCustomHooks';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 
-export const UserPostDetails = () => {
-    const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
-    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+const UserPostDetailsPlaceholder = () => {
+    return (
+        <Screen>
+            <View />
+        </Screen>
+    );
+};
+
+interface ImplementationProps {
+    userPost: UserPost;
+}
+
+const UserPostDetailsImplementation = ({ userPost }: ImplementationProps) => {
+    const navigation = useEmbtrNavigation();
     const closeMenu = useAppSelector(getCloseMenu);
+    const interactableData =
+        InteractableElementCustomHooks.useUserPostInteractableElement(userPost);
 
-    const userPost = StoryCustomHooks.useStory(route.params.id);
-
-    if (!userPost.data) {
-        return (
-            <Screen>
-                <View />
-            </Screen>
-        );
-    }
-
-    const userIsPostOwner = userPost.data?.user?.uid === getAuth().currentUser?.uid;
-
-    const submitComment = async (text: string, taggedUsers: UserProfileModel[]) => {
-        if (!userPost.data?.id) {
-            return;
-        }
-
-        await StoryController.addCommentViaApi(userPost.data.id, text);
-        onCommented();
-    };
-
-    const deleteComment = async (comment: Comment) => {
-        if (!userPost.data?.id) {
-            return;
-        }
-
-        await StoryController.deleteCommentViaApi(comment);
-    };
+    const userIsPostOwner = userPost.user?.uid === getAuth().currentUser?.uid;
 
     const navigateToEdit = () => {
-        if (!userPost.data?.id) {
+        if (!userPost.id) {
             return;
         }
 
@@ -65,11 +50,11 @@ export const UserPostDetails = () => {
             return;
         }
 
-        navigation.navigate(Routes.EDIT_USER_POST_DETAILS, { id: userPost.data.id });
+        navigation.navigate(Routes.EDIT_USER_POST_DETAILS, { id: userPost.id });
     };
 
     const deletePost = () => {
-        if (!userPost.data?.id) {
+        if (!userPost.id) {
             return;
         }
 
@@ -83,23 +68,18 @@ export const UserPostDetails = () => {
             [
                 {
                     text: 'Cancel',
-                    onPress: () => {
-                    },
+                    onPress: () => {},
                     style: 'cancel',
                 },
                 {
                     text: 'I am sure. Delete it.',
                     onPress: async () => {
-                        if (!userPost.data) {
-                            return;
-                        }
-
-                        await StoryController.deleteViaApi(userPost.data);
+                        await StoryController.deleteViaApi(userPost);
                         navigation.navigate('Timeline');
                     },
                 },
             ],
-            { cancelable: true },
+            { cancelable: true }
         );
     };
 
@@ -121,8 +101,6 @@ export const UserPostDetails = () => {
         },
     ];
 
-    const comments = userPost.data?.comments ?? [];
-
     return (
         <Screen>
             {userIsPostOwner ? (
@@ -139,13 +117,27 @@ export const UserPostDetails = () => {
 
             {userIsPostOwner && <EmbtrMenuCustom />}
 
-            <ScrollableTextInputBox submitComment={submitComment}>
+            <ScrollableTextInputBox submitComment={interactableData.onCommentAdded}>
                 <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
-                    <UserPostElement userPost={userPost.data} />
+                    <UserPostElement userPost={userPost} interactableData={interactableData} />
                 </View>
 
-                <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
+                <CommentsScrollView
+                    comments={interactableData.comments}
+                    onDeleteComment={interactableData.onCommentDeleted}
+                />
             </ScrollableTextInputBox>
         </Screen>
     );
+};
+
+export const UserPostDetails = () => {
+    const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
+    const userPost = StoryCustomHooks.useStory(route.params.id);
+
+    if (!userPost.data) {
+        return <UserPostDetailsPlaceholder />;
+    }
+
+    return <UserPostDetailsImplementation userPost={userPost.data} />;
 };

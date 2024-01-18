@@ -18,10 +18,13 @@ export const UserPostTimelineElement = ({ userPost }: Props) => {
         if (!userPost.id) {
             return;
         }
+
+
+        navigation.navigate(Routes.USER_POST_DETAILS, { id: userPost.id });
     };
 
     return (
-        <Pressable>
+        <Pressable onPress={navigateToPostDetails}>
             <UserPostElement userPost={userPost} interactableData={interactableData} />
         </Pressable>
     );

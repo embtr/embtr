@@ -1,5 +1,5 @@
 import { PLANNED_DAY_RESULT } from 'resources/endpoints';
-import { Comment as CommentModel, Image, PlannedDay, PlannedDayResult } from 'resources/schema';
+import { Comment, Image, PlannedDay, PlannedDayResult } from 'resources/schema';
 import {
     CreatePlannedDayResultRequest,
     CreatePlannedDayResultResponse,
@@ -182,11 +182,15 @@ class DailyResultController {
         return await LikeController.add(Interactable.PLANNED_DAY_RESULT, id);
     }
 
-    public static async addCommentViaApi(id: number, comment: string) {
-        return await CommentController.add(Interactable.PLANNED_DAY_RESULT, id, comment);
+    public static async addCommentViaApi(
+        id: number,
+        comment: string
+    ): Promise<Comment | undefined> {
+        const result = await CommentController.add(Interactable.PLANNED_DAY_RESULT, id, comment);
+        return result;
     }
 
-    public static async deleteCommentViaApi(comment: CommentModel) {
+    public static async deleteCommentViaApi(comment: Comment) {
         return await CommentController.delete(Interactable.PLANNED_DAY_RESULT, comment);
     }
 
@@ -224,7 +228,7 @@ export namespace PlannedDayResultCustomHooks {
     export const usePlannedDayResult = (id?: number) => {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['plannedDayResult', id],
-            queryFn: async () => await DailyResultController.getViaApi(id ?? 0),
+            queryFn: async () => await DailyResultController.getViaApi(id!),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
             enabled: !!id && id > 0,
         });
