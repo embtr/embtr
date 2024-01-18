@@ -20,14 +20,13 @@ import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import * as React from 'react';
 import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
+import { UserPostElement } from 'src/components/timeline/UserPostElement';
 
 export const UserPostDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
     const closeMenu = useAppSelector(getCloseMenu);
 
-    const onLiked = route.params.onLike;
-    const onCommented = route.params.onComment;
     const userPost = StoryCustomHooks.useStory(route.params.id);
 
     if (!userPost.data) {
@@ -84,7 +83,8 @@ export const UserPostDetails = () => {
             [
                 {
                     text: 'Cancel',
-                    onPress: () => {},
+                    onPress: () => {
+                    },
                     style: 'cancel',
                 },
                 {
@@ -99,7 +99,7 @@ export const UserPostDetails = () => {
                     },
                 },
             ],
-            { cancelable: true }
+            { cancelable: true },
         );
     };
 
@@ -141,7 +141,7 @@ export const UserPostDetails = () => {
 
             <ScrollableTextInputBox submitComment={submitComment}>
                 <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
-                    <UserPostTimelineElement userPost={userPost.data} onLike={onLiked} />
+                    <UserPostElement userPost={userPost.data} />
                 </View>
 
                 <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
