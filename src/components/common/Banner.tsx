@@ -6,10 +6,10 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getOpenMenu, getCloseMenu, setMenuOptions, getShowCardShadow } from 'src/redux/user/GlobalState';
+import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
-import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
+import { POPPINS_MEDIUM } from 'src/util/constants';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 interface Props {
     name: string;
@@ -65,6 +65,9 @@ export const Banner = ({
     const bannerSize = 20;
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+    const netInfo = useNetInfo();
+    const isConnectedToNetwork = netInfo.isConnected;
 
     const dispatch = useAppDispatch();
     const updateMenuOptions = () => {
@@ -191,16 +194,28 @@ export const Banner = ({
                     }}
                 >
                     {/* INNER RIGHT ICON */}
-                    {innerRightIcon && (
+                    {!isConnectedToNetwork ? (
                         <Ionicons
                             style={{ paddingRight: 10 }}
-                            name={innerRightIcon}
+                            name={'cloud-offline-outline'}
                             size={iconSize}
-                            color={colors.text}
+                            color={colors.progress_bar_failed}
                             onPress={() => {
                                 if (innerRightOnClick) innerRightOnClick();
                             }}
                         />
+                    ) : (
+                        innerRightIcon && (
+                            <Ionicons
+                                style={{ paddingRight: 10 }}
+                                name={innerRightIcon}
+                                size={iconSize}
+                                color={colors.text}
+                                onPress={() => {
+                                    if (innerRightOnClick) innerRightOnClick();
+                                }}
+                            />
+                        )
                     )}
 
                     {/* RIGHT ICON */}
@@ -271,7 +286,6 @@ export const Banner = ({
                     )}
                 </View>
             </View>
-
         </View>
     );
 };

@@ -20,7 +20,6 @@ export namespace UserPostInteractableElementCustomHooks {
         userPost: UserPost,
         interactableData: InteractableData
     ) => {
-        console.log('ADDING user post listeners');
         DeviceEventEmitter.addListener(createOnLikeUserPostEmitKey(userPost), () => {
             interactableData.wasLiked();
         });
@@ -35,7 +34,6 @@ export namespace UserPostInteractableElementCustomHooks {
     };
 
     export const removeUserPostInteractableEventListeners = (userPost: UserPost) => {
-        // if event emitters exist, remove them
         if (!userPost.id) {
             return;
         }
