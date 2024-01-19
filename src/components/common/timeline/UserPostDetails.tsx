@@ -2,7 +2,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { getAuth } from 'firebase/auth';
 import StoryController, { StoryCustomHooks } from 'src/controller/timeline/story/StoryController';
-import { Alert, DeviceEventEmitter, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { UserPost } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -24,7 +24,7 @@ import { UserPostInteractableElementCustomHooks } from 'src/components/timeline/
 const UserPostDetailsPlaceholder = () => {
     return (
         <Screen>
-            <View />
+            <Banner name={'Post Details'} leftIcon={'arrow-back'} leftRoute="BACK" />
         </Screen>
     );
 };
@@ -134,17 +134,6 @@ const UserPostDetailsImplementation = ({ userPost }: ImplementationProps) => {
 export const UserPostDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPostDetails'>>();
     const userPost = StoryCustomHooks.useStory(route.params.id);
-
-    React.useEffect(() => {
-        return () => {
-            if (!userPost.data) {
-                return;
-            }
-            UserPostInteractableElementCustomHooks.removeUserPostInteractableEventListeners(
-                userPost.data
-            );
-        };
-    }, [userPost.data]);
 
     if (!userPost.data) {
         return <UserPostDetailsPlaceholder />;

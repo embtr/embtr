@@ -5,19 +5,19 @@ import { InteractableData, InteractableElementCustomHooks } from './Interactable
 
 export namespace PlannedDayResultInteractableElementCustomHooks {
     export const createOnLikePlannedDayResultEmitKey = (plannedDayResult: PlannedDayResult) => {
-        return `onLike_${plannedDayResult.id}`;
+        return `onPlannedTaskLike_${plannedDayResult.id}`;
     };
 
     export const createOnCommentAddedPlannedDayResultEmitKey = (
         plannedDayResult: PlannedDayResult
     ) => {
-        return `onCommentAdded_${plannedDayResult.id}`;
+        return `onPlannedTaskCommentAdded_${plannedDayResult.id}`;
     };
 
     export const createOnCommentDeletedPlannedDayResultEmitKey = (
         plannedDayResult: PlannedDayResult
     ) => {
-        return `onCommentDeleted_${plannedDayResult.id}`;
+        return `onPlannedTaskCommentDeleted_${plannedDayResult.id}`;
     };
 
     export const createPlannedDayResultInteractableEventListeners = (

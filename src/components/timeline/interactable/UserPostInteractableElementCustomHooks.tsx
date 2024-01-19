@@ -5,21 +5,22 @@ import { InteractableData, InteractableElementCustomHooks } from './Interactable
 
 export namespace UserPostInteractableElementCustomHooks {
     export const createOnLikeUserPostEmitKey = (userPost: UserPost) => {
-        return `onLike_${userPost.id}`;
+        return `onUserPostLike_${userPost.id}`;
     };
 
     export const createOnCommentAddedUserPostEmitKey = (userPost: UserPost) => {
-        return `onCommentAdded_${userPost.id}`;
+        return `onUserPostCommentAdded_${userPost.id}`;
     };
 
     export const createOnCommentDeletedUserPostEmitKey = (userPost: UserPost) => {
-        return `onCommentDeleted_${userPost.id}`;
+        return `onUserPostCommentDeleted_${userPost.id}`;
     };
 
     export const createUserPostInteractableEventListeners = (
         userPost: UserPost,
         interactableData: InteractableData
     ) => {
+        console.log('ADDING user post listeners');
         DeviceEventEmitter.addListener(createOnLikeUserPostEmitKey(userPost), () => {
             interactableData.wasLiked();
         });
@@ -34,9 +35,16 @@ export namespace UserPostInteractableElementCustomHooks {
     };
 
     export const removeUserPostInteractableEventListeners = (userPost: UserPost) => {
-        DeviceEventEmitter.removeAllListeners(createOnLikeUserPostEmitKey(userPost));
-        DeviceEventEmitter.removeAllListeners(createOnCommentAddedUserPostEmitKey(userPost));
-        DeviceEventEmitter.removeAllListeners(createOnCommentDeletedUserPostEmitKey(userPost));
+        // if event emitters exist, remove them
+        if (!userPost.id) {
+            return;
+        }
+
+        setTimeout(() => {
+            DeviceEventEmitter.removeAllListeners(createOnLikeUserPostEmitKey(userPost));
+            DeviceEventEmitter.removeAllListeners(createOnCommentAddedUserPostEmitKey(userPost));
+            DeviceEventEmitter.removeAllListeners(createOnCommentDeletedUserPostEmitKey(userPost));
+        }, 0);
     };
 
     export const useUserPostInteractableElement = (userPost: UserPost): InteractableData => {

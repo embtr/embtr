@@ -14,7 +14,6 @@ import {
     TimelineController,
     TimelineCustomHooks,
 } from 'src/controller/timeline/TimelineController';
-import { PlannedDayResult, UserPost } from 'resources/schema';
 
 export const Timeline = () => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
