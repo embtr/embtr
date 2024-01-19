@@ -27,8 +27,8 @@ export const UserSettings = () => {
                     }}
                 >
                     <View style={{ height: TIMELINE_CARD_PADDING }} />
-                    <NotificationsToggle />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    {/*<NotificationsToggle />*/}
+                    {/*<View style={{ height: TIMELINE_CARD_PADDING / 2 }} />*/}
                     <EditProfileSettingsButton />
                     <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
                     <SettingsAccount />
