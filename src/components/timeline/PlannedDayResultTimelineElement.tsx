@@ -4,7 +4,7 @@ import { PlannedDayResult } from 'resources/schema';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { PlannedDayResultElement } from 'src/components/timeline/PlannedDayResultElement';
-import { InteractableElementCustomHooks } from 'src/components/timeline/InteractableElementCustomHooks';
+import { PlannedDayResultInteractableElementCustomHooks } from './interactable/PlannedDayResultInteractableElementCustomHooks';
 
 interface Props {
     plannedDayResult: PlannedDayResult;
@@ -12,7 +12,9 @@ interface Props {
 
 export const PlannedDayResultTimelineElement = ({ plannedDayResult }: Props) => {
     const interactableData =
-        InteractableElementCustomHooks.usePlannedDayResultInteractableElement(plannedDayResult);
+        PlannedDayResultInteractableElementCustomHooks.usePlannedDayResultInteractableElement(
+            plannedDayResult
+        );
 
     const navigation = useEmbtrNavigation();
 
@@ -21,6 +23,10 @@ export const PlannedDayResultTimelineElement = ({ plannedDayResult }: Props) => 
             return;
         }
 
+        PlannedDayResultInteractableElementCustomHooks.createPlannedDayResultInteractableEventListeners(
+            plannedDayResult,
+            interactableData
+        );
         navigation.navigate(Routes.DAILY_RESULT_DETAILS, { id: plannedDayResult.id });
     };
 

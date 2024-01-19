@@ -7,8 +7,8 @@ import DailyResultController, {
 } from 'src/controller/timeline/daily_result/DailyResultController';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Screen } from '../Screen';
-import { Comment, PlannedDayResult, User } from 'resources/schema';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { PlannedDayResult } from 'resources/schema';
+import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { Banner } from 'src/components/common/Banner';
@@ -21,41 +21,33 @@ import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableText
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { PlannedDayResultTimelineElement } from 'src/components/timeline/PlannedDayResultTimelineElement';
+import { PlannedDayResultElement } from 'src/components/timeline/PlannedDayResultElement';
+import { PlannedDayResultInteractableElementCustomHooks } from 'src/components/timeline/interactable/PlannedDayResultInteractableElementCustomHooks';
 
-export const DailyResultDetails = () => {
-    const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
+export const DailyResultDetailsPlaceholder = () => {
+    return (
+        <Screen>
+            <View />
+        </Screen>
+    );
+};
+
+export interface DailyResultDetailsProps {
+    plannedDayResult: PlannedDayResult;
+}
+
+export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResultDetailsProps) => {
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
     const closeMenu = useAppSelector(getCloseMenu);
-    const dispatch = useAppDispatch();
 
-    const plannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(route.params.id);
-
-    if (!plannedDayResult.data) {
-        return (
-            <Screen>
-                <View />
-            </Screen>
+    const interactableData =
+        PlannedDayResultInteractableElementCustomHooks.usePlannedDayResultInteractableElement(
+            plannedDayResult
         );
-    }
-
-    const submitComment = async (text: string, taggedUsers: User[]) => {
-        if (plannedDayResult.data?.id) {
-            await DailyResultController.addCommentViaApi(plannedDayResult.data.id, text);
-            DailyResultController.invalidate(route.params.id);
-        }
-    };
-
-    const deleteComment = async (comment: Comment) => {
-        if (plannedDayResult.data?.id) {
-            await DailyResultController.deleteCommentViaApi(comment);
-            DailyResultController.invalidate(route.params.id);
-        }
-    };
 
     const onEdit = () => {
-        if (plannedDayResult.data?.id) {
-            navigation.navigate('EditDailyResultDetails', { id: plannedDayResult.data.id });
+        if (plannedDayResult.id) {
+            navigation.navigate('EditDailyResultDetails', { id: plannedDayResult.id });
         }
     };
 
@@ -72,15 +64,15 @@ export const DailyResultDetails = () => {
                 {
                     text: 'I am sure. Delete it.',
                     onPress: async () => {
-                        if (!plannedDayResult.data?.id) {
+                        if (!plannedDayResult.id) {
                             return;
                         }
 
-                        const clone: PlannedDayResult = { ...plannedDayResult.data, active: false };
+                        const clone: PlannedDayResult = { ...plannedDayResult, active: false };
                         await DailyResultController.updateViaApi(clone);
-                        if (plannedDayResult.data?.plannedDay?.dayKey) {
+                        if (plannedDayResult.plannedDay?.dayKey) {
                             PlannedDayController.prefetchPlannedDayData(
-                                plannedDayResult.data.plannedDay.dayKey
+                                plannedDayResult.plannedDay.dayKey
                             );
                         }
                         navigation.goBack();
@@ -116,8 +108,7 @@ export const DailyResultDetails = () => {
         );
     }
 
-    const userIsAuthor = plannedDayResult.data?.plannedDay?.user?.uid === getCurrentUid();
-    const comments = plannedDayResult.data?.comments ?? [];
+    const userIsAuthor = plannedDayResult.plannedDay?.user?.uid === getCurrentUid();
 
     return (
         <Screen>
@@ -135,12 +126,41 @@ export const DailyResultDetails = () => {
 
             {userIsAuthor && <EmbtrMenuCustom />}
 
-            <ScrollableTextInputBox submitComment={submitComment}>
+            <ScrollableTextInputBox submitComment={interactableData.onCommentAdded}>
                 <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
-                    <PlannedDayResultTimelineElement plannedDayResult={plannedDayResult.data} />
+                    <PlannedDayResultElement
+                        plannedDayResult={plannedDayResult}
+                        interactableData={interactableData}
+                    />
                 </View>
-                <CommentsScrollView comments={comments} onDeleteComment={deleteComment} />
+                <CommentsScrollView
+                    comments={interactableData.comments}
+                    onDeleteComment={interactableData.onCommentDeleted}
+                />
             </ScrollableTextInputBox>
         </Screen>
     );
+};
+
+export const DailyResultDetails = () => {
+    const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
+    const plannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(route.params.id);
+
+    React.useEffect(() => {
+        return () => {
+            if (!plannedDayResult.data) {
+                return;
+            }
+
+            PlannedDayResultInteractableElementCustomHooks.removePlannedDayResultInteractableEventListeners(
+                plannedDayResult.data
+            );
+        };
+    }, []);
+
+    if (!plannedDayResult.data) {
+        return <DailyResultDetailsPlaceholder />;
+    }
+
+    return <DailyResultDetailsImplementation plannedDayResult={plannedDayResult.data} />;
 };

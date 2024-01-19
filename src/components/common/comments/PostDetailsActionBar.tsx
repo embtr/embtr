@@ -10,8 +10,7 @@ import {
 import * as Haptics from 'expo-haptics';
 import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
-import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
-import { InteractableData } from 'src/components/timeline/InteractableElementCustomHooks';
+import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 
 interface Props {
     interactableData: InteractableData;

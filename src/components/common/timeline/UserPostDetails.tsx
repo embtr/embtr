@@ -17,9 +17,9 @@ import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableText
 import { TIMELINE_CARD_PADDING } from 'src/util/constants';
 import * as React from 'react';
 import { UserPostElement } from 'src/components/timeline/UserPostElement';
-import { InteractableElementCustomHooks } from 'src/components/timeline/InteractableElementCustomHooks';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
+import { UserPostInteractableElementCustomHooks } from 'src/components/timeline/interactable/UserPostInteractableElementCustomHooks';
 
 const UserPostDetailsPlaceholder = () => {
     return (
@@ -37,7 +37,7 @@ const UserPostDetailsImplementation = ({ userPost }: ImplementationProps) => {
     const navigation = useEmbtrNavigation();
     const closeMenu = useAppSelector(getCloseMenu);
     const interactableData =
-        InteractableElementCustomHooks.useUserPostInteractableElement(userPost);
+        UserPostInteractableElementCustomHooks.useUserPostInteractableElement(userPost);
 
     const userIsPostOwner = userPost.user?.uid === getAuth().currentUser?.uid;
 
@@ -137,11 +137,14 @@ export const UserPostDetails = () => {
 
     React.useEffect(() => {
         return () => {
-            DeviceEventEmitter.removeAllListeners(`onLike_${route.params.id}`);
-            DeviceEventEmitter.removeAllListeners(`onCommentAdded_${route.params.id}`);
-            DeviceEventEmitter.removeAllListeners(`onCommentDeleted_${route.params.id}`);
+            if (!userPost.data) {
+                return;
+            }
+            UserPostInteractableElementCustomHooks.removeUserPostInteractableEventListeners(
+                userPost.data
+            );
         };
-    }, []);
+    }, [userPost.data]);
 
     if (!userPost.data) {
         return <UserPostDetailsPlaceholder />;

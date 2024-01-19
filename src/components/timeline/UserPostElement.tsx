@@ -7,7 +7,7 @@ import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarouse
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
-import { InteractableData } from 'src/components/timeline/InteractableElementCustomHooks';
+import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 import { UserPost } from 'resources/schema';
 
 interface Props {
