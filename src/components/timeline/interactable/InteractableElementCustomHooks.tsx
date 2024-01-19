@@ -4,6 +4,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 // Two Electric Boogaloo - CherkimHS - 2024-01-18 @ 5:39 AM
+
 export interface InteractableData {
     likeCount: number;
     onLike: () => {};
@@ -32,8 +33,10 @@ export namespace InteractableElementCustomHooks {
         );
         const [currentComments, setCurrentComments] = React.useState(comments ?? []);
 
+        // ensure we are using the most up to date
+        // likes and comments from the database
         React.useEffect(() => {
-            const isLiked = likes?.some((like) => like.user?.uid === currentUser?.uid) ?? false;
+            const isLiked = likes?.some((like) => like.userId === currentUser?.id) ?? false;
             setIsLiked(isLiked);
             setLikeCount(likes?.length ?? 0);
             setCurrentComments(comments ?? []);

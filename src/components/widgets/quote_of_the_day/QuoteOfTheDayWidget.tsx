@@ -16,62 +16,52 @@ import {
 import { WidgetBase } from '../WidgetBase';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import {
-    QuoteOfTheDayController,
-    QuoteOfTheDayCustomHooks,
-} from 'src/controller/widget/quote_of_the_day/QuoteOfTheDayController';
-import { LikeController } from 'src/controller/api/general/LikeController';
-import { Interactable } from 'resources/types/interactable/Interactable';
+import { QuoteOfTheDayCustomHooks } from 'src/controller/widget/quote_of_the_day/QuoteOfTheDayController';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import LottieView from 'lottie-react-native';
-import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
 import { wait } from 'src/util/GeneralUtility';
-import { UserCustomHooks } from 'src/controller/user/UserController';
+import { QuoteOfTheDayInteractableElementCustomHooks } from 'src/components/timeline/interactable/QuoteOfTheDayInteractableElementCustomHooks';
+import { QuoteOfTheDay } from 'resources/schema';
+import { Screen } from 'src/components/common/Screen';
 
-export const QuoteOfTheDayWidget = () => {
+const QuoteOfTheDayPlaceholder = () => {
+    return (
+        <Screen>
+            <View />
+        </Screen>
+    );
+};
+
+interface ImplementationProps {
+    quoteOfTheDay: QuoteOfTheDay;
+}
+
+const QuoteOfTheDayImplementation = ({ quoteOfTheDay }: ImplementationProps) => {
     const { colors } = useTheme();
-
     const navigation = useNavigation<StackNavigationProp<TodayTab, 'AddQuoteOfTheDay'>>();
-
-    const currentUserId = UserCustomHooks.useCurrentUserId();
-    const quoteOfTheDay = QuoteOfTheDayCustomHooks.useQuoteOfTheDay();
-    if (!currentUserId || !quoteOfTheDay) {
-        return <View />;
-    }
-
-    const isLiked = quoteOfTheDay.data?.likes?.some((like) => like?.userId === currentUserId.data);
-    const likeCount = quoteOfTheDay.data?.likes?.length || 0;
-
     const [isAnimating, setIsAnimating] = React.useState(false);
+
+    const interactableData =
+        QuoteOfTheDayInteractableElementCustomHooks.useQuoteOfTheDayInteractableElement(
+            quoteOfTheDay
+        );
 
     const closeMenu = useAppSelector(getCloseMenu);
 
     const animation = React.useRef<LottieView>(null);
     const onHeartPressed = () => {
-        if (isLiked) {
+        if (interactableData.isLiked) {
             return;
         }
 
-        if (!(isMobileBrowser() || isDesktopBrowser())) {
-            animation.current?.play();
-            setIsAnimating(true);
-            wait(1000).then(() => {
-                animation.current?.reset();
-                setIsAnimating(false);
-            });
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        }
-        onLike();
-    };
-
-    const onLike = async () => {
-        if (isLiked || !quoteOfTheDay.data?.id) {
-            return;
-        }
-
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        await LikeController.add(Interactable.QUOTE_OF_THE_DAY, quoteOfTheDay.data.id);
-        QuoteOfTheDayController.invalidateQuoteOfTheDay();
+        animation.current?.play();
+        setIsAnimating(true);
+        wait(1000).then(() => {
+            animation.current?.reset();
+            setIsAnimating(false);
+        });
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        interactableData.onLike();
     };
 
     const onAdd = () => {
@@ -80,11 +70,11 @@ export const QuoteOfTheDayWidget = () => {
     };
 
     const navigateToUserProfile = () => {
-        if (!quoteOfTheDay.data?.user?.uid) {
+        if (!quoteOfTheDay.user?.uid) {
             return;
         }
 
-        navigation.navigate('UserProfile', { id: quoteOfTheDay.data.user.uid });
+        navigation.navigate('UserProfile', { id: quoteOfTheDay.user.uid });
     };
 
     return (
@@ -122,7 +112,7 @@ export const QuoteOfTheDayWidget = () => {
                 }}
             >
                 {'"'}
-                {quoteOfTheDay.data?.quote}
+                {quoteOfTheDay.quote}
                 {'"'}
             </Text>
             <Text
@@ -135,7 +125,7 @@ export const QuoteOfTheDayWidget = () => {
                     textAlign: 'right',
                 }}
             >
-                {quoteOfTheDay.data?.author ? '-' : ''} {quoteOfTheDay.data?.author}
+                {quoteOfTheDay.author ? '-' : ''} {quoteOfTheDay.author}
             </Text>
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1, justifyContent: 'flex-end' }}>
@@ -171,9 +161,13 @@ export const QuoteOfTheDayWidget = () => {
                             >
                                 <Ionicons
                                     style={{ display: isAnimating ? 'none' : undefined }}
-                                    name={isLiked ? 'heart' : 'heart-outline'}
+                                    name={interactableData.isLiked ? 'heart' : 'heart-outline'}
                                     size={WIDGET_LIKE_ICON_SIZE}
-                                    color={isLiked ? 'red' : colors.timeline_card_footer}
+                                    color={
+                                        interactableData.isLiked
+                                            ? 'red'
+                                            : colors.timeline_card_footer
+                                    }
                                 />
                             </View>
                         </Pressable>
@@ -185,7 +179,7 @@ export const QuoteOfTheDayWidget = () => {
                                 paddingTop: 1,
                             }}
                         >
-                            {likeCount || 0}
+                            {interactableData.likeCount}
                         </Text>
                     </View>
                 </View>
@@ -212,11 +206,21 @@ export const QuoteOfTheDayWidget = () => {
                             }}
                             onPress={navigateToUserProfile}
                         >
-                            {quoteOfTheDay.data?.user?.displayName}
+                            {quoteOfTheDay.user?.displayName}
                         </Text>
                     </Text>
                 </View>
             </View>
         </WidgetBase>
     );
+};
+
+export const QuoteOfTheDayWidget = () => {
+    const quoteOfTheDay = QuoteOfTheDayCustomHooks.useQuoteOfTheDay();
+
+    if (!quoteOfTheDay.data) {
+        return <QuoteOfTheDayPlaceholder />;
+    }
+
+    return <QuoteOfTheDayImplementation quoteOfTheDay={quoteOfTheDay.data} />;
 };
