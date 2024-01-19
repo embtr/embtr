@@ -5,7 +5,11 @@ import { CreateCommentRequest, CreateCommentResponse } from 'resources/types/req
 import axiosInstance from 'src/axios/axios';
 
 export class CommentController {
-    public static async add(interactable: Interactable, id: number, comment: string) {
+    public static async add(
+        interactable: Interactable,
+        id: number,
+        comment: string
+    ): Promise<Comment | undefined> {
         const endpoint = getInteractableEndpoint(interactable);
         const request: CreateCommentRequest = {
             comment,
@@ -18,7 +22,7 @@ export class CommentController {
                 return response.comment;
             })
             .catch((error) => {
-                return error.response.data;
+                return undefined;
             });
     }
 

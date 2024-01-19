@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PlannedDayResult as PlannedDayResultModel, UserPost } from 'resources/schema';
+import { UserPost } from 'resources/schema';
 import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
 
 interface Props {

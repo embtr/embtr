@@ -16,7 +16,7 @@ export type MasterScreens = {
     CreateUserPost: undefined;
     EditUserPostDetails: { id: number };
     EditDailyResultDetails: { id: number };
-    UserPostDetails: { id: number; onLike: Function; onComment: Function };
+    UserPostDetails: { id: number };
     DailyResultDetails: { id: number };
     UserProfile: { id: string };
     Notifications: undefined;

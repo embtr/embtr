@@ -10,30 +10,21 @@ import {
 import * as Haptics from 'expo-haptics';
 import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
-import { isDesktopBrowser, isMobileBrowser } from 'src/util/DeviceUtil';
+import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 
 interface Props {
-    likeCount: number;
-    isLiked: boolean;
-    onLike: Function;
-    commentCount: number;
+    interactableData: InteractableData;
     padding?: number;
 }
 
-const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, padding }: Props) => {
+const PostDetailsActionBar = ({ interactableData, padding }: Props) => {
     const { colors } = useTheme();
 
-    const [heartPressed, setHeartPressed] = React.useState(isLiked);
     const [isAnimating, setIsAnimating] = React.useState(false);
-
     const animation = React.useRef<LottieView>(null);
 
-    React.useEffect(() => {
-        setHeartPressed(isLiked);
-    }, [isLiked]);
-
     const onHeartPressed = () => {
-        if (heartPressed) {
+        if (interactableData.isLiked) {
             return;
         }
 
@@ -44,7 +35,7 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
             setIsAnimating(false);
         });
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        onLike();
+        interactableData.onLike();
     };
 
     return (
@@ -75,13 +66,15 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
-                    <Pressable onPress={heartPressed ? undefined : onHeartPressed}>
+                    <Pressable onPress={interactableData.isLiked ? undefined : onHeartPressed}>
                         <View style={{ width: TIMELINE_CARD_ICON_SIZE }}>
                             <Ionicons
                                 style={{ display: isAnimating ? 'none' : undefined }}
-                                name={heartPressed ? 'heart' : 'heart-outline'}
+                                name={interactableData.isLiked ? 'heart' : 'heart-outline'}
                                 size={TIMELINE_CARD_ICON_SIZE}
-                                color={heartPressed ? 'red' : colors.timeline_card_footer}
+                                color={
+                                    interactableData.isLiked ? 'red' : colors.timeline_card_footer
+                                }
                             />
                         </View>
                     </Pressable>
@@ -94,7 +87,7 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
                                 fontFamily: 'Poppins_500Medium',
                             }}
                         >
-                            {likeCount}
+                            {interactableData.likeCount}
                         </Text>
                     </View>
 
@@ -114,7 +107,7 @@ const PostDetailsActionBar = ({ likeCount, isLiked, commentCount, onLike, paddin
                                 fontFamily: 'Poppins_500Medium',
                             }}
                         >
-                            {commentCount}
+                            {interactableData.comments.length}
                         </Text>
                     </View>
                 </View>
