@@ -1,8 +1,16 @@
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { View, ViewStyle, Image } from 'react-native';
+import { View, Text, ViewStyle } from 'react-native';
+import * as React from 'react';
+import { Image } from 'expo-image';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { Ionicons } from '@expo/vector-icons';
+import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 
 export const LoadingPage = () => {
     const { colors } = useTheme();
+
+    const netInfo = useNetInfo();
+    const isConnectedToNetwork = netInfo.isConnected;
 
     const loadingPageView = {
         width: '100%',
@@ -12,7 +20,13 @@ export const LoadingPage = () => {
 
     return (
         <View style={loadingPageView}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+            <View
+                style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                }}
+            >
                 <View style={{ bottom: '10%' }}>
                     <Image
                         source={require('assets/logo.png')}
@@ -20,13 +34,37 @@ export const LoadingPage = () => {
                     />
                 </View>
                 <Image
-                    source={require('assets/logo_text.png')}
-                    style={{ width: 150, height: 50 }}
+                    source={require('assets/embtr_title.svg')}
+                    style={{
+                        width: 410 / 2,
+                        height: 97 / 2,
+                    }}
                 />
             </View>
 
             {/* FLEX 3 BUTTONS*/}
-            <View style={{ flex: 1 }}></View>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                {!isConnectedToNetwork && (
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                        <Ionicons
+                            style={{ paddingRight: 10 }}
+                            name={'cloud-offline-outline'}
+                            size={80}
+                            color={colors.progress_bar_failed}
+                        />
+                        <Text
+                            style={{
+                                alignItems: 'center',
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 16,
+                                color: colors.progress_bar_failed,
+                            }}
+                        >
+                            There appears to be an issue connecting to the server.
+                        </Text>
+                    </View>
+                )}
+            </View>
         </View>
     );
 };
