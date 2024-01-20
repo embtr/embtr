@@ -102,7 +102,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                             }}
                             style={{ color: colors.link, fontSize: 12 }}
                         >
-                            view all..
+                            view all...
                         </Text>
                     </View>
                 </View>

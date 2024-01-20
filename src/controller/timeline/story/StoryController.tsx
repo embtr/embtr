@@ -27,26 +27,9 @@ export interface StoryModel extends TimelinePostModel {
 }
 
 class StoryController {
-    public static async getAllForUser(userId: number): Promise<UserPost[]> {
+    public static async getPosts(userId: number): Promise<UserPost[]> {
         return await axiosInstance
             .get(`/user/v1/${userId}/posts`)
-            .then((success) => {
-                const response = success.data as GetAllUserPostResponse;
-                return response.userPosts ?? [];
-            })
-            .catch((error) => {
-                return [];
-            });
-    }
-
-    public static async getAllViaApi(upperBound: Date, lowerBound: Date): Promise<UserPost[]> {
-        return await axiosInstance
-            .get(`${USER_POST}v1/`, {
-                params: {
-                    upperBound: upperBound.toISOString(),
-                    lowerBound: lowerBound.toISOString(),
-                },
-            })
             .then((success) => {
                 const response = success.data as GetAllUserPostResponse;
                 return response.userPosts ?? [];

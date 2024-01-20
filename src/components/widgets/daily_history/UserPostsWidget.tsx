@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
-import { getWindowWidth } from 'src/util/GeneralUtility';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { UserPost } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
@@ -26,7 +25,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
     const [posts, setPosts] = React.useState<UserPost[]>([]);
 
     const fetch = async () => {
-        const posts = await StoryController.getAllForUser(userId);
+        const posts = await StoryController.getPosts(userId);
         if (posts) {
             setPosts(posts);
         }

@@ -2,40 +2,44 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import React from 'react';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
-import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { PlannedDayResultSummary } from 'resources/types/planned_day_result/PlannedDayResult';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { FilteredTimeline } from 'src/components/timeline/FilteredTimeline';
+import {
+    TimelineController,
+    TimelineCustomHooks,
+} from 'src/controller/timeline/TimelineController';
+import { TimelineElement } from 'resources/types/requests/Timeline';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 export const DailyResults = () => {
+    const navigation = useEmbtrNavigation();
     const route = useRoute<RouteProp<TimelineTabScreens, 'UserPosts'>>();
     const userId = route.params.userId;
 
-    const [plannedDayResultSummaries, setPlannedDayResultSummaries] = React.useState<
-        PlannedDayResultSummary[]
-    >([]);
+    const timelineElements = TimelineCustomHooks.usePlannedDayResultTimelineData(userId);
 
-    useFocusEffect(
-        React.useCallback(() => {
-            getPlannedDayResults();
-        }, [])
-    );
-
-    const getPlannedDayResults = async () => {
-        const plannedDayResultSummaries =
-            (await DailyResultController.getAllSummariesForUser(userId)) ?? [];
-        setPlannedDayResultSummaries(plannedDayResultSummaries);
-    };
+    const timelineData: TimelineElement[] = [];
+    timelineElements.data?.pages.forEach((page) => {
+        timelineData.push(...(page?.elements ?? []));
+    });
 
     return (
         <Screen>
-            <Banner name="Daily Results" leftText="back" leftRoute="BACK" />
+            <Banner
+                name="Daily Results"
+                leftText="back"
+                leftOnClick={async () => {
+                    navigation.goBack();
+                }}
+            />
+
             <FilteredTimeline
-                userPosts={[]}
-                plannedDayResultSummaries={plannedDayResultSummaries}
-                joinedChallenges={[]}
-                refreshing={false}
-                loadMore={() => {}}
+                timelineElements={timelineData}
+                hasMore={timelineElements.hasNextPage ?? false}
+                pullToRefresh={async () => {
+                    await TimelineController.invalidateUserPostsCache(userId);
+                }}
+                loadMore={timelineElements.fetchNextPage}
             />
         </Screen>
     );

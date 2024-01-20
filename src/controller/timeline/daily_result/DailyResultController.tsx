@@ -23,79 +23,19 @@ import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 class DailyResultController {
     public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {
-        return await axiosInstance
-            .get(`/user/v1/${userId}/day-results`)
-            .then((success) => {
-                const response = success.data as GetPlannedDayResultSummariesResponse;
-                return response.plannedDayResultSummaries ?? [];
-            })
-            .catch((error) => {
-                return [];
-            });
-    }
-
-    public static async getAllViaApi(
-        upperBound: Date,
-        lowerBound: Date
-    ): Promise<PlannedDayResult[]> {
-        const upperBoundDate = new Date(upperBound).toISOString();
-        const lowerBoundDate = new Date(lowerBound).toISOString();
-
-        return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}v1/`, {
-                params: {
-                    upperBound: upperBoundDate,
-                    lowerBound: lowerBoundDate,
-                },
-            })
-            .then((success) => {
-                const response = success.data as GetPlannedDayResultsResponse;
-                return response.plannedDayResults ?? [];
-            })
-            .catch((error) => {
-                return [];
-            });
+        try {
+            const results = await axiosInstance.get<GetPlannedDayResultSummariesResponse>(
+                `/user/v1/${userId}/day-results`
+            );
+            const response: GetPlannedDayResultSummariesResponse = results.data;
+            return response.plannedDayResultSummaries ?? [];
+        } catch (error) {
+            return [];
+        }
     }
 
     public static async getViaApi(id: number): Promise<PlannedDayResult | undefined> {
         return this.get(id);
-    }
-
-    public static async getAllSummaries(
-        upperBound: Date,
-        lowerBound: Date
-    ): Promise<PlannedDayResultSummary[]> {
-        const upperBoundDate = new Date(upperBound).toISOString();
-        const lowerBoundDate = new Date(lowerBound).toISOString();
-
-        return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}v1/summaries`, {
-                params: {
-                    upperBound: upperBoundDate,
-                    lowerBound: lowerBoundDate,
-                },
-            })
-            .then((success) => {
-                const response = success.data as GetPlannedDayResultSummariesResponse;
-                return response.plannedDayResultSummaries ?? [];
-            })
-            .catch((error) => {
-                return [];
-            });
-    }
-
-    public static async getSummary(
-        plannedDayResultId: number
-    ): Promise<PlannedDayResultSummary | undefined> {
-        return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}v1/summary/${plannedDayResultId}`)
-            .then((success) => {
-                const response = success.data as GetPlannedDayResultSummaryResponse;
-                return response.plannedDayResultSummary;
-            })
-            .catch((error) => {
-                return undefined;
-            });
     }
 
     public static async get(id: number): Promise<PlannedDayResult | undefined> {
@@ -192,17 +132,6 @@ class DailyResultController {
 
     public static async deleteCommentViaApi(comment: Comment) {
         return await CommentController.delete(Interactable.PLANNED_DAY_RESULT, comment);
-    }
-
-    public static async hideCreateRecommendation(dayKey: string) {
-        return await axiosInstance
-            .post(`/planned-day-result/v1/${dayKey}/hide-recommendation`)
-            .then((success) => {
-                return success.data;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
     }
 
     /*
