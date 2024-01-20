@@ -19,16 +19,15 @@ import {
 } from 'src/redux/user/GlobalState';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import { Routes } from 'src/navigation/RootStackParamList';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 export const EditHabitModal = () => {
     const { colors } = useTheme();
     const dispatch = useAppDispatch();
 
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+    const navigation = useEmbtrNavigation();
     const dayKey = useAppSelector(getSelectedDayKey);
     const plannedHabitData = useAppSelector(getEditModalPlannedTask);
     const plannedHabit = plannedHabitData.plannedTask;
@@ -41,7 +40,10 @@ export const EditHabitModal = () => {
     const buttonPadding = isLargerScreen ? 3 : 2;
     const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
     const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
-    const date = dayKey && typeof dayKey === 'string' ? getDateFromDayKey(dayKey) : new Date();
+    const date =
+        dayKey && typeof dayKey === 'string' && dayKey !== ''
+            ? getDateFromDayKey(dayKey)
+            : new Date();
     const fullDatePretty = getDatePrettyFullMonth(date);
 
     const svgUri = '';

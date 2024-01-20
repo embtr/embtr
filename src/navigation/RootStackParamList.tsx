@@ -58,6 +58,11 @@ export type MasterScreens = {
         isCreateCustomHabit?: boolean;
         scheduledHabitId?: number;
     };
+
+    EditPlannedHabit: {
+        plannedTaskId?: number;
+        newPlannedHabitData?: NewPlannedHabitData;
+    };
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -81,11 +86,6 @@ export type RootStackParamList = {
     // in-app screens without tab bar
     AddHabitCategory: { id?: number; type?: HabitCategoryType };
     AddHabitCategories: undefined;
-
-    EditPlannedHabit: {
-        plannedTaskId?: number;
-        newPlannedHabitData?: NewPlannedHabitData;
-    };
 };
 
 export namespace Routes {
