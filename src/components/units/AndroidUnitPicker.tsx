@@ -5,7 +5,7 @@ import { Picker } from '@react-native-picker/picker';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { Unit } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getUnits } from 'src/redux/user/GlobalState';
+import { UnitCustomHooks } from 'src/controller/unit/UnitController';
 
 interface Props {
     defaultUnit?: Unit;
@@ -18,10 +18,9 @@ interface Props {
 
 export const AndroidUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
-
     const [selectedUnit, setSelectedUnit] = React.useState<Unit | undefined>(defaultUnit);
 
-    const units = useAppSelector(getUnits);
+    const units = UnitCustomHooks.useUnits();
 
     React.useEffect(() => {
         if (visible) {
@@ -32,12 +31,6 @@ export const AndroidUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Pr
     React.useEffect(() => {
         confirm(selectedUnit);
     }, [selectedUnit]);
-
-    let displayUnit = '';
-    if (selectedUnit?.unit) {
-        const selectedUnitValue = selectedUnit.unit.toString().toLowerCase();
-        displayUnit = selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1) + 's';
-    }
 
     const pickerRef = React.useRef<Picker<Unit>>(null); // Create a ref for the Picker component
 
@@ -59,7 +52,7 @@ export const AndroidUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Pr
                 }}
             >
                 <Picker.Item label="None" value={undefined} />
-                {units.map((unit) => {
+                {units.data.map((unit) => {
                     if (!unit.unit) return null;
 
                     const selectedUnitValue = unit.unit.toString().toLowerCase();

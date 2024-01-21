@@ -81,6 +81,7 @@ export namespace ScheduledHabitCustomHooks {
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
+
     export const useScheduledHabit = (id: number) => {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['scheduledHabit', id],

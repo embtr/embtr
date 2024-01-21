@@ -5,7 +5,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Picker } from '@react-native-picker/picker';
 import { POPPINS_REGULAR } from 'src/util/constants';
 import { Unit } from 'resources/schema';
-import { UnitController } from 'src/controller/unit/UnitController';
+import { UnitController, UnitCustomHooks } from 'src/controller/unit/UnitController';
 
 interface Props {
     defaultUnit?: Unit;
@@ -16,20 +16,15 @@ interface Props {
 
 export const IOSUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Props) => {
     const { colors } = useTheme();
-
-    const [units, setUnits] = React.useState<Unit[]>([]);
     const [selectedUnitId, setSelectedUnitId] = React.useState<number | undefined>(defaultUnit?.id);
 
-    const selectedUnit = units.find((unit) => unit.id === selectedUnitId);
+    const units = UnitCustomHooks.useUnits();
+    const selectedUnit = units.data.find((unit) => {
+        if (unit.id === selectedUnitId) {
+            return unit;
+        }
+    });
 
-    const fetchUnits = async () => {
-        const units = await UnitController.getAll();
-        setUnits(units);
-    };
-
-    React.useEffect(() => {
-        fetchUnits();
-    }, []);
 
     React.useEffect(() => {
         if (visible) {
@@ -117,11 +112,15 @@ export const IOSUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Props)
                                                 }}
                                                 selectedValue={selectedUnit?.id ?? 0} // Set the selectedValue prop to the selectedUnit state
                                                 onValueChange={(itemValue, itemIndex) => {
-                                                    setSelectedUnitId(itemValue);
+                                                    if (!itemValue) {
+                                                        return;
+                                                    }
+
+                                                    setSelectedUnitId(Number(itemValue));
                                                 }}
                                             >
                                                 <Picker.Item label="None" value={undefined} />
-                                                {units.map((unit) => {
+                                                {units.data.map((unit) => {
                                                     if (!unit.unit) return null;
 
                                                     const selectedUnitValue = unit.unit
@@ -135,7 +134,7 @@ export const IOSUnitPicker = ({ defaultUnit, visible, confirm, dismiss }: Props)
                                                     return (
                                                         <Picker.Item
                                                             label={capitalizedUnitValue}
-                                                            value={unit!.id!} // Set the value prop to a unique identifier for the unit
+                                                            value={unit.id} // Set the value prop to a unique identifier for the unit
                                                             key={unit.id}
                                                         />
                                                     );
