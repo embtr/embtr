@@ -7,9 +7,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { CreateEditUserPostBase } from './CreateEditUserPostBase';
 import { LoadingOverlay } from 'src/components/common/loading/LoadingOverlay';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Timeline } from 'src/components/timeline/Timeline';
+import { TimelineController } from 'src/controller/timeline/TimelineController';
 
 export const CreateUserPost = () => {
-    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const navigation = useEmbtrNavigation();
 
     const [title, setTitle] = React.useState<string>('');
     const [body, setBody] = React.useState<string>('');
@@ -27,7 +30,8 @@ export const CreateUserPost = () => {
 
         setEnableSubmit(false);
         await StoryController.createViaApi(title, body, imageUrls);
-        navigation.navigate('Timeline');
+        await TimelineController.invalidateCache();
+        navigation.navigate('TimelineTab', { screen: 'Timeline' });
     };
 
     const onImagesUploaded = (uploadedImageUrls: string[]) => {
