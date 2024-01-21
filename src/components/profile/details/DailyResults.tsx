@@ -13,7 +13,7 @@ import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 export const DailyResults = () => {
     const navigation = useEmbtrNavigation();
-    const route = useRoute<RouteProp<TimelineTabScreens, 'UserPosts'>>();
+    const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResults'>>();
     const userId = route.params.userId;
 
     const timelineElements = TimelineCustomHooks.usePlannedDayResultTimelineData(userId);
@@ -37,7 +37,8 @@ export const DailyResults = () => {
                 timelineElements={timelineData}
                 hasMore={timelineElements.hasNextPage ?? false}
                 pullToRefresh={async () => {
-                    await TimelineController.invalidateUserPostsCache(userId);
+                    await TimelineController.invalidatePlannedDayResultsCache(userId);
+                    await TimelineController.clearPlannedDayResultsCache(userId);
                 }}
                 loadMore={timelineElements.fetchNextPage}
             />
