@@ -97,8 +97,9 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                     <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING }}>
                         <Text
                             onPress={() => {
-                                //@ts-ignore
-                                navigation.navigate('DailyResults', { userId: userId });
+                                navigation.navigate('DailyResults', {
+                                    userId: userId,
+                                });
                             }}
                             style={{ color: colors.link, fontSize: 12 }}
                         >
