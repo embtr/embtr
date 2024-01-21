@@ -7,6 +7,7 @@ import { User } from 'resources/schema';
 import Constants from 'expo-constants';
 import { CreatePushNotificationTokenRequest } from 'resources/types/requests/NotificationTypes';
 import axiosInstance from 'src/axios/axios';
+import * as Sentry from '@sentry/react-native';
 
 class PushNotificationController {
     public static registerPushNotificationToken = async () => {
@@ -18,6 +19,10 @@ class PushNotificationController {
 
         await PushNotificationController.setAndroidNotificationChannel();
         const token = await PushNotificationController.getPushNotificationToken();
+        if (!token) {
+            return;
+        }
+
         await PushNotificationController.createPushNotificationToken(token);
     };
 
@@ -33,11 +38,21 @@ class PushNotificationController {
     }
 
     private static async getPushNotificationToken() {
-        const token = (
-            await Notifications.getExpoPushTokenAsync({
-                projectId: Constants.easConfig?.projectId,
-            })
-        ).data;
+        const projectId =
+            Constants.easConfig?.projectId ?? Constants.expoConfig?.extra?.eas.projectId;
+
+        let token: string | undefined = undefined;
+        try {
+            token = (
+                await Notifications.getExpoPushTokenAsync({
+                    projectId,
+                })
+            ).data;
+        } catch (error) {
+            // 2024-01-21 - detecting missing projectId
+            Sentry.setExtra('projectId', projectId);
+            Sentry.captureException(error);
+        }
 
         return token;
     }

@@ -22,6 +22,7 @@ import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import * as Sentry from '@sentry/react-native';
 
 export const EditHabitModal = () => {
     const { colors } = useTheme();
@@ -40,10 +41,18 @@ export const EditHabitModal = () => {
     const buttonPadding = isLargerScreen ? 3 : 2;
     const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
     const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
-    const date =
-        dayKey && typeof dayKey === 'string' && dayKey !== ''
-            ? getDateFromDayKey(dayKey)
-            : new Date();
+
+    let date = new Date();
+    if (dayKey && dayKey !== '' && dayKey.length === '2021-01-01'.length) {
+        try {
+            date = getDateFromDayKey(dayKey);
+        } catch (error) {
+            // 2024-01-21 - android was crashing on release build launch
+            Sentry.setExtra('bad dayKey', dayKey);
+            Sentry.setExtra('using date', date);
+            Sentry.captureException(error);
+        }
+    }
     const fullDatePretty = getDatePrettyFullMonth(date);
 
     const svgUri = '';
