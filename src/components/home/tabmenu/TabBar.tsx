@@ -1,13 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, Dimensions, StyleSheet, Pressable, Animated } from 'react-native';
+import { View, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { TabElement } from 'src/components/home/tabmenu/TabElement';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TABS } from 'src/components/home/Dashboard';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
-import { Ionicons } from '@expo/vector-icons';
-import { CARD_SHADOW } from 'src/util/constants';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setShowQuickAddModal } from 'src/redux/user/GlobalState';
 import { Image } from 'expo-image';

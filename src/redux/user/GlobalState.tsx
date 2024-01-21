@@ -105,6 +105,8 @@ export const GlobalState = createSlice({
             state.globalLoading = false;
             state.updateModalPlannedTask = DEFAULT_UPDATE_MODAL_PLANNED_TASK;
             state.removalModalPlannedTask = DEFAULT_UPDATE_MODAL_PLANNED_TASK;
+            state.globalBlurBackground = false;
+            state.showQuickAddModal = false;
         },
         setUpdateModalPlannedTask(state, action: { payload: UpdateModalPlannedTask }) {
             state.updateModalPlannedTask = action.payload;

@@ -16,7 +16,7 @@ import {
 } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
 import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
-import { setCurrentUser } from 'src/redux/user/GlobalState';
+import { resetToDefault, setCurrentUser } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { ModalContainingComponent } from './components/common/modal/ModalContainingComponent';
 import { ConfettiView } from './components/common/animated_view/ConfettiView';
@@ -47,6 +47,9 @@ export const Main = () => {
     });
 
     React.useEffect(() => {
+        // reset all state
+        dispatch(resetToDefault());
+
         const loginUnsubscribe = registerAuthStateListener(async (firebaseUser) => {
             if (firebaseUser) {
                 const loggedInUser = await UserController.loginUser();
@@ -66,8 +69,6 @@ export const Main = () => {
     }, []);
 
     getFirebaseConnection('', '');
-
-    // todo register push notifications
 
     let view: JSX.Element =
         loggedIn === LoginState.LOGGED_IN ? <SecureMainStack /> : <InsecureMainStack />;
