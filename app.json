@@ -3,7 +3,7 @@
         "jsEngine": "hermes",
         "name": "embtr",
         "slug": "embtr",
-        "version": "0.0.330",
+        "version": "0.0.331",
         "orientation": "portrait",
         "icon": "assets/app_icon.png",
         "scheme": "embtr",
@@ -26,7 +26,7 @@
             "config": {
                 "usesNonExemptEncryption": false
             },
-            "buildNumber": "0.0.330"
+            "buildNumber": "0.0.331"
         },
         "android": {
             "adaptiveIcon": {
@@ -37,7 +37,7 @@
             "package": "com.brentryczak.embtr",
             "googleServicesFile": "./google-services.json",
             "softwareKeyboardLayoutMode": "pan",
-            "versionCode": 500000330
+            "versionCode": 500000331
         },
         "web": {
             "favicon": "assets/favicon.png"
@@ -54,9 +54,9 @@
                 "expo-build-properties",
                 {
                     "android": {
-                        "compileSdkVersion": 33,
-                        "targetSdkVersion": 33,
-                        "buildToolsVersion": "33.0.0"
+                        "compileSdkVersion": 34,
+                        "targetSdkVersion": 34,
+                        "buildToolsVersion": "34.0.0"
                     }
                 }
             ],
