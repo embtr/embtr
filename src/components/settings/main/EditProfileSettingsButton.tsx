@@ -9,7 +9,7 @@ export const EditProfileSettingsButton = () => {
     return (
         <SettingsButtonElement
             text={'Edit Profile'}
-            icon={'ios-pencil-sharp'}
+            icon={'pencil-sharp'}
             onPress={() => {
                 navigation.navigate('EditUserProfile');
             }}
