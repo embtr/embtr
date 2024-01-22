@@ -48,7 +48,8 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
                 <View
                     key={comment.id}
                     style={{
-                        paddingBottom: PADDING_LARGE / 1.5,
+                        paddingBottom: PADDING_MEDIUM,
+                        paddingHorizontal: PADDING_MEDIUM,
                     }}
                 >
                     <CommentBoxComment
