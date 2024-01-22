@@ -10,7 +10,7 @@ import { ActiveChallengesWidget } from 'src/components/widgets/challenges/Active
 import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
 import React from 'react';
 import { Context, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 
 interface Props {
     user: User;
@@ -38,24 +38,24 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
 
     return (
         <Screen>
-            <View style={{ height: '100%', paddingHorizontal: TIMELINE_CARD_PADDING }}>
+            <View style={{ height: '100%', paddingHorizontal: PADDING_LARGE }}>
                 <View style={{ paddingTop: 6 }}>
                     <DailyHistoryWidget userId={user.id} />
                 </View>
 
-                <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                <View style={{ paddingTop: PADDING_LARGE / 2 }}>
                     <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />
                 </View>
 
-                <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                <View style={{ paddingTop: PADDING_LARGE / 2 }}>
                     <UserPostsWidget userId={user.id} />
                 </View>
 
-                <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                <View style={{ paddingTop: PADDING_LARGE / 2 }}>
                     <UserDailyResultsWidget userId={user.id} />
                 </View>
 
-                <View style={{ height: TIMELINE_CARD_PADDING }} />
+                <View style={{ height: PADDING_LARGE }} />
             </View>
         </Screen>
     );

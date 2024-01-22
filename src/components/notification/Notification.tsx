@@ -4,7 +4,7 @@ import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TouchableOpacity } from 'react-native';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { formatDistance } from 'date-fns';
 import { Ionicons } from '@expo/vector-icons';
 import { Notification as NotificationModel, NotificationTargetPage } from 'resources/schema';
@@ -60,9 +60,9 @@ export const Notification = ({ notification }: Props) => {
                         style={{
                             flex: 1,
                             flexDirection: 'row',
-                            paddingTop: TIMELINE_CARD_PADDING,
-                            paddingBottom: TIMELINE_CARD_PADDING,
-                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingTop: PADDING_LARGE,
+                            paddingBottom: PADDING_LARGE,
+                            paddingLeft: PADDING_LARGE,
                         }}
                     >
                         <View style={{ marginRight: 10 }}>
@@ -89,7 +89,7 @@ export const Notification = ({ notification }: Props) => {
                                         flex: 1,
                                         justifyContent: 'center',
                                         alignItems: 'flex-end',
-                                        paddingRight: TIMELINE_CARD_PADDING,
+                                        paddingRight: PADDING_LARGE,
                                     }}
                                 >
                                     <Ionicons

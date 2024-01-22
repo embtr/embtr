@@ -14,7 +14,7 @@ import { CarouselCards, ImageCarouselImage } from '../common/images/ImageCarouse
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
 import { ImagesUploadingOverlay } from '../common/images/ImagesUploadingOverlay';
-import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { Image } from 'resources/schema';
 import { ImageUtility } from 'src/util/images/ImageUtility';
 
@@ -66,11 +66,11 @@ export const CreateEditUserPostBase = ({
     const styles = {
         layout: {
             flex: 1,
-            padding: TIMELINE_CARD_PADDING,
+            padding: PADDING_LARGE,
         },
         container: {
             backgroundColor: '#282828',
-            padding: TIMELINE_CARD_PADDING,
+            padding: PADDING_LARGE,
             borderRadius: 5,
         },
         text: {
@@ -95,7 +95,7 @@ export const CreateEditUserPostBase = ({
                     />
 
                     <View style={[styles.layout]}>
-                        <View style={{ marginBottom: TIMELINE_CARD_PADDING }}>
+                        <View style={{ marginBottom: PADDING_LARGE }}>
                             <Text style={[styles.header]}> Title </Text>
                             <View>
                                 <Text

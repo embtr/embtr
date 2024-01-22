@@ -8,7 +8,7 @@ import { SettingsAdvancedButton } from './SettingsAdvancedButton';
 import { NotificationsToggle } from './NotificationsToggle';
 import { EditProfileSettingsButton } from './EditProfileSettingsButton';
 import { SettingsVersion } from './SettingsVersion';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export const UserSettings = () => {
@@ -23,24 +23,24 @@ export const UserSettings = () => {
                         flexDirection: 'column',
                         alignItems: 'center',
                         width: '100%',
-                        paddingHorizontal: TIMELINE_CARD_PADDING,
+                        paddingHorizontal: PADDING_LARGE,
                     }}
                 >
-                    <View style={{ height: TIMELINE_CARD_PADDING }} />
+                    <View style={{ height: PADDING_LARGE }} />
                     {/*<NotificationsToggle />*/}
                     {/*<View style={{ height: TIMELINE_CARD_PADDING / 2 }} />*/}
                     <EditProfileSettingsButton />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsAccount />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsMembership />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsSignOut />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsAdvancedButton />
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsVersion />
-                    <View style={{ height: TIMELINE_CARD_PADDING }} />
+                    <View style={{ height: PADDING_LARGE }} />
                 </View>
             </ScrollView>
         </Screen>

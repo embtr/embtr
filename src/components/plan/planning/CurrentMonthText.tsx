@@ -1,6 +1,6 @@
 import { TouchableOpacity, View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
@@ -33,7 +33,7 @@ export const CurrentMonthText = ({ onPress, advancedVisible, month, scrollToToda
                         style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            paddingLeft: TIMELINE_CARD_PADDING / 4,
+                            paddingLeft: PADDING_LARGE / 4,
                         }}
                     >
                         <Ionicons

@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { User } from 'resources/schema';
@@ -48,7 +48,7 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
                 Today's Activities
             </Text>
 
-            <View style={{ paddingTop: TIMELINE_CARD_PADDING }} />
+            <View style={{ paddingTop: PADDING_LARGE }} />
 
             <PlanTodayForUser user={user} />
 

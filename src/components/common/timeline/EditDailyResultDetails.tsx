@@ -8,7 +8,7 @@ import { ImageUploadProgressReport } from 'src/controller/image/ImageController'
 import { getUTCDayOfWeek } from 'src/controller/planning/TaskController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Banner } from '../Banner';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
@@ -86,7 +86,7 @@ export const EditDailyResultDetails = () => {
         fontSize: 16,
         fontFamily: 'Poppins_500Medium',
         color: colors.timeline_card_body,
-        paddingLeft: TIMELINE_CARD_PADDING,
+        paddingLeft: PADDING_LARGE,
     } as TextStyle;
 
     let dayOfWeek = '';
@@ -169,8 +169,8 @@ export const EditDailyResultDetails = () => {
 
                         <View
                             style={{
-                                paddingLeft: TIMELINE_CARD_PADDING,
-                                paddingRight: TIMELINE_CARD_PADDING,
+                                paddingLeft: PADDING_LARGE,
+                                paddingRight: PADDING_LARGE,
                                 paddingTop: 20,
                             }}
                         >

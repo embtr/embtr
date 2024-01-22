@@ -8,7 +8,7 @@ import {
     Poppins_400Regular,
     Poppins_500Medium,
 } from '@expo-google-fonts/poppins';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 
 interface Props {
     visible: boolean;
@@ -109,7 +109,7 @@ export const BannerInfoModal = ({ visible, dismiss }: Props) => {
                                     >
                                         Upload Banner Info
                                     </Text>
-                                    <View style={{ padding: TIMELINE_CARD_PADDING }}>
+                                    <View style={{ padding: PADDING_LARGE }}>
                                         <Text
                                             style={{
                                                 fontFamily: 'Poppins_400Regular',

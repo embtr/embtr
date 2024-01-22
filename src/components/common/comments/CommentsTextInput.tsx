@@ -5,7 +5,7 @@ import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox'
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/model/OldModels';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 
 interface Props {
@@ -60,8 +60,8 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
         <View
             style={{
                 width: '100%',
-                paddingLeft: focused ? 0 : TIMELINE_CARD_PADDING / 2,
-                paddingRight: focused ? 0 : TIMELINE_CARD_PADDING / 2,
+                paddingLeft: focused ? 0 : PADDING_LARGE / 2,
+                paddingRight: focused ? 0 : PADDING_LARGE / 2,
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingBottom: focused ? 0 : 3,

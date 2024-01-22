@@ -10,7 +10,7 @@ import {
     getMonthData,
 } from 'src/model/PlanningWidget';
 import { View } from 'react-native';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
 import { FlatList } from 'react-native-gesture-handler';
@@ -86,7 +86,7 @@ export const PlanningWidgetImproved = () => {
                 onScrollToToday={scrollToToday}
             />
 
-            <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+            <View style={{ height: PADDING_LARGE / 2 }} />
             <DayPickerImproved
                 ref={dayScrollRef}
                 selectedDay={selectedDay}
@@ -95,7 +95,7 @@ export const PlanningWidgetImproved = () => {
                 daysOfTheMonth={daysOfMonth}
             />
 
-            <View style={{ height: TIMELINE_CARD_PADDING }} />
+            <View style={{ height: PADDING_LARGE }} />
             <PlanSelectedDay />
         </WidgetBase>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import { FlatList, Animated, Easing } from 'react-native';
 import { View, StyleSheet } from 'react-native';
 import { CurrentMonthText } from 'src/components/plan/planning/CurrentMonthText';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { MonthPickerElementImproved } from './MonthPickerElementImproved';
 import { MonthPickerElementData } from 'src/model/PlanningWidget';
 
@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     animatedContainer: { overflow: 'hidden', width: '100%' },
 });
 
-const ANIMATION_HEIGHT = TIMELINE_CARD_PADDING * 3 - TIMELINE_CARD_PADDING / 2;
+const ANIMATION_HEIGHT = PADDING_LARGE * 3 - PADDING_LARGE / 2;
 
 const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {
     Animated.timing(viewHeight, {
@@ -85,7 +85,7 @@ export const MonthPickerImproved = React.forwardRef(
                 <Animated.View
                     style={[styles.animatedContainer, { height: advancedOptionsHeight }]}
                 >
-                    <View style={{ paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                    <View style={{ paddingTop: PADDING_LARGE / 2 }}>
                         <FlatList
                             ref={ref}
                             showsHorizontalScrollIndicator={false}

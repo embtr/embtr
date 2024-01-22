@@ -1,5 +1,5 @@
 import { Keyboard, Text, TouchableOpacity, View } from 'react-native';
-import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import {
     CreateEditHabitMode,
     useCreateEditScheduleHabit,
@@ -267,8 +267,8 @@ export const CreateEditHabitSaveButton = ({
         <TouchableOpacity onPress={onPress}>
             <View
                 style={{
-                    height: 50 - TIMELINE_CARD_PADDING,
-                    marginHorizontal: TIMELINE_CARD_PADDING / 2,
+                    height: 50 - PADDING_LARGE,
+                    marginHorizontal: PADDING_LARGE / 2,
                     backgroundColor: colors.accent_color,
                     justifyContent: 'center',
                     borderRadius: 3,

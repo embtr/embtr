@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentTab } from 'src/redux/user/GlobalState';
 import { getNavigationHook } from 'src/util/navigation/NavigationHookProvider';
@@ -74,7 +74,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
             </TouchableOpacity>
         );
 
-        elements.push(<View style={{ height: TIMELINE_CARD_PADDING / 2 }} />);
+        elements.push(<View style={{ height: PADDING_LARGE / 2 }} />);
         elements.push(element);
     }
 
@@ -94,7 +94,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
             {elements.length > 0 ? (
                 <View>
                     {elements}
-                    <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING }}>
+                    <View style={{ width: '100%', paddingTop: PADDING_LARGE }}>
                         <Text
                             onPress={() => {
                                 navigation.navigate('DailyResults', {

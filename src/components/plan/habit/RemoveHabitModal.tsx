@@ -7,7 +7,7 @@ import {
     POPPINS_MEDIUM,
     POPPINS_REGULAR,
     POPPINS_SEMI_BOLD,
-    TIMELINE_CARD_PADDING,
+    PADDING_LARGE,
 } from 'src/util/constants';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { PlannedTask } from 'resources/schema';
@@ -53,14 +53,14 @@ const getBody = (
                     style={{
                         width: '100%',
                         flexDirection: 'row',
-                        paddingTop: TIMELINE_CARD_PADDING,
-                        paddingLeft: TIMELINE_CARD_PADDING,
+                        paddingTop: PADDING_LARGE,
+                        paddingLeft: PADDING_LARGE,
                     }}
                 >
                     <View style={{ height: 25, width: 25 }}>
                         <OptimalImage data={optimalImageData} style={{ height: 25, width: 25 }} />
                     </View>
-                    <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ width: PADDING_LARGE / 2 }} />
                     <View style={{ flex: 1 }}>
                         <Text
                             numberOfLines={1}
@@ -69,7 +69,7 @@ const getBody = (
                                 width: '100%',
                                 fontFamily: POPPINS_MEDIUM,
                                 color: colors.accent_color,
-                                paddingRight: TIMELINE_CARD_PADDING,
+                                paddingRight: PADDING_LARGE,
                             }}
                         >
                             {plannedHabit.title}
@@ -83,14 +83,14 @@ const getBody = (
                 style={{
                     width: '100%',
                     flex: 1,
-                    paddingTop: TIMELINE_CARD_PADDING,
+                    paddingTop: PADDING_LARGE,
                 }}
             >
                 <Text
                     style={{
                         fontSize: 12,
                         fontFamily: 'Poppins_400Regular',
-                        paddingHorizontal: TIMELINE_CARD_PADDING,
+                        paddingHorizontal: PADDING_LARGE,
                         color: colors.text,
                     }}
                 >
@@ -106,7 +106,7 @@ const getBody = (
                     width: '100%',
                     alignItems: 'center',
                     justifyContent: 'flex-end',
-                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                    paddingHorizontal: PADDING_LARGE,
                 }}
             >
                 <TouchableOpacity
@@ -136,7 +136,7 @@ const getBody = (
                     </Text>
                 </TouchableOpacity>
 
-                <View style={{ height: TIMELINE_CARD_PADDING }} />
+                <View style={{ height: PADDING_LARGE }} />
 
                 <TouchableOpacity
                     style={[
@@ -176,7 +176,7 @@ const getBody = (
                     </Text>
                 </TouchableOpacity>
 
-                <View style={{ height: TIMELINE_CARD_PADDING }} />
+                <View style={{ height: PADDING_LARGE }} />
             </View>
         </View>
     );

@@ -3,7 +3,7 @@ import { ModalBase } from '../modal/ModalBase';
 import RNDateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import React from 'react';
-import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 
 interface Props {
     date: Date;
@@ -65,7 +65,7 @@ export const IOSDatePicker = ({ date, onConfirm, onCancel, visible }: Props) => 
                         style={{
                             width: '100%',
                             alignItems: 'center',
-                            paddingTop: TIMELINE_CARD_PADDING * 2,
+                            paddingTop: PADDING_LARGE * 2,
                         }}
                     >
                         <TouchableOpacity
@@ -75,7 +75,7 @@ export const IOSDatePicker = ({ date, onConfirm, onCancel, visible }: Props) => 
                         >
                             <View
                                 style={{
-                                    paddingVertical: TIMELINE_CARD_PADDING / 2,
+                                    paddingVertical: PADDING_LARGE / 2,
                                     backgroundColor: colors.modal_background,
                                     borderRadius: 6,
                                     width: pickerWidth,

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 
 interface MemoizedProps {
@@ -39,8 +39,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export const DAY_PICKER_ELEMENT_WIDTH =
-    (Dimensions.get('window').width - TIMELINE_CARD_PADDING * 3) / 7;
+export const DAY_PICKER_ELEMENT_WIDTH = (Dimensions.get('window').width - PADDING_LARGE * 3) / 7;
 
 export const MemoizedDayPickerElementImproved = React.memo(
     ({ elementData, isSelected, onSelect, monthIndex, isToday }: MemoizedProps) => {

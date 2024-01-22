@@ -1,7 +1,7 @@
 import { HabitSummary } from 'resources/types/habit/Habit';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -111,7 +111,7 @@ export const HabitSummaryElement = ({ habitSummary }: Props) => {
                 <View style={{ height: 40, width: 40 }}>
                     <OptimalImage data={optimalImageData} style={{ height: 40, width: 40 }} />
                 </View>
-                <View style={{ paddingLeft: TIMELINE_CARD_PADDING, flex: 1 }}>
+                <View style={{ paddingLeft: PADDING_LARGE, flex: 1 }}>
                     <Text
                         style={{
                             color: colors.text,
@@ -121,7 +121,7 @@ export const HabitSummaryElement = ({ habitSummary }: Props) => {
                     >
                         {habitSummary.task.title}
                     </Text>
-                    <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
 
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Text

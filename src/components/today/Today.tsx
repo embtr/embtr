@@ -15,7 +15,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
 import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { TodaysTasksWidgetImproved } from '../widgets/planning/TodaysTasksWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -86,14 +86,14 @@ export const Today = () => {
     return (
         <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
             <Screen>
-                <View style={{ flex: 1, paddingHorizontal: TIMELINE_CARD_PADDING  }}>
+                <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
                     <Banner name="Today" />
 
                     <ScrollView>
                         <TodaysCountdownWidget />
-                        <View style={{ height: TIMELINE_CARD_PADDING  }} />
+                        <View style={{ height: PADDING_LARGE }} />
                         <QuoteOfTheDayWidget />
-                        <View style={{ height: TIMELINE_CARD_PADDING  }} />
+                        <View style={{ height: PADDING_LARGE }} />
 
                         <View
                             onLayout={(e) => {
@@ -106,7 +106,7 @@ export const Today = () => {
                             <TodaysTasksWidgetImproved />
                         </View>
 
-                        <View style={{ height: TIMELINE_CARD_PADDING * 1.5 }} />
+                        <View style={{ height: PADDING_LARGE * 1.5 }} />
                     </ScrollView>
                 </View>
             </Screen>
