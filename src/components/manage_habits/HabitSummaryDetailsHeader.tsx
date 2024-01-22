@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { TIMELINE_CARD_PADDING, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
 import { HabitSummary } from 'resources/types/habit/Habit';
 import { useTheme } from '../theme/ThemeProvider';
@@ -28,7 +28,7 @@ export const HabitSummaryDetailsHeader = ({ habitSummary }: Props) => {
                 </View>
             </View>
 
-            <View style={{ width: TIMELINE_CARD_PADDING }} />
+            <View style={{ width: PADDING_LARGE }} />
 
             <View
                 style={{

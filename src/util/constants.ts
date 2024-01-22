@@ -3,8 +3,9 @@ import { getSafeWindowWidth } from './GeneralUtility';
 
 export const USER_SEARCH_WIDTH = '95%';
 
-// TIMELINE
-export const TIMELINE_CARD_PADDING = 12;
+export const PADDING_LARGE = 12;
+export const PADDING_MEDIUM = PADDING_LARGE * 0.75;
+export const PADDING_SMALL = PADDING_LARGE * 0.5;
 export const TIMELINE_CARD_ICON_SIZE = 25;
 export const TIMELINE_CARD_ICON_COUNT_SIZE = 12;
 
@@ -100,14 +101,14 @@ export namespace ReactQueryStaleTimes {
 export namespace UI {
     export namespace SCHEDULE_HABIT {
         export namespace REPEATING_SCHEDULE {
-            const totalDayOfWeekWidth = getSafeWindowWidth() - (TIMELINE_CARD_PADDING / 3) * 7;
+            const totalDayOfWeekWidth = getSafeWindowWidth() - (PADDING_LARGE / 3) * 7;
             export const DAY_OF_WEEK_WIDTH = totalDayOfWeekWidth / 7;
             export const GAP_BETWEEN_DAYS = (getSafeWindowWidth() - totalDayOfWeekWidth) / 6;
             export const DATE_WIDTH = DAY_OF_WEEK_WIDTH * 3 + GAP_BETWEEN_DAYS * 2;
         }
 
         export namespace TIME_OF_DAY {
-            const totalWidth = getSafeWindowWidth() - (TIMELINE_CARD_PADDING / 3) * 4;
+            const totalWidth = getSafeWindowWidth() - (PADDING_LARGE / 3) * 4;
             export const TIME_OF_DAY_WIDTH = totalWidth / 4;
             export const GAP_BETWEEN_TIME_OF_DAY = (getSafeWindowWidth() - totalWidth) / 3;
         }

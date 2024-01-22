@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, Keyboard } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated } from 'react-native';
 import {
@@ -33,7 +33,7 @@ export const ScheduledHabitTimeOfDay = () => {
         CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT === editMode;
 
     return (
-        <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
+        <View style={{ paddingBottom: PADDING_LARGE }}>
             <View
                 style={{
                     flexDirection: 'row',
@@ -74,7 +74,7 @@ export const ScheduledHabitTimeOfDay = () => {
 
             <Animated.View
                 style={{
-                    marginTop: TIMELINE_CARD_PADDING,
+                    marginTop: PADDING_LARGE,
                     flexDirection: 'row',
                     height: timeOfDayViewHeight,
                     overflow: 'hidden',

@@ -2,7 +2,7 @@ import React from 'react';
 import { Animated, Easing, View } from 'react-native';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedDay, PlannedTask } from 'resources/schema';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
@@ -45,7 +45,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
 
     React.useEffect(() => {
         const expand = !hasPlannedTasks || allHabitsAreComplete;
-        const expandHeight = !hasPlannedTasks ? 60 : 60 + TIMELINE_CARD_PADDING;
+        const expandHeight = !hasPlannedTasks ? 60 : 60 + PADDING_LARGE;
 
         runAnimation(expand ?? false, detailsViewHeight, expandHeight);
     }, [allHabitsAreComplete, hasPlannedTasks]);
@@ -117,7 +117,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     );
 
     const renderItem = ({ item }: { item: PlannedTask }) => (
-        <View style={{ paddingBottom: TIMELINE_CARD_PADDING / 2 }}>
+        <View style={{ paddingBottom: PADDING_LARGE / 2 }}>
             <MemoizedPlannableTaskImproved
                 initialPlannedTask={item}
                 dayKey={dayKey}

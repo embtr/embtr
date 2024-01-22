@@ -6,7 +6,7 @@ import { HabitSummaries } from 'src/components/manage_habits/HabitSummaries';
 import { View } from 'react-native';
 import { Checkbox } from 'src/components/checkbox/Checkbox';
 import React from 'react';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 
 export const ManageHabits = () => {
     const navigation = useEmbtrNavigation();
@@ -25,7 +25,7 @@ export const ManageHabits = () => {
 
             <View
                 style={{
-                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                    paddingHorizontal: PADDING_LARGE,
                     width: '100%',
                     flexDirection: 'row',
                 }}

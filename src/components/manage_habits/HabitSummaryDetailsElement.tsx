@@ -1,7 +1,7 @@
 import { View, Text, Image } from 'react-native';
 import { ScheduledHabit } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { formatDate } from 'src/util/DateUtility';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayController';
@@ -66,7 +66,7 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                             return (
                                 <Text
                                     style={{
-                                        paddingRight: TIMELINE_CARD_PADDING / 2,
+                                        paddingRight: PADDING_LARGE / 2,
                                         fontFamily: POPPINS_REGULAR,
                                         fontSize: 18,
                                         color: isDayOfWeekSelected
@@ -86,7 +86,7 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                             flex: 1,
                             flexDirection: 'row',
                             justifyContent: 'center',
-                            paddingTop: TIMELINE_CARD_PADDING / 2,
+                            paddingTop: PADDING_LARGE / 2,
                         }}
                     >
                         {timeOfDays.map((timeOfDay) => {
@@ -115,7 +115,7 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                             alignItems: 'center',
                         }}
                     >
-                        <View style={{ flex: 1, paddingTop: TIMELINE_CARD_PADDING / 2 }}>
+                        <View style={{ flex: 1, paddingTop: PADDING_LARGE / 2 }}>
                             <Text
                                 style={{
                                     fontFamily: POPPINS_REGULAR,

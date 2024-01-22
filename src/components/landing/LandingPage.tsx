@@ -3,7 +3,7 @@ import { Linking, Text, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { EmbtrButton } from '../common/button/EmbtrButton';
 import { LoginModal } from '../login/LoginModal';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
@@ -56,7 +56,7 @@ export const LandingPage = () => {
                     {isIosApp() && <AppleAuthenticate />}
                 </View>
 
-                <View style={{ height: TIMELINE_CARD_PADDING / 2 }} />
+                <View style={{ height: PADDING_LARGE / 2 }} />
             </View>
 
             <View style={{ width: 300, height: 45 }}>
@@ -149,8 +149,8 @@ export const LandingPage = () => {
                             <View
                                 style={{
                                     width: getWindowWidth() * 0.9,
-                                    paddingTop: TIMELINE_CARD_PADDING * 1.5,
-                                    paddingBottom: TIMELINE_CARD_PADDING,
+                                    paddingTop: PADDING_LARGE * 1.5,
+                                    paddingBottom: PADDING_LARGE,
                                 }}
                             >
                                 <HorizontalLine />
@@ -176,8 +176,8 @@ export const LandingPage = () => {
                             <View
                                 style={{
                                     width: '100%',
-                                    paddingTop: TIMELINE_CARD_PADDING,
-                                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                                    paddingTop: PADDING_LARGE,
+                                    paddingHorizontal: PADDING_LARGE,
                                 }}
                             >
                                 <Text

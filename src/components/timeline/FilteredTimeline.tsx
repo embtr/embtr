@@ -1,6 +1,6 @@
 import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { TimelineElement, TimelineElementType } from 'resources/types/requests/Timeline';
 import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
 import { PlannedDayResultTimelineElement } from './PlannedDayResultTimelineElement';
@@ -15,8 +15,8 @@ const createFooter = (hasMore: boolean, colors: any) => {
     ) : (
         <View
             style={{
-                paddingTop: TIMELINE_CARD_PADDING,
-                paddingBottom: TIMELINE_CARD_PADDING * 2.5,
+                paddingTop: PADDING_LARGE,
+                paddingBottom: PADDING_LARGE * 2.5,
             }}
         >
             <Text
@@ -39,8 +39,8 @@ const renderItem = (item: TimelineElement) => {
         return (
             <View
                 style={{
-                    paddingTop: TIMELINE_CARD_PADDING,
-                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                    paddingTop: PADDING_LARGE,
+                    paddingHorizontal: PADDING_LARGE,
                 }}
             >
                 <UserPostTimelineElement userPost={item.userPost} />
@@ -50,8 +50,8 @@ const renderItem = (item: TimelineElement) => {
         return (
             <View
                 style={{
-                    paddingTop: TIMELINE_CARD_PADDING,
-                    paddingHorizontal: TIMELINE_CARD_PADDING,
+                    paddingTop: PADDING_LARGE,
+                    paddingHorizontal: PADDING_LARGE,
                 }}
             >
                 <PlannedDayResultTimelineElement plannedDayResult={item.plannedDayResult} />

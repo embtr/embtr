@@ -1,6 +1,6 @@
 import { WidgetBase } from '../WidgetBase';
 import { View, Text } from 'react-native';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import React from 'react';
 import { PlanToday } from 'src/components/plan/planning/PlanToday';
@@ -27,7 +27,7 @@ export const TodaysTasksWidgetImproved = () => {
                 />
             </View>
 
-            <View style={{ paddingTop: TIMELINE_CARD_PADDING }} />
+            <View style={{ paddingTop: PADDING_LARGE }} />
 
             <PlanToday hideComplete={hideComplete} />
         </WidgetBase>

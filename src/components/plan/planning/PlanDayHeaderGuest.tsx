@@ -4,7 +4,7 @@ import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { PlannedDay } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 
 interface Styles {
     containerShared: ViewStyle;
@@ -26,7 +26,7 @@ const generateStyles = (colors: any): Styles => {
             justifyContent: 'center',
             alignContent: 'center',
             borderRadius: 5,
-            marginBottom: TIMELINE_CARD_PADDING,
+            marginBottom: PADDING_LARGE,
         },
         containerUnshared: {
             borderColor: '#404040',
@@ -35,8 +35,8 @@ const generateStyles = (colors: any): Styles => {
             justifyContent: 'center',
             alignContent: 'center',
             borderRadius: 5,
-            paddingVertical: TIMELINE_CARD_PADDING,
-            marginBottom: TIMELINE_CARD_PADDING,
+            paddingVertical: PADDING_LARGE,
+            marginBottom: PADDING_LARGE,
         },
 
         containerNoTasks: {
@@ -46,7 +46,7 @@ const generateStyles = (colors: any): Styles => {
             justifyContent: 'center',
             alignContent: 'center',
             borderRadius: 5,
-            paddingVertical: TIMELINE_CARD_PADDING,
+            paddingVertical: PADDING_LARGE,
         },
         topText: {
             flex: 1,

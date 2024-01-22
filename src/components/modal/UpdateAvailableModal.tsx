@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MasterScreens } from 'src/navigation/RootStackParamList';
@@ -65,7 +65,7 @@ export const UpdateAvailableModal = () => {
                 <View>
                     <Text
                         style={{
-                            paddingTop: TIMELINE_CARD_PADDING,
+                            paddingTop: PADDING_LARGE,
                             color: colors.text,
                             textAlign: 'center',
                             fontSize: 24,
@@ -78,8 +78,8 @@ export const UpdateAvailableModal = () => {
 
                 <View
                     style={{
-                        paddingTop: TIMELINE_CARD_PADDING,
-                        paddingHorizontal: TIMELINE_CARD_PADDING,
+                        paddingTop: PADDING_LARGE,
+                        paddingHorizontal: PADDING_LARGE,
                         flexDirection: 'row',
                         width: '100%',
                     }}
@@ -104,13 +104,13 @@ export const UpdateAvailableModal = () => {
                 <View
                     style={{
                         width: '100%',
-                        paddingTop: TIMELINE_CARD_PADDING * 2,
+                        paddingTop: PADDING_LARGE * 2,
                     }}
                 >
                     <TouchableOpacity
                         onPress={onUpdatePressed}
                         style={{
-                            marginHorizontal: TIMELINE_CARD_PADDING,
+                            marginHorizontal: PADDING_LARGE,
                             backgroundColor: colors.accent_color,
                             borderRadius: 5,
                         }}
@@ -120,7 +120,7 @@ export const UpdateAvailableModal = () => {
                                 color: colors.text,
                                 textAlign: 'center',
                                 fontFamily: POPPINS_MEDIUM,
-                                paddingVertical: TIMELINE_CARD_PADDING / 2,
+                                paddingVertical: PADDING_LARGE / 2,
                             }}
                         >
                             {`to the ${isIosApp() ? 'app store!' : 'play store!'}`}
@@ -132,13 +132,13 @@ export const UpdateAvailableModal = () => {
                     <View
                         style={{
                             width: '100%',
-                            paddingTop: TIMELINE_CARD_PADDING / 2,
+                            paddingTop: PADDING_LARGE / 2,
                         }}
                     >
                         <TouchableOpacity
                             onPress={onMaybeLater}
                             style={{
-                                marginHorizontal: TIMELINE_CARD_PADDING,
+                                marginHorizontal: PADDING_LARGE,
                                 borderRadius: 5,
                             }}
                         >
@@ -147,7 +147,7 @@ export const UpdateAvailableModal = () => {
                                     color: colors.secondary_text,
                                     textAlign: 'center',
                                     fontFamily: POPPINS_MEDIUM,
-                                    paddingVertical: TIMELINE_CARD_PADDING / 2,
+                                    paddingVertical: PADDING_LARGE / 2,
                                 }}
                             >
                                 maybe later

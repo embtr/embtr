@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Banner } from '../common/Banner';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { UpcomingChallenges } from './UpcomingChallenges';
 import { Screen } from '../common/Screen';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
@@ -17,7 +17,7 @@ export const ChallengeMain = () => {
         switch (props.route.key) {
             case 'planning':
                 return (
-                    <View style={{ height: '100%', padding: TIMELINE_CARD_PADDING / 2 }}>
+                    <View style={{ height: '100%', padding: PADDING_LARGE / 2 }}>
                         <PlanningWidgetImproved />
                     </View>
                 );
@@ -70,7 +70,7 @@ export const ChallengeMain = () => {
             <Banner name="Planning" />
 
             <ScrollView>
-                <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING / 2 }}>
+                <View style={{ paddingHorizontal: PADDING_LARGE / 2 }}>
                     <PlanningWidgetImproved />
                 </View>
             </ScrollView>

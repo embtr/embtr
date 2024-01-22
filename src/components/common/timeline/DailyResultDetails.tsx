@@ -18,7 +18,7 @@ import {
 } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableTextInputBox';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { PlannedDayResultElement } from 'src/components/timeline/PlannedDayResultElement';
@@ -127,7 +127,7 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
             {userIsAuthor && <EmbtrMenuCustom />}
 
             <ScrollableTextInputBox submitComment={interactableData.onCommentAdded}>
-                <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
+                <View style={{ paddingHorizontal: PADDING_LARGE }}>
                     <PlannedDayResultElement
                         plannedDayResult={plannedDayResult}
                         interactableData={interactableData}

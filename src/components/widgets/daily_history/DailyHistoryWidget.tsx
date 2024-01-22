@@ -2,7 +2,7 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import { DailyHistoryCustomHooks } from 'src/controller/daily_history/DailyHistoryController';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 
 interface Props {
@@ -107,9 +107,7 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
                 </View>
             </View>
 
-            <View style={{ flexDirection: 'row', paddingTop: TIMELINE_CARD_PADDING / 4 }}>
-                {views}
-            </View>
+            <View style={{ flexDirection: 'row', paddingTop: PADDING_LARGE / 4 }}>{views}</View>
 
             <View style={{ flexDirection: 'row', paddingTop: 1 }}>
                 <View style={{ flex: 1, paddingTop: 2 }}>

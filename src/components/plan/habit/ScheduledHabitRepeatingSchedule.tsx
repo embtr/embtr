@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Switch, Text, View } from 'react-native';
-import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { DaysOfTheWeekToggle } from 'src/components/plan/habit/DaysOfTheWeekToggle';
 import { HabitDateView } from 'src/components/plan/habit/HabitDateView';
@@ -13,7 +13,7 @@ import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit
 export const ScheduleHabitRepeatingSchedule = () => {
     const { colors } = useTheme();
 
-    const REPEATING_SCHEDULE_HEIGHT = 150 + TIMELINE_CARD_PADDING * 2;
+    const REPEATING_SCHEDULE_HEIGHT = 150 + PADDING_LARGE * 2;
     const {
         startDate,
         setStartDate,
@@ -73,7 +73,7 @@ export const ScheduleHabitRepeatingSchedule = () => {
     }, [endDate, endDateDatePickerModalVisible]);
 
     return (
-        <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
+        <View style={{ paddingBottom: PADDING_LARGE }}>
             {startDateDatePickerMemo}
             {endDateDatePickerMemo}
 
@@ -114,7 +114,7 @@ export const ScheduleHabitRepeatingSchedule = () => {
 
             <Animated.View
                 style={{
-                    marginTop: TIMELINE_CARD_PADDING,
+                    marginTop: PADDING_LARGE,
                     height: height,
                     overflow: 'hidden',
                 }}
@@ -134,7 +134,7 @@ export const ScheduleHabitRepeatingSchedule = () => {
                 <View
                     style={{
                         width: '100%',
-                        paddingTop: TIMELINE_CARD_PADDING,
+                        paddingTop: PADDING_LARGE,
                     }}
                 >
                     <HabitDateView

@@ -1,11 +1,6 @@
 import { View, Text, ViewStyle, TextStyle, Pressable } from 'react-native';
 import { PlannedTask } from 'resources/schema';
-import {
-    CARD_SHADOW,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-    TIMELINE_CARD_PADDING,
-} from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from '../theme/ThemeProvider';
 import { UnitUtility } from 'src/util/UnitUtility';
 import React from 'react';
@@ -46,7 +41,7 @@ const generateStyles = (colors: any): Styles => {
             ...CARD_SHADOW,
         },
         innerContainer: {
-            padding: TIMELINE_CARD_PADDING / 2,
+            padding: PADDING_LARGE / 2,
             width: '100%',
             flexDirection: 'row',
         },
@@ -76,13 +71,13 @@ const generateStyles = (colors: any): Styles => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-end',
-            paddingRight: TIMELINE_CARD_PADDING,
+            paddingRight: PADDING_LARGE,
             flex: 1,
         },
         svgIcon: {
             height: 30,
             width: 30,
-            right: TIMELINE_CARD_PADDING,
+            right: PADDING_LARGE,
         },
         svgProgress: {
             position: 'absolute',

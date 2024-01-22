@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Image } from 'expo-image';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { Ionicons } from '@expo/vector-icons';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { getAuth } from 'firebase/auth';
 import UserController from 'src/controller/user/UserController';
 import { resetToDefault } from 'src/redux/user/GlobalState';
@@ -109,7 +109,7 @@ export const LoadingPage = () => {
                         >
                             Logging you out to reset your state. Sorry!
                         </Text>
-                        <View style={{ height: TIMELINE_CARD_PADDING }} />
+                        <View style={{ height: PADDING_LARGE }} />
                         <ActivityIndicator color="#fff" animating size="large" />
                     </View>
                 ) : (

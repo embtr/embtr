@@ -8,7 +8,7 @@ import DailyResultController from 'src/controller/timeline/daily_result/DailyRes
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getFireConfetti } from 'src/redux/user/GlobalState';
-import { TIMELINE_CARD_PADDING, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 
 interface Styles {
     container: ViewStyle;
@@ -108,12 +108,12 @@ export const PlanDayHeader = ({
                             style={{
                                 backgroundColor: colors.accent_color,
                                 borderRadius: 2.5,
-                                marginHorizontal: TIMELINE_CARD_PADDING,
+                                marginHorizontal: PADDING_LARGE,
                             }}
                         >
                             <Text
                                 style={{
-                                    paddingVertical: TIMELINE_CARD_PADDING / 8,
+                                    paddingVertical: PADDING_LARGE / 8,
                                     lineHeight: 20,
                                     color: colors.text,
                                     textAlign: 'center',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PlannedTask as PlannedTaskModel } from 'resources/schema';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { OptimalImageData } from '../images/OptimalImage';
@@ -72,7 +72,7 @@ export const DailyResultCardElement = ({ plannedTask, onPress }: Props) => {
                 />
             )}
 
-            <View style={{ height: 30, paddingLeft: TIMELINE_CARD_PADDING / 2 }}>
+            <View style={{ height: 30, paddingLeft: PADDING_LARGE / 2 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text
                         style={{

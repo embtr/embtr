@@ -1,5 +1,5 @@
 import { Text, TextInput, View } from 'react-native';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
@@ -14,7 +14,7 @@ export const ScheduledHabitTitle = () => {
     };
 
     return (
-        <View style={{ paddingBottom: TIMELINE_CARD_PADDING }}>
+        <View style={{ paddingBottom: PADDING_LARGE }}>
             <View style={{ flexDirection: 'row' }}>
                 <Text
                     style={{
@@ -43,7 +43,7 @@ export const ScheduledHabitTitle = () => {
             </View>
             <View
                 style={{
-                    paddingTop: TIMELINE_CARD_PADDING / 4,
+                    paddingTop: PADDING_LARGE / 4,
                     flexDirection: 'row',
                 }}
             >
@@ -59,11 +59,11 @@ export const ScheduledHabitTitle = () => {
                 >
                     <OptimalImage data={optimalImageData} style={{ height: 37.5, width: 37.5 }} />
                 </View>
-                <View style={{ width: TIMELINE_CARD_PADDING }} />
+                <View style={{ width: PADDING_LARGE }} />
                 <TextInput
                     style={{
                         height: 50,
-                        padding: TIMELINE_CARD_PADDING,
+                        padding: PADDING_LARGE,
                         flex: 1,
                         color: colors.text,
                         borderRadius: 12,

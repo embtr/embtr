@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
 
 interface Props {
     text: string;
@@ -40,7 +40,7 @@ export const SettingsTextElement = ({ text, secondaryText, thirdaryText, onPress
                             fontFamily: POPPINS_MEDIUM,
                             fontSize: 15,
                             alignItems: 'flex-start',
-                            paddingLeft: TIMELINE_CARD_PADDING * 2,
+                            paddingLeft: PADDING_LARGE * 2,
                         }}
                     >
                         {text}
