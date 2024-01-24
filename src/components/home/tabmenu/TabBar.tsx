@@ -84,7 +84,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
 
         let element: JSX.Element = <View />;
         if (route.name === TABS.TIMELINE) {
-            let icon: any = isFocused ? 'ios-home' : 'ios-home-outline';
+            let icon: any = isFocused ? 'home' : 'home-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
         } else if (route.name === TABS.TODAY) {
             let icon: any = isFocused ? 'sunny' : 'sunny-outline';

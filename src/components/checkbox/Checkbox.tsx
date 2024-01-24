@@ -1,11 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import {
-    CARD_SHADOW,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-    TIMELINE_CARD_PADDING,
-} from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -32,7 +27,7 @@ export const Checkbox = ({ text, checked, onCheck }: Props) => {
                     >
                         {text}
                     </Text>
-                    <View style={{ width: TIMELINE_CARD_PADDING / 2 }} />
+                    <View style={{ width: PADDING_LARGE / 2 }} />
                 </View>
             )}
 

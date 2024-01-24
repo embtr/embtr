@@ -4,13 +4,14 @@ import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { ScheduledHabitCustomHooks } from 'src/controller/habit/ScheduledHabitController';
+import { ScheduledHabitUtil } from 'resources/types/util/ScheduledHabitUtil';
 
 export enum CreateEditHabitMode {
     CREATE_CUSTOM_HABIT = 'CREATE_CUSTOM_HABIT',
-    CREATE_NEW_HABIT = 'CREATE_NEW_HABIT',
-    EDIT_EXISTING_HABIT = 'EDIT_EXISTING_HABIT',
-    EDIT_EXISTING_PLANNED_HABIT = 'EDIT_EXISTING_PLANNED_HABIT',
+    CREATE_NEW_SCHEDULED_HABIT = 'CREATE_NEW_SCHEDULED_HABIT',
+    EDIT_EXISTING_SCHEDULED_HABIT = 'EDIT_EXISTING_SCHEDULED_HABIT',
     CREATE_NEW_PLANNED_HABIT = 'CREATE_NEW_PLANNED_HABIT',
+    EDIT_EXISTING_PLANNED_HABIT = 'EDIT_EXISTING_PLANNED_HABIT',
     INVALID = 'INVALID',
 }
 
@@ -21,19 +22,27 @@ export const getEditMode = (
     scheduledHabit?: ScheduledHabit,
     newPlannedHabitScheduledHabit?: ScheduledHabit
 ) => {
-    const editMode: CreateEditHabitMode = isCreateCustomHabit
-        ? CreateEditHabitMode.CREATE_CUSTOM_HABIT
-        : habit
-          ? CreateEditHabitMode.CREATE_NEW_HABIT
-          : scheduledHabit
-            ? CreateEditHabitMode.EDIT_EXISTING_HABIT
-            : plannedTask
-              ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
-              : newPlannedHabitScheduledHabit
-                ? CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT
-                : CreateEditHabitMode.INVALID;
+    if (isCreateCustomHabit) {
+        return CreateEditHabitMode.CREATE_CUSTOM_HABIT;
+    }
 
-    return editMode;
+    if (scheduledHabit) {
+        return CreateEditHabitMode.EDIT_EXISTING_SCHEDULED_HABIT;
+    }
+
+    if (habit) {
+        return CreateEditHabitMode.CREATE_NEW_SCHEDULED_HABIT;
+    }
+
+    if (plannedTask) {
+        return CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT;
+    }
+
+    if (newPlannedHabitScheduledHabit) {
+        return CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT;
+    }
+
+    return CreateEditHabitMode.INVALID;
 };
 
 interface CreateEditScheduledHabitType {
@@ -158,10 +167,10 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (scheduledHabit.data) {
-            setRemoteImageUrl(scheduledHabit.data.task?.remoteImageUrl ?? '');
-            setLocalImage(scheduledHabit.data.task?.localImage ?? '');
-            setTitle(scheduledHabit.data.task?.title ?? '');
-            setDescription(scheduledHabit.data.description ?? '');
+            setRemoteImageUrl(ScheduledHabitUtil.getRemoteImageUrl(scheduledHabit.data));
+            setLocalImage(ScheduledHabitUtil.getDescription(scheduledHabit.data));
+            setTitle(ScheduledHabitUtil.getTitle(scheduledHabit.data));
+            setDescription(ScheduledHabitUtil.getDescription(scheduledHabit.data));
             setStartDate(scheduledHabit.data.startDate ?? undefined);
             setEndDate(scheduledHabit.data.endDate ?? undefined);
             setDaysOfWeek(scheduledHabit.data.daysOfWeek ?? []);

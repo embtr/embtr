@@ -9,7 +9,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from '../common/Banner';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { HabitSummaryDetailsElement } from './HabitSummaryDetailsElement';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { HabitSummaryDetailsHeader } from './HabitSummaryDetailsHeader';
 import { ScheduledHabit } from 'resources/schema';
 import { Checkbox } from 'src/components/checkbox/Checkbox';
@@ -82,7 +82,7 @@ export const HabitSummaryDetails = () => {
         <Screen>
             <Banner leftRoute="BACK" leftIcon={'arrow-back'} name={'Manage Habit'} />
 
-            <View style={{ padding: TIMELINE_CARD_PADDING }}>
+            <View style={{ padding: PADDING_LARGE }}>
                 <HabitSummaryDetailsHeader habitSummary={habitSummary.data} />
             </View>
 
@@ -90,7 +90,7 @@ export const HabitSummaryDetails = () => {
                 style={{
                     width: '100%',
                     alignItems: 'flex-end',
-                    paddingRight: TIMELINE_CARD_PADDING,
+                    paddingRight: PADDING_LARGE,
                 }}
             >
                 <Checkbox

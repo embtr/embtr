@@ -1,5 +1,5 @@
 import { Dimensions, View } from 'react-native';
-import { TIMELINE_CARD_PADDING } from './constants';
+import { PADDING_LARGE } from './constants';
 
 export const wait = (timeout: number | undefined) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
@@ -12,7 +12,7 @@ export const getWindowWidth = () => {
 
 export const getSafeWindowWidth = () => {
     const windowWidth = getWindowWidth();
-    return windowWidth - TIMELINE_CARD_PADDING * 2;
+    return windowWidth - PADDING_LARGE * 2;
 };
 
 export const getWindowHeight = () => {

@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getDatePretty, getDatePrettyWithTime } from 'src/util/DateUtility';
 import { User } from 'resources/schema';
@@ -21,8 +21,8 @@ export const DailyResultHeader = ({ user, date }: Props) => {
                 style={{
                     flex: 1,
                     flexDirection: 'row',
-                    paddingTop: TIMELINE_CARD_PADDING,
-                    paddingLeft: TIMELINE_CARD_PADDING,
+                    paddingTop: PADDING_LARGE,
+                    paddingLeft: PADDING_LARGE,
                 }}
             >
                 <View style={{ flexDirection: 'row', flex: 1 }}>
@@ -70,8 +70,8 @@ export const DailyResultHeader = ({ user, date }: Props) => {
             <View
                 style={{
                     alignItems: 'flex-end',
-                    paddingTop: TIMELINE_CARD_PADDING / 2,
-                    paddingRight: TIMELINE_CARD_PADDING,
+                    paddingTop: PADDING_LARGE / 2,
+                    paddingRight: PADDING_LARGE,
                 }}
             >
                 <Text

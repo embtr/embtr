@@ -14,7 +14,7 @@ import {
 } from 'src/components/common/menu/EmbtrMenuOption';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableTextInputBox';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import * as React from 'react';
 import { UserPostElement } from 'src/components/timeline/UserPostElement';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
@@ -118,7 +118,7 @@ const UserPostDetailsImplementation = ({ userPost }: ImplementationProps) => {
             {userIsPostOwner && <EmbtrMenuCustom />}
 
             <ScrollableTextInputBox submitComment={interactableData.onCommentAdded}>
-                <View style={{ paddingHorizontal: TIMELINE_CARD_PADDING }}>
+                <View style={{ paddingHorizontal: PADDING_LARGE }}>
                     <UserPostElement userPost={userPost} interactableData={interactableData} />
                 </View>
 

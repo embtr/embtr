@@ -12,7 +12,7 @@ import {
     View,
 } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useNavigation } from '@react-navigation/core';
@@ -34,7 +34,7 @@ import { MetadataCustomHooks } from 'src/controller/metadata/MetadataController'
 const PROFILE_IMAGE =
     'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media';
 
-const PADDING = TIMELINE_CARD_PADDING * 0.6;
+const PADDING = PADDING_LARGE * 0.6;
 
 export const NewUserProfilePopulation = () => {
     const { colors } = useTheme();
@@ -121,21 +121,21 @@ export const NewUserProfilePopulation = () => {
             setUsernameAvailabilityResult({ message: 'required', available: false });
             return;
         }
-        
+
         const currentUsername = currentUser.data?.username;
 
         const usernameAvailabilityResult = await UserService.usernameIsAvailable(
             targetUsername,
             currentUsername
         );
-                setUsernameAvailabilityResult(usernameAvailabilityResult);
+        setUsernameAvailabilityResult(usernameAvailabilityResult);
     };
 
     const setUsernameWrapper = async (username: string) => {
         if (!UserService.usernameIsValid(username)) {
-                        return;
+            return;
         }
-        
+
         setUsernameAvailability(username);
         setUsername(username);
     };
@@ -150,8 +150,8 @@ export const NewUserProfilePopulation = () => {
             }}
         >
             <KeyboardAvoidingView behavior={'position'} keyboardVerticalOffset={100}>
-                <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
-                <View style={{ alignItems: 'center', paddingTop: TIMELINE_CARD_PADDING * 2 }}>
+                <View style={{ height: PADDING_LARGE * 2 }} />
+                <View style={{ alignItems: 'center', paddingTop: PADDING_LARGE * 2 }}>
                     <Image
                         source={require('assets/logo.png')}
                         style={{ width: 150, height: 150 }}
@@ -159,11 +159,11 @@ export const NewUserProfilePopulation = () => {
                 </View>
                 <Text
                     style={{
-                        paddingTop: TIMELINE_CARD_PADDING,
+                        paddingTop: PADDING_LARGE,
                         color: colors.text,
                         textAlign: 'center',
                         fontSize: 24,
-                        paddingBottom: TIMELINE_CARD_PADDING,
+                        paddingBottom: PADDING_LARGE,
                         fontFamily: POPPINS_MEDIUM,
                     }}
                 >
@@ -174,7 +174,7 @@ export const NewUserProfilePopulation = () => {
                     style={{
                         color: colors.secondary_text,
                         fontFamily: POPPINS_REGULAR,
-                        paddingHorizontal: TIMELINE_CARD_PADDING,
+                        paddingHorizontal: PADDING_LARGE,
                         fontSize: 14,
                     }}
                 >
@@ -182,8 +182,8 @@ export const NewUserProfilePopulation = () => {
                     yourself!
                 </Text>
 
-                <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
-                <View style={{ alignItems: 'center', paddingHorizontal: TIMELINE_CARD_PADDING }}>
+                <View style={{ height: PADDING_LARGE * 2 }} />
+                <View style={{ alignItems: 'center', paddingHorizontal: PADDING_LARGE }}>
                     <View
                         style={{
                             backgroundColor: colors.card_background,
@@ -224,7 +224,7 @@ export const NewUserProfilePopulation = () => {
                                         style={{
                                             color: colors.text,
                                             backgroundColor: colors.text_input_background,
-                                            padding: TIMELINE_CARD_PADDING,
+                                            padding: PADDING_LARGE,
                                             flex: 1,
                                             borderRadius: 5,
                                         }}
@@ -256,7 +256,7 @@ export const NewUserProfilePopulation = () => {
                                             color: colors.text,
                                             flex: 1,
                                             backgroundColor: colors.text_input_background,
-                                            padding: TIMELINE_CARD_PADDING,
+                                            padding: PADDING_LARGE,
                                             borderRadius: 5,
                                         }}
                                         placeholder={
@@ -283,7 +283,7 @@ export const NewUserProfilePopulation = () => {
                                         height: '100%',
                                         width: '100%',
                                         backgroundColor: colors.text_input_background,
-                                        padding: TIMELINE_CARD_PADDING,
+                                        padding: PADDING_LARGE,
                                         borderRadius: 5,
                                     }}
                                     textAlignVertical="top"
@@ -297,7 +297,7 @@ export const NewUserProfilePopulation = () => {
                         </View>
                     </View>
 
-                    <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
+                    <View style={{ height: PADDING_LARGE * 2 }} />
 
                     <View
                         style={{
@@ -314,7 +314,7 @@ export const NewUserProfilePopulation = () => {
                         <View
                             style={{
                                 flex: 1,
-                                paddingLeft: TIMELINE_CARD_PADDING,
+                                paddingLeft: PADDING_LARGE,
                             }}
                         >
                             <Text
@@ -352,7 +352,7 @@ export const NewUserProfilePopulation = () => {
                         </View>
                     </View>
 
-                    <View style={{ height: TIMELINE_CARD_PADDING * 2 }} />
+                    <View style={{ height: PADDING_LARGE * 2 }} />
 
                     <TouchableOpacity
                         onPress={async () => {
@@ -375,7 +375,7 @@ export const NewUserProfilePopulation = () => {
                                     : colors.secondary_text,
                                 textAlign: 'center',
                                 fontFamily: POPPINS_MEDIUM,
-                                paddingVertical: TIMELINE_CARD_PADDING / 2,
+                                paddingVertical: PADDING_LARGE / 2,
                             }}
                         >
                             Let's Go!

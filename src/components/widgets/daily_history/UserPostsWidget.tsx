@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { UserPost } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
@@ -71,7 +71,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
             </TouchableOpacity>
         );
 
-        postElements.push(<View style={{ height: TIMELINE_CARD_PADDING / 2 }} />);
+        postElements.push(<View style={{ height: PADDING_LARGE / 2 }} />);
         postElements.push(element);
     }
 
@@ -92,7 +92,7 @@ export const UserPostsWidget = ({ userId }: Props) => {
                 {postElements.length > 0 && (
                     <View>
                         <View>{postElements}</View>
-                        <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING }}>
+                        <View style={{ width: '100%', paddingTop: PADDING_LARGE }}>
                             <Text
                                 onPress={() => {
                                     //@ts-ignore

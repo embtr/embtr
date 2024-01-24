@@ -5,7 +5,7 @@ import { TextInput } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TodayTab } from 'src/navigation/RootStackParamList';
 import { QuoteOfTheDayController } from 'src/controller/widget/quote_of_the_day/QuoteOfTheDayController';
@@ -29,7 +29,7 @@ export const AddQuoteOfTheDay = () => {
         container: {
             backgroundColor: '#282828',
             color: colors.text,
-            padding: TIMELINE_CARD_PADDING,
+            padding: PADDING_LARGE,
             borderRadius: 5,
             fontFamily: POPPINS_REGULAR,
         },
@@ -44,7 +44,7 @@ export const AddQuoteOfTheDay = () => {
         },
         header: {
             fontSize: 15,
-        }
+        },
     };
 
     return (
@@ -61,16 +61,15 @@ export const AddQuoteOfTheDay = () => {
 
             <KeyboardAvoidingView style={{ flex: 1 }} behavior={isIosApp() ? 'padding' : 'height'}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View style={[styles.layout, { justifyContent: 'flex-start', marginBottom: 25 }]}>
+                    <View
+                        style={[styles.layout, { justifyContent: 'flex-start', marginBottom: 25 }]}
+                    >
                         <View style={{ paddingBottom: 40 }}>
                             <View style={[styles.container]}>
-                                <Text
-                                    style={[ styles.text]}>
+                                <Text style={[styles.text]}>
                                     Add a quote that inspires you! Once a day we randomly select a
                                     quote to inspire the entire community.{' '}
-                                    <Text
-                                        style={{ color: colors.accent_color_light}}
-                                    >
+                                    <Text style={{ color: colors.accent_color_light }}>
                                         Yours could be next!
                                     </Text>
                                 </Text>
@@ -78,15 +77,13 @@ export const AddQuoteOfTheDay = () => {
                         </View>
 
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={[styles.text,styles.header]}>
-                                Quote
-                            </Text>
+                            <Text style={[styles.text, styles.header]}>Quote</Text>
                         </View>
 
                         <View style={{ paddingBottom: 20 }}>
                             <TextInput
                                 textAlignVertical="top"
-                                style={[styles.container, {height: 120}]}
+                                style={[styles.container, { height: 120 }]}
                                 multiline={true}
                                 placeholder={'add a quote that inspires you!'}
                                 placeholderTextColor={colors.secondary_text}
@@ -96,9 +93,7 @@ export const AddQuoteOfTheDay = () => {
                         </View>
 
                         <View style={{ paddingTop: 10 }}>
-                            <Text style={[styles.text,styles.header]}>
-                                Author
-                            </Text>
+                            <Text style={[styles.text, styles.header]}>Author</Text>
                             <TextInput
                                 style={[styles.container]}
                                 placeholder={"Author's Name (Optional)"}

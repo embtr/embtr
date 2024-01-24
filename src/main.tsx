@@ -15,7 +15,6 @@ import {
     Poppins_600SemiBold,
 } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
-import { getFirebaseConnection } from './firebase/firestore/ConnectionProvider';
 import { resetToDefault, setCurrentUser } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { ModalContainingComponent } from './components/common/modal/ModalContainingComponent';
@@ -27,6 +26,10 @@ import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
 import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
 import { linking } from 'src/navigation/Linking';
+import firebaseApp from './firebase/Firebase';
+
+//start up firebase connection
+firebaseApp;
 
 enum LoginState {
     LOGGED_IN,
@@ -67,8 +70,6 @@ export const Main = () => {
             loginUnsubscribe();
         };
     }, []);
-
-    getFirebaseConnection('', '');
 
     let view: JSX.Element =
         loggedIn === LoginState.LOGGED_IN ? <SecureMainStack /> : <InsecureMainStack />;

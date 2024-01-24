@@ -3,7 +3,7 @@ import { CommentBoxComment } from 'src/components/common/textbox/CommentBoxComme
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import SwipeableDeleteCard from '../swipeable/SwipeableDeleteCard';
 import { Comment as CommentModel } from 'resources/schema';
-import { POPPINS_MEDIUM, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE, PADDING_MEDIUM } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
@@ -21,17 +21,18 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
 
         if (isCurrentUsersComment) {
             return (
-                <SwipeableDeleteCard
-                    key={comment.id}
-                    onDelete={() => {
-                        if (onDeleteComment) {
-                            onDeleteComment(comment);
-                        }
+                <View
+                    style={{
+                        paddingBottom: PADDING_MEDIUM,
+                        paddingHorizontal: PADDING_MEDIUM,
                     }}
                 >
-                    <View
-                        style={{
-                            paddingBottom: TIMELINE_CARD_PADDING / 1.5,
+                    <SwipeableDeleteCard
+                        key={comment.id}
+                        onDelete={() => {
+                            if (onDeleteComment) {
+                                onDeleteComment(comment);
+                            }
                         }}
                     >
                         <CommentBoxComment
@@ -39,15 +40,16 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
                             index={index}
                             isOwnPost={isCurrentUsersComment}
                         />
-                    </View>
-                </SwipeableDeleteCard>
+                    </SwipeableDeleteCard>
+                </View>
             );
         } else {
             return (
                 <View
                     key={comment.id}
                     style={{
-                        paddingBottom: TIMELINE_CARD_PADDING / 1.5,
+                        paddingBottom: PADDING_MEDIUM,
+                        paddingHorizontal: PADDING_MEDIUM,
                     }}
                 >
                     <CommentBoxComment
@@ -67,8 +69,8 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
                     color: colors.text,
                     fontFamily: POPPINS_MEDIUM,
                     fontSize: 14,
-                    paddingVertical: TIMELINE_CARD_PADDING / 2,
-                    paddingLeft: TIMELINE_CARD_PADDING,
+                    paddingVertical: PADDING_LARGE / 2,
+                    paddingLeft: PADDING_LARGE,
                 }}
             >
                 Comments

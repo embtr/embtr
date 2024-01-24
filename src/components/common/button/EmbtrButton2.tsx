@@ -1,12 +1,7 @@
 import { TouchableOpacity, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import {
-    CARD_SHADOW,
-    POPPINS_MEDIUM,
-    POPPINS_REGULAR,
-    TIMELINE_CARD_PADDING,
-} from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 
 interface Props {
     text: string;
@@ -24,7 +19,7 @@ export const EmbtrButton2 = ({ text, secondaryText, icon, onPress }: Props) => {
                 {
                     backgroundColor: colors.accent_color_faint,
                     height: 75,
-                    width: "100%",
+                    width: '100%',
                     borderRadius: 3,
                     flexDirection: 'row',
                 },
@@ -41,7 +36,7 @@ export const EmbtrButton2 = ({ text, secondaryText, icon, onPress }: Props) => {
                     <View
                         style={{
                             flex: 1,
-                            paddingLeft: TIMELINE_CARD_PADDING * 2,
+                            paddingLeft: PADDING_LARGE * 2,
                             justifyContent: 'center',
                         }}
                     >

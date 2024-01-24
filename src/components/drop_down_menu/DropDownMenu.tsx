@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { DropDownMenuItem, DropDownMenuItemData } from './DropDownMenuItem';
 
 interface Props {
@@ -21,7 +21,7 @@ export const DropDownMenu = ({ items }: Props) => {
                 position: 'absolute',
                 zIndex: 1,
                 left: -71, // Align to the left of the parent container
-                bottom: -100 - 1.5 * TIMELINE_CARD_PADDING, // Align to the bottom of the parent container
+                bottom: -100 - 1.5 * PADDING_LARGE, // Align to the bottom of the parent container
                 borderRadius: 12,
                 borderWidth: 2,
                 borderColor: 'yellow',

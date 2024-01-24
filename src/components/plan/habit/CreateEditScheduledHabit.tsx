@@ -1,17 +1,13 @@
 import React from 'react';
-import { RouteProp, useRoute } from '@react-navigation/native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
-import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
-import { TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { Routes } from 'src/navigation/RootStackParamList';
+import { PADDING_LARGE } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ScheduleHabitDescription } from 'src/components/plan/habit/ScheduleHabitDescription';
 import { ScheduleHabitRepeatingSchedule } from 'src/components/plan/habit/ScheduledHabitRepeatingSchedule';
-import {
-    CreateEditHabitMode,
-    CreateEditScheduledHabitProvider,
-} from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import { CreateEditScheduledHabitProvider } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTitle';
 import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
@@ -50,15 +46,7 @@ export const CreateEditScheduledHabit = () => {
     const isCreateCustomHabit = route.params.isCreateCustomHabit; // creating a new custom habit
     const onExit = route.params.onExit;
 
-    const editMode = isCreateCustomHabit
-        ? CreateEditHabitMode.CREATE_CUSTOM_HABIT
-        : habitId
-          ? CreateEditHabitMode.CREATE_NEW_HABIT
-          : scheduledHabitId
-            ? CreateEditHabitMode.EDIT_EXISTING_HABIT
-            : CreateEditHabitMode.INVALID;
-
-    const isCreatingNewHabit = editMode === CreateEditHabitMode.CREATE_NEW_HABIT;
+    const isCreatedNewScheduledHabit = !!habitId;
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 
@@ -71,7 +59,7 @@ export const CreateEditScheduledHabit = () => {
             scheduledHabitId={scheduledHabitId}
         >
             <Screen>
-                {!isCreatingNewHabit && (
+                {!isCreatedNewScheduledHabit && (
                     <ArchiveScheduledHabitModal
                         visible={archiveModalVisible}
                         onArchive={async () => {
@@ -97,11 +85,13 @@ export const CreateEditScheduledHabit = () => {
                         leftRoute={'BACK'}
                         leftIcon={'arrow-back'}
                         rightText={
-                            !isCreatingNewHabit && !isCreateCustomHabit ? 'archive' : undefined
+                            !isCreatedNewScheduledHabit && !isCreateCustomHabit
+                                ? 'archive'
+                                : undefined
                         }
                         rightColor={colors.archive}
                         rightOnClick={
-                            !isCreatingNewHabit
+                            !isCreatedNewScheduledHabit
                                 ? () => {
                                       setArchiveModalVisible(true);
                                   }
@@ -113,17 +103,17 @@ export const CreateEditScheduledHabit = () => {
                         <View
                             style={{
                                 flex: 1,
-                                paddingHorizontal: TIMELINE_CARD_PADDING,
+                                paddingHorizontal: PADDING_LARGE,
                             }}
                         >
-                            <View style={{ height: TIMELINE_CARD_PADDING }} />
+                            <View style={{ height: PADDING_LARGE }} />
                             <ScheduledHabitTitle />
                             <ScheduleHabitDescription />
                             <ScheduleHabitRepeatingSchedule />
                             <ScheduledHabitTimeOfDay />
                             <ScheduledHabitDetails />
                         </View>
-                        <View style={{ height: 10 * TIMELINE_CARD_PADDING }} />
+                        <View style={{ height: 10 * PADDING_LARGE }} />
                     </ScrollView>
 
                     <CreateEditHabitSaveButton

@@ -12,7 +12,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { Ionicons } from '@expo/vector-icons';
@@ -49,7 +49,7 @@ const createUpdatePlannedTask = async (clone: PlannedTask, dayKey: string) => {
 const fontSize = 14;
 const fontFamily = POPPINS_REGULAR;
 
-const MAX_OPTIONS_HEIGHT = 20 + TIMELINE_CARD_PADDING;
+const MAX_OPTIONS_HEIGHT = 20 + PADDING_LARGE;
 
 export const UpdatePlannedTaskModal = () => {
     const { colors } = useTheme();
@@ -226,8 +226,8 @@ export const UpdatePlannedTaskModal = () => {
                 style={{
                     width: '100%',
                     flexDirection: 'row',
-                    paddingLeft: TIMELINE_CARD_PADDING,
-                    paddingTop: TIMELINE_CARD_PADDING,
+                    paddingLeft: PADDING_LARGE,
+                    paddingTop: PADDING_LARGE,
                 }}
             >
                 <View style={{ width: 20, height: 20 }}>
@@ -240,7 +240,7 @@ export const UpdatePlannedTaskModal = () => {
                             fontSize: 18,
                             fontFamily: POPPINS_MEDIUM,
                             color: colors.text,
-                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingLeft: PADDING_LARGE,
                             bottom: 5,
                         }}
                     >
@@ -252,7 +252,7 @@ export const UpdatePlannedTaskModal = () => {
                     style={{
                         width: 20,
                         alignItems: 'flex-end',
-                        marginRight: TIMELINE_CARD_PADDING,
+                        marginRight: PADDING_LARGE,
                     }}
                 >
                     <Pressable
@@ -273,7 +273,7 @@ export const UpdatePlannedTaskModal = () => {
             {/* UNIT & QUANTITY SECTION */}
             <View
                 style={{
-                    marginTop: TIMELINE_CARD_PADDING * 2,
+                    marginTop: PADDING_LARGE * 2,
                     flexDirection: 'row',
                     alignItems: 'center',
                     width: '100%',
@@ -285,7 +285,7 @@ export const UpdatePlannedTaskModal = () => {
                     <Text
                         style={{
                             color: colors.text,
-                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingLeft: PADDING_LARGE,
                             fontFamily: POPPINS_REGULAR,
                             textAlign: 'center',
                             fontSize: 18,
@@ -304,7 +304,7 @@ export const UpdatePlannedTaskModal = () => {
                     <View
                         style={{
                             alignItems: 'center',
-                            paddingHorizontal: TIMELINE_CARD_PADDING / 2,
+                            paddingHorizontal: PADDING_LARGE / 2,
                         }}
                     >
                         <Ionicons
@@ -335,8 +335,7 @@ export const UpdatePlannedTaskModal = () => {
                                 fontFamily: POPPINS_REGULAR,
                                 textAlign: 'center',
                                 fontSize: 18,
-                                paddingVertical: TIMELINE_CARD_PADDING / 2,
-
+                                paddingVertical: PADDING_LARGE / 2,
                             }}
                             numberOfLines={1}
                             keyboardType={'numeric'}
@@ -412,7 +411,7 @@ export const UpdatePlannedTaskModal = () => {
                     <View
                         style={{
                             alignItems: 'center',
-                            paddingHorizontal: TIMELINE_CARD_PADDING / 2,
+                            paddingHorizontal: PADDING_LARGE / 2,
                         }}
                     >
                         <Ionicons
@@ -431,7 +430,7 @@ export const UpdatePlannedTaskModal = () => {
             {/* UNIT & QUANTITY SECTION */}
             <View
                 style={{
-                    marginTop: TIMELINE_CARD_PADDING * 2,
+                    marginTop: PADDING_LARGE * 2,
                     flexDirection: 'row',
                     alignItems: 'center',
                     width: '100%',
@@ -443,7 +442,7 @@ export const UpdatePlannedTaskModal = () => {
                     <Text
                         style={{
                             color: colors.text,
-                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingLeft: PADDING_LARGE,
                             fontFamily: POPPINS_REGULAR,
                             textAlign: 'center',
                             fontSize: 18,
@@ -459,7 +458,7 @@ export const UpdatePlannedTaskModal = () => {
                         alignItems: 'center',
                     }}
                 >
-                    <View style={{ width: TIMELINE_CARD_PADDING }} />
+                    <View style={{ width: PADDING_LARGE }} />
                     <View
                         style={{
                             flexDirection: 'row',
@@ -478,7 +477,7 @@ export const UpdatePlannedTaskModal = () => {
                                 fontFamily: POPPINS_REGULAR,
                                 textAlign: 'center',
                                 fontSize: 18,
-                                paddingVertical: TIMELINE_CARD_PADDING / 2,
+                                paddingVertical: PADDING_LARGE / 2,
                             }}
                             numberOfLines={1}
                             ref={textInputRef}
@@ -486,7 +485,7 @@ export const UpdatePlannedTaskModal = () => {
                             {timeOfDayPretty}
                         </Text>
                     </View>
-                    <View style={{ width: TIMELINE_CARD_PADDING }} />
+                    <View style={{ width: PADDING_LARGE }} />
                 </View>
             </View>
 
@@ -494,9 +493,9 @@ export const UpdatePlannedTaskModal = () => {
             <View
                 style={{
                     width: '100%',
-                    paddingTop: TIMELINE_CARD_PADDING * 2,
+                    paddingTop: PADDING_LARGE * 2,
                     flexDirection: 'row',
-                    paddingBottom: TIMELINE_CARD_PADDING,
+                    paddingBottom: PADDING_LARGE,
                 }}
             >
                 <View
@@ -508,7 +507,7 @@ export const UpdatePlannedTaskModal = () => {
                     <View
                         style={{
                             width: '100%',
-                            paddingHorizontal: TIMELINE_CARD_PADDING,
+                            paddingHorizontal: PADDING_LARGE,
                             flexDirection: 'row',
                         }}
                     >
@@ -582,7 +581,7 @@ export const UpdatePlannedTaskModal = () => {
                                 flexDirection: 'row',
                                 width: '100%',
                                 height: 20,
-                                paddingHorizontal: TIMELINE_CARD_PADDING,
+                                paddingHorizontal: PADDING_LARGE,
                             }}
                         >
                             <TouchableOpacity

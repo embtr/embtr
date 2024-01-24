@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Image, Keyboard, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { MasterScreens } from 'src/navigation/RootStackParamList';
@@ -43,7 +43,7 @@ export const TermsApprovalModal = () => {
                 <View>
                     <Text
                         style={{
-                            paddingTop: TIMELINE_CARD_PADDING,
+                            paddingTop: PADDING_LARGE,
                             color: colors.text,
                             textAlign: 'center',
                             fontSize: 24,
@@ -56,8 +56,8 @@ export const TermsApprovalModal = () => {
 
                 <View
                     style={{
-                        paddingTop: TIMELINE_CARD_PADDING,
-                        paddingHorizontal: TIMELINE_CARD_PADDING,
+                        paddingTop: PADDING_LARGE,
+                        paddingHorizontal: PADDING_LARGE,
                         flexDirection: 'row',
                         width: '100%',
                     }}
@@ -71,7 +71,7 @@ export const TermsApprovalModal = () => {
                     <View
                         style={{
                             flex: 1,
-                            paddingLeft: TIMELINE_CARD_PADDING,
+                            paddingLeft: PADDING_LARGE,
                         }}
                     >
                         <Text
@@ -109,7 +109,7 @@ export const TermsApprovalModal = () => {
                     </View>
                 </View>
 
-                <View style={{ width: '100%', paddingTop: TIMELINE_CARD_PADDING * 2 }}>
+                <View style={{ width: '100%', paddingTop: PADDING_LARGE * 2 }}>
                     <TouchableOpacity
                         onPress={async () => {
                             Keyboard.dismiss();
@@ -117,7 +117,7 @@ export const TermsApprovalModal = () => {
                         }}
                         disabled={!formValid}
                         style={{
-                            marginHorizontal: TIMELINE_CARD_PADDING,
+                            marginHorizontal: PADDING_LARGE,
                             backgroundColor: formValid
                                 ? colors.accent_color
                                 : colors.accent_color_dim,
@@ -129,7 +129,7 @@ export const TermsApprovalModal = () => {
                                 color: formValid ? colors.text : colors.secondary_text,
                                 textAlign: 'center',
                                 fontFamily: POPPINS_MEDIUM,
-                                paddingVertical: TIMELINE_CARD_PADDING / 2,
+                                paddingVertical: PADDING_LARGE / 2,
                             }}
                         >
                             Let's Go!

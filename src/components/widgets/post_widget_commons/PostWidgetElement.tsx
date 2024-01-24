@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 import React from 'react';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, TIMELINE_CARD_PADDING } from 'src/util/constants';
+import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { NestedImages } from 'src/components/common/images/NestedImages';
 import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -37,7 +37,7 @@ export const PostWidgetElement = ({
                 flexDirection: 'row',
                 backgroundColor: '#404040',
                 borderRadius: 5,
-                padding: TIMELINE_CARD_PADDING / 2,
+                padding: PADDING_LARGE / 2,
             }}
         >
             <View
@@ -52,7 +52,7 @@ export const PostWidgetElement = ({
                     padSize={imagePadSize ?? 0}
                     paddingStep={3}
                 />
-                <View style={{ width: TIMELINE_CARD_PADDING }} />
+                <View style={{ width: PADDING_LARGE }} />
                 <View style={{ flex: 1 }}>
                     <View>
                         <View style={{ flexDirection: 'row' }}>
@@ -73,7 +73,7 @@ export const PostWidgetElement = ({
                                     color: colors.secondary_text,
                                     fontFamily: POPPINS_REGULAR,
                                     fontSize: 10,
-                                    paddingLeft: TIMELINE_CARD_PADDING / 2,
+                                    paddingLeft: PADDING_LARGE / 2,
                                 }}
                             >
                                 {daysAgo}
@@ -105,7 +105,7 @@ export const PostWidgetElement = ({
                         >
                             {likes}
                         </Text>
-                        <View style={{ width: TIMELINE_CARD_PADDING }} />
+                        <View style={{ width: PADDING_LARGE }} />
 
                         <Text
                             numberOfLines={1}
