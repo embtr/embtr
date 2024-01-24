@@ -188,7 +188,7 @@ class UserController {
 
     public static async loginUser(): Promise<User | undefined> {
         let user: User | undefined = await this.getCurrentUser();
-                if (!user) {
+        if (!user) {
             user = await this.createUser();
             await this.forceRefreshIdToken();
         }

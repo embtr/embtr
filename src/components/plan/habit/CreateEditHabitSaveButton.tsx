@@ -122,6 +122,9 @@ export const CreateEditHabitSaveButton = ({
             id: scheduledHabitId,
             taskId: customHabitId ?? habitId,
             description: description,
+            title: title,
+            localImage: localImage,
+            remoteImageUrl: remoteImageUrl,
         };
 
         if (repeatingScheduleEnabled) {
@@ -163,7 +166,7 @@ export const CreateEditHabitSaveButton = ({
         return scheduledHabit;
     };
 
-    const createCustomHabit = async () => {
+    const createNewCustomHabit = async () => {
         Keyboard.dismiss();
 
         const task: Task = {
@@ -189,19 +192,19 @@ export const CreateEditHabitSaveButton = ({
         await ScheduledHabitController.create(scheduledHabit);
     };
 
-    const createHabit = async () => {
+    const createNewScheduledHabit = async () => {
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.create(scheduledHabit);
     };
 
-    const updateHabit = async () => {
+    const editExistingScheduledHabit = async () => {
         Keyboard.dismiss();
         const scheduledHabit: ScheduledHabit = createScheduledHabitRequest();
         await ScheduledHabitController.update(scheduledHabit);
     };
 
-    const updatePlannedHabit = async () => {
+    const editExistingPlannedHabit = async () => {
         if (!plannedHabitId) {
             Logger.log('no planned habit id found');
             return;
@@ -211,7 +214,7 @@ export const CreateEditHabitSaveButton = ({
         await PlannedTaskController.update(plannedTask);
     };
 
-    const createPlannedHabit = async () => {
+    const createNewPlannedHabit = async () => {
         if (!newPlannedHabitData?.dayKey || !newPlannedHabitData?.scheduledHabitId) {
             Logger.log('invalid data to create planned habit');
             return;
@@ -224,23 +227,23 @@ export const CreateEditHabitSaveButton = ({
     const onPress = async () => {
         switch (editMode) {
             case CreateEditHabitMode.CREATE_CUSTOM_HABIT:
-                await createCustomHabit();
+                await createNewCustomHabit();
                 break;
 
-            case CreateEditHabitMode.CREATE_NEW_HABIT:
-                await createHabit();
+            case CreateEditHabitMode.CREATE_NEW_SCHEDULED_HABIT:
+                await createNewScheduledHabit();
                 break;
 
-            case CreateEditHabitMode.EDIT_EXISTING_HABIT:
-                await updateHabit();
+            case CreateEditHabitMode.EDIT_EXISTING_SCHEDULED_HABIT:
+                await editExistingScheduledHabit();
                 break;
 
             case CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT:
-                await updatePlannedHabit();
+                await editExistingPlannedHabit();
                 break;
 
             case CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT:
-                await createPlannedHabit();
+                await createNewPlannedHabit();
                 break;
         }
 
@@ -258,7 +261,7 @@ export const CreateEditHabitSaveButton = ({
     };
 
     const createModes = [
-        CreateEditHabitMode.CREATE_NEW_HABIT,
+        CreateEditHabitMode.CREATE_NEW_SCHEDULED_HABIT,
         CreateEditHabitMode.CREATE_CUSTOM_HABIT,
     ];
     const buttonText = createModes.includes(editMode) ? 'Create' : 'Update';
