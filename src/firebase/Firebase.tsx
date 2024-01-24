@@ -1,15 +1,9 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAuth, initializeAuth } from 'firebase/auth';
+import { initializeAuth } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getReactNativePersistence } from 'firebase/auth';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
+const productionFirebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_WEB_API,
     authDomain: 'embtr-app.firebaseapp.com',
     projectId: 'embtr-app',
@@ -19,8 +13,20 @@ const firebaseConfig = {
     measurementId: 'G-RFPXMMXKY7',
 };
 
-// Initialize Firebase
+const developmentFirebaseConfig = {
+    apiKey: process.env.EXPO_PUBLIC_FIREBASE_WEB_API,
+    authDomain: 'embtr-development.firebaseapp.com',
+    projectId: 'embtr-development',
+    storageBucket: 'embtr-development.appspot.com',
+    messagingSenderId: '1023290678491',
+    appId: '1:1023290678491:web:5c40b411d16cf4b7dac0fe',
+    measurementId: 'G-JSXDNEXMLQ',
+};
+
+const firebaseConfig =
+    process.env.APP_ENV === 'production' ? productionFirebaseConfig : developmentFirebaseConfig;
 const firebaseApp = initializeApp(firebaseConfig);
+
 
 // Needed to persist logins over multiple app restarts
 initializeAuth(firebaseApp, {

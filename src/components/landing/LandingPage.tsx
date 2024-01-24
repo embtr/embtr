@@ -16,6 +16,14 @@ import { HorizontalLine } from '../common/HorizontalLine';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import { Image } from 'expo-image';
 
+const canUseGoogleAuth = () => {
+    return (
+        process.env.EXPO_PUBLIC_AUTH_EXPO_CLIENT_ID &&
+        process.env.EXPO_PUBLIC_AUTH_IOS_CLIENT_ID &&
+        process.env.EXPO_PUBLIC_AUTH_ANDROID_CLIENT_ID
+    );
+};
+
 export const LandingPage = () => {
     const { colors } = useTheme();
 
@@ -60,7 +68,7 @@ export const LandingPage = () => {
             </View>
 
             <View style={{ width: 300, height: 45 }}>
-                <FirebaseAuthenticate buttonText="Login With Google" />
+                {canUseGoogleAuth() && <FirebaseAuthenticate buttonText="Login With Google" />}
             </View>
         </View>
     );
