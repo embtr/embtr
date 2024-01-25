@@ -17,6 +17,7 @@ import { Screen } from 'src/components/common/Screen';
 import { ImagesUploadingOverlay } from '../images/ImagesUploadingOverlay';
 import { Image as ImageModel, PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
 import { ImageUtility } from 'src/util/images/ImageUtility';
+import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
 
 export const EditDailyResultDetails = () => {
     const { colors } = useTheme();
@@ -141,18 +142,17 @@ export const EditDailyResultDetails = () => {
         <Screen>
             <ImagesUploadingOverlay active={imagesUploading} progress={imageUploadProgess} />
 
-            <Banner
-                name="Edit Daily Result"
-                leftText={'Cancel'}
-                leftRoute="BACK"
-                rightText={'Save'}
-                rightOnClick={onSubmit}
-            />
-            <ScrollView>
-                <KeyboardAvoidingView
-                    style={{ height: '100%' }}
-                    keyboardVerticalOffset={isIosApp() ? -10 : 111}
-                    behavior={isIosApp() ? 'padding' : 'height'}
+            <View style={{ flex: 1 }}>
+                <EmbtrKeyboardAvoidingScrollView
+                    header={
+                        <Banner
+                            name="Edit Daily Result"
+                            leftText={'Cancel'}
+                            leftRoute="BACK"
+                            rightText={'Save'}
+                            rightOnClick={onSubmit}
+                        />
+                    }
                 >
                     <View style={{ paddingTop: 10 }}>
                         {/* COMPLETED/ FAILED */}
@@ -247,8 +247,8 @@ export const EditDailyResultDetails = () => {
                             </View>
                         </View>
                     </View>
-                </KeyboardAvoidingView>
-            </ScrollView>
+                </EmbtrKeyboardAvoidingScrollView>
+            </View>
         </Screen>
     );
 };

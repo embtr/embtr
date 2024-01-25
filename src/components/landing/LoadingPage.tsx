@@ -4,13 +4,8 @@ import * as React from 'react';
 import { Image } from 'expo-image';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { Ionicons } from '@expo/vector-icons';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
-import { getAuth } from 'firebase/auth';
-import UserController from 'src/controller/user/UserController';
-import { resetToDefault } from 'src/redux/user/GlobalState';
-import { useAppDispatch } from 'src/redux/Hooks';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { SignOutCustomHooks } from 'src/util/user/SignOutUtility';
-import { LoadingOverlay } from 'src/components/common/loading/LoadingOverlay';
 
 export const LoadingPage = () => {
     const { colors } = useTheme();
@@ -23,17 +18,22 @@ export const LoadingPage = () => {
 
     // add timer logic here to log user out if on this page for 10 seconds
     React.useEffect(() => {
-        const signoutTimer = setTimeout(() => {
-            signOut();
-        }, 10000);
-
         const slowLoadTimer = setTimeout(() => {
             setLoadIsSlow(true);
         }, 5000);
 
         return () => {
-            clearTimeout(signoutTimer);
             clearTimeout(slowLoadTimer);
+        };
+    }, []);
+
+    React.useEffect(() => {
+        const signoutTimer = setTimeout(() => {
+            signOut();
+        }, 10000);
+
+        return () => {
+            clearTimeout(signoutTimer);
         };
     }, []);
 

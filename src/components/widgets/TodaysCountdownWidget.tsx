@@ -3,7 +3,7 @@ import { getLocalDayOfWeek } from 'src/controller/planning/TaskController';
 import { Countdown } from '../common/time/Countdown';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
-import { POPPINS_MEDIUM } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 
 export const TodaysCountdownWidget = () => {
     const { colors } = useTheme();
@@ -21,19 +21,27 @@ export const TodaysCountdownWidget = () => {
             <View>
                 <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 16 }}>
                     Happy
-                    <Text style={{ color: colors.accent_color }}> {dayCapitalized}</Text>, {dateString}!
+                    <Text style={{ color: colors.accent_color }}> {dayCapitalized}</Text>{' '}
+                    {dateString}!
                 </Text>
 
-                <View style={{ paddingTop: 5 }}>
+                <View style={{ paddingTop: 5, flexDirection: 'row' }}>
                     <Text
                         style={{
-                            color: colors.text,
+                            color: colors.secondary_text,
                             fontSize: 12,
-                            fontFamily: 'Poppins_400Regular',
+                            fontFamily: POPPINS_REGULAR,
+                            paddingTop: 2,
+                            textAlign: 'left',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flex: 1,
                         }}
                     >
-                        <Countdown /> remaining
+                        no tasks for today
                     </Text>
+
+                    <Countdown />
                 </View>
             </View>
         </WidgetBase>

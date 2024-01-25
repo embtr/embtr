@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { initializeAuth } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getReactNativePersistence } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const productionFirebaseConfig = {
     apiKey: process.env.EXPO_PUBLIC_FIREBASE_WEB_API,
@@ -23,10 +24,13 @@ const developmentFirebaseConfig = {
     measurementId: 'G-JSXDNEXMLQ',
 };
 
+console.log (process.env.APP_ENV === 'production' || process.env.EXPO_PUBLIC_ENV === 'production')
 const firebaseConfig =
-    process.env.APP_ENV === 'production' ? productionFirebaseConfig : developmentFirebaseConfig;
+    process.env.APP_ENV === 'production' || process.env.EXPO_PUBLIC_ENV === 'production'
+        ? productionFirebaseConfig
+        : developmentFirebaseConfig;
 const firebaseApp = initializeApp(firebaseConfig);
-
+getFirestore(firebaseApp);
 
 // Needed to persist logins over multiple app restarts
 initializeAuth(firebaseApp, {

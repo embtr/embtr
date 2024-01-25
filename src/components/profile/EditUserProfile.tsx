@@ -421,6 +421,7 @@ export const EditUserProfile = () => {
                                 paddingRight: 10,
                             }}
                             multiline={true}
+                            scrollEnabled={false}
                             placeholder={bioPlaceholder}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={(text) => {

@@ -1,5 +1,3 @@
 #! /bin/bash
 
-pushd /home/thedevdad/Documents/embtr/scripts
-cp ../.environment/development/.env ../.env
-popd
+cp ~/Documents/embtr/.environment/development/.env ~/Documents/embtr/.env

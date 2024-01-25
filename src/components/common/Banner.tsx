@@ -8,8 +8,9 @@ import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
-import { POPPINS_MEDIUM } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
     name: string;
@@ -62,7 +63,7 @@ export const Banner = ({
     } as TextStyle;
 
     const iconSize = 30;
-    const bannerSize = 20;
+    const bannerSize = getWindowWidth() < 400 ? 18 : 20;
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -118,8 +119,14 @@ export const Banner = ({
 
     return (
         <View>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-end', height: 40 }}>
-                <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 10, paddingTop: 5 }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    height: 40,
+                }}
+            >
+                <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 10 }}>
                     {/* LEFT ICON */}
                     {leftIcon ? (
                         <Ionicons
@@ -171,6 +178,7 @@ export const Banner = ({
 
                 <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
                     <Text
+                        numberOfLines={1}
                         style={[
                             textStyle,
                             {
@@ -190,7 +198,6 @@ export const Banner = ({
                         flex: 1,
                         paddingRight: 10,
                         justifyContent: 'flex-end',
-                        paddingTop: 5,
                     }}
                 >
                     {/* INNER RIGHT ICON */}
@@ -225,7 +232,6 @@ export const Banner = ({
                                 <View
                                     style={{
                                         paddingRight: 1,
-                                        paddingTop: 0,
                                         zIndex: 1,
                                         position: 'absolute',
                                     }}
@@ -259,8 +265,8 @@ export const Banner = ({
                                 style={{
                                     paddingLeft: 10,
                                     paddingRight: 10,
-                                    alignItems: 'center',
                                     flex: 1,
+                                    alignItems: 'center',
                                     justifyContent: 'center',
                                 }}
                             >
@@ -274,7 +280,7 @@ export const Banner = ({
                                     }
                                     style={{
                                         textAlign: 'center',
-                                        fontFamily: 'Poppins_400Regular',
+                                        fontFamily: POPPINS_REGULAR,
                                         color: rightColor ?? colors.link,
                                         fontSize: 16,
                                     }}

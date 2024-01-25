@@ -27,6 +27,7 @@ import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
 import { linking } from 'src/navigation/Linking';
 import firebaseApp from './firebase/Firebase';
+import { EnvironmentIndicator } from 'src/components/debug/EnvironmentIndicator';
 
 //start up firebase connection
 firebaseApp;
@@ -79,6 +80,7 @@ export const Main = () => {
             <SafeAreaView forceInset={{ bottom: 'never' }} style={{ flex: 1 }}>
                 <NavigationContainer theme={DarkTheme} linking={linking}>
                     {/* TOP LEVEL COMPONENTS */}
+                    <EnvironmentIndicator />
                     <ModalContainingComponent />
                     <QuickAddModal />
                     <ConfettiView />

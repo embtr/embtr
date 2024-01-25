@@ -12,7 +12,13 @@ import {
     View,
 } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
+import {
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    PADDING_LARGE,
+    PADDING_MEDIUM,
+    PADDING_SMALL,
+} from 'src/util/constants';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useNavigation } from '@react-navigation/core';
@@ -23,6 +29,7 @@ import { Code } from 'resources/codes';
 import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
 import { Checkbox } from 'src/components/checkbox/Checkbox';
 import { MetadataCustomHooks } from 'src/controller/metadata/MetadataController';
+import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -149,240 +156,244 @@ export const NewUserProfilePopulation = () => {
                 Keyboard.dismiss();
             }}
         >
-            <KeyboardAvoidingView behavior={'position'} keyboardVerticalOffset={100}>
-                <View style={{ height: PADDING_LARGE * 2 }} />
-                <View style={{ alignItems: 'center', paddingTop: PADDING_LARGE * 2 }}>
-                    <Image
-                        source={require('assets/logo.png')}
-                        style={{ width: 150, height: 150 }}
-                    />
-                </View>
-                <Text
-                    style={{
-                        paddingTop: PADDING_LARGE,
-                        color: colors.text,
-                        textAlign: 'center',
-                        fontSize: 24,
-                        paddingBottom: PADDING_LARGE,
-                        fontFamily: POPPINS_MEDIUM,
-                    }}
-                >
-                    Welcome to embtr!
-                </Text>
-
-                <Text
-                    style={{
-                        color: colors.secondary_text,
-                        fontFamily: POPPINS_REGULAR,
-                        paddingHorizontal: PADDING_LARGE,
-                        fontSize: 14,
-                    }}
-                >
-                    We're so glad that you're here. Before we start, tell us a little bit about
-                    yourself!
-                </Text>
-
-                <View style={{ height: PADDING_LARGE * 2 }} />
-                <View style={{ alignItems: 'center', paddingHorizontal: PADDING_LARGE }}>
-                    <View
+            <EmbtrKeyboardAvoidingScrollView>
+                <View style={{ flex: 1 }}>
+                    <View style={{ height: PADDING_LARGE * 2 }} />
+                    <View style={{ alignItems: 'center', paddingTop: PADDING_LARGE * 2 }}>
+                        <Image
+                            source={require('assets/logo.png')}
+                            style={{ width: 150, height: 150 }}
+                        />
+                    </View>
+                    <Text
                         style={{
-                            backgroundColor: colors.card_background,
-                            height: getWindowHeight() / 4,
-                            width: '100%',
-                            borderRadius: 10,
-                            padding: PADDING,
+                            paddingTop: PADDING_LARGE,
+                            color: colors.text,
+                            textAlign: 'center',
+                            fontSize: 24,
+                            paddingBottom: PADDING_LARGE,
+                            fontFamily: POPPINS_MEDIUM,
                         }}
                     >
+                        Welcome to embtr!
+                    </Text>
+
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            paddingHorizontal: PADDING_LARGE,
+                            fontSize: 14,
+                        }}
+                    >
+                        We're so glad that you're here. Before we start, tell us a little bit about
+                        yourself!
+                    </Text>
+
+                    <View style={{ height: PADDING_LARGE * 2 }} />
+                    <View style={{ alignItems: 'center', paddingHorizontal: PADDING_LARGE }}>
                         <View
-                            style={{ flex: 1, flexDirection: 'row' }}
-                            onLayout={(e) => {
-                                setImageHeight(e.nativeEvent.layout.height);
+                            style={{
+                                backgroundColor: colors.card_background,
+                                height: getWindowHeight() / 4,
+                                width: '100%',
+                                borderRadius: 10,
+                                padding: PADDING,
                             }}
                         >
-                            <View>
-                                <TouchableOpacity onPress={uploadProfilePhoto}>
-                                    <View>
-                                        <CachedImage
+                            <View
+                                style={{ flex: 1, flexDirection: 'row' }}
+                                onLayout={(e) => {
+                                    setImageHeight(e.nativeEvent.layout.height);
+                                }}
+                            >
+                                <View>
+                                    <TouchableOpacity onPress={uploadProfilePhoto}>
+                                        <View>
+                                            <CachedImage
+                                                style={{
+                                                    width: imageHeight,
+                                                    height: imageHeight,
+                                                    borderRadius: 50,
+                                                }}
+                                                uri={userProfileUrl}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        paddingLeft: PADDING,
+                                    }}
+                                >
+                                    <View style={{ flex: 1 }}>
+                                        <TextInput
                                             style={{
-                                                width: imageHeight,
-                                                height: imageHeight,
-                                                borderRadius: 50,
+                                                color: colors.text,
+                                                backgroundColor: colors.text_input_background,
+                                                paddingLeft: PADDING_LARGE,
+                                                flex: 1,
+                                                borderRadius: 5,
                                             }}
-                                            uri={userProfileUrl}
+                                            placeholder={'username'}
+                                            placeholderTextColor={colors.secondary_text}
+                                            autoCapitalize={'none'}
+                                            onChangeText={setUsernameWrapper}
+                                            value={username}
+                                        />
+                                        <Text
+                                            style={{
+                                                color: usernameAvailabilityResult.available
+                                                    ? colors.progress_bar_complete
+                                                    : colors.error,
+                                                fontSize: 12,
+                                                position: 'absolute',
+                                                zIndex: 2,
+                                                right: 2,
+                                                bottom: 1,
+                                            }}
+                                        >
+                                            {usernameAvailabilityResult.message}
+                                        </Text>
+                                    </View>
+                                    <View style={{ height: PADDING }} />
+                                    <View style={{ flex: 1 }}>
+                                        <TextInput
+                                            style={{
+                                                color: colors.text,
+                                                flex: 1,
+                                                backgroundColor: colors.text_input_background,
+                                                paddingLeft: PADDING_LARGE,
+                                                borderRadius: 5,
+                                            }}
+                                            placeholder={
+                                                username.length
+                                                    ? 'display name (' + username + ')'
+                                                    : 'display name'
+                                            }
+                                            placeholderTextColor={colors.secondary_text}
+                                            onChangeText={setDisplayName}
+                                            value={displayName}
                                         />
                                     </View>
-                                </TouchableOpacity>
+                                </View>
                             </View>
                             <View
                                 style={{
                                     flex: 1,
-                                    paddingLeft: PADDING,
                                 }}
                             >
-                                <View style={{ flex: 1 }}>
+                                <View style={{ paddingTop: PADDING }}>
                                     <TextInput
                                         style={{
                                             color: colors.text,
+                                            height: '100%',
+                                            width: '100%',
                                             backgroundColor: colors.text_input_background,
-                                            padding: PADDING_LARGE,
-                                            flex: 1,
+                                            paddingLeft: PADDING_LARGE,
+                                            paddingTop: PADDING_SMALL,
                                             borderRadius: 5,
                                         }}
-                                        placeholder={'username'}
+                                        textAlignVertical="top"
+                                        multiline={true}
+                                        placeholder={'what makes you... you?'}
                                         placeholderTextColor={colors.secondary_text}
-                                        autoCapitalize={'none'}
-                                        onChangeText={setUsernameWrapper}
-                                        value={username}
-                                    />
-                                    <Text
-                                        style={{
-                                            color: usernameAvailabilityResult.available
-                                                ? colors.progress_bar_complete
-                                                : colors.error,
-                                            fontSize: 12,
-                                            position: 'absolute',
-                                            zIndex: 2,
-                                            right: 2,
-                                            bottom: 1,
-                                        }}
-                                    >
-                                        {usernameAvailabilityResult.message}
-                                    </Text>
-                                </View>
-                                <View style={{ height: PADDING }} />
-                                <View style={{ flex: 1 }}>
-                                    <TextInput
-                                        style={{
-                                            color: colors.text,
-                                            flex: 1,
-                                            backgroundColor: colors.text_input_background,
-                                            padding: PADDING_LARGE,
-                                            borderRadius: 5,
-                                        }}
-                                        placeholder={
-                                            username.length
-                                                ? 'display name (' + username + ')'
-                                                : 'display name'
-                                        }
-                                        placeholderTextColor={colors.secondary_text}
-                                        onChangeText={setDisplayName}
-                                        value={displayName}
+                                        onChangeText={setBio}
+                                        value={bio}
                                     />
                                 </View>
                             </View>
                         </View>
+
+                        <View style={{ height: PADDING_LARGE * 2 }} />
+
                         <View
                             style={{
-                                flex: 1,
+                                flexDirection: 'row',
+                                width: '100%',
                             }}
                         >
-                            <View style={{ paddingTop: PADDING }}>
-                                <TextInput
+                            <Checkbox
+                                checked={termsApproved}
+                                onCheck={() => {
+                                    setTermsApproved(!termsApproved);
+                                }}
+                            />
+                            <View
+                                style={{
+                                    flex: 1,
+                                    paddingLeft: PADDING_LARGE,
+                                }}
+                            >
+                                <Text
                                     style={{
-                                        color: colors.text,
-                                        height: '100%',
-                                        width: '100%',
-                                        backgroundColor: colors.text_input_background,
-                                        padding: PADDING_LARGE,
-                                        borderRadius: 5,
+                                        color: colors.secondary_text,
+                                        fontFamily: POPPINS_REGULAR,
+                                        fontSize: 14,
                                     }}
-                                    textAlignVertical="top"
-                                    multiline={true}
-                                    placeholder={'what makes you... you?'}
-                                    placeholderTextColor={colors.secondary_text}
-                                    onChangeText={setBio}
-                                    value={bio}
-                                />
+                                >
+                                    By continuing, you agree to our{' '}
+                                    <Text
+                                        onPress={() => {
+                                            Linking.openURL('https://embtr.com/terms');
+                                        }}
+                                        style={{
+                                            color: colors.accent_color,
+                                            fontFamily: POPPINS_MEDIUM,
+                                        }}
+                                    >
+                                        Terms of Service
+                                    </Text>{' '}
+                                    and{' '}
+                                    <Text
+                                        onPress={() => {
+                                            Linking.openURL('https://embtr.com/privacy');
+                                        }}
+                                        style={{
+                                            color: colors.accent_color,
+                                            fontFamily: POPPINS_MEDIUM,
+                                        }}
+                                    >
+                                        Privacy Policy
+                                    </Text>
+                                </Text>
                             </View>
                         </View>
-                    </View>
 
-                    <View style={{ height: PADDING_LARGE * 2 }} />
+                        <View style={{ height: PADDING_LARGE * 2 }} />
 
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            width: '100%',
-                        }}
-                    >
-                        <Checkbox
-                            checked={termsApproved}
-                            onCheck={() => {
-                                setTermsApproved(!termsApproved);
+                        <TouchableOpacity
+                            onPress={async () => {
+                                Keyboard.dismiss();
+                                await submitProfileData();
                             }}
-                        />
-                        <View
+                            disabled={!formValid}
                             style={{
-                                flex: 1,
-                                paddingLeft: PADDING_LARGE,
+                                width: '100%',
+                                backgroundColor: formValid
+                                    ? colors.accent_color
+                                    : colors.accent_color_dim,
+                                borderRadius: 5,
                             }}
                         >
                             <Text
                                 style={{
-                                    color: colors.secondary_text,
-                                    fontFamily: POPPINS_REGULAR,
-                                    fontSize: 14,
+                                    color: usernameAvailabilityResult.available
+                                        ? colors.text
+                                        : colors.secondary_text,
+                                    textAlign: 'center',
+                                    fontFamily: POPPINS_MEDIUM,
+                                    paddingVertical: PADDING_LARGE / 2,
                                 }}
                             >
-                                By continuing, you agree to our{' '}
-                                <Text
-                                    onPress={() => {
-                                        Linking.openURL('https://embtr.com/terms');
-                                    }}
-                                    style={{
-                                        color: colors.accent_color,
-                                        fontFamily: POPPINS_MEDIUM,
-                                    }}
-                                >
-                                    Terms of Service
-                                </Text>{' '}
-                                and{' '}
-                                <Text
-                                    onPress={() => {
-                                        Linking.openURL('https://embtr.com/privacy');
-                                    }}
-                                    style={{
-                                        color: colors.accent_color,
-                                        fontFamily: POPPINS_MEDIUM,
-                                    }}
-                                >
-                                    Privacy Policy
-                                </Text>
+                                Let's Go!
                             </Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
-
                     <View style={{ height: PADDING_LARGE * 2 }} />
-
-                    <TouchableOpacity
-                        onPress={async () => {
-                            Keyboard.dismiss();
-                            await submitProfileData();
-                        }}
-                        disabled={!formValid}
-                        style={{
-                            width: '100%',
-                            backgroundColor: formValid
-                                ? colors.accent_color
-                                : colors.accent_color_dim,
-                            borderRadius: 5,
-                        }}
-                    >
-                        <Text
-                            style={{
-                                color: usernameAvailabilityResult.available
-                                    ? colors.text
-                                    : colors.secondary_text,
-                                textAlign: 'center',
-                                fontFamily: POPPINS_MEDIUM,
-                                paddingVertical: PADDING_LARGE / 2,
-                            }}
-                        >
-                            Let's Go!
-                        </Text>
-                    </TouchableOpacity>
                 </View>
-            </KeyboardAvoidingView>
+            </EmbtrKeyboardAvoidingScrollView>
         </Pressable>
     );
 };

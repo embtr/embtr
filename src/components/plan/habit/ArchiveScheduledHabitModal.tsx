@@ -2,7 +2,13 @@ import { Modal, TouchableOpacity, View, Text, Pressable } from 'react-native';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ModalBase } from 'src/components/common/modal/ModalBase';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import {
+    PADDING_LARGE,
+    PADDING_MEDIUM,
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+} from 'src/util/constants';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
 interface Props {
@@ -21,117 +27,112 @@ export const ArchiveScheduledHabitModal = ({ visible, onArchive, onDismiss }: Pr
     };
 
     const body = (
-        <View style={{ flex: 1, alignItems: 'center' }}>
-            <View style={{ flex: 1 }}>
-                <View
+        <View style={{ alignItems: 'center' }}>
+            <View
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <Text
                     style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
+                        fontSize: 14,
+                        fontFamily: POPPINS_MEDIUM,
+                        color: colors.text,
+                        textAlign: 'center',
                     }}
                 >
-                    <Text
-                        style={{
-                            fontSize: 14,
-                            fontFamily: POPPINS_MEDIUM,
-                            color: colors.text,
-                            paddingTop: 15,
-                            textAlign: 'center',
-                        }}
-                    >
-                        Archive Habit
-                    </Text>
+                    Archive Habit
+                </Text>
 
-                    <Text
-                        style={{
-                            fontSize: 16,
-                            fontFamily: POPPINS_MEDIUM,
-                            color: colors.accent_color,
-                            paddingTop: 15,
-                            textAlign: 'center',
-                        }}
-                    >
-                        {title}
-                    </Text>
-                </View>
+                <Text
+                    style={{
+                        fontSize: 16,
+                        fontFamily: POPPINS_MEDIUM,
+                        color: colors.accent_color,
+                        paddingTop: 15,
+                        textAlign: 'center',
+                    }}
+                >
+                    {title}
+                </Text>
+            </View>
 
-                <View style={{ paddingTop: 25 }}>
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            fontSize: 12,
-                            fontFamily: 'Poppins_400Regular',
-                            paddingLeft: 10,
-                            paddingRight: 10,
-                            color: colors.text,
-                        }}
-                    >
-                        Once you archive this habit, you will no longer be able to edit it.
-                    </Text>
-                </View>
+            <View style={{ paddingTop: PADDING_LARGE }}>
+                <Text
+                    style={{
+                        textAlign: 'center',
+                        fontSize: 12,
+                        fontFamily: POPPINS_REGULAR,
+                        paddingLeft: PADDING_MEDIUM,
+                        paddingRight: PADDING_MEDIUM,
+                        paddingBottom: PADDING_MEDIUM,
+                        color: colors.text,
+                    }}
+                >
+                    Once you archive this habit, you will no longer be able to edit it.
+                </Text>
+            </View>
 
-                <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1 }} />
-                    <View
+            <View>
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <TouchableOpacity
                         style={{
-                            flex: 1.5,
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                            backgroundColor: colors.link,
+                            paddingVertical: 5,
+                            borderRadius: 6,
+                        }}
+                        onPress={() => {
+                            onHandleDismiss();
                         }}
                     >
-                        <TouchableOpacity
+                        <Text
                             style={{
-                                backgroundColor: colors.link,
-                                width: '90%',
-                                paddingVertical: 5,
-                                borderRadius: 6,
-                            }}
-                            onPress={() => {
-                                onHandleDismiss();
+                                textAlign: 'center',
+                                fontSize: 14,
+                                fontFamily: POPPINS_REGULAR,
+                                top: 2,
+                                color: colors.text,
+                                paddingHorizontal: PADDING_LARGE * 3,
                             }}
                         >
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    fontSize: 14,
-                                    fontFamily: POPPINS_REGULAR,
-                                    color: colors.text,
-                                }}
-                            >
-                                Nevermind!
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View
+                            Nevermind!
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <TouchableOpacity
                         style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                            alignItems: 'center',
+                            marginTop: 2.5,
+                            width: '90%',
+                            paddingVertical: 5,
+                            borderRadius: 6,
+                        }}
+                        onPress={() => {
+                            onArchive();
                         }}
                     >
-                        <TouchableOpacity
+                        <Text
                             style={{
-                                marginTop: 2.5,
-                                width: '90%',
-                                paddingVertical: 5,
-                                borderRadius: 6,
-                            }}
-                            onPress={() => {
-                                onArchive();
+                                textAlign: 'center',
+                                fontSize: 12,
+                                fontFamily: POPPINS_REGULAR,
+                                color: colors.archive,
                             }}
                         >
-                            <Text
-                                style={{
-                                    textAlign: 'center',
-                                    fontSize: 13,
-                                    fontFamily: POPPINS_REGULAR,
-                                    color: colors.archive,
-                                }}
-                            >
-                                Archive
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 0.5 }} />
+                            Archive
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -142,11 +143,9 @@ export const ArchiveScheduledHabitModal = ({ visible, onArchive, onDismiss }: Pr
             <Modal visible={visible} transparent={true} animationType={'fade'}>
                 <Pressable
                     style={{
-                        backgroundColor: 'transparent',
-                        flex: 1,
                         alignItems: 'center',
                         justifyContent: 'center',
-                        paddingBottom: '25%',
+                        flex: 1,
                     }}
                     onPress={(event) => {
                         if (event.target === event.currentTarget) {
@@ -154,17 +153,19 @@ export const ArchiveScheduledHabitModal = ({ visible, onArchive, onDismiss }: Pr
                         }
                     }}
                 >
+                    <View style={{ flex: 1 }} />
                     <View
                         style={{
-                            width: 300,
-                            height: getWindowHeight() / 3,
                             backgroundColor: colors.modal_background,
                             borderRadius: 7,
-                            justifyContent: 'space-around',
+                            width: '80%',
+                            paddingTop: PADDING_LARGE,
+                            paddingBottom: PADDING_SMALL / 2,
                         }}
                     >
                         {body}
                     </View>
+                    <View style={{ flex: 1 }} />
                 </Pressable>
             </Modal>
         </ModalBase>

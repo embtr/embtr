@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { POPPINS_REGULAR } from 'src/util/constants';
 
 const padZero = (value: number) => value.toString().padStart(2, '0');
 
@@ -11,7 +12,7 @@ export const Countdown = () => {
     useEffect(() => {
         const timerId = setInterval(() => {
             setDate(new Date());
-        }, 500);
+        }, 1000);
 
         return () => clearInterval(timerId);
     }, []);
@@ -26,8 +27,16 @@ export const Countdown = () => {
     const { hours, minutes, seconds } = timeLeft();
 
     return (
-        <Text style={{ color: colors.text, fontSize: 12, paddingTop: 2 }}>
-            {`${padZero(hours)}h ${padZero(minutes)}m ${padZero(seconds)}s`}
+        <Text
+            style={{
+                color: colors.text,
+                fontSize: 12,
+                paddingTop: 2,
+                fontFamily: POPPINS_REGULAR,
+            }}
+        >
+            {`${hours}h ${padZero(minutes)}m ${padZero(seconds)}s`}
+            <Text style={{ color: colors.accent_color_light, fontSize: 12 }}> remaining</Text>
         </Text>
     );
 };
