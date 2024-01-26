@@ -27,6 +27,8 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
         plannedDayResult.images ?? []
     );
 
+    const secondaryHeader = plannedDayResult.plannedDay.user.location ?? '';
+
     return (
         <View
             style={[
@@ -44,7 +46,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             <CardHeader
                 date={plannedDayResult.createdAt}
                 user={plannedDayResult.plannedDay?.user}
-                secondaryText={'secondary text here'}
+                secondaryText={secondaryHeader}
                 type={TimelineElementType.PLANNED_DAY_RESULT}
             />
 
