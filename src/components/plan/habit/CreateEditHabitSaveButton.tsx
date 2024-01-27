@@ -63,7 +63,7 @@ export const CreateEditHabitSaveButton = ({
     const currentTab = useAppSelector(getCurrentTab);
     const todayKey = useAppSelector(getTodayKey);
     const selectedDayKey = useAppSelector(getSelectedDayKey);
-    const dayKeyToUse = currentTab === TABS.TODAY ? todayKey : selectedDayKey;
+    const dayKeyToUse = currentTab === TABS.PLAN ? selectedDayKey : todayKey;
 
     const routes = navigation.getState().routes;
     const previousRoute = routes[routes.length - 2];

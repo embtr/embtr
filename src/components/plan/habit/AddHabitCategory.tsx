@@ -9,6 +9,7 @@ import { AddHabitElement } from './AddHabitElement';
 import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useEmbtrNavigation, useEmbtrRoute } from 'src/hooks/NavigationHooks';
 
 interface Props {
     id?: number;
@@ -16,8 +17,8 @@ interface Props {
 }
 
 export const AddHabitCategory = ({ id, type }: Props) => {
-    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const route = useRoute<RouteProp<RootStackParamList, 'AddHabitCategory'>>();
+    const navigation = useEmbtrNavigation();
+    const route = useEmbtrRoute(Routes.ADD_HABIT_CATEGORY);
     const habitCategoryId = id ?? Number(route.params.id);
     const habitCategoryType = type ?? Number(route.params.type);
     const needsBanner = !id;

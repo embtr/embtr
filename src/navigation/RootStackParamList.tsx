@@ -46,6 +46,7 @@ export type MasterScreens = {
     AdvancedUserSettings: undefined;
     EditUserProfile: undefined;
     AddHabitCategories: undefined;
+    AddHabitCategory: { id?: number; type?: HabitCategoryType };
     MyHabitsCategoryElement: undefined;
     NewUserProfilePopulation: undefined;
     TermsApprovalModal: undefined;
@@ -84,10 +85,6 @@ export type RootStackParamList = {
     Logout: undefined;
     LoadingPage: undefined;
     Loading: undefined;
-
-    // in-app screens without tab bar
-    AddHabitCategory: { id?: number; type?: HabitCategoryType };
-    AddHabitCategories: undefined;
 };
 
 export namespace Routes {
