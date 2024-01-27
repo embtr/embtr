@@ -8,18 +8,18 @@ import { TodayTab } from 'src/components/today/TodayTab';
 import { TabBar } from 'src/components/home/tabmenu/TabBar';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
-import { ChallengeTab } from 'src/components/challenge/ChallengeTab';
+import { PlanningTab } from 'src/components/challenge/PlanningTab';
 import React from 'react';
 import { OnLoginHooks } from 'src/hooks/OnLoginHooks';
+import { PlanTab } from 'src/components/plan/PlanTab';
 
 const Tab = createBottomTabNavigator();
 
 export const TABS = {
-    USER_PROFILE: 'CurrentUserTab',
     TIMELINE: 'TimelineTab',
     TODAY: 'TodayTab',
     PLAN: 'PlanTab',
-    CHALLENGE: 'ChallengeTab',
+    USER_PROFILE: 'CurrentUserTab',
 };
 
 export const Dashboard = () => {
@@ -95,11 +95,13 @@ export const Dashboard = () => {
                     component={TodayTab}
                 />
 
+                <Tab.Screen name={'PLACEHOLDER'} component={PlanTab} />
+
                 <Tab.Screen
-                    name={'PLACEHOLDER'}
+                    name={TABS.PLAN}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
-                            dispatch(setCurrentTab(TABS.CHALLENGE));
+                            dispatch(setCurrentTab(TABS.PLAN));
 
                             const currentlyInFocus = navigation.isFocused();
                             if (
@@ -107,46 +109,19 @@ export const Dashboard = () => {
                                 route &&
                                 route.state &&
                                 route.state.routes.length >= 1 &&
-                                route.state.routes[0]['name'] !== 'PlanMain'
+                                route.state.routes[0]['name'] !== 'PlanningMain'
                             ) {
                                 e.preventDefault();
                                 navigation.dispatch(
                                     CommonActions.reset({
                                         index: 0,
-                                        routes: [{ name: 'PlanMain' }],
+                                        routes: [{ name: 'PlanningMain' }],
                                     })
                                 );
                             }
                         },
                     })}
-                    component={ChallengeTab}
-                />
-
-                <Tab.Screen
-                    name={TABS.CHALLENGE}
-                    listeners={({ navigation, route }) => ({
-                        tabPress: (e) => {
-                            dispatch(setCurrentTab(TABS.CHALLENGE));
-
-                            const currentlyInFocus = navigation.isFocused();
-                            if (
-                                currentlyInFocus &&
-                                route &&
-                                route.state &&
-                                route.state.routes.length >= 1 &&
-                                route.state.routes[0]['name'] !== 'PlanMain'
-                            ) {
-                                e.preventDefault();
-                                navigation.dispatch(
-                                    CommonActions.reset({
-                                        index: 0,
-                                        routes: [{ name: 'PlanMain' }],
-                                    })
-                                );
-                            }
-                        },
-                    })}
-                    component={ChallengeTab}
+                    component={PlanningTab}
                 />
 
                 <Tab.Screen

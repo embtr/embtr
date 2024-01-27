@@ -89,7 +89,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
         } else if (route.name === TABS.TODAY) {
             let icon: any = isFocused ? 'sunny' : 'sunny-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
-        } else if (route.name === TABS.CHALLENGE) {
+        } else if (route.name === TABS.PLAN) {
             let icon: any = isFocused ? 'list-circle' : 'list-circle-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
         } else if (route.name === TABS.USER_PROFILE) {

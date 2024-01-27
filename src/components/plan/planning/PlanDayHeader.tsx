@@ -9,6 +9,7 @@ import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getFireConfetti } from 'src/redux/user/GlobalState';
 import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 interface Styles {
     container: ViewStyle;
@@ -49,6 +50,7 @@ const generateStyles = (colors: any): Styles => {
         },
     };
 };
+
 interface Props {
     plannedDay: PlannedDay;
     hasPlannedTasks: boolean;
@@ -66,7 +68,7 @@ export const PlanDayHeader = ({
     const styles = generateStyles(colors);
 
     const plannedDayResultsAreShared = (plannedDay.plannedDayResults?.length ?? 0) > 0;
-    const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
+    const navigation = useEmbtrNavigation();
     const fireConfetti = useAppSelector(getFireConfetti);
 
     const onShare = async () => {

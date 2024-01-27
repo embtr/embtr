@@ -9,8 +9,25 @@ import { Screen } from '../common/Screen';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
 
-export const ChallengeMain = () => {
+export const PlanningMain = () => {
+    return (
+        <Screen>
+            <Banner name="Planning" />
+
+            <ScrollView>
+                <View style={{ paddingHorizontal: PADDING_LARGE / 2 }}>
+                    <PlanningWidgetImproved />
+                </View>
+            </ScrollView>
+        </Screen>
+    );
+};
+
+/*
+
+// THIS IS SAVING THE TOP TAB LOGIC FOR LATER
     const { colors } = useTheme();
+
     const [index, setIndex] = React.useState(0);
 
     const renderScene = (props: SceneRendererProps & { route: { key: string; title: string } }) => {
@@ -65,15 +82,4 @@ export const ChallengeMain = () => {
         { key: 'achievements', title: 'Achievements' },
     ]);
 
-    return (
-        <Screen>
-            <Banner name="Planning" />
-
-            <ScrollView>
-                <View style={{ paddingHorizontal: PADDING_LARGE / 2 }}>
-                    <PlanningWidgetImproved />
-                </View>
-            </ScrollView>
-        </Screen>
-    );
-};
+ */
