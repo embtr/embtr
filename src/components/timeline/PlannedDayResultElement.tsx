@@ -68,24 +68,6 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             )}
 
             {/**********/}
-            {/*  BODY  */}
-            {/**********/}
-            {plannedDayResult.description && (
-                <View style={{ paddingTop: 12 }}>
-                    <Text
-                        numberOfLines={3}
-                        style={{
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 13,
-                            color: colors.text,
-                        }}
-                    >
-                        {plannedDayResult.description}
-                    </Text>
-                </View>
-            )}
-
-            {/**********/}
             {/* IMAGES */}
             {/**********/}
             {carouselImages.length > 0 && (
