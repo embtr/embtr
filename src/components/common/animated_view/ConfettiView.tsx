@@ -3,6 +3,7 @@ import LottieView from 'lottie-react-native';
 import React from 'react';
 import { setFireConfetti } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
+import { getWindowHeight, getWindowWidth } from 'src/util/GeneralUtility';
 
 export const ConfettiView = () => {
     const animation = React.useRef<LottieView>(null);
@@ -29,10 +30,14 @@ export const ConfettiView = () => {
             pointerEvents="none"
         >
             <LottieView
-                autoPlay={false}
                 loop={false}
                 ref={animation}
-                style={{ width: '140%', justifyContent: 'center' }}
+                style={{
+                    zIndex: 1,
+                    position: 'absolute',
+                    width: getWindowWidth(),
+                    height: getWindowHeight(),
+                }}
                 source={require('../../../../resources/lottie-confetti.json')}
             />
         </View>

@@ -5,7 +5,6 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { EmbtrButton } from '../common/button/EmbtrButton';
-import { LoginModal } from '../login/LoginModal';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
 import { RegisterModal } from '../login/RegisterModal';
 import { isDesktopBrowser } from 'src/util/DeviceUtil';
@@ -15,6 +14,8 @@ import { isIosApp } from 'src/util/DeviceUtil';
 import { HorizontalLine } from '../common/HorizontalLine';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import { Image } from 'expo-image';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Routes } from 'src/navigation/RootStackParamList';
 
 const canUseGoogleAuth = () => {
     return (
@@ -34,18 +35,10 @@ export const LandingPage = () => {
         fontFamily: 'Poppins_400Regular',
     } as TextStyle;
 
-    const [displayLoginModal, setDisplayLoginModal] = React.useState(false);
-    const [displayRegisterModal, setDisplayRegisterModal] = React.useState(false);
+    const navigation = useEmbtrNavigation();
+
     const [continueToDesktopBrowserLogin, setContinueToDesktopBrowserLogin] = React.useState(false);
     const [useAlternativeLoginMethods, setUseAlternativeLoginMethods] = React.useState(false);
-
-    const onLoginModalCancel = () => {
-        setDisplayLoginModal(false);
-    };
-
-    const onLoginModalConfirm = () => {
-        setDisplayLoginModal(false);
-    };
 
     if (isDesktopBrowser() && !continueToDesktopBrowserLogin) {
         return (
@@ -81,7 +74,7 @@ export const LandingPage = () => {
                     height={45}
                     buttonText="Login With Email"
                     callback={() => {
-                        setDisplayLoginModal(true);
+                        navigation.navigate(Routes.LOGIN_MODAL);
                     }}
                 />
             </View>
@@ -89,9 +82,9 @@ export const LandingPage = () => {
             <View style={{ width: 300, paddingTop: 6 }}>
                 <EmbtrButton
                     color="#b50017"
-                    buttonText="Register With Email"
+                    buttonText="Sign Up With Email"
                     callback={() => {
-                        setDisplayRegisterModal(true);
+                        navigation.navigate(Routes.REGISTER_MODAL);
                     }}
                 />
             </View>
@@ -100,19 +93,6 @@ export const LandingPage = () => {
 
     return (
         <Screen>
-            <ModalContainingComponent />
-            <LoginModal
-                visible={displayLoginModal}
-                confirm={onLoginModalConfirm}
-                dismiss={onLoginModalCancel}
-            />
-            <RegisterModal
-                visible={displayRegisterModal}
-                onDismiss={() => {
-                    setDisplayRegisterModal(false);
-                }}
-            />
-
             <View style={{ width: '100%', flex: 1, justifyContent: 'flex-end' }}>
                 {/* FLEX 1 LOGO */}
 

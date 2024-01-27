@@ -63,6 +63,8 @@ export type MasterScreens = {
         plannedTaskId?: number;
         newPlannedHabitData?: NewPlannedHabitData;
     };
+    LoginModal: { newAccountEmail?: string } | undefined;
+    RegisterModal: undefined;
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -105,4 +107,6 @@ export namespace Routes {
     export const UPDATE_AVAILABLE_MODAL = 'UpdateAvailableModal';
     export const MANAGE_HABITS = 'ManageHabits';
     export const HABIT_SUMMARY_DETAILS = 'HabitSummaryDetails';
+    export const LOGIN_MODAL = 'LoginModal';
+    export const REGISTER_MODAL = 'RegisterModal';
 }

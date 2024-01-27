@@ -1,6 +1,7 @@
 import { isBrowser, isMobile } from 'react-device-detect';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
+import { getWindowHeight, getWindowWidth } from 'src/util/GeneralUtility';
 //import { Platform } from 'react-native';
 
 /*
@@ -42,20 +43,28 @@ ios app
 
 export const isDesktopBrowser = (): boolean => {
     return isMobile === false && isBrowser === true;
-}
+};
 
 export const isMobileBrowser = (): boolean => {
     return isMobile === true;
-}
+};
 
-export const isIosApp = () : boolean => {
-    return Platform.OS === "ios"
-}
+export const isIosApp = (): boolean => {
+    return Platform.OS === 'ios';
+};
 
-export const isPhysicalDevice = () : boolean => {
+export const isPhysicalDevice = (): boolean => {
     return Device.isDevice;
-}
+};
 
-export const isAndroidDevice = () : boolean => {
+export const isAndroidDevice = (): boolean => {
     return Platform.OS === 'android';
-}
+};
+
+export const isShortDevice = (): boolean => {
+    return getWindowHeight() < 700;
+};
+
+export const isNarrowDevice = (): boolean => {
+    return getWindowWidth() < 370;
+};

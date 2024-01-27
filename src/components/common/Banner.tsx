@@ -11,6 +11,7 @@ import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { getWindowWidth } from 'src/util/GeneralUtility';
+import { isNarrowDevice } from 'src/util/DeviceUtil';
 
 interface Props {
     name: string;
@@ -63,7 +64,7 @@ export const Banner = ({
     } as TextStyle;
 
     const iconSize = 30;
-    const bannerSize = getWindowWidth() < 400 ? 18 : 20;
+    const bannerSize = isNarrowDevice() ? 18 : 20;
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 

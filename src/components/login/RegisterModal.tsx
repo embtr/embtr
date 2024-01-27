@@ -1,96 +1,316 @@
 import React from 'react';
-import { RegisterSuccessModal } from './RegisterSuccessModalBody';
-import { RegisterModalBody } from './RegisterModalBody';
-import { getWindowHeight, wait } from 'src/util/GeneralUtility';
-import { Keyboard, Modal, TouchableOpacity, View } from 'react-native';
-import { setGlobalBlurBackground } from 'src/redux/user/GlobalState';
-import { useDispatch } from 'react-redux';
 
-interface Props {
-    visible: boolean;
-    onDismiss: Function;
+import { Image, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import {
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    PADDING_LARGE,
+    PADDING_SMALL,
+    PADDING_MEDIUM,
+} from 'src/util/constants';
+import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
+import { Banner } from 'src/components/common/Banner';
+import { isShortDevice } from 'src/util/DeviceUtil';
+import { Screen } from 'src/components/common/Screen';
+import { Response } from 'resources/types/requests/RequestTypes';
+import UserController from 'src/controller/user/UserController';
+import { Code } from 'resources/codes';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Routes } from 'src/navigation/RootStackParamList';
+
+const enum EmailFormState {
+    DEFAULT,
+    INVALID_EMAIL,
+    EMAIL_IN_USE,
 }
 
-export const RegisterModal = ({ visible, onDismiss }: Props) => {
-    const [displayRegisterModal, setDisplayRegisterModal] = React.useState(true);
-    const [keyboardOpen, setKeyboardOpen] = React.useState(false);
+const enum PasswordFormState {
+    DEFAULT,
+    INVALID_PASSWORD,
+}
 
-    const dispatch = useDispatch();
+const enum PasswordAgainFormState {
+    DEFAULT,
+    PASSWORDS_DO_NOT_MATCH,
+}
 
-    const onRegisterSuccessModalDismiss = () => {
-        onDismiss();
-        wait(750).then(() => {
-            setDisplayRegisterModal(true);
-        });
+const getEmailFormStateMessage = (state: EmailFormState) => {
+    switch (state) {
+        case EmailFormState.DEFAULT:
+            return '';
+
+        case EmailFormState.INVALID_EMAIL:
+            return 'Invalid email';
+
+        case EmailFormState.EMAIL_IN_USE:
+            return 'Email in use';
+    }
+};
+
+const getPasswordFormStateMessage = (state: PasswordFormState) => {
+    switch (state) {
+        case PasswordFormState.DEFAULT:
+            return '';
+
+        case PasswordFormState.INVALID_PASSWORD:
+            return 'Invalid password';
+    }
+};
+
+const getPasswordAgainFormStateMessage = (state: PasswordAgainFormState) => {
+    switch (state) {
+        case PasswordAgainFormState.DEFAULT:
+            return '';
+
+        case PasswordAgainFormState.PASSWORDS_DO_NOT_MATCH:
+            return 'Passwords do not match';
+    }
+};
+
+export const RegisterModal = () => {
+    const { colors } = useTheme();
+
+    const navigation = useEmbtrNavigation();
+
+    const onSuccessComplete = () => {
+        navigation.goBack();
+        setTimeout(() => {
+            navigation.navigate(Routes.LOGIN_MODAL, { newAccountEmail: email });
+        }, 250);
     };
 
-    const onRegisterModalConfirm = (registrationSuccess: boolean) => {
-        setDisplayRegisterModal(false);
+    const [emailFormState, setEmailFormState] = React.useState<EmailFormState>(
+        EmailFormState.DEFAULT
+    );
+    const [passwordFormState, setPasswordFormState] = React.useState<PasswordFormState>(
+        PasswordFormState.DEFAULT
+    );
+
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [passwordAgain, setPasswordAgain] = React.useState('');
+    const [waitingForResponse, setWaitingForResponse] = React.useState(false);
+
+    const textPadding = isShortDevice() ? PADDING_SMALL : PADDING_LARGE;
+    const formValid = email.length > 0 && password.length > 0 && password === passwordAgain;
+
+    const clearFormState = () => {
+        setEmailFormState(EmailFormState.DEFAULT);
+        setPasswordFormState(PasswordFormState.DEFAULT);
     };
 
-    React.useEffect(() => {
-        dispatch(setGlobalBlurBackground(visible));
+    const handleSignUp = async () => {
+        clearFormState();
+        const result: Response = await UserController.createAccount(email, password);
+        switch (result.internalCode) {
+            case Code.SUCCESS:
+                onSuccessComplete();
+                break;
 
-        return () => {
-            dispatch(setGlobalBlurBackground(false));
-        };
-    }, [visible]);
+            case Code.CREATE_ACCOUNT_EMAIL_IN_USE:
+                setEmailFormState(EmailFormState.EMAIL_IN_USE);
+                break;
 
-    React.useEffect(() => {
-        Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
-        Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
+            case Code.CREATE_ACCOUNT_INVALID_EMAIL:
+                setEmailFormState(EmailFormState.INVALID_EMAIL);
+                break;
 
-        return () => {
-            Keyboard.removeAllListeners('keyboardDidShow');
-            Keyboard.removeAllListeners('keyboardDidHide');
-        };
-    }, []);
-
-    const onHandleDismiss = () => {
-        if (keyboardOpen) {
-            Keyboard.dismiss();
-        } else {
-            onDismiss();
-            setDisplayRegisterModal(true);
+            case Code.CREATE_ACCOUNT_INVALID_PASSWORD:
+                setPasswordFormState(PasswordFormState.INVALID_PASSWORD);
+                break;
         }
+
+        setWaitingForResponse(false);
     };
+
+    const passwordAgainFormState =
+        password === passwordAgain
+            ? PasswordAgainFormState.DEFAULT
+            : PasswordAgainFormState.PASSWORDS_DO_NOT_MATCH;
+
+    const emailFormStateMessage = getEmailFormStateMessage(emailFormState);
+    const passwordFormStateMessage = getPasswordFormStateMessage(passwordFormState);
+    const passwordAgainFormStateMessage = getPasswordAgainFormStateMessage(passwordAgainFormState);
 
     return (
-        <Modal visible={visible} transparent={true} animationType={'slide'}>
-            <TouchableOpacity
-                style={{ height: getWindowHeight() / 4, width: '100%' }}
-                onPress={() => {
-                    onHandleDismiss();
-                }}
-            />
-            <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity
-                    style={{ flex: 1 }}
-                    onPress={() => {
-                        onHandleDismiss();
-                    }}
-                />
+        <Screen>
+            <View style={{ flex: 1 }}>
+                <EmbtrKeyboardAvoidingScrollView
+                    header={<Banner name={''} leftText="close" leftRoute={'BACK'} />}
+                >
+                    <View style={{ flex: 0.25 }} />
+                    <View>
+                        <View style={{ alignItems: 'center', paddingTop: PADDING_LARGE * 2 }}>
+                            <Image
+                                source={require('assets/logo.png')}
+                                style={{ width: 150, height: 150 }}
+                            />
+                        </View>
+                        <Text
+                            style={{
+                                paddingTop: PADDING_LARGE,
+                                color: colors.text,
+                                textAlign: 'center',
+                                fontSize: 24,
+                                paddingBottom: PADDING_LARGE,
+                                fontFamily: POPPINS_MEDIUM,
+                            }}
+                        >
+                            Sign Up
+                        </Text>
 
-                {displayRegisterModal ? (
-                    <RegisterModalBody confirm={onRegisterModalConfirm} />
-                ) : (
-                    <RegisterSuccessModal dismiss={onRegisterSuccessModalDismiss} />
-                )}
+                        <Text
+                            style={{
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_REGULAR,
+                                paddingHorizontal: PADDING_LARGE,
+                                fontSize: 14,
+                                textAlign: 'center',
+                            }}
+                        >
+                            Sign up below. We look forward to smashing goals with you!
+                        </Text>
 
-                <TouchableOpacity
-                    style={{ flex: 1 }}
-                    onPress={() => {
-                        onHandleDismiss();
-                    }}
-                />
+                        <View style={{ height: PADDING_LARGE * 2 }} />
+
+                        <View style={{ alignItems: 'center', paddingHorizontal: PADDING_LARGE }}>
+                            <View
+                                style={{
+                                    backgroundColor: colors.card_background,
+                                    width: '100%',
+                                    borderRadius: 10,
+                                    padding: PADDING_LARGE,
+                                }}
+                            >
+                                <View>
+                                    <View>
+                                        <View>
+                                            <TextInput
+                                                style={{
+                                                    color: colors.text,
+                                                    backgroundColor: colors.text_input_background,
+                                                    paddingLeft: PADDING_LARGE,
+                                                    borderRadius: 5,
+                                                    paddingVertical: textPadding,
+                                                }}
+                                                placeholder={'email'}
+                                                placeholderTextColor={colors.secondary_text}
+                                                autoCapitalize={'none'}
+                                                onChangeText={setEmail}
+                                                value={email}
+                                            />
+
+                                            <Text
+                                                style={{
+                                                    color: colors.error,
+                                                    fontSize: 12,
+                                                    position: 'absolute',
+                                                    zIndex: 2,
+                                                    right: 4,
+                                                    bottom: 1,
+                                                }}
+                                            >
+                                                {emailFormStateMessage}
+                                            </Text>
+                                        </View>
+                                        <View style={{ height: PADDING_SMALL }} />
+                                        <View>
+                                            <Text
+                                                style={{
+                                                    color: colors.error,
+                                                    fontSize: 12,
+                                                    position: 'absolute',
+                                                    zIndex: 2,
+                                                    right: 4,
+                                                    bottom: 1,
+                                                }}
+                                            >
+                                                {passwordFormStateMessage}
+                                            </Text>
+
+                                            <TextInput
+                                                style={{
+                                                    color: colors.text,
+                                                    backgroundColor: colors.text_input_background,
+                                                    paddingLeft: PADDING_LARGE,
+                                                    borderRadius: 5,
+                                                    paddingVertical: textPadding,
+                                                }}
+                                                placeholder={'password'}
+                                                placeholderTextColor={colors.secondary_text}
+                                                onChangeText={setPassword}
+                                                value={password}
+                                                secureTextEntry={true}
+                                            />
+                                        </View>
+
+                                        <View style={{ height: PADDING_SMALL }} />
+                                        <View>
+                                            <Text
+                                                style={{
+                                                    color: colors.error,
+                                                    fontSize: 12,
+                                                    position: 'absolute',
+                                                    zIndex: 2,
+                                                    right: 4,
+                                                    bottom: 1,
+                                                }}
+                                            >
+                                                {passwordAgainFormStateMessage}
+                                            </Text>
+
+                                            <TextInput
+                                                style={{
+                                                    color: colors.text,
+                                                    backgroundColor: colors.text_input_background,
+                                                    paddingLeft: PADDING_LARGE,
+                                                    borderRadius: 5,
+                                                    paddingVertical: textPadding,
+                                                }}
+                                                placeholder={'password again'}
+                                                placeholderTextColor={colors.secondary_text}
+                                                onChangeText={setPasswordAgain}
+                                                value={passwordAgain}
+                                                secureTextEntry={true}
+                                            />
+                                        </View>
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View style={{ height: PADDING_LARGE * 2 }} />
+
+                            <TouchableOpacity
+                                onPress={async () => {
+                                    Keyboard.dismiss();
+                                    setWaitingForResponse(true);
+                                    await handleSignUp();
+                                }}
+                                disabled={!formValid}
+                                style={{
+                                    width: '100%',
+                                    backgroundColor: formValid
+                                        ? colors.accent_color
+                                        : colors.accent_color_dim,
+                                    borderRadius: 5,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        color: formValid ? colors.text : colors.secondary_text,
+                                        textAlign: 'center',
+                                        fontFamily: POPPINS_MEDIUM,
+                                        paddingVertical: PADDING_LARGE / 2,
+                                    }}
+                                >
+                                    {"Let's Go!"}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </EmbtrKeyboardAvoidingScrollView>
             </View>
-
-            <TouchableOpacity
-                style={{ flex: 1, width: '100%' }}
-                onPress={() => {
-                    onHandleDismiss();
-                }}
-            />
-        </Modal>
+        </Screen>
     );
 };
