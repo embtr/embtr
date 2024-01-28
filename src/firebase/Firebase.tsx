@@ -24,11 +24,10 @@ const developmentFirebaseConfig = {
     measurementId: 'G-JSXDNEXMLQ',
 };
 
-console.log (process.env.APP_ENV === 'production' || process.env.EXPO_PUBLIC_ENV === 'production')
 const firebaseConfig =
-    process.env.APP_ENV === 'production' || process.env.EXPO_PUBLIC_ENV === 'production'
-        ? productionFirebaseConfig
-        : developmentFirebaseConfig;
+    process.env.APP_ENV === 'development' || process.env.EXPO_PUBLIC_ENV === 'development'
+        ? developmentFirebaseConfig 
+        : productionFirebaseConfig;
 const firebaseApp = initializeApp(firebaseConfig);
 getFirestore(firebaseApp);
 

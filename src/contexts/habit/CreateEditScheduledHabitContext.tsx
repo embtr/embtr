@@ -168,7 +168,7 @@ export const CreateEditScheduledHabitProvider = ({
     React.useEffect(() => {
         if (scheduledHabit.data) {
             setRemoteImageUrl(ScheduledHabitUtil.getRemoteImageUrl(scheduledHabit.data));
-            setLocalImage(ScheduledHabitUtil.getDescription(scheduledHabit.data));
+            setLocalImage(ScheduledHabitUtil.getLocalImage(scheduledHabit.data));
             setTitle(ScheduledHabitUtil.getTitle(scheduledHabit.data));
             setDescription(ScheduledHabitUtil.getDescription(scheduledHabit.data));
             setStartDate(scheduledHabit.data.startDate ?? undefined);

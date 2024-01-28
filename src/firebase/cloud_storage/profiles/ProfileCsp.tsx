@@ -2,6 +2,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { getAuth } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
+import * as Sentry from '@sentry/react-native';
 
 export const uploadImages = async (
     pickerResults: ImagePicker.ImagePickerAsset[],
@@ -26,6 +27,7 @@ export const uploadImages = async (
         }
     } catch (e) {
         console.log(e);
+        Sentry.captureException(e);
         alert('Upload failed, sorry :(');
     }
 
