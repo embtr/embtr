@@ -14,14 +14,8 @@ import { PADDING_LARGE } from 'src/util/constants';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
 import { FlatList } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 
-const months: MonthPickerElementData[] = getMonthData();
-const daysOfMonth = getDaysForMonth();
-const currentMonth = months[Math.floor(months.length / 2)];
-const zeroPaddedMonth = currentMonth.month.toString().padStart(2, '0');
-const currentDay: DayPickerElementData = daysOfMonth.get(currentMonth.year + zeroPaddedMonth)![
-    new Date().getDate() - 1
-];
 const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerElementData) => {
     const year = monthData.year;
     const month = (monthData.month + 1).toString().padStart(2, '0');
@@ -30,13 +24,40 @@ const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerEle
     return `${year}-${month}-${day}`;
 };
 
+const useCurrentDayData = () => {
+    const [date, setDate] = React.useState(new Date());
+
+    const months: MonthPickerElementData[] = getMonthData(date);
+    const daysOfMonth = getDaysForMonth();
+    const currentMonth = months[Math.floor(months.length / 2)];
+
+    const zeroPaddedMonth = currentMonth.month.toString().padStart(2, '0');
+    const currentDay: DayPickerElementData = daysOfMonth.get(currentMonth.year + zeroPaddedMonth)![
+        new Date().getDate() - 1
+    ];
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setDate(new Date());
+        }, [])
+    );
+
+    return { months, daysOfMonth, currentMonth, currentDay };
+};
+
 export const PlanningWidgetImproved = () => {
+    const currentDayData = useCurrentDayData();
+
     const dispatch = useAppDispatch();
     const monthScrollRef = React.useRef<FlatList>(null);
     const dayScrollRef = React.useRef<FlatList>(null);
 
-    const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(currentMonth);
-    const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>(currentDay);
+    const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(
+        currentDayData.currentMonth
+    );
+    const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>(
+        currentDayData.currentDay
+    );
 
     React.useEffect(() => {
         const newDayKey = generateDayKey(selectedDay, selectedMonth);
@@ -58,19 +79,23 @@ export const PlanningWidgetImproved = () => {
     };
 
     const scrollToToday = () => {
-        setSelectedMonth(currentMonth);
-        setSelectedDay(currentDay);
+        setSelectedMonth(currentDayData.currentMonth);
+        setSelectedDay(currentDayData.currentDay);
 
-        dispatch(setSelectedDayKey(generateDayKey(currentDay, currentMonth)));
+        dispatch(
+            setSelectedDayKey(
+                generateDayKey(currentDayData.currentDay, currentDayData.currentMonth)
+            )
+        );
 
         dayScrollRef.current?.scrollToIndex({
-            index: currentDay.index,
+            index: currentDayData.currentDay.index,
             animated: true,
             viewPosition: 0.5, // Centers the selected item
         });
 
         monthScrollRef.current?.scrollToIndex({
-            index: currentMonth.index,
+            index: currentDayData.currentMonth.index,
             animated: true,
             viewPosition: 0.5, // Centers the selected item
         });
@@ -80,7 +105,7 @@ export const PlanningWidgetImproved = () => {
         <WidgetBase>
             <MonthPickerImproved
                 ref={monthScrollRef}
-                allMonths={months}
+                allMonths={currentDayData.months}
                 selectedMonth={selectedMonth}
                 onSelectionChange={onMonthSelected}
                 onScrollToToday={scrollToToday}
@@ -92,7 +117,7 @@ export const PlanningWidgetImproved = () => {
                 selectedDay={selectedDay}
                 selectedMonth={selectedMonth}
                 onSelectionChange={onDaySelected}
-                daysOfTheMonth={daysOfMonth}
+                daysOfTheMonth={currentDayData.daysOfMonth}
             />
 
             <View style={{ height: PADDING_LARGE }} />

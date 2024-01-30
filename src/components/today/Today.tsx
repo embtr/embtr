@@ -21,14 +21,9 @@ import { TodaysTasksWidgetImproved } from '../widgets/planning/TodaysTasksWidget
 import { ScrollView } from 'react-native-gesture-handler';
 
 export const Today = () => {
-    const [refreshedTimestamp, setRefreshedTimestamp] = React.useState<Date>();
     const [planningWidgetHeight, setPlanningWidgetHeight] = React.useState<number>(0);
 
     const user = useAppSelector(getCurrentUser);
-
-    React.useEffect(() => {
-        setRefreshedTimestamp(new Date());
-    }, []);
 
     if (!user) {
         return (

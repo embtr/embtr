@@ -50,10 +50,6 @@ const QuoteOfTheDayImplementation = ({ quoteOfTheDay }: ImplementationProps) => 
 
     const animation = React.useRef<LottieView>(null);
     const onHeartPressed = () => {
-        if (interactableData.isLiked) {
-            return;
-        }
-
         animation.current?.play();
         setIsAnimating(true);
         wait(1000).then(() => {
@@ -135,7 +131,7 @@ const QuoteOfTheDayImplementation = ({ quoteOfTheDay }: ImplementationProps) => 
                             zIndex: -1,
                             width: 200,
                             height: 200,
-                            left: -146,
+                            left: -150,
                             top: -21,
                             transform: [{ scaleX: -1 }],
                         }}

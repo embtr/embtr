@@ -65,7 +65,7 @@ class StoryController {
         };
 
         return await axiosInstance
-            .post(`${USER_POST}v1`, request)
+            .post(`${USER_POST}`, request)
             .then((success) => {
                 const response: CreateUserPostResponse = success.data;
                 return response.userPost;
@@ -86,7 +86,7 @@ class StoryController {
         };
 
         return await axiosInstance
-            .patch(`${USER_POST}v1`, request)
+            .patch(`${USER_POST}`, request)
             .then((success) => {
                 const response: CreateUserPostResponse = success.data;
                 return response.userPost;

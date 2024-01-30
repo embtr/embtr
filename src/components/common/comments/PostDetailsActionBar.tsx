@@ -48,7 +48,7 @@ const PostDetailsActionBar = ({ interactableData, padding }: Props) => {
                             zIndex: -1,
                             width: 200,
                             height: 200,
-                            left: -144,
+                            left: -148,
                             top: -27,
                             transform: [{ scaleX: -1 }],
                         }}
@@ -84,7 +84,7 @@ const PostDetailsActionBar = ({ interactableData, padding }: Props) => {
                             style={{
                                 color: colors.timeline_card_footer,
                                 fontSize: TIMELINE_CARD_ICON_COUNT_SIZE,
-                                fontFamily: 'Poppins_500Medium',
+                                fontFamily: POPPINS_REGULAR,
                             }}
                         >
                             {interactableData.likeCount}

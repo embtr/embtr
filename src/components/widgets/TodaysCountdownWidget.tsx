@@ -4,11 +4,14 @@ import { Countdown } from '../common/time/Countdown';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
+import { NotificationController } from 'src/controller/notification/NotificationController';
 
 export const TodaysCountdownWidget = () => {
     const { colors } = useTheme();
+    const [date, setDate] = React.useState(new Date());
 
-    const date = new Date();
     const day = getLocalDayOfWeek(date);
     const dayCapitalized = day.charAt(0).toUpperCase() + day.slice(1);
 
@@ -16,6 +19,13 @@ export const TodaysCountdownWidget = () => {
         month: 'long',
         day: 'numeric',
     });
+
+    useFocusEffect(
+        React.useCallback(() => {
+            setDate(new Date());
+        }, [])
+    );
+
     return (
         <WidgetBase>
             <View>

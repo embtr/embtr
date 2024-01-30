@@ -5,11 +5,9 @@ export interface MonthPickerElementData {
     index: number;
 }
 
-export const getMonthData = (): MonthPickerElementData[] => {
-    const now = new Date();
-
+export const getMonthData = (date: Date): MonthPickerElementData[] => {
     const sixMonthsAgo = new Date();
-    sixMonthsAgo.setMonth(now.getMonth() - 6);
+    sixMonthsAgo.setMonth(date.getMonth() - 6);
 
     const months: MonthPickerElementData[] = [];
     for (let i = 0; i < 13; i++) {
@@ -146,6 +144,54 @@ export const getDaysForMonth = () => {
         '202411',
         generateDaysOfMonth({ year: 2024, month: 11, monthString: 'December', index: 11 })
     );
+    daysOfMonthMap.set(
+        '202500',
+        generateDaysOfMonth({ year: 2025, month: 0, monthString: 'January', index: 0 })
+    );
+    daysOfMonthMap.set(
+        '202501',
+        generateDaysOfMonth({ year: 2025, month: 1, monthString: 'February', index: 1 })
+    );
+    daysOfMonthMap.set(
+        '202502',
+        generateDaysOfMonth({ year: 2025, month: 2, monthString: 'March', index: 2 })
+    );
+    daysOfMonthMap.set(
+        '202503',
+        generateDaysOfMonth({ year: 2025, month: 3, monthString: 'April', index: 3 })
+    );
+    daysOfMonthMap.set(
+        '202504',
+        generateDaysOfMonth({ year: 2025, month: 4, monthString: 'May', index: 4 })
+    );
+    daysOfMonthMap.set(
+        '202505',
+        generateDaysOfMonth({ year: 2025, month: 5, monthString: 'June', index: 5 })
+    );
+    daysOfMonthMap.set(
+        '202506',
+        generateDaysOfMonth({ year: 2025, month: 6, monthString: 'July', index: 6 })
+    );
+    daysOfMonthMap.set(
+        '202507',
+        generateDaysOfMonth({ year: 2025, month: 7, monthString: 'August', index: 7 })
+    );
+    daysOfMonthMap.set(
+        '202508',
+        generateDaysOfMonth({ year: 2025, month: 8, monthString: 'September', index: 8 })
+    );
+    daysOfMonthMap.set(
+        '202509',
+        generateDaysOfMonth({ year: 2025, month: 9, monthString: 'October', index: 9 })
+    );
+    daysOfMonthMap.set(
+        '202510',
+        generateDaysOfMonth({ year: 2025, month: 10, monthString: 'November', index: 10 })
+    );
+    daysOfMonthMap.set(
+        '202511',
+        generateDaysOfMonth({ year: 2025, month: 11, monthString: 'December', index: 11 })
+    );
 
     return daysOfMonthMap;
 };
@@ -154,6 +200,7 @@ interface DayData {
     dayShort: string;
     dayFull: string;
 }
+
 const DAYS: DayData[] = [
     { dayShort: 'Sun', dayFull: 'Sunday' },
     { dayShort: 'Mon', dayFull: 'Monday' },
