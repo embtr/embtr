@@ -12,7 +12,7 @@ import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 export class NotificationController {
     public static async getUnreadNotificationCount(): Promise<number> {
         return await axiosInstance
-            .get(`${NOTIFICATION}v1/count`)
+            .get(`${NOTIFICATION}count`)
             .then((success) => {
                 const response = success.data as GetUnreadNotificationCountResponse;
                 return response.count ?? 0;
@@ -24,7 +24,7 @@ export class NotificationController {
 
     public static async getNotificationsViaApi(): Promise<Notification[]> {
         return await axiosInstance
-            .get(`${NOTIFICATION}v1/`)
+            .get(`${NOTIFICATION}`)
             .then((success) => {
                 const response = success.data as GetNotificationsResponse;
                 return response.notifications ?? [];
@@ -36,7 +36,7 @@ export class NotificationController {
 
     public static async clearAll() {
         return await axiosInstance
-            .post(`${NOTIFICATION}v1/clear`)
+            .post(`${NOTIFICATION}clear`)
             .then((success) => {
                 //todo do something here
             })

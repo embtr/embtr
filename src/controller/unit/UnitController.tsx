@@ -7,7 +7,7 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 export class UnitController {
     public static async getAll() {
         return axiosInstance
-            .get<GetUnitsResponse>(`/unit/v1/`)
+            .get<GetUnitsResponse>(`/unit/`)
             .then((success) => {
                 return success.data.units ?? [];
             })

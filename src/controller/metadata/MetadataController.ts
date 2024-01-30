@@ -4,17 +4,17 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 import { GetAllMetadataResponse } from 'resources/types/requests/MetadataTypes';
 
 export enum MetadataKey {
-    LATEST_APP_VERSION = 'LATEST_APP_VERSION',
-    MINIMUM_APP_VERSION = 'MINIMUM_APP_VERSION',
-    RECOMMENDED_TASKS = 'RECOMMENDED_TASKS',
-    TIMELINE_DAYS = 'TIMELINE_DAYS',
+    LATEST_IOS_VERSION = 'LATEST_IOS_VERSION',
+    LATEST_ANDROID_VERSION = 'LATEST_ANDROID_VERSION',
+    MINIMUM_IOS_VERSION = 'MINIMUM_IOS_VERSION',
+    MINIMUM_ANDROID_VERSION = 'MINIMUM_ANDROID_VERSION',
     TERMS_VERSION = 'TERMS_VERSION',
 }
 
 export class MetadataController {
     public static async getMetadata(key: MetadataKey) {
         try {
-            const success = await axiosInstance.get<GetAllMetadataResponse>('/metadata/v1/');
+            const success = await axiosInstance.get<GetAllMetadataResponse>('/metadata/');
             const response: GetAllMetadataResponse = success.data;
             return response.metadata.find((metadata) => metadata.key === key)?.value;
         } catch (error) {
@@ -38,11 +38,19 @@ export namespace MetadataCustomHooks {
         return MetadataCustomHooks.useMetadata(MetadataKey.TERMS_VERSION);
     };
 
-    export const useLatestAppVersion = () => {
-        return MetadataCustomHooks.useMetadata(MetadataKey.LATEST_APP_VERSION);
+    export const useLatestIosVersion = () => {
+        return MetadataCustomHooks.useMetadata(MetadataKey.LATEST_IOS_VERSION);
     };
 
-    export const useMinimumAppVersion = () => {
-        return MetadataCustomHooks.useMetadata(MetadataKey.MINIMUM_APP_VERSION);
+    export const useLatestAndroidVersion = () => {
+        return MetadataCustomHooks.useMetadata(MetadataKey.LATEST_ANDROID_VERSION);
+    };
+
+    export const useMinimumIosVersion = () => {
+        return MetadataCustomHooks.useMetadata(MetadataKey.MINIMUM_IOS_VERSION);
+    };
+
+    export const useMinimumAndroidVersion = () => {
+        return MetadataCustomHooks.useMetadata(MetadataKey.MINIMUM_ANDROID_VERSION);
     };
 }

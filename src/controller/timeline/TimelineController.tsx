@@ -15,7 +15,7 @@ const PAGE_SIZE = 10;
 export class TimelineController {
     public static async fetch(cursor: TimelineRequestCursor): Promise<TimelineData | undefined> {
         return await axiosInstance
-            .get(`/timeline/v1/`, {
+            .get(`/timeline/`, {
                 params: {
                     cursor: cursor.cursor,
                     limit: cursor.limit,
@@ -35,7 +35,7 @@ export class TimelineController {
         cursor: TimelineRequestCursor
     ): Promise<TimelineData | undefined> {
         return await axiosInstance
-            .get(`/user/v1/${userId}/timeline-posts/`, {
+            .get(`/user/${userId}/timeline-posts/`, {
                 params: {
                     cursor: cursor.cursor,
                     limit: cursor.limit,
@@ -55,7 +55,7 @@ export class TimelineController {
         cursor: TimelineRequestCursor
     ): Promise<TimelineData | undefined> {
         return await axiosInstance
-            .get(`/user/v1/${userId}/timeline-day-results/`, {
+            .get(`/user/${userId}/timeline-day-results/`, {
                 params: {
                     cursor: cursor.cursor,
                     limit: cursor.limit,

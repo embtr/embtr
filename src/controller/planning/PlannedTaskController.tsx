@@ -34,7 +34,7 @@ class PlannedTaskController {
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY}v1/${dayKey}/planned-task/`, request)
+            .post(`${PLANNED_DAY}${dayKey}/planned-task/`, request)
             .then((success) => {
                 return success.data;
             })
@@ -53,7 +53,7 @@ class PlannedTaskController {
         };
 
         try {
-            const response = await axiosInstance.put(`${PLANNED_DAY}v1/planned-task/`, request);
+            const response = await axiosInstance.put(`${PLANNED_DAY}planned-task/`, request);
             const updatedPlannedTask: UpdatePlannedTaskResponse = response.data;
             return updatedPlannedTask;
         } catch (error) {

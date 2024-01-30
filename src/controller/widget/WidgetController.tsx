@@ -25,7 +25,7 @@ export class WidgetController {
         };
 
         return await axiosInstance
-            .post(`/widget/v1/`, request)
+            .post(`/widget/`, request)
             .then((success) => {
                 return success.data;
             })

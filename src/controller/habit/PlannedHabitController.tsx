@@ -7,7 +7,7 @@ import { GetPlannedHabitResponse } from 'resources/types/requests/PlannedTaskTyp
 export class PlannedHabitController {
     public static async get(id: number): Promise<PlannedTask | undefined> {
         return await axiosInstance
-            .get<GetPlannedHabitResponse>(`/planned-habit/v1/${id}`)
+            .get<GetPlannedHabitResponse>(`/planned-habit/${id}`)
             .then((success) => {
                 return success.data.plannedHabit;
             })

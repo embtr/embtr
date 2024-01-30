@@ -11,7 +11,7 @@ import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 export class QuoteOfTheDayController {
     public static async get(): Promise<QuoteOfTheDay> {
         return await axiosInstance
-            .get(`/quote-of-the-day/v1/`)
+            .get(`/quote-of-the-day/`)
             .then((success) => {
                 const response: GetQuoteOfTheDayResponse = success.data;
                 return response.quoteOfTheDay;
@@ -24,7 +24,7 @@ export class QuoteOfTheDayController {
     public static async create(quote: string, author: string) {
         const request: CreateQuoteOfTheDayRequest = { quote: quote, author: author };
         return await axiosInstance
-            .post(`/quote-of-the-day/v1/`, request)
+            .post(`/quote-of-the-day/`, request)
             .then((success) => {
                 return success.data.quoteOfTheDay;
             })

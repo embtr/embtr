@@ -17,8 +17,12 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { useDispatch } from 'react-redux';
-import { setGlobalLoading } from 'src/redux/user/GlobalState';
-import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
+import { getCurrentUser, getSelectedDayKey, setGlobalLoading } from 'src/redux/user/GlobalState';
+import { useEmbtrNavigation, useEmbtrRoute } from 'src/hooks/NavigationHooks';
+import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { PlannedDayService } from 'src/service/PlannedDayService';
+import getTodayDayKey = PlannedDayService.getTodayDayKey;
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -39,6 +43,7 @@ export const runCreateEditScheduledHabitAnimation = (
 
 export const CreateEditScheduledHabit = () => {
     const { colors } = useTheme();
+    const navigation = useEmbtrNavigation();
     const route = useEmbtrRoute(Routes.CREATE_EDIT_SCHEDULED_HABIT);
 
     const habitId = route.params.habitId; // creating a new habit from a template
@@ -49,6 +54,8 @@ export const CreateEditScheduledHabit = () => {
     const isCreatedNewScheduledHabit = !!habitId;
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
+    const currentUser = useAppSelector(getCurrentUser);
+    const selectedDayKey = useAppSelector(getSelectedDayKey);
 
     const dispatch = useDispatch();
 
@@ -71,7 +78,18 @@ export const CreateEditScheduledHabit = () => {
 
                             dispatch(setGlobalLoading(true));
                             await ScheduledHabitController.archive(scheduledHabitId);
+
+                            await PlannedDayController.invalidatePlannedDay(
+                                currentUser.id ?? 0,
+                                getTodayDayKey()
+                            );
+                            await PlannedDayController.invalidatePlannedDay(
+                                currentUser.id ?? 0,
+                                selectedDayKey
+                            );
+
                             dispatch(setGlobalLoading(false));
+                            navigation.goBack();
                         }}
                         onDismiss={() => {
                             setArchiveModalVisible(!archiveModalVisible);

@@ -29,7 +29,7 @@ export interface StoryModel extends TimelinePostModel {
 class StoryController {
     public static async getPosts(userId: number): Promise<UserPost[]> {
         return await axiosInstance
-            .get(`/user/v1/${userId}/posts`)
+            .get(`/user/${userId}/posts`)
             .then((success) => {
                 const response = success.data as GetAllUserPostResponse;
                 return response.userPosts ?? [];
@@ -41,7 +41,7 @@ class StoryController {
 
     public static async getViaApi(id: number) {
         return await axiosInstance
-            .get(`${USER_POST}v1/${id}`)
+            .get(`${USER_POST}${id}`)
             .then((success) => {
                 const response = success.data as GetUserPostResponse;
                 return response.userPost;

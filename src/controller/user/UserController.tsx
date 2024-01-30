@@ -46,7 +46,7 @@ class UserController {
         };
 
         return await axiosInstance
-            .post(`/${ACCOUNT_ENDPOINT}/v1/create/`, body)
+            .post(`/${ACCOUNT_ENDPOINT}/create/`, body)
             .then((success) => {
                 return success.data;
             })
@@ -61,7 +61,7 @@ class UserController {
         };
 
         return await axiosInstance
-            .post(`/${ACCOUNT_ENDPOINT}/v1/forgot_password/`, body)
+            .post(`/${ACCOUNT_ENDPOINT}/forgot_password/`, body)
             .then((success) => {
                 return success.data;
             })
@@ -76,7 +76,7 @@ class UserController {
         };
 
         return await axiosInstance
-            .post(`/${ACCOUNT_ENDPOINT}/v1/send_verification_email`, body)
+            .post(`/${ACCOUNT_ENDPOINT}/send_verification_email`, body)
             .then((success) => {
                 return success.data;
             })
@@ -87,7 +87,7 @@ class UserController {
 
     public static async currentUserExists(): Promise<boolean> {
         try {
-            const response = await axiosInstance.get(`/user/v1/currentUserExists`);
+            const response = await axiosInstance.get(`/user/currentUserExists`);
             const data: GetBooleanResponse = response.data;
             return data.result === true;
         } catch (error) {
@@ -97,7 +97,7 @@ class UserController {
 
     public static async getCurrentUser(): Promise<User | undefined> {
         try {
-            const success = await axiosInstance.get<GetUserResponse>(`/${USER_ENDPOINT}/v1/`);
+            const success = await axiosInstance.get<GetUserResponse>(`/${USER_ENDPOINT}/`);
             const response: GetUserResponse = success.data;
             return response.user;
         } catch (error) {
@@ -107,7 +107,7 @@ class UserController {
 
     public static async getUserByUidViaApi(uid: string): Promise<GetUserResponse> {
         try {
-            const success = await axiosInstance.get(`/${USER_ENDPOINT}/v1/${uid}`);
+            const success = await axiosInstance.get(`/${USER_ENDPOINT}/${uid}`);
             return success.data;
         } catch (error) {
             return error.response.data;
@@ -116,7 +116,7 @@ class UserController {
 
     public static async createUser(): Promise<User | undefined> {
         try {
-            const success = await axiosInstance.post(`/${USER_ENDPOINT}/v1/`);
+            const success = await axiosInstance.post(`/${USER_ENDPOINT}/`);
             const response: CreateUserResponse = success.data;
             return response.user;
         } catch (error) {
@@ -126,7 +126,7 @@ class UserController {
 
     public static async deleteUser() {
         await axiosInstance
-            .post(`/${ACCOUNT_ENDPOINT}/v1/delete`)
+            .post(`/${ACCOUNT_ENDPOINT}/delete`)
             .then((success) => {
                 return success.data;
             })
@@ -141,7 +141,7 @@ class UserController {
         };
 
         return await axiosInstance
-            .patch(`${USER}v1/setup`, request)
+            .patch(`${USER}setup`, request)
             .then((success) => {
                 const data: UpdateUserResponse = success.data;
                 return data;
@@ -155,7 +155,7 @@ class UserController {
     public static async update(user: User): Promise<User | undefined> {
         const request: UpdateUserRequest = { user };
         try {
-            const response = await axiosInstance.patch(`${USER}v1/`, request);
+            const response = await axiosInstance.patch(`${USER}`, request);
             const updateUserResponse: UpdateUserResponse = response.data;
             return updateUserResponse.user;
         } catch (error) {
@@ -165,7 +165,7 @@ class UserController {
 
     public static async search(query: string) {
         return await axiosInstance
-            .get(`/${USER_ENDPOINT}/v1/search`, { params: { query } })
+            .get(`/${USER_ENDPOINT}/search`, { params: { query } })
             .then((success) => {
                 const usersResponse: GetUsersResponse = success.data;
                 return usersResponse.users;
@@ -177,7 +177,7 @@ class UserController {
 
     public static async refreshToken() {
         return await axiosInstance
-            .post(`/${ACCOUNT_ENDPOINT}/v1/refresh_token`)
+            .post(`/${ACCOUNT_ENDPOINT}/refresh_token`)
             .then((success) => {
                 return success.data;
             })
@@ -202,7 +202,7 @@ class UserController {
 
     public static async usernameExists(username: string): Promise<boolean> {
         return await axiosInstance
-            .get<GetBooleanResponse>(`/user/v1/exists`, { params: { username } })
+            .get<GetBooleanResponse>(`/user/exists`, { params: { username } })
             .then((success) => {
                 return success.data.result === true;
             })

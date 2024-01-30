@@ -16,7 +16,7 @@ import { getTodayPureDate } from 'src/util/DateUtility';
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
         return await axiosInstance
-            .get(`/user/v1/${userId}/habit-journey`)
+            .get(`/user/${userId}/habit-journey`)
             .then((success) => {
                 const body: GetHabitJourneyResponse = success.data;
                 return body.habitJourneys;
@@ -28,7 +28,7 @@ export class HabitController {
 
     public static async getAllGenericHabitCategories(): Promise<HabitCategory[] | undefined> {
         return await axiosInstance
-            .get<GetHabitCategoriesResponse>('/habit/v1/categories/generic')
+            .get<GetHabitCategoriesResponse>('/habit/categories/generic')
             .then((success) => {
                 if (success.data.habitCategories) {
                     return success.data.habitCategories;
@@ -44,7 +44,7 @@ export class HabitController {
 
     public static async getCustomHabitsCategory(): Promise<HabitCategory | undefined> {
         return await axiosInstance
-            .get<GetHabitCategoriesResponse>('/habit/v1/categories/custom')
+            .get<GetHabitCategoriesResponse>('/habit/categories/custom')
             .then((success) => {
                 const response: GetHabitCategoryResponse = success.data;
                 if (response.habitCategory) {
@@ -61,7 +61,7 @@ export class HabitController {
 
     public static async getRecentHabitsCategory(): Promise<HabitCategory | undefined> {
         return await axiosInstance
-            .get<GetHabitCategoriesResponse>('/habit/v1/categories/recent')
+            .get<GetHabitCategoriesResponse>('/habit/categories/recent')
             .then((success) => {
                 const response: GetHabitCategoryResponse = success.data;
                 if (response.habitCategory) {
@@ -80,7 +80,7 @@ export class HabitController {
         const today = getTodayPureDate();
 
         return await axiosInstance
-            .get<GetHabitCategoriesResponse>('/habit/v1/categories/active', {
+            .get<GetHabitCategoriesResponse>('/habit/categories/active', {
                 params: {
                     date: today,
                 },
@@ -128,7 +128,7 @@ export class HabitController {
 
     public static async getHabit(id: number): Promise<Task | undefined> {
         return await axiosInstance
-            .get(`/habit/v1/${id}`)
+            .get(`/habit/${id}`)
             .then((success) => {
                 const result: GetTaskResponse = success.data;
                 return result.task;

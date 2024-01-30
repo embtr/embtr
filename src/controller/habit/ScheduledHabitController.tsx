@@ -3,11 +3,13 @@ import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import {
+    ArchiveScheduledHabitRequest,
     CreateScheduledHabitRequest,
     GetScheduledHabitResponse,
     GetScheduledHabitsResponse,
 } from 'resources/types/requests/ScheduledHabitTypes';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { PureDate } from 'resources/types/date/PureDate';
 
 export class ScheduledHabitController {
     public static async create(scheduledHabit: ScheduledHabit) {
@@ -16,7 +18,7 @@ export class ScheduledHabitController {
         };
 
         return await axiosInstance
-            .post('/habit/v1/schedule', createScheduledHabitRequest)
+            .post('/habit/schedule', createScheduledHabitRequest)
             .then((success) => {
                 return true;
             })
@@ -30,8 +32,13 @@ export class ScheduledHabitController {
     }
 
     public static async archive(id: number) {
+        const date: PureDate = PureDate.fromDateOnClient(new Date());
+        const request: ArchiveScheduledHabitRequest = {
+            date,
+        };
+
         return await axiosInstance
-            .post(`/habit/v1/schedule/${id}/archive`)
+            .post(`/habit/schedule/${id}/archive`, request)
             .then((success) => {
                 return true;
             })
@@ -43,7 +50,7 @@ export class ScheduledHabitController {
     public static async getScheduledHabit(id: number) {
         try {
             const success = await axiosInstance.get<GetScheduledHabitResponse>(
-                `/habit/v1/schedule/${id}`
+                `/habit/schedule/${id}`
             );
             return success.data.scheduledHabit;
         } catch (error) {
@@ -56,7 +63,7 @@ export class ScheduledHabitController {
     ): Promise<ScheduledHabit[] | undefined> {
         try {
             const success = await axiosInstance.get<GetScheduledHabitResponse>(
-                `/habit/v1/${habitId}/schedules`
+                `/habit/${habitId}/schedules`
             );
             const data: GetScheduledHabitsResponse = success.data;
             return data.scheduledHabits;

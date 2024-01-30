@@ -103,7 +103,7 @@ export const FAKE_HABIT: TaskModel = {
 class TaskController {
     public static async createViaApi(createTaskRequest: CreateTaskRequest): Promise<NewTaskModel> {
         return await axiosInstance
-            .post('/habit/v1/', createTaskRequest)
+            .post('/habit/', createTaskRequest)
             .then((success) => {
                 const response: CreateTaskResponse = success.data;
                 return response.task;
@@ -116,7 +116,7 @@ class TaskController {
     public static async search(query: string): Promise<NewTaskModel[]> {
         const startTime = Date.now();
         return await axiosInstance
-            .get(`/habit/v1/`, { params: { q: query } })
+            .get(`/habit/`, { params: { q: query } })
             .then((success) => {
                 const endTime = Date.now();
                 const responseTime = endTime - startTime;
@@ -131,7 +131,7 @@ class TaskController {
 
     public static async getRecent(): Promise<NewTaskModel[]> {
         return await axiosInstance
-            .get('/habit/v1/recent')
+            .get('/habit/recent')
             .then((success) => {
                 return success.data.tasks;
             })
@@ -147,7 +147,7 @@ class TaskController {
         };
 
         return await axiosInstance
-            .put(`/task/v1/${task.id}/preference`, request)
+            .put(`/task/${task.id}/preference`, request)
             .then((success) => {
                 return success.data;
             })

@@ -25,7 +25,7 @@ class DailyResultController {
     public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {
         try {
             const results = await axiosInstance.get<GetPlannedDayResultSummariesResponse>(
-                `/user/v1/${userId}/day-results`
+                `/user/${userId}/day-results`
             );
             const response: GetPlannedDayResultSummariesResponse = results.data;
             return response.plannedDayResultSummaries ?? [];
@@ -40,7 +40,7 @@ class DailyResultController {
 
     public static async get(id: number): Promise<PlannedDayResult | undefined> {
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}v1/${id}`)
+            .get(`${PLANNED_DAY_RESULT}${id}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultResponse;
                 return response.plannedDayResult!;
@@ -60,7 +60,7 @@ class DailyResultController {
         const userId = await getUserIdFromToken();
 
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}v1/${userId}/${plannedDay.dayKey}`)
+            .get(`${PLANNED_DAY_RESULT}${userId}/${plannedDay.dayKey}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultResponse;
                 return response.plannedDayResult;
@@ -76,7 +76,7 @@ class DailyResultController {
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY_RESULT}v1/`, body)
+            .post(`${PLANNED_DAY_RESULT}`, body)
             .then((success) => {
                 const results = success.data as CreatePlannedDayResultResponse;
                 return results.plannedDayResult;
@@ -108,7 +108,7 @@ class DailyResultController {
         };
 
         return await axiosInstance
-            .patch(`${PLANNED_DAY_RESULT}v1/`, body)
+            .patch(`${PLANNED_DAY_RESULT}`, body)
             .then((success) => {
                 const results = success.data as UpdatePlannedDayResultResponse;
                 return results.plannedDayResult;

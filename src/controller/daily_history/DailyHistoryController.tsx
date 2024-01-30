@@ -10,7 +10,7 @@ export class DailyHistoryController {
         start.setDate(start.getDate() - 29);
 
         return axiosInstance
-            .get(`/user/v1/${userId}/daily-history/`, { params: { start, end } })
+            .get(`/user/${userId}/daily-history/`, { params: { start, end } })
             .then((success) => {
                 const response: GetDailyHistoryResponse = success.data;
                 return response.dailyHistory;

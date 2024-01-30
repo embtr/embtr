@@ -4,10 +4,13 @@ import { Code } from 'resources/codes';
 import { hydrateDates } from 'src/util/DateUtility';
 import { getApiUrl } from 'src/util/UrlUtility';
 import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
+import Constants from 'expo-constants';
 
 const axiosInstance = axios.create({
     baseURL: getApiUrl(),
 });
+
+const currentVersion = Constants.expoConfig?.version;
 
 axiosInstance.interceptors.request.use(
     async (config) => {
@@ -15,6 +18,8 @@ axiosInstance.interceptors.request.use(
         if (authToken) {
             config.headers['Authorization'] = `Bearer ${authToken}`;
         }
+
+        config.headers['client-version'] = currentVersion;
 
         return config;
     },

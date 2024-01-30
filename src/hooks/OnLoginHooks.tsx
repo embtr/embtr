@@ -8,6 +8,7 @@ import { UpdateUtility } from 'src/util/updates/UpdateUtility';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getAcknowledgedVersion } from 'src/redux/user/GlobalState';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
+import { isIosApp } from 'src/util/DeviceUtil';
 
 const handleLoginModals = () => {
     const navigation = useEmbtrNavigation();
@@ -15,8 +16,13 @@ const handleLoginModals = () => {
     const currentUser = UserCustomHooks.useCurrentUser();
     const termsVersion = MetadataCustomHooks.useLatestTermsVersion();
 
-    const minimumAppVersion = MetadataCustomHooks.useMinimumAppVersion();
-    const latestAppVersion = MetadataCustomHooks.useLatestAppVersion();
+    const minimumIosVersion = MetadataCustomHooks.useMinimumIosVersion();
+    const minimumAndroidVersion = MetadataCustomHooks.useMinimumAndroidVersion();
+    const latestIosVersion = MetadataCustomHooks.useLatestIosVersion();
+    const latestAndroidVersion = MetadataCustomHooks.useLatestAndroidVersion();
+    const minimumAppVersion = isIosApp() ? minimumIosVersion : minimumAndroidVersion;
+    const latestAppVersion = isIosApp() ? latestIosVersion : latestAndroidVersion;
+
     const currentVersion = Constants.expoConfig?.version;
     const acknowledgeVersion = useAppSelector(getAcknowledgedVersion);
 

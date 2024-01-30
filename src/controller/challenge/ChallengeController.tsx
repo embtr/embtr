@@ -16,7 +16,7 @@ export class ChallengeController {
         const lowerBoundDate = new Date(lowerBound).toISOString();
 
         return axiosInstance
-            .get(`/challenge/v1/recently-joined/`, {
+            .get(`/challenge/recently-joined/`, {
                 params: {
                     upperBound: upperBoundDate,
                     lowerBound: lowerBoundDate,
@@ -34,7 +34,7 @@ export class ChallengeController {
 
     public static async get(id: number) {
         return axiosInstance
-            .get(`/challenge/v1/${id}`)
+            .get(`/challenge/${id}`)
             .then((success) => {
                 const body: GetChallengeResponse = success.data;
                 return body.challenge;
@@ -46,7 +46,7 @@ export class ChallengeController {
 
     public static async getAll() {
         return axiosInstance
-            .get(`/challenge/v1/`)
+            .get(`/challenge/`)
             .then((success) => {
                 const body: GetChallengesResponse = success.data;
                 return body.challenges ?? [];
@@ -58,7 +58,7 @@ export class ChallengeController {
 
     public static async getAllActiveForUser(userId: number) {
         return axiosInstance
-            .get(`/user/v1/${userId}/active-challenge-participation/`)
+            .get(`/user/${userId}/active-challenge-participation/`)
             .then((success) => {
                 const body: GetChallengeParticipationResponse = success.data;
                 return body.challengeParticipation ?? [];
@@ -70,7 +70,7 @@ export class ChallengeController {
 
     public static async getAllForUser(userId: number) {
         return axiosInstance
-            .get(`/user/v1/${userId}/challenge-participation/`)
+            .get(`/user/${userId}/challenge-participation/`)
             .then((success) => {
                 const body: GetChallengeParticipationResponse = success.data;
                 return body.challengeParticipation ?? [];
@@ -82,7 +82,7 @@ export class ChallengeController {
 
     public static async getAllCompletedForUser(userId: number) {
         return axiosInstance
-            .get(`/user/v1/${userId}/completed-challenges/`)
+            .get(`/user/${userId}/completed-challenges/`)
             .then((success) => {
                 const body: GetChallengeParticipationResponse = success.data;
                 return body.challengeParticipation ?? [];
@@ -94,7 +94,7 @@ export class ChallengeController {
 
     public static async register(challengeId: number) {
         return axiosInstance
-            .post(`/challenge/v1/${challengeId}/register`)
+            .post(`/challenge/${challengeId}/register`)
             .then((success) => {
                 return true;
             })
@@ -105,7 +105,7 @@ export class ChallengeController {
 
     public static async like(challengeId: number) {
         return axiosInstance
-            .post(`/challenge/v1/${challengeId}/like`)
+            .post(`/challenge/${challengeId}/like`)
             .then((success) => {
                 return true;
             })

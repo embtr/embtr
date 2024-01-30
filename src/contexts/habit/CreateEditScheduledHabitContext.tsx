@@ -154,6 +154,7 @@ export const CreateEditScheduledHabitProvider = ({
             setQuantity(1);
             setCompletedQuantity(0);
             setUnit(undefined);
+            setStartDate(new Date());
         } else if (isCreateCustomHabit) {
             setRemoteImageUrl(
                 'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habits%2Fcustom_habits_placeholder.svg?alt=media'

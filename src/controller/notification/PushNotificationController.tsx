@@ -68,7 +68,7 @@ class PushNotificationController {
         };
 
         return await axiosInstance
-            .post(`/user/createPushNotificationToken/v1/`, request)
+            .post(`/user/createPushNotificationToken/`, request)
             .then((success) => {
                 return success.data;
             })
