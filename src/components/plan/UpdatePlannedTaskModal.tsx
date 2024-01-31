@@ -261,9 +261,9 @@ export const UpdatePlannedTaskModal = () => {
                         }}
                     >
                         <Ionicons
-                            style={{ alignItems: 'flex-end', left: 5, bottom: 5 }}
+                            style={{ alignItems: 'flex-end', left: 5, bottom: 7.5 }}
                             name={'close'}
-                            size={20}
+                            size={25}
                             color={colors.secondary_text}
                         />
                     </Pressable>
@@ -676,21 +676,14 @@ export const UpdatePlannedTaskModal = () => {
     return (
         <Modal visible={!!plannedTask.title} transparent={true} animationType={'fade'}>
             {/* <View style={{height: "100%", width: 1, backgroundColor: "yellow", zIndex: 100, position: 'absolute', right: 50}}></View> */}
-            <Pressable
-                onPress={() => {
-                    onDismissWrapper();
-                }}
+            <View
                 style={{
                     height: '100%',
                     width: '100%',
                     backgroundColor: 'rgba(000,000,000,.6)',
                 }}
             >
-                <Pressable
-                    onPress={() => {
-                        setKeyboardFocused(false);
-                        Keyboard.dismiss();
-                    }}
+                <View
                     style={{
                         position: 'absolute',
                         zIndex: 1,
@@ -708,8 +701,8 @@ export const UpdatePlannedTaskModal = () => {
                     >
                         {body}
                     </View>
-                </Pressable>
-            </Pressable>
+                </View>
+            </View>
         </Modal>
     );
 };

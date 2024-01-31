@@ -34,6 +34,8 @@ export const Notification = ({ notification }: Props) => {
                 return 'DailyResultDetails';
             case NotificationTargetPage.USER_POST_DETAILS:
                 return 'UserPostDetails';
+            case NotificationTargetPage.TODAY:
+                return 'Today';
         }
     };
 

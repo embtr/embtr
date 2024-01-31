@@ -135,6 +135,7 @@ export const EditDailyResultDetails = () => {
         //clonedDailyResult.data.imageUrls = updatedImageUrls;
         //DailyResultController.update(clonedDailyResult);
         await DailyResultController.updateViaApi(clonedPlannedDayResult);
+        await DailyResultController.invalidate(clonedPlannedDayResult.id ?? 0);
         navigation.goBack();
     };
 

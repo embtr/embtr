@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     Keyboard,
-    KeyboardAvoidingView,
     ActivityIndicator,
     StyleSheet,
     TouchableOpacity,
@@ -16,7 +15,6 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useNavigation } from '@react-navigation/native';
 import { ProfileTabScreens } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { ScrollView } from 'react-native-gesture-handler';
 import ProfileBannerImage from 'src/components/profile/profile_component/ProfileBannerImage';
 import { Ionicons } from '@expo/vector-icons';
 import { BannerInfoModal } from 'src/components/profile/profile_component/BannerInfoModal';
@@ -27,7 +25,6 @@ import { POPPINS_REGULAR } from 'src/util/constants';
 import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
 import { Code } from 'resources/codes';
 import { User } from 'resources/schema';
-import { isIosApp } from 'src/util/DeviceUtil';
 import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
 
 const placeholderOptions: string[] = [
@@ -135,7 +132,12 @@ export const EditUserProfile = () => {
             return;
         }
 
-        const updateUserResponse = await UserController.setup(updatedUser);
+        const clone = { ...updatedUser };
+        if (!clone.displayName) {
+            clone.displayName = clone.username;
+        }
+
+        const updateUserResponse = await UserController.setup(clone);
         if (updateUserResponse === undefined) {
             setUsernameAvailabilityResult({
                 message: 'an error occurred',
@@ -341,7 +343,7 @@ export const EditUserProfile = () => {
                                 borderWidth: 1,
                                 width: '95%',
                             }}
-                            placeholder={'Display Name'}
+                            placeholder={updatedUser?.username}
                             placeholderTextColor={colors.secondary_text}
                             onChangeText={(displayName) =>
                                 setUpdatedUser({ ...updatedUser, displayName })

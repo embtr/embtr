@@ -45,6 +45,7 @@ export const EditUserPostDetails = () => {
         clonedUserPost.images = images;
 
         await StoryController.updateViaApi(clonedUserPost);
+        await StoryController.invalidate(clonedUserPost.id ?? 0);
 
         navigation.goBack();
     };
@@ -72,7 +73,14 @@ export const EditUserPostDetails = () => {
 
     return (
         <Screen>
-            <Banner name="Edit Post" leftText={'Cancel'} leftRoute="BACK" rightText={'Save'} rightOnClick={saveUserPost} />
+            <Banner
+                name="Edit Post"
+                leftText={'Cancel'}
+                leftRoute="BACK"
+                rightText={'Save'}
+                rightOnClick={saveUserPost}
+            />
+
             <CreateEditUserPostBase
                 title={title}
                 setTitle={setTitle}

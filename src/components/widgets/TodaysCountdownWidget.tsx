@@ -36,21 +36,6 @@ export const TodaysCountdownWidget = () => {
                 </Text>
 
                 <View style={{ paddingTop: 5, flexDirection: 'row' }}>
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            fontSize: 12,
-                            fontFamily: POPPINS_REGULAR,
-                            paddingTop: 2,
-                            textAlign: 'left',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex: 1,
-                        }}
-                    >
-                        no tasks for today
-                    </Text>
-
                     <Countdown />
                 </View>
             </View>
