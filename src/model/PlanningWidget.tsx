@@ -7,6 +7,7 @@ export interface MonthPickerElementData {
 
 export const getMonthData = (date: Date): MonthPickerElementData[] => {
     const sixMonthsAgo = new Date();
+    sixMonthsAgo.setDate(1);
     sixMonthsAgo.setMonth(date.getMonth() - 6);
 
     const months: MonthPickerElementData[] = [];

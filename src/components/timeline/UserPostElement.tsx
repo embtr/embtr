@@ -74,7 +74,6 @@ export const UserPostElement = ({ userPost, interactableData }: Props) => {
             {userPost.body && (
                 <View style={{ paddingTop: 12 }}>
                     <Text
-                        numberOfLines={3}
                         style={{
                             fontFamily: POPPINS_REGULAR,
                             fontSize: 13,
