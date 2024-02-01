@@ -5,11 +5,20 @@ export class UpdateUtility {
     public static updateIsAvailable(localVersion: string, databaseVersion: string) {
         const localVersionArray = localVersion.split('.');
         const databaseVersionArray = databaseVersion.split('.');
+
         for (let i = 0; i < localVersionArray.length; i++) {
-            if (parseInt(localVersionArray[i]) < parseInt(databaseVersionArray[i])) {
+            const localVersion = parseInt(localVersionArray[i]);
+            const databaseVersion = parseInt(databaseVersionArray[i]);
+
+            if (localVersion > databaseVersion) {
+                return false;
+            }
+
+            if (localVersion < databaseVersion) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -17,7 +26,7 @@ export class UpdateUtility {
         if (isAndroidDevice()) {
             Linking.openURL('https://play.google.com/store/apps/details?id=com.brentryczak.embtr');
         } else {
-            Linking.openURL('itms-beta://');
+            Linking.openURL('itms-apps://');
         }
     };
 }

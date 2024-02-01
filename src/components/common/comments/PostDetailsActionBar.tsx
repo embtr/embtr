@@ -114,30 +114,20 @@ const PostDetailsActionBar = ({ interactableData, padding }: Props) => {
 
                 <View style={{ flex: 1 }} />
                 <View style={{}}>
-                    <Pressable
-                        style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
-                        onPress={() => {
-                            alert("I don't work yet :(");
-                        }}
-                    >
-                        <Text
-                            style={{
-                                paddingRight: 12,
-                                color: colors.text,
-                                fontSize: 12,
-                                fontFamily: POPPINS_REGULAR,
-                            }}
-                        ></Text>
-                        <Ionicons
-                            name={'share-outline'}
-                            size={TIMELINE_CARD_ICON_SIZE}
-                            color={colors.secondary_text}
-                        />
-                    </Pressable>
+                    {/*<Pressable*/}
+                    {/*    style={{*/}
+                    {/*        flexDirection: 'row',*/}
+                    {/*        justifyContent: 'center',*/}
+                    {/*        alignItems: 'center',*/}
+                    {/*    }}*/}
+                    {/*    onPress={() => {}}*/}
+                    {/*>*/}
+                    {/*    <Ionicons*/}
+                    {/*        name={'share-outline'}*/}
+                    {/*        size={TIMELINE_CARD_ICON_SIZE}*/}
+                    {/*        color={colors.secondary_text}*/}
+                    {/*    />*/}
+                    {/*</Pressable>*/}
                 </View>
             </View>
         </View>

@@ -19,8 +19,13 @@ export const UpdateAvailableModal = () => {
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
     const dispatch = useAppDispatch();
 
-    const minimumAppVersion = MetadataCustomHooks.useMinimumAppVersion();
-    const latestAppVersion = MetadataCustomHooks.useLatestAppVersion();
+    const minimumIosVersion = MetadataCustomHooks.useMinimumIosVersion();
+    const minimumAndroidVersion = MetadataCustomHooks.useMinimumAndroidVersion();
+    const latestIosVersion = MetadataCustomHooks.useLatestIosVersion();
+    const latestAndroidVersion = MetadataCustomHooks.useLatestAndroidVersion();
+    const minimumAppVersion = isIosApp() ? minimumIosVersion : minimumAndroidVersion;
+    const latestAppVersion = isIosApp() ? latestIosVersion : latestAndroidVersion;
+
     const currentVersion = Constants.expoConfig?.version ?? '0.0.0';
 
     if (!minimumAppVersion.data || !latestAppVersion.data) {
@@ -49,6 +54,7 @@ export const UpdateAvailableModal = () => {
     };
 
     const isRequired = UpdateUtility.updateIsAvailable(currentVersion, minimumAppVersion.data);
+
     const requiredText = 'This is a required update.';
 
     return (
