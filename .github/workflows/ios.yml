@@ -4,11 +4,22 @@ on:
       - master
 
 jobs:
+
   build:
-    runs-on: -latest
+
+    # mac/xcode version numbers -> https://github.com/actions/virtual-environments
+    runs-on: macos-14
+
     steps:
-      - name: 🏗 Setup repo
+      - name: Checkout repository
         uses: actions/checkout@v3
+
+      - uses: maxim-lobanov/setup-xcode@v1  #https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#xcode
+        with:
+          xcode-version: '15.2'
+
+      - name: Display Xcode version
+        run: sudo xcode-select -p
 
       - name: 🏗 Setup Node
         uses: actions/setup-node@v3
@@ -31,4 +42,4 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: 🪐 Deploy app
-        run: eas submit --non-interactive --platform android --path "/tmp/build.aab"
+        run: eas submit --non-interactive --platform ios --path "/tmp/build.aab"
