@@ -16,14 +16,24 @@ jobs:
           node-version: 18.x
           cache: npm
 
+      - name: Setup JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'adopt'
+          cache: gradle
+
       - name: 🏗 Setup EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+      
+      - name: 📦 Setup Android SDK
+        uses: android-actions/setup-android@v3
 
       - name: 📦 Install dependencies
         run: npm ci
 
       - name: 🚀 Build app
-        run: eas build --platform android --profile production --auto-submit --non-interactive
+        run: eas build --platform android --local
