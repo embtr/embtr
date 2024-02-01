@@ -35,4 +35,9 @@ jobs:
         run: npm ci
 
       - name: 🚀 Build app
-        run: eas build --platform android --local
+        run: eas build --platform android --local --profile production --output "/tmp/build.aab"
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+      - name: 🪐 Deploy app
+        run: eas submit --non-interactive --platform android --path "/tmp/build.aab"
