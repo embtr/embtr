@@ -24,6 +24,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "brentryczak@gmail.com",
+        "ascAppId": "1600994834",
+        "appleTeamId": "F2DR84DKST"
+      }
+    }
   }
 }
