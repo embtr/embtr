@@ -37,9 +37,9 @@ jobs:
         run: npm ci
 
       - name: 🚀 Build app
-        run: eas build --platform ios --local --profile production --output "/tmp/build.aab"
+        run: eas build --non-interactive --platform ios --local --profile production --output "/tmp/build.ipa"
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: 🪐 Deploy app
-        run: eas submit --non-interactive --platform ios --path "/tmp/build.aab"
+        run: eas submit --non-interactive --platform ios --path "/tmp/build.ipa"
