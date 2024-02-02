@@ -42,4 +42,4 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: 🪐 Deploy app
-        run: eas submit --non-interactive --platform ios --path "/tmp/build.ipa"
+        run: eas submit --non-interactive --profile production --platform ios --path "/tmp/build.ipa"
