@@ -1,0 +1,46 @@
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    # mac/xcode version numbers -> https://github.com/actions/virtual-environments
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - uses: maxim-lobanov/setup-xcode@v1  #https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md#xcode
+        with:
+          xcode-version: '15.2'
+
+      - name: Display Xcode version
+        run: sudo xcode-select -p
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🚀 Build app
+        run: eas build --non-interactive --platform ios --local --profile production --output "/tmp/build.ipa"
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+      - name: 📂 Save build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ios-build
+          path: /tmp/build.ipa
