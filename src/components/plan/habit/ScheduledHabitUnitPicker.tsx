@@ -7,15 +7,18 @@ import { IOSUnitPicker } from 'src/components/units/IOSUnitPicker';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { UI } from 'src/util/constants';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import { UnitUtility } from 'src/util/UnitUtility';
 
 export const ScheduledHabitUnitPicker = () => {
     const { colors } = useTheme();
 
     const [showSetUnitModal, setShowSetUnitModal] = React.useState<boolean>(false);
 
-    const { unit, setUnit } = useCreateEditScheduleHabit();
+    const { unit, setUnit, quantity } = useCreateEditScheduleHabit();
 
-    let selectedUnitValue = unit?.unit ? unit.unit.toString().toLowerCase() : 'Of What?';
+    let selectedUnitValue = unit?.unit
+        ? UnitUtility.getReadableUnit(unit, quantity ?? 2)
+        : 'Of What?';
     selectedUnitValue = selectedUnitValue.charAt(0).toUpperCase() + selectedUnitValue.slice(1);
 
     return (
