@@ -68,3 +68,7 @@ export const isShortDevice = (): boolean => {
 export const isNarrowDevice = (): boolean => {
     return getWindowWidth() < 370;
 };
+
+export const isExtraWideDevice = (): boolean => {
+    return getWindowWidth() > 800;
+}
