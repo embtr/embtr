@@ -42,11 +42,11 @@ const generateStyles = (colors: any): Styles => {
         },
         innerContainer: {
             padding: PADDING_LARGE / 2,
-            width: '100%',
+            flex: 1,
             flexDirection: 'row',
         },
         statusContainer: {
-            width: '3%',
+            paddingLeft: PADDING_LARGE ,
             borderTopLeftRadius: 5,
             borderBottomLeftRadius: 5,
         },
