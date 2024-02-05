@@ -13,7 +13,7 @@ interface Props {
 
 export const DailyHistoryWidget = ({ userId }: Props) => {
     const { colors } = useTheme();
-    const diameter = getWindowWidth() / 45;
+    const diameter = isExtraWideDevice() ? getWindowWidth() / 37.5 : 9;
 
     const dailyHistory = DailyHistoryCustomHooks.useDailyHistory(userId);
 
@@ -31,7 +31,9 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
             <View
                 key={i}
                 style={{
-                    backgroundColor: colors.progress_bar_complete,
+                    backgroundColor: historyElement.complete
+                    ? colors.progress_bar_complete
+                    : colors.progress_bar_color,
                     height: diameter,
                     width: diameter,
                     borderRadius: 1,
