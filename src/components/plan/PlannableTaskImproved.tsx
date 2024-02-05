@@ -46,7 +46,7 @@ const generateStyles = (colors: any): Styles => {
             flexDirection: 'row',
         },
         statusContainer: {
-            paddingLeft: PADDING_LARGE ,
+            paddingLeft: PADDING_LARGE,
             borderTopLeftRadius: 5,
             borderBottomLeftRadius: 5,
         },
@@ -71,8 +71,7 @@ const generateStyles = (colors: any): Styles => {
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'flex-end',
-            paddingRight: PADDING_LARGE,
-            flex: 1,
+            paddingHorizontal: PADDING_LARGE,
         },
         svgIcon: {
             height: 30,
@@ -163,7 +162,6 @@ export const PlannableTaskImproved = ({ initialPlannedTask, dayKey, isGuest }: P
         >
             {/* STATUS INDICATOR */}
             <View style={[styles.statusContainer, { backgroundColor: statusColor }]} />
-
             <View style={styles.innerContainer}>
                 <View>
                     <Text style={styles.text} numberOfLines={1}>
@@ -178,23 +176,22 @@ export const PlannableTaskImproved = ({ initialPlannedTask, dayKey, isGuest }: P
                         </Text>
                     </View>
                 </View>
+            </View>
+            <View style={styles.timeIconContainer}>
+                <Image
+                    source={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
+                    style={styles.svgIcon}
+                />
 
-                <View style={styles.timeIconContainer}>
-                    <Image
-                        source={TimeOfDayUtility.getTimeOfDayIcon(plannedTask.timeOfDay)}
-                        style={styles.svgIcon}
+                <View>
+                    <ProgressSvg
+                        targetQuantity={targetQuantity ?? 1}
+                        completedQuantity={completedQuantity ?? 0}
+                        isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
                     />
 
-                    <View>
-                        <ProgressSvg
-                            targetQuantity={targetQuantity ?? 1}
-                            completedQuantity={completedQuantity ?? 0}
-                            isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
-                        />
-
-                        <View style={styles.svgProgress}>
-                            <OptimalImage data={habitIconImage} style={{ height: 16, width: 16 }} />
-                        </View>
+                    <View style={styles.svgProgress}>
+                        <OptimalImage data={habitIconImage} style={{ height: 16, width: 16 }} />
                     </View>
                 </View>
             </View>

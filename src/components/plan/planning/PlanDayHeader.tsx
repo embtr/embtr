@@ -151,6 +151,8 @@ export const PlanDayHeader = ({
                 </View>
             </View>
         );
+    } else {
+        header = <View></View>;
     }
 
     return header;
