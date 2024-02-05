@@ -121,7 +121,12 @@ export const ScheduleHabitRepeatingSchedule = () => {
             >
                 <DaysOfTheWeekToggle />
 
-                <View style={{ width: '100%' }}>
+                <View
+                    style={{
+                        width: '100%',
+                        paddingTop: PADDING_LARGE,
+                    }}
+                >
                     <HabitDateView
                         dateType="Start Date"
                         prettyDate={startDatePretty}

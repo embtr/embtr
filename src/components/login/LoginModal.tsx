@@ -18,7 +18,6 @@ import { Code } from 'resources/codes';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
-import { ConfettiView } from 'src/components/common/animated_view/ConfettiView';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getFireConfetti } from 'src/redux/user/GlobalState';
 
@@ -234,6 +233,7 @@ export const LoginModal = () => {
                                             }}
                                             placeholder={'password'}
                                             placeholderTextColor={colors.secondary_text}
+                                            autoCapitalize={'none'}
                                             onChangeText={setPassword}
                                             value={password}
                                             secureTextEntry={true}

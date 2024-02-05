@@ -1,15 +1,15 @@
 import React from 'react';
 import { Pressable, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { UI } from 'src/util/constants';
 
 interface Props {
     dayOfTheWeek: string;
     value: boolean;
     setValue: Function;
-    size: number;
 }
 
-export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue, size }: Props) => {
+export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue }: Props) => {
     const { colors } = useTheme();
 
     const toggle = () => {
@@ -19,8 +19,8 @@ export const DayOfTheWeekToggle = ({ dayOfTheWeek, value, setValue, size }: Prop
     return (
         <Pressable
             style={{
-                height: size,
-                width: size,
+                height: 50,
+                flex: 1,
                 alignContent: 'center',
                 justifyContent: 'center',
                 borderRadius: 12,

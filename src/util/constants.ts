@@ -1,5 +1,6 @@
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { getSafeWindowWidth } from './GeneralUtility';
+import { getSafeWindowWidth, getWindowWidth } from './GeneralUtility';
+import { isExtraWideDevice } from 'src/util/DeviceUtil';
 
 export const USER_SEARCH_WIDTH = '95%';
 
@@ -50,26 +51,15 @@ export const TIME_LEFT_IN_DAY_WIDGET_DESCRIPTION =
     'A snapshot of how much time remains in the day.';
 
 export const QUOTE_OF_THE_DAY_WIDGET = 'Quote Of The Day';
-export const QUOTE_OF_THE_DAY_WIDGET_DESCRIPTION = 'One quote a day - sourced by the community!';
-
 export const TODAYS_TASKS_WIDGET = "Today's Tasks";
 export const TODAYS_TASKS_WIDGET_DESCRIPTION = "A list of today's tasks.";
-
 export const TODAYS_PHOTOS_WIDGET = "Today's Photos";
-export const TODAYS_PHOTOS_WIDGET_DESCRIPTION = "Add and view your days photo's with this widget!";
-
 export const TODAYS_NOTES_WIDGET = "Today's Notes";
-export const TODAYS_NOTES_WIDGET_DESCRIPTION = 'Have a thought? Jot it down!';
 
 export const UPCOMING_GOALS_WIDGET = 'Upcoming Goals';
-export const UPCOMING_GOALS_WIDGET_DESCRIPTION = 'A simple view of all of your upcoming goals.';
-
 export const DAILY_HISTORY_WIDGET = 'Daily History';
-export const DAILY_HISTORY_WIDGET_DESCRIPTION =
-    'A 50,000 ft. look at your daily results over the last 30 days.';
 
 export const PILLARS_WIDGET = 'Pillars Widget';
-export const PILLARS_WIDGET_DESCRIPTION = 'A snapshot of what you hold most important.';
 
 export const WIDGETS = [
     TIME_LEFT_IN_DAY_WIDGET,
@@ -84,12 +74,6 @@ export const WIDGETS = [
 
 export const WIDGET_LIKE_ICON_SIZE = 20;
 
-export enum ScrollChangeEvent {
-    BEYOND_TOP,
-    AT_TOP,
-    BELOW_TOP,
-}
-
 export type IoniconName = keyof typeof Ionicons.glyphMap;
 export type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -103,8 +87,12 @@ export namespace UI {
         export namespace REPEATING_SCHEDULE {
             const totalDayOfWeekWidth = getSafeWindowWidth() - (PADDING_LARGE / 3) * 7;
             export const DAY_OF_WEEK_WIDTH = totalDayOfWeekWidth / 7;
-            export const GAP_BETWEEN_DAYS = (getSafeWindowWidth() - totalDayOfWeekWidth) / 6;
-            export const DATE_WIDTH = DAY_OF_WEEK_WIDTH * 3 + GAP_BETWEEN_DAYS * 2;
+            export const GAP_BETWEEN_DAYS = isExtraWideDevice()
+                ? PADDING_LARGE
+                : (getSafeWindowWidth() - totalDayOfWeekWidth) / 6;
+            export const DATE_WIDTH = isExtraWideDevice()
+                ? getWindowWidth() * 0.4 + PADDING_LARGE
+                : DAY_OF_WEEK_WIDTH * 3 + GAP_BETWEEN_DAYS * 2;
         }
 
         export namespace TIME_OF_DAY {

@@ -82,61 +82,26 @@ export const DaysOfTheWeekToggle = () => {
     }, [allDaysOfWeek, monday, tuesday, wednesday, thursday, friday, saturday, sunday]);
 
     return (
-        <View style={{ flex: 1, flexDirection: 'row', width: '100%' }}>
-            <DayOfTheWeekToggle
-                dayOfTheWeek={'M'}
-                value={monday}
-                setValue={setMonday}
-                size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
-            />
+        <View style={{ flexDirection: 'row', width: '100%', height: 50 }}>
+            <DayOfTheWeekToggle dayOfTheWeek={'M'} value={monday} setValue={setMonday} />
             <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
-            <DayOfTheWeekToggle
-                dayOfTheWeek={'T'}
-                value={tuesday}
-                setValue={setTuesday}
-                size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
-            />
+            <DayOfTheWeekToggle dayOfTheWeek={'T'} value={tuesday} setValue={setTuesday} />
             <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
-            <DayOfTheWeekToggle
-                dayOfTheWeek={'W'}
-                value={wednesday}
-                setValue={setWednesday}
-                size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
-            />
+            <DayOfTheWeekToggle dayOfTheWeek={'W'} value={wednesday} setValue={setWednesday} />
             <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
-            <DayOfTheWeekToggle
-                dayOfTheWeek={'T'}
-                value={thursday}
-                setValue={setThursday}
-                size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
-            />
+            <DayOfTheWeekToggle dayOfTheWeek={'T'} value={thursday} setValue={setThursday} />
             <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
-            <DayOfTheWeekToggle
-                dayOfTheWeek={'F'}
-                value={friday}
-                setValue={setFriday}
-                size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
-            />
+            <DayOfTheWeekToggle dayOfTheWeek={'F'} value={friday} setValue={setFriday} />
             <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
-            <DayOfTheWeekToggle
-                dayOfTheWeek={'S'}
-                value={saturday}
-                setValue={setSaturday}
-                size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
-            />
+            <DayOfTheWeekToggle dayOfTheWeek={'S'} value={saturday} setValue={setSaturday} />
             <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
 
-            <DayOfTheWeekToggle
-                dayOfTheWeek={'S'}
-                value={sunday}
-                setValue={setSunday}
-                size={UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.DAY_OF_WEEK_WIDTH}
-            />
+            <DayOfTheWeekToggle dayOfTheWeek={'S'} value={sunday} setValue={setSunday} />
         </View>
     );
 };

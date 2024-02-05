@@ -1,7 +1,7 @@
 import { View, Text, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getVerticalAlignmentLine } from 'src/util/GeneralUtility';
-import { UI, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { getVerticalAlignmentLine, getWindowWidth } from 'src/util/GeneralUtility';
+import { UI, POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 
 interface Props {
     dateType: string;

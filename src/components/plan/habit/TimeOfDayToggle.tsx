@@ -19,7 +19,7 @@ export const TimeOfDayToggle = ({ timeOfDay, value, setValue }: Props) => {
         <Pressable
             style={{
                 height: 50,
-                width: UI.SCHEDULE_HABIT.TIME_OF_DAY.TIME_OF_DAY_WIDTH,
+                flex: 1,
                 alignContent: 'center',
                 justifyContent: 'center',
 
