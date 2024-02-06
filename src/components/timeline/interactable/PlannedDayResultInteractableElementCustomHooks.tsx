@@ -2,6 +2,8 @@ import { DeviceEventEmitter } from 'react-native';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { Comment, PlannedDayResult } from 'resources/schema';
 import { InteractableData, InteractableElementCustomHooks } from './InteractableElementCustomHooks';
+import { ReportController } from 'src/controller/ReportController';
+import { CreateReportDto } from 'resources/types/dto/Report';
 
 export namespace PlannedDayResultInteractableElementCustomHooks {
     export const createOnLikePlannedDayResultEmitKey = (plannedDayResult: PlannedDayResult) => {
@@ -96,12 +98,26 @@ export namespace PlannedDayResultInteractableElementCustomHooks {
             DailyResultController.invalidate(plannedDayResult.id);
         };
 
+        const report = async () => {
+            if (!plannedDayResult.id) {
+                return;
+            }
+
+            const createReportDto: CreateReportDto = {
+                type: 'PLANNED_DAY_RESULT',
+                id: plannedDayResult.id,
+            };
+
+            ReportController.createReport(createReportDto);
+        };
+
         return InteractableElementCustomHooks.useInteractableElement(
             plannedDayResult.likes ?? [],
             plannedDayResult.comments ?? [],
             addLike,
             addComment,
-            deleteComment
+            deleteComment,
+            report
         );
     };
 }

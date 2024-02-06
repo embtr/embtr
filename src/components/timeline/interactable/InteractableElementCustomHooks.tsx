@@ -15,6 +15,7 @@ export interface InteractableData {
     wasLiked: () => void;
     commentWasAdded: () => void;
     commentWasDeleted: () => void;
+    report: () => void;
 }
 
 export namespace InteractableElementCustomHooks {
@@ -23,7 +24,8 @@ export namespace InteractableElementCustomHooks {
         comments: Comment[],
         addLike: () => Promise<void>,
         addComment: (comment: string) => Promise<Comment | undefined>,
-        deleteComment: (comment: Comment) => Promise<void>
+        deleteComment: (comment: Comment) => Promise<void>,
+        report: () => Promise<void>
     ): InteractableData => {
         const currentUser = useAppSelector(getCurrentUser);
 
@@ -105,6 +107,7 @@ export namespace InteractableElementCustomHooks {
             wasLiked,
             commentWasAdded: commentAdded,
             commentWasDeleted: commentDeleted,
+            report: report,
         };
     };
 }
