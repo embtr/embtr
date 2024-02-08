@@ -11,6 +11,7 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { SingleScrollUserBody } from 'src/components/profile/profile_component/single_scroll/SingleScrollUserBody';
 import { TimelineController } from 'src/controller/timeline/TimelineController';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export const UserProfile = () => {
     const navigation = useEmbtrNavigation();
@@ -37,6 +38,8 @@ export const UserProfile = () => {
             </Screen>
         );
     }
+
+    const isCurrentUser = getCurrentUid() === user.uid;
 
     const onOptionsPressed = () => {
         Alert.alert(
@@ -78,15 +81,22 @@ export const UserProfile = () => {
         );
     };
 
+    const banner = isCurrentUser ? (
+        <Banner name="User Profile" leftIcon={'arrow-back'} leftRoute="BACK" />
+    ) : (
+        <Banner
+            name="User Profile"
+            leftIcon={'arrow-back'}
+            rightIcon={'ellipsis-horizontal-outline'}
+            rightOnClick={onOptionsPressed}
+            leftRoute="BACK"
+        />
+    );
+
     return (
         <Screen>
-            <Banner
-                name="User Profile"
-                leftIcon={'arrow-back'}
-                rightIcon={'ellipsis-horizontal-outline'}
-                rightOnClick={onOptionsPressed}
-                leftRoute="BACK"
-            />
+            {banner}
+
             <EmbtrMenuCustom />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <ProfileHeader user={user} setHeight={() => {}} />

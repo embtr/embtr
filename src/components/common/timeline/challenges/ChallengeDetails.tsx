@@ -129,6 +129,7 @@ export const ChallengeDetails = () => {
                     isLiked={isLiked}
                     commentCount={comments.length}
                     onLike={likeChallenge}
+                    isCurrentUser={false}
                 />
                 <HorizontalLine />
 
