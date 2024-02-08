@@ -3,7 +3,13 @@ import { Linking, Text, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
+import {
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    PADDING_LARGE,
+    PADDING_MEDIUM,
+    PADDING_SMALL,
+} from 'src/util/constants';
 import { EmbtrButton } from '../common/button/EmbtrButton';
 import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
 import { RegisterModal } from '../login/RegisterModal';
@@ -16,6 +22,8 @@ import { getWindowWidth } from 'src/util/GeneralUtility';
 import { Image } from 'expo-image';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
+import { EnvironmentUtil } from 'src/util/EnvironmentUtil';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const canUseGoogleAuth = () => {
     return (
@@ -68,6 +76,19 @@ export const LandingPage = () => {
 
     const alternativeLoginMethods = (
         <View>
+            {EnvironmentUtil.isDevelopment() && (
+                <View style={{ width: 300, paddingBottom: PADDING_SMALL }}>
+                    <EmbtrButton
+                        color={colors.link}
+                        buttonText="Debug Login"
+                        callback={() => {
+                            const auth = getAuth();
+                            signInWithEmailAndPassword(auth, 'brent@embtr.com', 'Password');
+                        }}
+                    />
+                </View>
+            )}
+
             <View style={{ width: 300, height: 45 }}>
                 <EmbtrButton
                     color={'#e300ef'}
@@ -79,7 +100,7 @@ export const LandingPage = () => {
                 />
             </View>
 
-            <View style={{ width: 300, paddingTop: 6 }}>
+            <View style={{ width: 300, paddingTop: PADDING_SMALL }}>
                 <EmbtrButton
                     color="#b50017"
                     buttonText="Sign Up With Email"

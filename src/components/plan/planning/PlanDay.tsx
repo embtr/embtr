@@ -8,10 +8,77 @@ import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
 import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
 
-export const keyExtractor = (plannedTask: PlannedTask) => {
-    const key = PlanningService.getPlannedHabitUniqueKey(plannedTask);
-    return key;
+const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
+    return 'completedQuantity' in item;
+};
+
+export const keyExtractor = (item: PlannedTask | TimeOfDayDivider) => {
+    if (isPlannedTask(item)) {
+        const key = PlanningService.getPlannedHabitUniqueKey(item);
+        return key;
+    }
+
+    return item.name + '_' + item.id;
+};
+
+interface PlanningSections {
+    allDay: Array<PlannedDay>;
+    morning: Array<PlannedDay>;
+    afternoon: Array<PlannedDay>;
+    evening: Array<PlannedDay>;
+    night: Array<PlannedDay>;
+}
+
+const defaultPlannedSections: PlanningSections = {
+    allDay: [],
+    morning: [],
+    afternoon: [],
+    evening: [],
+    night: [],
+};
+
+const buildPlannedSections = (plannedTasks: PlannedTask[]): PlanningSections => {
+    const allDay = plannedTasks.filter((task) => !task.timeOfDay?.id);
+    const morning = plannedTasks.filter((task) => task.timeOfDay?.id === 1);
+    const afternoon = plannedTasks.filter((task) => task.timeOfDay?.id === 2);
+    const evening = plannedTasks.filter((task) => task.timeOfDay?.id === 3);
+    const night = plannedTasks.filter((task) => task.timeOfDay?.id === 4);
+
+    return { allDay, morning, afternoon, evening, night };
+};
+
+const buildElementList = (plannedSections: PlanningSections): Array<PlannedTask> => {
+    const elements: Array<PlannedTask | TimeOfDayDivider> = [];
+
+    if (plannedSections.allDay.length > 0) {
+        elements.push({ id: 0, name: 'All Day' });
+        elements.push(...plannedSections.allDay);
+    }
+
+    if (plannedSections.morning.length > 0) {
+        elements.push({ id: 1, name: 'Morning' });
+        elements.push(...plannedSections.morning);
+    }
+
+    if (plannedSections.afternoon.length > 0) {
+        elements.push({ id: 2, name: 'Afternoon' });
+        elements.push(...plannedSections.afternoon);
+    }
+
+    if (plannedSections.evening.length > 0) {
+        elements.push({ id: 3, name: 'Evening' });
+        elements.push(...plannedSections.evening);
+    }
+
+    if (plannedSections.night.length > 0) {
+        elements.push({ id: 4, name: 'Night' });
+        elements.push(...plannedSections.night);
+    }
+
+    return elements;
 };
 
 interface Props {
@@ -30,7 +97,9 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: nu
 };
 
 export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
-    const [elements, setElements] = React.useState<Array<PlannedTask>>([]);
+    const colors = useTheme().colors;
+
+    const [elements, setElements] = React.useState<PlanningSections>(defaultPlannedSections);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
 
     const isCurrentUser = plannedDay.user?.uid === getCurrentUid();
@@ -51,41 +120,15 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     }, [allHabitsAreComplete, hasPlannedTasks]);
 
     React.useEffect(() => {
-        if (!plannedDay.plannedTasks || plannedDay.plannedTasks.length === 0) {
-            setElements([]);
-            return;
-        }
-
-        if (plannedDay.plannedTasks.length < 7) {
-            if (hideComplete) {
-                setElements(
-                    plannedDay.plannedTasks.filter(
-                        (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
-                    )
-                );
-            } else {
-                setElements(plannedDay.plannedTasks);
-            }
-
-            return;
-        }
-
-        hideComplete
-            ? plannedDay.plannedTasks
-                  .slice(0, 7)
-                  .filter((task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1))
-            : plannedDay.plannedTasks.slice(0, 7);
+        const allPlannedTasks = hideComplete
+            ? plannedDay.plannedTasks?.filter(
+                  (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
+              )
+            : plannedDay.plannedTasks;
+        const allSections = buildPlannedSections(allPlannedTasks ?? []);
 
         const id = requestAnimationFrame(() => {
-            if (plannedDay.plannedTasks) {
-                setElements(
-                    hideComplete
-                        ? plannedDay.plannedTasks.filter(
-                              (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
-                          )
-                        : plannedDay.plannedTasks
-                );
-            }
+            setElements(allSections);
         });
 
         return () => {
@@ -116,15 +159,23 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
         />
     );
 
-    const renderItem = ({ item }: { item: PlannedTask }) => (
-        <View style={{ paddingBottom: PADDING_LARGE / 2 }}>
-            <MemoizedPlannableTaskImproved
-                initialPlannedTask={item}
-                dayKey={dayKey}
-                isGuest={!isCurrentUser}
-            />
-        </View>
-    );
+    const renderItem = ({ item }: { item: PlannedTask | TimeOfDayDivider }) => {
+        if (isPlannedTask(item)) {
+            return (
+                <View style={{ paddingBottom: PADDING_LARGE / 2 }}>
+                    <MemoizedPlannableTaskImproved
+                        initialPlannedTask={item}
+                        dayKey={dayKey}
+                        isGuest={!isCurrentUser}
+                    />
+                </View>
+            );
+        }
+
+        return <TimeOfDayDivider timeOfDayDivider={item} />;
+    };
+
+    const data = buildElementList(elements);
 
     return (
         <View style={{ width: '100%' }}>
@@ -134,7 +185,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                 scrollEnabled={false}
                 //estimatedFirstItemOffset={0}
                 //estimatedItemSize={61}
-                data={elements}
+                data={data}
                 renderItem={renderItem}
                 keyExtractor={keyExtractor}
                 removeClippedSubviews={true}

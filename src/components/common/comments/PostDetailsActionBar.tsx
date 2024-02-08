@@ -1,5 +1,5 @@
 import React from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Alert, Pressable, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import {
@@ -113,7 +113,47 @@ const PostDetailsActionBar = ({ interactableData, padding }: Props) => {
                 </View>
 
                 <View style={{ flex: 1 }} />
-                <View style={{}}>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Pressable
+                        style={{
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                        onPress={() => {
+                            Alert.alert(
+                                'Advanced Options',
+                                '',
+                                [
+                                    {
+                                        text: 'Cancel',
+                                        onPress: () => {},
+                                        style: 'cancel',
+                                    },
+                                    {
+                                        text: 'Report Post',
+                                        onPress: async () => {
+                                            await interactableData.report();
+                                            Alert.alert(
+                                                'Reported',
+                                                'The post has been reported. Thank you for your feedback.',
+                                                [{ text: 'OK', onPress: () => {} }]
+                                            );
+                                        },
+                                        style: 'destructive',
+                                    },
+                                ],
+                                { cancelable: true }
+                            );
+                        }}
+                    >
+                        <Ionicons
+                            name={'ellipsis-horizontal-outline'}
+                            size={TIMELINE_CARD_ICON_SIZE / 1.5}
+                            color={colors.secondary_text}
+                        />
+                    </Pressable>
+
                     {/*<Pressable*/}
                     {/*    style={{*/}
                     {/*        flexDirection: 'row',*/}

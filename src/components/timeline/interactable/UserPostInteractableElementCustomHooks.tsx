@@ -2,6 +2,8 @@ import { Comment, UserPost } from 'resources/schema';
 import { DeviceEventEmitter } from 'react-native';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { InteractableData, InteractableElementCustomHooks } from './InteractableElementCustomHooks';
+import { CreateReportDto } from 'resources/types/dto/Report';
+import { ReportController } from 'src/controller/ReportController';
 
 export namespace UserPostInteractableElementCustomHooks {
     export const createOnLikeUserPostEmitKey = (userPost: UserPost) => {
@@ -77,12 +79,26 @@ export namespace UserPostInteractableElementCustomHooks {
             StoryController.invalidate(userPost.id);
         };
 
+        const report = async () => {
+            if (!userPost.id) {
+                return;
+            }
+
+            const createReportDto: CreateReportDto = {
+                type: 'USER_POST',
+                id: userPost.id,
+            };
+
+            ReportController.createReport(createReportDto);
+        };
+
         return InteractableElementCustomHooks.useInteractableElement(
             userPost.likes ?? [],
             userPost.comments ?? [],
             addLike,
             addComment,
-            deleteComment
+            deleteComment,
+            report
         );
     };
 }

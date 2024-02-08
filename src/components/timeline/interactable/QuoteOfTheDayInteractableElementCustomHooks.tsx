@@ -26,12 +26,15 @@ export namespace QuoteOfTheDayInteractableElementCustomHooks {
             return undefined;
         };
 
+        const report = async () => {};
+
         return InteractableElementCustomHooks.useInteractableElement(
             quoteOfTheDay.likes ?? [],
             EMPTY_COMMENTS,
             addLike,
             addComment,
-            deleteComment
+            deleteComment,
+            report
         );
     };
 }
