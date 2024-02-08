@@ -221,6 +221,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                     isLiked={isLiked}
                     commentCount={challenge.comments?.length ?? 0}
                     onLike={likeChallenge}
+                    isCurrentUser={false}
                 />
             </View>
         </View>

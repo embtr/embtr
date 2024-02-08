@@ -9,6 +9,7 @@ import { CardHeader } from './card_components/CardHeader';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 import { UserPost } from 'resources/schema';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
     userPost: UserPost;
@@ -25,6 +26,7 @@ export const UserPostElement = ({ userPost, interactableData }: Props) => {
     const sortDate = userPost.createdAt;
     const user = userPost.user;
     const secondaryHeader = user.location;
+    const isCurrentUser = getCurrentUid() === user.uid;
 
     let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(
         userPost.images ?? []
@@ -111,7 +113,10 @@ export const UserPostElement = ({ userPost, interactableData }: Props) => {
                     }}
                 >
                     <View style={{ height: 8 }} />
-                    <PostDetailsActionBar interactableData={interactableData} />
+                    <PostDetailsActionBar
+                        interactableData={interactableData}
+                        isCurrentUser={isCurrentUser}
+                    />
                 </View>
             </View>
         </View>

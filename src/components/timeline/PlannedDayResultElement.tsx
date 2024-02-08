@@ -10,6 +10,7 @@ import { DailyResultBody } from '../common/timeline/DailyResultBody';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { PlannedDayResult } from 'resources/schema';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 interface Props {
     plannedDayResult: PlannedDayResult;
@@ -28,6 +29,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
     );
 
     const secondaryHeader = plannedDayResult.plannedDay.user.location ?? '';
+    const isCurrentUser = getCurrentUid() === plannedDayResult.plannedDay.user.uid;
 
     return (
         <View
@@ -102,7 +104,10 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
                     }}
                 >
                     <View style={{ height: 8 }} />
-                    <PostDetailsActionBar interactableData={interactableData} />
+                    <PostDetailsActionBar
+                        interactableData={interactableData}
+                        isCurrentUser={isCurrentUser}
+                    />
                 </View>
             </View>
         </View>
