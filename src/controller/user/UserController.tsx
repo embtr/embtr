@@ -7,6 +7,7 @@ import {
     VerifyAccountEmailRequest,
 } from 'resources/types/requests/AccountTypes';
 import {
+    CreateBlockUserRequest,
     CreateUserResponse,
     GetUserResponse,
     GetUsersResponse,
@@ -208,6 +209,21 @@ class UserController {
             })
             .catch((error) => {
                 return false;
+            });
+    }
+
+    public static async blockUser(id: number) {
+        const request: CreateBlockUserRequest = {
+            userId: id,
+        };
+
+        return await axiosInstance
+            .post(`/user/block/`, request)
+            .then((success) => {
+                return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
             });
     }
 
