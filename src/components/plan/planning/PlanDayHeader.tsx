@@ -22,9 +22,7 @@ const generateStyles = (colors: any): Styles => {
     return {
         container: {
             height: 60,
-            borderColor: '#404040',
-            backgroundColor: '#343434',
-            borderWidth: 1,
+            backgroundColor: colors.background_light,
             justifyContent: 'center',
             alignContent: 'center',
             borderRadius: 5,

@@ -69,7 +69,7 @@ export const CreateEditUserPostBase = ({
             padding: PADDING_LARGE,
         },
         container: {
-            backgroundColor: '#282828',
+            backgroundColor: colors.background_light,
             padding: PADDING_LARGE,
             borderRadius: 5,
         },

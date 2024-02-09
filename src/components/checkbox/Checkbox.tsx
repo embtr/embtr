@@ -37,7 +37,7 @@ export const Checkbox = ({ text, checked, onCheck }: Props) => {
                 }}
                 style={[
                     {
-                        backgroundColor: '#404040',
+                        backgroundColor: colors.background_light,
                         borderRadius: 5,
                         paddingHorizontal: 4,
                         paddingVertical: 2,

@@ -58,7 +58,7 @@ export const CurrentMonthText = ({ onPress, advancedVisible, month, scrollToToda
                     style={[
                         {
                             flexDirection: 'row',
-                            backgroundColor: '#404040',
+                            backgroundColor: colors.background_light,
                             borderRadius: 5,
                             paddingHorizontal: 4,
                             paddingVertical: 2,
