@@ -86,7 +86,7 @@ export const lightColors = {
     accent_color_dark: '##673cb5',
     accent_color: 'orange',
     accent_color_light: '#9F78E7',
-    accent_color_dim: '#362B35',
+    accent_color_dim: '#BEBEBE',
     accent_color_faint: '#d4d4d4',
     secondary_accent_color: '#FF6712',
     archive: '#DF5A6E',
