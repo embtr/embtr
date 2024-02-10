@@ -4,11 +4,7 @@ import DEFAULT_LIGHT from 'assets/banner_light.png'; // Import default light ima
 import DEFAULT_DARK from 'assets/banner.png'; // Import default dark image
 import { useTheme } from 'src/components/theme/ThemeProvider'; // Import useTheme hook
 
-interface Props {
-    theme?: 'isLight' | 'isDark'; // Theme type
-}
-
-export const ThemeDefaultImage = ({ theme }: Props): JSX.Element => {
+export const ThemeDefaultImage = (): JSX.Element => {
     const { isDark } = useTheme(); // Get the current theme
 
     // Determine the image source based on the theme
