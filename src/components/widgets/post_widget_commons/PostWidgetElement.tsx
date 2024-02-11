@@ -35,7 +35,7 @@ export const PostWidgetElement = ({
         <View
             style={{
                 flexDirection: 'row',
-                backgroundColor: colors.background_light,
+                backgroundColor: colors.card_new_background,
                 borderRadius: 5,
                 padding: PADDING_LARGE / 2,
             }}

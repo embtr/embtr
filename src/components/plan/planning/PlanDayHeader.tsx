@@ -22,7 +22,7 @@ const generateStyles = (colors: any): Styles => {
     return {
         container: {
             height: 60,
-            backgroundColor: colors.background_light,
+            backgroundColor: colors.card_new_background,
             justifyContent: 'center',
             alignContent: 'center',
             borderRadius: 5,

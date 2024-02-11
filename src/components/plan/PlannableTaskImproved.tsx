@@ -35,7 +35,7 @@ interface Styles {
 const generateStyles = (colors: any): Styles => {
     return {
         container: {
-            backgroundColor: colors.background_light,
+            backgroundColor: colors.card_new_background,
             borderRadius: 5,
             flexDirection: 'row',
             ...CARD_SHADOW,

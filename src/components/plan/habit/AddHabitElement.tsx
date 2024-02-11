@@ -31,7 +31,7 @@ export const AddHabitElement = ({
             <View
                 style={[
                     {
-                        backgroundColor: highlightElement ? colors.accent_color_dim : colors.background_light,
+                        backgroundColor: highlightElement ? colors.accent_color_dim : colors.card_new_background,
                         borderRadius: 9,
                         flex: 1,
                         flexDirection: 'row',
