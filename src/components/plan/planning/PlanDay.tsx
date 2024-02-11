@@ -7,9 +7,12 @@ import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
 import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
+import { SwipeableCard } from 'src/components/common/swipeable/SwipeableCard';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { useAppSelector } from 'src/redux/Hooks';
+import { PlannedTaskService } from 'src/service/PlannedHabitService';
 
 const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
     return 'completedQuantity' in item;
@@ -102,7 +105,9 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     const [elements, setElements] = React.useState<PlanningSections>(defaultPlannedSections);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
 
-    const isCurrentUser = plannedDay.user?.uid === getCurrentUid();
+    const currentUser = useAppSelector(getCurrentUser);
+    const currentUserId = currentUser.id;
+    const isCurrentUser = plannedDay.user?.id === currentUserId;
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
     const allHabitsAreComplete =
@@ -122,8 +127,8 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     React.useEffect(() => {
         const allPlannedTasks = hideComplete
             ? plannedDay.plannedTasks?.filter(
-                  (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
-              )
+                (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
+            )
             : plannedDay.plannedTasks;
         const allSections = buildPlannedSections(allPlannedTasks ?? []);
 
@@ -167,6 +172,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                         initialPlannedTask={item}
                         dayKey={dayKey}
                         isGuest={!isCurrentUser}
+                        currentUserId={currentUserId ?? 0}
                     />
                 </View>
             );

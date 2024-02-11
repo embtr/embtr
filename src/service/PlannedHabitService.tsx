@@ -1,4 +1,5 @@
 import { PlannedTask } from 'resources/schema';
+import { Constants } from 'resources/types/constants/constants';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 
 export namespace PlannedTaskService {
@@ -9,6 +10,29 @@ export namespace PlannedTaskService {
             await PlannedTaskController.update(plannedHabit);
         } else {
             await PlannedTaskController.create(plannedHabit, dayKey);
+        }
+    };
+
+    export const skip = async (plannedTask: PlannedTask, dayKey: string) => {
+        const clone = { ...plannedTask };
+        clone.status = Constants.HabitStatus.SKIPPED;
+
+        await createUpdatePlannedTask(clone, dayKey);
+    };
+
+    export const complete = async (plannedTask: PlannedTask, dayKey: string) => {
+        const clone = { ...plannedTask };
+        clone.status = Constants.HabitStatus.COMPLETE;
+        clone.completedQuantity = clone.quantity;
+
+        await createUpdatePlannedTask(clone, dayKey);
+    };
+
+    const createUpdatePlannedTask = async (clone: PlannedTask, dayKey: string) => {
+        if (clone.id) {
+            await PlannedTaskController.update(clone);
+        } else {
+            await PlannedTaskController.create(clone, dayKey);
         }
     };
 }
