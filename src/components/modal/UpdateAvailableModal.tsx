@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { useNavigation } from '@react-navigation/core';
@@ -54,8 +54,6 @@ export const UpdateAvailableModal = () => {
     };
 
     const isRequired = UpdateUtility.updateIsAvailable(currentVersion, minimumAppVersion.data);
-
-    const requiredText = 'This is a required update.';
 
     return (
         <View
