@@ -21,7 +21,6 @@ import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
-    getFireConfetti,
     getUpdateModalPlannedTask,
     setEditModalPlannedTask,
     setRemovalModalPlannedTask,
@@ -29,14 +28,9 @@ import {
 } from 'src/redux/user/GlobalState';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { PlannedTask } from 'resources/schema';
-import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { Constants } from 'resources/types/constants/constants';
-import { PlannedDayService } from 'src/service/PlannedDayService';
-
-const refreshPlannedDay = async (dayKey: string) => {
-    PlannedDayController.prefetchPlannedDayData(dayKey);
-};
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 
 const createUpdatePlannedTask = async (clone: PlannedTask, dayKey: string) => {
     if (clone.id) {
@@ -54,6 +48,7 @@ const MAX_OPTIONS_HEIGHT = 20 + PADDING_LARGE;
 export const UpdatePlannedTaskModal = () => {
     const { colors } = useTheme();
 
+    const currentUser = useAppSelector(getCurrentUser);
     const plannedTaskData = useAppSelector(getUpdateModalPlannedTask);
     const plannedTask = plannedTaskData.plannedTask;
     const onUpdateCallback = plannedTaskData.callback;
@@ -69,9 +64,6 @@ export const UpdatePlannedTaskModal = () => {
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
         new Animated.Value(MAX_OPTIONS_HEIGHT)
     );
-
-    const currentUser = useAppSelector(getCurrentUser);
-    const fireConfetti = useAppSelector(getFireConfetti);
 
     const dismiss = () => {
         dispatch(setUpdateModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
@@ -98,9 +90,8 @@ export const UpdatePlannedTaskModal = () => {
         onUpdateCallback(clone);
         dismiss();
 
-        await applyChangesAndFireConfetti(async () => {
-            await createUpdatePlannedTask(clone, dayKey);
-        });
+        await createUpdatePlannedTask(clone, dayKey);
+        PlannedDayController.invalidatePlannedDay(currentUser.id ?? 0, dayKey);
     };
 
     const complete = async () => {
@@ -111,9 +102,8 @@ export const UpdatePlannedTaskModal = () => {
         onUpdateCallback(clone);
         dismiss();
 
-        await applyChangesAndFireConfetti(async () => {
-            await createUpdatePlannedTask(clone, dayKey);
-        });
+        await createUpdatePlannedTask(clone, dayKey);
+        PlannedDayController.invalidatePlannedDay(currentUser.id ?? 0, dayKey);
     };
 
     const update = async () => {
@@ -127,21 +117,8 @@ export const UpdatePlannedTaskModal = () => {
         onUpdateCallback(clone);
         dismiss();
 
-        await applyChangesAndFireConfetti(async () => {
-            await createUpdatePlannedTask(clone, dayKey);
-        });
-    };
-
-    const applyChangesAndFireConfetti = async (applyFunction: Function) => {
-        const wasCompleteBefore = await PlannedDayService.isComplete(currentUser.id ?? 0, dayKey);
-        await applyFunction();
-        refreshPlannedDay(dayKey);
-        if (!wasCompleteBefore) {
-            const isCompleteAfter = await PlannedDayService.isComplete(currentUser.id ?? 0, dayKey);
-            if (isCompleteAfter) {
-                fireConfetti();
-            }
-        }
+        await createUpdatePlannedTask(clone, dayKey);
+        PlannedDayController.invalidatePlannedDay(currentUser.id ?? 0, dayKey);
     };
 
     const runAnimation = (expand: boolean, viewHeight: Animated.Value) => {

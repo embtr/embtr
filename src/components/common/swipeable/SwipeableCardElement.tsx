@@ -17,6 +17,7 @@ interface Props {
 }
 
 export const SwipeableCardElement = ({ data }: Props) => {
+    const paddingMultiplier = data.text.length < 6 ? 1.5 : 1;
     return (
         <TouchableOpacity
             onPress={data.onAction}
@@ -30,8 +31,8 @@ export const SwipeableCardElement = ({ data }: Props) => {
         >
             <View
                 style={{
-                    paddingLeft: PADDING_LARGE,
-                    paddingRight: PADDING_LARGE,
+                    paddingLeft: PADDING_LARGE * paddingMultiplier,
+                    paddingRight: PADDING_LARGE * paddingMultiplier,
                 }}
             >
                 <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: 'white' }}>{data.text}</Text>

@@ -8,7 +8,7 @@ import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { Swipeable } from 'react-native-gesture-handler';
-import { setRemovalModalPlannedTask, setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
+import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
 import { PlanningService } from 'src/util/planning/PlanningService';
@@ -157,13 +157,16 @@ export const PlannableTaskImproved = ({
 
     const ref = React.useRef<Swipeable>(null);
 
-    const isComplete = (plannedTask.completedQuantity ?? 0) >= (plannedTask.quantity ?? 1);
+    const showReset =
+        (plannedTask.completedQuantity ?? 0) >= (plannedTask.quantity ?? 1) ||
+        plannedTask.status === Constants.HabitStatus.SKIPPED ||
+        plannedTask.status === Constants.HabitStatus.FAILED;
 
     const leftSnapOption: SwipeableSnapOptionData = {
-        text: isComplete ? 'Reset' : 'Done',
-        color: isComplete ? 'gray' : colors.progress_bar_complete,
+        text: showReset ? 'Reset' : 'Done',
+        color: showReset ? 'gray' : colors.progress_bar_complete,
         onAction: async () => {
-            if (isComplete) {
+            if (showReset) {
                 setPlannedTask({
                     ...plannedTask,
                     status: Constants.HabitStatus.INCOMPLETE,
@@ -201,19 +204,18 @@ export const PlannableTaskImproved = ({
             },
         },
         {
-            text: 'Remove',
+            text: 'Fail',
             color: colors.progress_bar_failed,
-            onAction: () => {
+            onAction: async () => {
+                setPlannedTask({
+                    ...plannedTask,
+                    status: Constants.HabitStatus.FAILED,
+                });
                 ref.current?.close();
-                dispatch(
-                    setRemovalModalPlannedTask({
-                        plannedTask: plannedTask,
-                        callback: (plannedTask: PlannedTask) => {
-                            setPlannedTask(plannedTask);
-                        },
-                        dayKey: dayKey,
-                    })
-                );
+
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                await PlannedTaskService.fail(plannedTask, dayKey);
+                PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
         },
     ];
@@ -267,6 +269,7 @@ export const PlannableTaskImproved = ({
                             targetQuantity={targetQuantity ?? 1}
                             completedQuantity={completedQuantity ?? 0}
                             isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
+                            isFailed={plannedTask.status === Constants.HabitStatus.FAILED}
                         />
 
                         <View style={styles.svgProgress}>

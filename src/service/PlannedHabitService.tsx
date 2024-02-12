@@ -20,6 +20,13 @@ export namespace PlannedTaskService {
         await createUpdatePlannedTask(clone, dayKey);
     };
 
+    export const fail = async (plannedTask: PlannedTask, dayKey: string) => {
+        const clone = { ...plannedTask };
+        clone.status = Constants.HabitStatus.FAILED;
+
+        await createUpdatePlannedTask(clone, dayKey);
+    };
+
     export const complete = async (plannedTask: PlannedTask, dayKey: string) => {
         const clone = { ...plannedTask };
         clone.status = Constants.HabitStatus.COMPLETE;
