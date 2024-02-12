@@ -28,6 +28,14 @@ export namespace PlannedTaskService {
         await createUpdatePlannedTask(clone, dayKey);
     };
 
+    export const incomplete = async (plannedTask: PlannedTask, dayKey: string) => {
+        const clone = { ...plannedTask };
+        clone.status = Constants.HabitStatus.INCOMPLETE;
+        clone.completedQuantity = 0;
+
+        await createUpdatePlannedTask(clone, dayKey);
+    };
+
     const createUpdatePlannedTask = async (clone: PlannedTask, dayKey: string) => {
         if (clone.id) {
             await PlannedTaskController.update(clone);

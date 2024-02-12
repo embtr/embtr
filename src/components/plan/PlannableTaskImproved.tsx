@@ -7,7 +7,7 @@ import React from 'react';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
+import { Swipeable } from 'react-native-gesture-handler';
 import { setRemovalModalPlannedTask, setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
@@ -17,6 +17,10 @@ import { SwipeableCard } from '../common/swipeable/SwipeableCard';
 import { PlannedTaskService } from 'src/service/PlannedHabitService';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import * as Haptics from 'expo-haptics';
+import {
+    SwipeableCardElementData,
+    SwipeableSnapOptionData,
+} from '../common/swipeable/SwipeableCardElement';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -153,28 +157,42 @@ export const PlannableTaskImproved = ({
 
     const ref = React.useRef<Swipeable>(null);
 
-    const leftOptions = [
-        {
-            text: 'Done',
-            color: colors.progress_bar_complete,
-            onPress: async () => { },
-            onOpened: async () => {
-                setPlannedTask({ ...plannedTask, status: Constants.HabitStatus.COMPLETE });
-                ref.current?.close();
+    const isComplete = (plannedTask.completedQuantity ?? 0) >= (plannedTask.quantity ?? 1);
 
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const leftSnapOption: SwipeableSnapOptionData = {
+        text: isComplete ? 'Reset' : 'Done',
+        color: isComplete ? 'gray' : colors.progress_bar_complete,
+        onAction: async () => {
+            if (isComplete) {
+                setPlannedTask({
+                    ...plannedTask,
+                    status: Constants.HabitStatus.INCOMPLETE,
+                    completedQuantity: 0,
+                });
+                await PlannedTaskService.incomplete(plannedTask, dayKey);
+                PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
+            } else {
+                setPlannedTask({
+                    ...plannedTask,
+                    status: Constants.HabitStatus.COMPLETE,
+                    completedQuantity: plannedTask.quantity,
+                });
                 await PlannedTaskService.complete(plannedTask, dayKey);
                 PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
-            },
+            }
         },
-    ];
+        snapPoint: 100,
+    };
 
-    const rightOptions = [
+    const rightOptions: SwipeableCardElementData[] = [
         {
             text: 'Skip',
             color: colors.progress_bar_skipped,
-            onPress: async () => {
-                setPlannedTask({ ...plannedTask, status: Constants.HabitStatus.SKIPPED });
+            onAction: async () => {
+                setPlannedTask({
+                    ...plannedTask,
+                    status: Constants.HabitStatus.SKIPPED,
+                });
                 ref.current?.close();
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -185,7 +203,7 @@ export const PlannableTaskImproved = ({
         {
             text: 'Remove',
             color: colors.progress_bar_failed,
-            onPress: () => {
+            onAction: () => {
                 ref.current?.close();
                 dispatch(
                     setRemovalModalPlannedTask({
@@ -205,7 +223,7 @@ export const PlannableTaskImproved = ({
     }
 
     return (
-        <SwipeableCard leftOptions={leftOptions} rightOptions={rightOptions} ref={ref}>
+        <SwipeableCard leftSnapOption={leftSnapOption} rightOptions={rightOptions} ref={ref}>
             <Pressable
                 disabled={isGuest === true}
                 style={styles.container}

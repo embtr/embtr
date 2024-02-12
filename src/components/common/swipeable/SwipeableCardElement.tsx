@@ -5,22 +5,24 @@ import { PADDING_LARGE, POPPINS_SEMI_BOLD } from 'src/util/constants';
 export interface SwipeableCardElementData {
     text: string;
     color: string;
-    onPress: () => void;
-    onOpened?: () => void;
+    onAction: () => void;
 }
 
-export const SwipeableCardElement = ({
-    text,
-    color,
-    onPress,
-    onOpened,
-}: SwipeableCardElementData) => {
+export interface SwipeableSnapOptionData extends SwipeableCardElementData {
+    snapPoint: number;
+}
+
+interface Props {
+    data: SwipeableCardElementData | SwipeableSnapOptionData;
+}
+
+export const SwipeableCardElement = ({ data }: Props) => {
     return (
         <TouchableOpacity
-            onPress={onPress}
+            onPress={data.onAction}
             style={{
                 height: '100%',
-                backgroundColor: color,
+                backgroundColor: data.color,
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: 5,
@@ -32,7 +34,7 @@ export const SwipeableCardElement = ({
                     paddingRight: PADDING_LARGE,
                 }}
             >
-                <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: 'white' }}>{text}</Text>
+                <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: 'white' }}>{data.text}</Text>
             </View>
         </TouchableOpacity>
     );
