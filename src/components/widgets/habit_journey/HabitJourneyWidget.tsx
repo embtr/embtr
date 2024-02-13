@@ -9,7 +9,7 @@ import { HabitController } from 'src/controller/habit/HabitController';
 import { HabitJourneyElement3 } from './HabitJourneyElement3';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { getWindowWidth } from 'src/util/GeneralUtility';
-import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
+import { PlannedDayCustomHooks, getTodayKey } from 'src/controller/planning/PlannedDayController';
 
 interface Props {
     user: User;
@@ -22,7 +22,7 @@ export const HabitJourneyWidget = ({ user }: Props) => {
     const [selectedView, setSelectedView] = React.useState(1);
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
 
-    const todaysPlannedDay = PlannedDayCustomHooks.useTodaysPlannedDay();
+    const todaysPlannedDay = PlannedDayCustomHooks.usePlannedDayForCurrentUser(getTodayKey());
     const selectedPlannedDay = PlannedDayCustomHooks.useSelectedPlannedDay();
 
     const fetch = async () => {
