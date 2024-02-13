@@ -173,7 +173,6 @@ export const PlannableTaskImproved = ({
                     completedQuantity: 0,
                 });
                 await PlannedTaskService.incomplete(plannedTask, dayKey);
-                PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             } else {
                 setPlannedTask({
                     ...plannedTask,
@@ -181,8 +180,9 @@ export const PlannableTaskImproved = ({
                     completedQuantity: plannedTask.quantity,
                 });
                 await PlannedTaskService.complete(plannedTask, dayKey);
-                PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             }
+
+            PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
         },
         snapPoint: 100,
     };
