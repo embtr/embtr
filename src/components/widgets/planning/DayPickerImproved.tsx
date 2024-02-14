@@ -26,17 +26,19 @@ const render = ({
     selectedMonth: MonthPickerElementData;
     onSelectionChange: Function;
     isToday: boolean;
-}) => (
-    <MemoizedDayPickerElementImproved
-        elementData={item}
-        isSelected={selectedDay.index === item.index}
-        monthIndex={selectedMonth.index}
-        onSelect={(day: DayPickerElementData) => {
-            onSelectionChange(day);
-        }}
-        isToday={isToday}
-    />
-);
+}) => {
+    return (
+        <MemoizedDayPickerElementImproved
+            elementData={item}
+            isSelected={selectedDay.index === item.index}
+            monthIndex={selectedMonth.index}
+            onSelect={(day: DayPickerElementData) => {
+                onSelectionChange(day);
+            }}
+            isToday={isToday}
+        />
+    );
+};
 
 const scrollToSelected = (flatListRef: React.RefObject<FlatList>, index: number) => {
     flatListRef.current?.scrollToIndex({
@@ -46,15 +48,15 @@ const scrollToSelected = (flatListRef: React.RefObject<FlatList>, index: number)
     });
 };
 
-const currentMonth = new Date().getMonth() + 1;
-const currentDay = new Date().getDate();
-
 export const DayPickerImproved = React.forwardRef(
     ({ selectedDay, selectedMonth, onSelectionChange, daysOfTheMonth }: Props, ref: any) => {
         const onSelectionChangeWrapper = (day: DayPickerElementData) => {
             scrollToSelected(ref, day.index);
             onSelectionChange(day);
         };
+
+        const currentMonth = new Date().getMonth() + 1;
+        const currentDay = new Date().getDate();
 
         const zeroPaddedMonth = selectedMonth.month.toString().padStart(2, '0');
         const key = `${selectedMonth.year}${zeroPaddedMonth}`;
