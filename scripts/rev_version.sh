@@ -36,20 +36,27 @@ newVersion="$major.$minor.$patch"
 
 # 001002003
 # first three are major, next three are minor, last three are patch
-read -r versionCodeMajor versionCodeMinod VersionCodePatch <<< "$(echo "$currentVersionCode" | sed 's/.\{3\}/& /g')"
+#
+#
+#
+read -r versionCodeMajor versionCodeMinor versionCodePatch <<< "$(echo "$currentVersionCode" | sed -E 's/(...)(...)(...)$/\1 \2 \3/')"
+versionCodeMajor=$((10#$versionCodeMajor))  # Removes leading zeros
+versionCodeMinor=$((10#$versionCodeMinor))  # Removes leading zeros
+versionCodePatch=$((10#$versionCodePatch))  # Removes leading zeros
+
 if [[ "$level" == "major" ]]; then 
     ((versionCodeMajor++))
-    versionCodeMinod=0
+    versionCodeMinor=0
     versionCodePatch=0
 elif [[ "$level" == "minor" ]]; then 
-    ((versionCodeMinod++))
+    ((versionCodeMinor++))
     versionCodePatch=0
 else
     ((versionCodePatch++))
 fi
 
 zeroPaddedMajor="$(printf "%03d" $versionCodeMajor)"
-zeroPaddedMinor="$(printf "%03d" $versionCodeMinod)"
+zeroPaddedMinor="$(printf "%03d" $versionCodeMinor)"
 zeroPaddedPatch="$(printf "%03d" $versionCodePatch)"
 newVersionCode="$zeroPaddedMajor$zeroPaddedMinor$zeroPaddedPatch"
 
