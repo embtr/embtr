@@ -42,7 +42,7 @@ const defaultPlannedSections: PlanningSections = {
 };
 
 const buildPlannedSections = (plannedTasks: PlannedTask[]): PlanningSections => {
-    const allDay = plannedTasks.filter((task) => !task.timeOfDay?.id);
+    const allDay = plannedTasks.filter((task) => task.timeOfDay?.id === 5);
     const morning = plannedTasks.filter((task) => task.timeOfDay?.id === 1);
     const afternoon = plannedTasks.filter((task) => task.timeOfDay?.id === 2);
     const evening = plannedTasks.filter((task) => task.timeOfDay?.id === 3);

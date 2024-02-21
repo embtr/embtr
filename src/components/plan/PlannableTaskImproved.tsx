@@ -225,7 +225,12 @@ export const PlannableTaskImproved = ({
     }
 
     return (
-        <SwipeableCard leftSnapOption={leftSnapOption} rightOptions={rightOptions} ref={ref}>
+        <SwipeableCard
+            disabled={isGuest === true}
+            leftSnapOption={leftSnapOption}
+            rightOptions={rightOptions}
+            ref={ref}
+        >
             <Pressable
                 disabled={isGuest === true}
                 style={styles.container}

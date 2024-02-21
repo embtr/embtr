@@ -16,12 +16,16 @@ interface Props {
 
     rightOptions?: SwipeableCardElementData[];
     rightSnapOption?: SwipeableSnapOptionData;
+    disabled?: boolean;
 }
 
 const maxSwipeDistance = 100;
 
 export const SwipeableCard = React.forwardRef<Swipeable, Props>(
-    ({ children, leftOptions, rightOptions, leftSnapOption, rightSnapOption }: Props, ref: any) => {
+    (
+        { children, leftOptions, rightOptions, leftSnapOption, rightSnapOption, disabled }: Props,
+        ref: any
+    ) => {
         const renderLeftActions = (progress: Animated.AnimatedInterpolation<number>) => {
             const translateX = progress.interpolate({
                 inputRange: [0, 1],
@@ -93,6 +97,7 @@ export const SwipeableCard = React.forwardRef<Swipeable, Props>(
         return (
             <GestureHandlerRootView>
                 <Swipeable
+                    enabled={!disabled}
                     ref={ref}
                     renderRightActions={renderRightActions}
                     renderLeftActions={renderLeftActions}

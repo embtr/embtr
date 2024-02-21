@@ -35,40 +35,27 @@ export const CommentsScrollView = ({ comments, onDeleteComment, limit }: Props) 
             },
         ];
 
-        if (isCurrentUsersComment) {
-            return (
-                <View
-                    style={{
-                        paddingBottom: PADDING_MEDIUM,
-                        paddingHorizontal: PADDING_MEDIUM,
-                    }}
-                >
-                    <SwipeableCard ref={ref} rightOptions={rightOptions} key={comment.id}>
-                        <CommentBoxComment
-                            comment={comment}
-                            index={index}
-                            isOwnPost={isCurrentUsersComment}
-                        />
-                    </SwipeableCard>
-                </View>
-            );
-        } else {
-            return (
-                <View
+        return (
+            <View
+                style={{
+                    paddingBottom: PADDING_MEDIUM,
+                    paddingHorizontal: PADDING_MEDIUM,
+                }}
+            >
+                <SwipeableCard
+                    ref={ref}
+                    disabled={!isCurrentUsersComment}
+                    rightOptions={rightOptions}
                     key={comment.id}
-                    style={{
-                        paddingBottom: PADDING_MEDIUM,
-                        paddingHorizontal: PADDING_MEDIUM,
-                    }}
                 >
                     <CommentBoxComment
                         comment={comment}
                         index={index}
                         isOwnPost={isCurrentUsersComment}
                     />
-                </View>
-            );
-        }
+                </SwipeableCard>
+            </View>
+        );
     });
 
     return (
