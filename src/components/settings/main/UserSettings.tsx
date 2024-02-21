@@ -10,6 +10,7 @@ import { EditProfileSettingsButton } from './EditProfileSettingsButton';
 import { SettingsVersion } from './SettingsVersion';
 import { PADDING_LARGE } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ThemeToggle } from 'src/components/theme/ThemeToggle';
 
 export const UserSettings = () => {
     return (
@@ -32,6 +33,8 @@ export const UserSettings = () => {
                     <EditProfileSettingsButton />
                     <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsAccount />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
+                    <ThemeToggle />
                     <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsMembership />
                     <View style={{ height: PADDING_LARGE / 2 }} />

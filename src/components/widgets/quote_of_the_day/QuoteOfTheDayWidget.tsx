@@ -86,7 +86,7 @@ const QuoteOfTheDayImplementation = ({ quoteOfTheDay }: ImplementationProps) => 
                     onPress={onAdd}
                     style={[
                         {
-                            backgroundColor: '#404040',
+                            backgroundColor: colors.card_new_background,
                             borderRadius: 5,
                             paddingHorizontal: 4,
                             paddingVertical: 2,

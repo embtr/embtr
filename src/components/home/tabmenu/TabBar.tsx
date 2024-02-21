@@ -113,7 +113,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
                     <View
                         style={[
                             {
-                                backgroundColor: '#404040',
+                                backgroundColor: colors.background_light,
                                 borderRadius: 50,
                                 height: 60,
                                 width: 60,

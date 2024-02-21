@@ -7,6 +7,7 @@ import React from 'react';
 import { User } from 'resources/schema';
 import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
+import { ThemeDefaultImage } from './ThemeDefaultImage';
 
 interface Props {
     user: User;
@@ -37,14 +38,7 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                         uri={user.bannerUrl ?? DEFAULT}
                     />
                 ) : (
-                    <Image
-                        source={DEFAULT}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            borderRadius: 15,
-                        }}
-                    />
+                    <ThemeDefaultImage />
                 )}
             </View>
 
