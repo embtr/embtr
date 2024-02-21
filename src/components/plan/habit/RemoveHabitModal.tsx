@@ -16,12 +16,9 @@ import {
     getSelectedDayKey,
     setRemovalModalPlannedTask,
 } from 'src/redux/user/GlobalState';
-import { Dispatch } from 'react';
-import { AnyAction } from '@reduxjs/toolkit';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
-import { PlannedHabitController } from 'src/controller/habit/PlannedHabitController';
 import { PlannedTaskService } from 'src/service/PlannedHabitService';
 
 const isLargerScreen = getWindowHeight() > 800;

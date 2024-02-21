@@ -54,6 +54,7 @@ export const MemoizedDayPickerElementImproved = React.memo(
     },
     (prevProps, nextProps) => {
         return (
+            prevProps.isToday === nextProps.isToday &&
             prevProps.isSelected === nextProps.isSelected &&
             prevProps.monthIndex === nextProps.monthIndex
         );

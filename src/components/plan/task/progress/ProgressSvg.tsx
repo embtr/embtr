@@ -6,15 +6,21 @@ interface Props {
     targetQuantity: number;
     completedQuantity: number;
     isSkipped?: boolean;
+    isFailed?: boolean;
 }
 
-export const ProgressSvg = ({ targetQuantity, completedQuantity, isSkipped }: Props) => {
+export const ProgressSvg = ({ targetQuantity, completedQuantity, isSkipped, isFailed }: Props) => {
     const { colors } = useTheme();
 
     let progressColor = colors.progress_bar_complete;
     if (isSkipped) {
         completedQuantity = targetQuantity;
         progressColor = colors.progress_bar_skipped;
+    }
+
+    if (isFailed) {
+        completedQuantity = targetQuantity;
+        progressColor = colors.progress_bar_failed;
     }
 
     if (completedQuantity > targetQuantity) {

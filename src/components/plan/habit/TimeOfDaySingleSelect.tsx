@@ -4,6 +4,7 @@ import { TimeOfDayToggle } from './TimeOfDayToggle';
 import { TimeOfDay } from 'resources/schema';
 import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayController';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
+import { UI } from 'src/util/constants';
 
 export const TimeOfDaySingleSelect = () => {
     const timesOfDay: TimeOfDay[] = TimesOfDayCustomHooks.useTimesOfDay();
@@ -109,15 +110,15 @@ export const TimeOfDaySingleSelect = () => {
     return (
         <View style={{ flexDirection: 'row', width: '100%' }}>
             <TimeOfDayToggle timeOfDay={'Morning'} value={state.morning} setValue={updateMorning} />
-            <View style={{ flex: 1 }} />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
             <TimeOfDayToggle
                 timeOfDay={'Afternoon'}
                 value={state.afternoon}
                 setValue={updateAfternoon}
             />
-            <View style={{ flex: 1 }} />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
             <TimeOfDayToggle timeOfDay={'Evening'} value={state.evening} setValue={updateEvening} />
-            <View style={{ flex: 1 }} />
+            <View style={{ width: UI.SCHEDULE_HABIT.REPEATING_SCHEDULE.GAP_BETWEEN_DAYS }} />
             <TimeOfDayToggle timeOfDay={'Night'} value={state.night} setValue={updateNight} />
         </View>
     );

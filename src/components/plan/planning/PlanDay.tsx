@@ -7,9 +7,10 @@ import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
 import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
+import { getCurrentUser, getFireConfetti } from 'src/redux/user/GlobalState';
+import { useAppSelector } from 'src/redux/Hooks';
+import { Constants } from 'resources/types/constants/constants';
 
 const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
     return 'completedQuantity' in item;
@@ -41,7 +42,7 @@ const defaultPlannedSections: PlanningSections = {
 };
 
 const buildPlannedSections = (plannedTasks: PlannedTask[]): PlanningSections => {
-    const allDay = plannedTasks.filter((task) => !task.timeOfDay?.id);
+    const allDay = plannedTasks.filter((task) => task.timeOfDay?.id === 5);
     const morning = plannedTasks.filter((task) => task.timeOfDay?.id === 1);
     const afternoon = plannedTasks.filter((task) => task.timeOfDay?.id === 2);
     const evening = plannedTasks.filter((task) => task.timeOfDay?.id === 3);
@@ -81,6 +82,27 @@ const buildElementList = (plannedSections: PlanningSections): Array<PlannedTask>
     return elements;
 };
 
+const getAllHabitsAreComplete = (plannedDay: PlannedDay): boolean => {
+    const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
+
+    const allHabitsAreComplete =
+        hasPlannedTasks &&
+        plannedDay.plannedTasks?.reduce(
+            (acc, task) =>
+                acc &&
+                (task.status === Constants.HabitStatus.SKIPPED ||
+                    (task.completedQuantity ?? 0) >= (task.quantity ?? 1)),
+            true
+        );
+
+    return allHabitsAreComplete ?? false;
+};
+
+interface CompletionHistory {
+    dayKey: string;
+    completed: boolean;
+}
+
 interface Props {
     plannedDay: PlannedDay;
     dayKey: string;
@@ -97,33 +119,46 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: nu
 };
 
 export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
-    const colors = useTheme().colors;
-
     const [elements, setElements] = React.useState<PlanningSections>(defaultPlannedSections);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
+    const [previousCompletionHistory, setPreviousCompletionHistory] =
+        React.useState<CompletionHistory | null>(null);
 
-    const isCurrentUser = plannedDay.user?.uid === getCurrentUid();
+    const fireConfetti = useAppSelector(getFireConfetti);
+    const currentUser = useAppSelector(getCurrentUser);
+    const currentUserId = currentUser.id;
+    const isCurrentUser = plannedDay.user?.id === currentUserId;
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
-    const allHabitsAreComplete =
-        hasPlannedTasks &&
-        plannedDay.plannedTasks?.reduce(
-            (acc, task) => acc && (task.completedQuantity ?? 0) >= (task.quantity ?? 1),
-            true
-        );
+    const allHabitsAreComplete = getAllHabitsAreComplete(plannedDay);
 
     React.useEffect(() => {
         const expand = !hasPlannedTasks || allHabitsAreComplete;
         const expandHeight = !hasPlannedTasks ? 60 : 60 + PADDING_LARGE;
-
         runAnimation(expand ?? false, detailsViewHeight, expandHeight);
-    }, [allHabitsAreComplete, hasPlannedTasks]);
+
+        const completionHistory: CompletionHistory = {
+            dayKey,
+            completed: allHabitsAreComplete,
+        };
+
+        if (previousCompletionHistory && previousCompletionHistory.dayKey === dayKey) {
+            if (
+                allHabitsAreComplete === true &&
+                previousCompletionHistory.completed !== allHabitsAreComplete
+            ) {
+                fireConfetti();
+            }
+        }
+
+        setPreviousCompletionHistory(completionHistory);
+    }, [allHabitsAreComplete, hasPlannedTasks, dayKey]);
 
     React.useEffect(() => {
         const allPlannedTasks = hideComplete
             ? plannedDay.plannedTasks?.filter(
-                  (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
-              )
+                (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
+            )
             : plannedDay.plannedTasks;
         const allSections = buildPlannedSections(allPlannedTasks ?? []);
 
@@ -167,6 +202,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                         initialPlannedTask={item}
                         dayKey={dayKey}
                         isGuest={!isCurrentUser}
+                        currentUserId={currentUserId ?? 0}
                     />
                 </View>
             );
