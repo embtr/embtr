@@ -5,13 +5,18 @@ import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 import { User } from 'resources/schema';
-import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
+import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 
 interface Props {
     user: User;
     setHeight: Function;
 }
+
+const verifiedBadgeData: OptimalImageData = {
+    localImage: 'PROFILE.VERIFIED_BADGE',
+};
 
 export const ProfileHeader = ({ user, setHeight }: Props) => {
     const { colors } = useTheme();
@@ -88,12 +93,22 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                             <Text
                                 style={{
                                     fontSize: 16,
+                                    paddingRight: PADDING_SMALL * 0.5,
                                     fontFamily: POPPINS_MEDIUM,
                                     color: colors.profile_name_text,
                                 }}
                             >
                                 {user.displayName}
                             </Text>
+
+                            <OptimalImage
+                                data={verifiedBadgeData}
+                                style={{
+                                    width: 15,
+                                    height: 15,
+                                    bottom: 1,
+                                }}
+                            />
                         </View>
                     </View>
                     <View

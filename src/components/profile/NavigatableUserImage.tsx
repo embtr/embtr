@@ -1,10 +1,12 @@
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Image } from 'react-native';
+import { View, Image, StyleSheet } from 'react-native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { CachedImage } from '../common/images/CachedImage';
 import { TouchableWithoutFeedback } from 'react-native';
 import { User } from 'resources/schema';
+import { CARD_SHADOW } from 'src/util/constants';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
@@ -28,52 +30,37 @@ export const NavigatableUserImage = ({ user, size, denyNavigation }: Props) => {
         return <View />;
     }
 
-    if (denyNavigation) {
-        return (
-            <View>
-                <Image
-                    style={{ width: size, height: size, borderRadius: 50 }}
-                    source={{ uri: user.photoUrl }}
-                />
-            </View>
-        );
-    }
-
     return (
-        <View>
+        <View style={styles.container}>
             <TouchableWithoutFeedback onPress={toUserProfile}>
-                <View style={{ alignItems: 'flex-end', justifyContent: 'flex-end' }}>
-                    {/* GEM SLOTS */}
-
-                    {/*
-                    <View style={{ zIndex: 1, position: 'absolute', left: 8, top: -11 }}>
-                        <Ionicons name={'water-outline'} size={10} color={colors.tab_selected} />
-                    </View>
-
-                    <View style={{ zIndex: 1, position: 'absolute', left: -2, top: -5 }}>
-                        <Ionicons name={'fitness-outline'} size={10} color={colors.tab_selected} />
-                    </View>
-
-                    <View style={{ zIndex: 1, position: 'absolute', left: -10, top: 5 }}>
-                        <Ionicons name={'book-outline'} size={10} color={colors.tab_selected} />
-                    </View>
-                    */}
+                <View style={styles.imageContainer}>
                     <CachedImage
                         uri={user.photoUrl}
-                        style={{ width: size, height: size, borderRadius: 50 }}
+                        style={[styles.image, { width: size, height: size }]}
                     />
-                    <View
-                        style={{
-                            position: 'absolute',
-                            zIndex: 1,
-                            paddingBottom: 1,
-                            paddingRight: 1,
-                        }}
-                    >
-                        {/* <ProfileLevel userProfileModel={userProfileModel} useSmall={true} /> */}
-                    </View>
                 </View>
             </TouchableWithoutFeedback>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        // Add any container styles if needed
+    },
+    imageContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: 'green',
+        shadowOpacity: 0.5,
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowRadius: 3,
+    },
+    image: {
+        borderRadius: 50,
+        overflow: 'hidden',
+    },
+});
