@@ -7,6 +7,7 @@ interface Props {
     strokeWidth: number;
     targetQuantity: number;
     completedQuantity: number;
+    incompleteIsFailed?: boolean;
     isSkipped?: boolean;
     isFailed?: boolean;
 }
@@ -16,6 +17,7 @@ export const ProgressSvg = ({
     strokeWidth,
     targetQuantity,
     completedQuantity,
+    incompleteIsFailed,
     isSkipped,
     isFailed,
 }: Props) => {
@@ -51,8 +53,10 @@ export const ProgressSvg = ({
                 cx={circleRadius}
                 cy={circleRadius}
                 r={radius}
-                stroke={colors.secondary_text}
-                strokeWidth={strokeWidth}
+                stroke={
+                    incompleteIsFailed === true ? colors.progress_bar_failed : colors.secondary_text
+                }
+                strokeWidth={strokeWidth * 0.9}
                 fill="transparent"
             />
 

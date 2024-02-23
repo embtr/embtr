@@ -9,10 +9,9 @@ import { DailyResultCardElementTimeOfDay } from './DailyResultCardElementTimeOfD
 
 interface Props {
     plannedTasks: PlannedTask[];
-    onPress?: Function;
 }
 
-export const DailyResultCardElement = ({ plannedTasks, onPress }: Props) => {
+export const DailyResultCardElement = ({ plannedTasks }: Props) => {
     const { colors } = useTheme();
 
     const plannedTask = plannedTasks?.[0] ?? undefined;
@@ -25,7 +24,7 @@ export const DailyResultCardElement = ({ plannedTasks, onPress }: Props) => {
     };
 
     const views: JSX.Element[] = [];
-    plannedTasks.forEach((plannedTask, index) => {
+    plannedTasks.forEach((plannedTask) => {
         views.push(
             <View key={plannedTask.id} style={{ paddingRight: PADDING_SMALL }}>
                 <DailyResultCardElementTimeOfDay plannedTask={plannedTask} />
@@ -36,30 +35,39 @@ export const DailyResultCardElement = ({ plannedTasks, onPress }: Props) => {
     return (
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             {plannedTask.remoteImageUrl && (
-                <HabitIcon
-                    optimalImageData={optimalImageData}
-                    size={35}
-                    color={colors.tab_selected}
-                />
-            )}
-            <View style={{ paddingLeft: PADDING_LARGE / 2 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <Text
-                        style={{
-                            color: colors.goal_primary_font,
-                            fontFamily: POPPINS_SEMI_BOLD,
-                            fontSize: 12,
-                            includeFontPadding: false,
-                        }}
-                    >
-                        {plannedTask?.title}{' '}
-                    </Text>
+                <View
+                    style={{
+                        backgroundColor: '#404040',
+                        padding: 4,
+                        borderRadius: 9,
+                    }}
+                >
+                    <HabitIcon
+                        optimalImageData={optimalImageData}
+                        size={30}
+                        color={colors.tab_selected}
+                    />
                 </View>
+            )}
+
+            <View style={{ paddingLeft: PADDING_LARGE / 2 }}>
+                {/* TITLE */}
+                <Text
+                    style={{
+                        color: colors.goal_primary_font,
+                        fontFamily: POPPINS_SEMI_BOLD,
+                        fontSize: 13,
+                        top: -2,
+                    }}
+                >
+                    {plannedTask?.title}
+                </Text>
+
+                {/* COMPLETION */}
                 <View
                     style={{
                         flexDirection: 'row',
-                        width: '100%',
-                        paddingTop: PADDING_SMALL / 2,
+                        paddingBottom: PADDING_SMALL / 4,
                     }}
                 >
                     {views}

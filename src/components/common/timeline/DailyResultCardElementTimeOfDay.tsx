@@ -4,6 +4,7 @@ import { Constants } from 'resources/types/constants/constants';
 import { ProgressSvg } from 'src/components/plan/task/progress/ProgressSvg';
 import { OptimalImage, OptimalImageData } from '../images/OptimalImage';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
+import { PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 
 interface Props {
     plannedTask: PlannedTask;
@@ -32,31 +33,19 @@ export const DailyResultCardElementTimeOfDay = ({ plannedTask }: Props) => {
         stats = `${completedQuantity}`;
     }
 
-    const size = 20;
+    const size = 16;
 
     return (
         <View>
             <ProgressSvg
                 size={size}
-                strokeWidth={1}
+                strokeWidth={2.5}
+                incompleteIsFailed={true}
                 targetQuantity={quantity ?? 1}
                 completedQuantity={completedQuantity ?? 0}
                 isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
                 isFailed={plannedTask.status === Constants.HabitStatus.FAILED}
             />
-
-            <View
-                style={{
-                    position: 'absolute',
-                    zIndex: -1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: size,
-                    height: size,
-                }}
-            >
-                <OptimalImage data={imageData} style={{ height: size, width: size }} />
-            </View>
         </View>
     );
 };
