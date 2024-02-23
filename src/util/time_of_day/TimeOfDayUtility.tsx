@@ -65,4 +65,18 @@ export namespace TimeOfDayUtility {
 
         return '';
     }
+
+    export function getTimeOfDayImageRepoKey(timeOfDayId: number) {
+        if (timeOfDayId === 1) {
+            return 'TIME_OF_DAY.MORNING';
+        } else if (timeOfDayId === 2) {
+            return 'TIME_OF_DAY.AFTERNOON';
+        } else if (timeOfDayId === 3) {
+            return 'TIME_OF_DAY.EVENING';
+        } else if (timeOfDayId === 4) {
+            return 'TIME_OF_DAY.NIGHT';
+        }
+
+        return 'TIME_OF_DAY.AFTERNOON';
+    }
 }

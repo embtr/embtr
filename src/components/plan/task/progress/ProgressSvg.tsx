@@ -3,13 +3,24 @@ import Svg, { Circle } from 'react-native-svg';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
+    size: number;
+    strokeWidth: number;
     targetQuantity: number;
     completedQuantity: number;
+    incompleteIsFailed?: boolean;
     isSkipped?: boolean;
     isFailed?: boolean;
 }
 
-export const ProgressSvg = ({ targetQuantity, completedQuantity, isSkipped, isFailed }: Props) => {
+export const ProgressSvg = ({
+    size,
+    strokeWidth,
+    targetQuantity,
+    completedQuantity,
+    incompleteIsFailed,
+    isSkipped,
+    isFailed,
+}: Props) => {
     const { colors } = useTheme();
 
     let progressColor = colors.progress_bar_complete;
@@ -27,31 +38,35 @@ export const ProgressSvg = ({ targetQuantity, completedQuantity, isSkipped, isFa
         completedQuantity = targetQuantity;
     }
 
+    const radius = size / 2 - strokeWidth / 2;
+    const circleRadius = size / 2;
+
     // Calculate the circumference of the circle
-    const radius = 13;
     const progress = (completedQuantity / targetQuantity) * 100;
     const circumference = 2 * Math.PI * radius;
     const dashOffset = circumference * (1 - progress / 100);
 
     return (
-        <Svg width={28} height={28} transform={[{ rotate: '-90deg' }]}>
+        <Svg width={size} height={size} transform={[{ rotate: '-90deg' }]}>
             {/* Background Circle */}
             <Circle
-                cx={14}
-                cy={14}
+                cx={circleRadius}
+                cy={circleRadius}
                 r={radius}
-                stroke={colors.secondary_text}
-                strokeWidth={2}
+                stroke={
+                    incompleteIsFailed === true ? colors.progress_bar_failed : colors.secondary_text
+                }
+                strokeWidth={strokeWidth * 0.9}
                 fill="transparent"
             />
 
             {/* Progress Circle */}
             <Circle
-                cx={14}
-                cy={14}
+                cx={circleRadius}
+                cy={circleRadius}
                 r={radius}
                 stroke={progressColor}
-                strokeWidth={2}
+                strokeWidth={strokeWidth}
                 fill="transparent"
                 strokeDasharray={circumference}
                 strokeDashoffset={dashOffset}

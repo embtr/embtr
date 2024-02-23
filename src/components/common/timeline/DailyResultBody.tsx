@@ -1,8 +1,8 @@
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM } from 'src/util/constants';
+import { PADDING_MEDIUM, PADDING_SMALL, POPPINS_MEDIUM } from 'src/util/constants';
 import { DailyResultCardElement } from './DailyResultCardElement';
-import { PlannedDayResult as PlannedDayResultModel } from 'resources/schema';
+import { PlannedDayResult as PlannedDayResultModel, PlannedTask } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
 import { Constants } from 'resources/types/constants/constants';
 
@@ -18,11 +18,29 @@ export const DailyResultBody = ({ plannedDayResult }: Props) => {
         plannedDayResult.plannedDay?.challengeParticipant?.[0]?.challenge?.challengeRewards?.[0]
             ?.remoteImageUrl;
 
-    let plannedTaskViews: JSX.Element[] = [];
+    const groupedPlannedTasks: Map<number, PlannedTask[]> = new Map();
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
+        const scheduledHabitId = plannedTask.scheduledHabitId ?? 0;
+
+        if (groupedPlannedTasks.has(scheduledHabitId)) {
+            groupedPlannedTasks.get(scheduledHabitId)?.push(plannedTask);
+        } else {
+            groupedPlannedTasks.set(scheduledHabitId, [plannedTask]);
+        }
+    });
+
+    const plannedTaskViews: JSX.Element[] = [];
+    let count = 0;
+    groupedPlannedTasks.forEach((plannedTasks) => {
+        const isLast = count++ === groupedPlannedTasks.size - 1;
         plannedTaskViews.push(
-            <View key={plannedTask.id} style={{ paddingBottom: 7.5 }}>
-                <DailyResultCardElement plannedTask={plannedTask} />
+            <View
+                style={{
+                    paddingBottom: isLast ? 0 : PADDING_MEDIUM,
+                }}
+                key={plannedTasks[0].id}
+            >
+                <DailyResultCardElement plannedTasks={plannedTasks} />
             </View>
         );
     });
@@ -73,7 +91,7 @@ export const DailyResultBody = ({ plannedDayResult }: Props) => {
                 </View>
             )}
 
-            <View style={{ paddingTop: 5, paddingBottom: 2 }}>{plannedTaskViews}</View>
+            <View style={{}}>{plannedTaskViews}</View>
         </View>
     );
 };
