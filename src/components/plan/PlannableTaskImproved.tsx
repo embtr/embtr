@@ -271,6 +271,8 @@ export const PlannableTaskImproved = ({
 
                     <View>
                         <ProgressSvg
+                            size={28}
+                            strokeWidth={2}
                             targetQuantity={targetQuantity ?? 1}
                             completedQuantity={completedQuantity ?? 0}
                             isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
