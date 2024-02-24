@@ -1,29 +1,12 @@
 import * as React from 'react';
-import { Linking, Text, TextStyle, View } from 'react-native';
+import { Text, TextStyle, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { FirebaseAuthenticate } from 'src/components/login/google/FirebaseAuthenticate';
-import {
-    POPPINS_MEDIUM,
-    POPPINS_REGULAR,
-    PADDING_LARGE,
-    PADDING_MEDIUM,
-    PADDING_SMALL,
-} from 'src/util/constants';
-import { EmbtrButton } from '../common/button/EmbtrButton';
-import { ModalContainingComponent } from '../common/modal/ModalContainingComponent';
-import { RegisterModal } from '../login/RegisterModal';
-import { isDesktopBrowser } from 'src/util/DeviceUtil';
+import { isAndroidDevice, isDesktopBrowser } from 'src/util/DeviceUtil';
 import { DesktopLandingPage } from './DesktopLandingPage';
-import { AppleAuthenticate } from '../login/apple/AppleAuthenticate';
-import { isIosApp } from 'src/util/DeviceUtil';
-import { HorizontalLine } from '../common/HorizontalLine';
-import { getWindowWidth } from 'src/util/GeneralUtility';
 import { Image } from 'expo-image';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import { Routes } from 'src/navigation/RootStackParamList';
-import { EnvironmentUtil } from 'src/util/EnvironmentUtil';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import Purchases, { LOG_LEVEL, PurchasesOffering } from 'react-native-purchases';
 
 const canUseGoogleAuth = () => {
     return (
@@ -32,6 +15,9 @@ const canUseGoogleAuth = () => {
         process.env.EXPO_PUBLIC_AUTH_ANDROID_CLIENT_ID
     );
 };
+
+const revenueCatIosApiKey = process.env.EXPO_PUBLIC_REVENUECAT_IOS_API_KEY;
+const revenueCatAndroidApiKey = process.env.EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY;
 
 export const LandingPage = () => {
     const { colors } = useTheme();
@@ -48,6 +34,29 @@ export const LandingPage = () => {
     const [continueToDesktopBrowserLogin, setContinueToDesktopBrowserLogin] = React.useState(false);
     const [useAlternativeLoginMethods, setUseAlternativeLoginMethods] = React.useState(false);
 
+    const [currentOffering, setCurrentOffering] = React.useState<PurchasesOffering | null>(null);
+
+    React.useEffect(() => {
+        const setup = async () => {
+            if (isAndroidDevice()) {
+                Purchases.configure({ apiKey: revenueCatAndroidApiKey ?? '' });
+            } else {
+                Purchases.configure({ apiKey: revenueCatIosApiKey ?? '' });
+            }
+
+            console.log(Purchases);
+            Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+            const offerings = await Purchases.getOfferings();
+            console.log(offerings);
+            setCurrentOffering(offerings.current);
+        };
+
+        setup().catch((e) => {
+            console.log(e);
+        });
+    }, []);
+
     if (isDesktopBrowser() && !continueToDesktopBrowserLogin) {
         return (
             <DesktopLandingPage
@@ -57,60 +66,6 @@ export const LandingPage = () => {
             />
         );
     }
-
-    const socialLoginOptions = (
-        <View>
-            <View>
-                <View style={{ width: 300, height: 45 }}>
-                    {isIosApp() && <AppleAuthenticate />}
-                </View>
-
-                <View style={{ height: PADDING_LARGE / 2 }} />
-            </View>
-
-            <View style={{ width: 300, height: 45 }}>
-                {canUseGoogleAuth() && <FirebaseAuthenticate buttonText="Login With Google" />}
-            </View>
-        </View>
-    );
-
-    const alternativeLoginMethods = (
-        <View>
-            {EnvironmentUtil.isDevelopment() && (
-                <View style={{ width: 300, paddingBottom: PADDING_SMALL }}>
-                    <EmbtrButton
-                        color={colors.link}
-                        buttonText="Debug Login"
-                        callback={() => {
-                            const auth = getAuth();
-                            signInWithEmailAndPassword(auth, 'brent@embtr.com', 'Password');
-                        }}
-                    />
-                </View>
-            )}
-
-            <View style={{ width: 300, height: 45 }}>
-                <EmbtrButton
-                    color={'#e300ef'}
-                    height={45}
-                    buttonText="Login With Email"
-                    callback={() => {
-                        navigation.navigate(Routes.LOGIN_MODAL);
-                    }}
-                />
-            </View>
-
-            <View style={{ width: 300, paddingTop: PADDING_SMALL }}>
-                <EmbtrButton
-                    color="#b50017"
-                    buttonText="Sign Up With Email"
-                    callback={() => {
-                        navigation.navigate(Routes.REGISTER_MODAL);
-                    }}
-                />
-            </View>
-        </View>
-    );
 
     return (
         <Screen>
@@ -138,6 +93,19 @@ export const LandingPage = () => {
                         }}
                     />
                 </View>
+                {currentOffering ? (
+                    <View>
+                        <Text>Current Offering: {currentOffering.identifier}</Text>
+                        <Text>Package Count: {currentOffering.availablePackages.length}</Text>
+                        {currentOffering.availablePackages.map((pkg) => {
+                            return <Text>{pkg.product.identifier}</Text>;
+                        })}
+                    </View>
+                ) : (
+                    <View>
+                        <Text>Current Offering: OMEGAFAIL</Text>
+                    </View>
+                )}
 
                 {/* FLEX 3 BUTTONS*/}
                 <View style={{ flex: 1 }}>
@@ -148,81 +116,6 @@ export const LandingPage = () => {
                                 A community achieving their wildest dreams.
                             </Text>
                             <Text style={textStyle}>Together.</Text>
-                        </View>
-
-                        <View style={{ flex: 2, alignItems: 'center' }}>
-                            {useAlternativeLoginMethods
-                                ? alternativeLoginMethods
-                                : socialLoginOptions}
-
-                            <View
-                                style={{
-                                    width: getWindowWidth() * 0.9,
-                                    paddingTop: PADDING_LARGE * 1.5,
-                                    paddingBottom: PADDING_LARGE,
-                                }}
-                            >
-                                <HorizontalLine />
-                            </View>
-
-                            <Text
-                                onPress={() => {
-                                    setUseAlternativeLoginMethods(!useAlternativeLoginMethods);
-                                }}
-                                style={{
-                                    color: colors.link,
-                                    textAlign: 'center',
-                                    fontFamily: POPPINS_REGULAR,
-                                }}
-                            >
-                                {useAlternativeLoginMethods
-                                    ? isIosApp()
-                                        ? 'Login with social accounts'
-                                        : 'Login with Google'
-                                    : 'Alternative login methods'}
-                            </Text>
-
-                            <View
-                                style={{
-                                    width: '100%',
-                                    paddingTop: PADDING_LARGE,
-                                    paddingHorizontal: PADDING_LARGE,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: colors.secondary_text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 12,
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    By registering or logging in, you agree to our{' '}
-                                    <Text
-                                        onPress={() => {
-                                            Linking.openURL('https://embtr.com/terms');
-                                        }}
-                                        style={{
-                                            color: colors.accent_color,
-                                            fontFamily: POPPINS_MEDIUM,
-                                        }}
-                                    >
-                                        Terms of Service
-                                    </Text>{' '}
-                                    and{' '}
-                                    <Text
-                                        onPress={() => {
-                                            Linking.openURL('https://embtr.com/privacy');
-                                        }}
-                                        style={{
-                                            color: colors.accent_color,
-                                            fontFamily: POPPINS_MEDIUM,
-                                        }}
-                                    >
-                                        Privacy Policy
-                                    </Text>
-                                </Text>
-                            </View>
                         </View>
                     </View>
                 </View>
