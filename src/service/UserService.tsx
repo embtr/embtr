@@ -1,3 +1,4 @@
+import { Role, User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 
 export interface UsernameAvailabilityResult {
@@ -45,5 +46,25 @@ export class UserService {
         }
 
         return { message: 'available', available: true };
+    }
+
+    public static userHasFreeRole(user: User) {
+        if (!user.roles) {
+            return false;
+        }
+
+        return this.hasRole(user.roles, 'free');
+    }
+
+    public static userHasPremiumRole(user: User) {
+        if (!user.roles) {
+            return false;
+        }
+
+        return this.hasRole(user.roles, 'premium');
+    }
+
+    private static hasRole(roles: Role[], role: string) {
+        return roles.some((r) => r.name === role);
     }
 }

@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, Text, TextStyle, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
 
@@ -6,10 +6,17 @@ interface Props {
     text: string;
     secondaryText: string;
     thirdaryText: string;
+    secondaryTextStyle?: TextStyle;
     onPress?: Function;
 }
 
-export const SettingsTextElement = ({ text, secondaryText, thirdaryText, onPress }: Props) => {
+export const SettingsTextElement = ({
+    text,
+    secondaryText,
+    thirdaryText,
+    secondaryTextStyle,
+    onPress,
+}: Props) => {
     const { colors } = useTheme();
 
     return (
@@ -59,14 +66,17 @@ export const SettingsTextElement = ({ text, secondaryText, thirdaryText, onPress
                     <Text
                         ellipsizeMode="tail"
                         numberOfLines={1}
-                        style={{
-                            color: colors.secondary_text,
-                            fontFamily: POPPINS_MEDIUM,
-                            fontSize: 15,
-                            paddingLeft: 30,
-                            width: '100%',
-                            textAlign: 'right',
-                        }}
+                        style={[
+                            {
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_MEDIUM,
+                                fontSize: 15,
+                                paddingLeft: 30,
+                                width: '100%',
+                                textAlign: 'right',
+                            },
+                            secondaryTextStyle,
+                        ]}
                     >
                         {thirdaryText && (
                             <Text

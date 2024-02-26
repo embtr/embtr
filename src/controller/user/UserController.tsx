@@ -98,7 +98,7 @@ class UserController {
 
     public static async getCurrentUser(): Promise<User | undefined> {
         try {
-            const success = await axiosInstance.get<GetUserResponse>(`/${USER_ENDPOINT}/`);
+            const success = await axiosInstance.get<GetUserResponse>(`/user/`);
             const response: GetUserResponse = success.data;
             return response.user;
         } catch (error) {
