@@ -10,7 +10,7 @@ import {
     POPPINS_SEMI_BOLD,
 } from 'src/util/constants';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
-import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { PremiumBadge } from 'src/components/common/PremiumBadge';
 
 interface Props {
     date: Date;
@@ -18,10 +18,6 @@ interface Props {
     secondaryText?: string;
     type: TimelineElementType;
 }
-
-const data: OptimalImageData = {
-    localImage: 'PROFILE.VERIFIED_BADGE',
-};
 
 export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
     const { colors } = useTheme();
@@ -72,7 +68,6 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
                             <Text
                                 style={{
                                     paddingRight: PADDING_SMALL / 3,
-                                    includeFontPadding: false,
                                     fontFamily: POPPINS_SEMI_BOLD,
                                     fontSize: 16,
                                     color: colors.text,
@@ -81,13 +76,7 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
                                 {user.displayName}
                             </Text>
 
-                            <OptimalImage
-                                data={data}
-                                style={{
-                                    width: 15,
-                                    height: 15,
-                                }}
-                            />
+                            <PremiumBadge user={user} size={14} />
                         </View>
                         <Text
                             style={{
