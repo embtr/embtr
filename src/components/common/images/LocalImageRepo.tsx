@@ -30,9 +30,28 @@ export namespace LocalImageRepo {
                     return TROPHY;
                 case 'CUSTOM_HABITS_PLACEHOLDER':
                     return CUSTOM_HABITS_PLACEHOLDER;
-                default:
-                    return null;
             }
+
+            throw new Error('Invalid Habit namespace key: ' + key);
+        };
+    }
+
+    export namespace Profile {
+        export const VERIFIED_BADGE = require('assets/verify.png');
+        export const PREMIUM_BADGE = require('assets/logo.png');
+        export const HEART_BADGE_BACKGROUND = require('assets/black_heart.png');
+
+        export const get = (key: string) => {
+            switch (key) {
+                case 'PREMIUM_BADGE':
+                    return PREMIUM_BADGE;
+                case 'VERIFIED_BADGE':
+                    return VERIFIED_BADGE;
+                case 'HEART_BADGE_BACKGROUND':
+                    return HEART_BADGE_BACKGROUND;
+            }
+
+            throw new Error('Invalid Profile namespace key: ' + key);
         };
     }
 
@@ -45,8 +64,10 @@ export namespace LocalImageRepo {
                 return TimeOfDay.get(key);
             case 'HABIT':
                 return Habit.get(key);
-            default:
-                return null;
+            case 'PROFILE':
+                return Profile.get(key);
         }
+
+        throw new Error('Invalid ImageRepo namespace: ' + namespace);
     };
 }

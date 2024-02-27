@@ -5,8 +5,9 @@ import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 import { User } from 'resources/schema';
-import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
+import { PremiumBadge } from 'src/components/common/PremiumBadge';
 
 interface Props {
     user: User;
@@ -88,12 +89,14 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                             <Text
                                 style={{
                                     fontSize: 16,
+                                    paddingRight: PADDING_SMALL * 0.5,
                                     fontFamily: POPPINS_MEDIUM,
                                     color: colors.profile_name_text,
                                 }}
                             >
                                 {user.displayName}
                             </Text>
+                            <PremiumBadge user={user} size={15} />
                         </View>
                     </View>
                     <View

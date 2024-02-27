@@ -3,8 +3,14 @@ import { User } from 'resources/schema';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getHumanReadableDate } from 'src/util/DateUtility';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import {
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+} from 'src/util/constants';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
+import { PremiumBadge } from 'src/components/common/PremiumBadge';
 
 interface Props {
     date: Date;
@@ -22,15 +28,15 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
         type === TimelineElementType.USER_POST
             ? 'Post'
             : type === TimelineElementType.PLANNED_DAY_RESULT
-              ? 'Daily Update'
-              : 'Challenge';
+                ? 'Daily Update'
+                : 'Challenge';
 
     const color =
         type === TimelineElementType.USER_POST
             ? colors.timeline_label_user_post
             : type === TimelineElementType.PLANNED_DAY_RESULT
-              ? colors.timeline_label_daily_results
-              : colors.timeline_label_challenge;
+                ? colors.timeline_label_daily_results
+                : colors.timeline_label_challenge;
 
     return (
         <View style={{ flexDirection: 'row' }}>
@@ -52,16 +58,26 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
                     }}
                 >
                     <View>
-                        <Text
+                        <View
                             style={{
-                                includeFontPadding: false,
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 16,
-                                color: colors.text,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
                         >
-                            {user.displayName}
-                        </Text>
+                            <Text
+                                style={{
+                                    paddingRight: PADDING_SMALL / 3,
+                                    fontFamily: POPPINS_SEMI_BOLD,
+                                    fontSize: 16,
+                                    color: colors.text,
+                                }}
+                            >
+                                {user.displayName}
+                            </Text>
+
+                            <PremiumBadge user={user} size={14} />
+                        </View>
                         <Text
                             style={{
                                 includeFontPadding: false,
