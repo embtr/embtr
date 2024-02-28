@@ -3,10 +3,18 @@ import { SettingsTextElement } from '../generic/SettingsTextElement';
 import { UserService } from 'src/service/UserService';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextStyle } from 'react-native';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Routes } from 'src/navigation/RootStackParamList';
 
 export const SettingsMembership = () => {
+    const navigation = useEmbtrNavigation();
+
     const currentUser = UserCustomHooks.useCurrentUser();
     const colors = useTheme().colors;
+
+    const onPress = () => {
+        navigation.navigate(Routes.PREMIUM_MODAL);
+    };
 
     const text = 'Membership';
 
@@ -14,8 +22,6 @@ export const SettingsMembership = () => {
     let color: TextStyle = {
         color: colors.secondary_text,
     };
-
-    console.log(currentUser.data?.roles);
 
     if (currentUser.data?.roles && UserService.userHasPremiumRole(currentUser.data)) {
         value = 'Premium';
@@ -26,10 +32,11 @@ export const SettingsMembership = () => {
 
     return (
         <SettingsTextElement
+            onPress={onPress}
             text={text}
             secondaryText={value}
-            thirdaryText={''}
             secondaryTextStyle={color}
+            thirdaryText={'Get Premium'}
         />
     );
 };

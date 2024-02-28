@@ -66,6 +66,7 @@ export type MasterScreens = {
     };
     LoginModal: { newAccountEmail?: string } | undefined;
     RegisterModal: undefined;
+    PremiumModal: undefined;
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -106,4 +107,5 @@ export namespace Routes {
     export const HABIT_SUMMARY_DETAILS = 'HabitSummaryDetails';
     export const LOGIN_MODAL = 'LoginModal';
     export const REGISTER_MODAL = 'RegisterModal';
+    export const PREMIUM_MODAL = 'PremiumModal';
 }
