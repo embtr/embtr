@@ -1,5 +1,5 @@
 import React from 'react';
-import Purchases, { LOG_LEVEL } from 'react-native-purchases';
+import Purchases, { LOG_LEVEL, PurchasesOfferings } from 'react-native-purchases';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
@@ -55,5 +55,20 @@ export namespace RevenueCat {
     export async function getUserId() {
         const currentUser = getCurrentUid();
         return currentUser;
+    }
+
+    export async function isPremium() {
+        const customerInfo = await Purchases.getCustomerInfo();
+        return customerInfo.activeSubscriptions.length > 0;
+    }
+
+    export async function purchasePremium() {
+        const offerings: PurchasesOfferings = await RevenueCat.getAvailableOfferings();
+        const monthlyPackage = offerings.current?.monthly;
+        if (!monthlyPackage) {
+            return;
+        }
+
+        const result = await Purchases.purchasePackage(monthlyPackage);
     }
 }

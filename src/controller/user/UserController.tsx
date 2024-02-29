@@ -11,6 +11,7 @@ import {
     CreateUserResponse,
     GetUserResponse,
     GetUsersResponse,
+    UpdatePremiumStatusResponse,
     UpdateUserRequest,
     UpdateUserResponse,
 } from 'resources/types/requests/UserTypes';
@@ -221,6 +222,17 @@ class UserController {
             .post(`/user/block/`, request)
             .then((success) => {
                 return success.data;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
+    public static async refreshPremiumStatus(): Promise<User> {
+        return await axiosInstance
+            .post<UpdatePremiumStatusResponse>(`/user/premium/`)
+            .then((success) => {
+                return success.data.user;
             })
             .catch((error) => {
                 return error.response.data;

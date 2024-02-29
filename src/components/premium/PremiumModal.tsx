@@ -1,38 +1,25 @@
 import React from 'react';
 
-import { Image, Keyboard, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { Banner } from '../common/Banner';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
-import Purchases, { PurchasesOfferings } from 'react-native-purchases';
-import * as Sentry from '@sentry/react-native';
+import UserController from 'src/controller/user/UserController';
 
 export const PremiumModal = () => {
     const { colors } = useTheme();
 
     const navigation = useEmbtrNavigation();
 
-    const purchase = async () => {
-        const offerings: PurchasesOfferings = await RevenueCat.getAvailableOfferings();
-        const monthlyPackage = offerings.current?.monthly;
-        if (!monthlyPackage) {
-            Sentry.captureEvent({
-                message: 'No monthly package available',
-            });
-
-            return;
+    const executePurchase = async () => {
+        const isPremium = await RevenueCat.isPremium();
+        if (!isPremium) {
+            await RevenueCat.purchasePremium();
         }
 
-        Sentry.captureEvent({
-            message: 'Monthly package available: ' + JSON.stringify(monthlyPackage),
-        });
-
-        const result = await Purchases.purchasePackage(monthlyPackage);
-        Sentry.captureEvent({
-            message: 'Purchase result: ' + JSON.stringify(result),
-        });
+        await UserController.refreshPremiumStatus();
     };
 
     return (
@@ -138,9 +125,10 @@ export const PremiumModal = () => {
 
                     {/* PURCHASE BUTTON*/}
                     <View style={{ width: '100%', paddingBottom: PADDING_LARGE * 4 }}>
+                        <Text>$3.99 per month, cancel anytime</Text>
                         <TouchableOpacity
                             onPress={async () => {
-                                purchase();
+                                executePurchase();
                             }}
                             style={{
                                 marginHorizontal: PADDING_LARGE,
@@ -157,7 +145,7 @@ export const PremiumModal = () => {
                                     top: 2,
                                 }}
                             >
-                                $3.99/month
+                                Continue
                             </Text>
                         </TouchableOpacity>
 
