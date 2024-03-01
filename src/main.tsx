@@ -28,7 +28,7 @@ import { EditHabitModal } from './components/plan/habit/EditHabitModal';
 import { linking } from 'src/navigation/Linking';
 import firebaseApp from './firebase/Firebase';
 import { EnvironmentIndicator } from 'src/components/debug/EnvironmentIndicator';
-//import { RevenueCat } from './controller/revenuecat/RevenueCat';
+import { RevenueCat } from './controller/revenuecat/RevenueCat';
 
 //start up firebase connection
 firebaseApp;
@@ -51,7 +51,7 @@ export const Main = () => {
         Roboto_500Medium,
     });
 
-    //RevenueCat.useConfigure();
+    RevenueCat.useConfigure();
 
     React.useEffect(() => {
         // reset all state
@@ -62,12 +62,12 @@ export const Main = () => {
                 const loggedInUser = await UserController.loginUser();
                 if (loggedInUser) {
                     setLoggedIn(LoginState.LOGGED_IN);
-                    //RevenueCat.login();
+                    RevenueCat.login();
                     dispatch(setCurrentUser(loggedInUser));
                 }
             } else {
                 setLoggedIn(LoginState.LOGGED_OUT);
-                //RevenueCat.logout();
+                RevenueCat.logout();
                 dispatch(setCurrentUser({}));
             }
         });

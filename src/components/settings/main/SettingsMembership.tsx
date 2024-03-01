@@ -5,28 +5,24 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextStyle } from 'react-native';
 import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
 
+const text = 'Membership';
+
 export const SettingsMembership = () => {
     const currentUser = UserCustomHooks.useCurrentUser();
     const colors = useTheme().colors;
 
-    const onPress = async () => {
+    const purchasePremium = async () => {
         const purchased = await RevenueCat.executePaywallWorkflow();
         await UserController.forceRefreshIdToken();
     };
 
-    const text = 'Membership';
-
-    let value = 'Free';
-    let color: TextStyle = {
-        color: colors.secondary_text,
+    const isPremium = currentUser.data?.roles && UserService.userHasPremiumRole(currentUser.data);
+    const onPress = isPremium ? undefined : purchasePremium;
+    const thirdaryText = isPremium ? '' : 'Get Premium';
+    const value = isPremium ? 'Premium' : 'Free';
+    const color: TextStyle = {
+        color: isPremium ? colors.accent_color_light : colors.secondary_text,
     };
-
-    if (currentUser.data?.roles && UserService.userHasPremiumRole(currentUser.data)) {
-        value = 'Premium';
-        color = {
-            color: colors.accent_color_light,
-        };
-    }
 
     return (
         <SettingsTextElement
@@ -34,7 +30,7 @@ export const SettingsMembership = () => {
             text={text}
             secondaryText={value}
             secondaryTextStyle={color}
-            thirdaryText={'Get Premium'}
+            thirdaryText={thirdaryText}
         />
     );
 };
