@@ -3,6 +3,9 @@ import Purchases, { LOG_LEVEL, PurchasesOfferings } from 'react-native-purchases
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
+import RevenueCatUI, { PAYWALL_RESULT } from 'react-native-purchases-ui';
+import UserController from '../user/UserController';
+
 const revenueCatIosApiKey = 'appl_RXSlTRftBMMkEfTIItxDhgJiLwq';
 const revenueCatAndroidApiKey = 'goog_ZYVCZlindWJZYXpncseVDmGbyqB';
 
@@ -42,6 +45,13 @@ export namespace RevenueCat {
         return offerings;
     }
 
+    export async function getCurrentOffering() {
+        const offerings: PurchasesOfferings = await RevenueCat.getAvailableOfferings();
+        const monthlyPackage = offerings.current?.monthly;
+
+        return monthlyPackage;
+    }
+
     export async function getActiveSubscriptions() {
         const customerInfo = await Purchases.getCustomerInfo();
         customerInfo.activeSubscriptions;
@@ -63,12 +73,20 @@ export namespace RevenueCat {
     }
 
     export async function purchasePremium() {
-        const offerings: PurchasesOfferings = await RevenueCat.getAvailableOfferings();
-        const monthlyPackage = offerings.current?.monthly;
+        const monthlyPackage = await RevenueCat.getCurrentOffering();
         if (!monthlyPackage) {
             return;
         }
 
         const result = await Purchases.purchasePackage(monthlyPackage);
+    }
+
+    export async function executePaywallWorkflow(): Promise<boolean> {
+        const paywallResult: PAYWALL_RESULT = await RevenueCatUI.presentPaywall();
+        await UserController.refreshPremiumStatus();
+
+        return (
+            paywallResult === PAYWALL_RESULT.PURCHASED || paywallResult === PAYWALL_RESULT.RESTORED
+        );
     }
 }

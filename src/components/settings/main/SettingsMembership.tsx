@@ -1,19 +1,17 @@
-import { UserCustomHooks } from 'src/controller/user/UserController';
+import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { SettingsTextElement } from '../generic/SettingsTextElement';
 import { UserService } from 'src/service/UserService';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextStyle } from 'react-native';
-import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import { Routes } from 'src/navigation/RootStackParamList';
+import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
 
 export const SettingsMembership = () => {
-    const navigation = useEmbtrNavigation();
-
     const currentUser = UserCustomHooks.useCurrentUser();
     const colors = useTheme().colors;
 
-    const onPress = () => {
-        navigation.navigate(Routes.PREMIUM_MODAL);
+    const onPress = async () => {
+        const purchased = await RevenueCat.executePaywallWorkflow();
+        await UserController.forceRefreshIdToken();
     };
 
     const text = 'Membership';

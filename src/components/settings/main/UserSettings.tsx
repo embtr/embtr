@@ -5,7 +5,6 @@ import { SettingsAccount } from './SettingsAccount';
 import { SettingsMembership } from './SettingsMembership';
 import { SettingsSignOut } from './SettingsSignOut';
 import { SettingsAdvancedButton } from './SettingsAdvancedButton';
-import { NotificationsToggle } from './NotificationsToggle';
 import { EditProfileSettingsButton } from './EditProfileSettingsButton';
 import { SettingsVersion } from './SettingsVersion';
 import { PADDING_LARGE } from 'src/util/constants';

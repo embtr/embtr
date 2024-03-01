@@ -239,7 +239,7 @@ class UserController {
             });
     }
 
-    private static async forceRefreshIdToken() {
+    public static async forceRefreshIdToken() {
         await getAuth().currentUser?.getIdToken(true);
     }
 

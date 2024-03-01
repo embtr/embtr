@@ -18,7 +18,6 @@ import { ManageHabits } from 'src/components/manage_habits/ManageHabits';
 import { HabitSummaryDetails } from '../manage_habits/HabitSummaryDetails';
 import { TermsApprovalModal } from 'src/components/profile/TermsApprovalModal';
 import { UpdateAvailableModal } from 'src/components/modal/UpdateAvailableModal';
-import { PremiumModal } from '../premium/PremiumModal';
 
 const Stack = createStackNavigator();
 
@@ -75,12 +74,6 @@ export const SecureMainStack = () => {
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen name={Routes.HABIT_SUMMARY_DETAILS} component={HabitSummaryDetails} />
-
-            <Stack.Screen
-                name={Routes.PREMIUM_MODAL}
-                component={PremiumModal}
-                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            />
         </Stack.Navigator>
     );
 };
