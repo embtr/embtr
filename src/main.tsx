@@ -54,9 +54,6 @@ export const Main = () => {
         Roboto_500Medium,
     });
 
-    //todo config
-    //revenueCat.();
-
     React.useEffect(() => {
         revenueCat.configure();
 
@@ -73,7 +70,6 @@ export const Main = () => {
                 }
             } else {
                 setLoggedIn(LoginState.LOGGED_OUT);
-                revenueCat.logout();
                 dispatch(setCurrentUser({}));
             }
         });
