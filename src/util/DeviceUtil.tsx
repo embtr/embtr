@@ -2,6 +2,7 @@ import { isBrowser, isMobile } from 'react-device-detect';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import { getWindowHeight, getWindowWidth } from 'src/util/GeneralUtility';
+import Constants from 'expo-constants';
 //import { Platform } from 'react-native';
 
 /*
@@ -61,6 +62,10 @@ export const isAndroidDevice = (): boolean => {
     return Platform.OS === 'android';
 };
 
+export const isExpoGo = (): boolean => {
+    return Constants.appOwnership === 'expo';
+};
+
 export const isShortDevice = (): boolean => {
     return getWindowHeight() < 700;
 };
@@ -71,4 +76,4 @@ export const isNarrowDevice = (): boolean => {
 
 export const isExtraWideDevice = (): boolean => {
     return getWindowWidth() > 800;
-}
+};

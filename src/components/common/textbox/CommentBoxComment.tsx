@@ -7,6 +7,7 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { UsernameTagTracker } from 'src/util/user/UsernameTagTracker';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { Comment } from 'resources/schema';
+import { PremiumBadge } from '../PremiumBadge';
 
 interface Props {
     comment: Comment;
@@ -51,6 +52,7 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
                         style={{
                             flex: 1,
                             flexDirection: 'row',
+                            alignItems: 'center',
                         }}
                     >
                         <Text
@@ -62,6 +64,13 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
                         >
                             {comment.user?.displayName}
                         </Text>
+                        <View
+                            style={{
+                                paddingLeft: 1.5,
+                            }}
+                        >
+                            <PremiumBadge user={comment.user!} size={14} />
+                        </View>
                         <View style={{ flex: 1 }} />
                         <Text
                             style={{

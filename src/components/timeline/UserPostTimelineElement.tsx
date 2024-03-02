@@ -1,9 +1,9 @@
+import React from 'react';
 import { UserPost } from 'resources/schema';
 import { UserPostElement } from 'src/components/timeline/UserPostElement';
 import { Pressable } from 'react-native';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
-import React, { useCallback } from 'react';
 import { UserPostInteractableElementCustomHooks } from './interactable/UserPostInteractableElementCustomHooks';
 import { useFocusEffect } from '@react-navigation/native';
 

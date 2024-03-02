@@ -84,19 +84,37 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 flexDirection: 'row',
+                                width: '100%',
                             }}
                         >
+                            <View
+                                style={{
+                                    flex: 1,
+                                }}
+                            />
                             <Text
                                 style={{
                                     fontSize: 16,
-                                    paddingRight: PADDING_SMALL * 0.5,
                                     fontFamily: POPPINS_MEDIUM,
                                     color: colors.profile_name_text,
                                 }}
                             >
                                 {user.displayName}
                             </Text>
-                            <PremiumBadge user={user} size={15} />
+
+                            <View
+                                style={{
+                                    flex: 1,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        paddingLeft: PADDING_SMALL / 3,
+                                    }}
+                                >
+                                    <PremiumBadge user={user} size={15} />
+                                </View>
+                            </View>
                         </View>
                     </View>
                     <View
