@@ -2,26 +2,24 @@ import { View } from 'react-native';
 import { PlannedTask } from 'resources/schema';
 import { Constants } from 'resources/types/constants/constants';
 import { ProgressSvg } from 'src/components/plan/task/progress/ProgressSvg';
-import { OptimalImage, OptimalImageData } from '../images/OptimalImage';
-import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
-import { PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
+import { SkippedResultIcon } from './result_icons/SkippedResultIcon';
+import { FailedResultIcon } from './result_icons/FailedResultIcon';
+import { CompleteResultIcon } from './result_icons/CompleteResultIcon';
+import { IncompleteResultIcon } from './result_icons/IncompleteResultIcon';
 
 interface Props {
     plannedTask: PlannedTask;
 }
 
 export const DailyResultCardElementTimeOfDay = ({ plannedTask }: Props) => {
-    const imageData: OptimalImageData = {
-        localImage: TimeOfDayUtility.getTimeOfDayImageRepoKey(plannedTask.timeOfDayId ?? 0),
-    };
-
     const quantity = plannedTask.quantity;
     const completedQuantity = plannedTask.completedQuantity;
 
-    let taskIsComplete = false;
-    if (quantity && completedQuantity) {
-        taskIsComplete = completedQuantity >= quantity;
-    }
+    const taskIsComplete =
+        plannedTask.status === Constants.HabitStatus.COMPLETE ||
+        (completedQuantity ?? 0) >= (quantity ?? 1);
+    const taskIsSkipped = plannedTask.status === Constants.HabitStatus.SKIPPED;
+    const taskIsFailed = plannedTask.status === Constants.HabitStatus.FAILED;
 
     let status = plannedTask.status;
     if (status === undefined) {
@@ -37,15 +35,15 @@ export const DailyResultCardElementTimeOfDay = ({ plannedTask }: Props) => {
 
     return (
         <View>
-            <ProgressSvg
-                size={size}
-                strokeWidth={2.5}
-                incompleteIsFailed={true}
-                targetQuantity={quantity ?? 1}
-                completedQuantity={completedQuantity ?? 0}
-                isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
-                isFailed={plannedTask.status === Constants.HabitStatus.FAILED}
-            />
+            {taskIsSkipped ? (
+                <SkippedResultIcon />
+            ) : taskIsFailed ? (
+                <FailedResultIcon />
+            ) : taskIsComplete ? (
+                <CompleteResultIcon />
+            ) : (
+                <IncompleteResultIcon />
+            )}
         </View>
     );
 };

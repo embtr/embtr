@@ -1,6 +1,6 @@
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PADDING_MEDIUM, PADDING_SMALL, POPPINS_MEDIUM } from 'src/util/constants';
+import { PADDING_MEDIUM, POPPINS_MEDIUM } from 'src/util/constants';
 import { DailyResultCardElement } from './DailyResultCardElement';
 import { PlannedDayResult as PlannedDayResultModel, PlannedTask } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
