@@ -52,6 +52,13 @@ export type MasterScreens = {
     UpdateAvailableModal: undefined;
     ManageHabits: undefined;
     HabitSummaryDetails: { id: number };
+
+    CreateEditScheduledHabit_SlideUp: {
+        onExit?: () => void;
+        habitId?: number;
+        isCreateCustomHabit?: boolean;
+        scheduledHabitId?: number;
+    };
     CreateEditScheduledHabit: {
         onExit?: () => void;
         habitId?: number;
@@ -95,6 +102,7 @@ export namespace Routes {
     export const ADD_HABIT_CATEGORY = 'AddHabitCategory';
     export const ADD_HABIT_CATEGORIES = 'AddHabitCategories';
     export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';
+    export const CREATE_EDIT_SCHEDULED_HABIT_SLIDE_UP = 'CreateEditScheduledHabit_SlideUp';
     export const EDIT_PLANNED_HABIT = 'EditPlannedHabit';
     export const MY_HABITS_CATEGORY_ELEMENT = 'MyHabitsCategoryElement';
     export const ADVANCED_USER_SETTINGS = 'AdvancedUserSettings';

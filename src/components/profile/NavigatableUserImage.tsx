@@ -51,13 +51,6 @@ const styles = StyleSheet.create({
     imageContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: 'green',
-        shadowOpacity: 0.5,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowRadius: 3,
     },
     image: {
         borderRadius: 50,

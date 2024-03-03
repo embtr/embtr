@@ -1,8 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { Banner } from 'src/components/common/Banner';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import { Routes } from 'src/navigation/RootStackParamList';
 import { Screen } from 'src/components/common/Screen';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { AddHabitElement } from './AddHabitElement';

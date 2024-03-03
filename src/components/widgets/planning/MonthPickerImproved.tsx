@@ -5,6 +5,8 @@ import { CurrentMonthText } from 'src/components/plan/planning/CurrentMonthText'
 import { PADDING_LARGE } from 'src/util/constants';
 import { MonthPickerElementImproved } from './MonthPickerElementImproved';
 import { MonthPickerElementData } from 'src/model/PlanningWidget';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { Routes } from 'src/navigation/RootStackParamList';
 
 const styles = StyleSheet.create({
     animatedContainer: { overflow: 'hidden', width: '100%' },
@@ -59,6 +61,8 @@ interface Props {
 
 export const MonthPickerImproved = React.forwardRef(
     ({ allMonths, selectedMonth, onSelectionChange, onScrollToToday }: Props, ref: any) => {
+        const navigation = useEmbtrNavigation();
+
         const [advancedOptionsHeight] = React.useState<Animated.Value>(new Animated.Value(0));
         const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
 
@@ -79,6 +83,11 @@ export const MonthPickerImproved = React.forwardRef(
                     month={selectedMonth.monthString}
                     advancedVisible={advancedVisible}
                     scrollToToday={onScrollToToday}
+                    navigateToCreateHabit={() => {
+                        navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT_SLIDE_UP, {
+                            isCreateCustomHabit: true,
+                        });
+                    }}
                 />
 
                 {/* collapsable month selector */}

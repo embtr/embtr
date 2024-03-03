@@ -97,49 +97,54 @@ export const CreateEditScheduledHabit = () => {
                     />
                 )}
 
-                <SafeAreaView forceInset={{}} style={{ flex: 1 }}>
-                    <Banner
-                        name={'Schedule Habit'}
-                        leftRoute={'BACK'}
-                        leftIcon={'arrow-back'}
-                        rightText={
-                            !isCreatedNewScheduledHabit && !isCreateCustomHabit
+                <Banner
+                    name={'Schedule Habit'}
+                    leftRoute={'BACK'}
+                    leftIcon={'arrow-back'}
+                    rightText={
+                        isCreateCustomHabit
+                            ? 'discovery'
+                            : !isCreatedNewScheduledHabit && !isCreateCustomHabit
                                 ? 'archive'
                                 : undefined
-                        }
-                        rightColor={colors.archive}
-                        rightOnClick={
-                            !isCreatedNewScheduledHabit
+                    }
+                    rightColor={isCreateCustomHabit ? colors.link : colors.archive}
+                    rightOnClick={
+                        isCreateCustomHabit
+                            ? () => {
+                                navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
+                            }
+                            : !isCreatedNewScheduledHabit
                                 ? () => {
-                                      setArchiveModalVisible(true);
-                                  }
+                                    setArchiveModalVisible(true);
+                                }
                                 : undefined
-                        }
-                    />
+                    }
+                />
 
-                    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                        <View
-                            style={{
-                                flex: 1,
-                                paddingHorizontal: PADDING_LARGE,
-                            }}
-                        >
-                            <View style={{ height: PADDING_LARGE }} />
-                            <ScheduledHabitTitle />
-                            <ScheduleHabitDescription />
-                            <ScheduleHabitRepeatingSchedule />
-                            <ScheduledHabitTimeOfDay />
-                            <ScheduledHabitDetails />
-                        </View>
-                        <View style={{ height: 10 * PADDING_LARGE }} />
-                    </ScrollView>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            paddingHorizontal: PADDING_LARGE,
+                        }}
+                    >
+                        <View style={{ height: PADDING_LARGE }} />
+                        <ScheduledHabitTitle />
+                        <ScheduleHabitDescription />
+                        <ScheduleHabitRepeatingSchedule />
+                        <ScheduledHabitTimeOfDay />
+                        <ScheduledHabitDetails />
+                    </View>
+                    <View style={{ height: 10 * PADDING_LARGE }} />
+                </ScrollView>
 
-                    <CreateEditHabitSaveButton
-                        habitId={habitId}
-                        scheduledHabitId={scheduledHabitId}
-                        onExit={onExit}
-                    />
-                </SafeAreaView>
+                <CreateEditHabitSaveButton
+                    habitId={habitId}
+                    scheduledHabitId={scheduledHabitId}
+                    onExit={onExit}
+                />
+                <View style={{ height: PADDING_LARGE * 2 }} />
             </Screen>
         </CreateEditScheduledHabitProvider>
     );

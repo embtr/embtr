@@ -1,6 +1,5 @@
 import axiosInstance from 'src/axios/axios';
 import {
-    GetHabitJourneyResponse,
     GetHabitSummariesResponse,
     GetHabitSummaryResponse,
 } from 'resources/types/requests/HabitTypes';

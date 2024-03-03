@@ -98,7 +98,7 @@ export const Today = () => {
                             }}
                             style={{ flex: 1 }}
                         >
-                            <TodaysTasksWidgetImproved />
+                            <PlanningWidgetImproved />
                         </View>
 
                         <View style={{ height: PADDING_LARGE * 1.5 }} />

@@ -3,13 +3,13 @@ import { View, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { TabElement } from 'src/components/home/tabmenu/TabElement';
 import { useTheme } from 'src/components/theme/ThemeProvider';
+import { Image } from 'expo-image';
 import { TABS } from 'src/components/home/Dashboard';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { setShowQuickAddModal } from 'src/redux/user/GlobalState';
-import { Image } from 'expo-image';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
+import { Routes } from 'src/navigation/RootStackParamList';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
@@ -98,7 +98,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             element = (
                 <TouchableOpacity
                     onPress={() => {
-                        dispatch(setShowQuickAddModal(true));
+                        navigation.navigate(Routes.MANAGE_HABITS);
                     }}
                     style={[
                         {

@@ -31,7 +31,7 @@ export const TodaysCountdownWidget = () => {
             <View>
                 <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 16 }}>
                     Happy
-                    <Text style={{ color: colors.accent_color }}> {dayCapitalized}</Text>{' '}
+                    <Text style={{ color: colors.accent_color_light }}> {dayCapitalized}</Text>{' '}
                     {dateString}!
                 </Text>
 

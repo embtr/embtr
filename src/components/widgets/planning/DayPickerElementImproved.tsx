@@ -64,7 +64,9 @@ export const MemoizedDayPickerElementImproved = React.memo(
 export const DayPickerElementImproved = ({ elementData, isSelected, onSelect, isToday }: Props) => {
     const { colors } = useTheme();
 
-    const textColor = isSelected ? colors.accent_color : colors.today_calendar_picker_unselected;
+    const textColor = isSelected
+        ? colors.accent_color_light
+        : colors.today_calendar_picker_unselected;
     const underscoreColor = isSelected ? colors.accent_color : colors.card_background;
 
     return (

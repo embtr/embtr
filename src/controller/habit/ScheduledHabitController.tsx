@@ -10,6 +10,7 @@ import {
 } from 'resources/types/requests/ScheduledHabitTypes';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { PureDate } from 'resources/types/date/PureDate';
+import { getTodayPureDate } from 'src/util/DateUtility';
 
 export class ScheduledHabitController {
     public static async create(scheduledHabit: ScheduledHabit) {
@@ -39,12 +40,30 @@ export class ScheduledHabitController {
 
         return await axiosInstance
             .post(`/habit/schedule/${id}/archive`, request)
-            .then((success) => {
+            .then(() => {
                 return true;
             })
-            .catch((error) => {
+            .catch(() => {
                 return false;
             });
+    }
+
+    public static async getActive() {
+        const now = getTodayPureDate();
+
+        try {
+            const success = await axiosInstance.get<GetScheduledHabitsResponse>(
+                '/scheduled-habit/active/',
+                {
+                    params: {
+                        date: now,
+                    },
+                }
+            );
+            return success.data.scheduledHabits;
+        } catch (error) {
+            return undefined;
+        }
     }
 
     public static async getScheduledHabit(id: number) {
@@ -78,6 +97,16 @@ export class ScheduledHabitController {
 }
 
 export namespace ScheduledHabitCustomHooks {
+    export const useActive = () => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['activeScheduledHabits'],
+            queryFn: async () => await ScheduledHabitController.getActive(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
     export const useScheduledHabitsByHabit = (habitId: number) => {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['scheduledHabitsByHabit', habitId],

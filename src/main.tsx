@@ -29,7 +29,7 @@ import { linking } from 'src/navigation/Linking';
 import firebaseApp from './firebase/Firebase';
 import { EnvironmentIndicator } from 'src/components/debug/EnvironmentIndicator';
 import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
-import { RevenueCatImpl } from './controller/revenuecat/RevenueCatImpl';
+import { RevenueCatDummy } from './controller/revenuecat/RevenueCatDummy';
 
 //start up firebase connection
 firebaseApp;
@@ -41,7 +41,7 @@ enum LoginState {
 }
 
 export const Main = () => {
-    const revenueCat: RevenueCat = new RevenueCatImpl();
+    const revenueCat: RevenueCat = new RevenueCatDummy();
 
     const dispatch = useAppDispatch();
     const [loggedIn, setLoggedIn] = React.useState(LoginState.LOADING);

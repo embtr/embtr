@@ -5,6 +5,8 @@ import { CARD_SHADOW, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants'
 import { formatDate } from 'src/util/DateUtility';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayController';
+import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
+import { ScheduledHabitUtil } from 'resources/types/util/ScheduledHabitUtil';
 
 interface Props {
     scheduledHabit: ScheduledHabit;
@@ -15,6 +17,13 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
 
     const timeOfDays = TimesOfDayCustomHooks.useTimesOfDay();
 
+    const optimalImageData: OptimalImageData = {
+        localImage: ScheduledHabitUtil.getLocalImage(scheduledHabit),
+        remoteImageUrl: ScheduledHabitUtil.getRemoteImageUrl(scheduledHabit),
+    };
+
+    const title = ScheduledHabitUtil.getTitle(scheduledHabit);
+
     const start = formatDate(scheduledHabit.startDate ?? new Date());
     const end = formatDate(scheduledHabit.endDate ?? new Date());
 
@@ -24,7 +33,6 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                 width: '100%',
                 paddingHorizontal: 12,
                 paddingTop: 12,
-                flexDirection: 'row',
             }}
         >
             <View
@@ -33,13 +41,46 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                         backgroundColor: colors.card_background,
                         borderRadius: 9,
                         flex: 1,
-                        flexDirection: 'row',
                         alignItems: 'center',
                         padding: 12,
                     },
                     CARD_SHADOW,
                 ]}
             >
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        width: '100%',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <View
+                            style={{
+                                height: 40,
+                                width: 40,
+                                backgroundColor: colors.secondary_text,
+                            }}
+                        >
+                            <OptimalImage
+                                data={optimalImageData}
+                                style={{ height: 40, width: 40 }}
+                            />
+                        </View>
+                    </View>
+                    <Text
+                        style={{
+                            color: colors.text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 18,
+                        }}
+                    >
+                        {title}
+                    </Text>
+                    <View style={{ flex: 1 }} />
+                </View>
+
                 <View style={{ alignItems: 'center', width: '100%' }}>
                     <View
                         style={{

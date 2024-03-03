@@ -4,6 +4,19 @@
   },
   "build": {
     "development": {
+      "cache": {
+        "key": "resetme"
+      },
+      "env": {
+        "APP_ENV": "production",
+        "EXPO_PUBLIC_AUTH_EXPO_CLIENT_ID": "376803163073-nivsntdkkej9ltf8lm7o46u1m2o63hcg.apps.googleusercontent.com",
+        "EXPO_PUBLIC_AUTH_IOS_CLIENT_ID": "376803163073-8pb7iligkf6p5ea4roucb23fe8v857r8.apps.googleusercontent.com",
+        "EXPO_PUBLIC_AUTH_ANDROID_CLIENT_ID": "376803163073-dn4cpjpj65nn3fm5e2f6r6hqc5hp7agf.apps.googleusercontent.com",
+        "EXPO_PUBLIC_FIREBASE_WEB_API": "AIzaSyCuX7Ye-FNL4ucNqk2SlnRJXHo7HmoeN1s",
+        "EXPO_PUBLIC_REVENUECAT_IOS_API_KEY": "appl_RXSlTRftBMMkEfTIItxDhgJiLwq",
+        "EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY": "goog_ZYVCZlindWJZYXpncseVDmGbyqB"
+      }
+
       "developmentClient": true,
       "distribution": "internal",
       "env": {

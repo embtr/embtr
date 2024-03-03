@@ -3,6 +3,7 @@ import { HabitSummary } from 'resources/types/habit/Habit';
 import { HabitSummaryElement } from 'src/components/manage_habits/HabitSummaryElement';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { PADDING_LARGE, PADDING_MEDIUM } from 'src/util/constants';
 
 interface Props {
     habitSummaries: HabitSummary[];
@@ -15,12 +16,13 @@ export const HabitSummaries = ({ habitSummaries, showExpired }: Props) => {
     const habits = showExpired
         ? habitSummaries
         : habitSummaries.filter((habitSummary) => {
-              return habitSummary.nextHabitDays != undefined && habitSummary.nextHabitDays >= 0;
-          });
+            return habitSummary.nextHabitDays != undefined && habitSummary.nextHabitDays >= 0;
+        });
 
-    const renderItem = ({ item }: { item: HabitSummary }) => {
+    const renderItem = ({ item, index }: { item: HabitSummary; index: number }) => {
         return (
             <Pressable
+                style={{ paddingTop: index === 0 ? 0 : PADDING_MEDIUM }}
                 onPress={() => {
                     if (!item.task.id) {
                         return;

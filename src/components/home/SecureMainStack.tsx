@@ -34,7 +34,10 @@ export const SecureMainStack = () => {
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen name="AddHabitCategory" component={AddHabitCategory} />
-            <Stack.Screen name="CreateEditScheduledHabit" component={CreateEditScheduledHabit} />
+            <Stack.Screen
+                name={Routes.CREATE_EDIT_SCHEDULED_HABIT}
+                component={CreateEditScheduledHabit}
+            />
             <Stack.Screen name="EditPlannedHabit" component={EditPlannedHabit} />
             <Stack.Screen
                 name="MyHabitsCategoryElement"
@@ -71,6 +74,11 @@ export const SecureMainStack = () => {
             <Stack.Screen
                 name={Routes.MANAGE_HABITS}
                 component={ManageHabits}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name={Routes.CREATE_EDIT_SCHEDULED_HABIT_SLIDE_UP}
+                component={CreateEditScheduledHabit}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen name={Routes.HABIT_SUMMARY_DETAILS} component={HabitSummaryDetails} />

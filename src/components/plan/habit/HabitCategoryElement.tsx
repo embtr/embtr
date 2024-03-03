@@ -26,10 +26,10 @@ export const HabitCategoryElement = ({ habitCategory }: Props) => {
         const type: HabitCategoryType = isCustomHabits
             ? HabitCategoryType.CUSTOM_HABITS
             : isRecentHabits
-              ? HabitCategoryType.RECENT_HABITS
-              : isMyHabits
-                ? HabitCategoryType.MY_HABITS
-                : HabitCategoryType.HABIT_CATEGORY;
+                ? HabitCategoryType.RECENT_HABITS
+                : isMyHabits
+                    ? HabitCategoryType.MY_HABITS
+                    : HabitCategoryType.HABIT_CATEGORY;
 
         navigation.navigate(Routes.ADD_HABIT_CATEGORY, {
             id: habitCategory.id,

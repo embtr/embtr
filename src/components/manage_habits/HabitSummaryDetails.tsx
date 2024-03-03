@@ -29,16 +29,16 @@ export const HabitSummaryDetails = () => {
     const currentDayKey = getTodayKey();
     const filteredScheduledHabits = !showExpired
         ? scheduledHabits.data?.filter((scheduledHabit) => {
-              if (!scheduledHabit.endDate) {
-                  return true;
-              }
+            if (!scheduledHabit.endDate) {
+                return true;
+            }
 
-              const pureCurrentDayKey = PureDate.fromString(currentDayKey);
-              const pureScheduledHabitEndDate = PureDate.fromDateFromServer(scheduledHabit.endDate);
-              const isExpired = pureScheduledHabitEndDate < pureCurrentDayKey;
+            const pureCurrentDayKey = PureDate.fromString(currentDayKey);
+            const pureScheduledHabitEndDate = PureDate.fromDateFromServer(scheduledHabit.endDate);
+            const isExpired = pureScheduledHabitEndDate < pureCurrentDayKey;
 
-              return !isExpired;
-          })
+            return !isExpired;
+        })
         : scheduledHabits.data;
 
     if (!habitSummary.data || !scheduledHabits.data) {
@@ -86,21 +86,6 @@ export const HabitSummaryDetails = () => {
                 <HabitSummaryDetailsHeader habitSummary={habitSummary.data} />
             </View>
 
-            <View
-                style={{
-                    width: '100%',
-                    alignItems: 'flex-end',
-                    paddingRight: PADDING_LARGE,
-                }}
-            >
-                <Checkbox
-                    text={'Show Expired '}
-                    checked={showExpired}
-                    onCheck={() => {
-                        setShowExpired(!showExpired);
-                    }}
-                />
-            </View>
             <FlatList
                 data={filteredScheduledHabits}
                 renderItem={renderItem}

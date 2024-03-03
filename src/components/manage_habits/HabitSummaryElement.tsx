@@ -91,7 +91,6 @@ export const HabitSummaryElement = ({ habitSummary }: Props) => {
             style={{
                 width: '100%',
                 paddingHorizontal: 12,
-                paddingTop: 12,
                 flexDirection: 'row',
             }}
         >
