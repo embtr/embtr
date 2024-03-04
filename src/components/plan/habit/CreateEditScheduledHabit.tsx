@@ -12,14 +12,13 @@ import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTit
 import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
 import { CreateEditHabitSaveButton } from 'src/components/plan/habit/CreateEditHabitSaveButton';
-import SafeAreaView from 'react-native-safe-area-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { useDispatch } from 'react-redux';
 import { getCurrentUser, getSelectedDayKey, setGlobalLoading } from 'src/redux/user/GlobalState';
 import { useEmbtrNavigation, useEmbtrRoute } from 'src/hooks/NavigationHooks';
-import PlannedDayController, { getTodayKey } from 'src/controller/planning/PlannedDayController';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { PlannedDayService } from 'src/service/PlannedDayService';
 import getTodayDayKey = PlannedDayService.getTodayDayKey;
@@ -105,20 +104,20 @@ export const CreateEditScheduledHabit = () => {
                         isCreateCustomHabit
                             ? 'discovery'
                             : !isCreatedNewScheduledHabit && !isCreateCustomHabit
-                                ? 'archive'
-                                : undefined
+                              ? 'archive'
+                              : undefined
                     }
                     rightColor={isCreateCustomHabit ? colors.link : colors.archive}
                     rightOnClick={
                         isCreateCustomHabit
                             ? () => {
-                                navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
-                            }
+                                  navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
+                              }
                             : !isCreatedNewScheduledHabit
-                                ? () => {
+                              ? () => {
                                     setArchiveModalVisible(true);
                                 }
-                                : undefined
+                              : undefined
                     }
                 />
 

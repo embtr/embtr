@@ -14,14 +14,12 @@ import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { Logger } from 'src/util/GeneralUtility';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentTab, getSelectedDayKey } from 'src/redux/user/GlobalState';
+import { getSelectedDayKey } from 'src/redux/user/GlobalState';
 import PlannedDayController, {
     getDateFromDayKey,
-    getTodayKey,
 } from 'src/controller/planning/PlannedDayController';
 import TaskController from 'src/controller/planning/TaskController';
 import { HabitController } from 'src/controller/habit/HabitController';
-import { TABS } from 'src/components/home/Dashboard';
 import { CreateTaskRequest } from 'resources/types/requests/TaskTypes';
 
 interface Props {
@@ -65,8 +63,7 @@ export const CreateEditHabitSaveButton = ({
 
     const routes = navigation.getState().routes;
     const previousRoute = routes[routes.length - 2];
-    const isFromHabitSummaryDetails =
-        previousRoute.name.toString() === Routes.HABIT_SUMMARY_DETAILS;
+    const isFromHabitSummaryDetails = previousRoute.name.toString() === Routes.MANAGE_HABITS;
 
     const createUpdatedPlannedTask = (id: number) => {
         const plannedTask: PlannedTask = {

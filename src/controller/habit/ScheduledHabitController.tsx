@@ -48,12 +48,48 @@ export class ScheduledHabitController {
             });
     }
 
+    public static async getPast() {
+        const now = getTodayPureDate();
+
+        try {
+            const success = await axiosInstance.get<GetScheduledHabitsResponse>(
+                '/scheduled-habit/past/',
+                {
+                    params: {
+                        date: now,
+                    },
+                }
+            );
+            return success.data.scheduledHabits;
+        } catch (error) {
+            return undefined;
+        }
+    }
+
     public static async getActive() {
         const now = getTodayPureDate();
 
         try {
             const success = await axiosInstance.get<GetScheduledHabitsResponse>(
                 '/scheduled-habit/active/',
+                {
+                    params: {
+                        date: now,
+                    },
+                }
+            );
+            return success.data.scheduledHabits;
+        } catch (error) {
+            return undefined;
+        }
+    }
+
+    public static async getFuture() {
+        const now = getTodayPureDate();
+
+        try {
+            const success = await axiosInstance.get<GetScheduledHabitsResponse>(
+                '/scheduled-habit/future/',
                 {
                     params: {
                         date: now,
@@ -94,13 +130,45 @@ export class ScheduledHabitController {
     public static async invalidateScheduledHabitsByHabit(habitId: number) {
         await reactQueryClient.invalidateQueries(['scheduledHabitsByHabit', habitId]);
     }
+
+    public static async invalidatePastScheduledHabits() {
+        await reactQueryClient.invalidateQueries(['pastScheduledHabits']);
+    }
+
+    public static async invalidateActiveScheduledHabits() {
+        await reactQueryClient.invalidateQueries(['activeScheduledHabits']);
+    }
+
+    public static async invalidateFutureScheduledHabits() {
+        await reactQueryClient.invalidateQueries(['futureScheduledHabits']);
+    }
 }
 
 export namespace ScheduledHabitCustomHooks {
+    export const usePast = () => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['pastScheduledHabits'],
+            queryFn: async () => await ScheduledHabitController.getPast(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
     export const useActive = () => {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['activeScheduledHabits'],
             queryFn: async () => await ScheduledHabitController.getActive(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useFuture = () => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['futureScheduledHabits'],
+            queryFn: async () => await ScheduledHabitController.getFuture(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
