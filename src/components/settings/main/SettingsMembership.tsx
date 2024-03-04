@@ -5,12 +5,12 @@ import { UserService } from 'src/service/UserService';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextStyle } from 'react-native';
 import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
-import { RevenueCatDummy } from 'src/controller/revenuecat/RevenueCatDummy';
+import { RevenueCatProvider } from 'src/controller/revenuecat/RevenueCatProvider';
 
 const text = 'Membership';
 
 export const SettingsMembership = () => {
-    const revenueCat: RevenueCat = new RevenueCatDummy();
+    const revenueCat: RevenueCat = RevenueCatProvider.get();
 
     const currentUser = UserCustomHooks.useCurrentUser();
     const colors = useTheme().colors;

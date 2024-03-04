@@ -3,11 +3,11 @@ import { RevenueCat } from './RevenueCat';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
 export class RevenueCatDummy implements RevenueCat {
-    public async configure() { }
+    public async configure() {}
 
-    public async login() { }
+    public async login() {}
 
-    public async logout() { }
+    public async logout() {}
 
     public async getAvailableOfferings(): Promise<PurchasesOfferings | undefined> {
         return undefined;
@@ -17,9 +17,9 @@ export class RevenueCatDummy implements RevenueCat {
         return undefined;
     }
 
-    public async getActiveSubscriptions() { }
+    public async getActiveSubscriptions() {}
 
-    public async getLoggedInUser() { }
+    public async getLoggedInUser() {}
 
     public async getUserId() {
         const uid = getCurrentUid();
@@ -30,7 +30,7 @@ export class RevenueCatDummy implements RevenueCat {
         return true;
     }
 
-    public async purchasePremium() { }
+    public async purchasePremium() {}
 
     public async executePaywallWorkflow(): Promise<boolean> {
         return true;
