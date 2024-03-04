@@ -5,7 +5,13 @@ import DEFAULT from 'assets/banner.png';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 import { User } from 'resources/schema';
-import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import {
+    PADDING_LARGE,
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+} from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { PremiumBadge } from 'src/components/common/PremiumBadge';
 
@@ -126,21 +132,30 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                             style={{
                                 fontSize: 12,
                                 includeFontPadding: false,
+                                fontFamily: POPPINS_SEMI_BOLD,
+                                color: colors.link,
+                                bottom: 1,
+                            }}
+                        >
+                            {'@'}
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                includeFontPadding: false,
                                 fontFamily: POPPINS_MEDIUM,
                                 color: colors.secondary_text,
                             }}
                         >
-                            {'@' + user.username}
+                            {user.username}
                         </Text>
-                        <View
-                            style={{
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <Ionicons name={'location-outline'} size={12} color={colors.link} />
+
+                        <View style={{ justifyContent: 'center' }}>
+                            <Ionicons name={'location-sharp'} size={12} color={colors.link} />
                         </View>
                         <Text
                             style={{
+                                right: 1,
                                 fontSize: 12,
                                 includeFontPadding: false,
                                 fontFamily: POPPINS_MEDIUM,

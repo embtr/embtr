@@ -7,7 +7,7 @@ export class DailyHistoryController {
     public static async get(userId: number) {
         const end = new Date();
         const start = new Date();
-        start.setDate(start.getDate() - 29);
+        start.setDate(start.getDate() - 100);
 
         return axiosInstance
             .get(`/user/${userId}/daily-history/`, { params: { start, end } })

@@ -14,7 +14,6 @@ interface Props {
 
 export const PremiumBadge = ({ user, size }: Props) => {
     const userIsPremium = UserService.userHasPremiumRole(user);
-    console.log(user.roles, userIsPremium);
     if (!userIsPremium) {
         return <View />;
     }

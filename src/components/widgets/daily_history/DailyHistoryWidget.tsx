@@ -24,16 +24,18 @@ export const DailyHistoryWidget = ({ userId }: Props) => {
     const history = dailyHistory.data.history;
 
     let views: JSX.Element[] = [];
-    for (let i = 0; i < history.length; i++) {
-        const historyElement = history[i];
+    for (let i = 0; i < 29; i++) {
+        const index = 100 - 29 + i + 1;
+        const historyElement = history[index];
+        console.log(historyElement);
 
         views.push(
             <View
                 key={i}
                 style={{
                     backgroundColor: historyElement.complete
-                    ? colors.progress_bar_complete
-                    : colors.progress_bar_color,
+                        ? colors.progress_bar_complete
+                        : colors.progress_bar_color,
                     height: diameter,
                     width: diameter,
                     borderRadius: 1,

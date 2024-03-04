@@ -11,7 +11,6 @@ export namespace QuoteOfTheDayInteractableElementCustomHooks {
     ): InteractableData => {
         const addLike = async () => {
             if (!quoteOfTheDay.id) {
-                console.log('no id - returning');
                 return;
             }
 
