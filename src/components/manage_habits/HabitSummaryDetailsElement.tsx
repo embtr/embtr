@@ -24,15 +24,15 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
 
     const title = ScheduledHabitUtil.getTitle(scheduledHabit);
 
-    const start = formatDate(scheduledHabit.startDate ?? new Date());
-    const end = formatDate(scheduledHabit.endDate ?? new Date());
+    const start = formatDate(scheduledHabit.startDate ?? scheduledHabit.createdAt ?? new Date());
+    const end = scheduledHabit.endDate ? formatDate(scheduledHabit.endDate) : 'ongoing';
 
     return (
         <View
             style={{
                 width: '100%',
-                paddingHorizontal: 12,
-                paddingTop: 12,
+                paddingHorizontal: PADDING_LARGE,
+                paddingTop: PADDING_LARGE,
             }}
         >
             <View
@@ -42,7 +42,7 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                         borderRadius: 9,
                         flex: 1,
                         alignItems: 'center',
-                        padding: 12,
+                        padding: PADDING_LARGE,
                     },
                     CARD_SHADOW,
                 ]}
@@ -58,14 +58,17 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                     <View style={{ flex: 1 }}>
                         <View
                             style={{
+                                backgroundColor: '#404040',
+                                borderRadius: 9,
                                 height: 40,
                                 width: 40,
-                                backgroundColor: colors.secondary_text,
+                                alignItems: 'center',
+                                justifyContent: 'center',
                             }}
                         >
                             <OptimalImage
                                 data={optimalImageData}
-                                style={{ height: 40, width: 40 }}
+                                style={{ height: 36, width: 36 }}
                             />
                         </View>
                     </View>
@@ -124,13 +127,15 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
 
                     <View
                         style={{
-                            flex: 1,
+                            alignItems: 'center',
                             flexDirection: 'row',
-                            justifyContent: 'center',
-                            paddingTop: PADDING_LARGE / 2,
                         }}
                     >
                         {timeOfDays.map((timeOfDay) => {
+                            if (timeOfDay.id === 5) {
+                                return;
+                            }
+
                             const timeOfDayIsSelected = scheduledHabit.timesOfDay?.some(
                                 (selectedTimeOfDay) => {
                                     return selectedTimeOfDay.id === timeOfDay.id;
@@ -150,13 +155,19 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                         })}
                     </View>
 
+                    {/*
                     <View
                         style={{
                             flexDirection: 'row',
                             alignItems: 'center',
+                            paddingTop: PADDING_LARGE / 2,
                         }}
                     >
-                        <View style={{ flex: 1, paddingTop: PADDING_LARGE / 2 }}>
+                        <View
+                            style={{
+                                flex: 1,
+                            }}
+                        >
                             <Text
                                 style={{
                                     fontFamily: POPPINS_REGULAR,
@@ -182,6 +193,7 @@ export const HabitSummaryDetailsElement = ({ scheduledHabit }: Props) => {
                             </Text>
                         </View>
                     </View>
+                    */}
                 </View>
             </View>
         </View>

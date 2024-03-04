@@ -3,7 +3,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { View, Text, Pressable } from 'react-native';
-import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useTheme } from '../theme/ThemeProvider';
@@ -23,9 +23,14 @@ export const ManageHabits = () => {
     const colors = useTheme().colors;
     const activeScheduledHabits = ScheduledHabitCustomHooks.useActive();
 
-    const renderItem = ({ item }: { item: ScheduledHabit }) => {
+    const renderItem = ({ item, index }: { item: ScheduledHabit; index: number }) => {
+        const isLastElement = index === (activeScheduledHabits.data?.length ?? 1) - 1;
+
         return (
             <Pressable
+                style={{
+                    marginBottom: isLastElement ? PADDING_LARGE : 0,
+                }}
                 onPress={() => {
                     if (!item.id) {
                         return;
@@ -51,7 +56,7 @@ export const ManageHabits = () => {
     return (
         <Screen>
             <Banner
-                name={'Manage Habits'}
+                name={'My Habits'}
                 leftText={'close'}
                 leftOnClick={() => {
                     navigation.goBack();
@@ -77,6 +82,7 @@ export const ManageHabits = () => {
                     style={{
                         height: 50 - PADDING_LARGE,
                         marginHorizontal: PADDING_LARGE,
+                        marginTop: PADDING_LARGE,
                         backgroundColor: colors.accent_color,
                         justifyContent: 'center',
                         borderRadius: 3,
@@ -90,7 +96,7 @@ export const ManageHabits = () => {
                             fontSize: 16,
                         }}
                     >
-                        Build New Habit
+                        Add New Habit
                     </Text>
                 </View>
             </TouchableOpacity>
