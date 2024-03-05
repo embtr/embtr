@@ -13,11 +13,9 @@ import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWi
 import { TodaysPhotosWidget } from '../widgets/TodaysPhotosWidget';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
-import { Context, ContextOptions, DEFAULT_CONTEXT, UserUtility } from 'src/util/user/UserUtility';
 import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { PADDING_LARGE } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
-import { TodaysTasksWidgetImproved } from '../widgets/planning/TodaysTasksWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export const Today = () => {
@@ -34,16 +32,6 @@ export const Today = () => {
             </Screen>
         );
     }
-
-    const [context, setContext] = React.useState<Context>(DEFAULT_CONTEXT);
-    React.useEffect(() => {
-        const fetch = async () => {
-            const context = await UserUtility.fetch(user.id!, [ContextOptions.ACTIVE_CHALLENGES]);
-            setContext(context);
-        };
-
-        fetch();
-    }, []);
 
     const getWidgetFromType = (type: WidgetType) => {
         switch (type) {
@@ -68,8 +56,8 @@ export const Today = () => {
             case WidgetType.PLANNING:
                 return <PlanningWidgetImproved />;
 
-            case WidgetType.ACTIVE_CHALLENGES:
-                return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;
+            //case WidgetType.ACTIVE_CHALLENGES:
+            //    return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;
 
             case WidgetType.TODAYS_PHOTOS:
                 return <TodaysPhotosWidget />;

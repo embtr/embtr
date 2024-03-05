@@ -3,7 +3,6 @@ import React from 'react';
 import {
     Image,
     Keyboard,
-    KeyboardAvoidingView,
     Linking,
     Pressable,
     Text,
@@ -12,13 +11,7 @@ import {
     View,
 } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    POPPINS_MEDIUM,
-    POPPINS_REGULAR,
-    PADDING_LARGE,
-    PADDING_MEDIUM,
-    PADDING_SMALL,
-} from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 import { CachedImage } from 'src/components/common/images/CachedImage';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useNavigation } from '@react-navigation/core';
@@ -30,6 +23,10 @@ import { UserService, UsernameAvailabilityResult } from 'src/service/UserService
 import { Checkbox } from 'src/components/checkbox/Checkbox';
 import { MetadataCustomHooks } from 'src/controller/metadata/MetadataController';
 import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
+import { getAuth } from 'firebase/auth';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getAppleAuthUserInfo } from 'src/redux/user/GlobalState';
+import { AppleAuthUserInfo } from 'src/model/GlobalState';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -43,14 +40,34 @@ const PROFILE_IMAGE =
 
 const PADDING = PADDING_LARGE * 0.6;
 
+const getAppleUsername = (appleAuthUserInfo: AppleAuthUserInfo) => {
+    const givenName: string = (appleAuthUserInfo.givenName ?? '').toLowerCase();
+    const familyName: string = (appleAuthUserInfo.familyName ?? '').toLowerCase();
+
+    let username = '';
+    if (givenName && !familyName) {
+        username = givenName;
+    } else if (!givenName && familyName) {
+        username = familyName;
+    } else if (givenName && familyName) {
+        username = givenName + '_' + familyName;
+    }
+
+    username = username.substring(0, 20);
+    return username;
+};
+
 export const NewUserProfilePopulation = () => {
     const { colors } = useTheme();
 
     const [imageHeight, setImageHeight] = React.useState(0);
     const [imageUploading, setImageUploading] = React.useState(false);
 
-    const [username, setUsername] = React.useState('');
-    const [displayName, setDisplayName] = React.useState('');
+    const appleAuthUserInfo = useAppSelector(getAppleAuthUserInfo);
+    const defaultUsername = appleAuthUserInfo ? getAppleUsername(appleAuthUserInfo) : '';
+
+    const [username, setUsername] = React.useState(defaultUsername);
+    const [displayName, setDisplayName] = React.useState(defaultUsername);
     const [bio, setBio] = React.useState('');
     const [userProfileUrl, setUserProfileUrl] = React.useState(PROFILE_IMAGE);
     const [termsApproved, setTermsApproved] = React.useState(false);
@@ -79,7 +96,7 @@ export const NewUserProfilePopulation = () => {
                 setUserProfileUrl(currentUser.data.photoUrl);
             }
 
-            setUsernameAvailability(currentUser.data.username ?? '');
+            setUsernameAvailability(currentUser.data.username ?? defaultUsername ?? '');
         }
     }, [currentUser.data]);
 

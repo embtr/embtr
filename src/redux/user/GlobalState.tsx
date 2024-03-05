@@ -2,7 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { User } from 'resources/schema';
-import { DEFAULT_UPDATE_MODAL_PLANNED_TASK, UpdateModalPlannedTask } from 'src/model/GlobalState';
+import {
+    AppleAuthUserInfo,
+    DEFAULT_APPLE_AUTH_USER_INFO,
+    DEFAULT_UPDATE_MODAL_PLANNED_TASK,
+    UpdateModalPlannedTask,
+} from 'src/model/GlobalState';
 import { DayKey } from 'resources/types/custom_schema/DayKey';
 
 const INITIAL_STATE: GlobalState = {
@@ -26,6 +31,7 @@ const INITIAL_STATE: GlobalState = {
     removalModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     editModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     acknowledgedVersion: '0.0.0',
+    appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
 };
 
 interface GlobalState {
@@ -48,6 +54,7 @@ interface GlobalState {
     removalModalPlannedTask: UpdateModalPlannedTask;
     editModalPlannedTask: UpdateModalPlannedTask;
     acknowledgedVersion: string;
+    appleAuthUserInfo: AppleAuthUserInfo;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -107,6 +114,7 @@ export const GlobalState = createSlice({
             state.removalModalPlannedTask = DEFAULT_UPDATE_MODAL_PLANNED_TASK;
             state.globalBlurBackground = false;
             state.showQuickAddModal = false;
+            state.appleAuthUserInfo = DEFAULT_APPLE_AUTH_USER_INFO;
         },
         setUpdateModalPlannedTask(state, action: { payload: UpdateModalPlannedTask }) {
             state.updateModalPlannedTask = action.payload;
@@ -119,6 +127,9 @@ export const GlobalState = createSlice({
         },
         setAcknowledgedVersion(state, action) {
             state.acknowledgedVersion = action.payload;
+        },
+        setAppleAuthUserInfo(state, action) {
+            state.appleAuthUserInfo = action.payload;
         },
     },
 });
@@ -267,6 +278,14 @@ export const getAcknowledgedVersion = (state: RootState): string => {
     return state.globalState.acknowledgedVersion;
 };
 
+export const getAppleAuthUserInfo = (state: RootState): AppleAuthUserInfo => {
+    if (state?.globalState.appleAuthUserInfo === undefined) {
+        return INITIAL_STATE.appleAuthUserInfo;
+    }
+
+    return state.globalState.appleAuthUserInfo;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -287,4 +306,5 @@ export const {
     setRemovalModalPlannedTask,
     setEditModalPlannedTask,
     setAcknowledgedVersion,
+    setAppleAuthUserInfo,
 } = GlobalState.actions;

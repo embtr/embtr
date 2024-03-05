@@ -1,4 +1,4 @@
-import { PlannedTask } from "resources/schema";
+import { PlannedTask } from 'resources/schema';
 
 export interface UpdateModalPlannedTask {
     plannedTask: PlannedTask;
@@ -16,3 +16,14 @@ export const DEFAULT_UPDATE_MODAL_PLANNED_TASK: UpdateModalPlannedTask = {
     dayKey: '',
     callback: () => {},
 };
+
+export interface AppleAuthUserInfo {
+    familyName?: string;
+    givenName?: string;
+    middleName?: string;
+    namePrefix?: string;
+    nameSuffix?: string;
+    nickname?: string;
+}
+
+export const DEFAULT_APPLE_AUTH_USER_INFO: AppleAuthUserInfo = {};

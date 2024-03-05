@@ -57,15 +57,6 @@ export const Journey = () => {
         });
     }, []);
 
-    const [context, setContext] = React.useState<Context>(DEFAULT_CONTEXT);
-    React.useEffect(() => {
-        const fetch = async () => {
-            const context = await UserUtility.fetch(user?.id!, [ContextOptions.ACTIVE_CHALLENGES]);
-            setContext(context);
-        };
-
-        fetch();
-    }, []);
     const closeMenu = useAppSelector(getCloseMenu);
     const menuOptions: EmbtrMenuOption[] = [
         {
@@ -113,8 +104,8 @@ export const Journey = () => {
             case WidgetType.PLANNING:
                 return <PlanningWidgetImproved />;
 
-            case WidgetType.ACTIVE_CHALLENGES:
-                return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;
+            //case WidgetType.ACTIVE_CHALLENGES:
+            //    return <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />;
         }
 
         return <View />;

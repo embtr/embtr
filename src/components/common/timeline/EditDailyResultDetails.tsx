@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Text, TextStyle, KeyboardAvoidingView, Keyboard, ScrollView } from 'react-native';
+import { View, Text, TextStyle, Keyboard } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
@@ -9,7 +9,6 @@ import { getUTCDayOfWeek } from 'src/controller/planning/TaskController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { PADDING_LARGE } from 'src/util/constants';
-import { isIosApp } from 'src/util/DeviceUtil';
 import { Banner } from '../Banner';
 import { CarouselCards, ImageCarouselImage } from '../images/ImageCarousel';
 import { DailyResultCardElement } from './DailyResultCardElement';
@@ -125,15 +124,8 @@ export const EditDailyResultDetails = () => {
     const onSubmit = async () => {
         const clonedPlannedDayResult: PlannedDayResultModel = { ...plannedDayResult };
         clonedPlannedDayResult.description = updatedDescription;
-        //clonedPlannedDayResult.plannedDayResultImages = updatedImageUrls.map((url) => {
-        //    return { url };
-        //});
         clonedPlannedDayResult.images = updatedImageUrls;
 
-        //let clonedDailyResult = DailyResultController.clone(dailyResult);
-        //clonedDailyResult.data.description = updatedDescription;
-        //clonedDailyResult.data.imageUrls = updatedImageUrls;
-        //DailyResultController.update(clonedDailyResult);
         await DailyResultController.updateViaApi(clonedPlannedDayResult);
         await DailyResultController.invalidate(clonedPlannedDayResult.id ?? 0);
         navigation.goBack();
