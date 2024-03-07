@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Switch, Text, View } from 'react-native';
-import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR, PADDING_SMALL } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { DaysOfTheWeekToggle } from 'src/components/plan/habit/DaysOfTheWeekToggle';
 import { HabitDateView } from 'src/components/plan/habit/HabitDateView';
@@ -13,7 +13,7 @@ import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit
 export const ScheduleHabitRepeatingSchedule = () => {
     const { colors } = useTheme();
 
-    const REPEATING_SCHEDULE_HEIGHT = 150 + PADDING_LARGE * 2;
+    const REPEATING_SCHEDULE_HEIGHT = 50;
     const {
         startDate,
         setStartDate,
@@ -28,12 +28,9 @@ export const ScheduleHabitRepeatingSchedule = () => {
     } = useCreateEditScheduleHabit();
     const [height] = React.useState<Animated.Value>(new Animated.Value(0));
 
-    const startDatePretty = startDate ? formatDate(startDate) : 'Forever';
-    const endDatePretty = endDate ? formatDate(endDate) : 'Forever';
-
     React.useEffect(() => {
         runCreateEditScheduledHabitAnimation(
-            repeatingScheduleEnabled,
+            !repeatingScheduleEnabled,
             height,
             REPEATING_SCHEDULE_HEIGHT
         );
@@ -91,11 +88,22 @@ export const ScheduleHabitRepeatingSchedule = () => {
                             fontSize: 16,
                         }}
                     >
-                        Repeating Schedule
+                        Schedule
                     </Text>
                 </View>
 
-                <View>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 11,
+                            top: 1.5,
+                            paddingRight: PADDING_SMALL,
+                        }}
+                    >
+                        Daily Habit
+                    </Text>
                     <Switch
                         value={repeatingScheduleEnabled}
                         onValueChange={() => {
@@ -120,36 +128,6 @@ export const ScheduleHabitRepeatingSchedule = () => {
                 }}
             >
                 <DaysOfTheWeekToggle />
-
-                <View
-                    style={{
-                        width: '100%',
-                        paddingTop: PADDING_LARGE,
-                    }}
-                >
-                    <HabitDateView
-                        dateType="Start Date"
-                        prettyDate={startDatePretty}
-                        onPress={() => {
-                            setStartDateDatePickerModalVisible(true);
-                        }}
-                    />
-                </View>
-
-                <View
-                    style={{
-                        width: '100%',
-                        paddingTop: PADDING_LARGE,
-                    }}
-                >
-                    <HabitDateView
-                        dateType="End Date"
-                        prettyDate={endDatePretty}
-                        onPress={() => {
-                            setEndDateDatePickerModalVisible(true);
-                        }}
-                    />
-                </View>
             </Animated.View>
         </View>
     );

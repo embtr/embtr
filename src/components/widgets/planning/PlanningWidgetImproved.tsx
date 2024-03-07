@@ -15,6 +15,7 @@ import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
 import { FlatList } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from 'src/components/theme/ThemeProvider';
 
 const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerElementData) => {
     const year = monthData.year;

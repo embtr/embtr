@@ -1,11 +1,9 @@
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { PlannedDay } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
-import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { Routes } from 'src/navigation/RootStackParamList';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getFireConfetti } from 'src/redux/user/GlobalState';
 import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
@@ -140,14 +138,7 @@ export const PlanDayHeader = ({
             <View style={styles.container}>
                 <Text style={styles.topText}>No habits planned for today...</Text>
                 <View style={styles.bottomTextContainer}>
-                    <Text
-                        onPress={() => {
-                            navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
-                        }}
-                        style={styles.bottomText}
-                    >
-                        let's change that!
-                    </Text>
+                    <Text style={styles.bottomText}>press the heart to add some!</Text>
                 </View>
             </View>
         );

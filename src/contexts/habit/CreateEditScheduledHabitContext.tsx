@@ -132,13 +132,14 @@ export const CreateEditScheduledHabitProvider = ({
     const [completedQuantity, setCompletedQuantity] = React.useState(0);
     const [unit, setUnit] = React.useState<Unit | undefined>(undefined);
 
-    const [repeatingScheduleEnabled, setRepeatingScheduleEnabled] = React.useState(false);
+    const [repeatingScheduleEnabled, setRepeatingScheduleEnabled] = React.useState(true);
+    const [timeOfDayEnabled, setTimeOfDayEnabled] = React.useState(true);
+
     const [detailsEnabled, setDetailsEnabled] = React.useState(false);
 
     const [startDateDatePickerModalVisible, setStartDateDatePickerModalVisible] =
         React.useState(false);
     const [endDateDatePickerModalVisible, setEndDateDatePickerModalVisible] = React.useState(false);
-    const [timeOfDayEnabled, setTimeOfDayEnabled] = React.useState(false);
 
     /*
      * creating new scheduled habit

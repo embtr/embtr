@@ -87,19 +87,8 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
             let icon: any = isFocused ? 'home' : 'home-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
         } else if (route.name === TABS.TODAY) {
-            let icon: any = isFocused ? 'sunny' : 'sunny-outline';
-            element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
-        } else if (route.name === TABS.PLAN) {
-            let icon: any = isFocused ? 'list-circle' : 'list-circle-outline';
-            element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
-        } else if (route.name === TABS.USER_PROFILE) {
-            element = <UserTabElement size={iconSize} />;
-        } else {
             element = (
-                <TouchableOpacity
-                    onPress={() => {
-                        navigation.navigate(Routes.MANAGE_HABITS);
-                    }}
+                <View
                     style={[
                         {
                             padding: 10,
@@ -115,8 +104,8 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
                             {
                                 backgroundColor: '#404040',
                                 borderRadius: 50,
-                                height: 60,
-                                width: 60,
+                                height: 60 * 0.9,
+                                width: 60 * 0.9,
                                 bottom: 25,
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -127,15 +116,23 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
                         <Image
                             source={require('assets/logo.png')}
                             style={{
-                                width: 40,
-                                height: 40,
+                                top: 2,
+                                width: 40 * 0.9,
+                                height: 40 * 0.9,
                             }}
                         />
                     </View>
-                </TouchableOpacity>
+                </View>
             );
+        } else if (route.name === TABS.JOURNEY) {
+            let icon: any = isFocused ? 'trail-sign-sharp' : 'trail-sign-outline';
+            element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
+        } else if (route.name === TABS.USER_PROFILE) {
+            element = <UserTabElement size={iconSize} />;
+        } else {
+            let icon: any = isFocused ? 'list-circle' : 'list-circle-outline';
+            element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
         }
-
         elements.push(
             <TouchableOpacity
                 accessibilityRole="button"

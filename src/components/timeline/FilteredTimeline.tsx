@@ -34,12 +34,14 @@ const createFooter = (hasMore: boolean, colors: any) => {
     return footer;
 };
 
-const renderItem = (item: TimelineElement) => {
+const renderItem = (item: TimelineElement, index: number) => {
+    const isTop = index === 0;
+
     if (item.type === TimelineElementType.USER_POST && item.userPost) {
         return (
             <View
                 style={{
-                    paddingTop: PADDING_LARGE,
+                    paddingTop: isTop ? 0 : PADDING_LARGE,
                     paddingHorizontal: PADDING_LARGE,
                 }}
             >
@@ -50,7 +52,7 @@ const renderItem = (item: TimelineElement) => {
         return (
             <View
                 style={{
-                    paddingTop: PADDING_LARGE,
+                    paddingTop: isTop ? 0 : PADDING_LARGE,
                     paddingHorizontal: PADDING_LARGE,
                 }}
             >
@@ -82,7 +84,7 @@ export const FilteredTimeline = ({ timelineElements, hasMore, pullToRefresh, loa
             overScrollMode="always"
             data={timelineElements}
             keyExtractor={keyExtractor}
-            renderItem={({ item }) => renderItem(item)}
+            renderItem={({ item, index }) => renderItem(item, index)}
             keyboardShouldPersistTaps={'handled'}
             style={{ backgroundColor: colors.background }}
             refreshControl={

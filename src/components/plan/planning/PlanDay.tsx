@@ -11,6 +11,7 @@ import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
 import { getCurrentUser, getFireConfetti } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
 import { Constants } from 'resources/types/constants/constants';
+import { PlanningWidgetAddOptions } from 'src/components/widgets/planning/PlanningWidgetAddOptions';
 
 const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
     return 'completedQuantity' in item;
@@ -157,8 +158,8 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     React.useEffect(() => {
         const allPlannedTasks = hideComplete
             ? plannedDay.plannedTasks?.filter(
-                (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
-            )
+                  (task) => (task.completedQuantity ?? 0) < (task.quantity ?? 1)
+              )
             : plannedDay.plannedTasks;
         const allSections = buildPlannedSections(allPlannedTasks ?? []);
 

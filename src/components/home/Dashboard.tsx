@@ -11,14 +11,18 @@ import { setCurrentTab } from 'src/redux/user/GlobalState';
 import { PlanningTab } from 'src/components/challenge/PlanningTab';
 import React from 'react';
 import { OnLoginHooks } from 'src/hooks/OnLoginHooks';
-import { PlanTab } from 'src/components/plan/PlanTab';
+import { MyHabits } from '../manage_habits/MyHabits';
+import { MyHabitsTab } from '../manage_habits/MyHabitsTab';
+import { JourneyTab } from '../journey/JourneyTab';
 
 const Tab = createBottomTabNavigator();
 
 export const TABS = {
     TIMELINE: 'TimelineTab',
+    MY_HABITS: 'MyHabitsTab',
     TODAY: 'TodayTab',
     PLAN: 'PlanTab',
+    JOURNEY: 'JourneyTab',
     USER_PROFILE: 'CurrentUserTab',
 };
 
@@ -72,6 +76,30 @@ export const Dashboard = () => {
                 />
 
                 <Tab.Screen
+                    name={TABS.MY_HABITS}
+                    listeners={({ navigation, route }) => ({
+                        tabPress: (e) => {
+                            dispatch(setCurrentTab(TABS.TODAY));
+
+                            const currentlyInFocus = navigation.isFocused();
+                            if (
+                                currentlyInFocus &&
+                                route &&
+                                route.state &&
+                                route.state.routes.length >= 1 &&
+                                route.state.routes[0]['name'] !== 'Today'
+                            ) {
+                                e.preventDefault();
+                                navigation.dispatch(
+                                    CommonActions.reset({ index: 0, routes: [{ name: 'Today' }] })
+                                );
+                            }
+                        },
+                    })}
+                    component={MyHabitsTab}
+                />
+
+                <Tab.Screen
                     name={TABS.TODAY}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
@@ -95,10 +123,8 @@ export const Dashboard = () => {
                     component={TodayTab}
                 />
 
-                <Tab.Screen name={'PLACEHOLDER'} component={PlanTab} />
-
                 <Tab.Screen
-                    name={TABS.PLAN}
+                    name={TABS.JOURNEY}
                     listeners={({ navigation, route }) => ({
                         tabPress: (e) => {
                             dispatch(setCurrentTab(TABS.PLAN));
@@ -121,7 +147,7 @@ export const Dashboard = () => {
                             }
                         },
                     })}
-                    component={PlanningTab}
+                    component={JourneyTab}
                 />
 
                 <Tab.Screen

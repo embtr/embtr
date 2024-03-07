@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Keyboard, Switch, Text, View } from 'react-native';
-import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR, PADDING_SMALL } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ScheduledHabitQuantityInput } from 'src/components/plan/habit/ScheduledHabitQuantityInput';
 import { ScheduledHabitUnitPicker } from 'src/components/plan/habit/ScheduledHabitUnitPicker';
@@ -8,7 +8,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 
-export const ScheduledHabitDetails = () => {
+export const ScheduledHabitConfigurations = () => {
     const { colors } = useTheme();
 
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
@@ -39,23 +39,11 @@ export const ScheduledHabitDetails = () => {
                             fontSize: 16,
                         }}
                     >
-                        Details
+                        Use Multiple Schedules
                     </Text>
                 </View>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 11,
-                            top: 1.5,
-                            paddingRight: PADDING_SMALL,
-                        }}
-                    >
-                        Use Details
-                    </Text>
-
+                <View style={{}}>
                     <Switch
                         onValueChange={() => {
                             setDetailsEnabled(!detailsEnabled);
@@ -78,15 +66,7 @@ export const ScheduledHabitDetails = () => {
                     height: detailsViewHeight,
                     overflow: 'hidden',
                 }}
-            >
-                <View style={{ flex: 1 }}>
-                    <ScheduledHabitQuantityInput />
-                </View>
-
-                <View style={{ flex: 1, paddingTop: PADDING_LARGE }}>
-                    <ScheduledHabitUnitPicker />
-                </View>
-            </Animated.View>
+            ></Animated.View>
         </View>
     );
 };

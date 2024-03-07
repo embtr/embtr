@@ -94,33 +94,6 @@ export const CurrentMonthText = ({
                         </Text>
                     </TouchableOpacity>
                 </View>
-
-                <View style={{ paddingLeft: PADDING_SMALL }}>
-                    <TouchableOpacity
-                        onPress={navigateToCreateHabit}
-                        style={[
-                            {
-                                flexDirection: 'row',
-                                backgroundColor: '#404040',
-                                borderRadius: 5,
-                                paddingHorizontal: 4,
-                                paddingVertical: 2,
-                            },
-                            CARD_SHADOW,
-                        ]}
-                    >
-                        <Text
-                            style={{
-                                color: colors.text,
-                                fontSize: 12,
-                                fontFamily: POPPINS_REGULAR,
-                                paddingHorizontal: PADDING_SMALL / 2,
-                            }}
-                        >
-                            + Add Habit
-                        </Text>
-                    </TouchableOpacity>
-                </View>
             </View>
         </View>
     );

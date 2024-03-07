@@ -27,7 +27,7 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
     const height = width * 0.33;
 
     return (
-        <View style={{ padding: PADDING_LARGE, paddingBottom: 0 }}>
+        <View style={{ paddingHorizontal: PADDING_LARGE }}>
             {/* BANNER */}
             <View
                 style={[

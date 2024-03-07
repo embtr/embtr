@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, Keyboard } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR, PADDING_SMALL } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated } from 'react-native';
 import {
@@ -22,7 +22,7 @@ export const ScheduledHabitTimeOfDay = () => {
 
     React.useEffect(() => {
         runCreateEditScheduledHabitAnimation(
-            timeOfDayEnabled,
+            !timeOfDayEnabled,
             timeOfDayViewHeight,
             TIME_OF_DAY_HEIGHT
         );
@@ -55,7 +55,18 @@ export const ScheduledHabitTimeOfDay = () => {
                     </Text>
                 </View>
 
-                <View style={{}}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 11,
+                            top: 1.5,
+                            paddingRight: PADDING_SMALL,
+                        }}
+                    >
+                        All Day
+                    </Text>
                     <Switch
                         onValueChange={() => {
                             setTimeOfDayEnabled(!timeOfDayEnabled);

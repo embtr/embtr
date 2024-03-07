@@ -16,7 +16,7 @@ export const ScheduleHabitDescription = () => {
                     fontSize: 16,
                 }}
             >
-                Description
+                Notes
             </Text>
 
             <View style={{ paddingTop: PADDING_LARGE / 4 }}>

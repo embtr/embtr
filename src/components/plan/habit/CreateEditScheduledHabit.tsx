@@ -5,7 +5,6 @@ import { Routes } from 'src/navigation/RootStackParamList';
 import { PADDING_LARGE } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ScheduleHabitDescription } from 'src/components/plan/habit/ScheduleHabitDescription';
 import { ScheduleHabitRepeatingSchedule } from 'src/components/plan/habit/ScheduledHabitRepeatingSchedule';
 import { CreateEditScheduledHabitProvider } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTitle';
@@ -22,6 +21,11 @@ import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { PlannedDayService } from 'src/service/PlannedDayService';
 import getTodayDayKey = PlannedDayService.getTodayDayKey;
+import { ScheduleHabitDescription } from './ScheduleHabitDescription';
+import {
+    ScheduledHabitConfiguration,
+    ScheduledHabitConfigurations,
+} from './ScheduledHabitConfigurations';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -131,6 +135,7 @@ export const CreateEditScheduledHabit = () => {
                         <View style={{ height: PADDING_LARGE }} />
                         <ScheduledHabitTitle />
                         <ScheduleHabitDescription />
+
                         <ScheduleHabitRepeatingSchedule />
                         <ScheduledHabitTimeOfDay />
                         <ScheduledHabitDetails />
