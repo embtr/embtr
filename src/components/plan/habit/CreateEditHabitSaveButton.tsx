@@ -53,8 +53,6 @@ export const CreateEditHabitSaveButton = ({
         timesOfDayEnabled,
         daysOfWeekEnabled,
         detailsEnabled,
-        startDate,
-        endDate,
         timesOfDay,
         editMode,
     } = useCreateEditScheduleHabit();
@@ -152,11 +150,16 @@ export const CreateEditHabitSaveButton = ({
                     id: timeOfDay.id,
                 };
             });
+        } else {
+            scheduledHabit.timesOfDay = [];
         }
 
         if (detailsEnabled) {
             scheduledHabit.quantity = quantity ?? 1;
             scheduledHabit.unitId = unit?.id ?? undefined;
+        } else {
+            scheduledHabit.quantity = 1;
+            scheduledHabit.unitId = undefined;
         }
 
         return scheduledHabit;
