@@ -15,12 +15,13 @@ import { Logger } from 'src/util/GeneralUtility';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getSelectedDayKey } from 'src/redux/user/GlobalState';
-import PlannedDayController, {
-    getDateFromDayKey,
-} from 'src/controller/planning/PlannedDayController';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import TaskController from 'src/controller/planning/TaskController';
 import { HabitController } from 'src/controller/habit/HabitController';
 import { CreateTaskRequest } from 'resources/types/requests/TaskTypes';
+import { DayOfWeekCustomHooks } from 'src/controller/day_of_week/DayOfWeekController';
+import { UserCustomHooks } from 'src/controller/user/UserController';
+import { HabitSummaryController } from 'src/controller/habit/HabitSummaryController';
 
 interface Props {
     habitId?: number;
@@ -49,8 +50,8 @@ export const CreateEditHabitSaveButton = ({
         unit,
         remoteImageUrl,
         localImage,
-        timeOfDayEnabled,
-        repeatingScheduleEnabled,
+        timesOfDayEnabled,
+        daysOfWeekEnabled,
         detailsEnabled,
         startDate,
         endDate,
@@ -58,12 +59,14 @@ export const CreateEditHabitSaveButton = ({
         editMode,
     } = useCreateEditScheduleHabit();
 
+    const currentUserId = UserCustomHooks.useCurrentUserId();
     const selectedDayKey = useAppSelector(getSelectedDayKey);
     const dayKeyToUse = selectedDayKey;
 
     const routes = navigation.getState().routes;
     const previousRoute = routes[routes.length - 2];
     const isFromHabitSummaryDetails = previousRoute.name.toString() === Routes.MANAGE_HABITS;
+    const allDaysOfWeek = DayOfWeekCustomHooks.useDaysOfWeek();
 
     const createUpdatedPlannedTask = (id: number) => {
         const plannedTask: PlannedTask = {
@@ -113,6 +116,9 @@ export const CreateEditHabitSaveButton = ({
     };
 
     const createScheduledHabitRequest = (customHabitId?: number) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
         const scheduledHabit: ScheduledHabit = {
             id: scheduledHabitId,
             taskId: customHabitId ?? habitId,
@@ -120,42 +126,37 @@ export const CreateEditHabitSaveButton = ({
             title: title,
             localImage: localImage,
             remoteImageUrl: remoteImageUrl,
+            daysOfWeekEnabled: daysOfWeekEnabled,
+            timesOfDayEnabled: timesOfDayEnabled,
+            detailsEnabled: detailsEnabled,
+            startDate: today,
         };
 
-        if (repeatingScheduleEnabled) {
+        if (daysOfWeekEnabled) {
             scheduledHabit.daysOfWeek = daysOfWeek.map((day) => {
                 return {
                     id: day.id,
                 };
             });
-            scheduledHabit.startDate = startDate;
-            scheduledHabit.endDate = endDate;
         } else {
-            //adding for just the selected day
-            const selectedDate = getDateFromDayKey(dayKeyToUse);
-            const dayOfWeek = selectedDate.getUTCDay() + 1;
-
-            scheduledHabit.daysOfWeek = [
-                {
-                    id: dayOfWeek,
-                },
-            ];
-
-            scheduledHabit.startDate = selectedDate;
-            scheduledHabit.endDate = selectedDate;
+            scheduledHabit.daysOfWeek = allDaysOfWeek.map((day) => {
+                return {
+                    id: day.id,
+                };
+            });
         }
 
-        if (detailsEnabled) {
-            scheduledHabit.quantity = quantity ?? 1;
-            scheduledHabit.unitId = unit?.id ?? undefined;
-        }
-
-        if (timeOfDayEnabled) {
+        if (timesOfDayEnabled) {
             scheduledHabit.timesOfDay = timesOfDay.map((timeOfDay) => {
                 return {
                     id: timeOfDay.id,
                 };
             });
+        }
+
+        if (detailsEnabled) {
+            scheduledHabit.quantity = quantity ?? 1;
+            scheduledHabit.unitId = unit?.id ?? undefined;
         }
 
         return scheduledHabit;
@@ -242,13 +243,20 @@ export const CreateEditHabitSaveButton = ({
                 break;
         }
 
-        await PlannedDayController.prefetchPlannedDayData(dayKeyToUse);
+        if (currentUserId.data && dayKeyToUse) {
+            const promises = [
+                HabitSummaryController.invalidateHabitSummaries(),
+                PlannedDayController.invalidatePlannedDay(currentUserId.data, dayKeyToUse),
+                PlannedDayController.prefetchPlannedDayData(dayKeyToUse),
+            ];
+            await Promise.all(promises);
+        }
+
+        if (onExit) {
+            onExit();
+        }
 
         if (isFromHabitSummaryDetails) {
-            if (onExit) {
-                onExit();
-            }
-
             navigation.goBack();
         } else {
             navigation.popToTop();
@@ -266,7 +274,7 @@ export const CreateEditHabitSaveButton = ({
             <View
                 style={{
                     height: 50 - PADDING_LARGE,
-                    marginHorizontal: PADDING_LARGE / 2,
+                    marginHorizontal: PADDING_LARGE,
                     backgroundColor: colors.accent_color,
                     justifyContent: 'center',
                     borderRadius: 3,

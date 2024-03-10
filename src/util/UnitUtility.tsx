@@ -1,8 +1,8 @@
 import { Unit } from 'resources/schema';
 
 export class UnitUtility {
-    public static getReadableUnit(unit: Unit, quantity: number) {
-        if (!unit.unit) {
+    public static getReadableUnit(unit?: Unit, quantity?: number) {
+        if (!unit?.unit) {
             return '';
         }
 

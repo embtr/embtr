@@ -104,7 +104,6 @@ export namespace Routes {
     export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';
     export const CREATE_EDIT_SCHEDULED_HABIT_SLIDE_UP = 'CreateEditScheduledHabit_SlideUp';
     export const EDIT_PLANNED_HABIT = 'EditPlannedHabit';
-    export const MY_HABITS_CATEGORY_ELEMENT = 'MyHabitsCategoryElement';
     export const ADVANCED_USER_SETTINGS = 'AdvancedUserSettings';
     export const NEW_USER_PROFILE_POPULATION = 'NewUserProfilePopulation';
     export const TERMS_APPROVAL_MODAL = 'TermsApprovalModal';

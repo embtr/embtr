@@ -8,10 +8,8 @@ import { TodayTab } from 'src/components/today/TodayTab';
 import { TabBar } from 'src/components/home/tabmenu/TabBar';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { setCurrentTab } from 'src/redux/user/GlobalState';
-import { PlanningTab } from 'src/components/challenge/PlanningTab';
 import React from 'react';
 import { OnLoginHooks } from 'src/hooks/OnLoginHooks';
-import { MyHabits } from '../manage_habits/MyHabits';
 import { MyHabitsTab } from '../manage_habits/MyHabitsTab';
 import { JourneyTab } from '../journey/JourneyTab';
 

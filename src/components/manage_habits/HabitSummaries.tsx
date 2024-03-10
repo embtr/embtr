@@ -1,48 +1,47 @@
 import { FlatList, Pressable, View } from 'react-native';
-import { HabitSummary } from 'resources/types/habit/Habit';
 import { HabitSummaryElement } from 'src/components/manage_habits/HabitSummaryElement';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import { PADDING_LARGE, PADDING_MEDIUM } from 'src/util/constants';
+import { PADDING_MEDIUM } from 'src/util/constants';
+import { ScheduledHabit } from 'resources/schema';
+import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 
 interface Props {
-    habitSummaries: HabitSummary[];
-    showExpired?: boolean;
+    scheduledHabits: ScheduledHabit[];
 }
 
-export const HabitSummaries = ({ habitSummaries, showExpired }: Props) => {
+export const HabitSummaries = ({ scheduledHabits }: Props) => {
     const navigation = useEmbtrNavigation();
 
-    const habits = showExpired
-        ? habitSummaries
-        : habitSummaries.filter((habitSummary) => {
-            return habitSummary.nextHabitDays != undefined && habitSummary.nextHabitDays >= 0;
-        });
-
-    const renderItem = ({ item, index }: { item: HabitSummary; index: number }) => {
+    const renderItem = ({ item, index }: { item: ScheduledHabit; index: number }) => {
         return (
             <Pressable
                 style={{ paddingTop: index === 0 ? 0 : PADDING_MEDIUM }}
                 onPress={() => {
-                    if (!item.task.id) {
+                    if (!item.id) {
                         return;
                     }
 
-                    navigation.navigate(Routes.HABIT_SUMMARY_DETAILS, { id: item.task.id });
+                    navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
+                        scheduledHabitId: item.id,
+                        onExit: () => {
+                            ScheduledHabitController.invalidateActiveScheduledHabits();
+                        },
+                    });
                 }}
             >
-                <HabitSummaryElement habitSummary={item} />
+                <HabitSummaryElement scheduledHabit={item} />
             </Pressable>
         );
     };
 
-    const keyExtractor = (item: HabitSummary, index: number) => {
-        return item.task.id ? item.task.id.toString() : '';
+    const keyExtractor = (item: ScheduledHabit, index: number) => {
+        return item.id ? item.id.toString() : '';
     };
 
     return (
         <View style={{ flex: 1 }}>
-            <FlatList data={habits} renderItem={renderItem} keyExtractor={keyExtractor} />
+            <FlatList data={scheduledHabits} renderItem={renderItem} keyExtractor={keyExtractor} />
         </View>
     );
 };

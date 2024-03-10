@@ -7,18 +7,16 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
 import { CreateEditScheduledHabit } from '../plan/habit/CreateEditScheduledHabit';
 import { EditPlannedHabit } from '../plan/habit/EditPlannedHabit';
-import { MyHabitsCategoryElement } from 'src/components/plan/habit/MyHabitsCategoryElement';
 import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
 import { AdvancedUserSettings } from '../settings/advanced/AdvancedUserSettings';
 import { UserSettings } from '../settings/main/UserSettings';
 import { AddQuoteOfTheDay } from 'src/components/widgets/quote_of_the_day/AddQuoteOfTheDay';
 import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfilePopulation';
 import { Routes } from 'src/navigation/RootStackParamList';
-import { ManageHabits } from 'src/components/manage_habits/ManageHabits';
 import { HabitSummaryDetails } from '../manage_habits/HabitSummaryDetails';
 import { TermsApprovalModal } from 'src/components/profile/TermsApprovalModal';
 import { UpdateAvailableModal } from 'src/components/modal/UpdateAvailableModal';
-import { ManageHabitsOld } from '../manage_habits/ManageHabitsOld';
+import { ManageHabits } from '../manage_habits/ManageHabits';
 
 const Stack = createStackNavigator();
 
@@ -40,11 +38,6 @@ export const SecureMainStack = () => {
                 component={CreateEditScheduledHabit}
             />
             <Stack.Screen name="EditPlannedHabit" component={EditPlannedHabit} />
-            <Stack.Screen
-                name="MyHabitsCategoryElement"
-                component={MyHabitsCategoryElement}
-                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
-            />
             <Stack.Screen
                 name="CreateUserPost"
                 component={CreateUserPost}
@@ -74,7 +67,7 @@ export const SecureMainStack = () => {
             />
             <Stack.Screen
                 name={Routes.MANAGE_HABITS}
-                component={ManageHabitsOld}
+                component={ManageHabits}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen

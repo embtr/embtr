@@ -22,10 +22,6 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { PlannedDayService } from 'src/service/PlannedDayService';
 import getTodayDayKey = PlannedDayService.getTodayDayKey;
 import { ScheduleHabitDescription } from './ScheduleHabitDescription';
-import {
-    ScheduledHabitConfiguration,
-    ScheduledHabitConfigurations,
-} from './ScheduledHabitConfigurations';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -108,20 +104,20 @@ export const CreateEditScheduledHabit = () => {
                         isCreateCustomHabit
                             ? 'discovery'
                             : !isCreatedNewScheduledHabit && !isCreateCustomHabit
-                              ? 'archive'
-                              : undefined
+                                ? 'archive'
+                                : undefined
                     }
                     rightColor={isCreateCustomHabit ? colors.link : colors.archive}
                     rightOnClick={
                         isCreateCustomHabit
                             ? () => {
-                                  navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
-                              }
+                                navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
+                            }
                             : !isCreatedNewScheduledHabit
-                              ? () => {
+                                ? () => {
                                     setArchiveModalVisible(true);
                                 }
-                              : undefined
+                                : undefined
                     }
                 />
 

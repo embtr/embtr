@@ -1,150 +1,45 @@
 import React from 'react';
+import { HabitSummaries } from 'src/components/manage_habits/HabitSummaries';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import { View, Text, Pressable } from 'react-native';
-import { CARD_SHADOW, PADDING_LARGE, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text } from 'react-native';
+import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useTheme } from '../theme/ThemeProvider';
 import {
     ScheduledHabitController,
     ScheduledHabitCustomHooks,
 } from 'src/controller/habit/ScheduledHabitController';
-import { ScheduledHabit } from 'resources/schema';
-import { HabitSummaryDetailsElement } from './HabitSummaryDetailsElement';
-import { ManageHabitsTimePeriodButton } from './ManageHabitsTimePeriodButton';
-
-const keyExtractor = (item: ScheduledHabit, index: number) => {
-    return item.id ? item.id.toString() : '';
-};
-
-const buttonBackgroundColor = '#404040';
-const opaqueButtonBackgroundColor = 'rgba(64, 64, 64, 0.4)';
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { ManageHabitsNoHabitsMessage } from './ManageHabitsNoHabitsMessage';
 
 export const ManageHabits = () => {
-    const navigation = useEmbtrNavigation();
     const colors = useTheme().colors;
+    const navigation = useEmbtrNavigation();
 
-    const pastScheduledHabits = ScheduledHabitCustomHooks.usePast();
-    const activeScheduledHabits = ScheduledHabitCustomHooks.useActive();
-    const futureScheduledHabits = ScheduledHabitCustomHooks.useFuture();
+    const scheduledHabits = ScheduledHabitCustomHooks.useActive();
 
-    const [displayedTimePeriod, setDisplayedTimePeriod] = React.useState('active');
-
-    const displayedScheduledHabits =
-        displayedTimePeriod === 'active'
-            ? activeScheduledHabits
-            : displayedTimePeriod === 'past'
-              ? pastScheduledHabits
-              : futureScheduledHabits;
-
-    const invalidateAll = () => {
-        ScheduledHabitController.invalidateActiveScheduledHabits();
-        ScheduledHabitController.invalidatePastScheduledHabits();
-        ScheduledHabitController.invalidateFutureScheduledHabits();
-    };
-
-    const renderItem = ({ item, index }: { item: ScheduledHabit; index: number }) => {
-        const isLastElement = index === (displayedScheduledHabits.data?.length ?? 1) - 1;
-
-        return (
-            <Pressable
-                style={{
-                    marginBottom: isLastElement ? PADDING_LARGE : 0,
-                }}
-                onPress={() => {
-                    if (!item.id) {
-                        return;
-                    }
-
-                    navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
-                        scheduledHabitId: item.id,
-                        onExit: () => {
-                            if (!item.id) {
-                                return;
-                            }
-
-                            invalidateAll();
-                        },
-                    });
-                }}
-            >
-                <HabitSummaryDetailsElement scheduledHabit={item} />
-            </Pressable>
-        );
+    const handleNavigation = () => {
+        navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT_SLIDE_UP, {
+            isCreateCustomHabit: true,
+            onExit: () => {
+                ScheduledHabitController.invalidateActiveScheduledHabits();
+            },
+        });
     };
 
     return (
         <Screen>
-            <Banner
-                name={'My Habits'}
-                leftText={'close'}
-                leftOnClick={() => {
-                    navigation.goBack();
-                }}
-            />
+            <Banner name={'My Habits'} />
 
-            <View
-                style={{
-                    flexDirection: 'row',
-                    justifyContent: 'flex-end',
-                    paddingHorizontal: PADDING_LARGE,
-                    paddingBottom: PADDING_LARGE,
-                }}
-            >
-                <View>
-                    <ManageHabitsTimePeriodButton
-                        name="Past"
-                        key="past"
-                        isSelected={displayedTimePeriod === 'past'}
-                        onPress={() => {
-                            setDisplayedTimePeriod('past');
-                        }}
-                    />
-                </View>
+            {scheduledHabits.data?.length === 0 && (
+                <ManageHabitsNoHabitsMessage onPress={handleNavigation} />
+            )}
 
-                <View style={{ paddingLeft: PADDING_SMALL }}>
-                    <ManageHabitsTimePeriodButton
-                        name="Active"
-                        key="active"
-                        isSelected={displayedTimePeriod === 'active'}
-                        onPress={() => {
-                            setDisplayedTimePeriod('active');
-                        }}
-                    />
-                </View>
+            <HabitSummaries scheduledHabits={scheduledHabits.data ?? []} />
 
-                <View style={{ paddingLeft: PADDING_SMALL }}>
-                    <ManageHabitsTimePeriodButton
-                        name="Future"
-                        key="future"
-                        isSelected={displayedTimePeriod === 'future'}
-                        onPress={() => {
-                            setDisplayedTimePeriod('future');
-                        }}
-                    />
-                </View>
-            </View>
-
-            <View style={{ flex: 1 }}>
-                <FlatList
-                    data={displayedScheduledHabits.data ?? []}
-                    renderItem={renderItem}
-                    keyExtractor={keyExtractor}
-                />
-            </View>
-
-            <TouchableOpacity
-                onPress={() => {
-                    navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
-                        isCreateCustomHabit: true,
-                        onExit: () => {
-                            invalidateAll();
-                        },
-                    });
-                }}
-            >
+            <TouchableOpacity onPress={handleNavigation}>
                 <View
                     style={{
                         height: 50 - PADDING_LARGE,

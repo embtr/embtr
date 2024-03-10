@@ -1,3 +1,4 @@
+import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { ScheduledHabit } from '../../schema';
 
 export namespace ScheduledHabitUtil {
@@ -15,5 +16,14 @@ export namespace ScheduledHabitUtil {
 
     export const getLocalImage = (scheduledHabit?: ScheduledHabit): string => {
         return scheduledHabit?.localImage ?? scheduledHabit?.task?.localImage ?? '';
+    };
+
+    export const getOptimalImage = (scheduledHabit?: ScheduledHabit): OptimalImageData => {
+        const optimalImage: OptimalImageData = {
+            remoteImageUrl: getRemoteImageUrl(scheduledHabit),
+            localImage: getLocalImage(scheduledHabit),
+        };
+
+        return optimalImage;
     };
 }

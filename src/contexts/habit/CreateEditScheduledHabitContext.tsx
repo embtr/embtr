@@ -70,11 +70,11 @@ interface CreateEditScheduledHabitType {
     setCompletedQuantity: (completedQuantity: number) => void;
     setUnit: (unit: Unit) => void;
 
-    timeOfDayEnabled: boolean;
-    repeatingScheduleEnabled: boolean;
+    timesOfDayEnabled: boolean;
+    daysOfWeekEnabled: boolean;
     detailsEnabled: boolean;
-    setTimeOfDayEnabled: (enabled: boolean) => void;
-    setRepeatingScheduleEnabled: (enabled: boolean) => void;
+    setTimesOfDayEnabled: (enabled: boolean) => void;
+    setDaysOfWeekEnabled: (enabled: boolean) => void;
     setDetailsEnabled: (enabled: boolean) => void;
 
     startDateDatePickerModalVisible: boolean;
@@ -132,8 +132,8 @@ export const CreateEditScheduledHabitProvider = ({
     const [completedQuantity, setCompletedQuantity] = React.useState(0);
     const [unit, setUnit] = React.useState<Unit | undefined>(undefined);
 
-    const [repeatingScheduleEnabled, setRepeatingScheduleEnabled] = React.useState(true);
-    const [timeOfDayEnabled, setTimeOfDayEnabled] = React.useState(true);
+    const [daysOfWeekEnabled, setDaysOfWeekEnabled] = React.useState(false);
+    const [timesOfDayEnabled, setTimesOfDayEnabled] = React.useState(false);
 
     const [detailsEnabled, setDetailsEnabled] = React.useState(false);
 
@@ -177,15 +177,14 @@ export const CreateEditScheduledHabitProvider = ({
             setEndDate(scheduledHabit.data.endDate ?? undefined);
             setDaysOfWeek(scheduledHabit.data.daysOfWeek ?? []);
             setTimesOfDay(scheduledHabit.data.timesOfDay ?? []);
+            setDetailsEnabled(scheduledHabit.data.detailsEnabled === true);
             setQuantity(scheduledHabit.data.quantity ?? 1);
             setCompletedQuantity(0);
             setUnit(scheduledHabit.data.unit ?? undefined);
 
-            setRepeatingScheduleEnabled(scheduledHabit.data.daysOfWeek?.length !== 0);
-            setTimeOfDayEnabled(scheduledHabit.data.timesOfDay?.length !== 0);
-            setDetailsEnabled(
-                scheduledHabit.data.quantity !== undefined || scheduledHabit.data.unit !== undefined
-            );
+            setDaysOfWeekEnabled(scheduledHabit.data.daysOfWeekEnabled === true);
+            setTimesOfDayEnabled(scheduledHabit.data.timesOfDayEnabled === true);
+            setDetailsEnabled(scheduledHabit.data.detailsEnabled === true);
         }
     }, [scheduledHabit.data]);
 
@@ -206,13 +205,11 @@ export const CreateEditScheduledHabitProvider = ({
             setCompletedQuantity(0);
             setUnit(newPlannedHabitScheduledHabit.data.unit ?? undefined);
 
-            setRepeatingScheduleEnabled(
-                newPlannedHabitScheduledHabit.data.daysOfWeek?.length !== 0
-            );
-            setTimeOfDayEnabled(newPlannedHabitScheduledHabit.data.timesOfDay?.length !== 0);
+            setDaysOfWeekEnabled(newPlannedHabitScheduledHabit.data.daysOfWeek?.length !== 0);
+            setTimesOfDayEnabled(newPlannedHabitScheduledHabit.data.timesOfDay?.length !== 0);
             setDetailsEnabled(
                 newPlannedHabitScheduledHabit.data.quantity !== undefined ||
-                    newPlannedHabitScheduledHabit.data.unit !== undefined
+                newPlannedHabitScheduledHabit.data.unit !== undefined
             );
         }
     }, [newPlannedHabitScheduledHabit.data]);
@@ -232,7 +229,7 @@ export const CreateEditScheduledHabitProvider = ({
             setCompletedQuantity(plannedHabit.data.completedQuantity ?? 0);
             setUnit(plannedHabit.data.unit ?? undefined);
 
-            setTimeOfDayEnabled(!!plannedHabit.data.timeOfDay);
+            setTimesOfDayEnabled(!!plannedHabit.data.timeOfDay);
             setDetailsEnabled(
                 plannedHabit.data.quantity !== undefined || plannedHabit.data.unit !== undefined
             );
@@ -263,11 +260,11 @@ export const CreateEditScheduledHabitProvider = ({
         setCompletedQuantity: setCompletedQuantity,
         setUnit: setUnit,
 
-        repeatingScheduleEnabled: repeatingScheduleEnabled,
-        timeOfDayEnabled: timeOfDayEnabled,
+        daysOfWeekEnabled: daysOfWeekEnabled,
+        timesOfDayEnabled: timesOfDayEnabled,
         detailsEnabled: detailsEnabled,
-        setRepeatingScheduleEnabled: setRepeatingScheduleEnabled,
-        setTimeOfDayEnabled: setTimeOfDayEnabled,
+        setDaysOfWeekEnabled: setDaysOfWeekEnabled,
+        setTimesOfDayEnabled: setTimesOfDayEnabled,
         setDetailsEnabled: setDetailsEnabled,
 
         startDateDatePickerModalVisible: startDateDatePickerModalVisible,

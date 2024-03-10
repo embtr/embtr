@@ -7,6 +7,7 @@ import { HabitSummary } from 'resources/types/habit/Habit';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getTodayPureDate } from 'src/util/DateUtility';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 export class HabitSummaryController {
     public static async getHabitSummaries(): Promise<HabitSummary[] | undefined> {
@@ -40,6 +41,10 @@ export class HabitSummaryController {
         } catch (error) {
             return undefined;
         }
+    }
+
+    public static async invalidateHabitSummaries() {
+        reactQueryClient.invalidateQueries(['habitSummaries']);
     }
 }
 

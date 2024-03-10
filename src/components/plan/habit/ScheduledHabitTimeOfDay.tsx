@@ -15,14 +15,18 @@ import { TimeOfDaySingleSelect } from './TimeOfDaySingleSelect';
 export const ScheduledHabitTimeOfDay = () => {
     const { colors } = useTheme();
 
-    const { timeOfDayEnabled, setTimeOfDayEnabled, editMode } = useCreateEditScheduleHabit();
+    const {
+        timesOfDayEnabled: timeOfDayEnabled,
+        setTimesOfDayEnabled: setTimeOfDayEnabled,
+        editMode,
+    } = useCreateEditScheduleHabit();
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
 
     const TIME_OF_DAY_HEIGHT = 50;
 
     React.useEffect(() => {
         runCreateEditScheduledHabitAnimation(
-            !timeOfDayEnabled,
+            timeOfDayEnabled,
             timeOfDayViewHeight,
             TIME_OF_DAY_HEIGHT
         );
@@ -51,22 +55,11 @@ export const ScheduledHabitTimeOfDay = () => {
                             fontSize: 16,
                         }}
                     >
-                        Time Of Day
+                        Specific Time of Day
                     </Text>
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 11,
-                            top: 1.5,
-                            paddingRight: PADDING_SMALL,
-                        }}
-                    >
-                        All Day
-                    </Text>
                     <Switch
                         onValueChange={() => {
                             setTimeOfDayEnabled(!timeOfDayEnabled);

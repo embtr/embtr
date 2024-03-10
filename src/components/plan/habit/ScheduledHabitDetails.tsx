@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Keyboard, Switch, Text, View } from 'react-native';
-import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR, PADDING_SMALL } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ScheduledHabitQuantityInput } from 'src/components/plan/habit/ScheduledHabitQuantityInput';
 import { ScheduledHabitUnitPicker } from 'src/components/plan/habit/ScheduledHabitUnitPicker';
@@ -44,18 +44,6 @@ export const ScheduledHabitDetails = () => {
                 </View>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 11,
-                            top: 1.5,
-                            paddingRight: PADDING_SMALL,
-                        }}
-                    >
-                        Use Details
-                    </Text>
-
                     <Switch
                         onValueChange={() => {
                             setDetailsEnabled(!detailsEnabled);
