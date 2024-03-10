@@ -39,20 +39,17 @@ newVersion="$major.$minor.$patch"
 read -r versionCodeMajor versionCodeMinor versionCodePatch <<< "$(echo "$currentVersionCode" | sed 's/.\{3\}/& /g')"
 
 if [[ "$level" == "major" ]]; then 
-    ((versionCodeMajor++))
+    versionCodeMajor=$(printf "%03d" $((10#$versionCodeMajor + 1)))
     versionCodeMinor=0
     versionCodePatch=0
 elif [[ "$level" == "minor" ]]; then 
-    ((versionCodeMinor++))
+    versionCodeMinor=$(printf "%03d" $((10#$versionCodeMinor + 1)))
     versionCodePatch=0
 else
-    ((versionCodePatch++))
+    versionCodePatch=$(printf "%03d" $((10#$versionCodePatch + 1)))
 fi
 
-zeroPaddedMajor="$(printf "%03d" $versionCodeMajor)"
-zeroPaddedMinor="$(printf "%03d" $versionCodeMinor)"
-zeroPaddedPatch="$(printf "%03d" $versionCodePatch)"
-newVersionCode="$zeroPaddedMajor$zeroPaddedMinor$zeroPaddedPatch"
+newVersionCode="$versionCodeMajor$versionCodeMinor$versionCodePatch"
 
 if [[ dry -eq 0 ]]; then 
     sed -i "s/\"$currentVersion/\"$newVersion/g" package.json
