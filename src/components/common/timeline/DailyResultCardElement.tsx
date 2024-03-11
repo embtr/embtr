@@ -6,6 +6,7 @@ import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { OptimalImageData } from '../images/OptimalImage';
 import { PlannedTask } from 'resources/schema';
 import { DailyResultCardElementTimeOfDay } from './DailyResultCardElementTimeOfDay';
+import { PlannedTaskUtil } from 'resources/types/util/PlannedTaskUtil';
 
 interface Props {
     plannedTasks: PlannedTask[];
@@ -19,9 +20,7 @@ export const DailyResultCardElement = ({ plannedTasks }: Props) => {
         return <View />;
     }
 
-    const optimalImageData: OptimalImageData = {
-        remoteImageUrl: plannedTask.remoteImageUrl,
-    };
+    const optimalImageData: OptimalImageData = PlannedTaskUtil.getOptimalImage(plannedTask);
 
     const views: JSX.Element[] = [];
     plannedTasks.forEach((plannedTask) => {
