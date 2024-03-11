@@ -6,7 +6,7 @@ import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
 import { OptimalImageData } from '../images/OptimalImage';
 import { PlannedTask } from 'resources/schema';
 import { DailyResultCardElementTimeOfDay } from './DailyResultCardElementTimeOfDay';
-import { PlannedTaskUtil } from 'resources/types/util/PlannedTaskUtil';
+import { PlannedTaskUtil } from 'src/util/PlannedTaskUtil';
 
 interface Props {
     plannedTasks: PlannedTask[];
