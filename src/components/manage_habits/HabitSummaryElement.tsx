@@ -1,19 +1,12 @@
 import { Text, View, Image } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    CARD_SHADOW,
-    POPPINS_REGULAR,
-    PADDING_LARGE,
-    PADDING_MEDIUM,
-    PADDING_SMALL,
-} from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_REGULAR, PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 import { OptimalImage } from 'src/components/common/images/OptimalImage';
-import { Ionicons } from '@expo/vector-icons';
 import { ScheduledHabit } from 'resources/schema';
-import { ScheduledHabitUtil } from 'resources/types/util/ScheduledHabitUtil';
 import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayController';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { UnitUtility } from 'src/util/UnitUtility';
+import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
 
 interface Props {
     scheduledHabit: ScheduledHabit;

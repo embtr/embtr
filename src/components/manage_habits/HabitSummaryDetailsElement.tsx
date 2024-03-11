@@ -6,7 +6,7 @@ import { formatDate } from 'src/util/DateUtility';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayController';
 import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
-import { ScheduledHabitUtil } from 'resources/types/util/ScheduledHabitUtil';
+import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
 
 interface Props {
     scheduledHabit: ScheduledHabit;

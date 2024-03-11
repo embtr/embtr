@@ -4,7 +4,7 @@ import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { ScheduledHabitCustomHooks } from 'src/controller/habit/ScheduledHabitController';
-import { ScheduledHabitUtil } from 'resources/types/util/ScheduledHabitUtil';
+import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
 
 export enum CreateEditHabitMode {
     CREATE_CUSTOM_HABIT = 'CREATE_CUSTOM_HABIT',
