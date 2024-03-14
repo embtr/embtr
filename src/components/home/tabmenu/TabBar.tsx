@@ -9,7 +9,6 @@ import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
-import { Routes } from 'src/navigation/RootStackParamList';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
@@ -125,7 +124,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
                 </View>
             );
         } else if (route.name === TABS.JOURNEY) {
-            let icon: any = isFocused ? 'trail-sign-sharp' : 'trail-sign-outline';
+            let icon: any = 'trail-sign-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
         } else if (route.name === TABS.USER_PROFILE) {
             element = <UserTabElement size={iconSize} />;

@@ -8,8 +8,6 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getAcknowledgedVersion } from 'src/redux/user/GlobalState';
 import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { UserPropertyUtil } from 'src/util/user/UserPropertyUtil';
-import { UserPropertyService } from 'src/service/UserPropertyService';
 
 const handleLoginModals = () => {
     const navigation = useEmbtrNavigation();
@@ -72,29 +70,9 @@ const handlePushNotificationToken = () => {
     PushNotificationController.registerPushNotificationToken();
 };
 
-const handleTimeZone = () => {
-    const currentUser = UserCustomHooks.useCurrentUser();
-    if (!currentUser.data) {
-        return;
-    }
-
-    const currentTimeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    const currentUserTimeZone = UserPropertyUtil.getTimeZone(currentUser.data);
-    if (currentUserTimeZone === currentTimeZoneName) {
-        return;
-    }
-
-    console.log('ADDING TIMEZONE', currentTimeZoneName);
-    UserPropertyService.createTimeZone(currentTimeZoneName);
-
-    // todo - refresh user data
-};
-
 export namespace OnLoginHooks {
     export const useOnLogin = () => {
         handleLoginModals();
         handlePushNotificationToken();
-        handleTimeZone();
     };
 }

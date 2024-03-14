@@ -133,10 +133,10 @@ export function hydrateDates<T>(data: T): T {
             } else if (isPureDate(data[key])) {
                 (data as any)[key] = PureDate.fromString(
                     (data as any)[key]['year'] +
-                        '-' +
-                        (data as any)[key]['month'] +
-                        '-' +
-                        (data as any)[key]['day']
+                    '-' +
+                    (data as any)[key]['month'] +
+                    '-' +
+                    (data as any)[key]['day']
                 );
             } else {
                 (data as any)[key] = hydrateDates((data as any)[key]) as any;
@@ -177,8 +177,7 @@ export function getHumanReadableDate(d: Date): string {
     } else if (differenceInDays(now, d) < 7) {
         return daysOfWeek[d.getDay()];
     } else {
-        return `${daysOfWeekAbbreviated[d.getDay()]}. ${d.getDate()}. ${
-            monthsAbbreviated[d.getMonth()]
-        }.`;
+        return `${daysOfWeekAbbreviated[d.getDay()]}. ${d.getDate()}. ${monthsAbbreviated[d.getMonth()]
+            }.`;
     }
 }

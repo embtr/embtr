@@ -1,18 +1,21 @@
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { DailyHistoryCustomHooks } from 'src/controller/daily_history/DailyHistoryController';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
-import { getMonthDayFormatted, getYesterday } from 'src/util/DateUtility';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import { isExtraWideDevice } from 'src/util/DeviceUtil';
 import { User } from 'resources/schema';
+import { HabitStreakCustomHooks } from 'src/controller/habit_streak/HabitStreakController';
+import { PureDate } from 'resources/types/date/PureDate';
+import { Constants } from 'resources/types/constants/constants';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 
 interface Props {
     user: User;
 }
 
-export const DailyHistoryWidget = ({ user }: Props) => {
+export const HabitStreakWidget = ({ user }: Props) => {
     const { colors } = useTheme();
     const diameter = isExtraWideDevice() ? getWindowWidth() / 37.5 : 9;
 
@@ -20,26 +23,32 @@ export const DailyHistoryWidget = ({ user }: Props) => {
         return <View />;
     }
 
-    const dailyHistory = DailyHistoryCustomHooks.useDailyHistory(user.id);
+    const habitStreak = HabitStreakCustomHooks.useHabitStreak(user.id);
 
-    if (!dailyHistory.data) {
+    useFocusEffect(
+        React.useCallback(() => {
+            habitStreak.refetch();
+        }, [])
+    );
+
+    if (!habitStreak.data) {
         return <View />;
     }
 
-    const history = dailyHistory.data.history;
-
     let views: JSX.Element[] = [];
-    for (let i = 0; i < 29; i++) {
-        const index = 100 - 29 + i + 1;
-        const historyElement = history[index];
+    for (let i = 0; i < habitStreak.data.results.length; i++) {
+        const historyElement = habitStreak.data.results[i];
 
         views.push(
             <View
                 key={i}
                 style={{
-                    backgroundColor: historyElement.complete
-                        ? colors.progress_bar_complete
-                        : colors.progress_bar_color,
+                    backgroundColor:
+                        historyElement.result === Constants.CompletionState.COMPLETE
+                            ? colors.progress_bar_complete
+                            : historyElement.result === Constants.CompletionState.INVALID
+                                ? colors.progress_bar_color
+                                : colors.progress_bar_failed,
                     height: diameter,
                     width: diameter,
                     borderRadius: 1,
@@ -51,26 +60,20 @@ export const DailyHistoryWidget = ({ user }: Props) => {
     }
     views.pop();
 
-    let streak = 0;
-    for (let i = history.length - 1; i >= 0; i--) {
-        if (!history[i].complete) {
-            break;
+    const getPrettyDate = (pureDate: PureDate) => {
+        if (!pureDate) {
+            return '';
         }
 
-        streak++;
-    }
+        const month = pureDate.getMonth();
+        const day = pureDate.getDay();
+        return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}`;
+    };
 
-    const today = new Date();
-
-    const twoWeeksAgo = getYesterday();
-    twoWeeksAgo.setDate(getYesterday().getDate() - 15);
-
-    const fourWeeksAgo = getYesterday();
-    fourWeeksAgo.setDate(getYesterday().getDate() - 30);
-
-    const yesterdayFormatted = getMonthDayFormatted(today);
-    const twoWeeksAgoFormatted = getMonthDayFormatted(twoWeeksAgo);
-    const fourWeeksAgoFormatted = getMonthDayFormatted(fourWeeksAgo);
+    let streak = habitStreak.data.currentStreak;
+    const startDateFormatted = getPrettyDate(habitStreak.data.startDate);
+    const medianDateFormatted = getPrettyDate(habitStreak.data.medianDate);
+    const endDateFormatted = getPrettyDate(habitStreak.data.endDate);
 
     return (
         <WidgetBase>
@@ -84,7 +87,7 @@ export const DailyHistoryWidget = ({ user }: Props) => {
                         bottom: 2,
                     }}
                 >
-                    Daily History
+                    Habit Streak
                 </Text>
 
                 <View style={{ flex: 1 }} />
@@ -127,7 +130,7 @@ export const DailyHistoryWidget = ({ user }: Props) => {
                         }}
                     >
                         {' '}
-                        {fourWeeksAgoFormatted}
+                        {startDateFormatted}
                     </Text>
                 </View>
 
@@ -140,7 +143,7 @@ export const DailyHistoryWidget = ({ user }: Props) => {
                         }}
                     >
                         {' '}
-                        {twoWeeksAgoFormatted}
+                        {medianDateFormatted}
                     </Text>
                 </View>
 
@@ -153,7 +156,7 @@ export const DailyHistoryWidget = ({ user }: Props) => {
                             fontSize: 8,
                         }}
                     >
-                        {yesterdayFormatted}{' '}
+                        {endDateFormatted}{' '}
                     </Text>
                 </View>
             </View>
