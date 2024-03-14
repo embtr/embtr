@@ -7,7 +7,6 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 
 export class HabitStreakController {
     public static async get(userId: number): Promise<HabitStreak | undefined> {
-        console.log('HabitStreakController.get');
         return axiosInstance
             .get<GetHabitStreakResponse>(`/habit-streak/${userId}`)
             .then((success) => {

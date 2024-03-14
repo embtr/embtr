@@ -7,7 +7,6 @@ import { ConfettiView } from '../common/animated_view/ConfettiView';
 import { Banner } from '../common/Banner';
 import { PADDING_LARGE } from 'src/util/constants';
 import { HabitStreakWidget } from '../widgets/habit_streak/HabitStreakWidget';
-import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 
 export const Journey = () => {
     const currentUser = UserCustomHooks.useCurrentUser();
@@ -28,8 +27,6 @@ export const Journey = () => {
                 <ConfettiView />
 
                 <View style={{ height: '100%', width: '100%', paddingHorizontal: PADDING_LARGE }}>
-                    <DailyHistoryWidget user={currentUser.data} />
-                    <View style={{ height: PADDING_LARGE }} />
                     <HabitStreakWidget user={currentUser.data} />
                 </View>
             </View>
