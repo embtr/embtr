@@ -6,7 +6,6 @@ import { Screen } from '../common/Screen';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { TodaysNotesWidget } from '../widgets/TodaysNotesWidget';
 import { TodaysActivitiesWidget, WidgetSource } from '../widgets/TodaysTasksWidget';
-import { DailyHistoryWidget } from '../widgets/daily_history/DailyHistoryWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { HabitJourneyWidget } from '../widgets/habit_journey/HabitJourneyWidget';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
@@ -46,9 +45,6 @@ export const Today = () => {
 
             case WidgetType.QUOTE_OF_THE_DAY:
                 return <QuoteOfTheDayWidget />;
-
-            case WidgetType.DAILY_HISTORY:
-                return <DailyHistoryWidget userId={user.id!} />;
 
             case WidgetType.HABIT_JOURNEY:
                 return <HabitJourneyWidget user={user} />;

@@ -1,12 +1,12 @@
 import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { User } from 'resources/schema';
-import { DailyHistoryWidget } from 'src/components/widgets/daily_history/DailyHistoryWidget';
 import { TodaysActivitiesWidget, WidgetSource } from 'src/components/widgets/TodaysTasksWidget';
 import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsWidget';
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
 import React from 'react';
 import { PADDING_LARGE } from 'src/util/constants';
+import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStreakWidget';
 
 interface Props {
     user: User;
@@ -26,7 +26,7 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
         <Screen>
             <View style={{ height: '100%', paddingHorizontal: PADDING_LARGE }}>
                 <View style={{ paddingTop: 6 }}>
-                    <DailyHistoryWidget userId={user.id} />
+                    <HabitStreakWidget user={user} />
                 </View>
 
                 <View style={{ paddingTop: PADDING_LARGE / 2 }}>

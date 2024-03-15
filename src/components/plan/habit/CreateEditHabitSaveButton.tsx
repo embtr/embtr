@@ -22,6 +22,7 @@ import { CreateTaskRequest } from 'resources/types/requests/TaskTypes';
 import { DayOfWeekCustomHooks } from 'src/controller/day_of_week/DayOfWeekController';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 import { HabitSummaryController } from 'src/controller/habit/HabitSummaryController';
+import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayController';
 
 interface Props {
     habitId?: number;
@@ -65,6 +66,7 @@ export const CreateEditHabitSaveButton = ({
     const previousRoute = routes[routes.length - 2];
     const isFromHabitSummaryDetails = previousRoute.name.toString() === Routes.MANAGE_HABITS;
     const allDaysOfWeek = DayOfWeekCustomHooks.useDaysOfWeek();
+    const allTimesOfDay = TimesOfDayCustomHooks.useTimesOfDay();
 
     const createUpdatedPlannedTask = (id: number) => {
         const plannedTask: PlannedTask = {
@@ -150,8 +152,11 @@ export const CreateEditHabitSaveButton = ({
                     id: timeOfDay.id,
                 };
             });
-        } else {
-            scheduledHabit.timesOfDay = [];
+        }
+
+        if (scheduledHabit.timesOfDay?.length === 0) {
+            const allDay = allTimesOfDay.find((timeOfDay) => timeOfDay.id === 5);
+            scheduledHabit.timesOfDay = allDay ? [allDay] : [];
         }
 
         if (detailsEnabled) {
