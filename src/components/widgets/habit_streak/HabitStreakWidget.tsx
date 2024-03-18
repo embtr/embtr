@@ -70,7 +70,9 @@ export const HabitStreakWidget = ({ user }: Props) => {
         return `${month < 10 ? '0' + month : month}/${day < 10 ? '0' + day : day}`;
     };
 
-    let streak = habitStreak.data.currentStreak;
+    const currentStreak = habitStreak.data.currentStreak;
+    const longestStreak = habitStreak.data.longestStreak;
+
     const startDateFormatted = getPrettyDate(habitStreak.data.startDate);
     const medianDateFormatted = getPrettyDate(habitStreak.data.medianDate);
     const endDateFormatted = getPrettyDate(habitStreak.data.endDate);
@@ -89,9 +91,38 @@ export const HabitStreakWidget = ({ user }: Props) => {
                 >
                     Habit Streak
                 </Text>
+            </View>
 
+            <View
+                style={{
+                    flexDirection: 'row',
+                }}
+            >
+                <View>
+                    <Text
+                        style={{
+                            color: colors.text,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 12,
+                            lineHeight: 14,
+                            bottom: 3,
+                        }}
+                    >
+                        longest streak:
+                        <Text
+                            style={{
+                                color: colors.accent_color_light,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 12,
+                                paddingTop: 5,
+                            }}
+                        >
+                            {' '}
+                            {longestStreak} {longestStreak == 1 ? 'day' : 'days'}
+                        </Text>
+                    </Text>
+                </View>
                 <View style={{ flex: 1 }} />
-
                 <View>
                     <Text
                         style={{
@@ -112,7 +143,7 @@ export const HabitStreakWidget = ({ user }: Props) => {
                             }}
                         >
                             {' '}
-                            {streak} {streak == 1 ? 'day' : 'days'}
+                            {currentStreak} {currentStreak == 1 ? 'day' : 'days'}
                         </Text>
                     </Text>
                 </View>
