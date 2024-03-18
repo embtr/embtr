@@ -1,7 +1,12 @@
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
+import {
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+    PADDING_LARGE,
+    PADDING_SMALL,
+} from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import { isExtraWideDevice } from 'src/util/DeviceUtil';
 import { User } from 'resources/schema';
@@ -96,6 +101,7 @@ export const HabitStreakWidget = ({ user }: Props) => {
             <View
                 style={{
                     flexDirection: 'row',
+                    paddingTop: PADDING_SMALL,
                 }}
             >
                 <View>
@@ -114,7 +120,6 @@ export const HabitStreakWidget = ({ user }: Props) => {
                                 color: colors.accent_color_light,
                                 fontFamily: POPPINS_REGULAR,
                                 fontSize: 12,
-                                paddingTop: 5,
                             }}
                         >
                             {' '}
@@ -139,7 +144,6 @@ export const HabitStreakWidget = ({ user }: Props) => {
                                 color: colors.accent_color_light,
                                 fontFamily: POPPINS_REGULAR,
                                 fontSize: 12,
-                                paddingTop: 5,
                             }}
                         >
                             {' '}
