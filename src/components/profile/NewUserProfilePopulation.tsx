@@ -23,7 +23,6 @@ import { UserService, UsernameAvailabilityResult } from 'src/service/UserService
 import { Checkbox } from 'src/components/checkbox/Checkbox';
 import { MetadataCustomHooks } from 'src/controller/metadata/MetadataController';
 import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
-import { getAuth } from 'firebase/auth';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getAppleAuthUserInfo } from 'src/redux/user/GlobalState';
 import { AppleAuthUserInfo } from 'src/model/GlobalState';
@@ -124,7 +123,10 @@ export const NewUserProfilePopulation = () => {
                 message: 'an error occurred',
                 available: false,
             });
-        } else if (updateUserResponse.internalCode === Code.USERNAME_IN_USE) {
+        } else if (
+            updateUserResponse.internalCode === Code.USERNAME_IN_USE ||
+            updateUserResponse.internalCode === Code.RESOURCE_ALREADY_EXISTS
+        ) {
             setUsernameAvailabilityResult({
                 message: 'username in use',
                 available: false,

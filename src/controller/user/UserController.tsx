@@ -154,15 +154,19 @@ class UserController {
             });
     }
 
-    public static async update(user: User): Promise<User | undefined> {
+    public static async update(user: User): Promise<UpdateUserResponse> {
         const request: UpdateUserRequest = { user };
-        try {
-            const response = await axiosInstance.patch(`${USER}`, request);
-            const updateUserResponse: UpdateUserResponse = response.data;
-            return updateUserResponse.user;
-        } catch (error) {
-            return undefined;
-        }
+
+        return await axiosInstance
+            .patch(`${USER}`, request)
+            .then((success) => {
+                const data: UpdateUserResponse = success.data;
+                return data;
+            })
+            .catch((error: AxiosError) => {
+                const data: UpdateUserResponse = error.response?.data as UpdateUserResponse;
+                return data;
+            });
     }
 
     public static async search(query: string) {

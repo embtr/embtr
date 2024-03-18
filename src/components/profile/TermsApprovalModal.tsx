@@ -25,7 +25,7 @@ export const TermsApprovalModal = () => {
         userClone.termsVersion = terms;
 
         const updateUserResponse = await UserController.update(userClone);
-        if (!updateUserResponse) {
+        if (!updateUserResponse.success) {
             return;
         }
 

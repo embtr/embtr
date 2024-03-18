@@ -137,13 +137,16 @@ export const EditUserProfile = () => {
             clone.displayName = clone.username;
         }
 
-        const updateUserResponse = await UserController.setup(clone);
+        const updateUserResponse = await UserController.update(clone);
         if (updateUserResponse === undefined) {
             setUsernameAvailabilityResult({
                 message: 'an error occurred',
                 available: false,
             });
-        } else if (updateUserResponse.internalCode === Code.USERNAME_IN_USE) {
+        } else if (
+            updateUserResponse.internalCode === Code.USERNAME_IN_USE ||
+            updateUserResponse.internalCode === Code.RESOURCE_ALREADY_EXISTS
+        ) {
             setUsernameAvailabilityResult({
                 message: 'username in use',
                 available: false,
