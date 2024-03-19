@@ -16,14 +16,14 @@ export const DailyResultCardElementTimeOfDay = ({ plannedTask }: Props) => {
     const completedQuantity = plannedTask.completedQuantity;
 
     const taskIsComplete =
-        plannedTask.status === Constants.HabitStatus.COMPLETE ||
+        plannedTask.status === Constants.CompletionState.COMPLETE ||
         (completedQuantity ?? 0) >= (quantity ?? 1);
-    const taskIsSkipped = plannedTask.status === Constants.HabitStatus.SKIPPED;
-    const taskIsFailed = plannedTask.status === Constants.HabitStatus.FAILED;
+    const taskIsSkipped = plannedTask.status === Constants.CompletionState.SKIPPED;
+    const taskIsFailed = plannedTask.status === Constants.CompletionState.FAILED;
 
     let status = plannedTask.status;
     if (status === undefined) {
-        status = Constants.HabitStatus.INCOMPLETE;
+        status = Constants.CompletionState.INCOMPLETE;
     }
 
     let stats = `${completedQuantity} / ${quantity}`;

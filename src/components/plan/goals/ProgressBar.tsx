@@ -15,16 +15,16 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
     if (isNaN(currentProgress)) {
         currentProgress = 100;
     }
-    if (status === Constants.HabitStatus.SKIPPED) {
+    if (status === Constants.CompletionState.SKIPPED) {
         currentProgress = 100;
     }
 
     const percentProgess = '' + currentProgress + '%';
 
     let color = colors.progress_bar_complete;
-    if (status === Constants.HabitStatus.SKIPPED) {
+    if (status === Constants.CompletionState.SKIPPED) {
         color = colors.progress_bar_skipped;
-    } else if (status === Constants.HabitStatus.FAILED) {
+    } else if (status === Constants.CompletionState.FAILED) {
         color = colors.progress_bar_failed;
     }
 

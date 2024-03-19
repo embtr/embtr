@@ -35,14 +35,14 @@ export interface PlannedDayMetadata {
 
 export const getPlannedDayStatus = (plannedDay: PlannedDay): string => {
     if (plannedDayIsComplete(plannedDay)) {
-        return Constants.HabitStatus.COMPLETE;
+        return Constants.CompletionState.COMPLETE;
     }
 
     if (plannedDayIsFailed(plannedDay)) {
-        return Constants.HabitStatus.FAILED;
+        return Constants.CompletionState.FAILED;
     }
 
-    return Constants.HabitStatus.INCOMPLETE;
+    return Constants.CompletionState.INCOMPLETE;
 };
 
 export const plannedDayIsComplete = (plannedDay: PlannedDay): boolean => {
@@ -70,11 +70,11 @@ export const plannedDayIsIncomplete = (plannedDay: PlannedDay): boolean => {
 };
 
 export const plannedTaskIsComplete = (plannedTask: PlannedTaskModel): boolean => {
-    return plannedTask.status === Constants.HabitStatus.COMPLETE;
+    return plannedTask.status === Constants.CompletionState.COMPLETE;
 };
 
 export const plannedTaskIsFailed = (plannedTask: PlannedTaskModel): boolean => {
-    return plannedTask.status === Constants.HabitStatus.FAILED;
+    return plannedTask.status === Constants.CompletionState.FAILED;
 };
 
 export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean => {

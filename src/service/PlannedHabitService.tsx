@@ -15,21 +15,21 @@ export namespace PlannedTaskService {
 
     export const skip = async (plannedTask: PlannedTask, dayKey: string) => {
         const clone = { ...plannedTask };
-        clone.status = Constants.HabitStatus.SKIPPED;
+        clone.status = Constants.CompletionState.SKIPPED;
 
         await createUpdatePlannedTask(clone, dayKey);
     };
 
     export const fail = async (plannedTask: PlannedTask, dayKey: string) => {
         const clone = { ...plannedTask };
-        clone.status = Constants.HabitStatus.FAILED;
+        clone.status = Constants.CompletionState.FAILED;
 
         await createUpdatePlannedTask(clone, dayKey);
     };
 
     export const complete = async (plannedTask: PlannedTask, dayKey: string) => {
         const clone = { ...plannedTask };
-        clone.status = Constants.HabitStatus.COMPLETE;
+        clone.status = Constants.CompletionState.COMPLETE;
         clone.completedQuantity = clone.quantity;
 
         await createUpdatePlannedTask(clone, dayKey);
@@ -37,7 +37,7 @@ export namespace PlannedTaskService {
 
     export const incomplete = async (plannedTask: PlannedTask, dayKey: string) => {
         const clone = { ...plannedTask };
-        clone.status = Constants.HabitStatus.INCOMPLETE;
+        clone.status = Constants.CompletionState.INCOMPLETE;
         clone.completedQuantity = 0;
 
         await createUpdatePlannedTask(clone, dayKey);

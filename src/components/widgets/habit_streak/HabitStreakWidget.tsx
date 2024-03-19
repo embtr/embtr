@@ -51,7 +51,7 @@ export const HabitStreakWidget = ({ user }: Props) => {
                     backgroundColor:
                         historyElement.result === Constants.CompletionState.COMPLETE
                             ? colors.progress_bar_complete
-                            : historyElement.result === Constants.CompletionState.INVALID
+                            : historyElement.result === Constants.CompletionState.NO_SCHEDULE
                                 ? colors.progress_bar_color
                                 : colors.progress_bar_failed,
                     height: diameter,

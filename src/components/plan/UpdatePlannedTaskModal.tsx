@@ -85,7 +85,7 @@ export const UpdatePlannedTaskModal = () => {
 
     const skip = async () => {
         const clone = { ...plannedTask };
-        clone.status = Constants.HabitStatus.SKIPPED;
+        clone.status = Constants.CompletionState.SKIPPED;
 
         onUpdateCallback(clone);
         dismiss();
@@ -96,7 +96,7 @@ export const UpdatePlannedTaskModal = () => {
 
     const complete = async () => {
         const clone = { ...plannedTask };
-        clone.status = Constants.HabitStatus.COMPLETE;
+        clone.status = Constants.CompletionState.COMPLETE;
         clone.completedQuantity = clone.quantity;
 
         onUpdateCallback(clone);
@@ -111,8 +111,8 @@ export const UpdatePlannedTaskModal = () => {
         clone.completedQuantity = selectedValue ?? 0;
         clone.status =
             clone.completedQuantity >= (clone.quantity ?? 0)
-                ? Constants.HabitStatus.COMPLETE
-                : Constants.HabitStatus.INCOMPLETE;
+                ? Constants.CompletionState.COMPLETE
+                : Constants.CompletionState.INCOMPLETE;
 
         onUpdateCallback(clone);
         dismiss();

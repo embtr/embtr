@@ -47,7 +47,7 @@ export const DailyResultBody = ({ plannedDayResult }: Props) => {
 
     let completedCount = 0;
     plannedDayResult.plannedDay?.plannedTasks?.forEach((plannedTask) => {
-        if (plannedTask.status === Constants.HabitStatus.COMPLETE) {
+        if (plannedTask.status === Constants.CompletionState.COMPLETE) {
             completedCount++;
         }
     });

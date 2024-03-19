@@ -37,7 +37,7 @@ export class PlanningService {
 
         let allTasksAreComplete = true;
         plannedDay?.plannedTasks?.forEach((plannedTask) => {
-            if (!(plannedTask.status !== Constants.HabitStatus.FAILED)) {
+            if (!(plannedTask.status !== Constants.CompletionState.FAILED)) {
                 allTasksAreComplete = false;
                 return;
             }

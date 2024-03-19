@@ -118,11 +118,11 @@ export const MemoizedPlannableTaskImproved = React.memo(
 
 const getStatusColor = (colors: any, status?: string) => {
     switch (status) {
-        case Constants.HabitStatus.FAILED:
+        case Constants.CompletionState.FAILED:
             return colors.progress_bar_failed;
-        case Constants.HabitStatus.SKIPPED:
+        case Constants.CompletionState.SKIPPED:
             return colors.progress_bar_skipped;
-        case Constants.HabitStatus.COMPLETE:
+        case Constants.CompletionState.COMPLETE:
             return colors.progress_bar_complete;
         default:
             return 'gray';
@@ -159,8 +159,8 @@ export const PlannableTaskImproved = ({
 
     const showReset =
         (plannedTask.completedQuantity ?? 0) >= (plannedTask.quantity ?? 1) ||
-        plannedTask.status === Constants.HabitStatus.SKIPPED ||
-        plannedTask.status === Constants.HabitStatus.FAILED;
+        plannedTask.status === Constants.CompletionState.SKIPPED ||
+        plannedTask.status === Constants.CompletionState.FAILED;
 
     const leftSnapOption: SwipeableSnapOptionData = {
         text: showReset ? 'Reset' : 'Done',
@@ -169,14 +169,14 @@ export const PlannableTaskImproved = ({
             if (showReset) {
                 setPlannedTask({
                     ...plannedTask,
-                    status: Constants.HabitStatus.INCOMPLETE,
+                    status: Constants.CompletionState.INCOMPLETE,
                     completedQuantity: 0,
                 });
                 await PlannedTaskService.incomplete(plannedTask, dayKey);
             } else {
                 setPlannedTask({
                     ...plannedTask,
-                    status: Constants.HabitStatus.COMPLETE,
+                    status: Constants.CompletionState.COMPLETE,
                     completedQuantity: plannedTask.quantity,
                 });
                 await PlannedTaskService.complete(plannedTask, dayKey);
@@ -194,7 +194,7 @@ export const PlannableTaskImproved = ({
             onAction: async () => {
                 setPlannedTask({
                     ...plannedTask,
-                    status: Constants.HabitStatus.SKIPPED,
+                    status: Constants.CompletionState.SKIPPED,
                 });
                 ref.current?.close();
 
@@ -209,7 +209,7 @@ export const PlannableTaskImproved = ({
             onAction: async () => {
                 setPlannedTask({
                     ...plannedTask,
-                    status: Constants.HabitStatus.FAILED,
+                    status: Constants.CompletionState.FAILED,
                 });
                 ref.current?.close();
 
@@ -275,8 +275,8 @@ export const PlannableTaskImproved = ({
                             strokeWidth={2}
                             targetQuantity={targetQuantity ?? 1}
                             completedQuantity={completedQuantity ?? 0}
-                            isSkipped={plannedTask.status === Constants.HabitStatus.SKIPPED}
-                            isFailed={plannedTask.status === Constants.HabitStatus.FAILED}
+                            isSkipped={plannedTask.status === Constants.CompletionState.SKIPPED}
+                            isFailed={plannedTask.status === Constants.CompletionState.FAILED}
                         />
 
                         <View style={styles.svgProgress}>
