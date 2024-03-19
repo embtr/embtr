@@ -87,6 +87,8 @@ export const CreateEditScheduledHabit = () => {
                                 selectedDayKey
                             );
 
+                            onExit?.();
+
                             dispatch(setGlobalLoading(false));
                             navigation.goBack();
                         }}
