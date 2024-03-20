@@ -54,7 +54,7 @@ export const Notifications = () => {
         <Screen>
             <Banner name="Notifications" leftIcon={'arrow-back'} leftRoute={'BACK'} />
 
-            {notifications.data?.length === 0 ? noNotifications : null}
+            {!notifications.isLoading && notifications.data?.length === 0 && noNotifications}
 
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
