@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { RefreshControl, View } from 'react-native';
+import { RefreshControl, View, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
@@ -11,11 +11,14 @@ import {
     NotificationController,
     NotificationCustomHooks,
 } from 'src/controller/notification/NotificationController';
+import { useTheme } from '../theme/ThemeProvider';
 
 export const Notifications = () => {
+    const colors = useTheme().colors;
     const [refreshing, setRefreshing] = React.useState(false);
     const notifications = NotificationCustomHooks.useNotifications();
     const unreadNotificationCount = NotificationCustomHooks.useUnreadNotificationCount();
+    console.log(notifications.data);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -41,9 +44,17 @@ export const Notifications = () => {
         );
     });
 
+    const noNotifications = (
+        <View style={{ padding: 20, alignItems: 'center' }}>
+            <Text style={{ color: colors.secondary_text }}>you have no notifications</Text>
+        </View>
+    );
+
     return (
         <Screen>
             <Banner name="Notifications" leftIcon={'arrow-back'} leftRoute={'BACK'} />
+
+            {notifications.data?.length === 0 ? noNotifications : null}
 
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
