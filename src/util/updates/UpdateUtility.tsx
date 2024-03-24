@@ -26,7 +26,9 @@ export class UpdateUtility {
         if (isAndroidDevice()) {
             Linking.openURL('https://play.google.com/store/apps/details?id=com.brentryczak.embtr');
         } else {
-            Linking.openURL('itms-apps://');
+            Linking.openURL('https://apps.apple.com/us/app/embtr/id1600994834');
+            //this url will take directly to review page
+            //Linking.openURL('https://apps.apple.com/us/app/embtr/id1600994834?action=write-review');
         }
     };
 }

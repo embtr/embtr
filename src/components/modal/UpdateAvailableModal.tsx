@@ -98,6 +98,7 @@ export const UpdateAvailableModal = () => {
                                 color: colors.secondary_text,
                                 fontFamily: POPPINS_REGULAR,
                                 fontSize: 14,
+                                textAlign: 'center',
                             }}
                         >
                             Update now to get the latest features.
