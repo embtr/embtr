@@ -7,9 +7,25 @@ import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayContr
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
+import { differenceInDays } from 'date-fns';
 
 interface Props {
     scheduledHabit: ScheduledHabit;
+}
+
+function getExpirationMessage(startDate: Date, endDate: Date) {
+    // Calculate the difference in days
+    const diffInDays = differenceInDays(endDate, startDate);
+
+    if (diffInDays === 0) {
+        return 'version expires today';
+    } else if (diffInDays === 1) {
+        return 'version expires tomorrow';
+    } else if (diffInDays > 1) {
+        return `version expires in ${diffInDays} days`;
+    } else {
+        return 'version expired';
+    }
 }
 
 export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
@@ -27,70 +43,21 @@ export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
     const unit = scheduledHabit.unit;
     const prettyUnits = UnitUtility.getReadableUnit(unit, quantity);
 
-    const nextHabitDays = 1;
-    const lastHabitDays = 1;
-
-    const nextHabitInFuture = nextHabitDays && nextHabitDays > 0;
-    const nextHabitIsToday =
-        (nextHabitDays !== undefined && nextHabitDays === 1) ||
-        (lastHabitDays !== undefined && lastHabitDays === 1);
-    const lastHabitInPast = lastHabitDays && lastHabitDays > 0;
+    const endDate = scheduledHabit.endDate;
+    const expires = endDate && getExpirationMessage(new Date(), endDate);
 
     let habitView: JSX.Element = <View />;
-    if (nextHabitInFuture) {
+    if (endDate) {
         habitView = (
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text
                     style={{
-                        color: colors.secondary_text,
+                        color: colors.error,
                         fontFamily: POPPINS_REGULAR,
                         fontSize: 10,
                     }}
                 >
-                    next habit in
-                    <Text
-                        style={{
-                            color: colors.accent_color,
-                        }}
-                    >
-                        {' '}
-                        {nextHabitDays} day{nextHabitDays === 1 ? '' : 's'}
-                    </Text>
-                </Text>
-            </View>
-        );
-    } else if (nextHabitIsToday) {
-        habitView = (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text
-                    style={{
-                        color: colors.secondary_text,
-                        fontFamily: POPPINS_REGULAR,
-                        fontSize: 10,
-                    }}
-                >
-                    next habit is
-                    <Text
-                        style={{
-                            color: colors.accent_color,
-                        }}
-                    >
-                        {' today'}
-                    </Text>
-                </Text>
-            </View>
-        );
-    } else if (lastHabitInPast) {
-        habitView = (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text
-                    style={{
-                        color: colors.secondary_text,
-                        fontFamily: POPPINS_REGULAR,
-                        fontSize: 10,
-                    }}
-                >
-                    last habit {lastHabitDays} day{lastHabitDays === 1 ? '' : 's'} ago
+                    {expires}
                 </Text>
             </View>
         );
@@ -115,6 +82,16 @@ export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
                     CARD_SHADOW,
                 ]}
             >
+                <View
+                    style={{
+                        width: '100%',
+                        alignItems: 'flex-end',
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                    {habitView}
+                </View>
+
                 <View
                     style={{
                         flexDirection: 'row',
@@ -252,23 +229,6 @@ export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
                         </Text>
                     </View>
                 )}
-            </View>
-            <View>
-                {/*todo -  get this working*/}
-                {/*
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Ionicons
-                            name={'chevron-forward-outline'}
-                            size={18}
-                            color={colors.card_background}
-                        />
-                    </View>
-                */}
             </View>
         </View>
     );

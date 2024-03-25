@@ -3,7 +3,7 @@ import { PlanDay } from './PlanDay';
 import { View } from 'react-native';
 
 export const PlanSelectedDay = () => {
-    const { dayKey, plannedDay } = PlannedDayCustomHooks.useSelectedPlannedDay();
+    const { dayKey, plannedDay } = PlannedDayCustomHooks.useSelectedPlannedDayForCurrentUser();
     if (!plannedDay?.data) {
         return <View />;
     }

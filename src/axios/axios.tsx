@@ -5,6 +5,7 @@ import { hydrateDates } from 'src/util/DateUtility';
 import { getApiUrl } from 'src/util/UrlUtility';
 import { getAuthTokenId } from 'src/util/user/CurrentUserUtil';
 import Constants from 'expo-constants';
+import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 
 const axiosInstance = axios.create({
     baseURL: getApiUrl(),
@@ -14,12 +15,15 @@ const currentVersion = Constants.expoConfig?.version;
 
 axiosInstance.interceptors.request.use(
     async (config) => {
+        const dayKey = getTodayKey();
         const authToken = await getAuthTokenId();
+
         if (authToken) {
             config.headers['Authorization'] = `Bearer ${authToken}`;
         }
 
         config.headers['client-version'] = currentVersion;
+        config.headers['client-dayKey'] = dayKey;
 
         return config;
     },

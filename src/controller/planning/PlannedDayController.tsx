@@ -6,7 +6,6 @@ import { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PLANNED_DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
 import axiosInstance from 'src/axios/axios';
-import { PlannedDay as PlannedDayModel, User } from 'resources/schema';
 import {
     CreatePlannedDayRequest,
     CreatePlannedDayResponse,
@@ -17,69 +16,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser, getSelectedDayKey } from 'src/redux/user/GlobalState';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
-import { Constants } from 'resources/types/constants/constants';
 import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
-
-export interface PlannedDay {
-    id?: string;
-    dayKey: string;
-    uid: string;
-    metadata?: PlannedDayMetadata;
-    plannedTasks: PlannedTaskModel[];
-}
+import { PlannedDay, User } from 'resources/schema';
 
 export interface PlannedDayMetadata {
     added: Timestamp;
     modified: Timestamp;
 }
-
-export const getPlannedDayStatus = (plannedDay: PlannedDay): string => {
-    if (plannedDayIsComplete(plannedDay)) {
-        return Constants.CompletionState.COMPLETE;
-    }
-
-    if (plannedDayIsFailed(plannedDay)) {
-        return Constants.CompletionState.FAILED;
-    }
-
-    return Constants.CompletionState.INCOMPLETE;
-};
-
-export const plannedDayIsComplete = (plannedDay: PlannedDay): boolean => {
-    for (const plannedTask of plannedDay.plannedTasks) {
-        if (!plannedTaskIsComplete(plannedTask)) {
-            return false;
-        }
-    }
-
-    return true;
-};
-
-export const plannedDayIsFailed = (plannedDay: PlannedDay): boolean => {
-    for (const plannedTask of plannedDay.plannedTasks) {
-        if (plannedTaskIsFailed(plannedTask)) {
-            return true;
-        }
-    }
-
-    return false;
-};
-
-export const plannedDayIsIncomplete = (plannedDay: PlannedDay): boolean => {
-    return !plannedDayIsComplete(plannedDay) && !plannedDayIsFailed(plannedDay);
-};
-
-export const plannedTaskIsComplete = (plannedTask: PlannedTaskModel): boolean => {
-    return plannedTask.status === Constants.CompletionState.COMPLETE;
-};
-
-export const plannedTaskIsFailed = (plannedTask: PlannedTaskModel): boolean => {
-    return plannedTask.status === Constants.CompletionState.FAILED;
-};
-
-export const plannedTaskIsIncomplete = (plannedTask: PlannedTaskModel): boolean => {
-    return !plannedTaskIsComplete(plannedTask) && !plannedTaskIsFailed(plannedTask);
-};
 
 export const createPlannedTaskByPlannedTask = (
     plannedTask: PlannedTaskModel,
@@ -226,10 +169,6 @@ export const getDayFromDate = (date: Date) => {
     return date.getDate() + 1;
 };
 
-export const getDayFromDayKey = (dayKey: string) => {
-    return parseInt(dayKey.substring(8, 10));
-};
-
 export const getDateFromDayKey = (dayKey: string) => {
     let date = new Date();
 
@@ -248,68 +187,40 @@ export const getDateFromDayKey = (dayKey: string) => {
     return dateAsUtc;
 };
 
-export const getDayKeyDaysOld = (dayKey: string) => {
-    const then: any = getDateFromDayKey(dayKey);
-    const now: any = new Date();
-
-    return getDaysOld(then, now);
-};
-
-export const createPlannedDayModel = (uid: string, dayKey: string) => {
-    const plannedDay: PlannedDay = {
-        dayKey: dayKey,
-        uid: getCurrentUid(),
-        plannedTasks: [],
-    };
-
-    return plannedDay;
-};
-
-export const createMetadata = () => {
-    const metadata: PlannedDayMetadata = {
-        added: Timestamp.now(),
-        modified: Timestamp.now(),
-    };
-
-    return metadata;
-};
-
 class PlannedDayController {
-    public static async completeDayViaApi(
-        plannedDay: PlannedDayModel
-    ): Promise<GetPlannedDayResponse> {
+    public static async completeDayViaApi(plannedDay: PlannedDay): Promise<PlannedDay | undefined> {
         const body: CreatePlannedDayResultRequest = {
             plannedDayId: plannedDay.id ?? 0,
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY_RESULT}`, body)
+            .post<GetPlannedDayResponse>(`${PLANNED_DAY_RESULT}`, body)
             .then((success) => {
-                return success.data as GetPlannedDayResponse;
+                return success.data.plannedDay;
             })
             .catch((error) => {
-                return error.response.data as GetPlannedDayResponse;
+                return plannedDay;
             });
     }
 
-    public static async createViaApi(dayKey: string): Promise<CreatePlannedDayResponse> {
+    public static async createViaApi(dayKey: string): Promise<PlannedDay | undefined> {
         const body: CreatePlannedDayRequest = {
             dayKey,
         };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY}`, body)
+            .post<CreatePlannedDayResponse>(`${PLANNED_DAY}`, body)
             .then((success) => {
-                return success.data as CreatePlannedDayResponse;
+                console.log('PlannedDayController.createViaApi', success.data);
+                return success.data.plannedDay;
             })
             .catch((error) => {
-                return error.response.data as CreatePlannedDayResponse;
+                console.log('PlannedDayController.createViaApi', error);
+                return undefined;
             });
     }
 
-    public static async getForCurrentUserViaApi(
-        dayKey: string
-    ): Promise<PlannedDayModel | undefined> {
+    public static async getForCurrentUserViaApi(dayKey: string): Promise<PlannedDay | undefined> {
         const userId = await getUserIdFromToken();
         if (!!userId) {
             return await this.getViaApi(userId, dayKey);
@@ -318,10 +229,7 @@ class PlannedDayController {
         return undefined;
     }
 
-    public static async getViaApi(
-        userId: number,
-        dayKey: string
-    ): Promise<PlannedDayModel | undefined> {
+    public static async getViaApi(userId: number, dayKey: string): Promise<PlannedDay | undefined> {
         return await axiosInstance
             .get(`${PLANNED_DAY}${userId}/${dayKey}`)
             .then((success) => {
@@ -336,6 +244,19 @@ class PlannedDayController {
             });
     }
 
+    public static async getOrCreateViaApi(
+        userId: number,
+        dayKey: string
+    ): Promise<PlannedDay | undefined> {
+        const plannedDay = await this.getViaApi(userId, dayKey);
+        if (plannedDay) {
+            return plannedDay;
+        }
+
+        const newPlannedDay = await this.createViaApi(dayKey);
+        return newPlannedDay;
+    }
+
     public static async isComplete(userId: number, dayKey: string): Promise<boolean | undefined> {
         return await axiosInstance
             .get(`${PLANNED_DAY}${userId}/${dayKey}/isComplete`)
@@ -346,34 +267,6 @@ class PlannedDayController {
             .catch((error) => {
                 return false;
             });
-    }
-
-    public static async getOrCreateViaApi(dayKey: string): Promise<PlannedDayModel | undefined> {
-        let plannedDay = await this.getForCurrentUserViaApi(dayKey);
-        if (plannedDay) {
-            return plannedDay;
-        }
-
-        const createResult: CreatePlannedDayResponse = await this.createViaApi(dayKey);
-        if (createResult.plannedDay) {
-            return createResult.plannedDay;
-        }
-
-        return undefined;
-    }
-
-    public static async getOrCreateForUser(userId: number, dayKey: string) {
-        const plannedDay = await this.getViaApi(userId, dayKey);
-        if (plannedDay) {
-            return plannedDay;
-        }
-
-        const createResult: CreatePlannedDayResponse = await this.createViaApi(dayKey);
-        if (createResult.plannedDay) {
-            return createResult.plannedDay;
-        }
-
-        return undefined;
     }
 
     public static async prefetchAllPlannedDayData() {
@@ -397,7 +290,7 @@ class PlannedDayController {
 
         reactQueryClient.prefetchQuery({
             queryKey: ['plannedDay', currentUserId, dayKey],
-            queryFn: () => PlannedDayController.getOrCreateForUser(currentUserId, dayKey),
+            queryFn: () => PlannedDayController.getViaApi(currentUserId, dayKey),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
     }
@@ -408,10 +301,13 @@ class PlannedDayController {
 }
 
 export namespace PlannedDayCustomHooks {
-    export const usePlannedDay = (userId: number, dayKey: string) => {
+    export const useGetOrCreatePlannedDayForCurentUser = (dayKey: string) => {
+        const currentUser = useAppSelector(getCurrentUser);
+        const userId = currentUser.id ?? 0;
+
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: ['plannedDay', userId, dayKey],
-            queryFn: () => PlannedDayController.getOrCreateForUser(userId, dayKey),
+            queryFn: () => PlannedDayController.getOrCreateViaApi(userId, dayKey),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
             enabled:
                 dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
@@ -421,18 +317,27 @@ export namespace PlannedDayCustomHooks {
     };
 
     export const usePlannedDayForCurrentUser = (dayKey: string) => {
-        const currentUser = useAppSelector(getCurrentUser);
-        const plannedDay = usePlannedDay(currentUser.id ?? 0, dayKey);
-
+        const plannedDay = useGetOrCreatePlannedDayForCurentUser(dayKey);
         return plannedDay;
     };
 
-    export const useSelectedPlannedDay = () => {
-        const currentUser = useAppSelector(getCurrentUser);
+    export const useSelectedPlannedDayForCurrentUser = () => {
         const dayKey = useAppSelector(getSelectedDayKey);
-        const plannedDay = PlannedDayCustomHooks.usePlannedDay(currentUser.id ?? 0, dayKey);
+        const plannedDay = PlannedDayCustomHooks.usePlannedDayForCurrentUser(dayKey);
 
         return { dayKey, plannedDay };
+    };
+
+    export const usePlannedDay = (userId: number, dayKey: string) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['plannedDay', userId, dayKey],
+            queryFn: () => PlannedDayController.getViaApi(userId, dayKey),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            enabled:
+                dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
 
     export const useTodaysPlannedDayForUser = (user: User) => {

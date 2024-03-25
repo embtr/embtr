@@ -3,11 +3,7 @@ import { POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { User } from 'resources/schema';
-import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
-import { PlanningService } from 'src/util/planning/PlanningService';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { TodaysTasksWidgetImproved } from 'src/components/widgets/planning/TodaysTasksWidgetImproved';
-import { PlanToday } from 'src/components/plan/planning/PlanToday';
 import { PlanTodayForUser } from 'src/components/plan/planning/PlanTodayForUser';
 
 export enum WidgetSource {
@@ -23,19 +19,12 @@ interface Props {
 export const TodaysActivitiesWidget = ({ user, source }: Props) => {
     const { colors } = useTheme();
 
-    const restDayView = (
-        <Text style={{ color: colors.text }}>
-            It looks like today is a{' '}
-            <Text style={{ color: colors.accent_color_light }}>rest day.</Text>
-        </Text>
-    );
-
     const isCurrentUser = user.uid === getCurrentUid();
 
     return (
         <WidgetBase
             symbol={isCurrentUser ? 'add-outline' : undefined}
-            onPressSymbol={isCurrentUser ? () => {} : undefined}
+            onPressSymbol={isCurrentUser ? () => { } : undefined}
         >
             <Text
                 style={{
@@ -51,8 +40,6 @@ export const TodaysActivitiesWidget = ({ user, source }: Props) => {
             <View style={{ paddingTop: PADDING_LARGE }} />
 
             <PlanTodayForUser user={user} />
-
-            {/*<View style={{ paddingTop: TIMELINE_CARD_PADDING }}>{restDayView}</View>*/}
         </WidgetBase>
     );
 };

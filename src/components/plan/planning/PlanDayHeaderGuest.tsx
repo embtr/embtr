@@ -9,9 +9,7 @@ import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 interface Styles {
     containerShared: ViewStyle;
     containerUnshared: ViewStyle;
-    containerNoTasks: ViewStyle;
     topText: TextStyle;
-    noTasksText: TextStyle;
     bottomTextContainer: ViewStyle;
     bottomText: TextStyle;
 }
@@ -38,24 +36,9 @@ const generateStyles = (colors: any): Styles => {
             paddingVertical: PADDING_LARGE,
             marginBottom: PADDING_LARGE,
         },
-
-        containerNoTasks: {
-            borderColor: '#404040',
-            backgroundColor: '#343434',
-            borderWidth: 1,
-            justifyContent: 'center',
-            alignContent: 'center',
-            borderRadius: 5,
-            paddingVertical: PADDING_LARGE,
-        },
         topText: {
             flex: 1,
             top: 2,
-            color: colors.secondary_text,
-            fontFamily: POPPINS_REGULAR,
-            textAlign: 'center',
-        },
-        noTasksText: {
             color: colors.secondary_text,
             fontFamily: POPPINS_REGULAR,
             textAlign: 'center',
@@ -131,8 +114,26 @@ export const PlanDayHeaderGuest = ({
         }
     } else if (!hasPlannedTasks) {
         header = (
-            <View style={styles.containerNoTasks}>
-                <Text style={styles.noTasksText}>Things are quiet... too quiet...</Text>
+            <View
+                style={{
+                    borderColor: '#404040',
+                    backgroundColor: '#343434',
+                    borderWidth: 1,
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                    borderRadius: 5,
+                    paddingVertical: PADDING_LARGE,
+                }}
+            >
+                <Text
+                    style={{
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_REGULAR,
+                        textAlign: 'center',
+                    }}
+                >
+                    Things are quiet... too quiet...
+                </Text>
             </View>
         );
     } else {
