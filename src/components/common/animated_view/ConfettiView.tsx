@@ -5,16 +5,49 @@ import { setFireConfetti } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { getWindowHeight, getWindowWidth } from 'src/util/GeneralUtility';
 
+const createLottiView = (removeView: () => void) => {
+    return (
+        <LottieView
+            key={Math.random()}
+            autoPlay={true}
+            loop={false}
+            onAnimationFinish={removeView}
+            style={{
+                zIndex: 1,
+                position: 'absolute',
+                width: getWindowWidth(),
+                height: getWindowHeight(),
+            }}
+            source={require('../../../../resources/lottie-confetti.json')}
+        />
+    );
+};
+
 export const ConfettiView = () => {
-    const animation = React.useRef<LottieView>(null);
     const dispatch = useAppDispatch();
+    const [views, setViews] = React.useState<Map<string, JSX.Element>>(new Map());
+
+    const fireConfetti = () => {
+        const randomId = Math.random().toString();
+        const removeView = () => {
+            setViews((prevViews) => {
+                const clone = new Map(prevViews);
+                clone.delete(randomId);
+                return clone;
+            });
+        };
+
+        const newView = createLottiView(removeView);
+        setViews((prevViews) => {
+            const clone = new Map(prevViews);
+            clone.set(randomId, newView);
+            return clone;
+        });
+    };
+
     React.useEffect(() => {
-        dispatch(
-            setFireConfetti(() => {
-                animation.current?.play();
-            })
-        );
-    }, []);
+        dispatch(setFireConfetti(fireConfetti));
+    }, [views]);
 
     return (
         <View
@@ -29,17 +62,7 @@ export const ConfettiView = () => {
             }}
             pointerEvents="none"
         >
-            <LottieView
-                loop={false}
-                ref={animation}
-                style={{
-                    zIndex: 1,
-                    position: 'absolute',
-                    width: getWindowWidth(),
-                    height: getWindowHeight(),
-                }}
-                source={require('../../../../resources/lottie-confetti.json')}
-            />
+            {Array.from(views.values()).map((view) => view)}
         </View>
     );
 };
