@@ -37,6 +37,8 @@ export const ScheduledHabitTimeOfDay = () => {
         CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT === editMode ||
         CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT === editMode;
 
+    const formInvalid = timeOfDayEnabled && (timesOfDay.length < 1 || timesOfDay[0].id === 5);
+
     return (
         <View style={{ paddingBottom: PADDING_LARGE }}>
             <View
@@ -56,7 +58,7 @@ export const ScheduledHabitTimeOfDay = () => {
                         Specific Time of Day
                     </Text>
 
-                    {timeOfDayEnabled && timesOfDay.length < 1 && (
+                    {formInvalid && (
                         <Text
                             style={{
                                 alignSelf: 'flex-end',

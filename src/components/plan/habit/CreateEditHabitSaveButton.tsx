@@ -59,7 +59,7 @@ export const CreateEditHabitSaveButton = ({
     } = useCreateEditScheduleHabit();
 
     const formIsValid = () => {
-        if (timesOfDayEnabled && timesOfDay.length < 1) {
+        if (timesOfDayEnabled && (timesOfDay.length < 1 || timesOfDay[0].id === 5)) {
             return false;
         }
 
