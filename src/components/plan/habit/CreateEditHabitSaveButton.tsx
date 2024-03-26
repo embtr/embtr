@@ -58,6 +58,24 @@ export const CreateEditHabitSaveButton = ({
         editMode,
     } = useCreateEditScheduleHabit();
 
+    const formIsValid = () => {
+        if (timesOfDayEnabled && timesOfDay.length < 1) {
+            return false;
+        }
+
+        if (daysOfWeekEnabled && daysOfWeek.length < 1) {
+            return false;
+        }
+
+        if (title.length < 1) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const formValid = formIsValid();
+
     const currentUserId = UserCustomHooks.useCurrentUserId();
     const selectedDayKey = useAppSelector(getSelectedDayKey);
     const dayKeyToUse = selectedDayKey;
@@ -278,12 +296,12 @@ export const CreateEditHabitSaveButton = ({
     const buttonText = createModes.includes(editMode) ? 'Create' : 'Update';
 
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity disabled={!formValid} onPress={onPress}>
             <View
                 style={{
                     height: 50 - PADDING_LARGE,
                     marginHorizontal: PADDING_LARGE,
-                    backgroundColor: colors.accent_color,
+                    backgroundColor: formValid ? colors.accent_color : colors.accent_color_dim,
                     justifyContent: 'center',
                     borderRadius: 3,
                 }}
