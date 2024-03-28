@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 export const createEmbtrMenuOptions = (options: EmbtrMenuOption[]): EmbtrMenuOptions => {
     let uniqueIdentifier = (Math.random() + 1).toString(36).substring(2);
     return { uniqueIdentifier: uniqueIdentifier, options: options };

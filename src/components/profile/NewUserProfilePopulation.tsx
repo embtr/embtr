@@ -16,7 +16,7 @@ import { CachedImage } from 'src/components/common/images/CachedImage';
 import { getWindowHeight } from 'src/util/GeneralUtility';
 import { useNavigation } from '@react-navigation/core';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MasterScreens } from 'src/navigation/RootStackParamList';
+import { MasterScreens, Routes } from 'src/navigation/RootStackParamList';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { Code } from 'resources/codes';
 import { UserService, UsernameAvailabilityResult } from 'src/service/UserService';
@@ -138,7 +138,9 @@ export const NewUserProfilePopulation = () => {
             });
         } else {
             await UserController.invalidateCurrentUser();
-            navigation.popToTop();
+            navigation.navigate(Routes.INTRO_MODAL);
+            // move to next page
+            //navigation.popToTop();
         }
     };
 
@@ -202,6 +204,7 @@ export const NewUserProfilePopulation = () => {
                             color: colors.secondary_text,
                             fontFamily: POPPINS_REGULAR,
                             paddingHorizontal: PADDING_LARGE,
+                            textAlign: 'center',
                             fontSize: 14,
                         }}
                     >
@@ -406,7 +409,7 @@ export const NewUserProfilePopulation = () => {
                                     paddingVertical: PADDING_LARGE / 2,
                                 }}
                             >
-                                Let's Go!
+                                Continue
                             </Text>
                         </TouchableOpacity>
                     </View>

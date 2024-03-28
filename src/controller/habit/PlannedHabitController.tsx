@@ -2,7 +2,10 @@ import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { PlannedTask } from 'resources/schema';
-import { GetPlannedHabitResponse } from 'resources/types/requests/PlannedTaskTypes';
+import {
+    GetPlannedHabitCountResponse,
+    GetPlannedHabitResponse,
+} from 'resources/types/requests/PlannedTaskTypes';
 
 export class PlannedHabitController {
     public static async get(id: number): Promise<PlannedTask | undefined> {
@@ -13,6 +16,17 @@ export class PlannedHabitController {
             })
             .catch((error) => {
                 return undefined;
+            });
+    }
+
+    public static async count(): Promise<number> {
+        return await axiosInstance
+            .get<GetPlannedHabitCountResponse>('/planned-habit/count')
+            .then((success) => {
+                return success.data.count ?? 0;
+            })
+            .catch((error) => {
+                return 0;
             });
     }
 }
@@ -27,5 +41,15 @@ export namespace PlannedHabitCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const usePlannedHabitCount = () => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['plannedHabitCount'],
+            queryFn: () => PlannedHabitController.count(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return data ?? 0;
     };
 }

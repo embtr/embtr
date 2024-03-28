@@ -9,6 +9,7 @@ import {
 import {
     CreateBlockUserRequest,
     CreateUserResponse,
+    GetNewUserChecklistResponse,
     GetUserResponse,
     GetUsersResponse,
     UpdatePremiumStatusResponse,
@@ -27,6 +28,7 @@ import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { AxiosError } from 'axios';
 import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
+import { NewUserChecklist } from 'resources/types/dto/NewUserChecklist';
 
 export interface UserModel {
     uid: string;
@@ -274,11 +276,15 @@ class UserController {
     public static async invalidateCurrentUser() {
         await reactQueryClient.invalidateQueries(['currentUser']);
     }
+
+    public static async invalidateNewUserChecklist() {
+        await reactQueryClient.invalidateQueries(['newUserChecklist']);
+    }
 }
 
 export namespace UserCustomHooks {
     export const useCurrentUser = () => {
-        const { status, error, data, fetchStatus } = useQuery({
+        const { status, data, fetchStatus } = useQuery({
             queryKey: ['currentUser'],
             queryFn: () => UserController.getCurrentUser(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
@@ -288,7 +294,7 @@ export namespace UserCustomHooks {
     };
 
     export const useCurrentUserId = () => {
-        const { status, error, data, fetchStatus } = useQuery({
+        const { status, data, fetchStatus } = useQuery({
             queryKey: ['currentUserId'],
             queryFn: () => getUserIdFromToken(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,

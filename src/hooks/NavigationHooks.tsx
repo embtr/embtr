@@ -1,6 +1,6 @@
-import { ParamListBase, Route, RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { Route, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { MasterScreens, TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { MasterScreens } from 'src/navigation/RootStackParamList';
 
 export const useEmbtrNavigation = () => {
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
