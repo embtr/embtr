@@ -7,7 +7,6 @@ import { Image } from 'expo-image';
 import { TABS } from 'src/components/home/Dashboard';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
-import { useAppDispatch } from 'src/redux/Hooks';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
@@ -44,8 +43,6 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
     const calculateDotLocation = (index: number) => {
         return index * tabWidth + (tabWidth / 2 - 12.5);
     };
-
-    const dispatch = useAppDispatch();
 
     const [translateValue] = React.useState(new Animated.Value(calculateDotLocation(1)));
     const config = {

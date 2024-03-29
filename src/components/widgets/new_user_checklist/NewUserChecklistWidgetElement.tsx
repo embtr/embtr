@@ -1,8 +1,10 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
 import { NewUserChecklistElement } from 'resources/types/dto/NewUserChecklist';
+import { NewUserChecklistElementDetailsModal } from './NewUserChecklistElementDetailsModal';
+import { Ionicons } from '@expo/vector-icons';
 
 interface Props {
     element: NewUserChecklistElement;
@@ -11,10 +13,12 @@ interface Props {
 export const NewUserChecklistWidgetElement = ({ element }: Props) => {
     const { colors } = useTheme();
 
-    console.log('element', element);
+    const [modalVisible, setModalVisible] = React.useState(false);
 
     return (
-        <View
+        <Pressable
+            disabled={element.complete}
+            onPress={() => setModalVisible(true)}
             style={{
                 borderColor: '#404040',
                 backgroundColor: '#343434',
@@ -25,25 +29,29 @@ export const NewUserChecklistWidgetElement = ({ element }: Props) => {
                 opacity: element.complete ? 0.4 : 1,
             }}
         >
+            <NewUserChecklistElementDetailsModal
+                visible={modalVisible}
+                onDismiss={() => setModalVisible(false)}
+                element={element}
+            />
+
             <View
                 style={{
                     paddingTop: PADDING_SMALL,
                     paddingLeft: PADDING_SMALL,
                 }}
             >
-                <View>
-                    <View
-                        style={{
-                            height: 10,
-                            width: 10,
-                            bottom: 1,
-                            borderRadius: 25,
-                            backgroundColor: element.complete
-                                ? colors.progress_bar_complete
-                                : colors.secondary_text,
-                        }}
-                    />
-                </View>
+                <View
+                    style={{
+                        height: 10,
+                        width: 10,
+                        bottom: 1,
+                        borderRadius: 25,
+                        backgroundColor: element.complete
+                            ? colors.progress_bar_complete
+                            : colors.secondary_text,
+                    }}
+                />
             </View>
             <View
                 style={{
@@ -73,6 +81,22 @@ export const NewUserChecklistWidgetElement = ({ element }: Props) => {
                     {element.description}
                 </Text>
             </View>
-        </View>
+
+            <View
+                style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingHorizontal: PADDING_LARGE,
+                }}
+            >
+                {!element.complete && (
+                    <Ionicons
+                        name={'information-circle-outline'}
+                        size={16}
+                        color={colors.accent_color_light}
+                    />
+                )}
+            </View>
+        </Pressable>
     );
 };

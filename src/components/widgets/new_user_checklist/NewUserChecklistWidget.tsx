@@ -15,10 +15,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu, getCurrentUser, getFireConfetti } from 'src/redux/user/GlobalState';
 import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { NewUserController, NewUserCustomHooks } from 'src/controller/new_user/NewUserController';
-import {
-    UserPropertyController,
-    UserPropertyCustomHooks,
-} from 'src/controller/user/UserPropertyController';
+import { UserPropertyController } from 'src/controller/user/UserPropertyController';
 import { Constants } from 'resources/types/constants/constants';
 
 const keyExtractor = (item: NewUserChecklistElement) => item.title;
