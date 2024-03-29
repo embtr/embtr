@@ -2,7 +2,7 @@ import { View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getShowCardShadow, setMenuOptions } from 'src/redux/user/GlobalState';
-import { CARD_SHADOW, IoniconName, PADDING_LARGE } from 'src/util/constants';
+import { CARD_SHADOW, IoniconName, PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 import { createEmbtrMenuOptions, EmbtrMenuOption } from '../common/menu/EmbtrMenuOption';
 import { useTheme } from '../theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
@@ -64,8 +64,8 @@ export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Pro
                     >
                         <View
                             style={{
-                                paddingTop: 3,
-                                paddingRight: 3,
+                                paddingLeft: PADDING_LARGE,
+                                paddingRight: PADDING_SMALL,
                                 flexDirection: 'row',
                             }}
                         >

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text, Keyboard } from 'react-native';
+import { Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR, PADDING_SMALL } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { View, Switch, Animated } from 'react-native';
 import {
@@ -18,6 +18,7 @@ export const ScheduledHabitTimeOfDay = () => {
     const {
         timesOfDayEnabled: timeOfDayEnabled,
         setTimesOfDayEnabled: setTimeOfDayEnabled,
+        timesOfDay,
         editMode,
     } = useCreateEditScheduleHabit();
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
@@ -36,6 +37,8 @@ export const ScheduledHabitTimeOfDay = () => {
         CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT === editMode ||
         CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT === editMode;
 
+    const formInvalid = timeOfDayEnabled && (timesOfDay.length < 1 || timesOfDay[0].id === 5);
+
     return (
         <View style={{ paddingBottom: PADDING_LARGE }}>
             <View
@@ -44,11 +47,8 @@ export const ScheduledHabitTimeOfDay = () => {
                     alignItems: 'center',
                 }}
             >
-                <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', flex: 1 }}>
                     <Text
-                        onPress={() => {
-                            Keyboard.dismiss();
-                        }}
                         style={{
                             color: colors.text,
                             fontFamily: POPPINS_MEDIUM,
@@ -57,6 +57,21 @@ export const ScheduledHabitTimeOfDay = () => {
                     >
                         Specific Time of Day
                     </Text>
+
+                    {formInvalid && (
+                        <Text
+                            style={{
+                                alignSelf: 'flex-end',
+                                color: colors.tab_selected,
+                                paddingLeft: 5,
+                                paddingBottom: 3,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 10,
+                            }}
+                        >
+                            cannot be blank
+                        </Text>
+                    )}
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>

@@ -90,7 +90,8 @@ const getAllHabitsAreComplete = (plannedDay: PlannedDay): boolean => {
         plannedDay.plannedTasks?.reduce(
             (acc, task) =>
                 acc &&
-                (task.status === Constants.CompletionState.SKIPPED ||
+                (task.status === Constants.CompletionState.FAILED ||
+                    task.status === Constants.CompletionState.SKIPPED ||
                     (task.completedQuantity ?? 0) >= (task.quantity ?? 1)),
             true
         );

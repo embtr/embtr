@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Switch, Text, View } from 'react-native';
-import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { DaysOfTheWeekToggle } from 'src/components/plan/habit/DaysOfTheWeekToggle';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -14,6 +14,7 @@ export const ScheduleHabitRepeatingSchedule = () => {
     const {
         daysOfWeekEnabled: repeatingScheduleEnabled,
         setDaysOfWeekEnabled: setRepeatingScheduleEnabled,
+        daysOfWeek,
     } = useCreateEditScheduleHabit();
     const [height] = React.useState<Animated.Value>(new Animated.Value(0));
 
@@ -33,7 +34,7 @@ export const ScheduleHabitRepeatingSchedule = () => {
                     alignItems: 'center',
                 }}
             >
-                <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', flex: 1 }}>
                     <Text
                         style={{
                             color: colors.text,
@@ -43,6 +44,21 @@ export const ScheduleHabitRepeatingSchedule = () => {
                     >
                         Days of the Week
                     </Text>
+
+                    {repeatingScheduleEnabled && daysOfWeek.length < 1 && (
+                        <Text
+                            style={{
+                                alignSelf: 'flex-end',
+                                color: colors.tab_selected,
+                                paddingLeft: 5,
+                                paddingBottom: 3,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 10,
+                            }}
+                        >
+                            cannot be blank
+                        </Text>
+                    )}
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>

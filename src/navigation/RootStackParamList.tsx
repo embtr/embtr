@@ -5,6 +5,7 @@ import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility'
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>;
     CurrentUserTab: NavigatorScreenParams<ProfileTabScreens>;
+    JourneyTab: NavigatorScreenParams<JourneyTabScreens>;
     PlanTab: NavigatorScreenParams<ChallengeTabScreens>;
     TodayTab: undefined;
 };
@@ -50,8 +51,10 @@ export type MasterScreens = {
     NewUserProfilePopulation: undefined;
     TermsApprovalModal: undefined;
     UpdateAvailableModal: undefined;
+    IntroModal: undefined;
     ManageHabits: undefined;
     HabitSummaryDetails: { id: number };
+    Journey: undefined;
 
     CreateEditScheduledHabit_SlideUp: {
         onExit?: () => void;
@@ -82,6 +85,8 @@ export type ChallengeTabScreens = MasterScreens & {};
 
 export type ProfileTabScreens = MasterScreens & {};
 
+export type JourneyTabScreens = MasterScreens & {};
+
 export type RootStackParamList = {
     LandingPage: undefined;
     Dashboard: NavigatorScreenParams<MainTabScreens>;
@@ -108,8 +113,10 @@ export namespace Routes {
     export const NEW_USER_PROFILE_POPULATION = 'NewUserProfilePopulation';
     export const TERMS_APPROVAL_MODAL = 'TermsApprovalModal';
     export const UPDATE_AVAILABLE_MODAL = 'UpdateAvailableModal';
+    export const INTRO_MODAL = 'IntroModal';
     export const MANAGE_HABITS = 'ManageHabits';
     export const HABIT_SUMMARY_DETAILS = 'HabitSummaryDetails';
     export const LOGIN_MODAL = 'LoginModal';
     export const REGISTER_MODAL = 'RegisterModal';
+    export const JOURNEY = 'Journey';
 }

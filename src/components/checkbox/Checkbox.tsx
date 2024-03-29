@@ -48,7 +48,7 @@ export const Checkbox = ({ text, checked, onCheck }: Props) => {
                 <Ionicons
                     name={'checkmark-done-sharp'}
                     size={20}
-                    color={checked ? colors.accent_color : "#404040"}
+                    color={checked ? colors.accent_color_light : '#404040'}
                 />
             </TouchableOpacity>
         </View>

@@ -138,7 +138,15 @@ export const PlanDayHeader = ({
             <View style={styles.container}>
                 <Text style={styles.topText}>No habits planned for today...</Text>
                 <View style={styles.bottomTextContainer}>
-                    <Text style={styles.bottomText}>press the heart to add some!</Text>
+                    <Text
+                        onPress={() => {
+                            // @ts-ignore :(
+                            navigation.navigate('MyHabitsTab');
+                        }}
+                        style={styles.bottomText}
+                    >
+                        Manage Your Habits
+                    </Text>
                 </View>
             </View>
         );
