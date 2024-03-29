@@ -45,13 +45,13 @@ export class NewUserController {
 
 export namespace NewUserCustomHooks {
     export const useNewUserChecklist = () => {
-        const { status, data, fetchStatus } = useQuery({
+        const { status, data, fetchStatus, refetch } = useQuery({
             queryKey: ['newUserChecklist'],
             queryFn: () => NewUserController.getNewUserChecklist(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
-        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
     };
 
     export const useUserHasFinishedNewUserChecklist = () => {

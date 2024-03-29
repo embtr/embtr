@@ -17,6 +17,7 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import { NewUserController, NewUserCustomHooks } from 'src/controller/new_user/NewUserController';
 import { UserPropertyController } from 'src/controller/user/UserPropertyController';
 import { Constants } from 'resources/types/constants/constants';
+import { useFocusEffect } from '@react-navigation/native';
 
 const keyExtractor = (item: NewUserChecklistElement) => item.title;
 
@@ -59,6 +60,12 @@ const NewUserChecklistWidgetImpl = () => {
     ];
 
     const checklist = NewUserCustomHooks.useNewUserChecklist();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            checklist.refetch();
+        }, [])
+    );
 
     const data: NewUserChecklistElement[] = [
         ...(checklist.data?.incomplete ?? []),
