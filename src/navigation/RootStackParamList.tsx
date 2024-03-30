@@ -55,6 +55,7 @@ export type MasterScreens = {
     ManageHabits: undefined;
     HabitSummaryDetails: { id: number };
     Journey: undefined;
+    UserNotifications: undefined;
 
     CreateEditScheduledHabit_SlideUp: {
         onExit?: () => void;
@@ -119,4 +120,5 @@ export namespace Routes {
     export const LOGIN_MODAL = 'LoginModal';
     export const REGISTER_MODAL = 'RegisterModal';
     export const JOURNEY = 'Journey';
+    export const USER_NOTIFICATIONS = 'UserNotifications';
 }

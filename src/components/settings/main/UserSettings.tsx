@@ -9,6 +9,7 @@ import { EditProfileSettingsButton } from './EditProfileSettingsButton';
 import { SettingsVersion } from './SettingsVersion';
 import { PADDING_LARGE } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
+import { SettingsNotifications } from '../notifications/SettingsNotifications';
 
 export const UserSettings = () => {
     return (
@@ -26,8 +27,8 @@ export const UserSettings = () => {
                     }}
                 >
                     <View style={{ height: PADDING_LARGE }} />
-                    {/*<NotificationsToggle />*/}
-                    {/*<View style={{ height: TIMELINE_CARD_PADDING / 2 }} />*/}
+                    <SettingsNotifications />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
                     <EditProfileSettingsButton />
                     <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsAccount />
