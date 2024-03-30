@@ -4,6 +4,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PADDING_LARGE, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Constants } from 'resources/types/constants/constants';
 
 export enum SocialNotificationsSettingsOption {
     OFF = 'OFF',
@@ -14,9 +15,9 @@ export enum SocialNotificationsSettingsOption {
 interface Props {
     title: string;
     description: string;
-    option: SocialNotificationsSettingsOption;
+    option: Constants.SocialNotificationsSetting;
     selected: boolean;
-    onPress: (option: SocialNotificationsSettingsOption) => void;
+    onPress: (option: Constants.SocialNotificationsSetting) => void;
 }
 
 export const SocialNotificationsSettingsElement = ({
@@ -68,6 +69,7 @@ export const SocialNotificationsSettingsElement = ({
                     style={{
                         color: colors.text,
                         includeFontPadding: false,
+                        fontSize: 16,
                         fontFamily: POPPINS_REGULAR,
                     }}
                 >
@@ -78,7 +80,7 @@ export const SocialNotificationsSettingsElement = ({
                     style={{
                         paddingTop: PADDING_SMALL,
                         color: colors.secondary_text,
-                        fontSize: 10,
+                        fontSize: 13,
                         includeFontPadding: false,
                         fontFamily: POPPINS_REGULAR,
                     }}

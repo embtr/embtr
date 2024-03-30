@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { Constants } from 'resources/types/constants/constants';
 import { NewUserChecklist } from 'resources/types/dto/NewUserChecklist';
 import { GetNewUserChecklistResponse } from 'resources/types/requests/UserTypes';
 import axiosInstance from 'src/axios/axios';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { ReactQueryStaleTimes } from 'src/util/constants';
-import { UserPropertyCustomHooks } from '../user/UserPropertyController';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
 
 export class NewUserController {
     public static async getNewUserChecklist(): Promise<NewUserChecklist | undefined> {
@@ -41,6 +39,36 @@ export class NewUserController {
                 return false;
             });
     }
+
+    public static async getNewUserChecklistDismissed(): Promise<boolean | undefined> {
+        return await axiosInstance
+            .get<GetBooleanResponse>(`/new-user/checklist/dismissed/`)
+            .then((result) => {
+                return result.data.result === true;
+            })
+            .catch(() => {
+                return undefined;
+            });
+    }
+
+    public static async getNewUserChecklistCompleted(): Promise<boolean | undefined> {
+        return await axiosInstance
+            .get<GetBooleanResponse>(`/new-user/checklist/completed/`)
+            .then((result) => {
+                return result.data.result === true;
+            })
+            .catch(() => {
+                return undefined;
+            });
+    }
+
+    public static async invalidateNewUserChecklistDismissed(): Promise<void> {
+        reactQueryClient.invalidateQueries(['newUserChecklistDismissed']);
+    }
+
+    public static async invalidateNewUserChecklistCompleted(): Promise<void> {
+        reactQueryClient.invalidateQueries(['newUserChecklistCompleted']);
+    }
 }
 
 export namespace NewUserCustomHooks {
@@ -55,14 +83,29 @@ export namespace NewUserCustomHooks {
     };
 
     export const useUserHasFinishedNewUserChecklist = () => {
-        const newUserChecklistDismissedUserProperty =
-            UserPropertyCustomHooks.useNewUserChecklistDismissed();
-        const newUserChecklistCompletedUserProperty =
-            UserPropertyCustomHooks.useNewUserChecklistCompleted();
+        const newUserChecklistDismissed = NewUserCustomHooks.useNewUserChecklistDismissed();
+        const newUserChecklistCompleted = NewUserCustomHooks.useNewUserChecklistCompleted();
 
-        return (
-            newUserChecklistDismissedUserProperty.data !== undefined ||
-            newUserChecklistCompletedUserProperty.data !== undefined
-        );
+        return newUserChecklistDismissed || newUserChecklistCompleted;
+    };
+
+    export const useNewUserChecklistDismissed = (): boolean => {
+        const { data } = useQuery({
+            queryKey: ['newUserChecklistDismissed'],
+            queryFn: () => NewUserController.getNewUserChecklistDismissed(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return data === true;
+    };
+
+    export const useNewUserChecklistCompleted = () => {
+        const { data } = useQuery({
+            queryKey: ['newUserChecklistCompleted'],
+            queryFn: () => NewUserController.getNewUserChecklistCompleted(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return data === true;
     };
 }

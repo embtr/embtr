@@ -9,20 +9,15 @@ import {
     POPPINS_SEMI_BOLD,
 } from 'src/util/constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-export enum ReminderNotificationsSettingsOption {
-    OFF = 'OFF',
-    DAILY = 'DAILY',
-    TIME_OF_DAY = 'TIME_OF_DAY',
-}
+import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
     title: string;
     description: string;
-    option: ReminderNotificationsSettingsOption;
+    option: Constants.ReminderNotificationsSetting;
     selected: boolean;
     premiumRequired?: boolean;
-    onPress: (option: ReminderNotificationsSettingsOption) => void;
+    onPress: (option: Constants.ReminderNotificationsSetting) => void;
 }
 
 export const ReminderNotificationsSettingsElement = ({
@@ -39,25 +34,30 @@ export const ReminderNotificationsSettingsElement = ({
         <TouchableOpacity disabled={premiumRequired} onPress={() => onPress(option)} style={{}}>
             <View>
                 {premiumRequired && (
-                    <Text
+                    <View
                         style={{
                             position: 'absolute',
                             zIndex: 1,
                             right: 0,
                             marginTop: PADDING_SMALL,
                             marginRight: PADDING_SMALL,
-                            fontFamily: POPPINS_SEMI_BOLD,
                             backgroundColor: colors.accent_color_light,
                             borderRadius: 50,
-                            fontSize: 7,
-                            height: 12,
-                            color: colors.text,
-                            textAlign: 'center',
+                            height: 13,
                             paddingHorizontal: PADDING_SMALL,
                         }}
                     >
-                        PREMIUM FEATURE
-                    </Text>
+                        <Text
+                            style={{
+                                fontFamily: POPPINS_SEMI_BOLD,
+                                fontSize: 9,
+                                color: colors.text,
+                                textAlign: 'center',
+                            }}
+                        >
+                            Embtr Premium
+                        </Text>
+                    </View>
                 )}
                 <View
                     style={{
@@ -103,6 +103,7 @@ export const ReminderNotificationsSettingsElement = ({
                                 style={{
                                     color: colors.text,
                                     includeFontPadding: false,
+                                    fontSize: 16,
                                     fontFamily: POPPINS_REGULAR,
                                 }}
                             >
@@ -115,7 +116,8 @@ export const ReminderNotificationsSettingsElement = ({
                         <Text
                             style={{
                                 color: colors.secondary_text,
-                                fontSize: 10,
+                                paddingTop: PADDING_SMALL,
+                                fontSize: 13,
                                 includeFontPadding: false,
                                 fontFamily: POPPINS_REGULAR,
                             }}
