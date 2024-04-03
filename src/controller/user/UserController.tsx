@@ -251,17 +251,6 @@ class UserController {
             });
     }
 
-    public static async sendJobRequest() {
-        return await axiosInstance
-            .get(`/job/daily-reminders/`)
-            .then((success) => {
-                return success.data.user;
-            })
-            .catch((error) => {
-                return error.response.data;
-            });
-    }
-
     public static async forceRefreshIdToken() {
         await getAuth().currentUser?.getIdToken(true);
     }

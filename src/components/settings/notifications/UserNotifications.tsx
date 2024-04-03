@@ -6,9 +6,21 @@ import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constan
 import { ReminderNotificationsSettings } from './reminder/ReminderNotificationsSettings';
 import { SocialNotificationsSettings } from './social/SocialNotificationSettings';
 import { WarningNotificationsSettings } from './warning/WarningNotificationsSettings';
+import { NotificationsDisabled } from './NotificationsDisabled';
+import { PushNotificationCustomHooks } from 'src/controller/notification/PushNotificationController';
 
 export const UserNotifications = () => {
     const colors = useTheme().colors;
+
+    const pushNotificationsEnabled = PushNotificationCustomHooks.useEnabled();
+
+    const disabledView = pushNotificationsEnabled ? (
+        <View />
+    ) : (
+        <View style={{ paddingTop: PADDING_LARGE }}>
+            <NotificationsDisabled />
+        </View>
+    );
 
     return (
         <Screen>
@@ -28,7 +40,14 @@ export const UserNotifications = () => {
                         </Text>
                     </View>
 
-                    <View style={{ paddingTop: PADDING_LARGE }}>
+                    {disabledView}
+
+                    <View
+                        style={{
+                            paddingTop: PADDING_LARGE,
+                            opacity: pushNotificationsEnabled ? 1 : 0.3,
+                        }}
+                    >
                         <View>
                             <Text
                                 style={{

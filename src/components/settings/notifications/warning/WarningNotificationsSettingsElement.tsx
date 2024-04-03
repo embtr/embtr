@@ -11,6 +11,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Constants } from 'resources/types/constants/constants';
 import UserController from 'src/controller/user/UserController';
+import { PushNotificationCustomHooks } from 'src/controller/notification/PushNotificationController';
 
 interface Props {
     title: string;
@@ -32,6 +33,7 @@ export const WarningNotificationsSettingsElement = ({
     onPress,
 }: Props) => {
     const { colors } = useTheme();
+    const pushNotificationsEnabled = PushNotificationCustomHooks.useEnabled();
 
     const hasInsufficientPremium = premiumRequired && !userIsPremium;
     const handlePress = () => {
@@ -43,7 +45,7 @@ export const WarningNotificationsSettingsElement = ({
     };
 
     return (
-        <TouchableOpacity onPress={handlePress}>
+        <TouchableOpacity disabled={!pushNotificationsEnabled} onPress={handlePress}>
             <View>
                 {premiumRequired && (
                     <View

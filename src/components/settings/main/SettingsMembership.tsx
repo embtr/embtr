@@ -18,16 +18,11 @@ export const SettingsMembership = () => {
         setPremiumPurchased(purchased);
     };
 
-    const sendJobRequest = async () => {
-        console.log('sendJobRequest');
-        UserController.sendJobRequest();
-    };
-
     const isPremium =
         premiumPurchased ||
         (currentUser.data?.roles && UserService.userHasPremiumRole(currentUser.data));
 
-    const onPress = isPremium ? sendJobRequest : purchasePremium;
+    const onPress = isPremium ? undefined : purchasePremium;
     const thirdaryText = isPremium ? '' : 'Get Premium';
     const value = isPremium ? 'Premium' : 'Free';
     const color: TextStyle = {

@@ -5,13 +5,14 @@ import { PADDING_LARGE, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constant
 import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Constants } from 'resources/types/constants/constants';
+import { PushNotificationCustomHooks } from 'src/controller/notification/PushNotificationController';
 
 interface Props {
     title: string;
     description: string;
-    option: Constants.SocialNotificationsSetting;
+    option: Constants.SocialNotificationSetting;
     selected: boolean;
-    onPress: (option: Constants.SocialNotificationsSetting) => void;
+    onPress: (option: Constants.SocialNotificationSetting) => void;
 }
 
 export const SocialNotificationsSettingsElement = ({
@@ -23,8 +24,11 @@ export const SocialNotificationsSettingsElement = ({
 }: Props) => {
     const { colors } = useTheme();
 
+    const pushNotificationsEnabled = PushNotificationCustomHooks.useEnabled();
+
     return (
         <TouchableOpacity
+            disabled={!pushNotificationsEnabled}
             onPress={() => onPress(option)}
             style={{
                 borderColor: '#404040',

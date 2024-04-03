@@ -1,6 +1,6 @@
 import * as Notifications from 'expo-notifications';
 import UserController from 'src/controller/user/UserController';
-import { Linking } from 'react-native';
+import { AppState, Linking } from 'react-native';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { darkColors } from 'src/theme/ColorThemes';
 import { User } from 'resources/schema';
@@ -8,6 +8,8 @@ import Constants from 'expo-constants';
 import { CreatePushNotificationTokenRequest } from 'resources/types/requests/NotificationTypes';
 import axiosInstance from 'src/axios/axios';
 import * as Sentry from '@sentry/react-native';
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
 
 class PushNotificationController {
     public static registerPushNotificationToken = async () => {
@@ -90,7 +92,7 @@ class PushNotificationController {
         });
     }
 
-    private static async openNotificationsSettings() {
+    public static async openNotificationsSettings() {
         await Linking.openSettings();
     }
 
@@ -123,6 +125,27 @@ class PushNotificationController {
     public static async removePushNotificationAccess() {
         //await UserController.updatePostNotificationToken(null);
     }
+}
+
+export namespace PushNotificationCustomHooks {
+    export const useEnabled = () => {
+        const [enabled, setEnabled] = React.useState<boolean>(false);
+
+        React.useEffect(() => {
+            updateEnabledState('');
+
+            const result = AppState.addEventListener('change', updateEnabledState);
+            return result.remove;
+        }, []);
+
+        const updateEnabledState = async (state: string) => {
+            const enabled =
+                await PushNotificationController.pushNotificationsAllowedOnSystemLevel();
+            setEnabled(enabled);
+        };
+
+        return enabled;
+    };
 }
 
 export default PushNotificationController;
