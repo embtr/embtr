@@ -6,12 +6,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Constants } from 'resources/types/constants/constants';
 
-export enum SocialNotificationsSettingsOption {
-    OFF = 'OFF',
-    DAILY = 'DAILY',
-    TIME_OF_DAY = 'TIME_OF_DAY',
-}
-
 interface Props {
     title: string;
     description: string;

@@ -10,14 +10,16 @@ import {
 } from 'src/util/constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Constants } from 'resources/types/constants/constants';
+import UserController from 'src/controller/user/UserController';
 
 interface Props {
     title: string;
     description: string;
-    option: Constants.ReminderNotificationsSetting;
+    option: Constants.ReminderNotificationSetting;
     selected: boolean;
     premiumRequired?: boolean;
-    onPress: (option: Constants.ReminderNotificationsSetting) => void;
+    hasPremium?: boolean;
+    onPress: (option: Constants.ReminderNotificationSetting) => void;
 }
 
 export const ReminderNotificationsSettingsElement = ({
@@ -26,12 +28,22 @@ export const ReminderNotificationsSettingsElement = ({
     option,
     selected,
     premiumRequired,
+    hasPremium,
     onPress,
 }: Props) => {
     const { colors } = useTheme();
 
+    const hasInsufficientPremium = premiumRequired && !hasPremium;
+    const handlePress = () => {
+        if (!hasInsufficientPremium) {
+            onPress(option);
+        } else {
+            UserController.runPremiumWorkflow();
+        }
+    };
+
     return (
-        <TouchableOpacity disabled={premiumRequired} onPress={() => onPress(option)} style={{}}>
+        <TouchableOpacity onPress={handlePress}>
             <View>
                 {premiumRequired && (
                     <View
@@ -68,7 +80,7 @@ export const ReminderNotificationsSettingsElement = ({
                         flexDirection: 'row',
                         paddingVertical: PADDING_SMALL,
                         paddingHorizontal: PADDING_SMALL,
-                        opacity: premiumRequired ? 0.5 : 1,
+                        opacity: hasInsufficientPremium ? 0.5 : 1,
                     }}
                 >
                     <View
@@ -76,7 +88,7 @@ export const ReminderNotificationsSettingsElement = ({
                             justifyContent: 'center',
                         }}
                     >
-                        {premiumRequired ? (
+                        {hasInsufficientPremium ? (
                             <Ionicons name={'lock-closed'} size={10} color={'gold'} />
                         ) : (
                             <View

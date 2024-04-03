@@ -9,7 +9,6 @@ import {
 import {
     CreateBlockUserRequest,
     CreateUserResponse,
-    GetNewUserChecklistResponse,
     GetUserResponse,
     GetUsersResponse,
     UpdatePremiumStatusResponse,
@@ -28,7 +27,12 @@ import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { AxiosError } from 'axios';
 import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
-import { NewUserChecklist } from 'resources/types/dto/NewUserChecklist';
+import { useAppSelector } from 'src/redux/Hooks';
+import { UserService } from 'src/service/UserService';
+import { getCurrentUser, setCurrentUser } from 'src/redux/user/GlobalState';
+import { RevenueCat } from '../revenuecat/RevenueCat';
+import { RevenueCatProvider } from '../revenuecat/RevenueCatProvider';
+import { Store } from 'src/redux/store';
 
 export interface UserModel {
     uid: string;
@@ -199,6 +203,8 @@ class UserController {
         if (!user) {
             user = await this.createUser();
             await this.forceRefreshIdToken();
+            //todo - fix me
+            //await this.setDefaultTimezone();
         }
 
         return user;
@@ -245,6 +251,17 @@ class UserController {
             });
     }
 
+    public static async sendJobRequest() {
+        return await axiosInstance
+            .get(`/job/daily-reminders/`)
+            .then((success) => {
+                return success.data.user;
+            })
+            .catch((error) => {
+                return error.response.data;
+            });
+    }
+
     public static async forceRefreshIdToken() {
         await getAuth().currentUser?.getIdToken(true);
     }
@@ -280,6 +297,17 @@ class UserController {
     public static async invalidateNewUserChecklist() {
         await reactQueryClient.invalidateQueries(['newUserChecklist']);
     }
+
+    public static async runPremiumWorkflow() {
+        const revenueCat: RevenueCat = RevenueCatProvider.get();
+
+        const purchased = await revenueCat.executePaywallWorkflow();
+        await UserController.forceRefreshIdToken();
+        const currentUser = await UserController.getCurrentUser();
+        Store.dispatch(setCurrentUser(currentUser));
+
+        return purchased;
+    }
 }
 
 export namespace UserCustomHooks {
@@ -301,6 +329,11 @@ export namespace UserCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useUserIsPremium = () => {
+        const currentUser = useAppSelector(getCurrentUser);
+        return UserService.userHasPremiumRole(currentUser);
     };
 }
 

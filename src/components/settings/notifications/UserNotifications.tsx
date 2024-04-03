@@ -3,8 +3,9 @@ import { Banner } from 'src/components/common/Banner';
 import { View, Text, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
-import { ReminderNotificationsSettings } from './ReminderNotificationsSettings';
-import { SocialNotificationsSettings } from './SocialNotificationSettings';
+import { ReminderNotificationsSettings } from './reminder/ReminderNotificationsSettings';
+import { SocialNotificationsSettings } from './social/SocialNotificationSettings';
+import { WarningNotificationsSettings } from './warning/WarningNotificationsSettings';
 
 export const UserNotifications = () => {
     const colors = useTheme().colors;
@@ -54,6 +55,21 @@ export const UserNotifications = () => {
                             </Text>
                             <ReminderNotificationsSettings />
                         </View>
+
+                        <View style={{ paddingTop: PADDING_LARGE }}>
+                            <Text
+                                style={{
+                                    color: colors.text,
+                                    fontFamily: POPPINS_MEDIUM,
+                                    fontSize: 16,
+                                }}
+                            >
+                                Warning Notifications
+                            </Text>
+                            <WarningNotificationsSettings />
+                        </View>
+
+                        <View style={{ height: PADDING_LARGE }} />
                     </View>
                 </View>
             </ScrollView>

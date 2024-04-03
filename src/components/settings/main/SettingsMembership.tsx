@@ -4,30 +4,30 @@ import { SettingsTextElement } from '../generic/SettingsTextElement';
 import { UserService } from 'src/service/UserService';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { TextStyle } from 'react-native';
-import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
-import { RevenueCatProvider } from 'src/controller/revenuecat/RevenueCatProvider';
 
 const text = 'Membership';
 
 export const SettingsMembership = () => {
-    const revenueCat: RevenueCat = RevenueCatProvider.get();
-
     const currentUser = UserCustomHooks.useCurrentUser();
     const colors = useTheme().colors;
 
     const [premiumPurchased, setPremiumPurchased] = React.useState(false);
 
     const purchasePremium = async () => {
-        const purchased = await revenueCat.executePaywallWorkflow();
-        await UserController.forceRefreshIdToken();
+        const purchased = await UserController.runPremiumWorkflow();
         setPremiumPurchased(purchased);
+    };
+
+    const sendJobRequest = async () => {
+        console.log('sendJobRequest');
+        UserController.sendJobRequest();
     };
 
     const isPremium =
         premiumPurchased ||
         (currentUser.data?.roles && UserService.userHasPremiumRole(currentUser.data));
 
-    const onPress = isPremium ? undefined : purchasePremium;
+    const onPress = isPremium ? sendJobRequest : purchasePremium;
     const thirdaryText = isPremium ? '' : 'Get Premium';
     const value = isPremium ? 'Premium' : 'Free';
     const color: TextStyle = {

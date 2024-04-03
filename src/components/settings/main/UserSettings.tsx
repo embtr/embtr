@@ -10,6 +10,7 @@ import { SettingsVersion } from './SettingsVersion';
 import { PADDING_LARGE } from 'src/util/constants';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SettingsNotifications } from '../notifications/SettingsNotifications';
+import { SettingsTimezone } from './SettingsTimezone';
 
 export const UserSettings = () => {
     return (
@@ -28,6 +29,8 @@ export const UserSettings = () => {
                 >
                     <View style={{ height: PADDING_LARGE }} />
                     <SettingsNotifications />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
+                    <SettingsTimezone />
                     <View style={{ height: PADDING_LARGE / 2 }} />
                     <EditProfileSettingsButton />
                     <View style={{ height: PADDING_LARGE / 2 }} />
