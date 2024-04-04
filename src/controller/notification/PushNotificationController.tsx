@@ -8,7 +8,6 @@ import Constants from 'expo-constants';
 import { CreatePushNotificationTokenRequest } from 'resources/types/requests/NotificationTypes';
 import axiosInstance from 'src/axios/axios';
 import * as Sentry from '@sentry/react-native';
-import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 class PushNotificationController {
@@ -96,34 +95,19 @@ class PushNotificationController {
         await Linking.openSettings();
     }
 
-    public static async pushNotificationsManuallyDisabled() {
-        return false;
-    }
-
-    public static async pushNotificationsAllowedOnSystemLevel() {
+    public static async canRequestPushNotifications() {
         const requestPermissions = await Notifications.getPermissionsAsync();
         return requestPermissions.canAskAgain;
     }
 
     public static async pushNotificationsEnabled() {
         const permissions = await Notifications.getPermissionsAsync();
-        return permissions.status === 'granted';
+        return permissions.granted;
     }
 
-    public static async addPushNotificationAccess() {
+    public static async requestPushNotificationAccess() {
         const answer = await Notifications.requestPermissionsAsync();
-        if (answer.status === 'granted') {
-            const token = await Notifications.getExpoPushTokenAsync();
-            //UserController.updatePostNotificationToken(token.data);
-            return true;
-        } else {
-            this.openNotificationsSettings();
-            return false;
-        }
-    }
-
-    public static async removePushNotificationAccess() {
-        //await UserController.updatePostNotificationToken(null);
+        return answer.granted;
     }
 }
 
@@ -140,12 +124,27 @@ export namespace PushNotificationCustomHooks {
 
         const updateEnabledState = async (state: string) => {
             const enabled =
-                await PushNotificationController.pushNotificationsAllowedOnSystemLevel();
+                await PushNotificationController.pushNotificationsEnabled();
             setEnabled(enabled);
         };
 
         return enabled;
     };
+
+    export const useCanRequestPermission = () => {
+        const [canRequest, setCanRequest] = React.useState<boolean>(false);
+
+        React.useEffect(() => {
+            const canRequest = async () => {
+                const canRequest = await PushNotificationController.canRequestPushNotifications();
+                setCanRequest(canRequest);
+            }
+
+            canRequest();
+        }, []);
+
+        return canRequest;
+    }
 }
 
 export default PushNotificationController;

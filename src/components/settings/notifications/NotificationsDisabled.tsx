@@ -3,10 +3,17 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PADDING_LARGE, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import PushNotificationController from 'src/controller/notification/PushNotificationController';
+import PushNotificationController, { PushNotificationCustomHooks } from 'src/controller/notification/PushNotificationController';
 
 export const NotificationsDisabled = () => {
     const { colors } = useTheme();
+
+    const canRequestPermission = PushNotificationCustomHooks.useCanRequestPermission();
+
+    const messageText = canRequestPermission
+        ? 'Your notifications are currently disabled. Please grant notification permissions to receive notifications.'
+        : 'Your notifications are currently disabled. Please enable them from your settings to receive notifications.'
+    const buttonText = canRequestPermission ? 'Grant Notification Permissions' : 'Visit Notification Settings';
 
     return (
         <TouchableOpacity>
@@ -51,14 +58,17 @@ export const NotificationsDisabled = () => {
                                 fontFamily: POPPINS_REGULAR,
                             }}
                         >
-                            Your notifications are currently disabled. Please enable them from your
-                            settings to receive notifications.
+                            {messageText}
                         </Text>
                     </View>
 
                     <TouchableOpacity
                         onPress={() => {
-                            PushNotificationController.openNotificationsSettings();
+                            if (canRequestPermission) {
+                                PushNotificationController.requestPushNotificationAccess();
+                            } else {
+                                PushNotificationController.openNotificationsSettings();
+                            }
                         }}
                     >
                         <View
@@ -79,10 +89,11 @@ export const NotificationsDisabled = () => {
                                     fontSize: 16,
                                 }}
                             >
-                                Visit Notification Settings
+                                {buttonText}
                             </Text>
                         </View>
                     </TouchableOpacity>
+                    <View style={{ height: PADDING_SMALL }} />
                 </View>
             </View>
         </TouchableOpacity>
