@@ -108,7 +108,7 @@ export const PlanDayHeaderGuest = ({
         } else {
             header = (
                 <View style={styles.containerUnshared}>
-                    <Text style={styles.noTasksText}>All of today's habits are complete 🎉</Text>
+                    <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
                 </View>
             );
         }
