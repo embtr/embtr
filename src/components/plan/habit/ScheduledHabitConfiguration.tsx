@@ -1,5 +1,4 @@
 import { View, Text, Image } from 'react-native';
-import { ScheduledHabit } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';

@@ -1,4 +1,4 @@
-import { Challenge, Comment } from 'resources/schema';
+import { Challenge, ChallengeParticipant, Comment } from 'resources/schema';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import {
     GetChallengeParticipationResponse,
@@ -9,6 +9,10 @@ import {
 import axiosInstance from 'src/axios/axios';
 import { CommentController } from '../api/general/CommentController';
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { ReactQueryStaleTimes } from 'src/util/constants';
+import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { ChallengeDto } from 'resources/types/dto/Challenge';
 
 export class ChallengeController {
     public static async getAllRecentJoined(upperBound: Date, lowerBound: Date) {
@@ -56,7 +60,7 @@ export class ChallengeController {
             });
     }
 
-    public static async getAllActiveForUser(userId: number) {
+    public static async getAllActiveForUser(userId: number): Promise<ChallengeParticipant[]> {
         return axiosInstance
             .get(`/user/${userId}/active-challenge-participation/`)
             .then((success) => {
@@ -115,7 +119,7 @@ export class ChallengeController {
     }
 
     public static async comment(challengeId: number, comment: string) {
-        const addedComment: Comment = await CommentController.add(
+        const addedComment = await CommentController.add(
             Interactable.CHALLENGE,
             challengeId,
             comment
@@ -129,21 +133,48 @@ export class ChallengeController {
     }
 
     public static useGetChallenges() {
-        const [challenges, setChallenges] = React.useState<Challenge[]>([]);
+        const [challengesDtos, setChallengeDtos] = React.useState<ChallengeDto[]>([]);
         React.useEffect(() => {
             const fetch = async () => {
-                const challenges = await ChallengeController.getAll();
-                setChallenges(challenges);
+                const challengeDtos = await ChallengeController.getAll();
+                setChallengeDtos(challengeDtos);
             };
 
             fetch();
         }, []);
 
         const refresh = async () => {
-            const challenges = await ChallengeController.getAll();
-            setChallenges(challenges);
+            const challengeDtos = await ChallengeController.getAll();
+            setChallengeDtos(challengeDtos);
         };
 
-        return { refresh, challenges };
+        return { refresh, challengesDtos };
+    }
+
+    public static async invalidate(id: number) {
+        console.log('invalidating challenge', id);
+        await reactQueryClient.invalidateQueries(['challenge', id]);
+    }
+}
+
+export namespace ChallengeCustomHooks {
+    export const useChallenge = (challengeId: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['challenge', challengeId],
+            queryFn: async () => ChallengeController.get(challengeId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    }
+
+    export const useActiveParticipation = (userId: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['acriveChallengeParticipation', userId],
+            queryFn: async () => ChallengeController.getAllActiveForUser(userId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     }
 }

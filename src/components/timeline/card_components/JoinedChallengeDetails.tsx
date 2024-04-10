@@ -1,32 +1,25 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { JoinedChallenge } from 'resources/schema';
+import { RecentlyJoinedChallenge } from 'resources/types/dto/RecentlyJoinedChallenge';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 interface Props {
-    joinedChallenge: JoinedChallenge;
+    recentlyJoinedChallenge: RecentlyJoinedChallenge;
 }
 
-export const JoinedChallengeDetails = ({ joinedChallenge }: Props) => {
-    if (!joinedChallenge.challenge.challengeRewards?.length) {
+export const JoinedChallengeDetails = ({ recentlyJoinedChallenge }: Props) => {
+    const { colors } = useTheme();
+    const [userIsAParticipant, setUserIsAParticipant] = React.useState(recentlyJoinedChallenge.isParticipant);
+
+    if (!recentlyJoinedChallenge.challenge.challenge.challengeRewards?.length) {
         return <View />;
     }
 
-    const currentUser = useAppSelector(getCurrentUser);
-    const { colors } = useTheme();
 
-    const [userIsAParticipant, setUserIsAParticipant] = React.useState(
-        joinedChallenge.challenge.challengeParticipants?.some(
-            (participant) => participant.userId === currentUser.id
-        )
-    );
-
-    const challengeReward = joinedChallenge.challenge.challengeRewards[0];
+    const challengeReward = recentlyJoinedChallenge.challenge.challenge.challengeRewards[0];
 
     return (
         <View
@@ -83,7 +76,7 @@ export const JoinedChallengeDetails = ({ joinedChallenge }: Props) => {
                 <View style={{ paddingTop: 12 }}>
                     <TouchableOpacity
                         onPress={() => {
-                            ChallengeController.register(joinedChallenge.challenge.id ?? 0);
+                            ChallengeController.register(recentlyJoinedChallenge.challenge.challenge.id ?? 0);
                             setUserIsAParticipant(true);
                             //setParticipantCount(participantCount + 1);
                         }}

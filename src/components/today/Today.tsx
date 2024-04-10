@@ -10,6 +10,7 @@ import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { PADDING_LARGE } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
+import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 
 export const Today = () => {
     const [planningWidgetHeight, setPlanningWidgetHeight] = React.useState<number>(0);

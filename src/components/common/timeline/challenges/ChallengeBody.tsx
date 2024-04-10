@@ -184,7 +184,7 @@ export const ChallengeBody = ({ challenge }: Props) => {
                                 <Text
                                     style={{
                                         fontFamily: POPPINS_MEDIUM,
-                                        color: colors.tab_selected,
+                                        color: colors.accent_color,
                                         fontSize: 12,
                                     }}
                                 >

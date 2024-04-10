@@ -5,6 +5,7 @@ import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitContro
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { ScheduledHabitCustomHooks } from 'src/controller/habit/ScheduledHabitController';
 import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
+import { Constants } from 'resources/types/constants/constants';
 
 export enum CreateEditHabitMode {
     CREATE_CUSTOM_HABIT = 'CREATE_CUSTOM_HABIT',
@@ -57,6 +58,7 @@ interface CreateEditScheduledHabitType {
     quantity: number | null;
     completedQuantity?: number;
     unit?: Unit;
+    isChallenge: boolean;
 
     setRemoteImageUrl: (remoteImageUrl: string) => void;
     setLocalImage: (localImage: string) => void;
@@ -69,6 +71,7 @@ interface CreateEditScheduledHabitType {
     setQuantity: (quantity: number | null) => void;
     setCompletedQuantity: (completedQuantity: number) => void;
     setUnit: (unit: Unit) => void;
+    setIsChallenge: (isChallenge: boolean) => void;
 
     timesOfDayEnabled: boolean;
     daysOfWeekEnabled: boolean;
@@ -131,6 +134,7 @@ export const CreateEditScheduledHabitProvider = ({
     const [quantity, setQuantity] = React.useState<number | null>(1);
     const [completedQuantity, setCompletedQuantity] = React.useState(0);
     const [unit, setUnit] = React.useState<Unit | undefined>(undefined);
+    const [isChallenge, setIsChallenge] = React.useState<boolean>(false);
 
     const [daysOfWeekEnabled, setDaysOfWeekEnabled] = React.useState(false);
     const [timesOfDayEnabled, setTimesOfDayEnabled] = React.useState(false);
@@ -155,6 +159,7 @@ export const CreateEditScheduledHabitProvider = ({
             setQuantity(1);
             setCompletedQuantity(0);
             setUnit(undefined);
+            setIsChallenge(false);
             setStartDate(new Date());
         } else if (isCreateCustomHabit) {
             setRemoteImageUrl(
@@ -181,6 +186,7 @@ export const CreateEditScheduledHabitProvider = ({
             setQuantity(scheduledHabit.data.quantity ?? 1);
             setCompletedQuantity(0);
             setUnit(scheduledHabit.data.unit ?? undefined);
+            setIsChallenge(scheduledHabit.data.task?.type === Constants.TaskType.CHALLENGE);
 
             setDaysOfWeekEnabled(scheduledHabit.data.daysOfWeekEnabled === true);
             setTimesOfDayEnabled(scheduledHabit.data.timesOfDayEnabled === true);
@@ -204,6 +210,7 @@ export const CreateEditScheduledHabitProvider = ({
             setQuantity(newPlannedHabitScheduledHabit.data.quantity ?? 1);
             setCompletedQuantity(0);
             setUnit(newPlannedHabitScheduledHabit.data.unit ?? undefined);
+            setIsChallenge(false);
 
             setDaysOfWeekEnabled(newPlannedHabitScheduledHabit.data.daysOfWeek?.length !== 0);
             setTimesOfDayEnabled(newPlannedHabitScheduledHabit.data.timesOfDay?.length !== 0);
@@ -228,6 +235,7 @@ export const CreateEditScheduledHabitProvider = ({
             setQuantity(plannedHabit.data.quantity ?? 1);
             setCompletedQuantity(plannedHabit.data.completedQuantity ?? 0);
             setUnit(plannedHabit.data.unit ?? undefined);
+            setIsChallenge(plannedHabit.data.scheduledHabit?.task?.type === Constants.TaskType.CHALLENGE);
 
             setTimesOfDayEnabled(!!plannedHabit.data.timeOfDay);
             setDetailsEnabled(
@@ -248,6 +256,8 @@ export const CreateEditScheduledHabitProvider = ({
         quantity: quantity,
         completedQuantity: completedQuantity,
         unit: unit,
+        isChallenge: isChallenge,
+
         setRemoteImageUrl: setRemoteImageUrl,
         setLocalImage: setLocalImage,
         setTitle: setTitle,
@@ -259,6 +269,7 @@ export const CreateEditScheduledHabitProvider = ({
         setQuantity: setQuantity,
         setCompletedQuantity: setCompletedQuantity,
         setUnit: setUnit,
+        setIsChallenge: setIsChallenge,
 
         daysOfWeekEnabled: daysOfWeekEnabled,
         timesOfDayEnabled: timesOfDayEnabled,

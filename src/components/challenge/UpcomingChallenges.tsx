@@ -3,16 +3,13 @@ import { View, RefreshControl, Pressable } from 'react-native';
 import { UpcomingChallenge } from 'src/components/challenge/UpcomingChallenge';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { CARD_SHADOW } from 'src/util/constants';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { ChallengeTabScreens } from 'src/navigation/RootStackParamList';
-import { useNavigation } from '@react-navigation/native';
+import { Routes } from 'src/navigation/RootStackParamList';
 import { ScrollView } from 'react-native-gesture-handler';
-
-type navigationProp = StackNavigationProp<ChallengeTabScreens, 'ChallengeDetails'>;
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 export const UpcomingChallenges = () => {
     const [refreshing, setRefreshing] = React.useState(false);
-    const navigation = useNavigation<navigationProp>();
+    const navigation = useEmbtrNavigation();
 
     const challenges = ChallengeController.useGetChallenges();
 
@@ -23,7 +20,9 @@ export const UpcomingChallenges = () => {
     };
 
     const challengeElements: JSX.Element[] = [];
-    for (const challenge of challenges.challenges) {
+    for (const challengeDto of challenges.challengesDtos) {
+        const challenge = challengeDto.challenge;
+
         const challengeElement = (
             <Pressable
                 key={challenge.id}
@@ -31,14 +30,13 @@ export const UpcomingChallenges = () => {
                     if (!challenge.id) {
                         return;
                     }
-                    navigation.navigate('ChallengeDetails', { id: challenge.id });
+                    navigation.navigate(Routes.CHALLENGE_DETAILS, { id: challenge.id });
                 }}
                 style={{
                     ...CARD_SHADOW, // Assuming CARD_SHADOW is the style for card shadow
-                    width: '100%',
                 }}
             >
-                <UpcomingChallenge challenge={challenge} />
+                <UpcomingChallenge challengeDto={challengeDto} />
             </Pressable>
         );
 

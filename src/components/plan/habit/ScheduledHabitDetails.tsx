@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, Keyboard, Switch, Text, View } from 'react-native';
-import { POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
+import { POPPINS_MEDIUM, PADDING_LARGE, POPPINS_REGULAR, PADDING_SMALL } from 'src/util/constants';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ScheduledHabitQuantityInput } from 'src/components/plan/habit/ScheduledHabitQuantityInput';
 import { ScheduledHabitUnitPicker } from 'src/components/plan/habit/ScheduledHabitUnitPicker';
@@ -12,7 +12,7 @@ export const ScheduledHabitDetails = () => {
     const { colors } = useTheme();
 
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
-    const { detailsEnabled, setDetailsEnabled } = useCreateEditScheduleHabit();
+    const { detailsEnabled, setDetailsEnabled, isChallenge } = useCreateEditScheduleHabit();
 
     const DETAILS_HEIGHT = 100 + PADDING_LARGE;
 
@@ -21,14 +21,18 @@ export const ScheduledHabitDetails = () => {
     }, [detailsEnabled]);
 
     return (
-        <View>
+        <View style={{
+            opacity: isChallenge ? .5 : 1,
+            pointerEvents: isChallenge ? 'none' : undefined
+
+        }}>
             <View
                 style={{
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}
             >
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, flexDirection: 'row' }}>
                     <Text
                         onPress={() => {
                             Keyboard.dismiss();
@@ -41,6 +45,22 @@ export const ScheduledHabitDetails = () => {
                     >
                         Details
                     </Text>
+
+                    {isChallenge && <Text
+                        onPress={() => {
+                            Keyboard.dismiss();
+                        }}
+                        style={{
+                            color: colors.progress_bar_failed,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 10,
+                            alignSelf: 'flex-end',
+                            bottom: PADDING_SMALL / 2,
+                            paddingLeft: PADDING_SMALL
+                        }}
+                    >
+                        challenge details cannot be modified
+                    </Text>}
                 </View>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

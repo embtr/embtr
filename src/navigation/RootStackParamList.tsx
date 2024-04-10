@@ -121,4 +121,5 @@ export namespace Routes {
     export const REGISTER_MODAL = 'RegisterModal';
     export const JOURNEY = 'Journey';
     export const USER_NOTIFICATIONS = 'UserNotifications';
+    export const CHALLENGE_DETAILS = 'ChallengeDetails';
 }

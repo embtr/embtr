@@ -9,9 +9,9 @@ interface Props {
 }
 
 export const ChallengeBadge = ({ reward, size, opaque }: Props) => {
-    if (!reward.imageUrl) {
+    if (!reward.remoteImageUrl) {
         return <View />;
     }
 
-    return <SvgUri width={size} height={size} uri={reward.imageUrl} opacity={opaque ? .2 : undefined} />;
+    return <SvgUri width={size} height={size} uri={reward.remoteImageUrl} opacity={opaque ? .2 : undefined} />;
 };

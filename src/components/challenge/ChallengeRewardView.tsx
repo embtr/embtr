@@ -13,7 +13,7 @@ export const ChallengeRewardView = ({ reward }: Props) => {
     const { colors } = useTheme();
     const useNarrowView = shouldUseNarrowView();
 
-    if (!reward.imageUrl) {
+    if (!reward.remoteImageUrl) {
         return <View />;
     }
 

@@ -1,28 +1,42 @@
 import React from 'react';
-import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Challenge, ChallengeParticipant } from 'resources/schema';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
-import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ChallengeRewardView } from './ChallengeRewardView';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
+import { ChallengeInteractableElementCustomHooks } from '../timeline/interactable/ChallengeInteractableElemnentCustomHooks';
+import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getSelectedDayKey } from 'src/redux/user/GlobalState';
+import { ChallengeDto } from 'resources/types/dto/Challenge';
 
 interface Props {
-    challenge: Challenge;
+    challengeDto: ChallengeDto;
 }
 
-export const UpcomingChallenge = ({ challenge }: Props) => {
+export const UpcomingChallenge = ({ challengeDto }: Props) => {
     const { colors } = useTheme();
+
+    const challenge = challengeDto.challenge;
 
     const [userIsAParticipant, setUsetIsAParticipant] = React.useState(false);
     const [participantCount, setParticipantCount] = React.useState(
-        challenge.challengeParticipants?.length || 0
+        challengeDto.participantCount
     );
     const [likeCount, setLikeCount] = React.useState(challenge.likes?.length || 0);
     const [isLiked, setIsLiked] = React.useState(false);
+
+    const currentlySelectedDay = useAppSelector(getSelectedDayKey);
+
+    const interactableData =
+        ChallengeInteractableElementCustomHooks.useChallengeInteractableElement(
+            challenge
+        );
 
     const daysUntilStart = Math.floor(
         ((challenge.start ?? new Date()).getTime() - new Date().getTime()) / 86400000
@@ -34,7 +48,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
 
     const totalDays = Math.floor(
         ((challenge.end ?? new Date()).getTime() - (challenge.start ?? new Date()).getTime()) /
-            86400000
+        86400000
     );
 
     React.useEffect(() => {
@@ -61,7 +75,13 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
             return;
         }
 
-        ChallengeController.register(challenge.id);
+        const currentUserId = await getUserIdFromToken();
+        await ChallengeController.register(challenge.id);
+        ScheduledHabitController.invalidateActiveScheduledHabits();
+        if (currentUserId && currentlySelectedDay) {
+            PlannedDayController.invalidatePlannedDay(currentUserId, currentlySelectedDay);
+        }
+
         setUsetIsAParticipant(true);
         setParticipantCount(participantCount + 1);
     };
@@ -203,7 +223,7 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                                 <Text
                                     style={{
                                         fontFamily: POPPINS_MEDIUM,
-                                        color: colors.tab_selected,
+                                        color: colors.accent_color_light,
                                         fontSize: 12,
                                     }}
                                 >
@@ -216,13 +236,12 @@ export const UpcomingChallenge = ({ challenge }: Props) => {
                     </View>
                 </View>
 
-                <PostDetailsActionBar
-                    likeCount={likeCount}
-                    isLiked={isLiked}
-                    commentCount={challenge.comments?.length ?? 0}
-                    onLike={likeChallenge}
-                    isCurrentUser={false}
-                />
+                <View style={{ paddingHorizontal: PADDING_SMALL }}>
+                    <PostDetailsActionBar
+                        interactableData={interactableData}
+                        isCurrentUser={false}
+                    />
+                </View>
             </View>
         </View>
     );

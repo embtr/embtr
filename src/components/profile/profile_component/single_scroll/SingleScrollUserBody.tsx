@@ -7,6 +7,7 @@ import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/Use
 import React from 'react';
 import { PADDING_LARGE } from 'src/util/constants';
 import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStreakWidget';
+import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
 
 interface Props {
     user: User;
@@ -29,15 +30,19 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
                     <HabitStreakWidget user={user} />
                 </View>
 
-                <View style={{ paddingTop: PADDING_LARGE / 2 }}>
+                <View style={{ paddingTop: PADDING_LARGE }}>
+                    <ActiveChallengesWidget userId={user.id ?? 0} />
+                </View>
+
+                <View style={{ paddingTop: PADDING_LARGE }}>
                     <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />
                 </View>
 
-                <View style={{ paddingTop: PADDING_LARGE / 2 }}>
+                <View style={{ paddingTop: PADDING_LARGE }}>
                     <UserPostsWidget userId={user.id} />
                 </View>
 
-                <View style={{ paddingTop: PADDING_LARGE / 2 }}>
+                <View style={{ paddingTop: PADDING_LARGE }}>
                     <UserDailyResultsWidget userId={user.id} />
                 </View>
 

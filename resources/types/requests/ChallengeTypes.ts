@@ -1,16 +1,18 @@
-import { Challenge, ChallengeParticipant, JoinedChallenge } from "../../schema";
+import { ChallengeParticipant } from "../../schema";
+import { ChallengeDto } from "../dto/Challenge";
+import { RecentlyJoinedChallenge } from "../dto/RecentlyJoinedChallenge";
 import { Response } from "./RequestTypes";
 
 export interface GetChallengesResponse extends Response {
-  challenges?: Challenge[];
+  challenges?: ChallengeDto[];
 }
 
 export interface GetChallengeResponse extends Response {
-  challenge?: Challenge;
+  challenge?: ChallengeDto;
 }
 
-export interface GetJoinedChallengesResponse extends Response {
-  joinedChallenges?: JoinedChallenge[];
+export interface GetRecentlyJoinedChallengesResponse extends Response {
+  recentlyJoinedChallenges?: RecentlyJoinedChallenge[]
 }
 
 export interface GetChallengeParticipationResponse extends Response {

@@ -40,8 +40,6 @@ const JourneyImpl = ({ hasFinishedChecklist }: Props) => {
     return (
         <Screen>
             <View style={{ flex: 1 }}>
-                <Banner name="My Journey" />
-
                 <ScrollView
                     refreshControl={
                         <RefreshControl

@@ -140,8 +140,8 @@ export const CreateEditHabitSaveButton = ({
         const scheduledHabit: ScheduledHabit = {
             id: scheduledHabitId,
             taskId: customHabitId ?? habitId,
-            description: description,
             title: title,
+            description: description,
             localImage: localImage,
             remoteImageUrl: remoteImageUrl,
             daysOfWeekEnabled: daysOfWeekEnabled,

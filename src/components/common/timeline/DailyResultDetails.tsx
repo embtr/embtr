@@ -37,6 +37,14 @@ export interface DailyResultDetailsProps {
 }
 
 export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResultDetailsProps) => {
+    React.useEffect(() => {
+        return () => {
+            PlannedDayResultInteractableElementCustomHooks.removePlannedDayResultInteractableEventListeners(
+                plannedDayResult
+            );
+        };
+    }, []);
+
     const navigation = useNavigation<StackNavigationProp<TimelineTabScreens>>();
     const closeMenu = useAppSelector(getCloseMenu);
 
@@ -58,7 +66,7 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
             [
                 {
                     text: 'Cancel',
-                    onPress: () => {},
+                    onPress: () => { },
                     style: 'cancel',
                 },
                 {
@@ -145,18 +153,6 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
 export const DailyResultDetails = () => {
     const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
     const plannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(route.params.id);
-
-    React.useEffect(() => {
-        return () => {
-            if (!plannedDayResult.data) {
-                return;
-            }
-
-            PlannedDayResultInteractableElementCustomHooks.removePlannedDayResultInteractableEventListeners(
-                plannedDayResult.data
-            );
-        };
-    }, []);
 
     if (!plannedDayResult.data) {
         return <DailyResultDetailsPlaceholder />;

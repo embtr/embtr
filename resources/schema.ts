@@ -62,6 +62,7 @@ export interface Task {
   user?: User;
   habitCategoryId?: number;
   habitCategory?: HabitCategory;
+  type?: string;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -440,14 +441,3 @@ export enum ChallengeRequirementCompletionState {
   COMPLETED = 'COMPLETED',
 }
 
-export interface ChallengeCompletionData {
-  amountComplete: number;
-  amountRequired: number;
-  percentComplete: number;
-  challengeRequirementCompletionState: ChallengeRequirementCompletionState;
-}
-
-export interface JoinedChallenge {
-  challenge: Challenge;
-  participants: ChallengeParticipant[];
-}

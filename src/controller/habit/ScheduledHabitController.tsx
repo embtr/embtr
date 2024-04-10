@@ -136,6 +136,7 @@ export class ScheduledHabitController {
     }
 
     public static async invalidateActiveScheduledHabits() {
+        console.log('invalidateActiveScheduledHabits');
         await reactQueryClient.invalidateQueries(['activeScheduledHabits']);
     }
 
@@ -162,6 +163,7 @@ export namespace ScheduledHabitCustomHooks {
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
+        console.log('useActive', status, fetchStatus);
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
 
