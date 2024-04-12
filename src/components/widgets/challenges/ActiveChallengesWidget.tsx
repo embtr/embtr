@@ -1,10 +1,9 @@
+import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
-import React from 'react';
 import { ActiveChallengeElement } from './ActiveChallengeElement';
-import { ScrollView } from 'react-native-gesture-handler';
 import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';
 
 interface Props {
@@ -27,24 +26,26 @@ export const ActiveChallengesWidget = ({ userId }: Props) => {
                     </Text>
                 </View>
 
-                <View style={{ paddingTop: 10 }}>
-                    <Text style={{ color: colors.text, fontFamily: POPPINS_REGULAR, fontSize: 12 }}>
+                <View>
+                    <Text
+                        style={{
+                            color: colors.accent_color_light,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 12,
+                        }}
+                    >
                         {activeParticipation.data?.length ?? 0} Active
                     </Text>
                 </View>
             </View>
 
-            <ScrollView
-                style={{ paddingTop: 5, paddingBottom: 3 }}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-            >
+            <View style={{ paddingTop: 5, paddingBottom: 3 }}>
                 {activeParticipation.data?.map((challengeParticipant) => (
                     <View key={challengeParticipant.id} style={{ paddingRight: 7.5 }}>
                         <ActiveChallengeElement challengeParticipant={challengeParticipant} />
                     </View>
                 ))}
-            </ScrollView>
+            </View>
         </WidgetBase>
     );
 };

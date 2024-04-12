@@ -1,5 +1,5 @@
 import React from 'react';
-import { Comment, Like } from 'resources/schema';
+import { Comment } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 
@@ -20,7 +20,8 @@ export interface InteractableData {
 
 export namespace InteractableElementCustomHooks {
     export const useInteractableElement = (
-        likes: Like[],
+        likeCount: number,
+        isLiked: boolean,
         comments: Comment[],
         addLike: () => Promise<void>,
         addComment: (comment: string) => Promise<Comment | undefined>,
@@ -29,23 +30,20 @@ export namespace InteractableElementCustomHooks {
     ): InteractableData => {
         const currentUser = useAppSelector(getCurrentUser);
 
-        const [likeCount, setLikeCount] = React.useState(likes?.length ?? 0);
-        const [isLiked, setIsLiked] = React.useState(
-            likes?.some((like) => like.user?.uid === currentUser?.uid) ?? false
-        );
+        const [currentLikeCount, setCurrentLikeCount] = React.useState(likeCount);
+        const [currentIsLiked, setcurrentIsLiked] = React.useState(isLiked);
         const [currentComments, setCurrentComments] = React.useState(comments ?? []);
 
         // ensure we are using the most up to date
         // likes and comments from the database
         React.useEffect(() => {
-            const isLiked = likes?.some((like) => like.userId === currentUser?.id) ?? false;
-            setIsLiked(isLiked);
-            setLikeCount(likes?.length ?? 0);
+            setCurrentLikeCount(likeCount);
+            setcurrentIsLiked(isLiked);
             setCurrentComments(comments ?? []);
-        }, [likes, comments]);
+        }, [isLiked, likeCount, comments.length]);
 
         const onLike = async () => {
-            if (isLiked) {
+            if (currentIsLiked) {
                 return;
             }
 
@@ -84,8 +82,8 @@ export namespace InteractableElementCustomHooks {
         };
 
         const wasLiked = () => {
-            setIsLiked(true);
-            setLikeCount((old) => old + 1);
+            setcurrentIsLiked(true);
+            setCurrentLikeCount((old) => old + 1);
         };
 
         const commentAdded = () => {
@@ -98,8 +96,8 @@ export namespace InteractableElementCustomHooks {
         };
 
         return {
-            likeCount,
-            isLiked,
+            likeCount: currentLikeCount,
+            isLiked: currentIsLiked,
             onLike,
             onCommentAdded,
             onCommentDeleted,

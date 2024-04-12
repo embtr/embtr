@@ -1,10 +1,11 @@
-import { Challenge, ChallengeParticipant, Comment } from 'resources/schema';
+import { ChallengeParticipant, Comment } from 'resources/schema';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import {
+    GetChallengeDetailsResponse,
     GetChallengeParticipationResponse,
-    GetChallengeResponse,
-    GetChallengesResponse,
-    GetJoinedChallengesResponse,
+    GetChallengeSummaryResponse,
+    GetChallengesDetailsResponse,
+    GetChallengesSummariesResponse,
 } from 'resources/types/requests/ChallengeTypes';
 import axiosInstance from 'src/axios/axios';
 import { CommentController } from '../api/general/CommentController';
@@ -12,51 +13,50 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
-import { ChallengeDto } from 'resources/types/dto/Challenge';
+import { ChallengeDetails, ChallengeSummary } from 'resources/types/dto/Challenge';
 
 export class ChallengeController {
-    public static async getAllRecentJoined(upperBound: Date, lowerBound: Date) {
-        const upperBoundDate = new Date(upperBound).toISOString();
-        const lowerBoundDate = new Date(lowerBound).toISOString();
-
+    public static async getAllDetails(): Promise<ChallengeDetails[] | undefined> {
         return axiosInstance
-            .get(`/challenge/recently-joined/`, {
-                params: {
-                    upperBound: upperBoundDate,
-                    lowerBound: lowerBoundDate,
-                },
-            })
-
-            .then((success) => {
-                const body: GetJoinedChallengesResponse = success.data;
-                return body.joinedChallenges ?? [];
-            })
-            .catch((error) => {
-                return [];
-            });
-    }
-
-    public static async get(id: number) {
-        return axiosInstance
-            .get(`/challenge/${id}`)
-            .then((success) => {
-                const body: GetChallengeResponse = success.data;
-                return body.challenge;
+            .get<GetChallengesDetailsResponse>(`/challenge/details`)
+            .then((result) => {
+                return result.data.challengesDetails
             })
             .catch((error) => {
                 return undefined;
             });
     }
 
-    public static async getAll() {
+    public static async getAllSummaries(): Promise<ChallengeSummary[] | undefined> {
         return axiosInstance
-            .get(`/challenge/`)
-            .then((success) => {
-                const body: GetChallengesResponse = success.data;
-                return body.challenges ?? [];
+            .get<GetChallengesSummariesResponse>(`/challenge/summary`)
+            .then((result) => {
+                return result.data.challengesSummaries
             })
             .catch((error) => {
-                return [];
+                return undefined;
+            });
+    }
+
+    public static async getDetails(id: number): Promise<ChallengeDetails | undefined> {
+        return axiosInstance
+            .get<GetChallengeDetailsResponse>(`/challenge/${id}/details`)
+            .then((result) => {
+                return result.data.challengeDetails
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
+    public static async getSummary(id: number): Promise<ChallengeSummary | undefined> {
+        return axiosInstance
+            .get<GetChallengeSummaryResponse>(`/challenge/${id}/summary`)
+            .then((result) => {
+                return result.data.challengeSummary
+            })
+            .catch((error) => {
+                return undefined;
             });
     }
 
@@ -132,36 +132,58 @@ export class ChallengeController {
         return await CommentController.delete(Interactable.CHALLENGE, comment);
     }
 
-    public static useGetChallenges() {
-        const [challengesDtos, setChallengeDtos] = React.useState<ChallengeDto[]>([]);
-        React.useEffect(() => {
-            const fetch = async () => {
-                const challengeDtos = await ChallengeController.getAll();
-                setChallengeDtos(challengeDtos);
-            };
-
-            fetch();
-        }, []);
-
-        const refresh = async () => {
-            const challengeDtos = await ChallengeController.getAll();
-            setChallengeDtos(challengeDtos);
-        };
-
-        return { refresh, challengesDtos };
+    public static async invalidateAllChallengeDetails() {
+        await reactQueryClient.invalidateQueries(['challengeDetails']);
     }
 
-    public static async invalidate(id: number) {
-        console.log('invalidating challenge', id);
-        await reactQueryClient.invalidateQueries(['challenge', id]);
+    public static async invalidateAllChallengeSummaries() {
+        await reactQueryClient.invalidateQueries(['challengeSummaries']);
+    }
+
+    public static async invalidateChallengeDetails(id: number) {
+        await reactQueryClient.invalidateQueries(['challengeDetails', id]);
+    }
+
+    public static async invalidateChallengeSummary(id: number) {
+        await reactQueryClient.invalidateQueries(['challengeSummary', id]);
     }
 }
 
 export namespace ChallengeCustomHooks {
-    export const useChallenge = (challengeId: number) => {
+    export const useAllChallengeDetails = () => {
         const { status, error, data, fetchStatus } = useQuery({
-            queryKey: ['challenge', challengeId],
-            queryFn: async () => ChallengeController.get(challengeId),
+            queryKey: ['challengeDetails'],
+            queryFn: async () => ChallengeController.getAllDetails(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    }
+
+    export const useAllChallengeSummaries = () => {
+        const { status, error, data, fetchStatus, refetch } = useQuery({
+            queryKey: ['challengeSummaries'],
+            queryFn: async () => ChallengeController.getAllSummaries(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
+    }
+
+    export const useChallengeDetails = (id: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['challengeDetails', id],
+            queryFn: async () => ChallengeController.getDetails(id),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    }
+
+    export const useChallengeSummary = (id: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['challengeSummary', id],
+            queryFn: async () => ChallengeController.getSummary(id),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 

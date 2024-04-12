@@ -1,45 +1,23 @@
 import React from 'react';
-import { View, RefreshControl, Pressable } from 'react-native';
+import { View, RefreshControl } from 'react-native';
 import { UpcomingChallenge } from 'src/components/challenge/UpcomingChallenge';
-import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { CARD_SHADOW } from 'src/util/constants';
-import { Routes } from 'src/navigation/RootStackParamList';
+import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 export const UpcomingChallenges = () => {
     const [refreshing, setRefreshing] = React.useState(false);
-    const navigation = useEmbtrNavigation();
 
-    const challenges = ChallengeController.useGetChallenges();
+    const challengeSummaries = ChallengeCustomHooks.useAllChallengeSummaries();
 
     const onRefresh = async () => {
         setRefreshing(true);
-        await challenges.refresh();
+        await challengeSummaries.refetch();
         setRefreshing(false);
     };
 
     const challengeElements: JSX.Element[] = [];
-    for (const challengeDto of challenges.challengesDtos) {
-        const challenge = challengeDto.challenge;
-
-        const challengeElement = (
-            <Pressable
-                key={challenge.id}
-                onPress={() => {
-                    if (!challenge.id) {
-                        return;
-                    }
-                    navigation.navigate(Routes.CHALLENGE_DETAILS, { id: challenge.id });
-                }}
-                style={{
-                    ...CARD_SHADOW, // Assuming CARD_SHADOW is the style for card shadow
-                }}
-            >
-                <UpcomingChallenge challengeDto={challengeDto} />
-            </Pressable>
-        );
-
+    for (const challengeSummary of challengeSummaries.data ?? []) {
+        const challengeElement = <UpcomingChallenge challengeSummary={challengeSummary} />;
         challengeElements.push(challengeElement);
     }
 

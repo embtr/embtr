@@ -157,14 +157,13 @@ export namespace ScheduledHabitCustomHooks {
     };
 
     export const useActive = () => {
-        const { status, error, data, fetchStatus } = useQuery({
+        const { status, error, data, fetchStatus, refetch } = useQuery({
             queryKey: ['activeScheduledHabits'],
             queryFn: async () => await ScheduledHabitController.getActive(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
-        console.log('useActive', status, fetchStatus);
-        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
     };
 
     export const useFuture = () => {

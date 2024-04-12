@@ -4,7 +4,7 @@ import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text } from 'react-native';
 import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useTheme } from '../theme/ThemeProvider';
 import {
@@ -33,37 +33,55 @@ export const ManageHabits = () => {
         <Screen>
             <Banner name={'My Habits'} />
 
-            {scheduledHabits.data?.length === 0 && (
-                <ManageHabitsNoHabitsMessage onPress={handleNavigation} />
-            )}
-
-            <HabitSummaries scheduledHabits={scheduledHabits.data ?? []} />
-
-            <TouchableOpacity onPress={handleNavigation}>
-                <View
-                    style={{
-                        height: 50 - PADDING_LARGE,
-                        marginHorizontal: PADDING_LARGE,
-                        marginTop: PADDING_LARGE,
-                        backgroundColor: colors.accent_color,
-                        justifyContent: 'center',
-                        borderRadius: 3,
-                    }}
+            <View style={{ flex: 1 }}>
+                <ScrollView
+                    style={{ flex: 1 }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={scheduledHabits.isLoading}
+                            onRefresh={() => {
+                                scheduledHabits.refetch();
+                            }}
+                        />
+                    }
                 >
-                    <Text
+                    <View style={{ flex: 1 }}>
+                        {scheduledHabits.data?.length === 0 && (
+                            <View style={{ paddingTop: PADDING_LARGE * 2 }}>
+                                <ManageHabitsNoHabitsMessage onPress={handleNavigation} />
+                            </View>
+                        )}
+
+                        <HabitSummaries scheduledHabits={scheduledHabits.data ?? []} />
+                    </View>
+                </ScrollView>
+
+                <TouchableOpacity onPress={handleNavigation}>
+                    <View
                         style={{
-                            textAlign: 'center',
-                            color: colors.text,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 16,
+                            height: 50 - PADDING_LARGE,
+                            marginHorizontal: PADDING_LARGE,
+                            marginTop: PADDING_LARGE,
+                            backgroundColor: colors.accent_color,
+                            justifyContent: 'center',
+                            borderRadius: 3,
                         }}
                     >
-                        Add New Habit
-                    </Text>
-                </View>
-            </TouchableOpacity>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                color: colors.text,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 16,
+                            }}
+                        >
+                            Add New Habit
+                        </Text>
+                    </View>
+                </TouchableOpacity>
 
-            <View style={{ height: PADDING_LARGE * 2 }} />
+                <View style={{ height: PADDING_LARGE * 2 }} />
+            </View>
         </Screen>
     );
 };

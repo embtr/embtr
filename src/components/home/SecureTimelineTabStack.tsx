@@ -7,7 +7,7 @@ import { UserPostDetails } from 'src/components/common/timeline/UserPostDetails'
 import { UserPosts } from 'src/components/profile/details/UserPosts';
 import { DailyResults } from 'src/components/profile/details/DailyResults';
 import { createStackNavigator } from '@react-navigation/stack';
-import { ChallengeDetails } from 'src/components/common/timeline/challenges/ChallengeDetails';
+import { ChallengeDetails1 } from 'src/components/common/timeline/challenges/ChallengeDetails1';
 import { AddHabitCategory } from 'src/components/plan/habit/AddHabitCategory';
 import { EditUserPostDetails } from 'src/components/timeline/EditUserPostDetails';
 import { EditDailyResultDetails } from 'src/components/common/timeline/EditDailyResultDetails';
@@ -27,7 +27,7 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="Notifications" component={Notifications} />
             <Stack.Screen name="UserPosts" component={UserPosts} />
             <Stack.Screen name="DailyResults" component={DailyResults} />
-            <Stack.Screen name="ChallengeDetails" component={ChallengeDetails} />
+            <Stack.Screen name="ChallengeDetails1" component={ChallengeDetails1} />
             <Stack.Screen name="AddHabit" component={AddHabitCategory} />
         </Stack.Navigator>
     );

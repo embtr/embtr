@@ -4,6 +4,8 @@ import StoryController from 'src/controller/timeline/story/StoryController';
 import { InteractableData, InteractableElementCustomHooks } from './InteractableElementCustomHooks';
 import { CreateReportDto } from 'resources/types/dto/Report';
 import { ReportController } from 'src/controller/ReportController';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 export namespace UserPostInteractableElementCustomHooks {
     export const createOnLikeUserPostEmitKey = (userPost: UserPost) => {
@@ -92,8 +94,10 @@ export namespace UserPostInteractableElementCustomHooks {
             ReportController.createReport(createReportDto);
         };
 
+        const currentUser = useAppSelector(getCurrentUser);
         return InteractableElementCustomHooks.useInteractableElement(
-            userPost.likes ?? [],
+            userPost.likes?.length ?? 0,
+            userPost.likes?.some((like) => like.userId === currentUser.id) ?? false,
             userPost.comments ?? [],
             addLike,
             addComment,

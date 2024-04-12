@@ -8,23 +8,28 @@ import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
 import { differenceInDays } from 'date-fns';
+import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
     scheduledHabit: ScheduledHabit;
 }
 
-function getExpirationMessage(startDate: Date, endDate: Date) {
+function getExpirationMessage(startDate: Date, endDate: Date, isChallenge: boolean) {
+    const object = isChallenge ? 'Challenge' : 'Habit';
+
     // Calculate the difference in days
     const diffInDays = differenceInDays(endDate, startDate);
 
     if (diffInDays === 0) {
-        return 'version expires today';
+        return `${object} ends today`;
     } else if (diffInDays === 1) {
-        return 'version expires tomorrow';
-    } else if (diffInDays > 1) {
-        return `version expires in ${diffInDays} days`;
+        return `${object} ends tomorrow`;
+    } else if (diffInDays < 10) {
+        return `${object} ends in ${diffInDays} days`;
+    } else if (diffInDays >= 10) {
+        return `${object}`;
     } else {
-        return 'version expired';
+        return '${object} ended';
     }
 }
 
@@ -44,12 +49,25 @@ export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
     const prettyUnits = UnitUtility.getReadableUnit(unit, quantity);
 
     const endDate = scheduledHabit.endDate;
-    const expires = endDate && getExpirationMessage(new Date(), endDate);
+    const expires =
+        endDate &&
+        getExpirationMessage(
+            new Date(),
+            endDate,
+            scheduledHabit.task?.type === Constants.TaskType.CHALLENGE
+        );
 
     let habitView: JSX.Element = <View />;
     if (endDate) {
         habitView = (
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+                style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    bottom: PADDING_SMALL,
+                    left: PADDING_SMALL,
+                }}
+            >
                 <Text
                     style={{
                         color: colors.error,
@@ -101,7 +119,7 @@ export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
                 >
                     <View
                         style={{
-                            backgroundColor: '#404040',
+                            backgroundColor: colors.widget_element_background,
                             padding: 4,
                             borderRadius: 9,
                         }}

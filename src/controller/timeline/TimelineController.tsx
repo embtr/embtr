@@ -26,7 +26,7 @@ export class TimelineController {
                 return response.timelineData;
             })
             .catch((error) => {
-                return udefined;
+                return undefined;
             });
     }
 

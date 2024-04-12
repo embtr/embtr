@@ -19,7 +19,7 @@ import { UpdateAvailableModal } from 'src/components/modal/UpdateAvailableModal'
 import { ManageHabits } from '../manage_habits/ManageHabits';
 import { IntroModal } from '../modal/IntroModal';
 import { UserNotifications } from '../settings/notifications/UserNotifications';
-import { ChallengeDetails } from '../common/timeline/challenges/ChallengeDetails';
+import { ChallengeDetails1 } from '../common/timeline/challenges/ChallengeDetails1';
 
 const Stack = createStackNavigator();
 
@@ -81,7 +81,7 @@ export const SecureMainStack = () => {
             />
             <Stack.Screen name={Routes.HABIT_SUMMARY_DETAILS} component={HabitSummaryDetails} />
             <Stack.Screen name={Routes.USER_NOTIFICATIONS} component={UserNotifications} />
-            <Stack.Screen name={Routes.CHALLENGE_DETAILS} component={ChallengeDetails} />
+            <Stack.Screen name={Routes.CHALLENGE_DETAILS} component={ChallengeDetails1} />
         </Stack.Navigator>
     );
 };

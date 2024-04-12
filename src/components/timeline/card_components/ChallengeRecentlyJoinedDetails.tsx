@@ -1,25 +1,24 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { RecentlyJoinedChallenge } from 'resources/types/dto/RecentlyJoinedChallenge';
+import { ChallengeReward } from 'resources/schema';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 
 interface Props {
-    recentlyJoinedChallenge: RecentlyJoinedChallenge;
+    challengeId: number;
+    isAParticipant: boolean;
+    challengeReward: ChallengeReward;
 }
 
-export const JoinedChallengeDetails = ({ recentlyJoinedChallenge }: Props) => {
+export const ChallengeRecentlyJoinedDetails = ({
+    challengeId,
+    isAParticipant,
+    challengeReward,
+}: Props) => {
     const { colors } = useTheme();
-    const [userIsAParticipant, setUserIsAParticipant] = React.useState(recentlyJoinedChallenge.isParticipant);
-
-    if (!recentlyJoinedChallenge.challenge.challenge.challengeRewards?.length) {
-        return <View />;
-    }
-
-
-    const challengeReward = recentlyJoinedChallenge.challenge.challenge.challengeRewards[0];
+    const [userIsAParticipant, setUserIsAParticipant] = React.useState(isAParticipant);
 
     return (
         <View
@@ -76,7 +75,7 @@ export const JoinedChallengeDetails = ({ recentlyJoinedChallenge }: Props) => {
                 <View style={{ paddingTop: 12 }}>
                     <TouchableOpacity
                         onPress={() => {
-                            ChallengeController.register(recentlyJoinedChallenge.challenge.challenge.id ?? 0);
+                            ChallengeController.register(challengeId);
                             setUserIsAParticipant(true);
                             //setParticipantCount(participantCount + 1);
                         }}

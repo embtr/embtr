@@ -30,7 +30,6 @@ interface Props {
 }
 
 interface Styles {
-    container: ViewStyle;
     innerContainer: ViewStyle;
     statusContainer: ViewStyle;
     text: TextStyle;
@@ -43,12 +42,6 @@ interface Styles {
 
 const generateStyles = (colors: any): Styles => {
     return {
-        container: {
-            backgroundColor: '#404040',
-            borderRadius: 5,
-            flexDirection: 'row',
-            ...CARD_SHADOW,
-        },
         innerContainer: {
             padding: PADDING_LARGE / 2,
             flex: 1,
@@ -233,7 +226,12 @@ export const PlannableTaskImproved = ({
         >
             <Pressable
                 disabled={isGuest === true}
-                style={styles.container}
+                style={{
+                    backgroundColor: colors.widget_element_background,
+                    borderRadius: 5,
+                    flexDirection: 'row',
+                    ...CARD_SHADOW,
+                }}
                 onPress={() => {
                     dispatch(
                         setUpdateModalPlannedTask({

@@ -4,6 +4,8 @@ import { Comment, PlannedDayResult } from 'resources/schema';
 import { InteractableData, InteractableElementCustomHooks } from './InteractableElementCustomHooks';
 import { ReportController } from 'src/controller/ReportController';
 import { CreateReportDto } from 'resources/types/dto/Report';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 export namespace PlannedDayResultInteractableElementCustomHooks {
     export const createOnLikePlannedDayResultEmitKey = (plannedDayResult: PlannedDayResult) => {
@@ -111,8 +113,10 @@ export namespace PlannedDayResultInteractableElementCustomHooks {
             ReportController.createReport(createReportDto);
         };
 
+        const currentUser = useAppSelector(getCurrentUser);
         return InteractableElementCustomHooks.useInteractableElement(
-            plannedDayResult.likes ?? [],
+            plannedDayResult.likes?.length ?? 0,
+            plannedDayResult.likes?.some((like) => like.userId === currentUser.id) ?? false,
             plannedDayResult.comments ?? [],
             addLike,
             addComment,

@@ -6,12 +6,13 @@ import {
     ChallengeRequirementCompletionState,
 } from 'resources/schema';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
-import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { getTimeLeft } from 'src/util/DateUtility';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import CompletionStamp from 'src/components/common/stamp/CompletionStamp';
+import { getWindowWidth } from 'src/util/GeneralUtility';
 
 interface Props {
     challengeParticipant: ChallengeParticipant;
@@ -55,15 +56,12 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
 
     return (
         <View
-            style={[
-                {
-                    width: 220,
-                    backgroundColor: colors.button_background,
-                    borderRadius: 3,
-                    padding: 7.5,
-                },
-                CARD_SHADOW,
-            ]}
+            style={{
+                width: getWindowWidth() / 2,
+                backgroundColor: colors.widget_element_background,
+                borderRadius: 3,
+                padding: 7.5,
+            }}
         >
             {isComplete && (
                 <View style={{ zIndex: 1, top: 20, left: '50%', position: 'absolute' }}>

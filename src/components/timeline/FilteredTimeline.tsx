@@ -4,7 +4,7 @@ import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { TimelineElement, TimelineElementType } from 'resources/types/requests/Timeline';
 import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
 import { PlannedDayResultTimelineElement } from './PlannedDayResultTimelineElement';
-import { RecentlyJoinedChallengeTimelineElement } from './RecentlyJoinedChallengeTimelineElement';
+import { ChallengeRecentlyJoinedTimelineElement } from './ChallengeRecentlyJoinedTimelineElement';
 
 const createFooter = (hasMore: boolean, colors: any) => {
     const footer = hasMore ? (
@@ -60,7 +60,7 @@ const renderItem = (item: TimelineElement, index: number) => {
                 <PlannedDayResultTimelineElement plannedDayResult={item.plannedDayResult} />
             </View>
         );
-    } else if (item.type === TimelineElementType.RECENTLY_JOINED_CHALLENGE && item.recentlyJoinedChallenge) {
+    } else if (item.type === TimelineElementType.RECENTLY_JOINED_CHALLENGE && item.challengeRecentlyJoined) {
         return (
             <View
                 style={{
@@ -68,7 +68,7 @@ const renderItem = (item: TimelineElement, index: number) => {
                     paddingHorizontal: PADDING_LARGE,
                 }}
             >
-                <RecentlyJoinedChallengeTimelineElement recentlyJoinedChallenge={item.recentlyJoinedChallenge} />
+                <ChallengeRecentlyJoinedTimelineElement challengeRecentlyJoined={item.challengeRecentlyJoined} />
             </View>
         );
     }
@@ -87,7 +87,7 @@ export const FilteredTimeline = ({ timelineElements, hasMore, pullToRefresh, loa
     const { colors } = useTheme();
 
     const keyExtractor = (item: TimelineElement) => {
-        const key = `${item.type}_post_${item.userPost?.id}_result_${item.plannedDayResult?.id}_challenge_${item.recentlyJoinedChallenge?.challenge.id}_${item.recentlyJoinedChallenge?.latestParticipant.id}`;
+        const key = `${item.type}_post_${item.userPost?.id}_result_${item.plannedDayResult?.id}_challenge_${item.challengeRecentlyJoined?.id}_${item.challengeRecentlyJoined?.latestParticipant.id}`;
         return key;
     };
 

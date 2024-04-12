@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { FilteredTimeline } from './FilteredTimeline';
-import { TimelineElement, TimelineElementType } from 'resources/types/requests/Timeline';
+import { TimelineElement } from 'resources/types/requests/Timeline';
 import { Banner } from 'src/components/common/Banner';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';

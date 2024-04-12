@@ -1,27 +1,37 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, PADDING_LARGE, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { CardHeader } from './card_components/CardHeader';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { RecentlyJoinedChallenge } from 'resources/types/dto/RecentlyJoinedChallenge';
-import { JoinedChallengeDetails } from './card_components/JoinedChallengeDetails';
+import { ChallengeRecentlyJoined } from 'resources/types/dto/Challenge';
+import { ChallengeRecentlyJoinedDetails } from './card_components/ChallengeRecentlyJoinedDetails';
 
 interface Props {
-    recentlyJoinedChallenge: RecentlyJoinedChallenge,
+    challengeRecentlyJoined: ChallengeRecentlyJoined;
     interactableData: InteractableData;
 }
 
-export const RecentlyJoinedChallengeElement = ({ recentlyJoinedChallenge, interactableData }: Props) => {
+export const ChallengeRecentlyJoinedElement = ({
+    challengeRecentlyJoined: challengeRecentlyJoined,
+    interactableData,
+}: Props) => {
     const { colors } = useTheme();
 
-    const user = recentlyJoinedChallenge.latestParticipant.user;
+    const user = challengeRecentlyJoined.latestParticipant.user;
     if (!user) {
         return <View />;
     }
+
+    const body =
+        challengeRecentlyJoined.participantCount > 2
+            ? `${user?.displayName}, and ${challengeRecentlyJoined.participantCount} others have joined the challenge!`
+            : challengeRecentlyJoined.participantCount === 2
+                ? `${user?.displayName}, and one other have joined the challenge!`
+                : `${user?.displayName} has joined the challenge!`;
 
     const secondaryHeader = user.location ?? '';
     const isCurrentUser = getCurrentUid() === user.uid;
@@ -41,7 +51,7 @@ export const RecentlyJoinedChallengeElement = ({ recentlyJoinedChallenge, intera
             {/* HEADER */}
             {/**********/}
             <CardHeader
-                date={recentlyJoinedChallenge.latestParticipant.createdAt ?? new Date()}
+                date={challengeRecentlyJoined.latestParticipant.createdAt ?? new Date()}
                 user={user}
                 secondaryText={secondaryHeader}
                 type={TimelineElementType.RECENTLY_JOINED_CHALLENGE}
@@ -58,7 +68,22 @@ export const RecentlyJoinedChallengeElement = ({ recentlyJoinedChallenge, intera
                         color: colors.text,
                     }}
                 >
-                    {recentlyJoinedChallenge.challenge.challenge.name}
+                    {challengeRecentlyJoined.name}
+                </Text>
+            </View>
+
+            {/**********/}
+            {/*  BODY  */}
+            {/**********/}
+            <View style={{ paddingTop: 12 }}>
+                <Text
+                    style={{
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 13,
+                        color: colors.text,
+                    }}
+                >
+                    {body}
                 </Text>
             </View>
 
@@ -66,7 +91,11 @@ export const RecentlyJoinedChallengeElement = ({ recentlyJoinedChallenge, intera
             {/* JOINED CHALLENGE DETAILS */}
             {/****************************/}
             <View style={{ paddingTop: PADDING_LARGE }}>
-                <JoinedChallengeDetails recentlyJoinedChallenge={recentlyJoinedChallenge} />
+                <ChallengeRecentlyJoinedDetails
+                    challengeId={challengeRecentlyJoined.id}
+                    isAParticipant={challengeRecentlyJoined.isParticipant}
+                    challengeReward={challengeRecentlyJoined.challengeRewards[0]}
+                />
             </View>
 
             {/********************/}
