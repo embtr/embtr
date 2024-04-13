@@ -54,7 +54,6 @@ export const ChallengeRecentlyJoinedDetails = ({
                     style={{
                         backgroundColor: '#515151',
                         paddingVertical: 8,
-                        paddingHorizontal: 12,
                         borderRadius: 10,
                     }}
                 >
@@ -66,9 +65,7 @@ export const ChallengeRecentlyJoinedDetails = ({
                             color: colors.text,
                             textAlign: 'center',
                         }}
-                    >
-                        +50 XP
-                    </Text>
+                    ></Text>
                 </View>
             </View>
             <View>
