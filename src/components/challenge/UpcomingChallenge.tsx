@@ -1,5 +1,12 @@
 import React from 'react';
-import { CARD_SHADOW, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import {
+    CARD_SHADOW,
+    PADDING_LARGE,
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+} from 'src/util/constants';
 import { View, Text, TouchableOpacity, Pressable } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
@@ -15,6 +22,7 @@ import { ChallengeSummary } from 'resources/types/dto/Challenge';
 import { ChallengeSummaryInteractableElementCustomHooks } from '../timeline/interactable/ChallengeSummaryInteractableElementCustomHooks';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
+import { HorizontalLine } from '../common/HorizontalLine';
 
 interface Props {
     challengeSummary: ChallengeSummary;
@@ -67,7 +75,6 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
 
     return (
         <Pressable
-            key={challengeSummary.id}
             onPress={() => {
                 if (!challengeSummary.id) {
                     return;
@@ -87,12 +94,12 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                 style={{
                     backgroundColor: colors.card_background,
                     width: '100%',
-                    height: 280,
                     borderRadius: 9,
+                    padding: PADDING_LARGE,
                 }}
             >
                 {/* TOP SECTION */}
-                <View style={{ padding: 10 }}>
+                <View>
                     {/* HEADER */}
                     <View>
                         <Text
@@ -100,8 +107,7 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                             style={{
                                 color: colors.text,
                                 fontFamily: POPPINS_MEDIUM,
-                                fontSize: 12,
-                                height: 20,
+                                fontSize: 16,
                             }}
                         >
                             {challengeSummary.name}
@@ -112,17 +118,15 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                                 style={{
                                     fontFamily: POPPINS_REGULAR,
                                     color: colors.secondary_text,
-                                    fontSize: 8,
+                                    fontSize: 12,
                                     bottom: 4,
                                 }}
                             >
                                 {participantCount} participant{participantCount === 1 ? '' : 's'} •{' '}
                                 <Text
                                     style={{
-                                        paddingTop: 2,
                                         fontFamily: POPPINS_REGULAR,
-                                        color: colors.tab_selected,
-                                        fontSize: 8,
+                                        color: colors.accent_color_light,
                                     }}
                                 >
                                     {ChallengeUtility.getDaysRemainingText(
@@ -131,16 +135,16 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                                     )}
                                 </Text>{' '}
                                 • {totalDays}
-                                {' days'}
+                                {' day challenge'}
                             </Text>
                         </View>
 
                         <Text
-                            numberOfLines={2}
                             style={{
                                 fontFamily: POPPINS_REGULAR,
                                 color: colors.text,
-                                fontSize: 10,
+                                fontSize: 11,
+                                paddingVertical: PADDING_LARGE,
                             }}
                         >
                             {challengeSummary.description}
@@ -153,24 +157,16 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                     style={{
                         flex: 1,
                         justifyContent: 'flex-end',
-                        bottom: 5,
                         alignContent: 'center',
                     }}
                 >
                     {/* Achievement */}
-                    <View
-                        style={{
-                            flexDirection: 'column',
-                            paddingLeft: 5,
-                            paddingBottom: 5,
-                        }}
-                    >
+                    <View>
                         <View>
                             <Text
                                 style={{
                                     color: colors.text,
                                     fontFamily: POPPINS_MEDIUM,
-                                    paddingTop: 15,
                                 }}
                             >
                                 Achievement
@@ -178,52 +174,48 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                         </View>
 
                         <View>
-                            <View style={{}}>
-                                {challengeSummary.challengeRewards &&
-                                    challengeSummary.challengeRewards.length > 0 && (
-                                        <ChallengeRewardView
-                                            reward={challengeSummary.challengeRewards[0]}
-                                        />
-                                    )}
-                            </View>
+                            {challengeSummary.challengeRewards &&
+                                challengeSummary.challengeRewards.length > 0 && (
+                                    <ChallengeRewardView
+                                        reward={challengeSummary.challengeRewards[0]}
+                                    />
+                                )}
                         </View>
                     </View>
-                    <View style={{ paddingTop: 7.5, paddingHorizontal: 5, paddingBottom: 15 }}>
-                        <View
-                            style={[
-                                {
-                                    borderRadius: 5,
-                                    borderColor: colors.toggle_background_unselected,
-                                    flexDirection: 'row',
-                                    padding: 7.5,
-                                    backgroundColor: colors.text_input_background_secondary,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                },
-                                CARD_SHADOW,
-                            ]}
+                    <View style={{ paddingVertical: PADDING_LARGE }}>
+                        <TouchableOpacity
+                            onPress={registerForChallenge}
+                            disabled={userIsAParticipant}
                         >
-                            <TouchableOpacity
-                                onPress={registerForChallenge}
-                                disabled={userIsAParticipant}
+                            <View
+                                style={[
+                                    {
+                                        backgroundColor: userIsAParticipant
+                                            ? colors.accent_color_light
+                                            : colors.accent_color,
+                                        borderRadius: 5,
+                                        paddingVertical: 6,
+                                        opacity: userIsAParticipant ? 0.5 : 1,
+                                    },
+                                    CARD_SHADOW,
+                                ]}
                             >
-                                <View style={{ flexDirection: 'row' }}>
-                                    <Text
-                                        style={{
-                                            fontFamily: POPPINS_MEDIUM,
-                                            color: colors.accent_color_light,
-                                            fontSize: 12,
-                                        }}
-                                    >
-                                        {userIsAParticipant
-                                            ? 'Challenge Accepted  ✅'
-                                            : 'Join Challenge'}
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                        fontFamily: POPPINS_SEMI_BOLD,
+                                        fontSize: 11,
+                                        color: colors.text,
+                                    }}
+                                >
+                                    {userIsAParticipant ? 'Challenge Accepted!' : 'Join Challenge'}
+                                </Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
 
+                    <HorizontalLine />
+                    <View style={{ paddingVertical: PADDING_SMALL }} />
                     <View style={{ paddingHorizontal: PADDING_SMALL }}>
                         <PostDetailsActionBar
                             interactableData={interactableData}

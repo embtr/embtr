@@ -25,7 +25,7 @@ export const ChallengeRewardView = ({ reward }: Props) => {
                     borderRadius: 5,
                     flexDirection: 'row',
                     padding: useNarrowView ? 7.5 : 15,
-                    backgroundColor: colors.text_input_background_secondary,
+                    backgroundColor: colors.widget_element_background,
                     alignItems: 'center',
                 },
                 CARD_SHADOW,

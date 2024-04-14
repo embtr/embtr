@@ -21,13 +21,6 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
 
     const percentProgess = '' + currentProgress + '%';
 
-    let color = colors.progress_bar_complete;
-    if (status === Constants.CompletionState.SKIPPED) {
-        color = colors.progress_bar_skipped;
-    } else if (status === Constants.CompletionState.FAILED) {
-        color = colors.progress_bar_failed;
-    }
-
     const progressPercent = currentProgress + '%';
 
     return (
@@ -38,7 +31,7 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
                     style={{
                         width: progressPercent,
                         height: 6,
-                        backgroundColor: color,
+                        backgroundColor: colors.secondary_accent_color,
                         borderRadius: 10,
                     }}
                 />
@@ -50,7 +43,7 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
                             fontFamily: 'Poppins_500Medium',
                             fontSize: 11,
                             textAlign: 'center',
-                            color,
+                            color: colors.secondary_accent_color,
                         }}
                     >
                         {' '}

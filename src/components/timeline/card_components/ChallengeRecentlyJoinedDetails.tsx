@@ -68,6 +68,7 @@ export const ChallengeRecentlyJoinedDetails = ({
                                         : colors.accent_color,
                                     borderRadius: 5,
                                     paddingVertical: 6,
+                                    opacity: userIsAParticipant ? 0.5 : 1,
                                 },
                                 CARD_SHADOW,
                             ]}
@@ -80,7 +81,7 @@ export const ChallengeRecentlyJoinedDetails = ({
                                     color: colors.text,
                                 }}
                             >
-                                {userIsAParticipant ? 'Joined!' : 'Join Challenge'}
+                                {userIsAParticipant ? 'Challenge Accepted!' : 'Join Challenge'}
                             </Text>
                         </View>
                     </TouchableOpacity>

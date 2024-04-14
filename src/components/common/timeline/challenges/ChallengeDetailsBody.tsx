@@ -1,7 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, PADDING_LARGE, PADDING_SMALL, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import {
+    CARD_SHADOW,
+    PADDING_LARGE,
+    PADDING_SMALL,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+} from 'src/util/constants';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 import { ChallengeDetails } from 'resources/types/dto/Challenge';
 import { ChallengeRecentlyJoinedDetails } from 'src/components/timeline/card_components/ChallengeRecentlyJoinedDetails';
@@ -39,6 +45,21 @@ export const ChallengeDetailsBody = ({ challengeDetails, interactableData }: Pro
                     }}
                 >
                     {challengeDetails.name}
+                </Text>
+            </View>
+
+            {/**********/}
+            {/*  BODY  */}
+            {/**********/}
+            <View style={{ paddingTop: PADDING_SMALL }}>
+                <Text
+                    style={{
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 13,
+                        color: colors.text,
+                    }}
+                >
+                    {challengeDetails.description}
                 </Text>
             </View>
 

@@ -35,7 +35,7 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
         type === TimelineElementType.USER_POST
             ? colors.timeline_label_user_post
             : type === TimelineElementType.PLANNED_DAY_RESULT
-                ? colors.timeline_label_daily_results
+                ? colors.accent_color_light
                 : colors.secondary_accent_color;
 
     return (

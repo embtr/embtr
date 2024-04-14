@@ -70,26 +70,11 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
             )}
             <View style={{ flexDirection: 'row' }}>
                 <View style={{ flex: 1 }}>
-                    <View>
-                        <Text
-                            numberOfLines={1}
-                            style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 12 }}
-                        >
-                            {challenge.name}
-                        </Text>
-                    </View>
-
                     <Text
-                        numberOfLines={2}
-                        style={{
-                            height: 30,
-                            bottom: isAndroidDevice() ? 3 : undefined,
-                            color: colors.text,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 9,
-                        }}
+                        numberOfLines={1}
+                        style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 14 }}
                     >
-                        {description}
+                        {challenge.name}
                     </Text>
                 </View>
                 <View style={{ paddingTop: 0 }}>
@@ -109,7 +94,21 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
                     fontSize: 10,
                 }}
             >
-                {progressRemaining} • {daysLeft}
+                <Text
+                    style={{
+                        color: colors.secondary_accent_color,
+                    }}
+                >
+                    {progressRemaining}
+                </Text>{' '}
+                •{' '}
+                <Text
+                    style={{
+                        color: colors.secondary_text,
+                    }}
+                >
+                    {daysLeft}
+                </Text>
             </Text>
             <View style={{ paddingBottom: 5, paddingTop: 1 }}>
                 <ProgressBar

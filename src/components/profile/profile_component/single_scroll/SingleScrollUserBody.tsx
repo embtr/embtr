@@ -30,9 +30,7 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
                     <HabitStreakWidget user={user} />
                 </View>
 
-                <View style={{ paddingTop: PADDING_LARGE }}>
-                    <ActiveChallengesWidget userId={user.id ?? 0} />
-                </View>
+                <ActiveChallengesWidget userId={user.id ?? 0} />
 
                 <View style={{ paddingTop: PADDING_LARGE }}>
                     <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />

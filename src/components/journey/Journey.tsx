@@ -2,7 +2,6 @@ import React from 'react';
 import { View } from 'react-native';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { Screen } from '../common/Screen';
-import { Banner } from '../common/Banner';
 import { PADDING_LARGE } from 'src/util/constants';
 import { HabitStreakWidget } from '../widgets/habit_streak/HabitStreakWidget';
 import { NewUserChecklistWidget } from '../widgets/new_user_checklist/NewUserChecklistWidget';
@@ -10,6 +9,7 @@ import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { HabitStreakController } from 'src/controller/habit_streak/HabitStreakController';
 import { User } from 'resources/schema';
 import { NewUserCustomHooks } from 'src/controller/new_user/NewUserController';
+import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 
 const onRefresh = (user: User, setRefreshing: Function) => {
     setRefreshing(true);
@@ -62,6 +62,8 @@ const JourneyImpl = ({ hasFinishedChecklist }: Props) => {
                         ) : (
                             <HabitStreakWidget user={currentUser.data} />
                         )}
+
+                        <ActiveChallengesWidget userId={currentUser.data.id ?? 0} />
                     </View>
                 </ScrollView>
             </View>

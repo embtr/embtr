@@ -8,6 +8,7 @@ import { Screen } from '../common/Screen';
 import { UpcomingChallenges } from '../challenge/UpcomingChallenges';
 import { Journey } from './Journey';
 import { Ionicons } from '@expo/vector-icons';
+import { UpcomingChallenges2 } from '../challenge/UpcomingChallenges2';
 
 export const HabitJourney = () => {
     const { colors } = useTheme();
@@ -25,7 +26,7 @@ export const HabitJourney = () => {
             case 'Challenges':
                 return (
                     <View style={{ height: '100%' }}>
-                        <UpcomingChallenges />
+                        <UpcomingChallenges2 />
                     </View>
                 );
 

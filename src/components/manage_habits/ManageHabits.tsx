@@ -3,7 +3,7 @@ import { HabitSummaries } from 'src/components/manage_habits/HabitSummaries';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { View, Text } from 'react-native';
-import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useTheme } from '../theme/ThemeProvider';
@@ -58,14 +58,17 @@ export const ManageHabits = () => {
 
                 <TouchableOpacity onPress={handleNavigation}>
                     <View
-                        style={{
-                            height: 50 - PADDING_LARGE,
-                            marginHorizontal: PADDING_LARGE,
-                            marginTop: PADDING_LARGE,
-                            backgroundColor: colors.accent_color,
-                            justifyContent: 'center',
-                            borderRadius: 3,
-                        }}
+                        style={[
+                            {
+                                height: 50 - PADDING_LARGE,
+                                marginHorizontal: PADDING_LARGE,
+                                marginTop: PADDING_LARGE,
+                                backgroundColor: colors.accent_color,
+                                justifyContent: 'center',
+                                borderRadius: 3,
+                            },
+                            CARD_SHADOW,
+                        ]}
                     >
                         <Text
                             style={{
