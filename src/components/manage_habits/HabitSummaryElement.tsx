@@ -7,30 +7,11 @@ import { TimesOfDayCustomHooks } from 'src/controller/time_of_day/TimeOfDayContr
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { UnitUtility } from 'src/util/UnitUtility';
 import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
-import { differenceInDays } from 'date-fns';
 import { Constants } from 'resources/types/constants/constants';
+import { ChallengeLabel } from '../common/comments/general/ChallengeLabel';
 
 interface Props {
     scheduledHabit: ScheduledHabit;
-}
-
-function getExpirationMessage(startDate: Date, endDate: Date, isChallenge: boolean) {
-    const object = isChallenge ? 'Challenge' : 'Habit';
-
-    // Calculate the difference in days
-    const diffInDays = differenceInDays(endDate, startDate);
-
-    if (diffInDays === 0) {
-        return `${object} ends today`;
-    } else if (diffInDays === 1) {
-        return `${object} ends tomorrow`;
-    } else if (diffInDays < 10) {
-        return `${object} ends in ${diffInDays} days`;
-    } else if (diffInDays >= 10) {
-        return `${object}`;
-    } else {
-        return '${object} ended';
-    }
 }
 
 export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
@@ -49,15 +30,8 @@ export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
     const prettyUnits = UnitUtility.getReadableUnit(unit, quantity);
 
     const endDate = scheduledHabit.endDate;
-    const expires =
-        endDate &&
-        getExpirationMessage(
-            new Date(),
-            endDate,
-            scheduledHabit.task?.type === Constants.TaskType.CHALLENGE
-        );
-
     let habitView: JSX.Element = <View />;
+
     if (endDate) {
         habitView = (
             <View
@@ -68,15 +42,7 @@ export const HabitSummaryElement = ({ scheduledHabit }: Props) => {
                     left: PADDING_SMALL,
                 }}
             >
-                <Text
-                    style={{
-                        color: colors.error,
-                        fontFamily: POPPINS_REGULAR,
-                        fontSize: 10,
-                    }}
-                >
-                    {expires}
-                </Text>
+                <ChallengeLabel />
             </View>
         );
     }

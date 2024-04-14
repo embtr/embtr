@@ -7,6 +7,7 @@ import { OptimalImageData } from '../images/OptimalImage';
 import { PlannedTask } from 'resources/schema';
 import { DailyResultCardElementTimeOfDay } from './DailyResultCardElementTimeOfDay';
 import { PlannedTaskUtil } from 'src/util/PlannedTaskUtil';
+import { ChallengeLabel } from '../comments/general/ChallengeLabel';
 
 interface Props {
     plannedTasks: PlannedTask[];
@@ -39,37 +40,45 @@ export const DailyResultCardElement = ({ plannedTasks }: Props) => {
                         backgroundColor: '#404040',
                         padding: 4,
                         borderRadius: 9,
+                        borderWidth: plannedTask.scheduledHabit?.task?.type === 'CHALLENGE' ? 1 : 0,
+                        borderColor:
+                            plannedTask.scheduledHabit?.task?.type === 'CHALLENGE'
+                                ? colors.secondary_accent_color
+                                : undefined,
                     }}
                 >
                     <HabitIcon
                         optimalImageData={optimalImageData}
                         size={30}
                         color={colors.tab_selected}
+                        isChallenge={plannedTask.scheduledHabit?.task?.type === 'CHALLENGE'}
                     />
                 </View>
             )}
 
-            <View style={{ paddingLeft: PADDING_LARGE / 2 }}>
-                {/* TITLE */}
-                <Text
-                    style={{
-                        color: colors.goal_primary_font,
-                        fontFamily: POPPINS_SEMI_BOLD,
-                        fontSize: 13,
-                        top: -2,
-                    }}
-                >
-                    {plannedTask?.title}
-                </Text>
+            <View style={{ flexDirection: 'row', flex: 1, paddingLeft: PADDING_LARGE / 2 }}>
+                <View style={{ flex: 1 }}>
+                    {/* TITLE */}
+                    <Text
+                        style={{
+                            color: colors.goal_primary_font,
+                            fontFamily: POPPINS_SEMI_BOLD,
+                            fontSize: 13,
+                            top: -2,
+                        }}
+                    >
+                        {plannedTask?.title}
+                    </Text>
 
-                {/* COMPLETION */}
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        paddingBottom: PADDING_SMALL / 4,
-                    }}
-                >
-                    {views}
+                    {/* COMPLETION */}
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            paddingBottom: PADDING_SMALL / 4,
+                        }}
+                    >
+                        {views}
+                    </View>
                 </View>
             </View>
         </View>

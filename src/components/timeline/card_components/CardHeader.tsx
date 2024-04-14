@@ -36,7 +36,7 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
             ? colors.timeline_label_user_post
             : type === TimelineElementType.PLANNED_DAY_RESULT
                 ? colors.timeline_label_daily_results
-                : colors.timeline_label_challenge;
+                : colors.secondary_accent_color;
 
     return (
         <View style={{ flexDirection: 'row' }}>

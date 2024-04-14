@@ -1,7 +1,12 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import {
+    PADDING_LARGE,
+    PADDING_SMALL,
+    POPPINS_REGULAR,
+    POPPINS_SEMI_BOLD,
+} from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
 import { ActiveChallengeElement } from './ActiveChallengeElement';
 import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';
@@ -39,13 +44,15 @@ export const ActiveChallengesWidget = ({ userId }: Props) => {
                 </View>
             </View>
 
-            <View style={{ paddingTop: 5, paddingBottom: 3 }}>
-                {activeParticipation.data?.map((challengeParticipant) => (
-                    <View key={challengeParticipant.id} style={{ paddingRight: 7.5 }}>
-                        <ActiveChallengeElement challengeParticipant={challengeParticipant} />
-                    </View>
-                ))}
-            </View>
+            <View style={{ height: PADDING_SMALL }} />
+
+            {activeParticipation.data?.map((challengeParticipant) => (
+                <View key={challengeParticipant.id} style={{ paddingRight: 7.5 }}>
+                    <ActiveChallengeElement challengeParticipant={challengeParticipant} />
+                </View>
+            ))}
+
+            <View style={{ height: PADDING_SMALL / 2 }} />
         </WidgetBase>
     );
 };

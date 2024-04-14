@@ -3,10 +3,11 @@ import { View, Text } from 'react-native';
 import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Banner } from '../common/Banner';
-import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { Screen } from '../common/Screen';
 import { UpcomingChallenges } from '../challenge/UpcomingChallenges';
 import { Journey } from './Journey';
+import { Ionicons } from '@expo/vector-icons';
 
 export const HabitJourney = () => {
     const { colors } = useTheme();
@@ -82,16 +83,39 @@ export const HabitJourney = () => {
                                 }}
                                 renderLabel={({ focused, route }) => {
                                     return (
-                                        <Text
+                                        <View
                                             style={{
-                                                fontSize: 13,
-                                                color: colors.planning_focused_text,
-                                                fontFamily: POPPINS_MEDIUM,
-                                                opacity: focused ? 1.0 : 0.35,
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
                                             }}
                                         >
-                                            {route.title}
-                                        </Text>
+                                            {route.title === 'Challenges' && (
+                                                <View
+                                                    style={{
+                                                        bottom: 2,
+                                                        paddingRight: PADDING_SMALL / 2,
+                                                        opacity: focused ? 1.0 : 0.35,
+                                                    }}
+                                                >
+                                                    <Ionicons
+                                                        name={'flash'}
+                                                        size={12}
+                                                        color={colors.secondary_accent_color}
+                                                    />
+                                                </View>
+                                            )}
+                                            <Text
+                                                style={{
+                                                    fontSize: 13,
+                                                    color: colors.planning_focused_text,
+                                                    fontFamily: POPPINS_MEDIUM,
+                                                    opacity: focused ? 1.0 : 0.35,
+                                                }}
+                                            >
+                                                {route.title}
+                                            </Text>
+                                        </View>
                                     );
                                 }}
                                 style={{

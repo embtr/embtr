@@ -28,8 +28,21 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
         color = colors.progress_bar_failed;
     }
 
+    const progressPercent = currentProgress + '%';
+
     return (
         <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 5, backgroundColor: colors.progress_bar_color, borderRadius: 10 }}>
+                <View
+                    // @ts-ignore
+                    style={{
+                        width: progressPercent,
+                        height: 6,
+                        backgroundColor: color,
+                        borderRadius: 10,
+                    }}
+                />
+            </View>
             {showPercent && (
                 <View style={{ flex: 1 }}>
                     <Text

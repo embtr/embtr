@@ -49,27 +49,6 @@ export const ChallengeRecentlyJoinedDetails = ({
                         </Text>
                     </View>
                 </View>
-
-                <View
-                    style={{
-                        backgroundColor: '#515151',
-                        paddingVertical: 8,
-                        paddingHorizontal: 12,
-                        borderRadius: 10,
-                    }}
-                >
-                    <Text
-                        style={{
-                            includeFontPadding: false,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 12,
-                            color: colors.text,
-                            textAlign: 'center',
-                        }}
-                    >
-                        +50 XP
-                    </Text>
-                </View>
             </View>
             <View>
                 <View style={{ paddingTop: 12 }}>
