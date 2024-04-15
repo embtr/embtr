@@ -1,7 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
-import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { ReactQueryStaleTimes } from 'src/util/constants';
-import { getDateFormatted, getDaysOld } from 'src/util/DateUtility';
+import { getDateFormatted } from 'src/util/DateUtility';
 import { PlannedTaskModel } from './PlannedTaskController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { PLANNED_DAY_RESULT, PLANNED_DAY } from 'resources/endpoints';
@@ -297,6 +296,7 @@ class PlannedDayController {
 
     public static async invalidatePlannedDay(userId: number, dayKey: string) {
         reactQueryClient.invalidateQueries(['plannedDay', userId, dayKey]);
+        reactQueryClient.invalidateQueries(['plannedDayIsComplete', dayKey]);
     }
 }
 
@@ -345,6 +345,21 @@ export namespace PlannedDayCustomHooks {
         const plannedDay = PlannedDayCustomHooks.usePlannedDay(user.id ?? 0, todayDayKey);
 
         return { todayDayKey, plannedDay };
+    };
+
+    export const usePlannedDayIsComplete = (dayKey: string) => {
+        const currentUser = useAppSelector(getCurrentUser);
+        const userId = currentUser.id ?? 0;
+
+        const { data } = useQuery({
+            queryKey: ['plannedDayIsComplete', userId, dayKey],
+            queryFn: () => PlannedDayController.isComplete(userId, dayKey),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            enabled:
+                dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
+        });
+
+        return data ?? false;
     };
 }
 

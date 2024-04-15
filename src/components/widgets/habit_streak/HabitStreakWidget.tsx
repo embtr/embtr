@@ -46,7 +46,7 @@ export const HabitStreakWidget = ({ user }: Props) => {
 
         views.push(
             <View
-                key={i}
+                key={historyElement.dayKey + historyElement.result}
                 style={{
                     backgroundColor:
                         historyElement.result === Constants.CompletionState.COMPLETE
@@ -61,7 +61,7 @@ export const HabitStreakWidget = ({ user }: Props) => {
             />
         );
 
-        views.push(<View style={{ flex: 1 }} />);
+        views.push(<View key={'placeholder' + i} style={{ flex: 1 }} />);
     }
     views.pop();
 

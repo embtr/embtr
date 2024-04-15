@@ -1,3 +1,5 @@
+import { getDayKeyFromDate } from 'src/controller/planning/PlannedDayController';
+
 export interface MonthPickerElementData {
     monthString: string;
     month: number;
@@ -35,6 +37,7 @@ export const generateDaysOfMonth = (month: MonthPickerElementData): DayPickerEle
         const dayData = DAYS[date.getDay()];
 
         const day: DayPickerElementData = {
+            dayKey: getDayKeyFromDate(date),
             dayShort: dayData.dayShort,
             dayFull: dayData.dayFull,
             displayNumber: date.getDate(),
@@ -230,6 +233,7 @@ const MONTHS: {
 };
 
 export interface DayPickerElementData {
+    dayKey: string;
     dayFull: string;
     dayShort: string;
     displayNumber: number;
