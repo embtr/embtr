@@ -296,7 +296,7 @@ class PlannedDayController {
 
     public static async invalidatePlannedDay(userId: number, dayKey: string) {
         reactQueryClient.invalidateQueries(['plannedDay', userId, dayKey]);
-        reactQueryClient.invalidateQueries(['plannedDayIsComplete', dayKey]);
+        reactQueryClient.invalidateQueries(['plannedDayIsComplete', userId, dayKey]);
     }
 }
 
