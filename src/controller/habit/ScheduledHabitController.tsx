@@ -136,7 +136,6 @@ export class ScheduledHabitController {
     }
 
     public static async invalidateActiveScheduledHabits() {
-        console.log('invalidateActiveScheduledHabits');
         await reactQueryClient.invalidateQueries(['activeScheduledHabits']);
     }
 

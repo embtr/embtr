@@ -20,6 +20,7 @@ export const ScheduledHabitTimeOfDay = () => {
         setTimesOfDayEnabled: setTimeOfDayEnabled,
         timesOfDay,
         editMode,
+        isChallenge,
     } = useCreateEditScheduleHabit();
     const [timeOfDayViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
 
@@ -34,6 +35,7 @@ export const ScheduledHabitTimeOfDay = () => {
     }, [timeOfDayEnabled]);
 
     const useSingleSelect =
+        isChallenge ||
         CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT === editMode ||
         CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT === editMode;
 

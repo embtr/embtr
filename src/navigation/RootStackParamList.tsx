@@ -25,7 +25,7 @@ export type MasterScreens = {
     GoalDetails: { uid: string; id: string; source: string };
     UserPosts: { userId: number };
     DailyResults: { userId: number };
-    ChallengeDetails: { id: number };
+    ChallengeDetailsView: { id: number };
     Today: undefined;
     PlanDay: { id: string };
     WidgetMarketplace: undefined;
@@ -121,5 +121,5 @@ export namespace Routes {
     export const REGISTER_MODAL = 'RegisterModal';
     export const JOURNEY = 'Journey';
     export const USER_NOTIFICATIONS = 'UserNotifications';
-    export const CHALLENGE_DETAILS = 'ChallengeDetails';
+    export const CHALLENGE_DETAILS_VIEW = 'ChallengeDetailsView';
 }

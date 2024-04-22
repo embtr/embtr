@@ -8,10 +8,10 @@ import { Banner } from '../../Banner';
 import ScrollableTextInputBox from '../../textbox/ScrollableTextInputBox';
 import { CommentsScrollView } from '../../comments/CommentsScrollView';
 import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
-import { ChallengeDetailsInteractableElementCustomHooks } from 'src/components/timeline/interactable/ChallengeDetailsInteractableElementCustomHooks';
 import { ChallengeDetails } from 'resources/types/dto/Challenge';
 import { ChallengeDetailsBody } from './ChallengeDetailsBody';
-import { PADDING_MEDIUM, PADDING_SMALL } from 'src/util/constants';
+import { PADDING_MEDIUM } from 'src/util/constants';
+import { ChallengeDetailsInteractableElementCustomHooks } from 'src/components/timeline/interactable/ChallengeDetailsInteractableElementCustomHooks';
 
 export interface Props {
     challengeDetails: ChallengeDetails;
@@ -62,8 +62,8 @@ const ChallengeDetailsImpl = ({ challengeDetails }: Props) => {
     );
 };
 
-export const ChallengeDetails1 = () => {
-    const route = useEmbtrRoute(Routes.CHALLENGE_DETAILS);
+export const ChallengeDetailsView = () => {
+    const route = useEmbtrRoute(Routes.CHALLENGE_DETAILS_VIEW);
     const challengeDetails = ChallengeCustomHooks.useChallengeDetails(route.params.id);
 
     if (!challengeDetails.data) {

@@ -30,6 +30,7 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
         }, [comment])
     );
 
+    console.log('CommentBoxComment.tsx:', comment.createdAt);
     const time = formatDistance(comment.createdAt ?? new Date(), new Date(), { addSuffix: true });
     return (
         <View

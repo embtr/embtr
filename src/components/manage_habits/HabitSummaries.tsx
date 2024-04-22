@@ -1,10 +1,10 @@
 import { FlatList, Pressable, View } from 'react-native';
-import { HabitSummaryElement } from 'src/components/manage_habits/HabitSummaryElement';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import { PADDING_MEDIUM } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { ScheduledHabit } from 'resources/schema';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
+import { HabitSummaryElementImproved } from './HabitSummaryElementImproved';
 
 interface Props {
     scheduledHabits: ScheduledHabit[];
@@ -16,7 +16,7 @@ export const HabitSummaries = ({ scheduledHabits }: Props) => {
     const renderItem = ({ item, index }: { item: ScheduledHabit; index: number }) => {
         return (
             <Pressable
-                style={{ paddingTop: index === 0 ? 0 : PADDING_MEDIUM }}
+                style={{ paddingTop: index === 0 ? 0 : PADDING_LARGE }}
                 onPress={() => {
                     if (!item.id) {
                         return;
@@ -30,7 +30,7 @@ export const HabitSummaries = ({ scheduledHabits }: Props) => {
                     });
                 }}
             >
-                <HabitSummaryElement scheduledHabit={item} />
+                <HabitSummaryElementImproved scheduledHabit={item} />
             </Pressable>
         );
     };

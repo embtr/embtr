@@ -27,7 +27,7 @@ export const ChallengeRecentlyJoinedTimelineElement = ({ challengeRecentlyJoined
             challengeRecentlyJoined,
             interactableData
         );
-        navigation.navigate(Routes.CHALLENGE_DETAILS, { id: challengeRecentlyJoined.id });
+        navigation.navigate(Routes.CHALLENGE_DETAILS_VIEW, { id: challengeRecentlyJoined.id });
     };
 
     return (

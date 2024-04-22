@@ -10,7 +10,6 @@ import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/Global
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { getWindowWidth } from 'src/util/GeneralUtility';
 import { isNarrowDevice } from 'src/util/DeviceUtil';
 
 interface Props {
@@ -106,16 +105,16 @@ export const Banner = ({
         leftOnClick
             ? leftOnClick()
             : leftRoute === 'BACK'
-              ? navigation.goBack()
-              : navigation.navigate(leftRoute as keyof RootStackParamList);
+                ? navigation.goBack()
+                : navigation.navigate(leftRoute as keyof RootStackParamList);
     };
 
     const rightOnPress = () => {
         rightOnClick
             ? rightOnClick()
             : rightRoute === 'BACK'
-              ? navigation.goBack()
-              : navigation.navigate(leftRoute as keyof RootStackParamList);
+                ? navigation.goBack()
+                : navigation.navigate(leftRoute as keyof RootStackParamList);
     };
 
     return (
@@ -276,8 +275,8 @@ export const Banner = ({
                                         rightEnabled === false
                                             ? undefined
                                             : () => {
-                                                  rightOnPress();
-                                              }
+                                                rightOnPress();
+                                            }
                                     }
                                     style={{
                                         textAlign: 'center',

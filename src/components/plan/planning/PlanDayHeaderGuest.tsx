@@ -7,25 +7,13 @@ import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 
 interface Styles {
-    containerShared: ViewStyle;
     containerUnshared: ViewStyle;
-    topText: TextStyle;
     bottomTextContainer: ViewStyle;
     bottomText: TextStyle;
 }
 
 const generateStyles = (colors: any): Styles => {
     return {
-        containerShared: {
-            height: 60,
-            borderColor: '#404040',
-            backgroundColor: '#343434',
-            borderWidth: 1,
-            justifyContent: 'center',
-            alignContent: 'center',
-            borderRadius: 5,
-            marginBottom: PADDING_LARGE,
-        },
         containerUnshared: {
             borderColor: '#404040',
             backgroundColor: '#343434',
@@ -35,13 +23,6 @@ const generateStyles = (colors: any): Styles => {
             borderRadius: 5,
             paddingVertical: PADDING_LARGE,
             marginBottom: PADDING_LARGE,
-        },
-        topText: {
-            flex: 1,
-            top: 2,
-            color: colors.secondary_text,
-            fontFamily: POPPINS_REGULAR,
-            textAlign: 'center',
         },
         bottomTextContainer: {
             flex: 1,
@@ -94,8 +75,29 @@ export const PlanDayHeaderGuest = ({
     if (allHabitsAreComplete) {
         if (plannedDayResultsAreShared) {
             header = (
-                <View style={styles.containerShared}>
-                    <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
+                <View
+                    style={{
+                        height: 60,
+                        borderColor: '#404040',
+                        backgroundColor: '#343434',
+                        borderWidth: 1,
+                        justifyContent: 'center',
+                        alignContent: 'center',
+                        borderRadius: 5,
+                        marginBottom: PADDING_LARGE,
+                    }}
+                >
+                    <Text
+                        style={{
+                            flex: 1,
+                            top: 2,
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            textAlign: 'center',
+                        }}
+                    >
+                        All of today's habits are complete 🎉
+                    </Text>
                     {plannedDayResultsAreShared && (
                         <View style={styles.bottomTextContainer}>
                             <Text onPress={onNavigateToDailyResult} style={styles.bottomText}>
@@ -108,7 +110,17 @@ export const PlanDayHeaderGuest = ({
         } else {
             header = (
                 <View style={styles.containerUnshared}>
-                    <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
+                    <Text
+                        style={{
+                            flex: 1,
+                            top: 2,
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_REGULAR,
+                            textAlign: 'center',
+                        }}
+                    >
+                        All of today's habits are complete 🎉
+                    </Text>
                 </View>
             );
         }

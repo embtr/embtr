@@ -21,11 +21,7 @@ export const ScheduledHabitDetails = () => {
     }, [detailsEnabled]);
 
     return (
-        <View style={{
-            opacity: isChallenge ? .5 : 1,
-            pointerEvents: isChallenge ? 'none' : undefined
-
-        }}>
+        <View style={{}}>
             <View
                 style={{
                     flexDirection: 'row',
@@ -45,25 +41,16 @@ export const ScheduledHabitDetails = () => {
                     >
                         Details
                     </Text>
-
-                    {isChallenge && <Text
-                        onPress={() => {
-                            Keyboard.dismiss();
-                        }}
-                        style={{
-                            color: colors.progress_bar_failed,
-                            fontFamily: POPPINS_REGULAR,
-                            fontSize: 10,
-                            alignSelf: 'flex-end',
-                            bottom: PADDING_SMALL / 2,
-                            paddingLeft: PADDING_SMALL
-                        }}
-                    >
-                        challenge details cannot be modified
-                    </Text>}
                 </View>
 
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                    style={{
+                        opacity: isChallenge ? 0.5 : 1,
+                        pointerEvents: isChallenge ? 'none' : undefined,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                    }}
+                >
                     <Switch
                         onValueChange={() => {
                             setDetailsEnabled(!detailsEnabled);
@@ -87,12 +74,20 @@ export const ScheduledHabitDetails = () => {
                     overflow: 'hidden',
                 }}
             >
-                <View style={{ flex: 1 }}>
-                    <ScheduledHabitQuantityInput />
-                </View>
+                <View
+                    style={{
+                        flex: 1,
+                        opacity: isChallenge ? 0.5 : 1,
+                        pointerEvents: isChallenge ? 'none' : undefined,
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <ScheduledHabitQuantityInput />
+                    </View>
 
-                <View style={{ flex: 1, paddingTop: PADDING_LARGE }}>
-                    <ScheduledHabitUnitPicker />
+                    <View style={{ flex: 1, paddingTop: PADDING_LARGE }}>
+                        <ScheduledHabitUnitPicker />
+                    </View>
                 </View>
             </Animated.View>
         </View>

@@ -5,37 +5,45 @@ import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditSchedul
 
 export const ScheduleHabitDescription = () => {
     const { colors } = useTheme();
-    const { description, setDescription } = useCreateEditScheduleHabit();
+    const { description, setDescription, isChallenge } = useCreateEditScheduleHabit();
 
     return (
-        <View style={{ paddingBottom: PADDING_LARGE }}>
-            <Text
-                style={{
-                    color: colors.text,
-                    fontFamily: POPPINS_MEDIUM,
-                    fontSize: 16,
-                }}
-            >
-                Notes
-            </Text>
-
-            <View style={{ paddingTop: PADDING_LARGE / 4 }}>
-                <TextInput
-                    textAlignVertical="top"
+        <View style={{}}>
+            <View style={{ paddingBottom: PADDING_LARGE }}>
+                <Text
                     style={{
-                        height: 150,
-                        borderRadius: 12,
-                        padding: PADDING_LARGE,
-                        backgroundColor: colors.background_light,
                         color: colors.text,
-                        fontFamily: POPPINS_REGULAR,
+                        fontFamily: POPPINS_MEDIUM,
+                        fontSize: 16,
                     }}
-                    multiline={true}
-                    placeholder={'Enter some specifics about this habit.'}
-                    placeholderTextColor={colors.secondary_text}
-                    onChangeText={setDescription}
-                    value={description}
-                />
+                >
+                    Notes
+                </Text>
+
+                <View
+                    style={{
+                        opacity: isChallenge ? 0.5 : 1,
+                        pointerEvents: isChallenge ? 'none' : undefined,
+                        paddingTop: PADDING_LARGE / 4,
+                    }}
+                >
+                    <TextInput
+                        textAlignVertical="top"
+                        style={{
+                            height: 150,
+                            borderRadius: 12,
+                            padding: PADDING_LARGE,
+                            backgroundColor: colors.background_light,
+                            color: colors.text,
+                            fontFamily: POPPINS_REGULAR,
+                        }}
+                        multiline={true}
+                        placeholder={'Enter some specifics about this habit.'}
+                        placeholderTextColor={colors.secondary_text}
+                        onChangeText={setDescription}
+                        value={description}
+                    />
+                </View>
             </View>
         </View>
     );

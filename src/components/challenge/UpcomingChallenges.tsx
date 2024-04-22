@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, RefreshControl } from 'react-native';
+import { View } from 'react-native';
 import { UpcomingChallenge } from 'src/components/challenge/UpcomingChallenge';
 import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';
-import { ScrollView } from 'react-native-gesture-handler';
+import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
+import { PADDING_LARGE } from 'src/util/constants';
+import { useTheme } from '../theme/ThemeProvider';
 
 export const UpcomingChallenges = () => {
+    const colors = useTheme().colors;
     const [refreshing, setRefreshing] = React.useState(false);
 
     const challengeSummaries = ChallengeCustomHooks.useAllChallengeSummaries();
@@ -17,41 +20,37 @@ export const UpcomingChallenges = () => {
 
     const challengeElements: JSX.Element[] = [];
     for (const challengeSummary of challengeSummaries.data ?? []) {
-        const challengeElement = <UpcomingChallenge challengeSummary={challengeSummary} />;
+        const challengeElement = (
+            <UpcomingChallenge key={challengeSummary.id} challengeSummary={challengeSummary} />
+        );
         challengeElements.push(challengeElement);
     }
 
-    const pairViews: JSX.Element[] = [];
-    for (let i = 0; i < challengeElements.length; i += 2) {
-        const pairView = (
-            <View
-                key={i}
-                style={{
-                    flexDirection: 'row',
-                    width: '100%',
-                    marginBottom: 10, // Adjust the margin between rows as needed
-                }}
-            >
-                <View style={{ flex: 1, paddingLeft: 5, paddingRight: 3.5 }}>
-                    {challengeElements[i]}
-                </View>
-                <View style={{ flex: 1, paddingLeft: 3.5, paddingRight: 5 }}>
-                    {challengeElements[i + 1]}
-                </View>
+    const challengeViews: JSX.Element[] = [];
+    for (let i = 0; i < challengeElements.length; i++) {
+        challengeViews.push(
+            <View style={{ flex: 1, padding: PADDING_LARGE, paddingTop: 0 }}>
+                {challengeElements[i]}
             </View>
         );
-
-        pairViews.push(pairView);
     }
 
     return (
         <View style={{ flex: 1 }}>
             <ScrollView
-                style={{ height: '100%' }}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1 }}
+                refreshControl={
+                    <RefreshControl
+                        colors={[colors.accent_color_light]}
+                        progressBackgroundColor={'white'}
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
             >
-                <View style={{ height: 5 }} />
-                {pairViews}
+                <View style={{ height: PADDING_LARGE }} />
+                {challengeViews}
             </ScrollView>
         </View>
     );

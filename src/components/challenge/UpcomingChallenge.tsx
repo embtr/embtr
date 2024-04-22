@@ -23,6 +23,7 @@ import { ChallengeSummaryInteractableElementCustomHooks } from '../timeline/inte
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { HorizontalLine } from '../common/HorizontalLine';
+import { TimelineController } from 'src/controller/timeline/TimelineController';
 
 interface Props {
     challengeSummary: ChallengeSummary;
@@ -32,16 +33,13 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
     const { colors } = useTheme();
     const navigation = useEmbtrNavigation();
 
-    const [userIsAParticipant, setUsetIsAParticipant] = React.useState(
-        challengeSummary.isParticipant
-    );
-    const [participantCount, setParticipantCount] = React.useState(
-        challengeSummary.participantCount
-    );
     const currentlySelectedDay = useAppSelector(getSelectedDayKey);
 
     const interactableData =
         ChallengeSummaryInteractableElementCustomHooks.useInteractableElement(challengeSummary);
+
+    const participantCount = challengeSummary.participantCount ?? 0;
+    const userIsAParticipant = challengeSummary.isParticipant;
 
     const daysUntilStart = Math.floor(
         ((challengeSummary.start ?? new Date()).getTime() - new Date().getTime()) / 86400000
@@ -58,19 +56,20 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
     );
 
     const registerForChallenge = async () => {
-        if (!challengeSummary.id) {
+        const currentUserId = await getUserIdFromToken();
+        if (!challengeSummary.id || !currentUserId) {
             return;
         }
 
-        const currentUserId = await getUserIdFromToken();
         await ChallengeController.register(challengeSummary.id);
+        ChallengeController.invalidateAllChallengeSummaries();
+        ChallengeController.invalidateActiveParticipation(currentUserId);
         ScheduledHabitController.invalidateActiveScheduledHabits();
+        TimelineController.invalidateCache();
+
         if (currentUserId && currentlySelectedDay) {
             PlannedDayController.invalidatePlannedDay(currentUserId, currentlySelectedDay);
         }
-
-        setUsetIsAParticipant(true);
-        setParticipantCount(participantCount + 1);
     };
 
     return (
@@ -84,7 +83,7 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                     challengeSummary,
                     interactableData
                 );
-                navigation.navigate(Routes.CHALLENGE_DETAILS, { id: challengeSummary.id });
+                navigation.navigate(Routes.CHALLENGE_DETAILS_VIEW, { id: challengeSummary.id });
             }}
             style={{
                 ...CARD_SHADOW, // Assuming CARD_SHADOW is the style for card shadow

@@ -2,7 +2,7 @@ import React from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
-import { RootStackParamList } from 'src/navigation/RootStackParamList';
+import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
 import { PADDING_LARGE } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -18,6 +18,7 @@ import SafeAreaView from 'react-native-safe-area-view';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
 import { ScheduledHabitTimeOfDay } from './ScheduledHabitTimeOfDay';
+import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
 
 export const runCreateEditScheduledHabitAnimation = (
     expand: boolean,
@@ -36,7 +37,7 @@ export const runCreateEditScheduledHabitAnimation = (
 
 export const EditPlannedHabit = () => {
     const { colors } = useTheme();
-    const route = useRoute<RouteProp<RootStackParamList, 'EditPlannedHabit'>>();
+    const route = useEmbtrRoute(Routes.EDIT_PLANNED_HABIT);
 
     const newPlannedHabitData = route.params.newPlannedHabitData; // we are editing a planned habit that hasn't been saved yet
     const plannedTaskId = route.params.plannedTaskId; // editing a planned habit
@@ -44,8 +45,8 @@ export const EditPlannedHabit = () => {
     const editMode = plannedTaskId
         ? CreateEditHabitMode.EDIT_EXISTING_PLANNED_HABIT
         : newPlannedHabitData
-          ? CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT
-          : CreateEditHabitMode.INVALID;
+            ? CreateEditHabitMode.CREATE_NEW_PLANNED_HABIT
+            : CreateEditHabitMode.INVALID;
 
     const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
 
@@ -81,8 +82,8 @@ export const EditPlannedHabit = () => {
                         rightOnClick={
                             !isCreatingNewPlannedHabit
                                 ? () => {
-                                      setArchiveModalVisible(true);
-                                  }
+                                    setArchiveModalVisible(true);
+                                }
                                 : undefined
                         }
                     />

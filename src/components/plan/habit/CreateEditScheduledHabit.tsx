@@ -1,5 +1,4 @@
 import React from 'react';
-import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { PADDING_LARGE } from 'src/util/constants';
@@ -11,17 +10,11 @@ import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTit
 import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
 import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitDetails';
 import { CreateEditHabitSaveButton } from 'src/components/plan/habit/CreateEditHabitSaveButton';
-import { useTheme } from 'src/components/theme/ThemeProvider';
-import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
-import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
-import { useDispatch } from 'react-redux';
-import { getCurrentUser, getSelectedDayKey, setGlobalLoading } from 'src/redux/user/GlobalState';
-import { useEmbtrNavigation, useEmbtrRoute } from 'src/hooks/NavigationHooks';
-import PlannedDayController from 'src/controller/planning/PlannedDayController';
-import { useAppSelector } from 'src/redux/Hooks';
-import { PlannedDayService } from 'src/service/PlannedDayService';
-import getTodayDayKey = PlannedDayService.getTodayDayKey;
+import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
 import { ScheduleHabitDescription } from './ScheduleHabitDescription';
+import { ScheduledHabitChallengeNotice } from './ScheduledHabitChallengeNotice';
+import { ScheduledHabitBanner } from './ScheduledHabitBanner';
+import { ScheduledHabitModals } from './ScheduledHabitModals';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -41,9 +34,10 @@ export const runCreateEditScheduledHabitAnimation = (
 };
 
 export const CreateEditScheduledHabit = () => {
-    const { colors } = useTheme();
-    const navigation = useEmbtrNavigation();
     const route = useEmbtrRoute(Routes.CREATE_EDIT_SCHEDULED_HABIT);
+
+    const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
+    const [leaveChallengeModalVisible, setLeaveChallengeModalVisible] = React.useState(false);
 
     const habitId = route.params.habitId; // creating a new habit from a template
     const scheduledHabitId = route.params.scheduledHabitId; // we are editing the scheduled habit
@@ -52,12 +46,6 @@ export const CreateEditScheduledHabit = () => {
 
     const isCreatedNewScheduledHabit = !!habitId;
 
-    const [archiveModalVisible, setArchiveModalVisible] = React.useState(false);
-    const currentUser = useAppSelector(getCurrentUser);
-    const selectedDayKey = useAppSelector(getSelectedDayKey);
-
-    const dispatch = useDispatch();
-
     return (
         <CreateEditScheduledHabitProvider
             isCreateCustomHabit={isCreateCustomHabit}
@@ -65,62 +53,30 @@ export const CreateEditScheduledHabit = () => {
             scheduledHabitId={scheduledHabitId}
         >
             <Screen>
-                {!isCreatedNewScheduledHabit && (
-                    <ArchiveScheduledHabitModal
-                        visible={archiveModalVisible}
-                        onArchive={async () => {
-                            if (!scheduledHabitId) {
-                                return;
-                            }
+                <ScheduledHabitModals
+                    scheduledHabitId={scheduledHabitId}
+                    isCreatedNewScheduledHabit
+                    onExit={() => {
+                        console.log('Exiting scheduled habit');
+                        onExit?.();
+                    }}
+                    archiveModalVisible={archiveModalVisible}
+                    leaveChallengeModalVisible={leaveChallengeModalVisible}
+                    closeModals={() => {
+                        setArchiveModalVisible(false);
+                        setLeaveChallengeModalVisible(false);
+                    }}
+                />
 
-                            setArchiveModalVisible(!archiveModalVisible);
-
-                            dispatch(setGlobalLoading(true));
-                            await ScheduledHabitController.archive(scheduledHabitId);
-
-                            await PlannedDayController.invalidatePlannedDay(
-                                currentUser.id ?? 0,
-                                getTodayDayKey()
-                            );
-                            await PlannedDayController.invalidatePlannedDay(
-                                currentUser.id ?? 0,
-                                selectedDayKey
-                            );
-
-                            onExit?.();
-
-                            dispatch(setGlobalLoading(false));
-                            navigation.goBack();
-                        }}
-                        onDismiss={() => {
-                            setArchiveModalVisible(!archiveModalVisible);
-                        }}
-                    />
-                )}
-
-                <Banner
-                    name={'Schedule Habit'}
-                    leftRoute={'BACK'}
-                    leftIcon={'arrow-back'}
-                    rightText={
-                        isCreateCustomHabit
-                            ? 'discovery'
-                            : !isCreatedNewScheduledHabit && !isCreateCustomHabit
-                                ? 'archive'
-                                : undefined
-                    }
-                    rightColor={isCreateCustomHabit ? colors.link : colors.archive}
-                    rightOnClick={
-                        isCreateCustomHabit
-                            ? () => {
-                                navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
-                            }
-                            : !isCreatedNewScheduledHabit
-                                ? () => {
-                                    setArchiveModalVisible(true);
-                                }
-                                : undefined
-                    }
+                <ScheduledHabitBanner
+                    isCreateCustomHabit={!!isCreateCustomHabit}
+                    isCreatedNewScheduledHabit={isCreatedNewScheduledHabit}
+                    onArchiveSheduledHabit={() => {
+                        setArchiveModalVisible(true);
+                    }}
+                    onLeaveChallenge={() => {
+                        setLeaveChallengeModalVisible(true);
+                    }}
                 />
 
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -131,9 +87,10 @@ export const CreateEditScheduledHabit = () => {
                         }}
                     >
                         <View style={{ height: PADDING_LARGE }} />
+
+                        <ScheduledHabitChallengeNotice />
                         <ScheduledHabitTitle />
                         <ScheduleHabitDescription />
-
                         <ScheduleHabitRepeatingSchedule />
                         <ScheduledHabitTimeOfDay />
                         <ScheduledHabitDetails />

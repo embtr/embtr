@@ -1,4 +1,4 @@
-import { View, Text, ViewStyle, TextStyle, Pressable } from 'react-native';
+import { View, Text, TextStyle, Pressable } from 'react-native';
 import { PlannedTask } from 'resources/schema';
 import {
     CARD_SHADOW,
@@ -28,8 +28,7 @@ import {
     SwipeableSnapOptionData,
 } from '../common/swipeable/SwipeableCardElement';
 import { HabitIcon } from './habit/HabitIcon';
-import { ChallengeLabel } from '../common/comments/general/ChallengeLabel';
-import { Ionicons } from '@expo/vector-icons';
+import { ChallengeBadge } from '../common/comments/general/ChallengeBadge';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -264,27 +263,7 @@ export const PlannableTaskImproved = ({
                             flex: 1,
                         }}
                     >
-                        {isChallenge && (
-                            <View>
-                                <View
-                                    style={{
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        width: 28,
-                                        borderWidth: 2,
-                                        borderColor: colors.secondary_accent_color,
-                                        borderRadius: 50,
-                                        height: 28,
-                                    }}
-                                >
-                                    <Ionicons
-                                        name={'flash'}
-                                        size={16}
-                                        color={colors.secondary_accent_color}
-                                    />
-                                </View>
-                            </View>
-                        )}
+                        {isChallenge && <ChallengeBadge size={28} />}
 
                         {plannedTask.timeOfDay?.id !== 5 && (
                             <View style={{ marginLeft: PADDING_SMALL }}>

@@ -301,6 +301,11 @@ class PlannedDayController {
 }
 
 export namespace PlannedDayCustomHooks {
+    export const useCurrentlySelectedPlannedDayKey = () => {
+        const dayKey = useAppSelector(getSelectedDayKey);
+        return dayKey;
+    };
+
     export const useGetOrCreatePlannedDayForCurentUser = (dayKey: string) => {
         const currentUser = useAppSelector(getCurrentUser);
         const userId = currentUser.id ?? 0;

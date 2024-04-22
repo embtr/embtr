@@ -4,7 +4,9 @@ import { ChallengeReward } from 'resources/schema';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { CARD_SHADOW, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { TimelineController } from 'src/controller/timeline/TimelineController';
+import { CARD_SHADOW, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 
 interface Props {
     challengeId: number;
@@ -18,7 +20,19 @@ export const ChallengeRecentlyJoinedDetails = ({
     challengeReward,
 }: Props) => {
     const { colors } = useTheme();
-    const [userIsAParticipant, setUserIsAParticipant] = React.useState(isAParticipant);
+
+    const registerForChallenge = async () => {
+        if (!challengeId) {
+            return;
+        }
+
+        const currentUserId = await getUserIdFromToken();
+        if (!currentUserId) {
+            return;
+        }
+
+        await ChallengeController.register(challengeId);
+    };
 
     return (
         <View
@@ -52,23 +66,16 @@ export const ChallengeRecentlyJoinedDetails = ({
             </View>
             <View>
                 <View style={{ paddingTop: 12 }}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            ChallengeController.register(challengeId);
-                            setUserIsAParticipant(true);
-                            //setParticipantCount(participantCount + 1);
-                        }}
-                        disabled={userIsAParticipant}
-                    >
+                    <TouchableOpacity onPress={registerForChallenge} disabled={isAParticipant}>
                         <View
                             style={[
                                 {
-                                    backgroundColor: userIsAParticipant
+                                    backgroundColor: isAParticipant
                                         ? colors.accent_color_light
                                         : colors.accent_color,
                                     borderRadius: 5,
                                     paddingVertical: 6,
-                                    opacity: userIsAParticipant ? 0.5 : 1,
+                                    opacity: isAParticipant ? 0.5 : 1,
                                 },
                                 CARD_SHADOW,
                             ]}
@@ -81,7 +88,7 @@ export const ChallengeRecentlyJoinedDetails = ({
                                     color: colors.text,
                                 }}
                             >
-                                {userIsAParticipant ? 'Challenge Accepted!' : 'Join Challenge'}
+                                {isAParticipant ? 'Challenge Accepted!' : 'Join Challenge'}
                             </Text>
                         </View>
                     </TouchableOpacity>

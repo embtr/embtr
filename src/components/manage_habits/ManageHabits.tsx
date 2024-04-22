@@ -24,6 +24,7 @@ export const ManageHabits = () => {
         navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT_SLIDE_UP, {
             isCreateCustomHabit: true,
             onExit: () => {
+                console.log('Exiting');
                 ScheduledHabitController.invalidateActiveScheduledHabits();
             },
         });

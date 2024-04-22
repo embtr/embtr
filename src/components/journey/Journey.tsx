@@ -10,11 +10,13 @@ import { HabitStreakController } from 'src/controller/habit_streak/HabitStreakCo
 import { User } from 'resources/schema';
 import { NewUserCustomHooks } from 'src/controller/new_user/NewUserController';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
+import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 
 const onRefresh = (user: User, setRefreshing: Function) => {
     setRefreshing(true);
     HabitStreakController.invalidateHabitStreak(user.id ?? 0);
     UserController.invalidateNewUserChecklist();
+    ChallengeController.invalidateActiveParticipation(user.id ?? 0);
 
     setTimeout(() => {
         setRefreshing(false);

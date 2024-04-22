@@ -5,10 +5,9 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Banner } from '../common/Banner';
 import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { Screen } from '../common/Screen';
-import { UpcomingChallenges } from '../challenge/UpcomingChallenges';
 import { Journey } from './Journey';
 import { Ionicons } from '@expo/vector-icons';
-import { UpcomingChallenges2 } from '../challenge/UpcomingChallenges2';
+import { UpcomingChallenges } from '../challenge/UpcomingChallenges';
 
 export const HabitJourney = () => {
     const { colors } = useTheme();
@@ -26,7 +25,7 @@ export const HabitJourney = () => {
             case 'Challenges':
                 return (
                     <View style={{ height: '100%' }}>
-                        <UpcomingChallenges2 />
+                        <UpcomingChallenges />
                     </View>
                 );
 
