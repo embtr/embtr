@@ -107,7 +107,7 @@ export class ChallengeController {
         return axiosInstance
             .post(`/challenge/${challengeId}/register`)
             .then((success) => {
-                ChallengeInvalidation.challengeJoinedLeft(challengeId);
+                ChallengeInvalidation.challengeParticipationUpdated(challengeId);
                 return true;
             })
             .catch((error) => {
@@ -119,7 +119,7 @@ export class ChallengeController {
         return axiosInstance
             .post(`/challenge/${challengeId}/leave`)
             .then((success) => {
-                ChallengeInvalidation.challengeJoinedLeft(challengeId);
+                ChallengeInvalidation.challengeParticipationUpdated(challengeId);
                 return true;
             })
             .catch((error) => {
@@ -201,7 +201,7 @@ export class ChallengeController {
 }
 
 namespace ChallengeInvalidation {
-    export const challengeJoinedLeft = async (id: number) => {
+    export const challengeParticipationUpdated = async (id: number) => {
         ScheduledHabitController.invalidateActiveScheduledHabits();
         TimelineController.invalidateCache();
 

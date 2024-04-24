@@ -1,9 +1,8 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { EmbtrModal } from 'src/components/common/modal/EmbtrModal';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface Props {
     visible: boolean;

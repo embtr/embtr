@@ -92,7 +92,7 @@ const getBody = (
                     }}
                 >
                     <Text style={{ fontFamily: POPPINS_SEMI_BOLD }}>Remove this habit </Text>
-                    from today or from your habit schedule. You can always add it back later.
+                    from today. You can always add it back later.
                 </Text>
             </View>
 

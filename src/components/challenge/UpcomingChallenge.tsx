@@ -62,14 +62,6 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
         }
 
         await ChallengeController.register(challengeSummary.id);
-        ChallengeController.invalidateAllChallengeSummaries();
-        ChallengeController.invalidateActiveParticipation(currentUserId);
-        ScheduledHabitController.invalidateActiveScheduledHabits();
-        TimelineController.invalidateCache();
-
-        if (currentUserId && currentlySelectedDay) {
-            PlannedDayController.invalidatePlannedDay(currentUserId, currentlySelectedDay);
-        }
     };
 
     return (

@@ -36,7 +36,6 @@ export const LeaveChallengeModalImproved = ({ visible, onDismiss, onExit }: Prop
 
         for (const challengeId of challengeIds) {
             await ChallengeController.leave(challengeId);
-            ChallengeController.invalidateAllChallengeData(challengeId, currentUserId);
             ScheduledHabitController.invalidateActiveScheduledHabits();
             PlannedDayController.invalidatePlannedDay(currentUserId, currentDayKey);
         }

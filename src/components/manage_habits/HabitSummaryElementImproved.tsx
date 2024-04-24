@@ -54,10 +54,9 @@ export const HabitSummaryElementImproved = ({ scheduledHabit }: Props) => {
         remoteImageUrl: ScheduledHabitUtil.getRemoteImageUrl(scheduledHabit),
     };
 
-    const endDate = scheduledHabit.endDate;
     let challengeLabel: JSX.Element = <View />;
 
-    if (endDate) {
+    if (scheduledHabit.task?.type === 'CHALLENGE') {
         challengeLabel = (
             <View
                 style={{

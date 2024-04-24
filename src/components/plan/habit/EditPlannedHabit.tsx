@@ -1,8 +1,7 @@
 import React from 'react';
-import { RouteProp, useRoute } from '@react-navigation/native';
 import { Banner } from 'src/components/common/Banner';
 import { Screen } from 'src/components/common/Screen';
-import { RootStackParamList, Routes } from 'src/navigation/RootStackParamList';
+import { Routes } from 'src/navigation/RootStackParamList';
 import { PADDING_LARGE } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -19,6 +18,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ArchiveScheduledHabitModal } from './ArchiveScheduledHabitModal';
 import { ScheduledHabitTimeOfDay } from './ScheduledHabitTimeOfDay';
 import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
+import { ScheduledHabitChallengeNotice } from './ScheduledHabitChallengeNotice';
 
 export const runCreateEditScheduledHabitAnimation = (
     expand: boolean,
@@ -96,6 +96,7 @@ export const EditPlannedHabit = () => {
                             }}
                         >
                             <View style={{ height: PADDING_LARGE }} />
+                            <ScheduledHabitChallengeNotice />
                             <ScheduledHabitTitle />
                             <ScheduleHabitDescription />
                             <ScheduledHabitTimeOfDay />
