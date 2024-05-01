@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, View } from 'react-native';
+import { View } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CarouselCardItem, CAROUSEL_IMAGE_HEIGHT } from './ImageCarouselItem';

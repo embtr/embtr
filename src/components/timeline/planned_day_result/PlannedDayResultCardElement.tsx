@@ -3,17 +3,16 @@ import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_SEMI_BOLD, PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 import { HabitIcon } from 'src/components/plan/habit/HabitIcon';
-import { OptimalImageData } from '../images/OptimalImage';
 import { PlannedTask } from 'resources/schema';
-import { DailyResultCardElementTimeOfDay } from './DailyResultCardElementTimeOfDay';
 import { PlannedTaskUtil } from 'src/util/PlannedTaskUtil';
-import { ChallengeLabel } from '../comments/general/ChallengeLabel';
+import { OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { PlannedDayResultCardElementTimeOfDay } from './PlannedDayResultCardElementTimeOfDay';
 
 interface Props {
     plannedTasks: PlannedTask[];
 }
 
-export const DailyResultCardElement = ({ plannedTasks }: Props) => {
+export const PlannedDayResultCardElement = ({ plannedTasks }: Props) => {
     const { colors } = useTheme();
 
     const plannedTask = plannedTasks?.[0] ?? undefined;
@@ -27,7 +26,7 @@ export const DailyResultCardElement = ({ plannedTasks }: Props) => {
     plannedTasks.forEach((plannedTask) => {
         views.push(
             <View key={plannedTask.id} style={{ paddingRight: PADDING_SMALL }}>
-                <DailyResultCardElementTimeOfDay plannedTask={plannedTask} />
+                <PlannedDayResultCardElementTimeOfDay plannedTask={plannedTask} />
             </View>
         );
     });

@@ -3,8 +3,8 @@ import { Pressable } from 'react-native';
 import { PlannedDayResult } from 'resources/schema';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
-import { PlannedDayResultElement } from 'src/components/timeline/PlannedDayResultElement';
-import { PlannedDayResultInteractableElementCustomHooks } from './interactable/PlannedDayResultInteractableElementCustomHooks';
+import { PlannedDayResultInteractableElementCustomHooks } from '../interactable/PlannedDayResultInteractableElementCustomHooks';
+import { PlannedDayResultElement } from './PlannedDayResultElement';
 
 interface Props {
     plannedDayResult: PlannedDayResult;
@@ -27,7 +27,8 @@ export const PlannedDayResultTimelineElement = ({ plannedDayResult }: Props) => 
             plannedDayResult,
             interactableData
         );
-        navigation.navigate(Routes.DAILY_RESULT_DETAILS, { id: plannedDayResult.id });
+
+        navigation.navigate(Routes.PLANNED_DAY_RESULT_DETAILS, { id: plannedDayResult.id });
     };
 
     return (

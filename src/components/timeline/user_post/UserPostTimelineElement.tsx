@@ -1,11 +1,11 @@
 import React from 'react';
 import { UserPost } from 'resources/schema';
-import { UserPostElement } from 'src/components/timeline/UserPostElement';
 import { Pressable } from 'react-native';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
-import { UserPostInteractableElementCustomHooks } from './interactable/UserPostInteractableElementCustomHooks';
 import { useFocusEffect } from '@react-navigation/native';
+import { UserPostElement } from './UserPostElement';
+import { UserPostInteractableElementCustomHooks } from '../interactable/UserPostInteractableElementCustomHooks';
 
 interface Props {
     userPost: UserPost;

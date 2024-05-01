@@ -2,9 +2,9 @@ import { ActivityIndicator, FlatList, RefreshControl, Text, View } from 'react-n
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { TimelineElement, TimelineElementType } from 'resources/types/requests/Timeline';
-import { UserPostTimelineElement } from 'src/components/timeline/UserPostTimelineElement';
-import { PlannedDayResultTimelineElement } from './PlannedDayResultTimelineElement';
-import { ChallengeRecentlyJoinedTimelineElement } from './ChallengeRecentlyJoinedTimelineElement';
+import { UserPostTimelineElement } from './user_post/UserPostTimelineElement';
+import { PlannedDayResultTimelineElement } from './planned_day_result/PlannedDayResultTimelineElement';
+import { ChallengeRecentlyJoinedTimelineElement } from './challenge/ChallengeRecentlyJoinedTimelineElement';
 
 const createFooter = (hasMore: boolean, colors: any) => {
     const footer = hasMore ? (
@@ -60,7 +60,10 @@ const renderItem = (item: TimelineElement, index: number) => {
                 <PlannedDayResultTimelineElement plannedDayResult={item.plannedDayResult} />
             </View>
         );
-    } else if (item.type === TimelineElementType.RECENTLY_JOINED_CHALLENGE && item.challengeRecentlyJoined) {
+    } else if (
+        item.type === TimelineElementType.RECENTLY_JOINED_CHALLENGE &&
+        item.challengeRecentlyJoined
+    ) {
         return (
             <View
                 style={{
@@ -68,7 +71,9 @@ const renderItem = (item: TimelineElement, index: number) => {
                     paddingHorizontal: PADDING_LARGE,
                 }}
             >
-                <ChallengeRecentlyJoinedTimelineElement challengeRecentlyJoined={item.challengeRecentlyJoined} />
+                <ChallengeRecentlyJoinedTimelineElement
+                    challengeRecentlyJoined={item.challengeRecentlyJoined}
+                />
             </View>
         );
     }

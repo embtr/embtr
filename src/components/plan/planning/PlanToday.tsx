@@ -17,12 +17,10 @@ export const PlanToday = ({ hideComplete }: Props) => {
         }, [])
     );
 
-    const plannedDay = PlannedDayCustomHooks.usePlannedDayForCurrentUser(dayKey);
+    const plannedDay = PlannedDayCustomHooks.useGetOrCreatePlannedDayForCurentUser(dayKey);
     if (!plannedDay?.data) {
         return <View />;
     }
 
     const todayKey = PlannedDayService.getTodayDayKey();
-
-    return <PlanDay plannedDay={plannedDay.data} hideComplete={hideComplete} dayKey={todayKey} />;
 };

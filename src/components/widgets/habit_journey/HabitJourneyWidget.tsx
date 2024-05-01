@@ -1,9 +1,9 @@
+import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from '../WidgetBase';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { HabitJourneys } from 'resources/types/habit/Habit';
-import React from 'react';
 import { User } from 'resources/schema';
 import { HabitController } from 'src/controller/habit/HabitController';
 import { HabitJourneyElement3 } from './HabitJourneyElement3';
@@ -22,7 +22,8 @@ export const HabitJourneyWidget = ({ user }: Props) => {
     const [selectedView, setSelectedView] = React.useState(1);
     const [showAddTaskModal, setShowAddTaskModal] = React.useState(false);
 
-    const todaysPlannedDay = PlannedDayCustomHooks.usePlannedDayForCurrentUser(getTodayKey());
+    const todaysPlannedDay =
+        PlannedDayCustomHooks.useGetOrCreatePlannedDayForCurentUser(getTodayKey());
     const selectedPlannedDay = PlannedDayCustomHooks.useSelectedPlannedDay();
 
     const fetch = async () => {

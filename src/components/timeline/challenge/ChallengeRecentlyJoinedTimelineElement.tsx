@@ -3,8 +3,8 @@ import { Pressable } from 'react-native';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { ChallengeRecentlyJoined } from 'resources/types/dto/Challenge';
-import { ChallengeSummaryInteractableElementCustomHooks } from './interactable/ChallengeSummaryInteractableElementCustomHooks';
 import { ChallengeRecentlyJoinedElement } from './ChallengeRecentlyJoinedElement';
+import { ChallengeSummaryInteractableElementCustomHooks } from '../interactable/ChallengeSummaryInteractableElementCustomHooks';
 
 interface Props {
     challengeRecentlyJoined: ChallengeRecentlyJoined;

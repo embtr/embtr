@@ -8,9 +8,16 @@ import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import {
+    PADDING_LARGE,
+    PADDING_MEDIUM,
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+} from 'src/util/constants';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { isNarrowDevice } from 'src/util/DeviceUtil';
+import { HorizontalLine } from './HorizontalLine';
 
 interface Props {
     name: string;
@@ -123,10 +130,16 @@ export const Banner = ({
                 style={{
                     flexDirection: 'row',
                     justifyContent: 'flex-end',
-                    height: 40,
                 }}
             >
-                <View style={{ flexDirection: 'row', flex: 1, paddingLeft: 10 }}>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        flex: 1,
+                        paddingLeft: 10,
+                        alignItems: 'center',
+                    }}
+                >
                     {/* LEFT ICON */}
                     {leftIcon ? (
                         <Ionicons
@@ -198,6 +211,7 @@ export const Banner = ({
                         flex: 1,
                         paddingRight: 10,
                         justifyContent: 'flex-end',
+                        alignItems: 'center',
                     }}
                 >
                     {/* INNER RIGHT ICON */}
@@ -252,7 +266,7 @@ export const Banner = ({
                             <Ionicons
                                 name={rightIcon}
                                 size={iconSize}
-                                color={colors.text}
+                                color={rightColor ?? colors.text}
                                 onPress={handleRightClick}
                             />
                         </View>
@@ -292,6 +306,7 @@ export const Banner = ({
                     )}
                 </View>
             </View>
+            <View style={{ height: PADDING_MEDIUM }} />
         </View>
     );
 };

@@ -1,13 +1,12 @@
 import { Text, View } from 'react-native';
 import React from 'react';
-import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
+import { POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { NestedImages } from 'src/components/common/images/NestedImages';
 import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { formatDistance } from 'date-fns';
 
 interface Props {
-    title: string;
     body: string;
     commentCount: number;
     likeCount: number;
@@ -17,7 +16,6 @@ interface Props {
 }
 
 export const PostWidgetElement = ({
-    title,
     body,
     commentCount,
     likeCount,
@@ -54,38 +52,11 @@ export const PostWidgetElement = ({
                 />
                 <View style={{ width: PADDING_LARGE }} />
                 <View style={{ flex: 1 }}>
-                    <View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text
-                                numberOfLines={1}
-                                style={{
-                                    color: colors.text,
-                                    fontFamily: POPPINS_SEMI_BOLD,
-                                    flex: 1,
-                                    fontSize: 15,
-                                }}
-                            >
-                                {title}
-                            </Text>
-
-                            <Text
-                                style={{
-                                    color: colors.secondary_text,
-                                    fontFamily: POPPINS_REGULAR,
-                                    fontSize: 10,
-                                    paddingLeft: PADDING_LARGE / 2,
-                                }}
-                            >
-                                {daysAgo}
-                            </Text>
-                        </View>
-                    </View>
-
                     <View style={{ flex: 1 }}>
                         <Text
-                            numberOfLines={1}
+                            numberOfLines={2}
                             style={{
-                                color: colors.secondary_text,
+                                color: colors.text,
                                 fontFamily: POPPINS_REGULAR,
                                 fontSize: 11,
                             }}
@@ -108,7 +79,6 @@ export const PostWidgetElement = ({
                         <View style={{ width: PADDING_LARGE }} />
 
                         <Text
-                            numberOfLines={1}
                             style={{
                                 color: colors.secondary_text,
                                 fontFamily: POPPINS_REGULAR,
@@ -116,6 +86,17 @@ export const PostWidgetElement = ({
                             }}
                         >
                             {comments}
+                        </Text>
+                        <View style={{ flex: 1 }} />
+
+                        <Text
+                            style={{
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 9,
+                            }}
+                        >
+                            {daysAgo}
                         </Text>
                     </View>
                 </View>

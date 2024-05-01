@@ -183,7 +183,6 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                 plannedDay={plannedDay}
                 hasPlannedTasks={hasPlannedTasks ?? false}
                 allHabitsAreComplete={allHabitsAreComplete ?? false}
-                dayKey={dayKey}
             />
         </Animated.View>
     ) : (

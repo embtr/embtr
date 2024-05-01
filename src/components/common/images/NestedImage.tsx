@@ -1,5 +1,6 @@
 import { View } from 'react-native';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { CARD_SHADOW } from 'src/util/constants';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 interface Props {
@@ -18,14 +19,17 @@ export const NestedImage = ({ image, size, padSize }: Props) => {
             }}
         >
             <View
-                style={{
-                    borderRadius: 5,
-                    width: size,
-                    height: size,
-                    backgroundColor: '#6a6a6a',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
+                style={[
+                    {
+                        borderRadius: 5,
+                        width: size,
+                        height: size,
+                        backgroundColor: '#6a6a6a',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    },
+                    CARD_SHADOW,
+                ]}
             >
                 <OptimalImage
                     data={image}

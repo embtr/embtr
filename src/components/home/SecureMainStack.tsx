@@ -7,7 +7,6 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import { AddHabitCategory } from '../plan/habit/AddHabitCategory';
 import { CreateEditScheduledHabit } from '../plan/habit/CreateEditScheduledHabit';
 import { EditPlannedHabit } from '../plan/habit/EditPlannedHabit';
-import { CreateUserPost } from 'src/components/timeline/CreateUserPost';
 import { AdvancedUserSettings } from '../settings/advanced/AdvancedUserSettings';
 import { UserSettings } from '../settings/main/UserSettings';
 import { AddQuoteOfTheDay } from 'src/components/widgets/quote_of_the_day/AddQuoteOfTheDay';
@@ -20,6 +19,10 @@ import { ManageHabits } from '../manage_habits/ManageHabits';
 import { IntroModal } from '../modal/IntroModal';
 import { UserNotifications } from '../settings/notifications/UserNotifications';
 import { ChallengeDetailsView } from '../common/timeline/challenges/ChallengeDetailsView';
+import { CreateUserPost } from '../timeline/user_post/crud/CreateUserPost';
+import { CreatePlannedDayResult } from '../timeline/planned_day_result/crud/CreatePlannedDayResult';
+import { EditPlannedDayResult } from '../timeline/planned_day_result/crud/EditPlannedDayResult';
+import { PlannedDayResultDetails } from '../timeline/planned_day_result/PlannedDayResultDetails';
 
 const Stack = createStackNavigator();
 
@@ -42,7 +45,7 @@ export const SecureMainStack = () => {
             />
             <Stack.Screen name="EditPlannedHabit" component={EditPlannedHabit} />
             <Stack.Screen
-                name="CreateUserPost"
+                name={Routes.CREATE_USER_POST}
                 component={CreateUserPost}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
@@ -79,9 +82,21 @@ export const SecureMainStack = () => {
                 component={CreateEditScheduledHabit}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
+
+            <Stack.Screen
+                name={Routes.CREATE_PLANNED_DAY_RESULT}
+                component={CreatePlannedDayResult}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+
+            <Stack.Screen name={Routes.EDIT_PLANNED_DAY_RESULT} component={EditPlannedDayResult} />
             <Stack.Screen name={Routes.HABIT_SUMMARY_DETAILS} component={HabitSummaryDetails} />
             <Stack.Screen name={Routes.USER_NOTIFICATIONS} component={UserNotifications} />
             <Stack.Screen name={Routes.CHALLENGE_DETAILS_VIEW} component={ChallengeDetailsView} />
+            <Stack.Screen
+                name={Routes.PLANNED_DAY_RESULT_DETAILS}
+                component={PlannedDayResultDetails}
+            />
         </Stack.Navigator>
     );
 };

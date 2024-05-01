@@ -27,6 +27,8 @@ export interface StoryModel extends TimelinePostModel {
 }
 
 class StoryController {
+    public static readonly UPLOAD_BUCKET = 'user_posts';
+
     public static async getPosts(userId: number): Promise<UserPost[]> {
         return await axiosInstance
             .get(`/user/${userId}/posts`)
@@ -51,18 +53,8 @@ class StoryController {
             });
     }
 
-    public static async createViaApi(title: string, body: string, images: string[]) {
-        const request: CreateUserPostRequest = {
-            userPost: {
-                title,
-                body,
-                images: images.map((image) => {
-                    return {
-                        url: image,
-                    };
-                }),
-            },
-        };
+    public static async createViaApi(userPost: UserPost) {
+        const request: CreateUserPostRequest = { userPost };
 
         return await axiosInstance
             .post(`${USER_POST}`, request)
@@ -110,7 +102,7 @@ class StoryController {
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
         const imgUrls: string[] = await ImageController.pickAndUploadImages(
-            'user_posts',
+            this.UPLOAD_BUCKET,
             imageUploadProgess
         );
         return imgUrls;

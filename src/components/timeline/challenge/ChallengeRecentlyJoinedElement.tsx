@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
-import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
-import { CardHeader } from './card_components/CardHeader';
+import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { ChallengeRecentlyJoined } from 'resources/types/dto/Challenge';
-import { ChallengeRecentlyJoinedDetails } from './card_components/ChallengeRecentlyJoinedDetails';
+import { CardHeader } from '../card_components/CardHeader';
+import { ChallengeRecentlyJoinedDetails } from '../card_components/ChallengeRecentlyJoinedDetails';
+import PostDetailsActionBar from 'src/components/common/comments/PostDetailsActionBar';
 
 interface Props {
     challengeRecentlyJoined: ChallengeRecentlyJoined;
@@ -56,21 +56,6 @@ export const ChallengeRecentlyJoinedElement = ({
                 secondaryText={secondaryHeader}
                 type={TimelineElementType.RECENTLY_JOINED_CHALLENGE}
             />
-
-            {/**********/}
-            {/* TITLE */}
-            {/**********/}
-            <View style={{ paddingTop: PADDING_LARGE }}>
-                <Text
-                    style={{
-                        fontFamily: POPPINS_SEMI_BOLD,
-                        fontSize: 14,
-                        color: colors.text,
-                    }}
-                >
-                    {challengeRecentlyJoined.name}
-                </Text>
-            </View>
 
             {/**********/}
             {/*  BODY  */}

@@ -18,7 +18,6 @@ export const Notifications = () => {
     const [refreshing, setRefreshing] = React.useState(false);
     const notifications = NotificationCustomHooks.useNotifications();
     const unreadNotificationCount = NotificationCustomHooks.useUnreadNotificationCount();
-    console.log(notifications.data);
 
     useFocusEffect(
         React.useCallback(() => {

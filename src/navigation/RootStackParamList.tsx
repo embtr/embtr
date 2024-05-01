@@ -13,18 +13,12 @@ export type MainTabScreens = {
 export type MasterScreens = {
     UserSearch: undefined;
     Timeline: undefined;
-    CreateUserPost: undefined;
-    EditUserPostDetails: { id: number };
-    EditDailyResultDetails: { id: number };
-    UserPostDetails: { id: number };
-    DailyResultDetails: { id: number };
     UserProfile: { id: string };
     Notifications: undefined;
     PillarDetails: { uid: string; id: string };
     ViewAllComments: { uid: string; goalId: string };
     GoalDetails: { uid: string; id: string; source: string };
     UserPosts: { userId: number };
-    DailyResults: { userId: number };
     ChallengeDetailsView: { id: number };
     Today: undefined;
     PlanDay: { id: string };
@@ -56,6 +50,12 @@ export type MasterScreens = {
     HabitSummaryDetails: { id: number };
     Journey: undefined;
     UserNotifications: undefined;
+    CreatePlannedDayResult: { dayKey: string };
+    EditPlannedDayResult: { id: number };
+    CreateUserPost: undefined;
+    EditUserPost: { id: number };
+    UserPostDetails: { id: number };
+    PlannedDayResultDetails: { id: number };
 
     CreateEditScheduledHabit_SlideUp: {
         onExit?: () => void;
@@ -101,10 +101,9 @@ export type RootStackParamList = {
 
 export namespace Routes {
     export const GOALS: keyof MasterScreens = 'Goals';
-    export const EDIT_USER_POST_DETAILS = 'EditUserPostDetails';
-    export const USER_POST_DETAILS = 'UserPostDetails';
     export const CREATE_USER_POST = 'CreateUserPost';
-    export const DAILY_RESULT_DETAILS = 'DailyResultDetails';
+    export const EDIT_USER_POST = 'EditUserPost';
+    export const USER_POST_DETAILS = 'UserPostDetails';
     export const ADD_HABIT_CATEGORY = 'AddHabitCategory';
     export const ADD_HABIT_CATEGORIES = 'AddHabitCategories';
     export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';
@@ -122,4 +121,7 @@ export namespace Routes {
     export const JOURNEY = 'Journey';
     export const USER_NOTIFICATIONS = 'UserNotifications';
     export const CHALLENGE_DETAILS_VIEW = 'ChallengeDetailsView';
+    export const CREATE_PLANNED_DAY_RESULT = 'CreatePlannedDayResult';
+    export const EDIT_PLANNED_DAY_RESULT = 'EditPlannedDayResult';
+    export const PLANNED_DAY_RESULT_DETAILS = 'PlannedDayResultDetails';
 }

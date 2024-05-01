@@ -14,7 +14,12 @@ export const NestedImages = ({ imageData, size, padSize, paddingStep }: Props) =
     for (let i = 0; i < Math.min(imageData.length, 3); i++) {
         const image = imageData[i];
         const element = (
-            <View style={{ right: i * (size - paddingStep), top: i * paddingStep }}>
+            <View
+                style={{
+                    right: i * (size - paddingStep),
+                    top: i * paddingStep,
+                }}
+            >
                 <NestedImage image={image} size={size} padSize={padSize} />
             </View>
         );

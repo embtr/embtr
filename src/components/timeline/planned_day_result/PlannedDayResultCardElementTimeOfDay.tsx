@@ -1,17 +1,16 @@
 import { View } from 'react-native';
 import { PlannedTask } from 'resources/schema';
 import { Constants } from 'resources/types/constants/constants';
-import { ProgressSvg } from 'src/components/plan/task/progress/ProgressSvg';
-import { SkippedResultIcon } from './result_icons/SkippedResultIcon';
-import { FailedResultIcon } from './result_icons/FailedResultIcon';
-import { CompleteResultIcon } from './result_icons/CompleteResultIcon';
-import { IncompleteResultIcon } from './result_icons/IncompleteResultIcon';
+import { CompleteResultIcon } from 'src/components/common/timeline/result_icons/CompleteResultIcon';
+import { FailedResultIcon } from 'src/components/common/timeline/result_icons/FailedResultIcon';
+import { IncompleteResultIcon } from 'src/components/common/timeline/result_icons/IncompleteResultIcon';
+import { SkippedResultIcon } from 'src/components/common/timeline/result_icons/SkippedResultIcon';
 
 interface Props {
     plannedTask: PlannedTask;
 }
 
-export const DailyResultCardElementTimeOfDay = ({ plannedTask }: Props) => {
+export const PlannedDayResultCardElementTimeOfDay = ({ plannedTask }: Props) => {
     const quantity = plannedTask.quantity;
     const completedQuantity = plannedTask.completedQuantity;
 
@@ -30,8 +29,6 @@ export const DailyResultCardElementTimeOfDay = ({ plannedTask }: Props) => {
     if (taskIsComplete) {
         stats = `${completedQuantity}`;
     }
-
-    const size = 16;
 
     return (
         <View>

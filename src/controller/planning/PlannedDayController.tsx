@@ -321,14 +321,9 @@ export namespace PlannedDayCustomHooks {
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
 
-    export const usePlannedDayForCurrentUser = (dayKey: string) => {
-        const plannedDay = useGetOrCreatePlannedDayForCurentUser(dayKey);
-        return plannedDay;
-    };
-
     export const useSelectedPlannedDayForCurrentUser = () => {
         const dayKey = useAppSelector(getSelectedDayKey);
-        const plannedDay = PlannedDayCustomHooks.usePlannedDayForCurrentUser(dayKey);
+        const plannedDay = PlannedDayCustomHooks.useGetOrCreatePlannedDayForCurentUser(dayKey);
 
         return { dayKey, plannedDay };
     };
@@ -343,6 +338,11 @@ export namespace PlannedDayCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const usePlannedDayForCurrentUser = (dayKey: string) => {
+        const currentUser = useAppSelector(getCurrentUser);
+        return usePlannedDay(currentUser.id ?? 0, dayKey);
     };
 
     export const useTodaysPlannedDayForUser = (user: User) => {

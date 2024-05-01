@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
+import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { Alert, View } from 'react-native';
 import DailyResultController, {
     PlannedDayResultCustomHooks,
 } from 'src/controller/timeline/daily_result/DailyResultController';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Screen } from '../Screen';
 import { PlannedDayResult } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
@@ -21,8 +20,11 @@ import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableText
 import { PADDING_LARGE } from 'src/util/constants';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
-import { PlannedDayResultElement } from 'src/components/timeline/PlannedDayResultElement';
 import { PlannedDayResultInteractableElementCustomHooks } from 'src/components/timeline/interactable/PlannedDayResultInteractableElementCustomHooks';
+import { Screen } from 'src/components/common/Screen';
+import { PlannedDayResultElement } from './PlannedDayResultElement';
+import { TimelineController } from 'src/controller/timeline/TimelineController';
+import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
 
 export const DailyResultDetailsPlaceholder = () => {
     return (
@@ -55,7 +57,7 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
 
     const onEdit = () => {
         if (plannedDayResult.id) {
-            navigation.navigate('EditDailyResultDetails', { id: plannedDayResult.id });
+            navigation.navigate(Routes.EDIT_PLANNED_DAY_RESULT, { id: plannedDayResult.id });
         }
     };
 
@@ -78,6 +80,7 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
 
                         const clone: PlannedDayResult = { ...plannedDayResult, active: false };
                         await DailyResultController.updateViaApi(clone);
+                        TimelineController.invalidateCache();
                         if (plannedDayResult.plannedDay?.dayKey) {
                             PlannedDayController.prefetchPlannedDayData(
                                 plannedDayResult.plannedDay.dayKey
@@ -122,9 +125,11 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
         <Screen>
             {userIsAuthor ? (
                 <Banner
-                    name={'Post Details'}
+                    name={'Day Results'}
                     leftIcon={'arrow-back'}
-                    leftRoute="BACK"
+                    leftOnClick={() => {
+                        navigation.goBack();
+                    }}
                     rightIcon={'ellipsis-horizontal'}
                     menuOptions={createEmbtrMenuOptions(menuItems)}
                 />
@@ -150,8 +155,8 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
     );
 };
 
-export const DailyResultDetails = () => {
-    const route = useRoute<RouteProp<TimelineTabScreens, 'DailyResultDetails'>>();
+export const PlannedDayResultDetails = () => {
+    const route = useEmbtrRoute(Routes.PLANNED_DAY_RESULT_DETAILS);
     const plannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(route.params.id);
 
     if (!plannedDayResult.data) {

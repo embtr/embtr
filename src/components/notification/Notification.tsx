@@ -94,14 +94,15 @@ export const Notification = ({ notification }: Props) => {
                                         paddingRight: PADDING_LARGE,
                                     }}
                                 >
-                                    <Ionicons
-                                        name={'mail-outline'}
-                                        size={16}
-                                        color={
-                                            notification.read
+                                    <View
+                                        style={{
+                                            height: 10,
+                                            width: 10,
+                                            borderRadius: 50,
+                                            backgroundColor: notification.read
                                                 ? colors.card_background
-                                                : colors.notification_dot
-                                        }
+                                                : colors.accent_color_light,
+                                        }}
                                     />
                                 </View>
                             </View>

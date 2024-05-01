@@ -63,7 +63,6 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
                 }}
             >
                 <PostWidgetElement
-                    title={summary.plannedDayResult.title ?? ''}
                     body={body}
                     commentCount={summary.plannedDayResult.comments?.length ?? 0}
                     likeCount={summary.plannedDayResult.likes?.length ?? 0}

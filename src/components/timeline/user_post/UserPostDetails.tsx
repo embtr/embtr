@@ -6,7 +6,6 @@ import { Alert, View } from 'react-native';
 import { UserPost } from 'resources/schema';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCloseMenu } from 'src/redux/user/GlobalState';
-import { Screen } from '../Screen';
 import { Banner } from 'src/components/common/Banner';
 import {
     createEmbtrMenuOptions,
@@ -16,10 +15,12 @@ import { EmbtrMenuCustom } from 'src/components/common/menu/EmbtrMenuCustom';
 import ScrollableTextInputBox from 'src/components/common/textbox/ScrollableTextInputBox';
 import { PADDING_LARGE } from 'src/util/constants';
 import * as React from 'react';
-import { UserPostElement } from 'src/components/timeline/UserPostElement';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { CommentsScrollView } from 'src/components/common/comments/CommentsScrollView';
 import { UserPostInteractableElementCustomHooks } from 'src/components/timeline/interactable/UserPostInteractableElementCustomHooks';
+import { Screen } from 'src/components/common/Screen';
+import { UserPostElement } from '../user_post/UserPostElement';
+import { TimelineController } from 'src/controller/timeline/TimelineController';
 
 const UserPostDetailsPlaceholder = () => {
     return (
@@ -50,7 +51,7 @@ const UserPostDetailsImplementation = ({ userPost }: ImplementationProps) => {
             return;
         }
 
-        navigation.navigate(Routes.EDIT_USER_POST_DETAILS, { id: userPost.id });
+        navigation.navigate(Routes.EDIT_USER_POST, { id: userPost.id });
     };
 
     const deletePost = () => {
@@ -68,13 +69,14 @@ const UserPostDetailsImplementation = ({ userPost }: ImplementationProps) => {
             [
                 {
                     text: 'Cancel',
-                    onPress: () => {},
+                    onPress: () => { },
                     style: 'cancel',
                 },
                 {
                     text: 'I am sure. Delete it.',
                     onPress: async () => {
                         await StoryController.deleteViaApi(userPost);
+                        TimelineController.invalidateCache();
                         navigation.navigate('Timeline');
                     },
                 },

@@ -2,7 +2,7 @@ import { View, Text } from 'react-native';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDatePretty, getDatePrettyWithTime } from 'src/util/DateUtility';
+import { getDatePrettyWithTime } from 'src/util/DateUtility';
 import { User } from 'resources/schema';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
     date: Date;
 }
 
-export const DailyResultHeader = ({ user, date }: Props) => {
+export const PlannedDayResultHeader = ({ user, date }: Props) => {
     const { colors } = useTheme();
 
     const datePretty = getDatePrettyWithTime(date);

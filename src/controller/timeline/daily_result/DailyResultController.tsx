@@ -5,8 +5,6 @@ import {
     CreatePlannedDayResultResponse,
     GetPlannedDayResultResponse,
     GetPlannedDayResultSummariesResponse,
-    GetPlannedDayResultSummaryResponse,
-    GetPlannedDayResultsResponse,
     UpdatePlannedDayResultRequest,
     UpdatePlannedDayResultResponse,
 } from 'resources/types/requests/PlannedDayResultTypes';
@@ -22,6 +20,8 @@ import { ReactQueryStaleTimes } from 'src/util/constants';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 
 class DailyResultController {
+    public static readonly UPLOAD_BUCKET = 'daily_results';
+
     public static async getAllSummariesForUser(userId: number): Promise<PlannedDayResultSummary[]> {
         try {
             const results = await axiosInstance.get<GetPlannedDayResultSummariesResponse>(
@@ -70,29 +70,19 @@ class DailyResultController {
             });
     }
 
-    public static async create(plannedDayId: number): Promise<PlannedDayResult | undefined> {
-        const body: CreatePlannedDayResultRequest = {
-            plannedDayId,
-        };
+    public static async create(
+        plannedDayResult: PlannedDayResult
+    ): Promise<PlannedDayResult | undefined> {
+        const request: CreatePlannedDayResultRequest = { plannedDayResult };
 
         return await axiosInstance
-            .post(`${PLANNED_DAY_RESULT}`, body)
-            .then((success) => {
-                const results = success.data as CreatePlannedDayResultResponse;
-                return results.plannedDayResult;
+            .post<CreatePlannedDayResultResponse>(`${PLANNED_DAY_RESULT}`, request)
+            .then((response) => {
+                return response.data.plannedDayResult;
             })
             .catch((error) => {
                 return undefined;
             });
-    }
-
-    public static async getOrCreate(plannedDay: PlannedDay): Promise<PlannedDayResult | undefined> {
-        let result = await this.getByPlannedDay(plannedDay);
-        if (!result) {
-            result = await this.create(plannedDay.id ?? 0);
-        }
-
-        return result;
     }
 
     public static async addPhotos(images: Image[], plannedDayResult: PlannedDayResult) {
@@ -140,7 +130,7 @@ class DailyResultController {
 
     public static async uploadImages(imageUploadProgess?: Function): Promise<string[]> {
         const imgUrls: string[] = await ImageController.pickAndUploadImages(
-            'daily_results',
+            this.UPLOAD_BUCKET,
             imageUploadProgess
         );
         return imgUrls;
