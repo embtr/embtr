@@ -9,7 +9,6 @@ import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
 import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { getTimeLeft } from 'src/util/DateUtility';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
-import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import CompletionStamp from 'src/components/common/stamp/CompletionStamp';
 import { getWindowWidth } from 'src/util/GeneralUtility';
@@ -42,8 +41,6 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
         challengeParticipant.challengeRequirementCompletionState ===
         ChallengeRequirementCompletionState.COMPLETED;
 
-    const description = challenge.description ?? '';
-
     const endDay = challenge.end ?? new Date();
     endDay.setHours(0, 0, 0, 0);
     const daysLeft = getTimeLeft(endDay);
@@ -72,18 +69,21 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
                 <View style={{ flex: 1 }}>
                     <Text
                         numberOfLines={1}
-                        style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 14 }}
+                        style={{
+                            color: colors.text,
+                            fontFamily: POPPINS_MEDIUM,
+                            fontSize: 14,
+                            height: 20,
+                        }}
                     >
                         {challenge.name}
                     </Text>
                 </View>
-                <View style={{ paddingTop: 0 }}>
-                    <ChallengeBadge
-                        reward={challenge.challengeRewards![0]}
-                        size={20}
-                        opaque={!isComplete}
-                    />
-                </View>
+                <ChallengeBadge
+                    reward={challenge.challengeRewards![0]}
+                    size={20}
+                    opaque={!isComplete}
+                />
             </View>
 
             <Text

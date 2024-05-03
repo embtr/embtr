@@ -17,6 +17,7 @@ axiosInstance.interceptors.request.use(
     async (config) => {
         const dayKey = getTodayKey();
         const authToken = await getAuthTokenId();
+        const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
         if (authToken) {
             config.headers['Authorization'] = `Bearer ${authToken}`;
@@ -24,6 +25,7 @@ axiosInstance.interceptors.request.use(
 
         config.headers['client-version'] = currentVersion;
         config.headers['client-dayKey'] = dayKey;
+        config.headers['client-timeZone'] = currentTimeZone;
 
         return config;
     },

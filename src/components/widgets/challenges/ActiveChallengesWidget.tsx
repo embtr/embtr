@@ -10,6 +10,7 @@ import {
 import { WidgetBase } from '../WidgetBase';
 import { ActiveChallengeElement } from './ActiveChallengeElement';
 import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';
+import { ScrollView } from 'react-native-gesture-handler';
 
 interface Props {
     userId: number;
@@ -59,11 +60,13 @@ export const ActiveChallengesWidget = ({ userId }: Props) => {
 
                 <View style={{ height: PADDING_SMALL }} />
 
-                {activeParticipation.data?.map((challengeParticipant) => (
-                    <View key={challengeParticipant.id} style={{ paddingRight: 7.5 }}>
-                        <ActiveChallengeElement challengeParticipant={challengeParticipant} />
-                    </View>
-                ))}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {activeParticipation.data?.map((challengeParticipant) => (
+                        <View key={challengeParticipant.id} style={{ paddingRight: 7.5 }}>
+                            <ActiveChallengeElement challengeParticipant={challengeParticipant} />
+                        </View>
+                    ))}
+                </ScrollView>
 
                 <View style={{ height: PADDING_SMALL / 2 }} />
             </WidgetBase>

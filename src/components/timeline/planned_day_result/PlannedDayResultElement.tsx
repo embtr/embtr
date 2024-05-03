@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { ImageUtility } from 'src/util/images/ImageUtility';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { PlannedDayResult } from 'resources/schema';
@@ -58,7 +58,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             {carouselImages.length > 0 && (
                 <View
                     style={{
-                        paddingTop: 10,
+                        paddingTop: PADDING_LARGE,
                         alignItems: 'center',
                     }}
                 >
@@ -66,20 +66,11 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
                 </View>
             )}
 
-            {/********************/}
-            {/* COMPLETED HABITS */}
-            {/********************/}
-            {plannedDayResult && (
-                <View style={{ paddingTop: PADDING_LARGE }}>
-                    <PlannedTaskResultGroups plannedDayResult={plannedDayResult} limit={8} />
-                </View>
-            )}
-
             {/**********/}
             {/*  BODY  */}
             {/**********/}
             {plannedDayResult.description && (
-                <View style={{}}>
+                <View style={{ paddingTop: PADDING_LARGE }}>
                     <Text
                         style={{
                             fontFamily: POPPINS_REGULAR,
@@ -89,6 +80,15 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
                     >
                         {plannedDayResult.description}
                     </Text>
+                </View>
+            )}
+
+            {/********************/}
+            {/* COMPLETED HABITS */}
+            {/********************/}
+            {plannedDayResult && (
+                <View style={{ paddingTop: PADDING_LARGE }}>
+                    <PlannedTaskResultGroups plannedDayResult={plannedDayResult} limit={8} />
                 </View>
             )}
 
