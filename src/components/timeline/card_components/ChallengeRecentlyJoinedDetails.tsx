@@ -1,24 +1,19 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { ChallengeReward } from 'resources/schema';
+import { Award } from 'resources/schema';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
-import { TimelineController } from 'src/controller/timeline/TimelineController';
 import { CARD_SHADOW, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 
 interface Props {
     challengeId: number;
     isAParticipant: boolean;
-    challengeReward: ChallengeReward;
+    award: Award;
 }
 
-export const ChallengeRecentlyJoinedDetails = ({
-    challengeId,
-    isAParticipant,
-    challengeReward,
-}: Props) => {
+export const ChallengeRecentlyJoinedDetails = ({ challengeId, isAParticipant, award }: Props) => {
     const { colors } = useTheme();
 
     const registerForChallenge = async () => {
@@ -47,7 +42,7 @@ export const ChallengeRecentlyJoinedDetails = ({
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ paddingRight: 8 }}>
-                            <ChallengeBadge reward={challengeReward} size={30} />
+                            <ChallengeBadge award={award} size={30} />
                         </View>
 
                         <Text
@@ -59,7 +54,7 @@ export const ChallengeRecentlyJoinedDetails = ({
                                 textAlign: 'center',
                             }}
                         >
-                            {challengeReward.name}
+                            {award.name}
                         </Text>
                     </View>
                 </View>

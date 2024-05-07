@@ -79,16 +79,13 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
                         {challenge.name}
                     </Text>
                 </View>
-                <ChallengeBadge
-                    reward={challenge.challengeRewards![0]}
-                    size={20}
-                    opaque={!isComplete}
-                />
+                {challenge.award && (
+                    <ChallengeBadge award={challenge.award} size={20} opaque={!isComplete} />
+                )}
             </View>
 
             <Text
                 style={{
-                    paddingLeft: 3,
                     color: colors.secondary_text,
                     fontFamily: POPPINS_REGULAR,
                     fontSize: 10,

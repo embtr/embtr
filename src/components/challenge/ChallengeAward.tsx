@@ -2,18 +2,18 @@ import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { shouldUseNarrowView } from 'src/util/GeneralUtility';
-import { ChallengeReward } from 'resources/schema';
+import { Award } from 'resources/schema';
 import { ChallengeBadge } from './ChallengeBadge';
 
 interface Props {
-    reward: ChallengeReward;
+    award: Award;
 }
 
-export const ChallengeRewardView = ({ reward }: Props) => {
+export const ChallengeAward = ({ award }: Props) => {
     const { colors } = useTheme();
     const useNarrowView = shouldUseNarrowView();
 
-    if (!reward.remoteImageUrl) {
+    if (!award.remoteImageUrl) {
         return <View />;
     }
 
@@ -31,7 +31,7 @@ export const ChallengeRewardView = ({ reward }: Props) => {
                 CARD_SHADOW,
             ]}
         >
-            <ChallengeBadge reward={reward} size={30} />
+            <ChallengeBadge award={award} size={30} />
             <Text
                 style={{
                     paddingLeft: 7,
@@ -40,7 +40,7 @@ export const ChallengeRewardView = ({ reward }: Props) => {
                     fontSize: useNarrowView ? 12 : 17,
                 }}
             >
-                {reward.name}
+                {award.name}
             </Text>
         </View>
     );

@@ -16,7 +16,7 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
     const { colors } = useTheme();
 
     const challenge = challengeParticipant?.challenge;
-    const challengeReward = challenge?.challengeRewards?.[0];
+    const award = challenge?.award;
 
     const onHandleDismiss = () => {
         onDismiss();
@@ -93,7 +93,7 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
                                 <SvgUri
                                     width={100}
                                     height={100}
-                                    uri={challengeReward?.imageUrl ?? ''}
+                                    uri={award?.remoteImageUrl ?? ''}
                                 />
                                 <Text
                                     style={{
@@ -103,7 +103,7 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
                                         textAlign: 'center',
                                     }}
                                 >
-                                    {challengeParticipant?.challengeCompletionDate?.toDateString()}
+                                    day user won here
                                 </Text>
                             </View>
                         </View>

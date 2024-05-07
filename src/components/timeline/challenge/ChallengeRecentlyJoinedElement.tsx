@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const ChallengeRecentlyJoinedElement = ({
-    challengeRecentlyJoined: challengeRecentlyJoined,
+    challengeRecentlyJoined,
     interactableData,
 }: Props) => {
     const { colors } = useTheme();
@@ -35,6 +35,8 @@ export const ChallengeRecentlyJoinedElement = ({
 
     const secondaryHeader = user.location ?? '';
     const isCurrentUser = getCurrentUid() === user.uid;
+
+    console.log('ChallengeRecentlyJoinedElement', challengeRecentlyJoined);
 
     return (
         <View
@@ -79,7 +81,7 @@ export const ChallengeRecentlyJoinedElement = ({
                 <ChallengeRecentlyJoinedDetails
                     challengeId={challengeRecentlyJoined.id}
                     isAParticipant={challengeRecentlyJoined.isParticipant}
-                    challengeReward={challengeRecentlyJoined.challengeRewards[0]}
+                    award={challengeRecentlyJoined.award}
                 />
             </View>
 

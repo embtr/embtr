@@ -12,10 +12,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
-import { ChallengeRewardView } from './ChallengeRewardView';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
-import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
-import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getSelectedDayKey } from 'src/redux/user/GlobalState';
 import { ChallengeSummary } from 'resources/types/dto/Challenge';
@@ -23,7 +20,7 @@ import { ChallengeSummaryInteractableElementCustomHooks } from '../timeline/inte
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { HorizontalLine } from '../common/HorizontalLine';
-import { TimelineController } from 'src/controller/timeline/TimelineController';
+import { ChallengeAward } from './ChallengeAward';
 
 interface Props {
     challengeSummary: ChallengeSummary;
@@ -165,12 +162,9 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                         </View>
 
                         <View>
-                            {challengeSummary.challengeRewards &&
-                                challengeSummary.challengeRewards.length > 0 && (
-                                    <ChallengeRewardView
-                                        reward={challengeSummary.challengeRewards[0]}
-                                    />
-                                )}
+                            {challengeSummary.award && (
+                                <ChallengeAward award={challengeSummary.award} />
+                            )}
                         </View>
                     </View>
                     <View style={{ paddingVertical: PADDING_LARGE }}>

@@ -1,15 +1,15 @@
 import { View } from 'react-native';
 import { SvgUri } from 'react-native-svg';
-import { ChallengeReward } from 'resources/schema';
+import { Award } from 'resources/schema';
 
 interface Props {
-    reward: ChallengeReward;
+    award: Award;
     size: number;
     opaque?: boolean;
 }
 
-export const ChallengeBadge = ({ reward, size, opaque }: Props) => {
-    if (!reward.remoteImageUrl) {
+export const ChallengeBadge = ({ award, size, opaque }: Props) => {
+    if (!award.remoteImageUrl) {
         return <View style={{ width: size, height: size }} />;
     }
 
@@ -18,7 +18,7 @@ export const ChallengeBadge = ({ reward, size, opaque }: Props) => {
             <SvgUri
                 width={size}
                 height={size}
-                uri={reward.remoteImageUrl}
+                uri={award.remoteImageUrl}
                 opacity={opaque ? 0.2 : undefined}
             />
         </View>

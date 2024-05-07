@@ -19,6 +19,8 @@ interface Props {
 }
 
 export const ChallengeDetailsBody = ({ challengeDetails, interactableData }: Props) => {
+    console.log('ChallengeDetail', challengeDetails);
+
     const { colors } = useTheme();
 
     return (
@@ -70,7 +72,7 @@ export const ChallengeDetailsBody = ({ challengeDetails, interactableData }: Pro
                 <ChallengeRecentlyJoinedDetails
                     isAParticipant={challengeDetails.isParticipant}
                     challengeId={challengeDetails.id}
-                    challengeReward={challengeDetails.challengeRewards[0]}
+                    award={challengeDetails.award}
                 />
             </View>
 
