@@ -1,10 +1,10 @@
-import { getWindowHeight } from 'src/util/GeneralUtility';
-import { Modal, TouchableOpacity, View, Text } from 'react-native';
-import { useTheme } from '../theme/ThemeProvider';
+import { TouchableOpacity, View, Text } from 'react-native';
 import { ChallengeParticipant } from 'resources/schema';
-import { ModalBase } from '../common/modal/ModalBase';
 import { SvgUri } from 'react-native-svg';
-import { POPPINS_MEDIUM } from 'src/util/constants';
+import { useTheme } from 'src/components/theme/ThemeProvider';
+import { EmbtrModal } from 'src/components/common/modal/EmbtrModal';
+import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { getDatePrettyWithYear } from 'src/util/DateUtility';
 
 interface Props {
     challengeParticipant?: ChallengeParticipant;
@@ -17,112 +17,113 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
 
     const challenge = challengeParticipant?.challenge;
     const award = challenge?.award;
+    const completedDatePretty = getDatePrettyWithYear(award?.updatedAt ?? new Date());
 
     const onHandleDismiss = () => {
         onDismiss();
     };
 
-    return (
-        <ModalBase visible={visible}>
-            <Modal visible={visible} transparent={true} animationType={'fade'}>
-                <TouchableOpacity
-                    style={{ height: getWindowHeight() / 4, width: '100%' }}
-                    onPress={() => {
-                        onHandleDismiss();
+    const body = (
+        <View style={{ alignItems: 'center', paddingVertical: PADDING_LARGE }}>
+            {/* TITLE SECTION */}
+            <View
+                style={{
+                    width: '100%',
+                }}
+            >
+                <View
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
-                />
-                <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity
-                        style={{ flex: 1 }}
-                        onPress={() => {
-                            onHandleDismiss();
-                        }}
-                    />
-
-                    <View
+                >
+                    <Text
                         style={{
-                            width: 300,
-                            height: getWindowHeight() / 3,
-                            backgroundColor: colors.modal_background,
-                            borderRadius: 7,
-                            justifyContent: 'space-around',
+                            fontSize: 16,
+                            fontFamily: POPPINS_MEDIUM,
+                            color: colors.text,
+                            textAlign: 'center',
                         }}
                     >
-                        <View style={{ flex: 1, alignItems: 'center' }}>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 14,
-                                        fontFamily: 'Poppins_500Medium',
-                                        color: colors.text,
-                                        paddingTop: 15,
-                                    }}
-                                >
-                                    {challenge?.name}
-                                </Text>
-                            </View>
-
-                            <View style={{ paddingTop: 25 }}>
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        fontSize: 12,
-                                        fontFamily: 'Poppins_400Regular',
-                                        paddingLeft: 10,
-                                        paddingRight: 10,
-                                        color: colors.secondary_text,
-                                    }}
-                                >
-                                    {challenge?.description}
-                                </Text>
-                            </View>
-
-                            <View
-                                style={{
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <SvgUri
-                                    width={100}
-                                    height={100}
-                                    uri={award?.remoteImageUrl ?? ''}
-                                />
-                                <Text
-                                    style={{
-                                        fontFamily: POPPINS_MEDIUM,
-                                        color: colors.text,
-                                        paddingTop: 20,
-                                        textAlign: 'center',
-                                    }}
-                                >
-                                    day user won here
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                    <TouchableOpacity
-                        style={{ flex: 1 }}
-                        onPress={() => {
-                            onHandleDismiss();
-                        }}
-                    />
+                        {challenge?.name}
+                    </Text>
                 </View>
+            </View>
 
-                <TouchableOpacity
-                    style={{ flex: 1, width: '100%' }}
-                    onPress={() => {
-                        onHandleDismiss();
+            {/* INSTRUCTIONS SECTION */}
+            <View
+                style={{
+                    paddingTop: PADDING_LARGE,
+                    alignItems: 'center',
+                    width: '100%',
+                }}
+            >
+                <SvgUri width={100} height={100} uri={award?.remoteImageUrl ?? ''} />
+            </View>
+
+            {/* INSTRUCTIONS SECTION */}
+            <View
+                style={{
+                    paddingTop: PADDING_LARGE,
+                    paddingHorizontal: PADDING_LARGE,
+                    width: '100%',
+                }}
+            >
+                <Text
+                    style={{
+                        fontFamily: POPPINS_REGULAR,
+                        color: colors.text,
+                        textAlign: 'center',
                     }}
-                />
-            </Modal>
-        </ModalBase>
+                >
+                    {completedDatePretty}
+                </Text>
+            </View>
+
+            {/* BUTTONS SECTION */}
+            <View
+                style={{
+                    paddingTop: PADDING_LARGE,
+                    width: '100%',
+                }}
+            >
+                <View
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+                    <TouchableOpacity
+                        style={{
+                            backgroundColor: colors.accent_color_light,
+                            paddingVertical: 5,
+                            borderRadius: 6,
+                        }}
+                        onPress={() => {
+                            onDismiss();
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                fontSize: 14,
+                                fontFamily: POPPINS_REGULAR,
+                                top: 2,
+                                color: colors.text,
+                                paddingHorizontal: PADDING_LARGE * 3,
+                            }}
+                        >
+                            Got it!
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </View>
+    );
+
+    return (
+        <EmbtrModal visible={visible} onDismiss={onDismiss}>
+            {body}
+        </EmbtrModal>
     );
 };

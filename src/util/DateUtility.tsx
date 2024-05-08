@@ -72,6 +72,10 @@ export const getDatePrettyWithTime = (date: Date): string => {
     return datePretty;
 };
 
+export const getDatePrettyWithYear = (date: Date): string => {
+    return format(date, 'MMM dd, yyyy');
+};
+
 export const getDateFormatted = (date: Date) => {
     let month = '' + (date.getMonth() + 1),
         day = '' + date.getDate(),

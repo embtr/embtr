@@ -2,51 +2,80 @@ import React from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { WidgetBase } from '../WidgetBase';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { POPPINS_SEMI_BOLD } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { ChallengeParticipant } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
 import { TrophyDetailsModal } from 'src/components/trophy_case/TrophyDetailsModal';
+import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';
+
+const imageSize = 60;
 
 interface Props {
-    completedChallenges: ChallengeParticipant[];
+    userId: number;
 }
-export const TrophyCaseWidget = ({ completedChallenges }: Props) => {
+
+export const TrophyCaseWidget = ({ userId }: Props) => {
     const { colors } = useTheme();
     const [selectedChallenge, setSelectedChallenge] = React.useState<ChallengeParticipant>();
 
+    const completedChallenges = ChallengeCustomHooks.useCompletedParticipation(userId);
+
+    if (completedChallenges.data === undefined || completedChallenges.data.length === 0) {
+        return <View />;
+    }
+
     const trophyElements: JSX.Element[] = [];
-    for (let i = 0; i < completedChallenges.length; i++) {
-        const url = completedChallenges[i].challenge?.award?.remoteImageUrl;
+    for (let i = 0; i < completedChallenges.data.length; i++) {
+        const url = completedChallenges.data[i].challenge?.award?.remoteImageUrl;
         trophyElements.push(
-            <View style={{ paddingHorizontal: 10 }}>
-                <Pressable
-                    onPress={() => {
-                        setSelectedChallenge(completedChallenges[i]);
+            <Pressable
+                onPress={() => {
+                    setSelectedChallenge(completedChallenges.data?.[i]);
+                }}
+            >
+                <View
+                    style={{
+                        height: imageSize,
+                        width: imageSize,
+                        borderRadius: 4,
+                        backgroundColor: colors.widget_element_background,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                     }}
                 >
-                    <SvgUri width={50} height={50} uri={url ?? ''} />
-                </Pressable>
-            </View>
+                    <SvgUri width={imageSize * 0.75} height={imageSize * 0.75} uri={url ?? ''} />
+                </View>
+            </Pressable>
         );
     }
 
     return (
-        <WidgetBase>
-            <TrophyDetailsModal
-                challengeParticipant={selectedChallenge}
-                visible={selectedChallenge !== undefined}
-                onDismiss={() => {
-                    setSelectedChallenge(undefined);
-                }}
-            />
-            <Text style={{ color: colors.text, fontFamily: POPPINS_SEMI_BOLD, fontSize: 15 }}>
-                Trophy Case
-            </Text>
-            <View style={{ paddingTop: 10 }}>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    {trophyElements}
-                </ScrollView>
-            </View>
-        </WidgetBase>
+        <View style={{ paddingTop: PADDING_LARGE }}>
+            <WidgetBase>
+                <TrophyDetailsModal
+                    challengeParticipant={selectedChallenge}
+                    visible={selectedChallenge !== undefined}
+                    onDismiss={() => {
+                        setSelectedChallenge(undefined);
+                    }}
+                />
+                <Text
+                    style={{
+                        color: colors.text,
+                        fontFamily: POPPINS_SEMI_BOLD,
+                        fontSize: 15,
+                        lineHeight: 17,
+                        bottom: 2,
+                    }}
+                >
+                    Trophy Case
+                </Text>
+                <View style={{ paddingTop: PADDING_SMALL }}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                        {trophyElements}
+                    </ScrollView>
+                </View>
+            </WidgetBase>
+        </View>
     );
 };

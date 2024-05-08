@@ -223,6 +223,8 @@ export namespace ChallengeCustomHooks {
         export const CHALLENGE_DETAILS_QUERY_KEY = 'challengeDetails';
         export const CHALLENGE_SUMMARY_QUERY_KEY = 'challengeSummary';
         export const CHALLENGE_SUMMARIES_QUERY_KEY = 'challengeSummaries';
+        export const CHALLENGE_COMPLETED_PARTICIPATION_QUERY_KEY =
+            'challengeCompletedParticipation';
     }
 
     export const useAllChallengeDetails = () => {
@@ -269,6 +271,16 @@ export namespace ChallengeCustomHooks {
         const { status, error, data, fetchStatus } = useQuery({
             queryKey: [Keys.ACTIVE_PARTICIPATION_QUERY_KEY, userId],
             queryFn: async () => ChallengeController.getAllActiveForUser(userId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useCompletedParticipation = (userId: number) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: [Keys.CHALLENGE_COMPLETED_PARTICIPATION_QUERY_KEY, userId],
+            queryFn: async () => ChallengeController.getAllCompletedForUser(userId),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
