@@ -134,9 +134,6 @@ export const CreateEditHabitSaveButton = ({
     };
 
     const createScheduledHabitRequest = (customHabitId?: number) => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-
         const scheduledHabit: ScheduledHabit = {
             id: scheduledHabitId,
             taskId: customHabitId ?? habitId,
@@ -147,7 +144,6 @@ export const CreateEditHabitSaveButton = ({
             daysOfWeekEnabled: daysOfWeekEnabled,
             timesOfDayEnabled: timesOfDayEnabled,
             detailsEnabled: detailsEnabled,
-            startDate: today,
         };
 
         if (daysOfWeekEnabled) {
