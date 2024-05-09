@@ -651,7 +651,14 @@ export const UpdatePlannedTaskModal = () => {
     );
 
     return (
-        <Modal visible={!!plannedTask.title} transparent={true} animationType={'fade'}>
+        <Modal
+            visible={!!plannedTask.title}
+            onRequestClose={() => {
+                dismiss();
+            }}
+            transparent={true}
+            animationType={'fade'}
+        >
             {/* <View style={{height: "100%", width: 1, backgroundColor: "yellow", zIndex: 100, position: 'absolute', right: 50}}></View> */}
             <View
                 style={{
