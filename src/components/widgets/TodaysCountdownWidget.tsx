@@ -3,10 +3,9 @@ import { getLocalDayOfWeek } from 'src/controller/planning/TaskController';
 import { Countdown } from '../common/time/Countdown';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_SMALL, POPPINS_MEDIUM } from 'src/util/constants';
 import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
-import { NotificationController } from 'src/controller/notification/NotificationController';
 
 export const TodaysCountdownWidget = () => {
     const { colors } = useTheme();
@@ -35,7 +34,7 @@ export const TodaysCountdownWidget = () => {
                     {dateString}!
                 </Text>
 
-                <View style={{ paddingTop: 5, flexDirection: 'row' }}>
+                <View style={{ paddingTop: PADDING_SMALL / 2, flexDirection: 'row' }}>
                     <Countdown />
                 </View>
             </View>

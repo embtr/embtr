@@ -31,7 +31,6 @@ export const Countdown = () => {
             style={{
                 color: colors.text,
                 fontSize: 12,
-                paddingTop: 2,
                 fontFamily: POPPINS_REGULAR,
             }}
         >

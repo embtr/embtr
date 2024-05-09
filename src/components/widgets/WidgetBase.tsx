@@ -13,9 +13,16 @@ interface Props {
     menuOptions?: EmbtrMenuOption[];
     symbol?: IoniconName;
     onPressSymbol?: Function;
+    backgroundColor?: string;
 }
 
-export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Props) => {
+export const WidgetBase = ({
+    children,
+    menuOptions,
+    symbol,
+    onPressSymbol,
+    backgroundColor,
+}: Props) => {
     const { colors } = useTheme();
 
     const dispatch = useAppDispatch();
@@ -33,7 +40,7 @@ export const WidgetBase = ({ children, menuOptions, symbol, onPressSymbol }: Pro
             style={[
                 {
                     borderRadius: 9,
-                    backgroundColor: colors.card_background,
+                    backgroundColor: backgroundColor ?? colors.card_background,
                     paddingVertical: PADDING_LARGE,
                     paddingHorizontal: PADDING_LARGE,
                 },
