@@ -28,10 +28,17 @@ interface Props {
     interactable: Interactable;
     images: Image[];
     body: string;
+    minimumTextLength?: number;
     onSubmit: (body: string, images: Image[]) => void;
 }
 
-export const CreateEditBody = ({ images, body, onSubmit, interactable }: Props) => {
+export const CreateEditBody = ({
+    images,
+    body,
+    onSubmit,
+    interactable,
+    minimumTextLength,
+}: Props) => {
     const colors = useTheme().colors;
     const [updatedBody, setUpdatedBody] = React.useState(body);
     const [updatedImages, setUpdatedImages] = React.useState(images);
@@ -43,11 +50,12 @@ export const CreateEditBody = ({ images, body, onSubmit, interactable }: Props) 
     const shakeAnimation = React.useRef(new Animated.Value(0)).current;
 
     const textApproachingMax = updatedBody.length > 700;
-    const textOverMax = updatedBody.length > 750;
+    const submitTextInvalid =
+        updatedBody.length < (minimumTextLength ?? 0) || updatedBody.length > 750;
 
     const shakeAggression = 2.5;
     const shakeText = () => {
-        if (textOverMax) {
+        if (submitTextInvalid) {
             setIsShaking(true);
             Animated.sequence([
                 Animated.timing(shakeAnimation, {
@@ -85,7 +93,7 @@ export const CreateEditBody = ({ images, body, onSubmit, interactable }: Props) 
     };
 
     const onSubmitPressed = async () => {
-        if (textOverMax) {
+        if (submitTextInvalid) {
             shakeText();
             return;
         }
@@ -173,7 +181,7 @@ export const CreateEditBody = ({ images, body, onSubmit, interactable }: Props) 
                 >
                     <Text
                         style={{
-                            color: textOverMax
+                            color: submitTextInvalid
                                 ? colors.progress_bar_failed
                                 : textApproachingMax
                                     ? colors.text_approaching_max
@@ -190,7 +198,7 @@ export const CreateEditBody = ({ images, body, onSubmit, interactable }: Props) 
                 {isSubmitting ? (
                     <ActivityIndicator color={colors.text} animating size="small" />
                 ) : (
-                    <View style={{ opacity: textOverMax ? 0.3 : 1 }}>
+                    <View style={{ opacity: submitTextInvalid ? 0.3 : 1 }}>
                         <Ionicons
                             onPress={onSubmitPressed}
                             name={'paper-plane-outline'}

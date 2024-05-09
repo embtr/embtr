@@ -50,6 +50,7 @@ export const CreateEditUserPostBase = ({ userPost, onSubmit }: Props) => {
                                     images={userPost.images ?? []}
                                     body={userPost.body ?? ''}
                                     onSubmit={onBodySubmit}
+                                    minimumTextLength={1}
                                 />
                             </View>
                         </ScrollView>

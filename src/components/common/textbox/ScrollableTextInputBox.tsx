@@ -3,7 +3,6 @@ import { CommentsTextInput } from 'src/components/common/comments/CommentsTextIn
 import { KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isIosApp } from 'src/util/DeviceUtil';
-import { User as UserModel } from 'resources/schema';
 
 interface Props {
     submitComment: Function;
@@ -18,8 +17,16 @@ const ScrollableTextInputBox = ({ submitComment, children }: Props) => {
     };
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} keyboardVerticalOffset={isIosApp() ? 40 : 0} behavior={isIosApp() ? 'padding' : undefined}>
-            <ScrollView style={{ flex: 1 }} onContentSizeChange={onCommentCountChanged} ref={scrollRef}>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            keyboardVerticalOffset={isIosApp() ? 40 : -218}
+            behavior={isIosApp() ? 'padding' : 'padding'}
+        >
+            <ScrollView
+                style={{ flex: 1 }}
+                onContentSizeChange={onCommentCountChanged}
+                ref={scrollRef}
+            >
                 {children}
             </ScrollView>
 

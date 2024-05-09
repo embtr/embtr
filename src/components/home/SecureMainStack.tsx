@@ -23,6 +23,7 @@ import { CreateUserPost } from '../timeline/user_post/crud/CreateUserPost';
 import { CreatePlannedDayResult } from '../timeline/planned_day_result/crud/CreatePlannedDayResult';
 import { EditPlannedDayResult } from '../timeline/planned_day_result/crud/EditPlannedDayResult';
 import { PlannedDayResultDetails } from '../timeline/planned_day_result/PlannedDayResultDetails';
+import { UserPostDetails } from '../timeline/user_post/UserPostDetails';
 
 const Stack = createStackNavigator();
 
@@ -91,6 +92,7 @@ export const SecureMainStack = () => {
 
             <Stack.Screen name={Routes.EDIT_PLANNED_DAY_RESULT} component={EditPlannedDayResult} />
             <Stack.Screen name={Routes.HABIT_SUMMARY_DETAILS} component={HabitSummaryDetails} />
+            <Stack.Screen name={Routes.USER_POST_DETAILS} component={UserPostDetails} />
             <Stack.Screen name={Routes.USER_NOTIFICATIONS} component={UserNotifications} />
             <Stack.Screen name={Routes.CHALLENGE_DETAILS_VIEW} component={ChallengeDetailsView} />
             <Stack.Screen

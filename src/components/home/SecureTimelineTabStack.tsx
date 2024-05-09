@@ -10,7 +10,6 @@ import { ChallengeDetailsView } from '../common/timeline/challenges/ChallengeDet
 import { Routes } from 'src/navigation/RootStackParamList';
 import { EditUserPost } from '../timeline/user_post/crud/EditUserPost';
 import { EditPlannedDayResult } from '../timeline/planned_day_result/crud/EditPlannedDayResult';
-import { UserPostDetails } from '../timeline/user_post/UserPostDetails';
 
 const Stack = createStackNavigator();
 
@@ -22,7 +21,6 @@ export const SecureTimelineTabStack = () => {
             <Stack.Screen name="UserProfile" component={UserProfile} />
             <Stack.Screen name={Routes.EDIT_USER_POST} component={EditUserPost} />
             <Stack.Screen name={Routes.EDIT_PLANNED_DAY_RESULT} component={EditPlannedDayResult} />
-            <Stack.Screen name="UserPostDetails" component={UserPostDetails} />
             <Stack.Screen name="Notifications" component={Notifications} />
             <Stack.Screen name="UserPosts" component={UserPosts} />
             <Stack.Screen name="DailyResults" component={DailyResults} />

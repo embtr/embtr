@@ -216,7 +216,14 @@ export const RemoveHabitModal = () => {
 
     return (
         <ModalBase visible={visible}>
-            <Modal visible={visible} transparent={true} animationType={'fade'}>
+            <Modal
+                visible={visible}
+                onRequestClose={() => {
+                    dismiss();
+                }}
+                transparent={true}
+                animationType={'fade'}
+            >
                 <Pressable
                     style={{
                         backgroundColor: 'transparent',
