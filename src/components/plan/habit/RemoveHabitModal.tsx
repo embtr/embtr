@@ -20,6 +20,7 @@ import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { PlannedTaskService } from 'src/service/PlannedHabitService';
+import { getDatePretty, getDatePrettyFullMonth } from 'src/util/DateUtility';
 
 const isLargerScreen = getWindowHeight() > 800;
 const buttonPadding = isLargerScreen ? 3 : 2;
@@ -65,7 +66,7 @@ const getBody = (
                                 fontSize: 20,
                                 width: '100%',
                                 fontFamily: POPPINS_MEDIUM,
-                                color: colors.accent_color,
+                                color: colors.text,
                                 paddingRight: PADDING_LARGE,
                             }}
                         >
@@ -91,8 +92,19 @@ const getBody = (
                         color: colors.text,
                     }}
                 >
-                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD }}>Remove this habit </Text>
-                    from today. You can always add it back later.
+                    <Text
+                        style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.accent_color_light }}
+                    >
+                        Remove{' '}
+                    </Text>
+                    this habit from
+                    <Text
+                        style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.accent_color_light }}
+                    >
+                        {' '}
+                        {getDatePrettyFullMonth(date)}
+                    </Text>
+                    . You can always add it back later.
                 </Text>
             </View>
 
