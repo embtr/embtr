@@ -6,7 +6,6 @@ import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { TouchableOpacity } from 'react-native';
 import { POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
 import { formatDistance } from 'date-fns';
-import { Ionicons } from '@expo/vector-icons';
 import { Notification as NotificationModel, NotificationTargetPage } from 'resources/schema';
 import { CachedImage } from '../common/images/CachedImage';
 
@@ -31,7 +30,7 @@ export const Notification = ({ notification }: Props) => {
     const getTargetPage = (target: NotificationTargetPage) => {
         switch (target) {
             case NotificationTargetPage.PLANNED_DAY_RESULT:
-                return 'DailyResultDetails';
+                return 'PlannedDayResultDetails';
             case NotificationTargetPage.USER_POST_DETAILS:
                 return 'UserPostDetails';
             case NotificationTargetPage.TODAY:
