@@ -34,7 +34,6 @@
             "userInterfaceStyle": "automatic",
             "package": "com.brentryczak.embtr",
             "googleServicesFile": "./google-services.json",
-            "softwareKeyboardLayoutMode": "pan",
             "versionCode": 604000001
         },
         "web": {
