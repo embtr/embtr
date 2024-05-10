@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Keyboard, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { UserTagBox } from 'src/components/common/comments/user_tags/UserTagBox';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserProfileModel } from 'src/model/OldModels';
 import { getWindowWidth } from 'src/util/GeneralUtility';
@@ -67,7 +66,7 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
                 flexDirection: 'row',
                 alignSelf: 'center',
                 alignItems: 'center',
-                marginBottom: insets.bottom > 0 ? insets.bottom : PADDING_SMALL,
+                marginBottom: focused ? 0 : insets.bottom > 0 ? insets.bottom : PADDING_SMALL,
             }}
         >
             <View
@@ -80,8 +79,6 @@ export const CommentsTextInput = ({ submitComment }: Props) => {
                     flex: 1,
                 }}
             >
-                <UserTagBox input={commentText} userTagged={applyUsernameTag} />
-
                 <View
                     style={{
                         flexDirection: 'row',

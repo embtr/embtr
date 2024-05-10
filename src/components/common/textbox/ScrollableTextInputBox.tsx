@@ -3,6 +3,7 @@ import { CommentsTextInput } from 'src/components/common/comments/CommentsTextIn
 import { KeyboardAvoidingView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { isIosApp } from 'src/util/DeviceUtil';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
     submitComment: Function;
@@ -16,11 +17,15 @@ const ScrollableTextInputBox = ({ submitComment, children }: Props) => {
         //scrollRef.current?.scrollTo({ x: 0, y: height, animated: true });
     };
 
+    const insets = useSafeAreaInsets();
+
     return (
         <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            keyboardVerticalOffset={isIosApp() ? 40 : -218}
-            behavior={isIosApp() ? 'padding' : 'padding'}
+            style={{
+                flex: 1,
+            }}
+            keyboardVerticalOffset={isIosApp() ? insets.top : 0}
+            behavior={isIosApp() ? 'padding' : undefined}
         >
             <ScrollView
                 style={{ flex: 1 }}
