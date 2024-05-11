@@ -71,7 +71,9 @@ export class RevenueCatImpl implements RevenueCat {
 
     public async purchasePremium() {
         const monthlyPackage = await this.getCurrentOffering();
+        alert('monthlyPackage: ' + JSON.stringify(monthlyPackage));
         if (!monthlyPackage) {
+            alert('No monthly package');
             return;
         }
 
@@ -79,8 +81,11 @@ export class RevenueCatImpl implements RevenueCat {
     }
 
     public async executePaywallWorkflow(): Promise<boolean> {
+        alert('displaying paywall');
         const paywallResult: PAYWALL_RESULT = await RevenueCatUI.presentPaywall();
+        alert('paywallResult: ' + paywallResult);
         await UserController.refreshPremiumStatus();
+        alert('refreshed premium status');
 
         return (
             paywallResult === PAYWALL_RESULT.PURCHASED || paywallResult === PAYWALL_RESULT.RESTORED
