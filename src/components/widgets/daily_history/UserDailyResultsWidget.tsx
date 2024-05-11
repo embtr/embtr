@@ -11,6 +11,7 @@ import { PlannedDayResultSummary } from 'resources/types/planned_day_result/Plan
 import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { PostWidgetElement } from 'src/components/widgets/post_widget_commons/PostWidgetElement';
+import { Routes } from 'src/navigation/RootStackParamList';
 
 interface Props {
     userId: number;
@@ -57,7 +58,7 @@ export const UserDailyResultsWidget = ({ userId }: Props) => {
             <TouchableOpacity
                 key={i}
                 onPress={() => {
-                    navigation.navigate('DailyResultDetails', {
+                    navigation.navigate(Routes.PLANNED_DAY_RESULT_DETAILS, {
                         id: summary.plannedDayResult.id ?? 0,
                     });
                 }}
