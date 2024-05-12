@@ -22,7 +22,6 @@ import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import * as Sentry from '@sentry/react-native';
 
 export const EditHabitModal = () => {
     const { colors } = useTheme();
@@ -48,9 +47,6 @@ export const EditHabitModal = () => {
             date = getDateFromDayKey(dayKey);
         } catch (error) {
             // 2024-01-21 - android was crashing on release build launch
-            Sentry.setExtra('bad dayKey', dayKey);
-            Sentry.setExtra('using date', date);
-            Sentry.captureException(error);
         }
     }
     const fullDatePretty = getDatePrettyFullMonth(date);

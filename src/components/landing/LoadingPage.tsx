@@ -29,7 +29,6 @@ export const LoadingPage = () => {
 
     React.useEffect(() => {
         const signoutTimer = setTimeout(() => {
-            // sentry remote log - user is being logged out
             signOut();
         }, 10000);
 

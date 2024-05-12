@@ -7,7 +7,6 @@ import { User } from 'resources/schema';
 import Constants from 'expo-constants';
 import { CreatePushNotificationTokenRequest } from 'resources/types/requests/NotificationTypes';
 import axiosInstance from 'src/axios/axios';
-import * as Sentry from '@sentry/react-native';
 import React from 'react';
 
 class PushNotificationController {
@@ -51,8 +50,6 @@ class PushNotificationController {
             ).data;
         } catch (error) {
             // 2024-01-21 - detecting missing projectId
-            Sentry.setExtra('projectId', projectId);
-            Sentry.captureException(error);
         }
 
         return token;
@@ -123,8 +120,7 @@ export namespace PushNotificationCustomHooks {
         }, []);
 
         const updateEnabledState = async (state: string) => {
-            const enabled =
-                await PushNotificationController.pushNotificationsEnabled();
+            const enabled = await PushNotificationController.pushNotificationsEnabled();
             setEnabled(enabled);
         };
 
@@ -138,13 +134,13 @@ export namespace PushNotificationCustomHooks {
             const canRequest = async () => {
                 const canRequest = await PushNotificationController.canRequestPushNotifications();
                 setCanRequest(canRequest);
-            }
+            };
 
             canRequest();
         }, []);
 
         return canRequest;
-    }
+    };
 }
 
 export default PushNotificationController;

@@ -11,16 +11,10 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { LogBox } from 'react-native';
-import * as Sentry from '@sentry/react-native';
 
 /*
  * "ABANDON ALL HOPE YE WHO ENTER HERE" - loganmbutler - 2023-11-29
  */
-
-Sentry.init({
-    dsn: 'https://113b0875ab8ad4fe2f5a644c010fbfa9@o4506605790560256.ingest.sentry.io/4506605798359040',
-    debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
-});
 
 const App = () => {
     LogBox.ignoreAllLogs();
@@ -47,4 +41,4 @@ const App = () => {
     );
 };
 
-export default Sentry.wrap(App);
+export default App;

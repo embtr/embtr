@@ -2,7 +2,6 @@ import * as ImagePicker from 'expo-image-picker';
 import { getAuth } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { ImageUploadProgressReport } from 'src/controller/image/ImageController';
-import * as Sentry from '@sentry/react-native';
 
 export const uploadImages = async (
     pickerResults: ImagePicker.ImagePickerAsset[],
@@ -27,7 +26,6 @@ export const uploadImages = async (
         }
     } catch (e) {
         console.log(e);
-        Sentry.captureException(e);
         alert('Upload failed, sorry :(');
     }
 
@@ -68,10 +66,10 @@ export const uploadImage = async (
 const createBlob = async (uri: string) => {
     const blob: any = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.onload = function () {
+        xhr.onload = function() {
             resolve(xhr.response);
         };
-        xhr.onerror = function (e) {
+        xhr.onerror = function(e) {
             console.log('BLOB ERROR', e);
             reject(new TypeError('Network request failed'));
         };
@@ -83,7 +81,7 @@ const createBlob = async (uri: string) => {
     return blob;
 };
 
-const hashString = function (str: string) {
+const hashString = function(str: string) {
     var hash = 0,
         i,
         chr;
