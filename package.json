@@ -1,6 +1,6 @@
 {
   "name": "embtr",
-  "version": "4.0.4",
+  "version": "4.0.9",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "npx expo start",
@@ -67,8 +67,8 @@
     "react-native-menu-view": "^1.2.2",
     "react-native-pager-view": "6.3.0",
     "react-native-parsed-text": "^0.0.22",
-    "react-native-purchases": "^7.27.1",
-    "react-native-purchases-ui": "^7.27.1",
+    "react-native-purchases": "^7.21.1",
+    "react-native-purchases-ui": "^7.22.0",
     "react-native-reanimated": "~3.10.1",
     "react-native-root-siblings": "^4.1.1",
     "react-native-root-toast": "^3.4.1",
