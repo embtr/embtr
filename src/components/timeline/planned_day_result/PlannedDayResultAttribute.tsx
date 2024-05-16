@@ -2,7 +2,9 @@ import { Text, View } from 'react-native';
 import { PlannedDayResultDto } from 'resources/types/dto/PlannedDay';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, PADDING_LARGE, POPPINS_MEDIUM } from 'src/util/constants';
+
+/* This is not Twitch purple. Twitch is Embtr purple - TheCaptainCoder - 2024-05-16 */
 
 interface Props {
     plannedDayResult: PlannedDayResultDto;
@@ -27,10 +29,8 @@ export const PlannedDayResultAttribute = ({ plannedDayResult }: Props) => {
         <View
             style={[
                 {
-                    backgroundColor: '#343434',
+                    backgroundColor: '#9147ff',
                     borderRadius: 5,
-                    borderWidth: 0.5,
-                    borderColor: '#606060',
                     paddingHorizontal: PADDING_LARGE,
                     paddingVertical: PADDING_LARGE,
                     flexDirection: 'row',
@@ -38,16 +38,18 @@ export const PlannedDayResultAttribute = ({ plannedDayResult }: Props) => {
                 CARD_SHADOW,
             ]}
         >
-            {optimalImageData.localImage ||
+            {(optimalImageData.localImage ||
                 optimalImageData.remoteImageUrl ||
-                (optimalImageData.ionicon && (
+                optimalImageData.ionicon) && (
                     <View style={{ paddingRight: PADDING_LARGE }}>
                         <View
                             style={{
                                 height: imageSize,
                                 width: imageSize,
                                 borderRadius: 4,
-                                backgroundColor: '#606060',
+                                borderWidth: 0.5,
+                                borderColor: colors.card_background,
+                                backgroundColor: '#404040',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}
@@ -61,12 +63,12 @@ export const PlannedDayResultAttribute = ({ plannedDayResult }: Props) => {
                             />
                         </View>
                     </View>
-                ))}
+                )}
 
             <Text
                 numberOfLines={2}
                 style={{
-                    fontFamily: POPPINS_REGULAR,
+                    fontFamily: POPPINS_MEDIUM,
                     flex: 1,
                     fontSize: 13,
                     color: colors.text,

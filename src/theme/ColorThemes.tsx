@@ -183,7 +183,7 @@ export const darkColors = {
     card_background: '#282828',
     widget_element_background: '#404040',
     accent_color_dark: '#673cb5',
-    accent_color: '#9154FF',
+    accent_color: '#9154ff',
     accent_color_light: '#9F78E7',
     accent_color_dim: '#362B35',
     accent_color_faint: '#322C30',

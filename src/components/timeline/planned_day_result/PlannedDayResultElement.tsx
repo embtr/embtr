@@ -68,19 +68,6 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
                 </View>
             )}
 
-            {/*************/}
-            {/* ATTRIBUTE */}
-            {/*************/}
-            {plannedDayResult.attribute && (
-                <View
-                    style={{
-                        paddingTop: padding,
-                    }}
-                >
-                    <PlannedDayResultAttribute plannedDayResult={plannedDayResult} />
-                </View>
-            )}
-
             {/**********/}
             {/*  BODY  */}
             {/**********/}
@@ -100,12 +87,25 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
                 </View>
             )}
 
+            {/*************/}
+            {/* ATTRIBUTE */}
+            {/*************/}
+            {plannedDayResult.attribute && (
+                <View
+                    style={{
+                        paddingTop: padding,
+                    }}
+                >
+                    <PlannedDayResultAttribute plannedDayResult={plannedDayResult} />
+                </View>
+            )}
+
             {/********************/}
             {/* COMPLETED HABITS */}
             {/********************/}
             {plannedDayResult && (
                 <View style={{ paddingTop: padding }}>
-                    <PlannedTaskResultGroups plannedDayResult={plannedDayResult} limit={8} />
+                    <PlannedTaskResultGroups plannedDayResult={plannedDayResult} limit={3} />
                 </View>
             )}
 
