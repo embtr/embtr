@@ -33,7 +33,7 @@ export const PlannedTaskResultGroups = ({ plannedDayResult, limit }: Props) => {
 
     const plannedTaskViews: JSX.Element[] = [];
     for (const plannedTask of limitedPlannedTaskGroups.entries()) {
-        const isLast = count++ === allPlannedTaskGroups.size - 1;
+        const isLast = plannedTask[0] === Array.from(limitedPlannedTaskGroups.keys()).pop();
         plannedTaskViews.push(
             <View
                 style={{

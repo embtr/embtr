@@ -4,16 +4,17 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { ImageUtility } from 'src/util/images/ImageUtility';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
-import { PlannedDayResult } from 'resources/schema';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 import { CarouselCards, ImageCarouselImage } from 'src/components/common/images/ImageCarousel';
 import { CardHeader } from '../card_components/CardHeader';
 import PostDetailsActionBar from 'src/components/common/comments/PostDetailsActionBar';
 import { PlannedTaskResultGroups } from './PlannedTaskResultGroups';
+import { PlannedDayResultAttribute } from './PlannedDayResultAttribute';
+import { PlannedDayResultDto } from 'resources/types/dto/PlannedDay';
 
 interface Props {
-    plannedDayResult: PlannedDayResult;
+    plannedDayResult: PlannedDayResultDto;
     interactableData: InteractableData;
 }
 
@@ -30,6 +31,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
 
     const secondaryHeader = plannedDayResult.plannedDay.user.location ?? '';
     const isCurrentUser = getCurrentUid() === plannedDayResult.plannedDay.user.uid;
+    const padding = PADDING_LARGE * 1.5;
 
     return (
         <View
@@ -58,7 +60,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             {carouselImages.length > 0 && (
                 <View
                     style={{
-                        paddingTop: PADDING_LARGE,
+                        paddingTop: padding,
                         alignItems: 'center',
                     }}
                 >
@@ -66,16 +68,31 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
                 </View>
             )}
 
+            {/*************/}
+            {/* ATTRIBUTE */}
+            {/*************/}
+            {plannedDayResult.attribute && (
+                <View
+                    style={{
+                        paddingTop: padding,
+                    }}
+                >
+                    <PlannedDayResultAttribute plannedDayResult={plannedDayResult} />
+                </View>
+            )}
+
             {/**********/}
             {/*  BODY  */}
             {/**********/}
             {plannedDayResult.description && (
-                <View style={{ paddingTop: PADDING_LARGE }}>
+                <View style={{ paddingTop: padding }}>
                     <Text
                         style={{
                             fontFamily: POPPINS_REGULAR,
                             fontSize: 13,
+                            lineHeight: 15,
                             color: colors.text,
+                            top: 2,
                         }}
                     >
                         {plannedDayResult.description}
@@ -87,7 +104,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             {/* COMPLETED HABITS */}
             {/********************/}
             {plannedDayResult && (
-                <View style={{ paddingTop: PADDING_LARGE }}>
+                <View style={{ paddingTop: padding }}>
                     <PlannedTaskResultGroups plannedDayResult={plannedDayResult} limit={8} />
                 </View>
             )}
@@ -95,7 +112,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             {/********************/}
             {/*    ACTION BAR    */}
             {/********************/}
-            <View style={{ paddingTop: PADDING_LARGE }}>
+            <View style={{ paddingTop: padding }}>
                 <View
                     style={{
                         borderColor: colors.secondary_text,

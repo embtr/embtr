@@ -4,10 +4,10 @@ import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { PlannedDayResultInteractableElementCustomHooks } from '../interactable/PlannedDayResultInteractableElementCustomHooks';
 import { PlannedDayResultElement } from './PlannedDayResultElement';
-import { PlannedDayTimelineElementDto } from 'resources/types/dto/PlannedDay';
+import { PlannedDayResultDto } from 'resources/types/dto/PlannedDay';
 
 interface Props {
-    plannedDayResult: PlannedDayTimelineElementDto;
+    plannedDayResult: PlannedDayResultDto;
 }
 
 export const PlannedDayResultTimelineElement = ({ plannedDayResult }: Props) => {

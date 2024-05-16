@@ -16,6 +16,10 @@ import { LogBox } from 'react-native';
  * "ABANDON ALL HOPE YE WHO ENTER HERE" - loganmbutler - 2023-11-29
  */
 
+/*
+ *  "JUST LIKE HABITS, GOOD CODE IS BUILT ONE LINE AT A TIME" - loganmbutler - 2024-05-16
+ */
+
 const App = () => {
     LogBox.ignoreAllLogs();
 
