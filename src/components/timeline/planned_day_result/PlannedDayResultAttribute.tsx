@@ -29,7 +29,7 @@ export const PlannedDayResultAttribute = ({ plannedDayResult }: Props) => {
         <View
             style={[
                 {
-                    backgroundColor: '#9147ff',
+                    backgroundColor: colors.accent_color,
                     borderRadius: 5,
                     paddingHorizontal: PADDING_LARGE,
                     paddingVertical: PADDING_LARGE,
