@@ -27,11 +27,6 @@ export const CardHeader = ({ date, user, dayKey, secondaryText, type }: Props) =
 
     let datePretty = getHumanReadableDate(date);
 
-    if (dayKey) {
-        const x = format(getDateFromDayKey(dayKey ?? ''), 'MMMM dd, yyyy');
-        console.log(x, dayKey);
-    }
-
     const label =
         type === TimelineElementType.USER_POST
             ? 'Post'

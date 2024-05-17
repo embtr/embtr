@@ -36,8 +36,6 @@ export const ChallengeRecentlyJoinedElement = ({
     const secondaryHeader = user.location ?? '';
     const isCurrentUser = getCurrentUid() === user.uid;
 
-    console.log('ChallengeRecentlyJoinedElement', challengeRecentlyJoined);
-
     return (
         <View
             style={[

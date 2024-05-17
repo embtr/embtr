@@ -6,7 +6,6 @@ export namespace DebouncerCustomHook {
 
         useEffect(() => {
             const timer = setTimeout(() => {
-                console.log(value);
                 setDebouncedValue(value);
             }, delay || 500);
 

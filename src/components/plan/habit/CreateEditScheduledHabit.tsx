@@ -57,7 +57,6 @@ export const CreateEditScheduledHabit = () => {
                     scheduledHabitId={scheduledHabitId}
                     isCreatedNewScheduledHabit
                     onExit={() => {
-                        console.log('Exiting scheduled habit');
                         onExit?.();
                     }}
                     archiveModalVisible={archiveModalVisible}

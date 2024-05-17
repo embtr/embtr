@@ -206,11 +206,9 @@ class PlannedDayController {
         return await axiosInstance
             .post<CreatePlannedDayResponse>(`${PLANNED_DAY}`, body)
             .then((success) => {
-                console.log('PlannedDayController.createViaApi', success.data);
                 return success.data.plannedDay;
             })
             .catch((error) => {
-                console.log('PlannedDayController.createViaApi', error);
                 return undefined;
             });
     }
