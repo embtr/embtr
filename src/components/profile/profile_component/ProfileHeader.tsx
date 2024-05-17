@@ -103,6 +103,8 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                                     fontSize: 16,
                                     fontFamily: POPPINS_MEDIUM,
                                     color: colors.profile_name_text,
+                                    lineHeight: 18,
+                                    top: 2,
                                 }}
                             >
                                 {user.displayName}

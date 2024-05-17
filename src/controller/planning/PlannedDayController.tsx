@@ -179,11 +179,7 @@ export const getDateFromDayKey = (dayKey: string) => {
     date.setMonth(month);
     date.setDate(day);
 
-    const dateAsUtc = new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
-    );
-
-    return dateAsUtc;
+    return date;
 };
 
 class PlannedDayController {

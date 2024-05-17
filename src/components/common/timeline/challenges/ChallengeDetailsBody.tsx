@@ -19,8 +19,6 @@ interface Props {
 }
 
 export const ChallengeDetailsBody = ({ challengeDetails, interactableData }: Props) => {
-    console.log('ChallengeDetail', challengeDetails);
-
     const { colors } = useTheme();
 
     return (

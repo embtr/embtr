@@ -2,7 +2,7 @@ import { Text, View } from 'react-native';
 import { User } from 'resources/schema';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getHumanReadableDate } from 'src/util/DateUtility';
+import { getDatePrettyWithYear, getHumanReadableDate } from 'src/util/DateUtility';
 import {
     PADDING_SMALL,
     POPPINS_MEDIUM,
@@ -11,31 +11,39 @@ import {
 } from 'src/util/constants';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { PremiumBadge } from 'src/components/common/PremiumBadge';
+import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
+import { format } from 'date-fns';
 
 interface Props {
     date: Date;
     user: User;
+    dayKey?: string;
     secondaryText?: string;
     type: TimelineElementType;
 }
 
-export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
+export const CardHeader = ({ date, user, dayKey, secondaryText, type }: Props) => {
     const { colors } = useTheme();
 
     let datePretty = getHumanReadableDate(date);
+
+    if (dayKey) {
+        const x = format(getDateFromDayKey(dayKey ?? ''), 'MMMM dd, yyyy');
+        console.log(x, dayKey);
+    }
 
     const label =
         type === TimelineElementType.USER_POST
             ? 'Post'
             : type === TimelineElementType.PLANNED_DAY_RESULT
-                ? 'Daily Update'
+                ? '' + format(getDateFromDayKey(dayKey ?? ''), 'MMMM dd, yyyy')
                 : 'Challenge';
 
     const color =
         type === TimelineElementType.USER_POST
             ? colors.timeline_label_user_post
             : type === TimelineElementType.PLANNED_DAY_RESULT
-                ? colors.accent_color_light
+                ? colors.link
                 : colors.secondary_accent_color;
 
     return (
@@ -109,7 +117,7 @@ export const CardHeader = ({ date, user, secondaryText, type }: Props) => {
                         textAlign: 'right',
                     }}
                 >
-                    {datePretty}
+                    Posted {datePretty}
                 </Text>
                 <View
                     style={{

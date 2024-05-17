@@ -30,7 +30,6 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
         }, [comment])
     );
 
-    console.log('CommentBoxComment.tsx:', comment.createdAt);
     const time = formatDistance(comment.createdAt ?? new Date(), new Date(), { addSuffix: true });
     return (
         <View
@@ -58,9 +57,12 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
                     >
                         <Text
                             style={{
-                                color: colors.secondary_text,
+                                color: colors.text,
                                 fontFamily: POPPINS_MEDIUM,
                                 fontSize: 14,
+                                lineHeight: 16,
+                                top: 2,
+                                bottom: 0,
                             }}
                         >
                             {comment.user?.displayName}
@@ -68,6 +70,7 @@ export const CommentBoxComment = ({ comment, isOwnPost }: Props) => {
                         <View
                             style={{
                                 paddingLeft: 1.5,
+                                top: 0.5,
                             }}
                         >
                             <PremiumBadge user={comment.user!} size={14} />

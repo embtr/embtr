@@ -29,13 +29,12 @@ export const PlannedDayResultAttribute = ({ plannedDayResult }: Props) => {
         <View
             style={[
                 {
-                    backgroundColor: colors.accent_color,
+                    backgroundColor: colors.accent_color_soft,
                     borderRadius: 5,
                     paddingHorizontal: PADDING_LARGE,
                     paddingVertical: PADDING_LARGE,
                     flexDirection: 'row',
                 },
-                CARD_SHADOW,
             ]}
         >
             {(optimalImageData.localImage ||
@@ -47,9 +46,6 @@ export const PlannedDayResultAttribute = ({ plannedDayResult }: Props) => {
                                 height: imageSize,
                                 width: imageSize,
                                 borderRadius: 4,
-                                borderWidth: 0.5,
-                                borderColor: colors.card_background,
-                                backgroundColor: '#404040',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                             }}

@@ -87,6 +87,7 @@ export const lightColors = {
     accent_color_dark: '##673cb5',
     accent_color: 'orange',
     accent_color_light: '#9F78E7',
+    accent_color_soft: '#413440',
     accent_color_dim: '#362B35',
     accent_color_faint: '#322C30',
     secondary_accent_color: '#FF6712',
@@ -94,6 +95,7 @@ export const lightColors = {
     timeline_label_daily_results: '#DF5A6E',
     timeline_label_challenge: '#7D44E4',
     timeline_label_user_post: '#27B24A',
+    timeline_label_daily_update: '#27B24A',
     text_approaching_max: '#FFC100',
 };
 
@@ -185,6 +187,7 @@ export const darkColors = {
     accent_color_dark: '#673cb5',
     accent_color: '#9154ff',
     accent_color_light: '#9F78E7',
+    accent_color_soft: '#413440',
     accent_color_dim: '#362B35',
     accent_color_faint: '#322C30',
     secondary_accent_color: '#FF6712',
@@ -193,5 +196,6 @@ export const darkColors = {
     timeline_label_daily_results: '#DF5A6E',
     timeline_label_challenge: '#9154FF',
     timeline_label_user_post: '#27B24A',
+    timeline_label_daily_update: '#27B24A',
     text_approaching_max: '#FFC100',
 };

@@ -50,6 +50,7 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             <CardHeader
                 date={plannedDayResult.createdAt}
                 user={plannedDayResult.plannedDay?.user}
+                dayKey={plannedDayResult.plannedDay?.dayKey}
                 secondaryText={secondaryHeader}
                 type={TimelineElementType.PLANNED_DAY_RESULT}
             />
