@@ -6,10 +6,10 @@ import { PlannedDayResultCardElement } from './PlannedDayResultCardElement';
 
 interface Props {
     plannedDayResult: PlannedDayResult;
-    limit?: number;
+    habitLimit?: number;
 }
 
-export const PlannedTaskResultGroups = ({ plannedDayResult, limit }: Props) => {
+export const PlannedTaskResultGroups = ({ plannedDayResult, habitLimit }: Props) => {
     const colors = useTheme().colors;
 
     const allPlannedTaskGroups: Map<number, PlannedTask[]> = new Map();
@@ -26,7 +26,7 @@ export const PlannedTaskResultGroups = ({ plannedDayResult, limit }: Props) => {
     const limitedPlannedTaskGroups = new Map<number, PlannedTask[]>();
     let count = 0;
     allPlannedTaskGroups.forEach((plannedTasks, key) => {
-        if (count++ < (limit ?? allPlannedTaskGroups.size)) {
+        if (count++ < (habitLimit ?? allPlannedTaskGroups.size)) {
             limitedPlannedTaskGroups.set(key, plannedTasks);
         }
     });

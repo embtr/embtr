@@ -10,6 +10,8 @@ interface Props {
     plannedDayResult: PlannedDayResultDto;
 }
 
+const HABIT_LIMIT = 4;
+
 export const PlannedDayResultTimelineElement = ({ plannedDayResult }: Props) => {
     const interactableData =
         PlannedDayResultInteractableElementCustomHooks.usePlannedDayResultInteractableElement(
@@ -36,6 +38,7 @@ export const PlannedDayResultTimelineElement = ({ plannedDayResult }: Props) => 
             <PlannedDayResultElement
                 plannedDayResult={plannedDayResult}
                 interactableData={interactableData}
+                habitLimit={HABIT_LIMIT}
             />
         </Pressable>
     );

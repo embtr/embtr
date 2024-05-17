@@ -16,9 +16,14 @@ import { PlannedDayResultDto } from 'resources/types/dto/PlannedDay';
 interface Props {
     plannedDayResult: PlannedDayResultDto;
     interactableData: InteractableData;
+    habitLimit?: number;
 }
 
-export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: Props) => {
+export const PlannedDayResultElement = ({
+    plannedDayResult,
+    interactableData,
+    habitLimit,
+}: Props) => {
     const { colors } = useTheme();
 
     if (!plannedDayResult.createdAt || !plannedDayResult.plannedDay?.user) {
@@ -106,7 +111,10 @@ export const PlannedDayResultElement = ({ plannedDayResult, interactableData }: 
             {/********************/}
             {plannedDayResult && (
                 <View style={{ paddingTop: padding }}>
-                    <PlannedTaskResultGroups plannedDayResult={plannedDayResult} limit={3} />
+                    <PlannedTaskResultGroups
+                        plannedDayResult={plannedDayResult}
+                        habitLimit={habitLimit}
+                    />
                 </View>
             )}
 
