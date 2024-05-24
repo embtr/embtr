@@ -49,6 +49,7 @@ export const CreateEditHabitSaveButton = ({
         quantity,
         completedQuantity,
         unit,
+        icon,
         remoteImageUrl,
         localImage,
         timesOfDayEnabled,
@@ -94,6 +95,7 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity ?? 1,
             completedQuantity: completedQuantity,
+            iconId: icon?.id,
             remoteImageUrl: remoteImageUrl,
             localImage: localImage,
         };
@@ -116,6 +118,7 @@ export const CreateEditHabitSaveButton = ({
             description: description,
             quantity: quantity ?? 1,
             completedQuantity: completedQuantity,
+            iconId: icon?.id,
             remoteImageUrl: remoteImageUrl,
             localImage: localImage,
         };
@@ -139,6 +142,7 @@ export const CreateEditHabitSaveButton = ({
             taskId: customHabitId ?? habitId,
             title: title,
             description: description,
+            iconId: icon?.id,
             localImage: localImage,
             remoteImageUrl: remoteImageUrl,
             daysOfWeekEnabled: daysOfWeekEnabled,
@@ -192,6 +196,7 @@ export const CreateEditHabitSaveButton = ({
             description,
             localImage: localImage,
             remoteImageUrl: remoteImageUrl,
+            iconId: icon?.id,
         };
 
         //create habit

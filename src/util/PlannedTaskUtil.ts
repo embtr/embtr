@@ -38,8 +38,17 @@ export namespace PlannedTaskUtil {
         );
     };
 
+    export const getIcon = (plannedTask?: PlannedTask) => {
+        return (
+            plannedTask?.icon ??
+            plannedTask?.scheduledHabit?.icon ??
+            plannedTask?.scheduledHabit?.task?.icon
+        );
+    };
+
     export const getOptimalImage = (plannedTask?: PlannedTask): OptimalImageData => {
         const optimalImage: OptimalImageData = {
+            icon: getIcon(plannedTask),
             localImage: getLocalImage(plannedTask),
             remoteImageUrl: getRemoteImageUrl(plannedTask),
         };

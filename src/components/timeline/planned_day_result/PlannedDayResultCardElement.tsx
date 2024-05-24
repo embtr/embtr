@@ -49,7 +49,6 @@ export const PlannedDayResultCardElement = ({ plannedTasks }: Props) => {
                     <HabitIcon
                         optimalImageData={optimalImageData}
                         size={30}
-                        color={colors.tab_selected}
                         isChallenge={plannedTask.scheduledHabit?.task?.type === 'CHALLENGE'}
                     />
                 </View>

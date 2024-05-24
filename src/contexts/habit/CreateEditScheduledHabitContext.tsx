@@ -1,4 +1,12 @@
-import { DayOfWeek, PlannedTask, ScheduledHabit, Task, TimeOfDay, Unit } from 'resources/schema';
+import {
+    DayOfWeek,
+    Icon,
+    PlannedTask,
+    ScheduledHabit,
+    Task,
+    TimeOfDay,
+    Unit,
+} from 'resources/schema';
 import React, { createContext, useContext } from 'react';
 import { HabitCustomHooks } from 'src/controller/habit/HabitController';
 import { PlannedHabitCustomHooks } from 'src/controller/habit/PlannedHabitController';
@@ -49,6 +57,7 @@ export const getEditMode = (
 interface CreateEditScheduledHabitType {
     remoteImageUrl: string;
     localImage: string;
+    icon?: Icon;
     title: string;
     description: string;
     startDate?: Date;
@@ -63,6 +72,7 @@ interface CreateEditScheduledHabitType {
 
     setRemoteImageUrl: (remoteImageUrl: string) => void;
     setLocalImage: (localImage: string) => void;
+    setIcon: (icon: Icon) => void;
     setTitle: (title: string) => void;
     setDescription: (description: string) => void;
     setStartDate: (startDate: Date) => void;
@@ -126,6 +136,7 @@ export const CreateEditScheduledHabitProvider = ({
 
     const [remoteImageUrl, setRemoteImageUrl] = React.useState('');
     const [localImage, setLocalImage] = React.useState('');
+    const [icon, setIcon] = React.useState<Icon | undefined>(undefined);
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
     const [startDate, setStartDate] = React.useState<Date | undefined>(undefined);
@@ -154,6 +165,7 @@ export const CreateEditScheduledHabitProvider = ({
         if (!isCreateCustomHabit && habit.data) {
             setRemoteImageUrl(habit.data.remoteImageUrl ?? '');
             setLocalImage(habit.data.localImage ?? '');
+            setIcon(habit.data.icon ?? undefined);
             setTitle(habit.data.title ?? '');
             setDescription(habit.data.description ?? '');
             setDaysOfWeek([]);
@@ -179,6 +191,7 @@ export const CreateEditScheduledHabitProvider = ({
         if (scheduledHabit.data) {
             setRemoteImageUrl(ScheduledHabitUtil.getRemoteImageUrl(scheduledHabit.data));
             setLocalImage(ScheduledHabitUtil.getLocalImage(scheduledHabit.data));
+            setIcon(scheduledHabit.data.icon ?? undefined);
             setTitle(ScheduledHabitUtil.getTitle(scheduledHabit.data));
             setDescription(ScheduledHabitUtil.getDescription(scheduledHabit.data));
             setStartDate(scheduledHabit.data.startDate ?? undefined);
@@ -213,6 +226,7 @@ export const CreateEditScheduledHabitProvider = ({
         if (newPlannedHabitScheduledHabit.data) {
             setRemoteImageUrl(newPlannedHabitScheduledHabit.data.task?.remoteImageUrl ?? '');
             setLocalImage(newPlannedHabitScheduledHabit.data.task?.localImage ?? '');
+            setIcon(newPlannedHabitScheduledHabit.data.task?.icon ?? undefined);
             setStartDate(newPlannedHabitScheduledHabit.data.startDate ?? undefined);
             setEndDate(newPlannedHabitScheduledHabit.data.endDate ?? undefined);
             setDaysOfWeek(newPlannedHabitScheduledHabit.data.daysOfWeek ?? []);
@@ -239,6 +253,7 @@ export const CreateEditScheduledHabitProvider = ({
         if (plannedHabit.data) {
             setRemoteImageUrl(plannedHabit.data.remoteImageUrl ?? '');
             setLocalImage(plannedHabit.data.localImage ?? '');
+            setIcon(plannedHabit.data.icon ?? undefined);
             setTitle(plannedHabit.data.title ?? '');
             setDescription(plannedHabit.data.description ?? '');
             setDaysOfWeek([]);
@@ -261,6 +276,7 @@ export const CreateEditScheduledHabitProvider = ({
     const contextValue: CreateEditScheduledHabitType = {
         remoteImageUrl: remoteImageUrl,
         localImage: localImage,
+        icon: icon,
         title: title,
         description: description,
         startDate: startDate,
@@ -275,6 +291,7 @@ export const CreateEditScheduledHabitProvider = ({
 
         setRemoteImageUrl: setRemoteImageUrl,
         setLocalImage: setLocalImage,
+        setIcon: setIcon,
         setTitle: setTitle,
         setDescription: setDescription,
         setStartDate: setStartDate,

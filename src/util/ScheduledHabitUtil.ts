@@ -18,6 +18,10 @@ export namespace ScheduledHabitUtil {
         return scheduledHabit?.localImage ?? scheduledHabit?.task?.localImage ?? '';
     };
 
+    export const getIcon = (scheduledHabit?: ScheduledHabit) => {
+        return scheduledHabit?.icon ?? scheduledHabit?.task?.icon;
+    };
+
     export const getOptimalImage = (scheduledHabit?: ScheduledHabit): OptimalImageData => {
         const optimalImage: OptimalImageData = {
             localImage: getLocalImage(scheduledHabit),

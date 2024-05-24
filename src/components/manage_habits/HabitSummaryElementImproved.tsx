@@ -50,6 +50,7 @@ export const HabitSummaryElementImproved = ({ scheduledHabit }: Props) => {
 
     const imageSize = 40;
     const icon: OptimalImageData = {
+        icon: ScheduledHabitUtil.getIcon(scheduledHabit),
         localImage: ScheduledHabitUtil.getLocalImage(scheduledHabit),
         remoteImageUrl: ScheduledHabitUtil.getRemoteImageUrl(scheduledHabit),
     };

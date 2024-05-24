@@ -1,15 +1,30 @@
-import { Text, TextInput, View } from 'react-native';
+import { Animated, Pressable, Text, TextInput, View } from 'react-native';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import React from 'react';
+import { runCreateEditScheduledHabitAnimation } from './CreateEditScheduledHabit';
+import { ScheduledHabitIconSelector } from './ScheduledHabitIconSelector';
 
 export const ScheduledHabitTitle = () => {
     const { colors } = useTheme();
-    const { remoteImageUrl, localImage, title, setTitle, isChallenge } =
+    const { icon, remoteImageUrl, localImage, title, setTitle, isChallenge } =
         useCreateEditScheduleHabit();
+    const [selectIconExpanded, setSelectIconExpanded] = React.useState<boolean>(false);
+    const [iconSelectionViewHeight] = React.useState<Animated.Value>(new Animated.Value(0));
+
+    const SELECT_ICON_VIEW_HEIGHT = 50 + PADDING_LARGE + PADDING_LARGE * 2;
+    React.useEffect(() => {
+        runCreateEditScheduledHabitAnimation(
+            selectIconExpanded,
+            iconSelectionViewHeight,
+            SELECT_ICON_VIEW_HEIGHT
+        );
+    }, [selectIconExpanded]);
 
     const optimalImageData: OptimalImageData = {
+        icon: icon,
         remoteImageUrl: remoteImageUrl,
         localImage: localImage,
     };
@@ -51,21 +66,27 @@ export const ScheduledHabitTitle = () => {
                         pointerEvents: isChallenge ? 'none' : undefined,
                     }}
                 >
-                    <View
-                        style={{
-                            height: 50,
-                            width: 50,
-                            borderRadius: 12,
-                            backgroundColor: colors.background_light,
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                    <Pressable
+                        onPress={() => {
+                            setSelectIconExpanded(!selectIconExpanded);
                         }}
                     >
-                        <OptimalImage
-                            data={optimalImageData}
-                            style={{ height: 37.5, width: 37.5 }}
-                        />
-                    </View>
+                        <View
+                            style={{
+                                height: 50,
+                                width: 50,
+                                borderRadius: 12,
+                                backgroundColor: colors.background_light,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <OptimalImage
+                                data={optimalImageData}
+                                style={{ height: 37.5, width: 37.5 }}
+                            />
+                        </View>
+                    </Pressable>
                     <View style={{ width: PADDING_LARGE }} />
                     <TextInput
                         style={{
@@ -84,6 +105,16 @@ export const ScheduledHabitTitle = () => {
                     />
                 </View>
             </View>
+
+            <Animated.View
+                style={{
+                    flexDirection: 'row',
+                    height: iconSelectionViewHeight,
+                    overflow: 'hidden',
+                }}
+            >
+                <ScheduledHabitIconSelector />
+            </Animated.View>
         </View>
     );
 };

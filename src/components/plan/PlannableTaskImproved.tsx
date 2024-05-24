@@ -119,6 +119,7 @@ export const PlannableTaskImproved = ({
     const dispatch = useAppDispatch();
 
     const habitIconImage: OptimalImageData = {
+        icon: plannedTask.icon,
         remoteImageUrl: plannedTask.remoteImageUrl,
         localImage: plannedTask.localImage,
     };
@@ -298,11 +299,7 @@ export const PlannableTaskImproved = ({
                                     height: 28,
                                 }}
                             >
-                                <HabitIcon
-                                    optimalImageData={habitIconImage}
-                                    size={16}
-                                    color="green"
-                                />
+                                <HabitIcon optimalImageData={habitIconImage} size={16} />
                             </View>
                         </View>
                     </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HabitCategory, Task } from 'resources/schema';
+import { HabitCategory, Icon, Task } from 'resources/schema';
 import {
     GetHabitCategoriesResponse,
     GetHabitCategoryResponse,
@@ -12,6 +12,7 @@ import { GetTaskResponse } from 'resources/types/requests/TaskTypes';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { Logger } from 'src/util/GeneralUtility';
 import { getTodayPureDate } from 'src/util/DateUtility';
+import { GetIconsResponse } from 'resources/types/requests/IconTypes';
 
 export class HabitController {
     public static async getHabitJourneys(userId: number) {
@@ -138,6 +139,17 @@ export class HabitController {
             });
     }
 
+    public static async getIcons(): Promise<Icon[] | undefined> {
+        return await axiosInstance
+            .get<GetIconsResponse>(`/habit/icons`)
+            .then((success) => {
+                return success.data.icons;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
     public static async prefetchHabitCategory(id: number) {
         reactQueryClient.prefetchQuery({
             queryKey: ['habit', id],
@@ -190,5 +202,15 @@ export namespace HabitCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useIcons = () => {
+        const { status, error, data } = useQuery({
+            queryKey: ['icons'],
+            queryFn: HabitController.getIcons,
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return data ?? [];
     };
 }

@@ -7,11 +7,10 @@ import { PADDING_MEDIUM } from 'src/util/constants';
 interface Props {
     optimalImageData: OptimalImageData;
     size: number;
-    color: string;
     isChallenge?: boolean;
 }
 
-export const HabitIcon = ({ optimalImageData, size, color, isChallenge }: Props) => {
+export const HabitIcon = ({ optimalImageData, size, isChallenge }: Props) => {
     const colors = useTheme().colors;
 
     return (

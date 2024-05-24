@@ -3,8 +3,10 @@ import { LocalImageRepo } from './LocalImageRepo';
 import { Image as ExpoImage } from 'expo-image';
 import { isIosApp } from 'src/util/DeviceUtil';
 import { Ionicons } from '@expo/vector-icons';
+import { Icon } from 'resources/schema';
 
 export interface OptimalImageData {
+    icon?: Icon;
     localImage?: string;
     remoteImageUrl?: string;
     ionicon?: {
@@ -19,6 +21,18 @@ interface Props {
 }
 
 export const OptimalImage = ({ data, style }: Props) => {
+    if (data.icon) {
+        return (
+            <OptimalImage
+                data={{
+                    remoteImageUrl: data.icon.remoteImageUrl,
+                    localImage: data.icon.localImage,
+                }}
+                style={style}
+            />
+        );
+    }
+
     if (data.localImage) {
         if (isIosApp()) {
             return <ExpoImage source={LocalImageRepo.get(data.localImage)} style={style} />;

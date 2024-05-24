@@ -108,6 +108,8 @@ export interface PlannedTask extends PlannedTaskCustom {
   quantity?: number;
   completedQuantity?: number;
   status?: string;
+  iconId?: number;
+  icon?: Icon;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
