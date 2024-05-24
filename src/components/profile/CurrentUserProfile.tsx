@@ -5,7 +5,6 @@ import { ProfileHeader } from 'src/components/profile/profile_component/ProfileH
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { getAuth } from 'firebase/auth';
-import { useSharedValue } from 'react-native-reanimated';
 import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { useFocusEffect } from '@react-navigation/native';
@@ -35,6 +34,7 @@ export const CurrentUserProfile = () => {
     };
 
     const onRefresh = React.useCallback(() => {
+        console.log('refreshing');
         setRefreshing(true);
         wait(500).then(() => {
             setRefreshing(false);
@@ -57,20 +57,12 @@ export const CurrentUserProfile = () => {
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
-                <ProfileHeader
-                    user={user}
-                    onFollowUser={() => {}}
-                    onUnfollowUser={() => {}}
-                    followerCount={0}
-                    followingCount={0}
-                    isFollowingUser={false}
-                    setHeight={() => {}}
-                />
+                <ProfileHeader user={user} setHeight={() => { }} />
                 {/* moving away from the tabs for now  */}
                 {/*
                     <ProfileBody newUser={user} setHeight={setBodyHeightWrapper} />
                     */}
-                <SingleScrollUserBody key={random} user={user} setHeight={() => {}} />
+                <SingleScrollUserBody key={random} user={user} setHeight={() => { }} />
             </ScrollView>
         </Screen>
     );
