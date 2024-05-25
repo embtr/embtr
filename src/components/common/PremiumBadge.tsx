@@ -1,26 +1,22 @@
-import { User } from 'resources/schema';
-import { UserService } from 'src/service/UserService';
 import { OptimalImage, OptimalImageData } from './images/OptimalImage';
-import { View } from 'react-native';
 
 const premiumBadgeData: OptimalImageData = {
     localImage: 'PROFILE.VERIFIED_BADGE',
 };
 
+const premiumBadgeDataWhite: OptimalImageData = {
+    localImage: 'PROFILE.PADLOCK',
+};
+
 interface Props {
-    user: User;
     size: number;
+    white?: boolean;
 }
 
-export const PremiumBadge = ({ user, size }: Props) => {
-    const userIsPremium = UserService.userHasPremiumRole(user);
-    if (!userIsPremium) {
-        return <View />;
-    }
-
+export const PremiumBadge = ({ size, white }: Props) => {
     return (
         <OptimalImage
-            data={premiumBadgeData}
+            data={white ? premiumBadgeDataWhite : premiumBadgeData}
             style={{
                 width: size,
                 height: size,

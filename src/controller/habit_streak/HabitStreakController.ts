@@ -19,8 +19,25 @@ export class HabitStreakController {
             });
     }
 
+    public static async getAdvanced(userId: number): Promise<HabitStreak | undefined> {
+        return axiosInstance
+            .get<GetHabitStreakResponse>(`/habit-streak/advanced/${userId}`)
+            .then((success) => {
+                const response: GetHabitStreakResponse = success.data;
+                return response.habitStreak;
+            })
+            .catch((error) => {
+                console.log(error);
+                return undefined;
+            });
+    }
+
     public static invalidateHabitStreak(userId: number) {
         reactQueryClient.invalidateQueries(['habitStreak', userId]);
+    }
+
+    public static invalidateAdvancedHabitStreak(userId: number) {
+        reactQueryClient.invalidateQueries(['advancedHabitStreak', userId]);
     }
 }
 
@@ -29,6 +46,16 @@ export namespace HabitStreakCustomHooks {
         const { status, error, data, fetchStatus, refetch } = useQuery({
             queryKey: ['habitStreak', userId],
             queryFn: () => HabitStreakController.get(userId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
+    }
+
+    export function useAdvancedHabitStreak(userId: number) {
+        const { status, error, data, fetchStatus, refetch } = useQuery({
+            queryKey: ['advancedHabitStreak', userId],
+            queryFn: () => HabitStreakController.getAdvanced(userId),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 

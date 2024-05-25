@@ -13,7 +13,7 @@ import {
     POPPINS_SEMI_BOLD,
 } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { PremiumBadge } from 'src/components/common/PremiumBadge';
+import { OptionalPremiumBadge } from 'src/components/common/OptionalPremiumBadge';
 
 interface Props {
     user: User;
@@ -120,7 +120,7 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                                         paddingLeft: PADDING_SMALL / 3,
                                     }}
                                 >
-                                    <PremiumBadge user={user} size={15} />
+                                    <OptionalPremiumBadge user={user} size={15} />
                                 </View>
                             </View>
                         </View>

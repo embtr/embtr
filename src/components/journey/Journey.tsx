@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { Screen } from '../common/Screen';
 import { PADDING_LARGE } from 'src/util/constants';
-import { HabitStreakWidget } from '../widgets/habit_streak/HabitStreakWidget';
 import { NewUserChecklistWidget } from '../widgets/new_user_checklist/NewUserChecklistWidget';
 import { RefreshControl, ScrollView } from 'react-native-gesture-handler';
 import { HabitStreakController } from 'src/controller/habit_streak/HabitStreakController';
@@ -11,10 +10,13 @@ import { User } from 'resources/schema';
 import { NewUserCustomHooks } from 'src/controller/new_user/NewUserController';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
+import { AdvancedHabitStreakWidget } from '../widgets/habit_streak/AdvancedHabitStreakWidget';
+import { HabitStreakWidget } from '../widgets/habit_streak/HabitStreakWidget';
 
 const onRefresh = (user: User, setRefreshing: Function) => {
     setRefreshing(true);
     HabitStreakController.invalidateHabitStreak(user.id ?? 0);
+    HabitStreakController.invalidateAdvancedHabitStreak(user.id ?? 0);
     UserController.invalidateNewUserChecklist();
     ChallengeController.invalidateActiveParticipation(user.id ?? 0);
 

@@ -40,7 +40,7 @@ export const WarningNotificationsSettingsElement = ({
         if (!hasInsufficientPremium) {
             onPress(option);
         } else {
-            UserController.runPremiumWorkflow();
+            UserController.runPremiumWorkflow('Warning Notifications Settings Element');
         }
     };
 

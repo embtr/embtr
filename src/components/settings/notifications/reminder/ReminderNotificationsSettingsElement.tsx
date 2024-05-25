@@ -41,7 +41,7 @@ export const ReminderNotificationsSettingsElement = ({
         if (!hasInsufficientPremium) {
             onPress(option);
         } else {
-            UserController.runPremiumWorkflow();
+            UserController.runPremiumWorkflow('Reminder Notifications Settings Element');
         }
     };
 

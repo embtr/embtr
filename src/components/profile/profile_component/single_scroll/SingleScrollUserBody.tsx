@@ -8,7 +8,7 @@ import React from 'react';
 import { PADDING_LARGE } from 'src/util/constants';
 import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
 import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
-import { HabitStreakAdvancedWidget } from 'src/components/widgets/habit_streak/HabitStreakWidgetAdvanced';
+import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStreakWidget';
 
 interface Props {
     user: User;
@@ -28,7 +28,7 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
         <Screen>
             <View style={{ height: '100%', paddingHorizontal: PADDING_LARGE }}>
                 <View style={{ paddingTop: 6 }}>
-                    <HabitStreakAdvancedWidget user={user} />
+                    <HabitStreakWidget user={user} />
                 </View>
 
                 <TrophyCaseWidget userId={user.id} />

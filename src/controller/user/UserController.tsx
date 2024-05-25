@@ -33,6 +33,7 @@ import { getCurrentUser, setCurrentUser } from 'src/redux/user/GlobalState';
 import { RevenueCat } from '../revenuecat/RevenueCat';
 import { RevenueCatProvider } from '../revenuecat/RevenueCatProvider';
 import { Store } from 'src/redux/store';
+import { PremiumController } from '../PremiumController';
 
 export interface UserModel {
     uid: string;
@@ -287,7 +288,9 @@ class UserController {
         await reactQueryClient.invalidateQueries(['newUserChecklist']);
     }
 
-    public static async runPremiumWorkflow() {
+    public static async runPremiumWorkflow(source: string) {
+        PremiumController.purchasePremiumPressed(source);
+
         const revenueCat: RevenueCat = RevenueCatProvider.get();
 
         const purchased = await revenueCat.executePaywallWorkflow();

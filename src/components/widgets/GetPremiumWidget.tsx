@@ -18,7 +18,11 @@ export const GetPremiumWidget = () => {
             <View style={{ height: PADDING_LARGE }} />
 
             <WidgetBase backgroundColor={colors.accent_color_dim}>
-                <Pressable onPress={UserController.runPremiumWorkflow}>
+                <Pressable
+                    onPress={() => {
+                        UserController.runPremiumWorkflow('Upgrade To Premium Widget');
+                    }}
+                >
                     <View>
                         <Text
                             style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 16 }}

@@ -2,7 +2,7 @@ import { Text, View } from 'react-native';
 import { User } from 'resources/schema';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { getDatePrettyWithYear, getHumanReadableDate } from 'src/util/DateUtility';
+import { getHumanReadableDate } from 'src/util/DateUtility';
 import {
     PADDING_SMALL,
     POPPINS_MEDIUM,
@@ -10,7 +10,7 @@ import {
     POPPINS_SEMI_BOLD,
 } from 'src/util/constants';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
-import { PremiumBadge } from 'src/components/common/PremiumBadge';
+import { OptionalPremiumBadge } from 'src/components/common/OptionalPremiumBadge';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { format } from 'date-fns';
 
@@ -79,7 +79,7 @@ export const CardHeader = ({ date, user, dayKey, secondaryText, type }: Props) =
                                 {user.displayName}
                             </Text>
 
-                            <PremiumBadge user={user} size={14} />
+                            <OptionalPremiumBadge user={user} size={14} />
                         </View>
                         <Text
                             style={{

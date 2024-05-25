@@ -11,6 +11,13 @@ import { Response } from './RequestTypes';
 import { PureDate } from '../date/PureDate';
 
 /**
+ * Challenges
+ */
+export interface GetChallengesResponse extends Response {
+  challenges: Challenge[]
+}
+
+/**
  * Challenge Summaries
  */
 export interface GetChallengesSummariesResponse extends Response {
@@ -61,7 +68,7 @@ export interface LeaveChallengeRequest {
 export interface CreateChallengeRequest {
   challenge: Pick<Challenge, 'name' | 'description' | 'start' | 'end'>;
   award: Pick<Award, 'name' | 'description' | 'remoteImageUrl' | 'localImage'>;
-  task: Pick<Task, 'title' | 'description'>;
+  task: Pick<Task, 'title' | 'description' | 'remoteImageUrl' | 'localImage'>;
   challengeRequirement: Pick<
     ChallengeRequirement,
     | 'unitId'

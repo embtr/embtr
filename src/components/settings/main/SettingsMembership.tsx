@@ -14,7 +14,7 @@ export const SettingsMembership = () => {
     const [premiumPurchased, setPremiumPurchased] = React.useState(false);
 
     const purchasePremium = async () => {
-        const purchased = await UserController.runPremiumWorkflow();
+        const purchased = await UserController.runPremiumWorkflow('Settings Membership');
         setPremiumPurchased(purchased);
     };
 
