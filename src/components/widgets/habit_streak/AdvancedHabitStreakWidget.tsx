@@ -47,8 +47,8 @@ const getBackgroundColor = (completionState: Constants.CompletionState, colors: 
 
 export const AdvancedHabitStreakWidget = ({ user }: Props) => {
     const { colors } = useTheme();
-    const diameter = isExtraWideDevice() ? getWindowWidth() / 37.5 : 9;
-    const padding = diameter / (isExtraWideDevice() ? 5 : 6);
+    const padding = (getWindowWidth() - PADDING_LARGE * 4) / 30 / 6;
+    const diameter = padding * 5;
 
     if (!user.id) {
         return <View />;
