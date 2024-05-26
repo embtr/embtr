@@ -38,7 +38,7 @@ export const GetPremiumWidget = () => {
                                 fontSize: 12,
                             }}
                         >
-                            unlock a verified profile, advanced reminders, and more!
+                            unlock a detailed statistics, advanced habit reminders, and more!
                         </Text>
                     </View>
                 </Pressable>

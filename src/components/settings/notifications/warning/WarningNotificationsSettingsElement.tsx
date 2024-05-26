@@ -12,6 +12,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Constants } from 'resources/types/constants/constants';
 import UserController from 'src/controller/user/UserController';
 import { PushNotificationCustomHooks } from 'src/controller/notification/PushNotificationController';
+import { PremiumFeatureBadge } from 'src/components/common/PremiumFeatureBadge';
 
 interface Props {
     title: string;
@@ -55,22 +56,9 @@ export const WarningNotificationsSettingsElement = ({
                             right: 0,
                             marginTop: PADDING_SMALL,
                             marginRight: PADDING_SMALL,
-                            backgroundColor: colors.accent_color_light,
-                            borderRadius: 50,
-                            height: 13,
-                            paddingHorizontal: PADDING_SMALL,
                         }}
                     >
-                        <Text
-                            style={{
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 9,
-                                color: colors.text,
-                                textAlign: 'center',
-                            }}
-                        >
-                            Embtr Premium
-                        </Text>
+                        <PremiumFeatureBadge />
                     </View>
                 )}
                 <View

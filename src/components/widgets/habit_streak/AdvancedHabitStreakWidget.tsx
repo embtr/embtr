@@ -15,6 +15,7 @@ import { PureDate } from 'resources/types/date/PureDate';
 import { Constants } from 'resources/types/constants/constants';
 import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
+import { PremiumFeatureBadge } from 'src/components/common/PremiumFeatureBadge';
 
 interface Props {
     user: User;
@@ -123,18 +124,33 @@ export const AdvancedHabitStreakWidget = ({ user }: Props) => {
 
     return (
         <WidgetBase>
-            <View style={{ flexDirection: 'row' }}>
+            <View
+                style={{
+                    bottom: PADDING_SMALL,
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                }}
+            >
                 <Text
                     style={{
                         color: colors.text,
                         fontFamily: POPPINS_SEMI_BOLD,
                         fontSize: 15,
-                        lineHeight: 17,
-                        bottom: 2,
+                        includeFontPadding: false,
+                        textAlign: 'center',
                     }}
                 >
                     Habit Streak
                 </Text>
+                <View style={{ flex: 1 }} />
+                <View
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <PremiumFeatureBadge />
+                </View>
             </View>
 
             <View
