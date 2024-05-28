@@ -8,42 +8,17 @@ import {
     PADDING_SMALL,
 } from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
-import { isExtraWideDevice } from 'src/util/DeviceUtil';
 import { User } from 'resources/schema';
 import { HabitStreakCustomHooks } from 'src/controller/habit_streak/HabitStreakController';
 import { PureDate } from 'resources/types/date/PureDate';
-import { Constants } from 'resources/types/constants/constants';
 import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
 import { PremiumFeatureBadge } from 'src/components/common/PremiumFeatureBadge';
+import { HabitStreak } from './HabitStreakWidget';
 
 interface Props {
     user: User;
 }
-
-const getBackgroundColor = (completionState: Constants.CompletionState, colors: any) => {
-    if (completionState === Constants.CompletionState.NO_SCHEDULE) {
-        return colors.progress_bar_color;
-    }
-
-    if (completionState === Constants.CompletionState.COMPLETE) {
-        return colors.progress_bar_complete;
-    }
-
-    if (completionState === Constants.CompletionState.FAILED) {
-        return colors.progress_bar_failed;
-    }
-
-    if (completionState === Constants.CompletionState.SKIPPED) {
-        return colors.progress_bar_skipped;
-    }
-
-    if (completionState === Constants.CompletionState.INCOMPLETE) {
-        return colors.secondary_text;
-    }
-
-    return 'purple';
-};
 
 export const AdvancedHabitStreakWidget = ({ user }: Props) => {
     const { colors } = useTheme();
@@ -78,6 +53,7 @@ export const AdvancedHabitStreakWidget = ({ user }: Props) => {
             group = [];
         }
     }
+    groupedResults.push(group);
 
     for (let i = 0; i < groupedResults.length; i++) {
         const group = groupedResults[i];
@@ -90,7 +66,7 @@ export const AdvancedHabitStreakWidget = ({ user }: Props) => {
                     key={historyElement.dayKey + historyElement.result}
                     style={{
                         marginTop: padding,
-                        backgroundColor: getBackgroundColor(historyElement.result, colors),
+                        backgroundColor: HabitStreak.getBackgroundColor(historyElement.result),
                         height: diameter,
                         width: diameter,
                         borderRadius: 1,
@@ -100,10 +76,72 @@ export const AdvancedHabitStreakWidget = ({ user }: Props) => {
         }
 
         views.push(<View key={'group' + i}>{groupViews}</View>);
-        if (i < 52) {
-            views.push(<View key={'placeholder' + i} style={{ width: padding }} />);
-        }
+        views.push(<View key={'placeholder' + i} style={{ width: padding }} />);
     }
+
+    // remove the last placeholder
+    views.pop();
+
+    const dayLabels = (
+        <View>
+            <View style={{ height: diameter + padding }}>
+                <Text
+                    style={{
+                        fontSize: 8,
+                        fontFamily: POPPINS_REGULAR,
+                        color: colors.secondary_text,
+                        paddingRight: PADDING_SMALL / 2,
+                    }}
+                >
+                    Mon
+                </Text>
+            </View>
+
+            <View style={{ height: diameter + padding }} />
+            <View style={{ height: diameter + padding }}>
+                <Text
+                    style={{
+                        fontSize: 8,
+                        fontFamily: POPPINS_REGULAR,
+                        color: colors.secondary_text,
+                        paddingRight: PADDING_SMALL / 2,
+                    }}
+                >
+                    Wed
+                </Text>
+            </View>
+
+            <View style={{ height: diameter + padding }} />
+            <View style={{ height: diameter + padding }}>
+                <Text
+                    style={{
+                        fontSize: 8,
+                        fontFamily: POPPINS_REGULAR,
+                        color: colors.secondary_text,
+                        paddingRight: PADDING_SMALL / 2,
+                    }}
+                >
+                    Fri
+                </Text>
+            </View>
+
+            <View style={{ height: diameter + padding }} />
+            <View style={{ height: diameter + padding }}>
+                <Text
+                    style={{
+                        fontSize: 8,
+                        fontFamily: POPPINS_REGULAR,
+                        color: colors.secondary_text,
+                        paddingRight: PADDING_SMALL / 2,
+                    }}
+                >
+                    Sun
+                </Text>
+            </View>
+        </View>
+    );
+
+    views.unshift(dayLabels);
 
     const getPrettyDate = (pureDate: PureDate) => {
         if (!pureDate) {
@@ -219,7 +257,16 @@ export const AdvancedHabitStreakWidget = ({ user }: Props) => {
                             fontSize: 8,
                         }}
                     >
-                        {' '}
+                        {/* using transparent color for text alignment */}
+                        <Text
+                            style={{
+                                color: 'transparent',
+                                paddingRight: padding,
+                            }}
+                        >
+                            {' Wed'}
+                        </Text>
+
                         {startDateFormatted}
                     </Text>
                 </View>
@@ -244,9 +291,10 @@ export const AdvancedHabitStreakWidget = ({ user }: Props) => {
                             color: colors.secondary_text,
                             fontFamily: POPPINS_REGULAR,
                             fontSize: 8,
+                            paddingRight: padding * 2.5,
                         }}
                     >
-                        {endDateFormatted}{' '}
+                        {endDateFormatted}
                     </Text>
                 </View>
             </View>

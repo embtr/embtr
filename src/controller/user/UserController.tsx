@@ -327,6 +327,11 @@ export namespace UserCustomHooks {
         const currentUser = useAppSelector(getCurrentUser);
         return UserService.userHasPremiumRole(currentUser);
     };
+
+    export const useIsCurrentUser = (user: User) => {
+        const currentUser = useAppSelector(getCurrentUser);
+        return currentUser.uid === user.uid;
+    };
 }
 
 export default UserController;

@@ -1,27 +1,21 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import {
     POPPINS_REGULAR,
     POPPINS_SEMI_BOLD,
     PADDING_LARGE,
-    CARD_SHADOW,
-    POPPINS_MEDIUM,
     PADDING_SMALL,
 } from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
-import { isExtraWideDevice } from 'src/util/DeviceUtil';
 import { User } from 'resources/schema';
 import { HabitStreakCustomHooks } from 'src/controller/habit_streak/HabitStreakController';
 import { PureDate } from 'resources/types/date/PureDate';
-import { Constants } from 'resources/types/constants/constants';
 import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
-import { PremiumBadge } from 'src/components/common/PremiumBadge';
-import { UserService } from 'src/service/UserService';
-import { PremiumController } from 'src/controller/PremiumController';
-import UserController from 'src/controller/user/UserController';
-import { HabitStreakWidget } from './HabitStreakWidget';
+import { HabitStreak } from './HabitStreakWidget';
+import { UpgradeToPremiumButton } from 'src/components/common/button/UpgradeToPremiumButton';
+import { UserCustomHooks } from 'src/controller/user/UserController';
 
 interface Props {
     user: User;
@@ -29,11 +23,14 @@ interface Props {
 
 export const BasicHabitStreakWidget = ({ user }: Props) => {
     const { colors } = useTheme();
-    const diameter = isExtraWideDevice() ? getWindowWidth() / 37.5 : 9;
+    const padding = (getWindowWidth() - PADDING_LARGE * 4) / 30 / 6;
+    const diameter = padding * 5;
 
     if (!user.id) {
-        return <View />;
+        return null;
     }
+
+    const isCurrentUser = UserCustomHooks.useIsCurrentUser(user);
 
     const habitStreak = HabitStreakCustomHooks.useHabitStreak(user.id);
 
@@ -55,12 +52,7 @@ export const BasicHabitStreakWidget = ({ user }: Props) => {
             <View
                 key={historyElement.dayKey + historyElement.result}
                 style={{
-                    backgroundColor:
-                        historyElement.result === Constants.CompletionState.COMPLETE
-                            ? colors.progress_bar_complete
-                            : historyElement.result === Constants.CompletionState.NO_SCHEDULE
-                                ? colors.progress_bar_color
-                                : colors.progress_bar_failed,
+                    backgroundColor: HabitStreak.getBackgroundColor(historyElement.result),
                     height: diameter,
                     width: diameter,
                     borderRadius: 1,
@@ -68,8 +60,10 @@ export const BasicHabitStreakWidget = ({ user }: Props) => {
             />
         );
 
-        views.push(<View key={'placeholder' + i} style={{ flex: 1 }} />);
+        views.push(<View key={'placeholder' + i} style={{ width: padding }} />);
     }
+
+    // remove the last placeholder
     views.pop();
 
     const getPrettyDate = (pureDate: PureDate) => {
@@ -204,50 +198,18 @@ export const BasicHabitStreakWidget = ({ user }: Props) => {
                 </View>
             </View>
 
-            <View
-                style={{
-                    width: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingTop: PADDING_LARGE,
-                }}
-            >
-                <TouchableOpacity
-                    onPress={async () => {
-                        await UserController.runPremiumWorkflow(
-                            'Reminder Notifications Settings Element'
-                        );
+            {isCurrentUser && (
+                <View
+                    style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        paddingTop: PADDING_LARGE,
+                        paddingBottom: PADDING_SMALL / 2,
                     }}
-                    style={[
-                        {
-                            width: '65%',
-                            flexDirection: 'row',
-                            backgroundColor: colors.accent_color_light,
-                            borderRadius: 5,
-                            paddingHorizontal: 4,
-                            paddingVertical: 2,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        },
-                        CARD_SHADOW,
-                    ]}
                 >
-                    <View style={{ paddingRight: PADDING_SMALL / 2 }}>
-                        <PremiumBadge size={18} white={true} />
-                    </View>
-                    <Text
-                        style={{
-                            color: colors.text,
-                            fontSize: 12,
-                            fontFamily: POPPINS_MEDIUM,
-                            textAlign: 'center',
-                            includeFontPadding: false,
-                        }}
-                    >
-                        Unlock Premium Stats
-                    </Text>
-                </TouchableOpacity>
-            </View>
+                    <UpgradeToPremiumButton source="Basic Habit Streak" />
+                </View>
+            )}
         </WidgetBase>
     );
 };
