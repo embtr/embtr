@@ -9,6 +9,7 @@ import { CreateEditPlannedDayResultBase } from './CreateEditPlannedDayResultBase
 import DailyResultController from 'src/controller/timeline/daily_result/DailyResultController';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 import { TimelineController } from 'src/controller/timeline/TimelineController';
+import * as StoreReview from 'expo-store-review';
 
 export const CreatePlannedDayResult = () => {
     const navigation = useEmbtrNavigation();
@@ -36,6 +37,11 @@ export const CreatePlannedDayResult = () => {
         DailyResultController.invalidate(plannedDayResult.id ?? 0);
         PlannedDayController.invalidatePlannedDay(currentUserId.data, route.params.dayKey);
         TimelineController.invalidateCache();
+
+        const isAvailable = await StoreReview.isAvailableAsync();
+        if (isAvailable) {
+            StoreReview.requestReview();
+        }
 
         navigation.goBack();
     };

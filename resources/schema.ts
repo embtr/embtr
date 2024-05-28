@@ -52,7 +52,7 @@ export interface PushNotificationToken {
   updatedAt?: Date;
 }
 
-export interface Task {
+export interface Task extends TaskCustom {
   id?: number;
   title?: string;
   description?: string;
@@ -85,7 +85,7 @@ export interface PlannedDay {
   plannedDayChallengeMilestones?: PlannedDayChallengeMilestone[];
 }
 
-export interface PlannedTask {
+export interface PlannedTask extends PlannedTaskCustom {
   id?: number;
   plannedDayId?: number;
   plannedDay?: PlannedDay;
@@ -326,8 +326,8 @@ export interface Award {
   id?: number;
   name?: string;
   description?: string;
-  remoteImageUrl?: string;
-  localImage?: string;
+  iconId?: number;
+  icon?: Icon;
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -391,7 +391,7 @@ export interface TimeOfDay {
   originalPlannedTasks?: PlannedTask[];
 }
 
-export interface ScheduledHabit {
+export interface ScheduledHabit extends ScheduledHabitCustom {
   id?: number;
   userId?: number;
   user?: User;
@@ -457,6 +457,7 @@ export interface Icon {
   plannedTasks?: PlannedTask[];
   ScheduledHabit?: ScheduledHabit[];
   Task?: Task[];
+  Award?: Award[];
 }
 
 export interface Tag {
@@ -522,4 +523,19 @@ export interface ChallengeCustom {
         createdAt?: Date;
         updatedAt?: Date;
     }[];
+}
+
+export interface PlannedTaskCustom {
+    remoteImageUrl?: string;
+    localImage?: string;
+}
+
+export interface TaskCustom {
+    remoteImageUrl?: string;
+    localImage?: string;
+}
+
+export interface ScheduledHabitCustom {
+    remoteImageUrl?: string;
+    localImage?: string;
 }
