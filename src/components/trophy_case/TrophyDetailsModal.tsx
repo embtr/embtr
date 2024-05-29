@@ -19,10 +19,6 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
     const award = challenge?.award;
     const completedDatePretty = getDatePrettyWithYear(award?.updatedAt ?? new Date());
 
-    const onHandleDismiss = () => {
-        onDismiss();
-    };
-
     const body = (
         <View style={{ alignItems: 'center', paddingVertical: PADDING_LARGE }}>
             {/* TITLE SECTION */}
@@ -58,7 +54,7 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
                     width: '100%',
                 }}
             >
-                <SvgUri width={100} height={100} uri={award?.remoteImageUrl ?? ''} />
+                <SvgUri width={100} height={100} uri={award?.icon?.remoteImageUrl ?? ''} />
             </View>
 
             {/* INSTRUCTIONS SECTION */}

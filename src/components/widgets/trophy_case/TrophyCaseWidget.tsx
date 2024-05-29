@@ -26,7 +26,7 @@ export const TrophyCaseWidget = ({ userId }: Props) => {
 
     const trophyElements: JSX.Element[] = [];
     for (let i = 0; i < completedChallenges.data.length; i++) {
-        const url = completedChallenges.data[i].challenge?.award?.remoteImageUrl;
+        const url = completedChallenges.data[i].challenge?.award?.icon?.remoteImageUrl;
         trophyElements.push(
             <Pressable
                 onPress={() => {
