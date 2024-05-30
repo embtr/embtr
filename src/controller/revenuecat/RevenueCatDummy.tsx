@@ -1,6 +1,7 @@
 import { PurchasesOfferings, PurchasesPackage } from 'react-native-purchases';
 import { RevenueCat } from './RevenueCat';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import UserController from '../user/UserController';
 
 export class RevenueCatDummy implements RevenueCat {
     public async configure() { }
@@ -34,6 +35,7 @@ export class RevenueCatDummy implements RevenueCat {
 
     public async executePaywallWorkflow(): Promise<boolean> {
         alert('This is a dummy implementation of RevenueCat');
+        await UserController.refreshPremiumStatus();
         return true;
     }
 }

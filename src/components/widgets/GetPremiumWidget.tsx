@@ -3,10 +3,12 @@ import { Pressable, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
 import { PADDING_LARGE, POPPINS_MEDIUM } from 'src/util/constants';
-import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
+import { UserCustomHooks } from 'src/controller/user/UserController';
 
 export const GetPremiumWidget = () => {
     const { colors } = useTheme();
+
+    const purchasePremiumWorkflow = UserCustomHooks.usePurchasePremium();
 
     const userIsPremium = UserCustomHooks.useUserIsPremium();
     if (userIsPremium) {
@@ -20,7 +22,7 @@ export const GetPremiumWidget = () => {
             <WidgetBase backgroundColor={colors.accent_color_dim}>
                 <Pressable
                     onPress={() => {
-                        UserController.runPremiumWorkflow('Upgrade To Premium Widget');
+                        purchasePremiumWorkflow('Upgrade To Premium Widget');
                     }}
                 >
                     <View>

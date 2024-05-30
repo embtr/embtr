@@ -4,37 +4,18 @@ import { Banner } from 'src/components/common/Banner';
 import { ProfileHeader } from 'src/components/profile/profile_component/ProfileHeader';
 import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
-import { getAuth } from 'firebase/auth';
-import { User } from 'resources/schema';
-import UserController from 'src/controller/user/UserController';
-import { useFocusEffect } from '@react-navigation/native';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SingleScrollUserBody } from 'src/components/profile/profile_component/single_scroll/SingleScrollUserBody';
+import { useAppSelector } from 'src/redux/Hooks';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
 
 export const CurrentUserProfile = () => {
     const [refreshing, setRefreshing] = React.useState(false);
-    const [user, setUser] = React.useState<User>();
     const [random, setRandom] = React.useState<number>(0);
 
-    // used for profile header scroll animation
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchUser();
-        }, [])
-    );
-
-    const fetchUser = async () => {
-        const uid = getAuth().currentUser?.uid;
-        if (!uid) {
-            return;
-        }
-
-        const user = await UserController.getUserByUidViaApi(uid);
-        setUser(user.user);
-    };
+    const user = useAppSelector(getCurrentUser);
 
     const onRefresh = React.useCallback(() => {
-        console.log('refreshing');
         setRefreshing(true);
         wait(500).then(() => {
             setRefreshing(false);

@@ -30,23 +30,22 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
     const { colors } = useTheme();
     const navigation = useEmbtrNavigation();
 
-    const currentlySelectedDay = useAppSelector(getSelectedDayKey);
-
     const interactableData =
         ChallengeSummaryInteractableElementCustomHooks.useInteractableElement(challengeSummary);
 
     const participantCount = challengeSummary.participantCount ?? 0;
     const userIsAParticipant = challengeSummary.isParticipant;
 
-    const daysUntilStart = Math.floor(
-        ((challengeSummary.start ?? new Date()).getTime() - new Date().getTime()) / 86400000
+    const daysUntilStart = Math.ceil(
+        ((new Date(challengeSummary.start) ?? new Date()).getTime() - new Date().getTime()) /
+        86400000
     );
 
-    const daysRemaining = Math.floor(
+    const daysRemaining = Math.ceil(
         ((challengeSummary.end ?? new Date()).getTime() - new Date().getTime()) / 86400000
     );
 
-    const totalDays = Math.floor(
+    const totalDays = Math.ceil(
         ((challengeSummary.end ?? new Date()).getTime() -
             (challengeSummary.start ?? new Date()).getTime()) /
         86400000

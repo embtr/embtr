@@ -2,15 +2,10 @@ import React from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    PADDING_LARGE,
-    PADDING_SMALL,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-} from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Constants } from 'resources/types/constants/constants';
-import UserController from 'src/controller/user/UserController';
+import { UserCustomHooks } from 'src/controller/user/UserController';
 import { PushNotificationCustomHooks } from 'src/controller/notification/PushNotificationController';
 import { PremiumFeatureBadge } from 'src/components/common/PremiumFeatureBadge';
 
@@ -35,6 +30,7 @@ export const ReminderNotificationsSettingsElement = ({
 }: Props) => {
     const { colors } = useTheme();
 
+    const purchasePremiumWorkflow = UserCustomHooks.usePurchasePremium();
     const pushNotificationsEnabled = PushNotificationCustomHooks.useEnabled();
 
     const hasInsufficientPremium = premiumRequired && !hasPremium;
@@ -42,7 +38,7 @@ export const ReminderNotificationsSettingsElement = ({
         if (!hasInsufficientPremium) {
             onPress(option);
         } else {
-            UserController.runPremiumWorkflow('Reminder Notifications Settings Element');
+            purchasePremiumWorkflow('Reminder Notifications Settings Element');
         }
     };
 

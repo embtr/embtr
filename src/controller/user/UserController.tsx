@@ -29,7 +29,7 @@ import { AxiosError } from 'axios';
 import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
 import { useAppSelector } from 'src/redux/Hooks';
 import { UserService } from 'src/service/UserService';
-import { getCurrentUser, setCurrentUser } from 'src/redux/user/GlobalState';
+import { getCurrentUser, getFireConfetti, setCurrentUser } from 'src/redux/user/GlobalState';
 import { RevenueCat } from '../revenuecat/RevenueCat';
 import { RevenueCatProvider } from '../revenuecat/RevenueCatProvider';
 import { Store } from 'src/redux/store';
@@ -303,6 +303,21 @@ class UserController {
 }
 
 export namespace UserCustomHooks {
+    export const usePurchasePremium = () => {
+        const fireConfetti = useAppSelector(getFireConfetti);
+
+        const runPremiumWorkflow = async (source: string) => {
+            const premiumWasPurchasd = await UserController.runPremiumWorkflow(source);
+            if (premiumWasPurchasd) {
+                fireConfetti();
+            }
+
+            return premiumWasPurchasd;
+        };
+
+        return runPremiumWorkflow;
+    };
+
     export const useCurrentUser = () => {
         const { status, data, fetchStatus } = useQuery({
             queryKey: ['currentUser'],
@@ -331,6 +346,17 @@ export namespace UserCustomHooks {
     export const useIsCurrentUser = (user: User) => {
         const currentUser = useAppSelector(getCurrentUser);
         return currentUser.uid === user.uid;
+    };
+
+    export const useUserByUid = (uid: string) => {
+        const { status, data, fetchStatus } = useQuery({
+            queryKey: ['userByUid', uid],
+            queryFn: () => UserController.getUserByUidViaApi(uid),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            enabled: !!uid,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
 }
 
