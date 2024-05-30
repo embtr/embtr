@@ -66,7 +66,7 @@ export const PlanDayHeaderGuest = ({
         }
 
         const id = plannedDay.plannedDayResults[0].id;
-        navigation.navigate(Routes.DAILY_RESULT_DETAILS, {
+        navigation.navigate(Routes.PLANNED_DAY_RESULT_DETAILS, {
             id,
         });
     };
