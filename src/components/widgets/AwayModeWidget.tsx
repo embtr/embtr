@@ -40,7 +40,7 @@ export const AwayModeWidgetImpl = ({ currentUserId, user }: ImplProps) => {
     }
 
     return (
-        <WidgetBase backgroundColor={'#224377'}>
+        <WidgetBase backgroundColor={colors.away}>
             <TouchableOpacity
                 disabled={!isCurrentUser}
                 onPress={() => {
