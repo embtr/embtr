@@ -29,6 +29,10 @@ export namespace HabitStreak {
             return 'rgba(223,223,223,.75)';
         }
 
+        if (completionState === Constants.CompletionState.AWAY) {
+            return colors.link;
+        }
+
         return colors.progress_bar_color;
     };
 }

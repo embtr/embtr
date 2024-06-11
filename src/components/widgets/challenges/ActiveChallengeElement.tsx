@@ -6,7 +6,7 @@ import {
     ChallengeRequirementCompletionState,
 } from 'resources/schema';
 import { ProgressBar } from 'src/components/plan/goals/ProgressBar';
-import { POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { getTimeLeft } from 'src/util/DateUtility';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
@@ -61,7 +61,7 @@ export const ActiveChallengeElement = ({ challengeParticipant }: Props) => {
             }}
         >
             {isComplete && (
-                <View style={{ zIndex: 1, top: 20, left: '50%', position: 'absolute' }}>
+                <View style={{ zIndex: 1, top: '30%', left: '50%', position: 'absolute' }}>
                     <CompletionStamp />
                 </View>
             )}

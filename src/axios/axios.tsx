@@ -24,8 +24,8 @@ axiosInstance.interceptors.request.use(
         }
 
         config.headers['client-version'] = currentVersion;
-        config.headers['client-dayKey'] = dayKey;
-        config.headers['client-timeZone'] = currentTimeZone;
+        config.headers['client-daykey'] = dayKey;
+        config.headers['client-timezone'] = currentTimeZone;
 
         return config;
     },

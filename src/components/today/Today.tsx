@@ -11,6 +11,7 @@ import { PADDING_LARGE } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GetPremiumWidget } from '../widgets/GetPremiumWidget';
+import { AwayModeWidget } from '../widgets/AwayModeWidget';
 
 export const Today = () => {
     const [planningWidgetHeight, setPlanningWidgetHeight] = React.useState<number>(0);
@@ -36,11 +37,11 @@ export const Today = () => {
                     <ScrollView>
                         <TodaysCountdownWidget />
 
+                        <AwayModeWidget />
+
                         <GetPremiumWidget />
-                        <View style={{ height: PADDING_LARGE }} />
 
                         <QuoteOfTheDayWidget />
-                        <View style={{ height: PADDING_LARGE }} />
 
                         <View
                             onLayout={(e) => {

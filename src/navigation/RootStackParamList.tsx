@@ -76,6 +76,7 @@ export type MasterScreens = {
     };
     LoginModal: { newAccountEmail?: string } | undefined;
     RegisterModal: undefined;
+    AwayMode: undefined;
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -124,4 +125,5 @@ export namespace Routes {
     export const CREATE_PLANNED_DAY_RESULT = 'CreatePlannedDayResult';
     export const EDIT_PLANNED_DAY_RESULT = 'EditPlannedDayResult';
     export const PLANNED_DAY_RESULT_DETAILS = 'PlannedDayResultDetails';
+    export const AWAY_MODE = 'AwayMode';
 }

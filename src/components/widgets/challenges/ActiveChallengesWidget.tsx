@@ -26,50 +26,48 @@ export const ActiveChallengesWidget = ({ userId }: Props) => {
     }
 
     return (
-        <View style={{ paddingTop: PADDING_LARGE }}>
-            <WidgetBase>
-                <View style={{ flexDirection: 'row' }}>
-                    <View style={{ flex: 1 }}>
-                        <Text
-                            style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_SEMI_BOLD,
-                                fontSize: 15,
-                                lineHeight: 17,
-                                bottom: 2,
-                            }}
-                        >
-                            Active Challenges
-                        </Text>
-                    </View>
-
-                    <View>
-                        <Text
-                            style={{
-                                color: colors.accent_color_light,
-                                fontFamily: POPPINS_REGULAR,
-                                fontSize: 12,
-                                lineHeight: 14,
-                                bottom: 2,
-                            }}
-                        >
-                            {activeParticipation.data?.length ?? 0} Active
-                        </Text>
-                    </View>
+        <WidgetBase>
+            <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1 }}>
+                    <Text
+                        style={{
+                            color: colors.text,
+                            fontFamily: POPPINS_SEMI_BOLD,
+                            fontSize: 15,
+                            lineHeight: 17,
+                            bottom: 2,
+                        }}
+                    >
+                        Active Challenges
+                    </Text>
                 </View>
 
-                <View style={{ height: PADDING_SMALL }} />
+                <View>
+                    <Text
+                        style={{
+                            color: colors.accent_color_light,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 12,
+                            lineHeight: 14,
+                            bottom: 2,
+                        }}
+                    >
+                        {activeParticipation.data?.length ?? 0} Active
+                    </Text>
+                </View>
+            </View>
 
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    {activeParticipation.data?.map((challengeParticipant) => (
-                        <View key={challengeParticipant.id} style={{ paddingRight: 7.5 }}>
-                            <ActiveChallengeElement challengeParticipant={challengeParticipant} />
-                        </View>
-                    ))}
-                </ScrollView>
+            <View style={{ height: PADDING_SMALL }} />
 
-                <View style={{ height: PADDING_SMALL / 2 }} />
-            </WidgetBase>
-        </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {activeParticipation.data?.map((challengeParticipant) => (
+                    <View key={challengeParticipant.id} style={{ paddingRight: 7.5 }}>
+                        <ActiveChallengeElement challengeParticipant={challengeParticipant} />
+                    </View>
+                ))}
+            </ScrollView>
+
+            <View style={{ height: PADDING_SMALL / 2 }} />
+        </WidgetBase>
     );
 };

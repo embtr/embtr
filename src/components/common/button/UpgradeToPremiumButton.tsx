@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 import { CARD_SHADOW, PADDING_SMALL, POPPINS_MEDIUM } from 'src/util/constants';
-import { PremiumBadge } from '../PremiumBadge';
+import { PremiumBadge } from '../badge/PremiumBadge';
 
 interface Props {
     source: string;
@@ -35,6 +35,7 @@ export const UpgradeToPremiumButton = ({ source }: Props) => {
             <View style={{ paddingRight: PADDING_SMALL / 2 }}>
                 <PremiumBadge size={18} white={true} />
             </View>
+
             <Text
                 style={{
                     color: colors.text,

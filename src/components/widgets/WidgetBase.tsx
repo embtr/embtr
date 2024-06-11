@@ -43,6 +43,7 @@ export const WidgetBase = ({
                     backgroundColor: backgroundColor ?? colors.card_background,
                     paddingVertical: PADDING_LARGE,
                     paddingHorizontal: PADDING_LARGE,
+                    marginBottom: PADDING_LARGE,
                 },
                 useCardShadow ? CARD_SHADOW : {},
             ]}

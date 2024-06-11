@@ -10,9 +10,9 @@ import {
     POPPINS_SEMI_BOLD,
 } from 'src/util/constants';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
-import { OptionalPremiumBadge } from 'src/components/common/OptionalPremiumBadge';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { format } from 'date-fns';
+import { BadgeBelt } from 'src/components/common/badge/BadgeBelt';
 
 interface Props {
     date: Date;
@@ -65,21 +65,25 @@ export const CardHeader = ({ date, user, dayKey, secondaryText, type }: Props) =
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
-                                justifyContent: 'center',
                             }}
                         >
                             <Text
                                 style={{
-                                    paddingRight: PADDING_SMALL / 3,
                                     fontFamily: POPPINS_SEMI_BOLD,
                                     fontSize: 16,
+                                    includeFontPadding: false,
                                     color: colors.text,
                                 }}
                             >
                                 {user.displayName}
                             </Text>
 
-                            <OptionalPremiumBadge user={user} size={14} />
+                            <View
+                                style={{
+                                    width: PADDING_SMALL / 2,
+                                }}
+                            />
+                            <BadgeBelt user={user} size={13} />
                         </View>
                         <Text
                             style={{

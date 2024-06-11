@@ -16,9 +16,7 @@ export const GetPremiumWidget = () => {
     }
 
     return (
-        <View>
-            <View style={{ height: PADDING_LARGE }} />
-
+        <View style={{ paddingBottom: PADDING_LARGE }}>
             <WidgetBase backgroundColor={colors.accent_color_dim}>
                 <Pressable
                     onPress={() => {

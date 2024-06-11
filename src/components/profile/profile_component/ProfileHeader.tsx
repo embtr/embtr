@@ -13,7 +13,8 @@ import {
     POPPINS_SEMI_BOLD,
 } from 'src/util/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { OptionalPremiumBadge } from 'src/components/common/OptionalPremiumBadge';
+import { UserPropertyUtil } from 'src/util/UserPropertyUtil';
+import { BadgeBelt } from 'src/components/common/badge/BadgeBelt';
 
 interface Props {
     user: User;
@@ -22,6 +23,8 @@ interface Props {
 
 export const ProfileHeader = ({ user, setHeight }: Props) => {
     const { colors } = useTheme();
+
+    const userIsAway = UserPropertyUtil.isAway(user);
 
     const width = getWindowWidth() * 0.95;
     const height = width * 0.33;
@@ -71,7 +74,7 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                 >
                     {user.photoUrl && (
                         <CachedImage
-                            style={{ width: '100%', height: '100%', borderRadius: 1000 }}
+                            style={{ width: '100%', height: '100%', borderRadius: 50 }}
                             uri={user.photoUrl}
                         />
                     )}
@@ -118,9 +121,11 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                                 <View
                                     style={{
                                         paddingLeft: PADDING_SMALL / 3,
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
                                     }}
                                 >
-                                    <OptionalPremiumBadge user={user} size={15} />
+                                    <BadgeBelt user={user} size={15} />
                                 </View>
                             </View>
                         </View>

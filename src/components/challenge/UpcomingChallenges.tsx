@@ -51,6 +51,7 @@ export const UpcomingChallenges = () => {
             >
                 <View style={{ height: PADDING_LARGE }} />
                 {challengeViews}
+                <View style={{ height: PADDING_LARGE }} />
             </ScrollView>
         </View>
     );

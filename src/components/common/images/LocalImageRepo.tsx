@@ -42,6 +42,7 @@ export namespace LocalImageRepo {
         export const PREMIUM_BADGE = require('assets/logo.png');
         export const HEART_BADGE_BACKGROUND = require('assets/black_heart.png');
         export const PADLOCK = require('assets/padlock.png');
+        export const NEW_USER = require('assets/new_user.png');
 
         export const get = (key: string) => {
             switch (key) {
@@ -55,6 +56,8 @@ export namespace LocalImageRepo {
                     return HEART_BADGE_BACKGROUND;
                 case 'PADLOCK':
                     return PADLOCK;
+                case 'NEW_USER':
+                    return NEW_USER;
             }
 
             throw new Error('Invalid Profile namespace key: ' + key);

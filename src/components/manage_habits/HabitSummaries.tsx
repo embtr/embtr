@@ -1,7 +1,6 @@
 import { FlatList, Pressable, View } from 'react-native';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
-import { PADDING_LARGE } from 'src/util/constants';
 import { ScheduledHabit } from 'resources/schema';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { HabitSummaryElementImproved } from './HabitSummaryElementImproved';
@@ -16,7 +15,6 @@ export const HabitSummaries = ({ scheduledHabits }: Props) => {
     const renderItem = ({ item, index }: { item: ScheduledHabit; index: number }) => {
         return (
             <Pressable
-                style={{ paddingTop: index === 0 ? 0 : PADDING_LARGE }}
                 onPress={() => {
                     if (!item.id) {
                         return;

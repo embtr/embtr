@@ -24,6 +24,8 @@ import { CreatePlannedDayResult } from '../timeline/planned_day_result/crud/Crea
 import { EditPlannedDayResult } from '../timeline/planned_day_result/crud/EditPlannedDayResult';
 import { PlannedDayResultDetails } from '../timeline/planned_day_result/PlannedDayResultDetails';
 import { UserPostDetails } from '../timeline/user_post/UserPostDetails';
+import { AwayModeSettings } from '../away_mode/AwayModeSettings';
+import { AwayMode } from '../away_mode/AwayMode';
 
 const Stack = createStackNavigator();
 
@@ -99,6 +101,7 @@ export const SecureMainStack = () => {
                 name={Routes.PLANNED_DAY_RESULT_DETAILS}
                 component={PlannedDayResultDetails}
             />
+            <Stack.Screen name={Routes.AWAY_MODE} component={AwayMode} />
         </Stack.Navigator>
     );
 };

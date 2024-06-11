@@ -14,6 +14,11 @@ import {
     SetUserWarningNotificationRequest,
     SetUserWarningNotificationResponse,
 } from 'resources/types/requests/UserPropertyTypes';
+import {
+    GetAwayModeResponse,
+    UpdateAwayModeRequest,
+    UpdateAwayModeResponse,
+} from 'resources/types/requests/UserTypes';
 import axiosInstance from 'src/axios/axios';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { ReactQueryStaleTimes } from 'src/util/constants';
@@ -113,6 +118,32 @@ export class UserPropertyController {
             });
     }
 
+    public static async getAwayMode(): Promise<Constants.AwayMode | undefined> {
+        return await axiosInstance
+            .get<GetAwayModeResponse>(`/user/property/away/`)
+            .then((success) => {
+                return success.data.awayMode;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
+    public static async setAwayMode(awayMode: Constants.AwayMode) {
+        const request: UpdateAwayModeRequest = {
+            awayMode,
+        };
+
+        return await axiosInstance
+            .post<UpdateAwayModeResponse>(`/user/property/away/`, request)
+            .then((success) => {
+                return success.data.awayMode;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
     public static async setWarningsNotification(setting: Constants.WarningNotificationSetting) {
         const request: SetUserWarningNotificationRequest = {
             setting,
@@ -159,6 +190,10 @@ export class UserPropertyController {
     public static async invalidateWarningNotification() {
         reactQueryClient.invalidateQueries(['warningNotificationSetting']);
     }
+
+    public static async invalidateAwayMode() {
+        reactQueryClient.invalidateQueries(['awayModeSetting']);
+    }
 }
 
 export namespace UserPropertyCustomHooks {
@@ -190,6 +225,16 @@ export namespace UserPropertyCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useAwayModeSetting = () => {
+        const { status, data, fetchStatus, refetch } = useQuery({
+            queryKey: ['awayModeSetting'],
+            queryFn: () => UserPropertyController.getAwayMode(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
     };
 
     export const useWarningNotificationSetting = () => {

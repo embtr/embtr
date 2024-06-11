@@ -6,14 +6,16 @@ import { EmbtrMenuCustom } from '../common/menu/EmbtrMenuCustom';
 import { wait } from 'src/util/GeneralUtility';
 import { RefreshControl, ScrollView, View } from 'react-native';
 import { SingleScrollUserBody } from 'src/components/profile/profile_component/single_scroll/SingleScrollUserBody';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { UserCustomHooks } from 'src/controller/user/UserController';
+import { User } from 'resources/schema';
 
-export const CurrentUserProfile = () => {
+interface Props {
+    user: User;
+}
+
+export const CurrentUserProfileImpl = ({ user }: Props) => {
     const [refreshing, setRefreshing] = React.useState(false);
     const [random, setRandom] = React.useState<number>(0);
-
-    const user = useAppSelector(getCurrentUser);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
@@ -47,4 +49,17 @@ export const CurrentUserProfile = () => {
             </ScrollView>
         </Screen>
     );
+};
+
+export const CurrentUserProfile = () => {
+    const user = UserCustomHooks.useCurrentUser();
+    if (!user.data) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
+
+    return <CurrentUserProfileImpl user={user.data} />;
 };

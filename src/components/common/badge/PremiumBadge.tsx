@@ -1,4 +1,4 @@
-import { OptimalImage, OptimalImageData } from './images/OptimalImage';
+import { OptimalImage, OptimalImageData } from '../images/OptimalImage';
 
 const premiumBadgeData: OptimalImageData = {
     localImage: 'PROFILE.VERIFIED_BADGE',

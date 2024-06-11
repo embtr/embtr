@@ -6,11 +6,12 @@ import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src
 interface Props {
     text: string;
     secondaryText?: string;
+    secondaryTextColor?: string;
     icon?: any;
     onPress: Function;
 }
 
-export const EmbtrButton2 = ({ text, secondaryText, icon, onPress }: Props) => {
+export const EmbtrButton2 = ({ text, secondaryText, secondaryTextColor, icon, onPress }: Props) => {
     const { colors } = useTheme();
 
     return (
@@ -40,6 +41,17 @@ export const EmbtrButton2 = ({ text, secondaryText, icon, onPress }: Props) => {
                             justifyContent: 'center',
                         }}
                     >
+                        {secondaryText && (
+                            <Text
+                                style={{
+                                    color: secondaryTextColor ?? colors.secondary_text,
+                                    fontFamily: POPPINS_MEDIUM,
+                                    fontSize: 12,
+                                    top: 2,
+                                }}
+                            ></Text>
+                        )}
+
                         <Text
                             style={{
                                 color: colors.button_text,
@@ -54,8 +66,8 @@ export const EmbtrButton2 = ({ text, secondaryText, icon, onPress }: Props) => {
                         {secondaryText && (
                             <Text
                                 style={{
-                                    color: colors.secondary_text,
-                                    fontFamily: POPPINS_REGULAR,
+                                    color: secondaryTextColor ?? colors.secondary_text,
+                                    fontFamily: POPPINS_MEDIUM,
                                     fontSize: 12,
                                     top: 2,
                                 }}

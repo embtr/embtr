@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { PADDING_SMALL } from 'src/util/constants';
 import { PremiumFeatureBadge } from 'src/components/common/PremiumFeatureBadge';
 
-export const SettingsNotifications = () => {
+export const SettingsAwayMode = () => {
     const navigation = useEmbtrNavigation();
 
     return (
@@ -21,11 +21,12 @@ export const SettingsNotifications = () => {
             >
                 <PremiumFeatureBadge tiny />
             </View>
+
             <SettingsButtonElement
-                text={'Notifications'}
-                icon={'rocket-outline'}
+                text={'Away Mode'}
+                icon={'airplane-outline'}
                 onPress={() => {
-                    navigation.navigate(Routes.USER_NOTIFICATIONS);
+                    navigation.navigate(Routes.AWAY_MODE);
                 }}
             />
         </View>
