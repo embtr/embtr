@@ -5,7 +5,7 @@ import { TodaysActivitiesWidget, WidgetSource } from 'src/components/widgets/Tod
 import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsWidget';
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
 import React from 'react';
-import { PADDING_LARGE, PADDING_MEDIUM, PADDING_SMALL } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
 import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
 import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStreakWidget';
@@ -29,7 +29,7 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
         <Screen>
             <View style={{ height: '100%', paddingHorizontal: PADDING_LARGE }}>
                 <View style={{ height: PADDING_SMALL }} />
-                <AwayModeWidget />
+                <AwayModeWidget user={user} />
                 <HabitStreakWidget user={user} />
                 <TrophyCaseWidget userId={user.id} />
                 <ActiveChallengesWidget userId={user.id ?? 0} />
@@ -40,25 +40,3 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
         </Screen>
     );
 };
-
-{
-    /* {context.completedChallenges.length > 0 && (
-                    <View style={{ paddingTop: 6, paddingHorizontal: 12 }}>
-                        {<TrophyCaseWidget completedChallenges={context.completedChallenges} />}
-                    </View>
-                )} */
-}
-
-{
-    /* <View style={{ paddingTop: 12, paddingHorizontal: 12 }}>
-                    <HabitJourneyWidget user={user} />
-                </View> */
-}
-
-{
-    /* {context.activeChallenges.length > 0 && (
-                    <View style={{ paddingTop: TIMELINE_CARD_PADDING }}>
-                        <ActiveChallengesWidget challengeParticipation={context.activeChallenges} />
-                    </View>
-                )} */
-}

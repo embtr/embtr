@@ -22,8 +22,6 @@ export const AwayModeSettings = () => {
 
     const setting = awayModeSetting.data ?? Constants.AwayMode.DISABLED;
 
-    console.log('awayModeSetting', awayModeSetting);
-
     return (
         <WidgetBase>
             <AwayModeSettingsElement

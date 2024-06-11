@@ -2,7 +2,7 @@ import { ProfileHeader } from 'src/components/profile/profile_component/ProfileH
 import { Screen } from 'src/components/common/Screen';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import UserController from 'src/controller/user/UserController';
+import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
 import { User } from 'resources/schema';
 import React from 'react';
 import { View, ScrollView, Alert } from 'react-native';
@@ -13,32 +13,12 @@ import { TimelineController } from 'src/controller/timeline/TimelineController';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { getCurrentUid } from 'src/session/CurrentUserProvider';
 
-export const UserProfile = () => {
+interface Props {
+    user: User;
+}
+
+export const UserProfileImpl = ({ user }: Props) => {
     const navigation = useEmbtrNavigation();
-    const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
-    const [user, setUser] = React.useState<User>();
-
-    const fetchNewUser = async () => {
-        const newUser = await UserController.getUserByUidViaApi(route.params.id);
-        setUser(newUser.user);
-    };
-
-    const fetchInitial = () => {
-        fetchNewUser();
-    };
-
-    React.useEffect(() => {
-        fetchInitial();
-    }, [route.params.id]);
-
-    if (!user) {
-        return (
-            <Screen>
-                <View />
-            </Screen>
-        );
-    }
-
     const isCurrentUser = getCurrentUid() === user.uid;
 
     const onOptionsPressed = () => {
@@ -48,7 +28,7 @@ export const UserProfile = () => {
             [
                 {
                     text: 'Cancel',
-                    onPress: () => {},
+                    onPress: () => { },
                     style: 'cancel',
                 },
                 {
@@ -99,9 +79,25 @@ export const UserProfile = () => {
 
             <EmbtrMenuCustom />
             <ScrollView showsVerticalScrollIndicator={false}>
-                <ProfileHeader user={user} setHeight={() => {}} />
-                <SingleScrollUserBody user={user} setHeight={() => {}} />
+                <ProfileHeader user={user} setHeight={() => { }} />
+                <SingleScrollUserBody user={user} setHeight={() => { }} />
             </ScrollView>
         </Screen>
     );
+};
+
+export const UserProfile = () => {
+    const route = useRoute<RouteProp<TimelineTabScreens, 'UserProfile'>>();
+
+    const user = UserCustomHooks.useUserByUid(route.params.id);
+
+    if (!user.data) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
+
+    return <UserProfileImpl user={user.data} />;
 };

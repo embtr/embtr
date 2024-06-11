@@ -37,7 +37,7 @@ export const Today = () => {
                     <ScrollView>
                         <TodaysCountdownWidget />
 
-                        <AwayModeWidget />
+                        <AwayModeWidget user={user} />
 
                         <GetPremiumWidget />
 

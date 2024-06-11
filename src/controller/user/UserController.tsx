@@ -114,12 +114,12 @@ class UserController {
         }
     }
 
-    public static async getUserByUidViaApi(uid: string): Promise<GetUserResponse> {
+    public static async getUserByUidViaApi(uid: string): Promise<User | undefined> {
         try {
-            const success = await axiosInstance.get(`/${USER_ENDPOINT}/${uid}`);
-            return success.data;
+            const success = await axiosInstance.get<GetUserResponse>(`/${USER_ENDPOINT}/${uid}`);
+            return success.data.user;
         } catch (error) {
-            return error.response.data;
+            return undefined;
         }
     }
 
@@ -282,6 +282,10 @@ class UserController {
 
     public static async invalidateCurrentUser() {
         await reactQueryClient.invalidateQueries(['currentUser']);
+    }
+
+    public static async invalidateUser(uid: string) {
+        await reactQueryClient.invalidateQueries(['userByUid', uid]);
     }
 
     public static async invalidateNewUserChecklist() {
