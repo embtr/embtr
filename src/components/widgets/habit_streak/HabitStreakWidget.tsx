@@ -4,6 +4,8 @@ import { BasicHabitStreakWidget } from './BasicHabitStreakWidget';
 import { UserService } from 'src/service/UserService';
 import { Constants } from 'resources/types/constants/constants';
 import { darkColors } from 'src/theme/ColorThemes';
+import { HabitCustomHooks } from 'src/controller/habit/HabitController';
+import { View } from 'react-native';
 
 export namespace HabitStreak {
     export const getBackgroundColor = (completionState: Constants.CompletionState) => {
@@ -39,14 +41,20 @@ export namespace HabitStreak {
 
 interface Props {
     user: User;
+    taskId?: number;
 }
 
-export const HabitStreakWidget = ({ user }: Props) => {
+export const HabitStreakWidget = ({ user, taskId }: Props) => {
     const userIsPremium = UserService.userHasPremiumRole(user);
 
-    if (userIsPremium) {
-        return <AdvancedHabitStreakWidget user={user} />;
+    const habit = HabitCustomHooks.useHabit(taskId ?? 0);
+    if (taskId && !habit.data) {
+        return <View />;
     }
 
-    return <BasicHabitStreakWidget user={user} />;
+    if (userIsPremium) {
+        return <AdvancedHabitStreakWidget user={user} habit={habit.data} />;
+    }
+
+    return <BasicHabitStreakWidget user={user} habit={habit.data} />;
 };

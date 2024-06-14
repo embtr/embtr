@@ -2,7 +2,6 @@ import { FlatList, Pressable, View } from 'react-native';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { ScheduledHabit } from 'resources/schema';
-import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
 import { HabitSummaryElementImproved } from './HabitSummaryElementImproved';
 
 interface Props {
@@ -20,11 +19,8 @@ export const HabitSummaries = ({ scheduledHabits }: Props) => {
                         return;
                     }
 
-                    navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT, {
-                        scheduledHabitId: item.id,
-                        onExit: () => {
-                            ScheduledHabitController.invalidateActiveScheduledHabits();
-                        },
+                    navigation.navigate(Routes.HABIT_DETAILS, {
+                        id: item.id,
                     });
                 }}
             >

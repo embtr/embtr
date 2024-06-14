@@ -51,7 +51,8 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
                 style={{
                     paddingTop: PADDING_LARGE,
                     alignItems: 'center',
-                    width: '100%',
+                    width: 100,
+                    height: 100,
                 }}
             >
                 <SvgUri width={100} height={100} uri={award?.icon?.remoteImageUrl ?? ''} />

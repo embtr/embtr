@@ -8,7 +8,7 @@ import {
     PADDING_SMALL,
 } from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
-import { User } from 'resources/schema';
+import { Task, User } from 'resources/schema';
 import { HabitStreakCustomHooks } from 'src/controller/habit_streak/HabitStreakController';
 import { PureDate } from 'resources/types/date/PureDate';
 import { useFocusEffect } from '@react-navigation/native';
@@ -19,9 +19,10 @@ import { UserCustomHooks } from 'src/controller/user/UserController';
 
 interface Props {
     user: User;
+    habit?: Task;
 }
 
-export const BasicHabitStreakWidget = ({ user }: Props) => {
+export const BasicHabitStreakWidget = ({ user, habit }: Props) => {
     const { colors } = useTheme();
     const padding = (getWindowWidth() - PADDING_LARGE * 4) / 30 / 6;
     const diameter = padding * 5;
@@ -32,7 +33,9 @@ export const BasicHabitStreakWidget = ({ user }: Props) => {
 
     const isCurrentUser = UserCustomHooks.useIsCurrentUser(user);
 
-    const habitStreak = HabitStreakCustomHooks.useHabitStreak(user.id);
+    const habitStreak = habit
+        ? HabitStreakCustomHooks.useHabitStreakForHabit(user.id, habit.id ?? 0)
+        : HabitStreakCustomHooks.useHabitStreak(user.id);
 
     useFocusEffect(
         React.useCallback(() => {

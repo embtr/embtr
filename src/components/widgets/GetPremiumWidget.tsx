@@ -2,7 +2,7 @@ import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
-import { PADDING_LARGE, POPPINS_MEDIUM } from 'src/util/constants';
+import { POPPINS_MEDIUM } from 'src/util/constants';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 
 export const GetPremiumWidget = () => {
@@ -16,33 +16,30 @@ export const GetPremiumWidget = () => {
     }
 
     return (
-        <View style={{ paddingBottom: PADDING_LARGE }}>
-            <WidgetBase backgroundColor={colors.accent_color_dim}>
-                <Pressable
-                    onPress={() => {
-                        purchasePremiumWorkflow('Upgrade To Premium Widget');
-                    }}
-                >
-                    <View>
-                        <Text
-                            style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 16 }}
-                        >
-                            Upgrade To{' '}
-                            <Text style={{ color: colors.accent_color_light }}>Premium</Text>
-                        </Text>
+        <WidgetBase backgroundColor={colors.accent_color_soft}>
+            <Pressable
+                onPress={() => {
+                    purchasePremiumWorkflow('Upgrade To Premium Widget');
+                }}
+            >
+                <View>
+                    <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 16 }}>
+                        Upgrade To <Text style={{ color: colors.accent_color_light }}>Premium</Text>
+                    </Text>
 
-                        <Text
-                            style={{
-                                color: colors.secondary_text,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 12,
-                            }}
-                        >
-                            unlock a detailed statistics, advanced habit reminders, and more!
-                        </Text>
-                    </View>
-                </Pressable>
-            </WidgetBase>
-        </View>
+                    <Text
+                        style={{
+                            color: colors.secondary_text,
+                            fontFamily: POPPINS_MEDIUM,
+                            fontSize: 12,
+                            top: 2,
+                        }}
+                    >
+                        Upgrade now to unlock detailed statistics, advanced habit reminders, and
+                        much more!
+                    </Text>
+                </View>
+            </Pressable>
+        </WidgetBase>
     );
 };
