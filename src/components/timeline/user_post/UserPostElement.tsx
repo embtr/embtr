@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
+import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { ImageUtility } from 'src/util/images/ImageUtility';
 import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
@@ -27,6 +27,7 @@ export const UserPostElement = ({ userPost, interactableData }: Props) => {
     const user = userPost.user;
     const secondaryHeader = user.location;
     const isCurrentUser = getCurrentUid() === user.uid;
+    const padding = PADDING_LARGE * 1.5;
 
     let carouselImages: ImageCarouselImage[] = ImageUtility.createReadOnlyCarouselImages(
         userPost.images ?? []
@@ -54,10 +55,24 @@ export const UserPostElement = ({ userPost, interactableData }: Props) => {
             />
 
             {/**********/}
+            {/* IMAGES */}
+            {/**********/}
+            {carouselImages.length > 0 && (
+                <View
+                    style={{
+                        paddingTop: padding,
+                        alignItems: 'center',
+                    }}
+                >
+                    <CarouselCards images={carouselImages} />
+                </View>
+            )}
+
+            {/**********/}
             {/*  BODY  */}
             {/**********/}
             {userPost.body && (
-                <View style={{ paddingTop: 12 }}>
+                <View style={{ paddingTop: padding }}>
                     <Text
                         style={{
                             fontFamily: POPPINS_REGULAR,
@@ -70,24 +85,10 @@ export const UserPostElement = ({ userPost, interactableData }: Props) => {
                 </View>
             )}
 
-            {/**********/}
-            {/* IMAGES */}
-            {/**********/}
-            {carouselImages.length > 0 && (
-                <View
-                    style={{
-                        paddingTop: 10,
-                        alignItems: 'center',
-                    }}
-                >
-                    <CarouselCards images={carouselImages} />
-                </View>
-            )}
-
             {/********************/}
             {/*    ACTION BAR    */}
             {/********************/}
-            <View style={{ paddingTop: 12 }}>
+            <View style={{ paddingTop: padding }}>
                 <View
                     style={{
                         borderColor: colors.secondary_text,

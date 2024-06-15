@@ -33,7 +33,9 @@ export const CarouselCards = ({ images }: Props) => {
             style={{
                 overflow: 'hidden',
                 alignItems: 'center',
-                height: CAROUSEL_IMAGE_HEIGHT + PAGINATION_DOT_SIZE + PADDING_LARGE,
+                height:
+                    CAROUSEL_IMAGE_HEIGHT +
+                    (images.length > 1 ? PAGINATION_DOT_SIZE + PADDING_LARGE : 0),
             }}
         >
             <Carousel
