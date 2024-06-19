@@ -27,7 +27,7 @@ export const ScheduledHabitBanner = ({
         }
 
         if (isCreateCustomHabit) {
-            return 'discovery';
+            return 'discover';
         }
 
         if (!isCreatedNewScheduledHabit) {

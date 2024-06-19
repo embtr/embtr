@@ -98,6 +98,7 @@ export const lightColors = {
     timeline_label_daily_update: '#27B24A',
     text_approaching_max: '#FFC100',
     away: '#224377',
+    habit_streak: '#803500',
 };
 
 // Dark theme colors
@@ -200,4 +201,5 @@ export const darkColors = {
     timeline_label_daily_update: '#27B24A',
     text_approaching_max: '#FFC100',
     away: '#224377',
+    habit_streak: '#803500',
 };

@@ -5,11 +5,12 @@ import { TodaysActivitiesWidget, WidgetSource } from 'src/components/widgets/Tod
 import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsWidget';
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
 import React from 'react';
-import { PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_MEDIUM, PADDING_SMALL } from 'src/util/constants';
 import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
 import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
 import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStreakWidget';
 import { AwayModeWidget } from 'src/components/widgets/AwayModeWidget';
+import { OnHabitStreakWidget } from 'src/components/widgets/OnHabitStreakWidget';
 
 interface Props {
     user: User;
@@ -28,8 +29,9 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
     return (
         <Screen>
             <View style={{ height: '100%', paddingHorizontal: PADDING_LARGE }}>
-                <View style={{ height: PADDING_SMALL }} />
+                <View style={{ height: PADDING_MEDIUM }} />
                 <AwayModeWidget user={user} />
+                <OnHabitStreakWidget user={user} />
                 <HabitStreakWidget user={user} />
                 <TrophyCaseWidget userId={user.id} />
                 <ActiveChallengesWidget userId={user.id ?? 0} />

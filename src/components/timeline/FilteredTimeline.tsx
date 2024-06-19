@@ -92,7 +92,7 @@ export const FilteredTimeline = ({ timelineElements, hasMore, pullToRefresh, loa
     const { colors } = useTheme();
 
     const keyExtractor = (item: TimelineElement) => {
-        const key = `${item.type}_post_${item.userPost?.id}_result_${item.plannedDayResult?.id}_challenge_${item.challengeRecentlyJoined?.id}_${item.challengeRecentlyJoined?.latestParticipant.id}`;
+        const key = `${item.type}_post_${item.userPost?.id}_result_${item.plannedDayResult?.id}_challenge_${item.challengeRecentlyJoined?.id}_${item.challengeRecentlyJoined?.latestParticipant?.id}`;
         return key;
     };
 

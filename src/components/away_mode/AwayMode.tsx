@@ -37,7 +37,7 @@ export const AwayMode = () => {
                                     flex: 1,
                                 }}
                             >
-                                Away Status
+                                Away Mode
                             </Text>
                             <AwayModeSettings />
                         </View>

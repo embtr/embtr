@@ -2,22 +2,24 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { WidgetBase } from './WidgetBase';
-import { POPPINS_MEDIUM } from 'src/util/constants';
+import { PADDING_LARGE, POPPINS_MEDIUM } from 'src/util/constants';
 import { UserPropertyController } from 'src/controller/user/UserPropertyController';
 import { Constants } from 'resources/types/constants/constants';
-import UserController, { UserCustomHooks } from 'src/controller/user/UserController';
+import UserController from 'src/controller/user/UserController';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { User } from 'resources/schema';
+import { getCurrentUid } from 'src/session/CurrentUserProvider';
+import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
+import { Ionicons } from '@expo/vector-icons';
 
-interface ImplProps {
-    currentUserId: number;
+interface Props {
     user: User;
 }
 
-export const AwayModeWidgetImpl = ({ currentUserId, user }: ImplProps) => {
+export const AwayModeWidget = ({ user }: Props) => {
     const { colors } = useTheme();
 
-    const isCurrentUser = currentUserId === user.id;
+    const isCurrentUser = getCurrentUid() === user.uid;
     const messagePrefix = isCurrentUser ? 'You are ' : `${user.displayName} is `;
     const messageBody = isCurrentUser
         ? 'Press here to turn off away mode and get back to the action!'
@@ -47,36 +49,35 @@ export const AwayModeWidgetImpl = ({ currentUserId, user }: ImplProps) => {
                     toggleAwayMode();
                 }}
             >
-                <View>
-                    <Text style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 16 }}>
-                        {messagePrefix}
-                        <Text style={{ color: colors.accent_color_light }}>Away</Text>
-                    </Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <View style={{ paddingRight: PADDING_LARGE, justifyContent: 'center' }}>
+                        <Ionicons
+                            style={{ left: 2 }}
+                            name={'airplane-sharp'}
+                            size={40}
+                            color={colors.link}
+                        />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Text
+                            style={{ color: colors.text, fontFamily: POPPINS_MEDIUM, fontSize: 16 }}
+                        >
+                            {messagePrefix}
+                            <Text style={{ color: colors.accent_color_light }}>Away</Text>
+                        </Text>
 
-                    <Text
-                        style={{
-                            color: colors.secondary_text,
-                            fontFamily: POPPINS_MEDIUM,
-                            fontSize: 12,
-                        }}
-                    >
-                        {messageBody}
-                    </Text>
+                        <Text
+                            style={{
+                                color: colors.secondary_text,
+                                fontFamily: POPPINS_MEDIUM,
+                                fontSize: 12,
+                            }}
+                        >
+                            {messageBody}
+                        </Text>
+                    </View>
                 </View>
             </TouchableOpacity>
         </WidgetBase>
     );
-};
-
-interface Props {
-    user: User;
-}
-
-export const AwayModeWidget = ({ user }: Props) => {
-    const currentUserId = UserCustomHooks.useCurrentUserId();
-    if (!currentUserId.data) {
-        return null;
-    }
-
-    return <AwayModeWidgetImpl currentUserId={currentUserId.data} user={user} />;
 };

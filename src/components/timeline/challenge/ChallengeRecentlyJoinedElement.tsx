@@ -21,7 +21,7 @@ export const ChallengeRecentlyJoinedElement = ({
 }: Props) => {
     const { colors } = useTheme();
 
-    const user = challengeRecentlyJoined.latestParticipant.user;
+    const user = challengeRecentlyJoined.latestParticipant?.user;
     if (!user) {
         return <View />;
     }

@@ -1,33 +1,25 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View } from 'react-native';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
 import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { PADDING_LARGE } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';
 import { GetPremiumWidget } from '../widgets/GetPremiumWidget';
 import { AwayModeWidget } from '../widgets/AwayModeWidget';
+import { OnHabitStreakWidget } from '../widgets/OnHabitStreakWidget';
+import { UserCustomHooks } from 'src/controller/user/UserController';
+import { User } from 'resources/schema';
 
-export const Today = () => {
+interface Props {
+    user: User;
+}
+
+export const TodayImpl = ({ user }: Props) => {
     const [planningWidgetHeight, setPlanningWidgetHeight] = React.useState<number>(0);
-
-    const user = useAppSelector(getCurrentUser);
-
-    if (!user) {
-        return (
-            <Screen>
-                <View>
-                    <Text>no user</Text>
-                </View>
-            </Screen>
-        );
-    }
-
     return (
         <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
             <Screen>
@@ -35,9 +27,9 @@ export const Today = () => {
                     <Banner name="Today" />
 
                     <ScrollView>
-                        <TodaysCountdownWidget />
-
                         <AwayModeWidget user={user} />
+
+                        <OnHabitStreakWidget user={user} />
 
                         <GetPremiumWidget />
 
@@ -60,4 +52,17 @@ export const Today = () => {
             </Screen>
         </TodayPageLayoutContextProvider>
     );
+};
+
+export const Today = () => {
+    const user = UserCustomHooks.useCurrentUser();
+    if (!user.data) {
+        return (
+            <Screen>
+                <View />
+            </Screen>
+        );
+    }
+
+    return <TodayImpl user={user.data} />;
 };

@@ -43,6 +43,10 @@ export namespace LocalImageRepo {
         export const HEART_BADGE_BACKGROUND = require('assets/black_heart.png');
         export const PADLOCK = require('assets/padlock.png');
         export const NEW_USER = require('assets/new_user.png');
+        export const HABIT_STREAK_GOLD = require('assets/gold_fire.png');
+        export const HABIT_STREAK_PURPLE = require('assets/purple_fire.png');
+        export const HABIT_STREAK = require('assets/fire.png');
+        export const HABIT_STREAK_SMALL = require('assets/wood.png');
 
         export const get = (key: string) => {
             switch (key) {
@@ -58,6 +62,14 @@ export namespace LocalImageRepo {
                     return PADLOCK;
                 case 'NEW_USER':
                     return NEW_USER;
+                case 'HABIT_STREAK_GOLD':
+                    return HABIT_STREAK_GOLD;
+                case 'HABIT_STREAK_PURPLE':
+                    return HABIT_STREAK_PURPLE;
+                case 'HABIT_STREAK':
+                    return HABIT_STREAK;
+                case 'HABIT_STREAK_SMALL':
+                    return HABIT_STREAK_SMALL;
             }
 
             throw new Error('Invalid Profile namespace key: ' + key);

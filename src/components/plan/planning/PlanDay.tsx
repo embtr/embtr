@@ -11,6 +11,8 @@ import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
 import { getCurrentUser, getFireConfetti } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
 import { Constants } from 'resources/types/constants/constants';
+import UserController from 'src/controller/user/UserController';
+import { HabitStreakController } from 'src/controller/habit_streak/HabitStreakController';
 
 const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
     return 'completedQuantity' in item;
@@ -134,6 +136,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     const allHabitsAreComplete = getAllHabitsAreComplete(plannedDay);
 
     React.useEffect(() => {
+        console.log('PlanDay useEffect', allHabitsAreComplete, hasPlannedTasks, dayKey);
         const expand = !hasPlannedTasks || allHabitsAreComplete;
         const expandHeight = !hasPlannedTasks ? 60 : 60 + PADDING_LARGE;
         runAnimation(expand ?? false, detailsViewHeight, expandHeight);
