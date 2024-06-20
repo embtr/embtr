@@ -13,8 +13,6 @@ import { ChallengeController } from 'src/controller/challenge/ChallengeControlle
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import PostDetailsActionBar from '../common/comments/PostDetailsActionBar';
 import { ChallengeUtility } from 'src/util/challenge/ChallengeUtility';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getSelectedDayKey } from 'src/redux/user/GlobalState';
 import { ChallengeSummary } from 'resources/types/dto/Challenge';
 import { ChallengeSummaryInteractableElementCustomHooks } from '../timeline/interactable/ChallengeSummaryInteractableElementCustomHooks';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
@@ -36,7 +34,11 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
     const participantCount = challengeSummary.participantCount ?? 0;
     const userIsAParticipant = challengeSummary.isParticipant;
     const disableButton = userIsAParticipant || !challengeSummary.canJoin;
-    const buttonText = userIsAParticipant ? 'Challenge Accepted!' : challengeSummary.canJoin ? 'Join Challenge' : 'Can no longer join';
+    const buttonText = userIsAParticipant
+        ? 'Challenge Accepted!'
+        : challengeSummary.canJoin
+            ? 'Join Challenge'
+            : 'Can no longer join';
 
     const daysUntilStart = Math.ceil(
         ((new Date(challengeSummary.start) ?? new Date()).getTime() - new Date().getTime()) /
@@ -169,19 +171,16 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                         </View>
                     </View>
                     <View style={{ paddingVertical: PADDING_LARGE }}>
-                        <TouchableOpacity
-                            onPress={registerForChallenge}
-                            disabled={disableButton}
-                        >
+                        <TouchableOpacity onPress={registerForChallenge} disabled={disableButton}>
                             <View
                                 style={[
                                     {
-                                        backgroundColor: userIsAParticipant
+                                        backgroundColor: disableButton
                                             ? colors.accent_color_light
                                             : colors.accent_color,
                                         borderRadius: 5,
                                         paddingVertical: 6,
-                                        opacity: userIsAParticipant ? 0.5 : 1,
+                                        opacity: disableButton ? 0.5 : 1,
                                     },
                                     CARD_SHADOW,
                                 ]}
