@@ -35,6 +35,8 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
 
     const participantCount = challengeSummary.participantCount ?? 0;
     const userIsAParticipant = challengeSummary.isParticipant;
+    const disableButton = userIsAParticipant || !challengeSummary.canJoin;
+    const buttonText = userIsAParticipant ? 'Challenge Accepted!' : challengeSummary.canJoin ? 'Join Challenge' : 'Can no longer join';
 
     const daysUntilStart = Math.ceil(
         ((new Date(challengeSummary.start) ?? new Date()).getTime() - new Date().getTime()) /
@@ -169,7 +171,7 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                     <View style={{ paddingVertical: PADDING_LARGE }}>
                         <TouchableOpacity
                             onPress={registerForChallenge}
-                            disabled={userIsAParticipant}
+                            disabled={disableButton}
                         >
                             <View
                                 style={[
@@ -192,7 +194,7 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                                         color: colors.text,
                                     }}
                                 >
-                                    {userIsAParticipant ? 'Challenge Accepted!' : 'Join Challenge'}
+                                    {buttonText}
                                 </Text>
                             </View>
                         </TouchableOpacity>

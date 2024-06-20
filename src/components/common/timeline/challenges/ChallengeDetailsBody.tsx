@@ -71,6 +71,7 @@ export const ChallengeDetailsBody = ({ challengeDetails, interactableData }: Pro
                     isAParticipant={challengeDetails.isParticipant}
                     challengeId={challengeDetails.id}
                     award={challengeDetails.award}
+                    canJoin={challengeDetails.canJoin}
                 />
             </View>
 
