@@ -11,9 +11,10 @@ interface Props {
     challengeId: number;
     isAParticipant: boolean;
     award: Award;
+    canJoin: boolean
 }
 
-export const ChallengeRecentlyJoinedDetails = ({ challengeId, isAParticipant, award }: Props) => {
+export const ChallengeRecentlyJoinedDetails = ({ challengeId, isAParticipant, award, canJoin }: Props) => {
     const { colors } = useTheme();
 
     const registerForChallenge = async () => {
@@ -28,6 +29,9 @@ export const ChallengeRecentlyJoinedDetails = ({ challengeId, isAParticipant, aw
 
         await ChallengeController.register(challengeId);
     };
+
+    const disableButton = isAParticipant || !canJoin;
+    const buttonText = isAParticipant ? 'Challenge Accepted!' : canJoin ? 'Join Challenge' : 'Can no longer join';
 
     return (
         <View
@@ -61,7 +65,7 @@ export const ChallengeRecentlyJoinedDetails = ({ challengeId, isAParticipant, aw
             </View>
             <View>
                 <View style={{ paddingTop: 12 }}>
-                    <TouchableOpacity onPress={registerForChallenge} disabled={isAParticipant}>
+                    <TouchableOpacity onPress={registerForChallenge} disabled={disableButton}>
                         <View
                             style={[
                                 {
@@ -83,7 +87,7 @@ export const ChallengeRecentlyJoinedDetails = ({ challengeId, isAParticipant, aw
                                     color: colors.text,
                                 }}
                             >
-                                {isAParticipant ? 'Challenge Accepted!' : 'Join Challenge'}
+                                {buttonText}
                             </Text>
                         </View>
                     </TouchableOpacity>
