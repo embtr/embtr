@@ -20,7 +20,7 @@ import { USER } from 'resources/endpoints';
 import { ImagePickerResult } from 'expo-image-picker';
 import { pickImage } from 'src/util/ImagePickerUtil';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
-import { User } from 'resources/schema';
+import { HabitStreakTier, User } from 'resources/schema';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
@@ -34,6 +34,8 @@ import { RevenueCat } from '../revenuecat/RevenueCat';
 import { RevenueCatProvider } from '../revenuecat/RevenueCatProvider';
 import { Store } from 'src/redux/store';
 import { PremiumController } from '../PremiumController';
+import { UserHabitStreakTier } from 'resources/types/dto/HabitStreak';
+import { GetUserHabitStreakTierResponse } from 'resources/types/requests/HabitStreakTypes';
 
 export interface UserModel {
     uid: string;
@@ -304,6 +306,24 @@ class UserController {
 
         return purchased;
     }
+
+    public static async getUserHabitStreakTier(
+        userId: number
+    ): Promise<UserHabitStreakTier | undefined> {
+        return axiosInstance
+            .get<GetUserHabitStreakTierResponse>(`user/${userId}/habit-streak-tier/`)
+            .then((success) => {
+                const response: GetUserHabitStreakTierResponse = success.data;
+                return response.userHabitStreakTier;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
+    public static async invalidateUserHabitStreakTier(userId: number) {
+        await reactQueryClient.invalidateQueries(['habitStreakTier', userId]);
+    }
 }
 
 export namespace UserCustomHooks {
@@ -362,6 +382,16 @@ export namespace UserCustomHooks {
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
     };
+
+    export function useUserHabitSreakTier(userId: number) {
+        const { status, error, data, fetchStatus, refetch } = useQuery({
+            queryKey: ['habitStreakTier', userId],
+            queryFn: () => UserController.getUserHabitStreakTier(userId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
+    }
 }
 
 export default UserController;

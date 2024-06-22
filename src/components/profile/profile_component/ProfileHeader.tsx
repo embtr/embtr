@@ -173,16 +173,18 @@ export const ProfileHeader = ({ user, setHeight }: Props) => {
                         </Text>
                     </View>
 
-                    <Text
-                        style={{
-                            fontSize: 12,
-                            fontFamily: POPPINS_REGULAR,
-                            textAlign: 'center',
-                            color: colors.text,
-                        }}
-                    >
-                        {user.bio}
-                    </Text>
+                    {user.bio && (
+                        <Text
+                            style={{
+                                fontSize: 12,
+                                fontFamily: POPPINS_REGULAR,
+                                textAlign: 'center',
+                                color: colors.text,
+                            }}
+                        >
+                            {user.bio}
+                        </Text>
+                    )}
                 </View>
             </View>
         </View>

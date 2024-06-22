@@ -17,7 +17,9 @@ export const TrophyDetailsModal = ({ challengeParticipant, visible, onDismiss }:
 
     const challenge = challengeParticipant?.challenge;
     const award = challenge?.award;
-    const completedDatePretty = getDatePrettyWithYear(challengeParticipant?.completedOnPlannedDay?.date ?? new Date());
+    const completedDatePretty = getDatePrettyWithYear(
+        challengeParticipant?.completedOnPlannedDay?.date ?? new Date()
+    );
 
     const body = (
         <View style={{ alignItems: 'center', paddingVertical: PADDING_LARGE }}>

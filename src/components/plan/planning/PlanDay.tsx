@@ -136,7 +136,6 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     const allHabitsAreComplete = getAllHabitsAreComplete(plannedDay);
 
     React.useEffect(() => {
-        console.log('PlanDay useEffect', allHabitsAreComplete, hasPlannedTasks, dayKey);
         const expand = !hasPlannedTasks || allHabitsAreComplete;
         const expandHeight = !hasPlannedTasks ? 60 : 60 + PADDING_LARGE;
         runAnimation(expand ?? false, detailsViewHeight, expandHeight);
@@ -145,6 +144,13 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
             dayKey,
             completed: allHabitsAreComplete,
         };
+
+        //terrible hack, unsure on how to fix this
+        if (previousCompletionHistory?.completed !== allHabitsAreComplete) {
+            setTimeout(() => {
+                UserController.invalidateUserHabitStreakTier(currentUserId ?? 0);
+            }, 1000);
+        }
 
         if (previousCompletionHistory && previousCompletionHistory.dayKey === dayKey) {
             if (

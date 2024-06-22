@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Pressable } from 'react-native';
 import { WidgetBase } from '../WidgetBase';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import {
+    CARD_SHADOW,
     PADDING_LARGE,
     PADDING_MEDIUM,
     PADDING_SMALL,
@@ -33,7 +34,7 @@ export const TrophyCaseWidget = ({ userId }: Props) => {
     for (let i = 0; i < completedChallenges.data.length; i++) {
         const url = completedChallenges.data[i].challenge?.award?.icon?.remoteImageUrl;
         trophyElements.push(
-            <View style={{ paddingLeft: i > 0 ? PADDING_SMALL : 0 }}>
+            <View style={[{ paddingLeft: i > 0 ? PADDING_SMALL : 0 }]}>
                 <Pressable
                     onPress={() => {
                         setSelectedChallenge(completedChallenges.data?.[i]);

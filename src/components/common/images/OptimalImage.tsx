@@ -34,10 +34,13 @@ export const OptimalImage = ({ data, style }: Props) => {
     }
 
     if (data.localImage) {
-        if (isIosApp()) {
-            return <ExpoImage source={LocalImageRepo.get(data.localImage)} style={style} />;
-        } else {
-            return <Image source={LocalImageRepo.get(data.localImage)} style={style} />;
+        const source = LocalImageRepo.get(data.localImage);
+        if (source) {
+            if (isIosApp()) {
+                return <ExpoImage source={LocalImageRepo.get(data.localImage)} style={style} />;
+            } else {
+                return <Image source={LocalImageRepo.get(data.localImage)} style={style} />;
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { HabitStreak, SimpleHabitStreak } from 'resources/types/dto/HabitStreak';
+import { GetHabitStreakTiersResponse } from 'resources/types/requests/HabitStreakTypes';
 import {
     GetHabitStreakResponse,
     GetSimpleHabitStreakResponse,
@@ -80,6 +81,19 @@ export class HabitStreakController {
             });
     }
 
+    public static async getAllHabitStreakTiers() {
+        return axiosInstance
+            .get<GetHabitStreakTiersResponse>(`/habit-streak/tiers`)
+            .then((success) => {
+                const response: GetHabitStreakTiersResponse = success.data;
+                return response.habitStreakTiers;
+            })
+            .catch((error) => {
+                console.log(error);
+                return [];
+            });
+    }
+
     public static invalidateHabitStreak(userId: number) {
         reactQueryClient.invalidateQueries(['habitStreak', userId]);
     }
@@ -101,18 +115,42 @@ export class HabitStreakController {
     }
 
     public static OptimisticIncrementSimpleHabitStreak(userId: number) {
-        console.log('OptimisticIncrementSimpleHabitStreak');
         const currentValue: SimpleHabitStreak | undefined = reactQueryClient.getQueryData([
             'simpleHabitStreak',
             userId,
         ]);
 
+        console.log('currentValue', currentValue);
         if (!currentValue) {
             return;
         }
 
         const newCurrentStreak = currentValue.currentStreak + 1;
         const newLongestStreak = Math.max(newCurrentStreak, currentValue.longestStreak);
+
+        console.log('newCurrentStreak', newCurrentStreak, 'newLongestStreak', newLongestStreak);
+
+        reactQueryClient.setQueryData(['simpleHabitStreak', userId], {
+            currentStreak: newCurrentStreak,
+            longestStreak: newLongestStreak,
+        });
+    }
+
+    public static OptimisticDecrementSimpleHabitStreak(userId: number) {
+        const currentValue: SimpleHabitStreak | undefined = reactQueryClient.getQueryData([
+            'simpleHabitStreak',
+            userId,
+        ]);
+
+        console.log('currentValue', currentValue);
+        if (!currentValue) {
+            return;
+        }
+
+        const newCurrentStreak = currentValue.currentStreak - 1;
+        const newLongestStreak = currentValue.longestStreak;
+
+        console.log('newCurrentStreak', newCurrentStreak, 'newLongestStreak', newLongestStreak);
 
         reactQueryClient.setQueryData(['simpleHabitStreak', userId], {
             currentStreak: newCurrentStreak,
@@ -166,6 +204,16 @@ export namespace HabitStreakCustomHooks {
         const { status, error, data, fetchStatus, refetch } = useQuery({
             queryKey: ['simpleHabitStreak', userId],
             queryFn: () => HabitStreakController.getSimple(userId),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
+    }
+
+    export function useAllHabitStreakTiers() {
+        const { status, error, data, fetchStatus, refetch } = useQuery({
+            queryKey: ['allHabitStreakTiers'],
+            queryFn: () => HabitStreakController.getAllHabitStreakTiers(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 

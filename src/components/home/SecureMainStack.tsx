@@ -26,6 +26,7 @@ import { PlannedDayResultDetails } from '../timeline/planned_day_result/PlannedD
 import { UserPostDetails } from '../timeline/user_post/UserPostDetails';
 import { AwayMode } from '../away_mode/AwayMode';
 import { HabitDetails } from '../habit/HabitDetails';
+import { HabitStreakTierSummary } from '../habit_streak/HabitStreakTierSummary';
 
 const Stack = createStackNavigator();
 
@@ -103,6 +104,12 @@ export const SecureMainStack = () => {
             />
             <Stack.Screen name={Routes.AWAY_MODE} component={AwayMode} />
             <Stack.Screen name={Routes.HABIT_DETAILS} component={HabitDetails} />
+
+            <Stack.Screen
+                name={Routes.HABIT_STREAK_TIER_SUMMARY}
+                component={HabitStreakTierSummary}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
         </Stack.Navigator>
     );
 };

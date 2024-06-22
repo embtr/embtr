@@ -1,0 +1,78 @@
+import React from 'react';
+import { Text, View } from 'react-native';
+import { useTheme } from '../theme/ThemeProvider';
+import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
+
+interface Props {
+    titlePrefix: string;
+    titlePostfix: string;
+    body: string;
+    icon: OptimalImageData;
+    note?: string;
+}
+
+export const HabitStreakTierElement = ({ titlePrefix, titlePostfix, body, icon, note }: Props) => {
+    const { colors } = useTheme();
+    const size = 40;
+
+    return (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ paddingRight: PADDING_LARGE }}>
+                <View
+                    style={{
+                        height: size,
+                        width: size,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <OptimalImage data={icon} style={{ height: size, width: size }} />
+                </View>
+            </View>
+
+            <View>
+                <Text
+                    style={{
+                        color: colors.text,
+                        fontFamily: POPPINS_MEDIUM,
+                        fontSize: 16,
+                    }}
+                >
+                    {titlePrefix}
+                    <Text style={{ color: colors.accent_color_light }}>{titlePostfix}</Text>
+                </Text>
+
+                <Text
+                    style={{
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_MEDIUM,
+                        fontSize: 12,
+                    }}
+                >
+                    {body}
+                </Text>
+            </View>
+
+            <View
+                style={{
+                    flex: 1,
+                    height: '100%',
+                    alignItems: 'flex-end',
+                    bottom: PADDING_SMALL,
+                    left: PADDING_SMALL,
+                }}
+            >
+                <Text
+                    style={{
+                        color: colors.secondary_text,
+                        fontFamily: POPPINS_REGULAR,
+                        fontSize: 9,
+                    }}
+                >
+                    {note}
+                </Text>
+            </View>
+        </View>
+    );
+};

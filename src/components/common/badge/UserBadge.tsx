@@ -1,17 +1,19 @@
+import { UserBadge as UserBadgeData } from 'resources/schema';
 import { OptimalImage, OptimalImageData } from '../images/OptimalImage';
 
-const badgeData: OptimalImageData = {
-    localImage: 'PROFILE.NEW_USER',
-};
-
 interface Props {
+    userBadge: UserBadgeData;
     size: number;
 }
 
-export const NewUserBadge = ({ size }: Props) => {
+export const UserBadge = ({ userBadge, size }: Props) => {
+    const data: OptimalImageData = {
+        ...userBadge.badge?.icon,
+    };
+
     return (
         <OptimalImage
-            data={badgeData}
+            data={data}
             style={{
                 width: size,
                 height: size,
