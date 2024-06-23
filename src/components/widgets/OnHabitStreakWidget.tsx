@@ -19,11 +19,11 @@ const getTitle = (isCurrentUser: boolean, isOnHabitStreak: boolean, currentStrea
         prefix = ``;
     }
 
+    const notOnStreakYet = currentStreak < 4;
+
     let postfix = '';
-    if (currentStreak < 4) {
+    if (notOnStreakYet) {
         postfix = 'Close to a ';
-    } else if (isOnHabitStreak) {
-        postfix = `On a `;
     } else {
         postfix = 'On a ';
     }
@@ -32,7 +32,7 @@ const getTitle = (isCurrentUser: boolean, isOnHabitStreak: boolean, currentStrea
         postfix = postfix.toLowerCase();
     }
 
-    if (isOnHabitStreak) {
+    if (isOnHabitStreak && !notOnStreakYet) {
         postfix += `record `;
     }
 
@@ -40,8 +40,10 @@ const getTitle = (isCurrentUser: boolean, isOnHabitStreak: boolean, currentStrea
 };
 
 const getBody = (user: User, isCurrentUser: boolean, currentStreak: number) => {
-    if (currentStreak < 3) {
-        const daysLeft = 3 - currentStreak;
+    const notOnStreakYet = currentStreak < 4;
+
+    if (notOnStreakYet) {
+        const daysLeft = 4 - currentStreak;
         if (daysLeft === 1) {
             return 'Just one more day to light the fire!';
         }

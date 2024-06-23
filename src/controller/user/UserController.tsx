@@ -20,7 +20,7 @@ import { USER } from 'resources/endpoints';
 import { ImagePickerResult } from 'expo-image-picker';
 import { pickImage } from 'src/util/ImagePickerUtil';
 import { uploadImage } from 'src/firebase/cloud_storage/profiles/ProfileCsp';
-import { HabitStreakTier, User } from 'resources/schema';
+import { User } from 'resources/schema';
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';

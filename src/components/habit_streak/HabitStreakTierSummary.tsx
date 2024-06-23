@@ -10,14 +10,11 @@ import { useTheme } from '../theme/ThemeProvider';
 
 const getDescription = (habitStreakTier: HabitStreakTier) => {
     const minStreak = habitStreakTier.minStreak ?? 0;
-    const maxStreak = habitStreakTier.maxStreak ?? 0;
-
-    if (maxStreak > 6969) {
-        return `Complete ${minStreak}+ days in a row.`;
+    if (minStreak === 0) {
+        return 'The beginning of your journey.';
     }
 
-    const description = `Complete ${minStreak} - ${maxStreak} days in a row.`;
-    return description;
+    return `Complete all habits ${minStreak} days in a row.`;
 };
 
 const renderItem = ({ item, index }: { item: HabitStreakTier; index: number }) => {
