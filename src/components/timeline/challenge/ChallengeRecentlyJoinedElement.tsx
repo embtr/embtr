@@ -28,7 +28,7 @@ export const ChallengeRecentlyJoinedElement = ({
 
     const body =
         challengeRecentlyJoined.participantCount > 2
-            ? `${user?.displayName}, and ${challengeRecentlyJoined.participantCount} others have joined the challenge!`
+            ? `${user?.displayName}, and ${challengeRecentlyJoined.participantCount - 1} others have joined the challenge!`
             : challengeRecentlyJoined.participantCount === 2
                 ? `${user?.displayName}, and one other have joined the challenge!`
                 : `${user?.displayName} has joined the challenge!`;
