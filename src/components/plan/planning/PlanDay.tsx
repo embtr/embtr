@@ -13,6 +13,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { Constants } from 'resources/types/constants/constants';
 import UserController from 'src/controller/user/UserController';
 import { HabitStreakController } from 'src/controller/habit_streak/HabitStreakController';
+import { getCurrentUserUid } from 'src/session/CurrentUserProvider';
 
 const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
     return 'completedQuantity' in item;
@@ -130,6 +131,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     const fireConfetti = useAppSelector(getFireConfetti);
     const currentUser = useAppSelector(getCurrentUser);
     const currentUserId = currentUser.id;
+    const currentUserUid = currentUser.uid;
     const isCurrentUser = plannedDay.user?.id === currentUserId;
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
@@ -149,6 +151,8 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
         if (previousCompletionHistory?.completed !== allHabitsAreComplete) {
             setTimeout(() => {
                 UserController.invalidateUserHabitStreakTier(currentUserId ?? 0);
+                UserController.invalidateUser(currentUserUid ?? '');
+                UserController.invalidateCurrentUser();
             }, 1000);
         }
 

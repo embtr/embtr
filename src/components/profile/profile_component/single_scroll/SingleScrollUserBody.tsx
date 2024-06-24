@@ -5,7 +5,7 @@ import { TodaysActivitiesWidget, WidgetSource } from 'src/components/widgets/Tod
 import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsWidget';
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
 import React from 'react';
-import { PADDING_LARGE, PADDING_MEDIUM, PADDING_SMALL } from 'src/util/constants';
+import { PADDING_LARGE, PADDING_MEDIUM } from 'src/util/constants';
 import { ActiveChallengesWidget } from 'src/components/widgets/challenges/ActiveChallengesWidget';
 import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseWidget';
 import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStreakWidget';
