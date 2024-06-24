@@ -101,25 +101,11 @@ export class HabitController {
     }
 
     public static async getAllHabitCategories(): Promise<HabitCategory[]> {
-        const requests = [
-            HabitController.getActiveHabitsCategory(),
-            HabitController.getCustomHabitsCategory(),
-            HabitController.getRecentHabitsCategory(),
-            HabitController.getAllGenericHabitCategories(),
-        ];
+        const requests = [HabitController.getAllGenericHabitCategories()];
 
         // consider using Promise.allSettled
-        const [active, custom, recent, generic] = await Promise.all(requests);
+        const [generic] = await Promise.all(requests);
         const allCategories: HabitCategory[] = [];
-        if (active) {
-            allCategories.push(active as HabitCategory);
-        }
-        if (custom) {
-            allCategories.push(custom as HabitCategory);
-        }
-        if (recent) {
-            allCategories.push(recent as HabitCategory);
-        }
         if (generic) {
             allCategories.push(...(generic as HabitCategory[]));
         }
