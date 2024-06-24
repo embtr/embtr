@@ -45,10 +45,10 @@ const getBody = (user: User, isCurrentUser: boolean, currentStreak: number) => {
     if (notOnStreakYet) {
         const daysLeft = 4 - currentStreak;
         if (daysLeft === 1) {
-            return 'Just one more day to light the fire!';
+            return 'Just one day away from lighting the fire!';
         }
 
-        return `Only ${daysLeft} days left to light the fire!`;
+        return `Only ${daysLeft} days away from lighting the fire!`;
     }
 
     if (!isCurrentUser) {

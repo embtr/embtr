@@ -56,11 +56,10 @@ export const HabitStreakTierElement = ({ titlePrefix, titlePostfix, body, icon, 
 
             <View
                 style={{
-                    flex: 1,
-                    height: '100%',
-                    alignItems: 'flex-end',
-                    bottom: PADDING_SMALL,
-                    left: PADDING_SMALL,
+                    right: -PADDING_SMALL,
+                    top: -PADDING_SMALL - 2.5,
+                    position: 'absolute',
+                    zIndex: 1,
                 }}
             >
                 <Text
@@ -68,6 +67,7 @@ export const HabitStreakTierElement = ({ titlePrefix, titlePostfix, body, icon, 
                         color: colors.secondary_text,
                         fontFamily: POPPINS_REGULAR,
                         fontSize: 9,
+                        includeFontPadding: false,
                     }}
                 >
                     {note}

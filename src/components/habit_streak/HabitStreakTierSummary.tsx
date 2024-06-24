@@ -62,7 +62,8 @@ const HabitStreakTierSummaryImpl = ({ habitStreakTiers }: ImplProps) => {
                 }}
             >
                 <Text style={{ color: colors.secondary_text, fontFamily: POPPINS_REGULAR }}>
-                    Habit Streaks are earned by completing consecutive days in a row.
+                    Habit Streaks are earned by completing all of your habits for a certain number
+                    of days in a row. The longer the streak, the higher Habit Streak Tier you earn!
                 </Text>
             </View>
 
