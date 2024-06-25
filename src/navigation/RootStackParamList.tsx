@@ -10,6 +10,28 @@ export type MainTabScreens = {
     TodayTab: undefined;
 };
 
+export type TutorialIslandTabScreens = {
+    TutorialIslandTimelineTab: NavigatorScreenParams<TutorialIslandTimelineTabScreens>;
+    TutorialIslandCurrentUserTab: NavigatorScreenParams<TutorialIslandProfileTabScreens>;
+    TutorialIslandJourneyTab: NavigatorScreenParams<TutorialIslandJourneyTabScreens>;
+    TutorialIslandPlanTab: NavigatorScreenParams<TutorialIslandChallengeTabScreens>;
+    TutorialIslandTodayTab: NavigatorScreenParams<TutorialIslandTodayTab>;
+};
+
+export type TutorialIslandScreens = {
+    TutorialIslandTimeline: undefined;
+};
+
+export type TutorialIslandTimelineTabScreens = TutorialIslandScreens & {};
+
+export type TutorialIslandTodayTab = TutorialIslandScreens & {};
+
+export type TutorialIslandChallengeTabScreens = TutorialIslandScreens & {};
+
+export type TutorialIslandProfileTabScreens = TutorialIslandScreens & {};
+
+export type TutorialIslandJourneyTabScreens = TutorialIslandScreens & {};
+
 export type MasterScreens = {
     UserSearch: undefined;
     Timeline: undefined;
@@ -94,6 +116,7 @@ export type JourneyTabScreens = MasterScreens & {};
 export type RootStackParamList = {
     LandingPage: undefined;
     Dashboard: NavigatorScreenParams<MainTabScreens>;
+    TutorialIslandDashboard: NavigatorScreenParams<TutorialIslandTabScreens>;
     About: undefined;
     ReleaseNotes: undefined;
     Contact: undefined;
@@ -130,4 +153,12 @@ export namespace Routes {
     export const AWAY_MODE = 'AwayMode';
     export const HABIT_DETAILS = 'HabitDetails';
     export const HABIT_STREAK_TIER_SUMMARY = 'HabitStreakTierSummary';
+}
+
+export namespace TutorialIslandRoutes {
+    export const TUTORIAL_ISLAND_TIMELINE = 'TutorialIslandTimeline';
+    export const TUTORIAL_ISLAND_CURRENT_USER = 'TutorialIslandCurrentUser';
+    export const TUTORIAL_ISLAND_JOURNEY = 'TutorialIslandJourney';
+    export const TUTORIAL_ISLAND_PLAN = 'TutorialIslandPlan';
+    export const TUTORIAL_ISLAND_TODAY = 'TutorialIslandToday';
 }
