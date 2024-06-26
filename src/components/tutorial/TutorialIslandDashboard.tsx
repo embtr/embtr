@@ -32,7 +32,7 @@ export const TutorialIslandDashboard = () => {
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>
             <Tab.Navigator
-                initialRouteName={TUTORIAL_TIMELINE_TABS.TIMELINE}
+                initialRouteName={TUTORIAL_TIMELINE_TABS.TODAY}
                 tabBar={(props: BottomTabBarProps) => <TutorialIslandTabBar {...props} />}
                 screenOptions={() => ({
                     tabBarHideOnKeyboard: true,

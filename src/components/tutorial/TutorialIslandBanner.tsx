@@ -36,7 +36,7 @@ interface Props {
     menuOptions?: EmbtrMenuOptions;
 }
 
-export const Banner = ({
+export const TutorialIslandBanner = ({
     name,
     leftRoute,
     leftIcon,

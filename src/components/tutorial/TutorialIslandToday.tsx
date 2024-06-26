@@ -1,25 +1,33 @@
 import * as React from 'react';
+import { TimelineElement } from 'resources/types/requests/Timeline';
+import { useFocusEffect } from '@react-navigation/native';
+import { NotificationController } from 'src/controller/notification/NotificationController';
 import { Screen } from 'src/components/common/Screen';
+import { TimelineCustomHooks } from 'src/controller/timeline/TimelineController';
 import { TutorialIslandBanner } from './TutorialIslandBanner';
 import { Button, View } from 'react-native';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
-import { TutorialIslandFlow, TutorialIslandOption } from 'src/model/TutorialIslandModels';
-import { TutorialIslandElement } from './TutorialIslandElement';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TutorialIslandFlow } from 'src/model/TutorialIslandModels';
 
-export const TutorialIslandTimeline = () => {
+export const TutorialIslandToday = () => {
+    useFocusEffect(
+        React.useCallback(() => {
+            NotificationController.prefetchUnreadNotificationCount();
+        }, [])
+    );
+
+    const timelineElements = TimelineCustomHooks.useTimelineData();
+
+    const timelineData: TimelineElement[] = [];
+    timelineElements.data?.pages.forEach((page) => {
+        timelineData.push(...(page?.elements ?? []));
+    });
+
     const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
 
     return (
         <Screen>
-            <TutorialIslandBanner
-                name={'Timeline'}
-                leftIcon={'people-outline'}
-                leftRoute={'UserSearch'}
-                innerLeftIcon={'add-outline'}
-                rightIcon={'notifications-outline'}
-                rightRoute={'Notifications'}
-            />
+            <TutorialIslandBanner name={'Today'} />
 
             <View style={{ flex: 1 }}>
                 <Button
@@ -45,19 +53,6 @@ export const TutorialIslandTimeline = () => {
                         setTutorialIslandState(TutorialIslandFlow.COMPLETE_HABIT);
                     }}
                 />
-
-                <View style={{ height: 10 }} />
-
-                <TutorialIslandElement option={TutorialIslandOption.SUPER_SECRET_OPTION}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('SUPER SECRET BUTTON');
-                            setTutorialIslandState(TutorialIslandFlow.COMPLETE_HABIT);
-                        }}
-                    >
-                        <View style={{ height: 50, width: 50, backgroundColor: 'red' }} />
-                    </TouchableOpacity>
-                </TutorialIslandElement>
             </View>
         </Screen>
     );

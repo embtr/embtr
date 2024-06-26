@@ -1,10 +1,11 @@
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getTutorialIslandState, setTutorialIslandState } from './GlobalState';
 import {
-    TutorialIslandFlowOption,
-    TutorialIslandStep,
-    createTutorialIslandState,
+    TutorialIslandFlow,
+    TutorialIslandOption,
+    TutorialIslandState,
 } from 'src/model/TutorialIslandModels';
+import { TutorialIslandService } from 'src/service/TutorialIslandService';
 
 export namespace GlobalStateCustomHooks {
     export const useTutorialIslandState = () => {
@@ -12,15 +13,24 @@ export namespace GlobalStateCustomHooks {
         return tutorialIslandState;
     };
 
-    export const useReportStepPressed = () => {
+    export const useReportOptionPressed = () => {
         const tutorialIslandState = useAppSelector(getTutorialIslandState);
         const dispatch = useAppDispatch();
 
-        return (step: TutorialIslandStep) => {
-            if (tutorialIslandState.currentStep === step) {
-                console.log('step pressed');
-                const currentStepIndex = tutorialIslandState.flow.steps.indexOf(step);
-                const nextStep = tutorialIslandState.flow.steps[currentStepIndex + 1];
+        return (option: TutorialIslandOption) => {
+            const currentStepContainsOption = TutorialIslandService.stepContainsOption(
+                tutorialIslandState.currentStep,
+                option
+            );
+
+            if (currentStepContainsOption) {
+                const currentStepIndex = tutorialIslandState.flowState.steps.indexOf(
+                    tutorialIslandState.currentStep
+                );
+
+                console.log('Current step', tutorialIslandState.currentStep);
+                const nextStep = tutorialIslandState.flowState.steps[currentStepIndex + 1];
+                console.log('Next step', nextStep);
                 dispatch(
                     setTutorialIslandState({
                         ...tutorialIslandState,
@@ -31,12 +41,11 @@ export namespace GlobalStateCustomHooks {
         };
     };
 
-    //todo fix naming
     export const useSetTutorialIslandState = () => {
         const dispatch = useAppDispatch();
 
-        return (flowOption: TutorialIslandFlowOption) => {
-            const state = createTutorialIslandState(flowOption);
+        return (flow: TutorialIslandFlow) => {
+            const state: TutorialIslandState = TutorialIslandService.createState(flow);
             dispatch(setTutorialIslandState(state));
         };
     };

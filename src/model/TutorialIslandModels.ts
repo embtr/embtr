@@ -1,4 +1,20 @@
-export enum TutorialIslandFlowOption {
+/*
+ *  INTERFACES
+ */
+export interface TutorialIslandFlowState {
+    flow: TutorialIslandFlow;
+    steps: TutorialIslandStep[];
+}
+
+export interface TutorialIslandState {
+    flowState: TutorialIslandFlowState;
+    currentStep: TutorialIslandStep;
+}
+
+/*
+ *  ENUMS
+ */
+export enum TutorialIslandFlow {
     INVALID = 'INVALID',
     CREATE_HABIT = 'CREATE_HABIT',
     COMPLETE_HABIT = 'COMPLETE_HABIT',
@@ -6,59 +22,72 @@ export enum TutorialIslandFlowOption {
 
 export enum TutorialIslandStep {
     INVALID = 'INVALID',
-    NAVIGATE_TO_TIMELINE = 'NAVIGATE_TO_TIMELINE',
-    NAVIGATE_TO_HABITS = 'NAVIGATE_TO_HABITS',
-    NAVIGATE_TO_TODAY = 'NAVIGATE_TO_TODAY',
-    NAVIGATE_TO_HABIT_JOURNEY = 'NAVIGATE_TO_HABIT_JOURNEY',
-    NAVIGATE_TO_CURRENT_USER = 'NAVIGATE_TO_CURRENT_USER',
-
-    PRESS_ADD_NEW_HABIT = 'PRESS_ADD_NEW_HABIT',
-    PRESS_HABIT_JOURNEY_CHALLENGES = 'PRESS_HABIT_JOURNEY_CHALLENGES',
+    PRESS_TIMELNE_TAB = 'PRESS_TIMELINE_TAB',
+    PRESS_HABITS_TAB = 'PRESS_HABITS_TAB',
+    PRESS_TODAY_TAB = 'PRESS_TODAY_TAB',
+    PRESS_JOURNEY_TAB = 'PRESS_JOURNEY_TAB',
+    PRESS_PROFILE_TAB = 'PRESS_PROFILE_TAB',
+    SUPER_SECRET_STEP = 'SUPER_SECRET_STEP',
 }
 
-export interface TutorialIslandFlow {
-    option: TutorialIslandFlowOption;
-    steps: TutorialIslandStep[];
-}
-
-export interface TutorialIslandState {
-    flow: TutorialIslandFlow;
-    currentStep: TutorialIslandStep;
+export enum TutorialIslandOption {
+    INVALID = 'INVALID',
+    TIMELINE_TAB = 'TIMELINE_TAB',
+    HABITS_TAB = 'HABITS_TAB',
+    TODAY_TAB = 'TODAY_TAB',
+    JOURNEY_TAB = 'JOURNEY_TAB',
+    PROFILE_TAB = 'PROFILE_TAB',
+    SUPER_SECRET_OPTION = 'SUPER_SECRET_OPTION',
 }
 
 /*
- * FLOWS
+ * FLOW MAPPINGS
  */
+export const flowToStepMap: Map<TutorialIslandFlow, TutorialIslandStep[]> = new Map();
+flowToStepMap.set(TutorialIslandFlow.INVALID, []);
 
-export const INVALID_FLOW: TutorialIslandFlow = {
-    option: TutorialIslandFlowOption.INVALID,
+flowToStepMap.set(TutorialIslandFlow.CREATE_HABIT, [
+    TutorialIslandStep.PRESS_HABITS_TAB,
+    TutorialIslandStep.PRESS_TODAY_TAB,
+    TutorialIslandStep.PRESS_TIMELNE_TAB,
+    TutorialIslandStep.PRESS_JOURNEY_TAB,
+    TutorialIslandStep.PRESS_PROFILE_TAB,
+]);
+
+flowToStepMap.set(TutorialIslandFlow.COMPLETE_HABIT, [
+    TutorialIslandStep.PRESS_PROFILE_TAB,
+    TutorialIslandStep.PRESS_HABITS_TAB,
+    TutorialIslandStep.SUPER_SECRET_STEP,
+]);
+
+/*
+ * STEP MAPPINGS
+ */
+export const stepToOptionMap: Map<TutorialIslandStep, TutorialIslandOption[]> = new Map();
+stepToOptionMap.set(TutorialIslandStep.INVALID, []);
+stepToOptionMap.set(TutorialIslandStep.PRESS_TIMELNE_TAB, [TutorialIslandOption.TIMELINE_TAB]);
+stepToOptionMap.set(TutorialIslandStep.PRESS_HABITS_TAB, [TutorialIslandOption.HABITS_TAB]);
+stepToOptionMap.set(TutorialIslandStep.PRESS_TODAY_TAB, [TutorialIslandOption.TODAY_TAB]);
+stepToOptionMap.set(TutorialIslandStep.PRESS_JOURNEY_TAB, [TutorialIslandOption.JOURNEY_TAB]);
+stepToOptionMap.set(TutorialIslandStep.PRESS_PROFILE_TAB, [TutorialIslandOption.PROFILE_TAB]);
+stepToOptionMap.set(TutorialIslandStep.SUPER_SECRET_STEP, [
+    TutorialIslandOption.SUPER_SECRET_OPTION,
+]);
+
+export const INVALID_FLOW_STATE: TutorialIslandFlowState = {
+    flow: TutorialIslandFlow.INVALID,
     steps: [],
 };
 
-export const CREATE_HABIT_FLOW: TutorialIslandFlow = {
-    option: TutorialIslandFlowOption.CREATE_HABIT,
-    steps: [TutorialIslandStep.NAVIGATE_TO_HABITS, TutorialIslandStep.PRESS_ADD_NEW_HABIT],
+export const CREATE_HABIT_FLOW: TutorialIslandFlowState = {
+    flow: TutorialIslandFlow.CREATE_HABIT,
+    steps: [],
 };
 
+/*
+ * DEFAULT STATE
+ */
 export const DEFAULT_TUTORIAL_ISLAND_STATE: TutorialIslandState = {
-    flow: INVALID_FLOW,
+    flowState: INVALID_FLOW_STATE,
     currentStep: TutorialIslandStep.INVALID,
-};
-
-const getTutorialIslandFlow = (flowOption: TutorialIslandFlowOption): TutorialIslandFlow => {
-    switch (flowOption) {
-        case TutorialIslandFlowOption.CREATE_HABIT:
-            return CREATE_HABIT_FLOW;
-        default:
-            return INVALID_FLOW;
-    }
-};
-
-export const createTutorialIslandState = (flowOption: TutorialIslandFlowOption) => {
-    const flow = getTutorialIslandFlow(flowOption);
-
-    return {
-        flow: flow,
-        currentStep: flow.steps[0],
-    };
 };

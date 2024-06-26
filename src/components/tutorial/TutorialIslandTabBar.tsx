@@ -8,6 +8,8 @@ import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 import { TUTORIAL_TIMELINE_TABS } from './TutorialIslandDashboard';
+import { TutorialIslandOption } from 'src/model/TutorialIslandModels';
+import { TutorialIslandElement } from './TutorialIslandElement';
 
 export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
@@ -79,19 +81,21 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
         };
 
         let element: JSX.Element = <View />;
+        let option: TutorialIslandOption = TutorialIslandOption.INVALID;
+
         if (route.name === TUTORIAL_TIMELINE_TABS.TIMELINE) {
             let icon: any = isFocused ? 'home' : 'home-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
+            option = TutorialIslandOption.TIMELINE_TAB;
         } else if (route.name === TUTORIAL_TIMELINE_TABS.TODAY) {
             element = (
                 <View
                     style={[
                         {
-                            padding: 10,
-                            borderRadius: 50,
-                            position: 'absolute',
-                            zIndex: 2,
-                            alignSelf: 'center',
+                            flex: 1, // Make the parent take up all available space
+                            justifyContent: 'center', // Center the children vertically
+                            alignItems: 'center', // Center the children horizontally
+                            padding: 18,
                         },
                     ]}
                 >
@@ -102,9 +106,9 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
                                 borderRadius: 50,
                                 height: 60 * 0.9,
                                 width: 60 * 0.9,
-                                bottom: 25,
                                 justifyContent: 'center',
                                 alignItems: 'center',
+                                marginBottom: 15, // Adjust bottom space
                                 ...ShadowUtility.getShadow(65),
                             },
                         ]}
@@ -120,24 +124,26 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
                     </View>
                 </View>
             );
+            option = TutorialIslandOption.TODAY_TAB;
         } else if (route.name === TUTORIAL_TIMELINE_TABS.JOURNEY) {
             let icon: any = 'trail-sign-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
+            option = TutorialIslandOption.JOURNEY_TAB;
         } else if (route.name === TUTORIAL_TIMELINE_TABS.USER_PROFILE) {
             element = <UserTabElement size={iconSize} />;
+            option = TutorialIslandOption.PROFILE_TAB;
         } else {
             let icon: any = isFocused ? 'list-circle' : 'list-circle-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
+            option = TutorialIslandOption.HABITS_TAB;
         }
+
         elements.push(
-            <TouchableOpacity
-                accessibilityRole="button"
-                onPress={onPress}
-                style={{ flex: 1 }}
-                key={index}
-            >
-                {element}
-            </TouchableOpacity>
+            <TutorialIslandElement key={index} option={option} style={{ flex: 1 }}>
+                <TouchableOpacity accessibilityRole="button" onPress={onPress}>
+                    {element}
+                </TouchableOpacity>
+            </TutorialIslandElement>
         );
     });
 

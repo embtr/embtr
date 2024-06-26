@@ -9,18 +9,19 @@ import {
     UpdateModalPlannedTask,
 } from 'src/model/GlobalState';
 import { DayKey } from 'resources/types/custom_schema/DayKey';
+import { DEFAULT_TUTORIAL_ISLAND_STATE, TutorialIslandState } from 'src/model/TutorialIslandModels';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
-    openMenu: () => {},
-    closeMenu: () => {},
+    openMenu: () => { },
+    closeMenu: () => { },
     currentTab: '',
     userProfileImage:
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
     showCardShadow: true,
     cardRefreshRequests: [],
-    fireConfetti: () => {},
-    displayDropDownAlert: () => {},
+    fireConfetti: () => { },
+    displayDropDownAlert: () => { },
     selectedDayKey: '',
     currentUser: {},
     timelineDays: 0,
@@ -32,8 +33,8 @@ const INITIAL_STATE: GlobalState = {
     editModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     acknowledgedVersion: '0.0.0',
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
+    tutorialIslandState: DEFAULT_TUTORIAL_ISLAND_STATE,
 };
-
 interface GlobalState {
     menuOptions: EmbtrMenuOptions;
     openMenu: Function;
@@ -55,6 +56,7 @@ interface GlobalState {
     editModalPlannedTask: UpdateModalPlannedTask;
     acknowledgedVersion: string;
     appleAuthUserInfo: AppleAuthUserInfo;
+    tutorialIslandState: TutorialIslandState;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -130,6 +132,9 @@ export const GlobalState = createSlice({
         },
         setAppleAuthUserInfo(state, action) {
             state.appleAuthUserInfo = action.payload;
+        },
+        setTutorialIslandState(state, action) {
+            state.tutorialIslandState = action.payload;
         },
     },
 });
@@ -286,6 +291,14 @@ export const getAppleAuthUserInfo = (state: RootState): AppleAuthUserInfo => {
     return state.globalState.appleAuthUserInfo;
 };
 
+export const getTutorialIslandState = (state: RootState): TutorialIslandState => {
+    if (state?.globalState.tutorialIslandState === undefined) {
+        return INITIAL_STATE.tutorialIslandState;
+    }
+
+    return state.globalState.tutorialIslandState;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -307,4 +320,5 @@ export const {
     setEditModalPlannedTask,
     setAcknowledgedVersion,
     setAppleAuthUserInfo,
+    setTutorialIslandState,
 } = GlobalState.actions;
