@@ -17,15 +17,22 @@ interface InnerProps {
 const Targeted = ({ children, option, onPress, tooltip, style }: InnerProps) => {
     const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
 
+    const [width, setWidth] = React.useState(0);
+
     return (
-        <View style={style}>
+        <View
+            style={style}
+            onLayout={(event) => {
+                setWidth(event.nativeEvent.layout.width);
+            }}
+        >
             <TouchableWithoutFeedback
                 onPress={() => {
                     reportOptionPressed(option);
                     onPress?.();
                 }}
             >
-                {tooltip && <TutorialIslandTooltip tooltip={tooltip} />}
+                {tooltip && <TutorialIslandTooltip tooltip={tooltip} parentWidth={width} />}
                 {children}
             </TouchableWithoutFeedback>
         </View>

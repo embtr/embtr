@@ -5,14 +5,14 @@ import { PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 
-const PADDING = 32;
-
 interface Props {
     tooltip: TutorialIslandTooltipData;
+    parentWidth: number;
 }
 
-export const TutorialIslandTooltip = ({ tooltip }: Props) => {
+export const TutorialIslandTooltip = ({ tooltip, parentWidth }: Props) => {
     const colors = useTheme().colors;
+    const PADDING = parentWidth / 2 - 10.5;
 
     return (
         <View
