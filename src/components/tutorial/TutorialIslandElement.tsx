@@ -1,17 +1,19 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { TutorialIslandOption } from 'src/model/TutorialIslandModels';
+import { TutorialIslandOption, TutorialIslandTooltipData } from 'src/model/TutorialIslandModels';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
 import { TutorialIslandService } from 'src/service/TutorialIslandService';
+import { TutorialIslandTooltip } from './TutorialIslandTooltip';
 
 interface InnerProps {
     children: React.ReactNode;
     option: TutorialIslandOption;
+    tooltip?: TutorialIslandTooltipData;
     style?: any;
 }
 
-const Targeted = ({ children, option, style }: InnerProps) => {
+const Targeted = ({ children, option, tooltip, style }: InnerProps) => {
     const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
 
     return (
@@ -21,6 +23,7 @@ const Targeted = ({ children, option, style }: InnerProps) => {
                     reportOptionPressed(option);
                 }}
             >
+                {tooltip && <TutorialIslandTooltip tooltip={tooltip} />}
                 {children}
             </TouchableWithoutFeedback>
         </View>
@@ -70,12 +73,9 @@ export const TutorialIslandElement = ({ children, option, style }: Props) => {
         );
     }
 
-    const stepContainsOption = TutorialIslandService.stepContainsOption(
-        tutorialIslandState.currentStep,
-        option
-    );
+    const stepOption = TutorialIslandService.getStepOption(tutorialIslandState.currentStep, option);
 
-    if (!stepContainsOption) {
+    if (!stepOption) {
         return (
             <Blocked style={style} option={option}>
                 {children}
@@ -83,8 +83,10 @@ export const TutorialIslandElement = ({ children, option, style }: Props) => {
         );
     }
 
+    const tooltip = stepOption.tooltip;
+
     return (
-        <Targeted style={style} option={option}>
+        <Targeted style={style} option={option} tooltip={tooltip}>
             {children}
         </Targeted>
     );

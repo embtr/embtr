@@ -10,6 +10,7 @@ import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 import { TUTORIAL_TIMELINE_TABS } from './TutorialIslandDashboard';
 import { TutorialIslandOption } from 'src/model/TutorialIslandModels';
 import { TutorialIslandElement } from './TutorialIslandElement';
+import { getDefaultOptions } from 'date-fns';
 
 export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
@@ -139,8 +140,12 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
         }
 
         elements.push(
-            <TutorialIslandElement key={index} option={option} style={{ flex: 1 }}>
-                <TouchableOpacity accessibilityRole="button" onPress={onPress}>
+            <TutorialIslandElement style={{ flex: 1 }} option={option}>
+                <TouchableOpacity
+                    onPress={() => {
+                        onPress();
+                    }}
+                >
                     {element}
                 </TouchableOpacity>
             </TutorialIslandElement>

@@ -4,6 +4,7 @@ import {
     TutorialIslandOption,
     TutorialIslandState,
     TutorialIslandStep,
+    TutorialIslandStepOption,
     flowToStepMap,
     stepToOptionMap,
 } from 'src/model/TutorialIslandModels';
@@ -13,11 +14,11 @@ export class TutorialIslandService {
         return this.getStepsForFlow(flow).includes(step);
     }
 
-    public static stepContainsOption(
+    public static getStepOption(
         step: TutorialIslandStep,
         option: TutorialIslandOption
-    ): boolean {
-        return this.getOptionsForStep(step).includes(option);
+    ): TutorialIslandStepOption | undefined {
+        return this.getOptionsForStep(step).find((stepOption) => stepOption.option === option);
     }
 
     public static tutorialIsActive(state: TutorialIslandState) {
@@ -49,7 +50,7 @@ export class TutorialIslandService {
         return flowToStepMap.get(flow) || [];
     }
 
-    private static getOptionsForStep(step: TutorialIslandStep): TutorialIslandOption[] {
+    private static getOptionsForStep(step: TutorialIslandStep): TutorialIslandStepOption[] {
         return stepToOptionMap.get(step) || [];
     }
 }

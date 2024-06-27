@@ -1,3 +1,5 @@
+import { FlexAlignType } from 'react-native';
+
 /*
  *  INTERFACES
  */
@@ -9,6 +11,16 @@ export interface TutorialIslandFlowState {
 export interface TutorialIslandState {
     flowState: TutorialIslandFlowState;
     currentStep: TutorialIslandStep;
+}
+
+export interface TutorialIslandStepOption {
+    option: TutorialIslandOption;
+    tooltip?: TutorialIslandTooltipData;
+}
+
+export interface TutorialIslandTooltipData {
+    text: string;
+    position: FlexAlignType;
 }
 
 /*
@@ -63,15 +75,40 @@ flowToStepMap.set(TutorialIslandFlow.COMPLETE_HABIT, [
 /*
  * STEP MAPPINGS
  */
-export const stepToOptionMap: Map<TutorialIslandStep, TutorialIslandOption[]> = new Map();
+export const stepToOptionMap: Map<TutorialIslandStep, TutorialIslandStepOption[]> = new Map();
 stepToOptionMap.set(TutorialIslandStep.INVALID, []);
-stepToOptionMap.set(TutorialIslandStep.PRESS_TIMELNE_TAB, [TutorialIslandOption.TIMELINE_TAB]);
-stepToOptionMap.set(TutorialIslandStep.PRESS_HABITS_TAB, [TutorialIslandOption.HABITS_TAB]);
-stepToOptionMap.set(TutorialIslandStep.PRESS_TODAY_TAB, [TutorialIslandOption.TODAY_TAB]);
-stepToOptionMap.set(TutorialIslandStep.PRESS_JOURNEY_TAB, [TutorialIslandOption.JOURNEY_TAB]);
-stepToOptionMap.set(TutorialIslandStep.PRESS_PROFILE_TAB, [TutorialIslandOption.PROFILE_TAB]);
+
+stepToOptionMap.set(TutorialIslandStep.PRESS_TIMELNE_TAB, [
+    {
+        option: TutorialIslandOption.TIMELINE_TAB,
+        tooltip: { text: 'This is the timeline tab', position: 'flex-start' },
+    },
+]);
+
+stepToOptionMap.set(TutorialIslandStep.PRESS_HABITS_TAB, [
+    {
+        option: TutorialIslandOption.HABITS_TAB,
+        tooltip: { text: 'This is the habits tab', position: 'center' },
+    },
+]);
+
+stepToOptionMap.set(TutorialIslandStep.PRESS_TODAY_TAB, [
+    { option: TutorialIslandOption.TODAY_TAB },
+]);
+
+stepToOptionMap.set(TutorialIslandStep.PRESS_JOURNEY_TAB, [
+    { option: TutorialIslandOption.JOURNEY_TAB },
+]);
+
+stepToOptionMap.set(TutorialIslandStep.PRESS_PROFILE_TAB, [
+    {
+        option: TutorialIslandOption.PROFILE_TAB,
+        tooltip: { text: 'This is the profile tab', position: 'flex-end' },
+    },
+]);
+
 stepToOptionMap.set(TutorialIslandStep.SUPER_SECRET_STEP, [
-    TutorialIslandOption.SUPER_SECRET_OPTION,
+    { option: TutorialIslandOption.SUPER_SECRET_OPTION },
 ]);
 
 export const INVALID_FLOW_STATE: TutorialIslandFlowState = {

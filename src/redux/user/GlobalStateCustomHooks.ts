@@ -18,12 +18,12 @@ export namespace GlobalStateCustomHooks {
         const dispatch = useAppDispatch();
 
         return (option: TutorialIslandOption) => {
-            const currentStepContainsOption = TutorialIslandService.stepContainsOption(
+            const currentStepOption = TutorialIslandService.getStepOption(
                 tutorialIslandState.currentStep,
                 option
             );
 
-            if (currentStepContainsOption) {
+            if (currentStepOption) {
                 const currentStepIndex = tutorialIslandState.flowState.steps.indexOf(
                     tutorialIslandState.currentStep
                 );
