@@ -5,7 +5,6 @@ import { Button, View } from 'react-native';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
 import { TutorialIslandFlow, TutorialIslandOption } from 'src/model/TutorialIslandModels';
 import { TutorialIslandElement } from './TutorialIslandElement';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export const TutorialIslandTimeline = () => {
     const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
@@ -48,15 +47,15 @@ export const TutorialIslandTimeline = () => {
 
                 <View style={{ height: 10 }} />
 
-                <TutorialIslandElement option={TutorialIslandOption.SUPER_SECRET_OPTION}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            alert('SUPER SECRET BUTTON');
-                            setTutorialIslandState(TutorialIslandFlow.COMPLETE_HABIT);
-                        }}
-                    >
-                        <View style={{ height: 50, width: 50, backgroundColor: 'red' }} />
-                    </TouchableOpacity>
+                <TutorialIslandElement
+                    style={{ height: 50, width: 50 }}
+                    onPress={() => {
+                        alert('SUPER SECRET BUTTON');
+                        setTutorialIslandState(TutorialIslandFlow.COMPLETE_HABIT);
+                    }}
+                    option={TutorialIslandOption.SUPER_SECRET_OPTION}
+                >
+                    <View style={{ height: 50, width: 50, backgroundColor: 'red' }} />
                 </TutorialIslandElement>
             </View>
         </Screen>

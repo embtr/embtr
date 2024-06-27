@@ -108,7 +108,10 @@ stepToOptionMap.set(TutorialIslandStep.PRESS_PROFILE_TAB, [
 ]);
 
 stepToOptionMap.set(TutorialIslandStep.SUPER_SECRET_STEP, [
-    { option: TutorialIslandOption.SUPER_SECRET_OPTION },
+    {
+        option: TutorialIslandOption.SUPER_SECRET_OPTION,
+        tooltip: { text: 'This is the super secret step', position: 'flex-start' },
+    },
 ]);
 
 export const INVALID_FLOW_STATE: TutorialIslandFlowState = {

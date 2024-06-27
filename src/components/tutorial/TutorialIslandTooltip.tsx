@@ -1,27 +1,33 @@
 import { Text, View } from 'react-native';
 import { TutorialIslandTooltipData } from 'src/model/TutorialIslandModels';
 import { useTheme } from '../theme/ThemeProvider';
-import { PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
+import { PADDING_SMALL } from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 
 interface Props {
     tooltip: TutorialIslandTooltipData;
     parentWidth: number;
+    parentHeight: number;
 }
 
-export const TutorialIslandTooltip = ({ tooltip, parentWidth }: Props) => {
+export const TutorialIslandTooltip = ({ tooltip, parentWidth, parentHeight }: Props) => {
     const colors = useTheme().colors;
     const PADDING = parentWidth / 2 - 10.5;
 
+    if (parentWidth === 0 || parentHeight === 0) {
+        return null;
+    }
+
     return (
         <View
+            pointerEvents="none"
             style={{
                 position: 'absolute',
                 zIndex: 1,
                 backgroundColor: colors.widget_element_background,
                 alignSelf: tooltip.position,
-                bottom: PADDING_LARGE * 4,
+                bottom: parentHeight + 15,
                 borderRadius: 6,
             }}
         >
