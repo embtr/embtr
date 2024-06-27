@@ -103,7 +103,10 @@ stepToOptionMap.set(TutorialIslandStep.PRESS_JOURNEY_TAB, [
 stepToOptionMap.set(TutorialIslandStep.PRESS_PROFILE_TAB, [
     {
         option: TutorialIslandOption.PROFILE_TAB,
-        tooltip: { text: 'This is the profile tab', position: 'flex-end' },
+        tooltip: {
+            text: 'This is the profile tab. I have a very long instruction. I wish you all the best.',
+            position: 'flex-end',
+        },
     },
 ]);
 
