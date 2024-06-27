@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity, Dimensions, StyleSheet, Animated } from 'react-native';
+import { View, Dimensions, StyleSheet, Animated } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { TabElement } from 'src/components/home/tabmenu/TabElement';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Image } from 'expo-image';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
-import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 import { TUTORIAL_TIMELINE_TABS } from './TutorialIslandDashboard';
 import { TutorialIslandOption } from 'src/model/TutorialIslandModels';
 import { TutorialIslandElement } from './TutorialIslandElement';
@@ -41,6 +40,7 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
     const iconSize = 25;
     const totalWidth = Dimensions.get('window').width;
     const tabWidth = totalWidth / state.routes.length;
+    const index = state.index;
 
     const calculateDotLocation = (index: number) => {
         return index * tabWidth + (tabWidth / 2 - 12.5);
@@ -109,7 +109,6 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginBottom: 15, // Adjust bottom space
-                                ...ShadowUtility.getShadow(65),
                             },
                         ]}
                     >
@@ -139,7 +138,15 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
         }
 
         elements.push(
-            <TutorialIslandElement style={{ flex: 1 }} onPress={onPress} option={option}>
+            <TutorialIslandElement
+                style={{
+                    flex: 1,
+                    position: 'relative',
+                    zIndex: option === TutorialIslandOption.TODAY_TAB ? 0 : 1,
+                }}
+                onPress={onPress}
+                option={option}
+            >
                 {element}
             </TutorialIslandElement>
         );

@@ -88,7 +88,10 @@ stepToOptionMap.set(TutorialIslandStep.PRESS_TIMELNE_TAB, [
 stepToOptionMap.set(TutorialIslandStep.PRESS_HABITS_TAB, [
     {
         option: TutorialIslandOption.HABITS_TAB,
-        tooltip: { text: 'This is the habits tab', position: 'center' },
+        tooltip: {
+            text: 'Let\'s create your first habit! You create habits in the "My Habits" tab.',
+            position: 'center',
+        },
     },
 ]);
 
@@ -97,7 +100,14 @@ stepToOptionMap.set(TutorialIslandStep.PRESS_TODAY_TAB, [
 ]);
 
 stepToOptionMap.set(TutorialIslandStep.PRESS_JOURNEY_TAB, [
-    { option: TutorialIslandOption.JOURNEY_TAB },
+    {
+        option: TutorialIslandOption.JOURNEY_TAB,
+
+        tooltip: {
+            text: 'This is such an amazing tool tip. Enjoy the journey!',
+            position: 'center',
+        },
+    },
 ]);
 
 stepToOptionMap.set(TutorialIslandStep.PRESS_PROFILE_TAB, [
