@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { TutorialIslandOption, TutorialIslandTooltipData } from 'src/model/TutorialIslandModels';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
@@ -9,11 +9,12 @@ import { TutorialIslandTooltip } from './TutorialIslandTooltip';
 interface InnerProps {
     children: React.ReactNode;
     option: TutorialIslandOption;
+    onPress?: () => void;
     tooltip?: TutorialIslandTooltipData;
     style?: any;
 }
 
-const Targeted = ({ children, option, tooltip, style }: InnerProps) => {
+const Targeted = ({ children, option, onPress, tooltip, style }: InnerProps) => {
     const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
 
     return (
@@ -21,6 +22,7 @@ const Targeted = ({ children, option, tooltip, style }: InnerProps) => {
             <TouchableWithoutFeedback
                 onPress={() => {
                     reportOptionPressed(option);
+                    onPress?.();
                 }}
             >
                 {tooltip && <TutorialIslandTooltip tooltip={tooltip} />}
@@ -30,8 +32,18 @@ const Targeted = ({ children, option, tooltip, style }: InnerProps) => {
     );
 };
 
-const Passthrough = ({ children, option, style }: InnerProps) => {
-    return <View style={style}>{children}</View>;
+const Passthrough = ({ children, option, onPress, style }: InnerProps) => {
+    return (
+        <View style={style}>
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    onPress?.();
+                }}
+            >
+                {children}
+            </TouchableWithoutFeedback>
+        </View>
+    );
 };
 
 const Blocked = ({ children, style }: InnerProps) => {
@@ -51,14 +63,15 @@ const Blocked = ({ children, style }: InnerProps) => {
 interface Props {
     children: React.ReactNode;
     option: TutorialIslandOption;
+    onPress?: () => void;
     style?: any;
 }
 
-export const TutorialIslandElement = ({ children, option, style }: Props) => {
+export const TutorialIslandElement = ({ children, option, onPress, style }: Props) => {
     const tutorialIslandState = GlobalStateCustomHooks.useTutorialIslandState();
     if (!tutorialIslandState) {
         return (
-            <Passthrough style={style} option={option}>
+            <Passthrough style={style} option={option} onPress={onPress}>
                 {children}
             </Passthrough>
         );
@@ -67,7 +80,7 @@ export const TutorialIslandElement = ({ children, option, style }: Props) => {
     const tutorialIslandIsActive = TutorialIslandService.tutorialIsActive(tutorialIslandState);
     if (!tutorialIslandIsActive) {
         return (
-            <Passthrough style={style} option={option}>
+            <Passthrough style={style} option={option} onPress={onPress}>
                 {children}
             </Passthrough>
         );
@@ -86,7 +99,7 @@ export const TutorialIslandElement = ({ children, option, style }: Props) => {
     const tooltip = stepOption.tooltip;
 
     return (
-        <Targeted style={style} option={option} tooltip={tooltip}>
+        <Targeted style={style} option={option} onPress={onPress} tooltip={tooltip}>
             {children}
         </Targeted>
     );
