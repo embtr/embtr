@@ -64,7 +64,7 @@ export const ScheduleHabitRepeatingSchedule = () => {
                 <View style={{ flexDirection: 'row' }}>
                     <Switch
                         value={repeatingScheduleEnabled}
-                        onValueChange={() => {
+                        onResponderRelease={() => {
                             setRepeatingScheduleEnabled(!repeatingScheduleEnabled);
                         }}
                         style={isAndroidDevice() ? { height: 20 } : {}}

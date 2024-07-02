@@ -11,16 +11,17 @@ import { TutorialIslandMyHabitsTab } from './navigation/tabs/TutorialIslandMyHab
 import { TutorialIslandTimelineTab } from './navigation/tabs/TutorialIslandTimelineTab';
 import { TutorialIslandMyJourneyTab } from './navigation/tabs/TutorialIslandJourneyTab';
 import { TutorialIslandProfileTab } from './navigation/tabs/TutorialIslandProfileTab';
+import { TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
 
 const Tab = createBottomTabNavigator();
 
 export const TUTORIAL_TIMELINE_TABS = {
-    TIMELINE: 'TutorialIslandTimelineTab',
-    MY_HABITS: 'TutorialIslandMyHabitsTab',
-    TODAY: 'TutorialIslandTodayTab',
-    PLAN: 'TutorialIslandPlanTab',
-    JOURNEY: 'TutorialIslandScreens',
-    USER_PROFILE: 'TutorialIslandCurrentUserTab',
+    TIMELINE: TutorialIslandRoutes.TUTORIAL_ISLAND_TIMELINE,
+    MY_HABITS: TutorialIslandRoutes.TUTORIAL_ISLAND_MY_HABITS_TAB,
+    TODAY: TutorialIslandRoutes.TUTORIAL_ISLAND_TODAY,
+    PLAN: TutorialIslandRoutes.TUTORIAL_ISLAND_PLAN,
+    JOURNEY: TutorialIslandRoutes.TUTORIAL_ISLAND_JOURNEY,
+    USER_PROFILE: TutorialIslandRoutes.TUTORIAL_ISLAND_CURRENT_USER,
 };
 
 export const TutorialIslandDashboard = () => {

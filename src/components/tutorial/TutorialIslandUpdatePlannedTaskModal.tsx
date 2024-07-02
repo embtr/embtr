@@ -45,7 +45,7 @@ const fontFamily = POPPINS_REGULAR;
 
 const MAX_OPTIONS_HEIGHT = 20 + PADDING_LARGE;
 
-export const UpdatePlannedTaskModal = () => {
+export const TutorialIslandUpdatePlannedTaskModal = () => {
     const { colors } = useTheme();
 
     const currentUser = useAppSelector(getCurrentUser);

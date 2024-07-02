@@ -1,56 +1,55 @@
 import {
     TutorialIslandFlow,
+    TutorialIslandFlowKey,
     TutorialIslandFlowState,
-    TutorialIslandOption,
-    TutorialIslandState,
+    TutorialIslandOptionKey,
     TutorialIslandStep,
-    TutorialIslandStepOption,
-    flowToStepMap,
-    stepToOptionMap,
-} from 'src/model/TutorialIslandModels';
+    TutorialIslandStepKey,
+} from 'src/model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandCompleteHabitFlow } from 'src/model/tutorial_island/flows/TutorialIslandCompleteHabitFlow';
+import { TutorialIslandCreateHabitFlow } from 'src/model/tutorial_island/flows/TutorialIslandCreateHabitFlow';
+import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
 
 export class TutorialIslandService {
-    public static flowContainsStep(flow: TutorialIslandFlow, step: TutorialIslandStep): boolean {
-        return this.getStepsForFlow(flow).includes(step);
+    public static flowContainsStep(flow: TutorialIslandFlow, step: TutorialIslandStepKey): boolean {
+        return flow.steps.some((flowStep) => flowStep.key === step);
     }
 
-    public static getStepOption(
+    public static stepContainsOption(
         step: TutorialIslandStep,
-        option: TutorialIslandOption
-    ): TutorialIslandStepOption | undefined {
-        return this.getOptionsForStep(step).find((stepOption) => stepOption.option === option);
+        option: TutorialIslandOptionKey
+    ): boolean {
+        return step.options.some((stepOption) => stepOption.key === option);
     }
 
-    public static tutorialIsActive(state: TutorialIslandState) {
-        return state.flowState?.flow !== TutorialIslandFlow.INVALID;
+    public static stepContainsAdvanceableOption(
+        step: TutorialIslandStep,
+        option: TutorialIslandOptionKey
+    ): boolean {
+        const currentOption = step.options.find((stepOption) => stepOption.key === option);
+        return currentOption?.onPressReportable === true;
     }
 
-    public static createState(flow: TutorialIslandFlow): TutorialIslandState {
-        const flowState = this.createFlowState(flow);
-        const firstStep = this.getStepsForFlow(flow)[0];
-
-        const state: TutorialIslandState = {
-            flowState: flowState,
-            currentStep: firstStep,
-        };
-
-        return state;
+    public static tutorialIsActive(state: TutorialIslandFlowState) {
+        return state.flow.key !== TutorialIslandFlowKey.INVALID;
     }
 
-    private static createFlowState(flow: TutorialIslandFlow): TutorialIslandFlowState {
-        const flowState: TutorialIslandFlowState = {
-            flow: flow,
-            steps: this.getStepsForFlow(flow),
-        };
-
-        return flowState;
+    public static getFlowFromKey(flowKey: TutorialIslandFlowKey) {
+        switch (flowKey) {
+            case TutorialIslandFlowKey.CREATE_HABIT:
+                return TutorialIslandCreateHabitFlow;
+            case TutorialIslandFlowKey.COMPLETE_HABIT:
+                return TutorialIslandCompleteHabitFlow;
+            default:
+                return TutorialIslandInvalidFlow;
+        }
     }
 
-    private static getStepsForFlow(flow: TutorialIslandFlow): TutorialIslandStep[] {
-        return flowToStepMap.get(flow) || [];
+    public static getStepFromFlow(flow: TutorialIslandFlow, stepKey: TutorialIslandStepKey) {
+        return flow.steps.find((step) => step.key === stepKey);
     }
 
-    private static getOptionsForStep(step: TutorialIslandStep): TutorialIslandStepOption[] {
-        return stepToOptionMap.get(step) || [];
+    public static getOptionFromStep(step: TutorialIslandStep, optionKey: TutorialIslandOptionKey) {
+        return step.options.find((option) => option.key === optionKey);
     }
 }

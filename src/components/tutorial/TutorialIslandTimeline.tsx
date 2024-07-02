@@ -3,11 +3,14 @@ import { Screen } from 'src/components/common/Screen';
 import { TutorialIslandBanner } from './TutorialIslandBanner';
 import { Button, View } from 'react-native';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
-import { TutorialIslandFlow, TutorialIslandOption } from 'src/model/TutorialIslandModels';
+import {
+    TutorialIslandFlow,
+    TutorialIslandOption,
+} from 'src/model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandElement } from './TutorialIslandElement';
 
 export const TutorialIslandTimeline = () => {
-    const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
+    const setTutorialIslandFlow = GlobalStateCustomHooks.useSetTutorialIslandFlow();
 
     return (
         <Screen>
@@ -24,7 +27,7 @@ export const TutorialIslandTimeline = () => {
                 <Button
                     title="Clear Create Habit Flow"
                     onPress={() => {
-                        setTutorialIslandState(TutorialIslandFlow.INVALID);
+                        setTutorialIslandFlow(TutorialIslandFlow.INVALID);
                     }}
                 />
                 <View style={{ height: 10 }} />
@@ -32,7 +35,7 @@ export const TutorialIslandTimeline = () => {
                 <Button
                     title="Start Create Habit Flow"
                     onPress={() => {
-                        setTutorialIslandState(TutorialIslandFlow.CREATE_HABIT);
+                        setTutorialIslandFlow(TutorialIslandFlow.CREATE_HABIT);
                     }}
                 />
 
@@ -41,7 +44,7 @@ export const TutorialIslandTimeline = () => {
                 <Button
                     title="Start Complete Habit Flow"
                     onPress={() => {
-                        setTutorialIslandState(TutorialIslandFlow.COMPLETE_HABIT);
+                        setTutorialIslandFlow(TutorialIslandFlow.COMPLETE_HABIT);
                     }}
                 />
 
@@ -51,7 +54,7 @@ export const TutorialIslandTimeline = () => {
                     style={{ height: 50, width: 50 }}
                     onPress={() => {
                         alert('SUPER SECRET BUTTON');
-                        setTutorialIslandState(TutorialIslandFlow.COMPLETE_HABIT);
+                        setTutorialIslandFlow(TutorialIslandFlow.COMPLETE_HABIT);
                     }}
                     option={TutorialIslandOption.SUPER_SECRET_OPTION}
                 >

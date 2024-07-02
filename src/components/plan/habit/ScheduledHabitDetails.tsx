@@ -21,7 +21,7 @@ export const ScheduledHabitDetails = () => {
     }, [detailsEnabled]);
 
     return (
-        <View style={{}}>
+        <View>
             <View
                 style={{
                     flexDirection: 'row',
@@ -52,7 +52,7 @@ export const ScheduledHabitDetails = () => {
                     }}
                 >
                     <Switch
-                        onValueChange={() => {
+                        onResponderRelease={() => {
                             setDetailsEnabled(!detailsEnabled);
                         }}
                         value={detailsEnabled}

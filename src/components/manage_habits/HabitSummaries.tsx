@@ -34,7 +34,7 @@ export const HabitSummaries = ({ scheduledHabits }: Props) => {
     };
 
     return (
-        <View style={{ flex: 1 }}>
+        <View>
             <FlatList data={scheduledHabits} renderItem={renderItem} keyExtractor={keyExtractor} />
         </View>
     );

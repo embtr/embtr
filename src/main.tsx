@@ -15,7 +15,7 @@ import {
     Poppins_600SemiBold,
 } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
-import { resetToDefault, setCurrentUser } from 'src/redux/user/GlobalState';
+import { resetToDefault, setCurrentUser, setTutorialIslandState } from 'src/redux/user/GlobalState';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { ModalContainingComponent } from './components/common/modal/ModalContainingComponent';
 import { ConfettiView } from './components/common/animated_view/ConfettiView';
@@ -30,6 +30,11 @@ import firebaseApp from './firebase/Firebase';
 import { EnvironmentIndicator } from 'src/components/debug/EnvironmentIndicator';
 import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
 import { RevenueCatProvider } from './controller/revenuecat/RevenueCatProvider';
+import { TutorialIslandSecureMainStack } from './components/home/TutorialIslandSecureMainStack';
+import { TutorialIslandModal } from './components/tutorial/TutorialIslandModal';
+import { TutorialIslandInvalidFlow } from './model/tutorial_island/flows/TutorialIslandInvalidFlow';
+import { TutorialIslandStepKey } from './model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandMainComponents } from './components/tutorial/TutorialIslandMainComponents';
 
 //start up firebase connection
 firebaseApp;
@@ -64,6 +69,12 @@ export const Main = () => {
             if (firebaseUser) {
                 const loggedInUser = await UserController.loginUser();
                 if (loggedInUser) {
+                    dispatch(
+                        setTutorialIslandState({
+                            flow: TutorialIslandInvalidFlow,
+                            currentStepKey: TutorialIslandStepKey.INVALID,
+                        })
+                    );
                     setLoggedIn(LoginState.LOGGED_IN);
                     revenueCat.login();
                     dispatch(setCurrentUser(loggedInUser));
@@ -80,7 +91,12 @@ export const Main = () => {
     }, []);
 
     let view: JSX.Element =
-        loggedIn === LoginState.LOGGED_IN ? <SecureMainStack /> : <InsecureMainStack />;
+        loggedIn === LoginState.LOGGED_IN ? (
+            //<SecureMainStack />
+            <TutorialIslandSecureMainStack />
+        ) : (
+            <InsecureMainStack />
+        );
 
     return (
         <Screen>
@@ -96,6 +112,7 @@ export const Main = () => {
                     <RemoveHabitModal />
                     <UpdatePlannedTaskModal />
                     <EditHabitModal />
+                    <TutorialIslandMainComponents />
                     {!fontsLoaded || loggedIn === LoginState.LOADING ? <LoadingPage /> : view}
                 </NavigationContainer>
             </SafeAreaView>

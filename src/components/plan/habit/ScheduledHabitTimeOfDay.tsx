@@ -78,7 +78,7 @@ export const ScheduledHabitTimeOfDay = () => {
 
                 <View style={{ flexDirection: 'row' }}>
                     <Switch
-                        onValueChange={() => {
+                        onResponderRelease={() => {
                             setTimeOfDayEnabled(!timeOfDayEnabled);
                         }}
                         value={timeOfDayEnabled}

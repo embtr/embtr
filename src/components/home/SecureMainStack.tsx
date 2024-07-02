@@ -1,5 +1,4 @@
 import { About } from 'src/static/About';
-import { Dashboard } from 'src/components/home/Dashboard';
 import { Logout } from 'src/components/logout/Logout';
 import { LoadingPage } from 'src/components/landing/LoadingPage';
 import { AddHabitCategories } from '../plan/habit/AddHabitCategories';
@@ -27,6 +26,7 @@ import { UserPostDetails } from '../timeline/user_post/UserPostDetails';
 import { AwayMode } from '../away_mode/AwayMode';
 import { HabitDetails } from '../habit/HabitDetails';
 import { HabitStreakTierSummary } from '../habit_streak/HabitStreakTierSummary';
+import { Dashboard } from './Dashboard';
 
 const Stack = createStackNavigator();
 

@@ -7,8 +7,12 @@ import { Image } from 'expo-image';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { TUTORIAL_TIMELINE_TABS } from './TutorialIslandDashboard';
-import { TutorialIslandOption } from 'src/model/TutorialIslandModels';
+import {
+    TutorialIslandOption,
+    TutorialIslandOptionKey,
+} from 'src/model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandElement } from './TutorialIslandElement';
+import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) => {
     const { colors } = useTheme();
@@ -40,7 +44,6 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
     const iconSize = 25;
     const totalWidth = Dimensions.get('window').width;
     const tabWidth = totalWidth / state.routes.length;
-    const index = state.index;
 
     const calculateDotLocation = (index: number) => {
         return index * tabWidth + (tabWidth / 2 - 12.5);
@@ -81,12 +84,12 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
         };
 
         let element: JSX.Element = <View />;
-        let option: TutorialIslandOption = TutorialIslandOption.INVALID;
+        let optionKey: TutorialIslandOptionKey = TutorialIslandOptionKey.INVALID;
 
         if (route.name === TUTORIAL_TIMELINE_TABS.TIMELINE) {
             let icon: any = isFocused ? 'home' : 'home-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
-            option = TutorialIslandOption.TIMELINE_TAB;
+            optionKey = TutorialIslandOptionKey.TAB__TIMELINE;
         } else if (route.name === TUTORIAL_TIMELINE_TABS.TODAY) {
             element = (
                 <View
@@ -109,6 +112,7 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginBottom: 15, // Adjust bottom space
+                                ...ShadowUtility.getShadow(65),
                             },
                         ]}
                     >
@@ -123,18 +127,18 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
                     </View>
                 </View>
             );
-            option = TutorialIslandOption.TODAY_TAB;
+            optionKey = TutorialIslandOptionKey.TAB__TODAY;
         } else if (route.name === TUTORIAL_TIMELINE_TABS.JOURNEY) {
             let icon: any = 'trail-sign-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
-            option = TutorialIslandOption.JOURNEY_TAB;
+            optionKey = TutorialIslandOptionKey.TAB__JOURNEY;
         } else if (route.name === TUTORIAL_TIMELINE_TABS.USER_PROFILE) {
             element = <UserTabElement size={iconSize} />;
-            option = TutorialIslandOption.PROFILE_TAB;
+            optionKey = TutorialIslandOptionKey.TAB__PROFILE;
         } else {
             let icon: any = isFocused ? 'list-circle' : 'list-circle-outline';
             element = <TabElement icon={icon} size={iconSize} focused={isFocused} />;
-            option = TutorialIslandOption.HABITS_TAB;
+            optionKey = TutorialIslandOptionKey.TAB__MY_HABITS_TAB;
         }
 
         elements.push(
@@ -142,10 +146,10 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
                 style={{
                     flex: 1,
                     position: 'relative',
-                    zIndex: option === TutorialIslandOption.TODAY_TAB ? 0 : 1,
+                    zIndex: optionKey === TutorialIslandOptionKey.TAB__TODAY ? 0 : 1,
                 }}
                 onPress={onPress}
-                option={option}
+                optionKey={optionKey}
             >
                 {element}
             </TutorialIslandElement>

@@ -16,10 +16,16 @@ export type TutorialIslandTabScreens = {
     TutorialIslandJourneyTab: NavigatorScreenParams<TutorialIslandJourneyTabScreens>;
     TutorialIslandPlanTab: NavigatorScreenParams<TutorialIslandChallengeTabScreens>;
     TutorialIslandTodayTab: NavigatorScreenParams<TutorialIslandTodayTab>;
+    TutorialIslandCreateEditScheduledHabitSlideUp: NavigatorScreenParams<TutorialIslandTodayTab>;
 };
 
 export type TutorialIslandScreens = {
-    TutorialIslandTimeline: undefined;
+    TutorialIslandCreateEditScheduledHabit: {
+        onExit?: () => void;
+        habitId?: number;
+        isCreateCustomHabit?: boolean;
+        scheduledHabitId?: number;
+    };
 };
 
 export type TutorialIslandTimelineTabScreens = TutorialIslandScreens & {};
@@ -161,4 +167,9 @@ export namespace TutorialIslandRoutes {
     export const TUTORIAL_ISLAND_JOURNEY = 'TutorialIslandJourney';
     export const TUTORIAL_ISLAND_PLAN = 'TutorialIslandPlan';
     export const TUTORIAL_ISLAND_TODAY = 'TutorialIslandToday';
+
+    export const TUTORIAL_ISLAND_DASHBOARD = 'TutorialIslandDashboard';
+    export const TUTORIAL_ISLAND_MY_HABITS_TAB = 'TutorialIslandMyHabitsTab';
+    export const TUTORIAL_ISLAND_CREATE_EDIT_SCHEDULED_HABIT =
+        'TutorialIslandCreateEditScheduledHabit';
 }

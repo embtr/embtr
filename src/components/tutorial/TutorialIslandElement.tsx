@@ -1,53 +1,106 @@
 import React from 'react';
 import { View } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { TutorialIslandOption, TutorialIslandTooltipData } from 'src/model/TutorialIslandModels';
+import {
+    TutorialIslandFlowKey,
+    TutorialIslandOption,
+    TutorialIslandOptionKey,
+    TutorialIslandTooltipData,
+} from 'src/model/tutorial_island/TutorialIslandModels';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
 import { TutorialIslandService } from 'src/service/TutorialIslandService';
 import { TutorialIslandTooltip } from './TutorialIslandTooltip';
 
+// 'a 10x dev lives here - wolfrik_ - 2024-07-02'
+
+export interface TutorialIslandElementRef {
+    reportOptionPressed: () => void;
+    isOption: (option: TutorialIslandOption) => boolean;
+}
+
 interface InnerProps {
     children: React.ReactNode;
-    option: TutorialIslandOption;
+    optionKey: TutorialIslandOptionKey;
     onPress?: () => void;
+    onPressReportable?: boolean;
     tooltip?: TutorialIslandTooltipData;
+    nextFlowKey?: TutorialIslandFlowKey;
     style?: any;
 }
 
-const Targeted = ({ children, option, onPress, tooltip, style }: InnerProps) => {
-    const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
+const Targeted = React.forwardRef<TutorialIslandElementRef, InnerProps>(
+    (
+        {
+            children,
+            optionKey,
+            onPress,
+            onPressReportable,
+            tooltip,
+            nextFlowKey,
+            style,
+        }: InnerProps,
+        ref
+    ) => {
+        const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
+        const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
 
-    const [layout, setLayout] = React.useState({ width: 0, height: 0 });
+        const advance = () => {
+            if (nextFlowKey) {
+                //setTutorialIslandState(nextFlowKey);
+            } else {
+                reportOptionPressed(optionKey);
+            }
+        };
 
-    return (
-        <View
-            style={style}
-            onLayout={(event) => {
-                setLayout(event.nativeEvent.layout);
-            }}
-        >
-            <TouchableWithoutFeedback
-                onPress={() => {
-                    reportOptionPressed(option);
-                    onPress?.();
+        const [layout, setLayout] = React.useState({ width: 0, height: 0 });
+
+        React.useImperativeHandle(ref, () => ({
+            reportOptionPressed: () => {
+                advance();
+            },
+            isOption: (option: TutorialIslandOption) => {
+                return option === option;
+            },
+        }));
+
+        return (
+            <View
+                style={[{ position: 'relative', zIndex: 1 }, style]}
+                onLayout={(event) => {
+                    setLayout(event.nativeEvent.layout);
                 }}
             >
+                <TouchableWithoutFeedback
+                    onPress={() => {
+                        onPress?.();
+
+                        if (onPressReportable) {
+                            advance();
+                        }
+                    }}
+                >
+                    {children}
+                </TouchableWithoutFeedback>
+
                 {tooltip && (
                     <TutorialIslandTooltip
                         tooltip={tooltip}
+                        onDismiss={() => {
+                            console.log('dismiss2');
+                            advance();
+                        }}
                         parentWidth={layout.width}
                         parentHeight={layout.height}
                     />
                 )}
-                {children}
-            </TouchableWithoutFeedback>
-        </View>
-    );
-};
+            </View>
+        );
+    }
+);
 
-const Passthrough = ({ children, option, onPress, style }: InnerProps) => {
+const Passthrough = ({ children, onPress, style }: InnerProps) => {
     return (
-        <View style={style}>
+        <View style={[{ position: 'relative', zIndex: 0 }, style]}>
             <TouchableWithoutFeedback
                 onPress={() => {
                     onPress?.();
@@ -61,59 +114,94 @@ const Passthrough = ({ children, option, onPress, style }: InnerProps) => {
 
 const Blocked = ({ children, style }: InnerProps) => {
     return (
-        <View style={[style, { pointerEvents: 'none' }]}>
-            <View
-                style={{
-                    opacity: 0.15,
-                }}
-            >
-                {children}
-            </View>
+        <View
+            style={[
+                { pointerEvents: 'none', position: 'relative', zIndex: 0, opacity: 0.15 },
+                style,
+            ]}
+        >
+            {children}
         </View>
     );
 };
 
 interface Props {
     children: React.ReactNode;
-    option: TutorialIslandOption;
+    optionKey: TutorialIslandOptionKey;
     onPress?: () => void;
     style?: any;
 }
 
-export const TutorialIslandElement = ({ children, option, onPress, style }: Props) => {
-    const tutorialIslandState = GlobalStateCustomHooks.useTutorialIslandState();
-    if (!tutorialIslandState) {
+// forward ref
+export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, Props>(
+    ({ children, optionKey, onPress, style }: Props, ref) => {
+        const targetedRef = React.useRef<TutorialIslandElementRef>(null);
+
+        React.useImperativeHandle(ref, () => ({
+            reportOptionPressed: () => {
+                targetedRef.current?.reportOptionPressed();
+            },
+            isOption: (option: TutorialIslandOption) => {
+                return targetedRef.current?.isOption(option) ?? false;
+            },
+        }));
+
+        const tutorialIslandState = GlobalStateCustomHooks.useTutorialIslandState();
+        if (!tutorialIslandState) {
+            return (
+                <Passthrough style={style} optionKey={optionKey} onPress={onPress}>
+                    {children}
+                </Passthrough>
+            );
+        }
+
+        const tutorialIslandIsActive = TutorialIslandService.tutorialIsActive(tutorialIslandState);
+        if (!tutorialIslandIsActive) {
+            return (
+                <Passthrough style={style} optionKey={optionKey} onPress={onPress}>
+                    {children}
+                </Passthrough>
+            );
+        }
+
+        const step = TutorialIslandService.getStepFromFlow(
+            tutorialIslandState.flow,
+            tutorialIslandState.currentStepKey
+        );
+
+        if (!step) {
+            return (
+                <Passthrough style={style} optionKey={optionKey} onPress={onPress}>
+                    {children}
+                </Passthrough>
+            );
+        }
+
+        const option = TutorialIslandService.getOptionFromStep(step, optionKey);
+        if (!option) {
+            return (
+                <Blocked style={style} optionKey={optionKey}>
+                    {children}
+                </Blocked>
+            );
+        }
+
+        const tooltip = option?.tooltip;
+        const onPressReportable = option?.onPressReportable;
+        const nextFlowKey = option?.nextFlowKey;
+
         return (
-            <Passthrough style={style} option={option} onPress={onPress}>
+            <Targeted
+                ref={targetedRef}
+                style={style}
+                optionKey={optionKey}
+                onPress={onPress}
+                tooltip={tooltip}
+                onPressReportable={onPressReportable}
+                nextFlowKey={nextFlowKey}
+            >
                 {children}
-            </Passthrough>
+            </Targeted>
         );
     }
-
-    const tutorialIslandIsActive = TutorialIslandService.tutorialIsActive(tutorialIslandState);
-    if (!tutorialIslandIsActive) {
-        return (
-            <Passthrough style={style} option={option} onPress={onPress}>
-                {children}
-            </Passthrough>
-        );
-    }
-
-    const stepOption = TutorialIslandService.getStepOption(tutorialIslandState.currentStep, option);
-
-    if (!stepOption) {
-        return (
-            <Blocked style={style} option={option}>
-                {children}
-            </Blocked>
-        );
-    }
-
-    const tooltip = stepOption.tooltip;
-
-    return (
-        <Targeted style={style} option={option} onPress={onPress} tooltip={tooltip}>
-            {children}
-        </Targeted>
-    );
-};
+);

@@ -9,7 +9,12 @@ import {
     UpdateModalPlannedTask,
 } from 'src/model/GlobalState';
 import { DayKey } from 'resources/types/custom_schema/DayKey';
-import { DEFAULT_TUTORIAL_ISLAND_STATE, TutorialIslandState } from 'src/model/TutorialIslandModels';
+import {
+    INVALID_FLOW_STATE,
+    TutorialIslandFlowState,
+    TutorialIslandStepKey,
+} from 'src/model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -33,7 +38,7 @@ const INITIAL_STATE: GlobalState = {
     editModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     acknowledgedVersion: '0.0.0',
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
-    tutorialIslandState: DEFAULT_TUTORIAL_ISLAND_STATE,
+    tutorialIslandState: INVALID_FLOW_STATE,
 };
 interface GlobalState {
     menuOptions: EmbtrMenuOptions;
@@ -56,7 +61,7 @@ interface GlobalState {
     editModalPlannedTask: UpdateModalPlannedTask;
     acknowledgedVersion: string;
     appleAuthUserInfo: AppleAuthUserInfo;
-    tutorialIslandState: TutorialIslandState;
+    tutorialIslandState: TutorialIslandFlowState;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -291,7 +296,7 @@ export const getAppleAuthUserInfo = (state: RootState): AppleAuthUserInfo => {
     return state.globalState.appleAuthUserInfo;
 };
 
-export const getTutorialIslandState = (state: RootState): TutorialIslandState => {
+export const getTutorialIslandState = (state: RootState): TutorialIslandFlowState => {
     if (state?.globalState.tutorialIslandState === undefined) {
         return INITIAL_STATE.tutorialIslandState;
     }

@@ -13,7 +13,7 @@ const createLottiView = (removeView: () => void) => {
             loop={false}
             onAnimationFinish={removeView}
             style={{
-                zIndex: 1,
+                zIndex: 1000,
                 position: 'absolute',
                 width: getWindowWidth(),
                 height: getWindowHeight(),

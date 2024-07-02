@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, View } from 'react-native';
-import { Swipeable, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Swipeable } from 'react-native-gesture-handler';
 import { PADDING_SMALL } from 'src/util/constants';
 import {
     SwipeableCardElement,
@@ -11,19 +11,29 @@ import * as Haptics from 'expo-haptics';
 
 interface Props {
     children: any;
+    disabled?: boolean;
+    onWillOpen?: (direction: 'left' | 'right') => void;
+
     leftOptions?: SwipeableCardElementData[];
     leftSnapOption?: SwipeableSnapOptionData;
 
     rightOptions?: SwipeableCardElementData[];
     rightSnapOption?: SwipeableSnapOptionData;
-    disabled?: boolean;
 }
 
 const maxSwipeDistance = 100;
 
 export const SwipeableCard = React.forwardRef<Swipeable, Props>(
     (
-        { children, leftOptions, rightOptions, leftSnapOption, rightSnapOption, disabled }: Props,
+        {
+            children,
+            leftOptions,
+            rightOptions,
+            leftSnapOption,
+            rightSnapOption,
+            disabled,
+            onWillOpen,
+        }: Props,
         ref: any
     ) => {
         const renderLeftActions = (progress: Animated.AnimatedInterpolation<number>) => {
@@ -95,39 +105,38 @@ export const SwipeableCard = React.forwardRef<Swipeable, Props>(
         };
 
         return (
-            <GestureHandlerRootView>
-                <Swipeable
-                    enabled={!disabled}
-                    ref={ref}
-                    renderRightActions={renderRightActions}
-                    renderLeftActions={renderLeftActions}
-                    overshootLeft={false}
-                    overshootRight={false}
-                    leftThreshold={ref.current?.state.leftWidth}
-                    rightThreshold={ref.current?.state.rightWidth}
-                    onSwipeableWillOpen={(direction) => {
-                        if (direction === 'left' && leftSnapOption) {
-                            if (leftSnapOption.snapPoint) {
-                                setTimeout(() => {
-                                    leftSnapOption.onAction();
-                                    ref.current.close();
-                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                                }, 0);
-                            }
-                        } else if (direction === 'right' && rightSnapOption) {
-                            if (rightSnapOption.snapPoint) {
-                                setTimeout(() => {
-                                    rightSnapOption.onAction();
-                                    ref.current.close();
-                                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                                }, 0);
-                            }
+            <Swipeable
+                enabled={!disabled}
+                ref={ref}
+                renderRightActions={renderRightActions}
+                renderLeftActions={renderLeftActions}
+                overshootLeft={false}
+                overshootRight={false}
+                leftThreshold={ref.current?.state.leftWidth}
+                rightThreshold={ref.current?.state.rightWidth}
+                onSwipeableWillOpen={(direction) => {
+                    onWillOpen?.(direction);
+                    if (direction === 'left' && leftSnapOption) {
+                        if (leftSnapOption.snapPoint) {
+                            setTimeout(() => {
+                                leftSnapOption.onAction();
+                                ref.current.close();
+                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                            }, 0);
                         }
-                    }}
-                >
-                    {children}
-                </Swipeable>
-            </GestureHandlerRootView>
+                    } else if (direction === 'right' && rightSnapOption) {
+                        if (rightSnapOption.snapPoint) {
+                            setTimeout(() => {
+                                rightSnapOption.onAction();
+                                ref.current.close();
+                                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                            }, 0);
+                        }
+                    }
+                }}
+            >
+                {children}
+            </Swipeable>
         );
     }
 );

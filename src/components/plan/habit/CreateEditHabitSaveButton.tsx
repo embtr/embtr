@@ -32,6 +32,7 @@ interface Props {
     onExit?: () => void;
 }
 
+// forward ref
 export const CreateEditHabitSaveButton = ({
     habitId,
     scheduledHabitId,
@@ -83,7 +84,7 @@ export const CreateEditHabitSaveButton = ({
 
     const routes = navigation.getState().routes;
     const previousRoute = routes[routes.length - 2];
-    const isFromHabitSummaryDetails = previousRoute.name.toString() === Routes.MANAGE_HABITS;
+    const isFromHabitSummaryDetails = previousRoute?.name?.toString() === Routes.MANAGE_HABITS;
     const allDaysOfWeek = DayOfWeekCustomHooks.useDaysOfWeek();
     const allTimesOfDay = TimesOfDayCustomHooks.useTimesOfDay();
 
