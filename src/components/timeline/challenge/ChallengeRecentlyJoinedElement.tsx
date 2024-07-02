@@ -80,6 +80,7 @@ export const ChallengeRecentlyJoinedElement = ({
                     challengeId={challengeRecentlyJoined.id}
                     isAParticipant={challengeRecentlyJoined.isParticipant}
                     award={challengeRecentlyJoined.award}
+                    canJoin={challengeRecentlyJoined.canJoin}
                 />
             </View>
 
