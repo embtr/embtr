@@ -13,10 +13,7 @@ import React from 'react';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { Swipeable } from 'react-native-gesture-handler';
-import {
-    setUpdateModalPlannedTask,
-    setUpdateTutorialIslandModalPlannedTask,
-} from 'src/redux/user/GlobalState';
+import { setUpdateTutorialIslandModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImageData } from '../common/images/OptimalImage';
 import { Constants } from 'resources/types/constants/constants';
@@ -39,6 +36,7 @@ interface Props {
     canSwipeRight: boolean;
     canSwipeLeft: boolean;
     canPress: boolean;
+    onPress: () => void;
     onComplete: () => void;
     onReset: () => void;
     onSkipFail: () => void;
@@ -92,6 +90,7 @@ export const TutorialIslandPlannableTaskImproved = ({
     canSwipeLeft,
     canSwipeRight,
     canPress,
+    onPress,
     onComplete,
     onReset,
     onSkipFail,
@@ -208,6 +207,7 @@ export const TutorialIslandPlannableTaskImproved = ({
                     ...CARD_SHADOW,
                 }}
                 onPress={() => {
+                    onPress();
                     dispatch(
                         setUpdateTutorialIslandModalPlannedTask({
                             plannedTask: plannedTask,

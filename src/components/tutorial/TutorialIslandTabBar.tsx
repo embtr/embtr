@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, StyleSheet, Animated } from 'react-native';
+import { View, Dimensions, StyleSheet, Animated, TouchableOpacity } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { TabElement } from 'src/components/home/tabmenu/TabElement';
 import { useTheme } from 'src/components/theme/ThemeProvider';
@@ -7,11 +7,8 @@ import { Image } from 'expo-image';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
 import { isAndroidDevice } from 'src/util/DeviceUtil';
 import { TUTORIAL_TIMELINE_TABS } from './TutorialIslandDashboard';
-import {
-    TutorialIslandOption,
-    TutorialIslandOptionKey,
-} from 'src/model/tutorial_island/TutorialIslandModels';
-import { TutorialIslandElement } from './TutorialIslandElement';
+import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandElement, TutorialIslandElementRef } from './TutorialIslandElement';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) => {
@@ -66,6 +63,12 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
             ...config,
         }).start();
     }, [state.index]);
+
+    const timelineRef = React.useRef<TutorialIslandElementRef>(null);
+    const habitsRef = React.useRef<TutorialIslandElementRef>(null);
+    const todayRef = React.useRef<TutorialIslandElementRef>(null);
+    const journeyRef = React.useRef<TutorialIslandElementRef>(null);
+    const profileRef = React.useRef<TutorialIslandElementRef>(null);
 
     let elements: JSX.Element[] = [];
     state.routes.forEach((route, index) => {
@@ -143,15 +146,46 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
 
         elements.push(
             <TutorialIslandElement
+                ref={
+                    optionKey === TutorialIslandOptionKey.TAB__TIMELINE
+                        ? timelineRef
+                        : optionKey === TutorialIslandOptionKey.TAB__MY_HABITS_TAB
+                            ? habitsRef
+                            : optionKey === TutorialIslandOptionKey.TAB__TODAY
+                                ? todayRef
+                                : optionKey === TutorialIslandOptionKey.TAB__JOURNEY
+                                    ? journeyRef
+                                    : optionKey === TutorialIslandOptionKey.TAB__PROFILE
+                                        ? profileRef
+                                        : null
+                }
                 style={{
                     flex: 1,
                     position: 'relative',
                     zIndex: optionKey === TutorialIslandOptionKey.TAB__TODAY ? 0 : 1,
                 }}
-                onPress={onPress}
                 optionKey={optionKey}
             >
-                {element}
+                <TouchableOpacity
+                    accessibilityRole="button"
+                    onPress={() => {
+                        optionKey === TutorialIslandOptionKey.TAB__TIMELINE
+                            ? timelineRef.current?.reportOptionPressed()
+                            : optionKey === TutorialIslandOptionKey.TAB__MY_HABITS_TAB
+                                ? habitsRef.current?.reportOptionPressed()
+                                : optionKey === TutorialIslandOptionKey.TAB__TODAY
+                                    ? todayRef.current?.reportOptionPressed()
+                                    : optionKey === TutorialIslandOptionKey.TAB__JOURNEY
+                                        ? journeyRef.current?.reportOptionPressed()
+                                        : optionKey === TutorialIslandOptionKey.TAB__PROFILE
+                                            ? profileRef.current?.reportOptionPressed()
+                                            : null;
+                        onPress();
+                    }}
+                    key={index}
+                >
+                    {element}
+                </TouchableOpacity>
             </TutorialIslandElement>
         );
     });

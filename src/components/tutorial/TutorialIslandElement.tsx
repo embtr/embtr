@@ -1,6 +1,5 @@
 import React from 'react';
 import { View } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import {
     TutorialIslandFlowKey,
     TutorialIslandOption,
@@ -21,7 +20,6 @@ export interface TutorialIslandElementRef {
 interface InnerProps {
     children: React.ReactNode;
     optionKey: TutorialIslandOptionKey;
-    onPress?: () => void;
     onPressReportable?: boolean;
     tooltip?: TutorialIslandTooltipData;
     nextFlowKey?: TutorialIslandFlowKey;
@@ -29,7 +27,7 @@ interface InnerProps {
 }
 
 const Targeted = React.forwardRef<TutorialIslandElementRef, InnerProps>(
-    ({ children, optionKey, onPress, onPressReportable, tooltip, style }: InnerProps, ref) => {
+    ({ children, optionKey, onPressReportable, tooltip, style }: InnerProps, ref) => {
         const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
 
         const advance = () => {
@@ -54,23 +52,12 @@ const Targeted = React.forwardRef<TutorialIslandElementRef, InnerProps>(
                     setLayout(event.nativeEvent.layout);
                 }}
             >
-                <TouchableWithoutFeedback
-                    onPress={() => {
-                        onPress?.();
-
-                        if (onPressReportable) {
-                            advance();
-                        }
-                    }}
-                >
-                    {children}
-                </TouchableWithoutFeedback>
+                <View>{children}</View>
 
                 {tooltip && (
                     <TutorialIslandTooltip
                         tooltip={tooltip}
                         onDismiss={() => {
-                            console.log('dismiss2');
                             advance();
                         }}
                         parentWidth={layout.width}
@@ -82,18 +69,8 @@ const Targeted = React.forwardRef<TutorialIslandElementRef, InnerProps>(
     }
 );
 
-const Passthrough = ({ children, onPress, style }: InnerProps) => {
-    return (
-        <View style={[{ position: 'relative', zIndex: 0 }, style]}>
-            <TouchableWithoutFeedback
-                onPress={() => {
-                    onPress?.();
-                }}
-            >
-                {children}
-            </TouchableWithoutFeedback>
-        </View>
-    );
+const Passthrough = ({ children, style }: InnerProps) => {
+    return <View style={[{ position: 'relative', zIndex: 0 }, style]}>{children}</View>;
 };
 
 const Blocked = ({ children, style }: InnerProps) => {
@@ -133,7 +110,7 @@ export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, 
         const tutorialIslandState = GlobalStateCustomHooks.useTutorialIslandState();
         if (!tutorialIslandState) {
             return (
-                <Passthrough style={style} optionKey={optionKey} onPress={onPress}>
+                <Passthrough style={style} optionKey={optionKey}>
                     {children}
                 </Passthrough>
             );
@@ -142,7 +119,7 @@ export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, 
         const tutorialIslandIsActive = TutorialIslandService.tutorialIsActive(tutorialIslandState);
         if (!tutorialIslandIsActive) {
             return (
-                <Passthrough style={style} optionKey={optionKey} onPress={onPress}>
+                <Passthrough style={style} optionKey={optionKey}>
                     {children}
                 </Passthrough>
             );
@@ -155,7 +132,7 @@ export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, 
 
         if (!step) {
             return (
-                <Passthrough style={style} optionKey={optionKey} onPress={onPress}>
+                <Passthrough style={style} optionKey={optionKey}>
                     {children}
                 </Passthrough>
             );
@@ -178,7 +155,6 @@ export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, 
                 ref={targetedRef}
                 style={style}
                 optionKey={optionKey}
-                onPress={onPress}
                 tooltip={tooltip}
                 onPressReportable={onPressReportable}
             >

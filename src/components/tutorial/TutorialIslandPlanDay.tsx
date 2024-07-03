@@ -230,6 +230,9 @@ export const TutorialIslandPlanDay = ({ plannedDay, hideComplete, dayKey }: Prop
                             initialPlannedTask={item}
                             dayKey={dayKey}
                             currentUserId={currentUserId ?? 0}
+                            onPress={() => {
+                                ref.current?.reportOptionPressed();
+                            }}
                             onComplete={() => {
                                 ref.current?.reportOptionPressed();
                             }}

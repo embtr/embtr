@@ -2,8 +2,8 @@ import React from 'react';
 import { HabitSummaries } from 'src/components/manage_habits/HabitSummaries';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
-import { View, Text } from 'react-native';
-import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
 import { useTheme } from '../theme/ThemeProvider';
 import {
@@ -12,7 +12,7 @@ import {
 } from 'src/controller/habit/ScheduledHabitController';
 import { useEmbtrTutorialIslandNavigation } from 'src/hooks/NavigationHooks';
 import { ManageHabitsNoHabitsMessage } from '../manage_habits/ManageHabitsNoHabitsMessage';
-import { TutorialIslandElement } from './TutorialIslandElement';
+import { TutorialIslandElement, TutorialIslandElementRef } from './TutorialIslandElement';
 import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
 
 export const TutorialIslandManageHabits = () => {
@@ -20,6 +20,7 @@ export const TutorialIslandManageHabits = () => {
     const navigation = useEmbtrTutorialIslandNavigation();
 
     const scheduledHabits = ScheduledHabitCustomHooks.useActive();
+    const ref = React.useRef<TutorialIslandElementRef>(null);
 
     const handleNavigation = () => {
         navigation.navigate(TutorialIslandRoutes.TUTORIAL_ISLAND_CREATE_EDIT_SCHEDULED_HABIT, {
@@ -51,32 +52,40 @@ export const TutorialIslandManageHabits = () => {
                 <View style={{ flex: 1 }} />
 
                 <TutorialIslandElement
+                    ref={ref}
                     optionKey={TutorialIslandOptionKey.MY_HABITS__ADD_NEW_HABIT_BUTTON}
-                    onPress={handleNavigation}
                 >
-                    <View
-                        style={[
-                            {
-                                height: 50 - PADDING_LARGE,
-                                marginHorizontal: PADDING_LARGE,
-                                marginTop: PADDING_LARGE,
-                                backgroundColor: colors.accent_color,
-                                justifyContent: 'center',
-                                borderRadius: 3,
-                            },
-                        ]}
+                    <TouchableOpacity
+                        onPress={() => {
+                            ref.current?.reportOptionPressed();
+                            handleNavigation();
+                        }}
                     >
-                        <Text
-                            style={{
-                                textAlign: 'center',
-                                color: colors.text,
-                                fontFamily: POPPINS_REGULAR,
-                                fontSize: 16,
-                            }}
+                        <View
+                            style={[
+                                {
+                                    height: 50 - PADDING_LARGE,
+                                    marginHorizontal: PADDING_LARGE,
+                                    marginTop: PADDING_LARGE,
+                                    backgroundColor: colors.accent_color,
+                                    justifyContent: 'center',
+                                    borderRadius: 3,
+                                },
+                                CARD_SHADOW,
+                            ]}
                         >
-                            Add New Habit
-                        </Text>
-                    </View>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    color: colors.text,
+                                    fontFamily: POPPINS_REGULAR,
+                                    fontSize: 16,
+                                }}
+                            >
+                                Add New Habit
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
                 </TutorialIslandElement>
 
                 <View style={{ height: PADDING_LARGE * 2 }} />
