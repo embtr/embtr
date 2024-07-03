@@ -63,7 +63,7 @@ export const TutorialIslandCompleteHabitFlow: TutorialIslandFlow = {
                     key: TutorialIslandOptionKey.PLAN_DAY__PLANNED_TASK,
                     onPressReportable: false,
                     tooltip: {
-                        text: 'Life happens... Swipe left to reveal your "life happens" options and press Skip or Fail.',
+                        text: 'Sometimes life happens... Swipe left to reveal your "life happens" options and press one.',
                         position: TooltipPosition.TOP,
                         alignment: 'center',
                         padding: PADDING_LARGE,
@@ -78,7 +78,7 @@ export const TutorialIslandCompleteHabitFlow: TutorialIslandFlow = {
                     key: TutorialIslandOptionKey.PLAN_DAY__PLANNED_TASK,
                     onPressReportable: false,
                     tooltip: {
-                        text: 'Snap to the right again to reset your habit!',
+                        text: 'Reset your habit by swiping left letting it SNAP.',
                         position: TooltipPosition.BOTTOM,
                         alignment: 'center',
                         padding: PADDING_LARGE,
@@ -91,12 +91,75 @@ export const TutorialIslandCompleteHabitFlow: TutorialIslandFlow = {
             options: [
                 {
                     key: TutorialIslandOptionKey.PLAN_DAY__PLANNED_TASK,
-                    onPressReportable: false,
+                    onPressReportable: true,
                     tooltip: {
                         text: 'Tap on the habit to view advanced options!',
                         position: TooltipPosition.TOP,
                         alignment: 'center',
                         padding: PADDING_LARGE,
+                    },
+                },
+            ],
+        },
+        {
+            key: TutorialIslandStepKey.COMPLETE_HABIT_FLOW__EXPLAIN_QUANTITY,
+            options: [
+                {
+                    key: TutorialIslandOptionKey.UPDATE_HABIT_MODAL__QUANTITY,
+                    onPressReportable: false,
+                    tooltip: {
+                        text: 'Tap here or use the + and - signs to set the quantity that you have completed.',
+                        position: TooltipPosition.TOP,
+                        alignment: 'flex-end',
+                        padding: PADDING_LARGE,
+                        dismissableText: 'Got it!',
+                    },
+                },
+            ],
+        },
+        {
+            key: TutorialIslandStepKey.COMPLETE_HABIT_FLOW__EXPLAIN_ADVANCED,
+            options: [
+                {
+                    key: TutorialIslandOptionKey.UPDATE_HABIT_MODAL__ADVANCED_CHEVRON,
+                    onPressReportable: true,
+                    tooltip: {
+                        text: 'Tap the chevron for advanced options such as remove and edit.',
+                        position: TooltipPosition.BOTTOM,
+                        alignment: 'flex-end',
+                        padding: PADDING_LARGE,
+                        dismissableText: 'Got it!',
+                    },
+                },
+            ],
+        },
+        {
+            key: TutorialIslandStepKey.COMPLETE_HABIT_FLOW__EXPLAIN_UPDATE,
+            options: [
+                {
+                    key: TutorialIslandOptionKey.UPDATE_HABIT_MODAL__ADVANCED_UPDATE,
+                    onPressReportable: true,
+                    tooltip: {
+                        text: 'Press Update to save your changes.',
+                        position: TooltipPosition.TOP,
+                        alignment: 'center',
+                        padding: PADDING_LARGE,
+                    },
+                },
+            ],
+        },
+        {
+            key: TutorialIslandStepKey.COMPLETE_HABIT_FLOW__BID_GOODLUCK,
+            options: [
+                {
+                    key: TutorialIslandOptionKey.GENERAL_NOTIFICATION,
+                    onPressReportable: false,
+                    tooltip: {
+                        text: 'Your onboarding is complete! Explore the remaining tabs on your own and enjoy your habit building experience! Welcome to Embtr 🎉',
+                        position: TooltipPosition.CENTER,
+                        alignment: 'center',
+                        padding: PADDING_LARGE,
+                        dismissableText: 'Sweet!',
                     },
                 },
             ],

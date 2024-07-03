@@ -12,9 +12,7 @@ import { DayKey } from 'resources/types/custom_schema/DayKey';
 import {
     INVALID_FLOW_STATE,
     TutorialIslandFlowState,
-    TutorialIslandStepKey,
 } from 'src/model/tutorial_island/TutorialIslandModels';
-import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -36,6 +34,10 @@ const INITIAL_STATE: GlobalState = {
     updateModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     removalModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     editModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
+
+    updateTutorialIslandModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
+    removalTutorialIslandModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
+    editTutorialIslandModalPlannedTask: DEFAULT_UPDATE_MODAL_PLANNED_TASK,
     acknowledgedVersion: '0.0.0',
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
     tutorialIslandState: INVALID_FLOW_STATE,
@@ -59,6 +61,9 @@ interface GlobalState {
     updateModalPlannedTask: UpdateModalPlannedTask;
     removalModalPlannedTask: UpdateModalPlannedTask;
     editModalPlannedTask: UpdateModalPlannedTask;
+    updateTutorialIslandModalPlannedTask: UpdateModalPlannedTask;
+    removalTutorialIslandModalPlannedTask: UpdateModalPlannedTask;
+    editTutorialIslandModalPlannedTask: UpdateModalPlannedTask;
     acknowledgedVersion: string;
     appleAuthUserInfo: AppleAuthUserInfo;
     tutorialIslandState: TutorialIslandFlowState;
@@ -131,6 +136,18 @@ export const GlobalState = createSlice({
         },
         setEditModalPlannedTask(state, action) {
             state.editModalPlannedTask = action.payload;
+        },
+        setUpdateTutorialIslandModalPlannedTask(
+            state,
+            action: { payload: UpdateModalPlannedTask }
+        ) {
+            state.updateTutorialIslandModalPlannedTask = action.payload;
+        },
+        setRemovalTutorialIslandModalPlannedTask(state, action) {
+            state.removalTutorialIslandModalPlannedTask = action.payload;
+        },
+        setEditTutorialIslandModalPlannedTask(state, action) {
+            state.editTutorialIslandModalPlannedTask = action.payload;
         },
         setAcknowledgedVersion(state, action) {
             state.acknowledgedVersion = action.payload;
@@ -280,6 +297,34 @@ export const getEditModalPlannedTask = (state: RootState): UpdateModalPlannedTas
     return state.globalState.editModalPlannedTask;
 };
 
+export const getUpdateTutorialIslandModalPlannedTask = (
+    state: RootState
+): UpdateModalPlannedTask => {
+    if (state?.globalState.updateTutorialIslandModalPlannedTask === undefined) {
+        return INITIAL_STATE.updateModalPlannedTask;
+    }
+
+    return state.globalState.updateTutorialIslandModalPlannedTask;
+};
+
+export const getRemovalTutorialIslandModalPlannedTask = (
+    state: RootState
+): UpdateModalPlannedTask => {
+    if (state?.globalState.removalTutorialIslandModalPlannedTask === undefined) {
+        return INITIAL_STATE.removalModalPlannedTask;
+    }
+
+    return state.globalState.removalTutorialIslandModalPlannedTask;
+};
+
+export const getEditTutorialIslandModalPlannedTask = (state: RootState): UpdateModalPlannedTask => {
+    if (state?.globalState.editTutorialIslandModalPlannedTask === undefined) {
+        return INITIAL_STATE.editModalPlannedTask;
+    }
+
+    return state.globalState.editTutorialIslandModalPlannedTask;
+};
+
 export const getAcknowledgedVersion = (state: RootState): string => {
     if (state?.globalState.acknowledgedVersion === undefined) {
         return INITIAL_STATE.acknowledgedVersion;
@@ -323,6 +368,9 @@ export const {
     setUpdateModalPlannedTask,
     setRemovalModalPlannedTask,
     setEditModalPlannedTask,
+    setUpdateTutorialIslandModalPlannedTask,
+    setRemovalTutorialIslandModalPlannedTask,
+    setEditTutorialIslandModalPlannedTask,
     setAcknowledgedVersion,
     setAppleAuthUserInfo,
     setTutorialIslandState,

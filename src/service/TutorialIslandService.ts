@@ -40,6 +40,7 @@ export class TutorialIslandService {
                 return TutorialIslandCreateHabitFlow;
             case TutorialIslandFlowKey.COMPLETE_HABIT:
                 return TutorialIslandCompleteHabitFlow;
+
             default:
                 return TutorialIslandInvalidFlow;
         }

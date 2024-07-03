@@ -21,16 +21,18 @@ import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
-    getUpdateModalPlannedTask,
-    setEditModalPlannedTask,
-    setRemovalModalPlannedTask,
-    setUpdateModalPlannedTask,
+    getUpdateTutorialIslandModalPlannedTask,
+    setEditTutorialIslandModalPlannedTask,
+    setRemovalTutorialIslandModalPlannedTask,
+    setUpdateTutorialIslandModalPlannedTask,
 } from 'src/redux/user/GlobalState';
 import PlannedTaskController from 'src/controller/planning/PlannedTaskController';
 import { PlannedTask } from 'resources/schema';
 import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { Constants } from 'resources/types/constants/constants';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { TutorialIslandElement, TutorialIslandElementRef } from './TutorialIslandElement';
+import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
 
 const createUpdatePlannedTask = async (clone: PlannedTask, dayKey: string) => {
     if (clone.id) {
@@ -49,7 +51,7 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
     const { colors } = useTheme();
 
     const currentUser = useAppSelector(getCurrentUser);
-    const plannedTaskData = useAppSelector(getUpdateModalPlannedTask);
+    const plannedTaskData = useAppSelector(getUpdateTutorialIslandModalPlannedTask);
     const plannedTask = plannedTaskData.plannedTask;
     const onUpdateCallback = plannedTaskData.callback;
     const dayKey = plannedTaskData.dayKey;
@@ -61,25 +63,26 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
     const [selectedValue, setSelectedValue] = React.useState<number | null>(
         plannedTask.completedQuantity ?? 0
     );
+    const [buttonHeight, setButtonHeight] = React.useState(0);
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
         new Animated.Value(MAX_OPTIONS_HEIGHT)
     );
 
     const dismiss = () => {
-        dispatch(setUpdateModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
+        dispatch(setUpdateTutorialIslandModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
     };
 
     const remove = () => {
         dismiss();
         setTimeout(() => {
-            dispatch(setRemovalModalPlannedTask(plannedTaskData));
+            dispatch(setRemovalTutorialIslandModalPlannedTask(plannedTaskData));
         }, 200);
     };
 
     const edit = async () => {
         dismiss();
         setTimeout(() => {
-            dispatch(setEditModalPlannedTask(plannedTaskData));
+            dispatch(setEditTutorialIslandModalPlannedTask(plannedTaskData));
         }, 200);
     };
 
@@ -190,6 +193,7 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
     const top = getWindowHeight() / 2 - 150;
 
     const textInputRef = React.useRef<TextInput>(null);
+    const tutorialPressedRef = React.useRef<TutorialIslandElementRef>(null);
 
     const unitsPretty = plannedTask.unit
         ? UnitUtility.getReadableUnit(plannedTask.unit, 2)
@@ -256,216 +260,256 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
                     width: '100%',
                 }}
             >
-                <View
-                    style={{ flexDirection: 'row', flex: 1, height: '100%', alignItems: 'center' }}
-                >
-                    <Text
-                        style={{
-                            color: colors.text,
-                            paddingLeft: PADDING_LARGE,
-                            fontFamily: POPPINS_REGULAR,
-                            textAlign: 'center',
-                            fontSize: 18,
-                        }}
-                    >
-                        {unitsPretty}
-                    </Text>
-                </View>
-                <View
+                <TutorialIslandElement
                     style={{
-                        flexDirection: 'row',
                         flex: 1,
-                        alignItems: 'center',
                     }}
+                    optionKey={TutorialIslandOptionKey.UPDATE_HABIT_MODAL__QUANTITY_TITLE}
                 >
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            paddingHorizontal: PADDING_LARGE / 2,
-                        }}
-                    >
-                        <Ionicons
-                            name={'remove'}
-                            size={30}
-                            color={colors.text}
-                            onPress={() => {
-                                setSelectedValue((selectedValue ?? 0) - 1);
-                                setInputWasFocused(true);
-                            }}
-                        />
-                    </View>
                     <View
                         style={{
                             flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderColor: colors.secondary_text,
-                            borderWidth: 1,
-                            borderRadius: 5,
                             flex: 1,
-                            backgroundColor: colors.background_light,
-                        }}
-                    >
-                        <TextInput
-                            style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_REGULAR,
-                                textAlign: 'center',
-                                fontSize: 18,
-                                paddingVertical: PADDING_LARGE / 2,
-                            }}
-                            numberOfLines={1}
-                            keyboardType={'numeric'}
-                            ref={textInputRef}
-                            onBlur={() => {
-                                setKeyboardFocused(false);
-                            }}
-                            onSubmitEditing={() => {
-                                onUpdateWrapper();
-                            }}
-                            onFocus={() => {
-                                setInputWasFocused(true);
-                                setKeyboardFocused(true);
-                                textInputRef.current?.setNativeProps({
-                                    selection: {
-                                        start: 0,
-                                        end: selectedValue?.toString().length,
-                                    },
-                                });
-                            }}
-                            value={selectedValue?.toString()}
-                            onChangeText={(text) => {
-                                textInputRef.current?.setNativeProps({
-                                    selection: {
-                                        start: text.length,
-                                        end: text.length,
-                                    },
-                                });
-
-                                if (text.length > 0 && isNaN(parseInt(text))) {
-                                    return;
-                                }
-
-                                setSelectedValue(text.length === 0 ? null : parseInt(text));
-                            }}
-                        />
-                        <View
-                            style={{
-                                zIndex: 1,
-                                position: 'absolute',
-                                bottom: -5.5,
-                                backgroundColor: colors.background_light,
-                                right: 5,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: 2,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    color: colors.secondary_text,
-                                    fontSize: 10,
-                                    paddingRight: 5,
-                                    textAlign: 'center',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    left: 2.5,
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color:
-                                            (selectedValue ?? 0) >= (plannedTask.quantity ?? 0)
-                                                ? colors.progress_bar_complete
-                                                : colors.secondary_text,
-                                    }}
-                                >
-                                    Goal: {plannedTask.quantity}
-                                </Text>
-                            </Text>
-                        </View>
-                    </View>
-
-                    <View
-                        style={{
+                            height: '100%',
                             alignItems: 'center',
-                            paddingHorizontal: PADDING_LARGE / 2,
-                        }}
-                    >
-                        <Ionicons
-                            name={'add'}
-                            size={30}
-                            color={colors.text}
-                            onPress={() => {
-                                setSelectedValue((selectedValue ?? 0) + 1);
-                                setInputWasFocused(true);
-                            }}
-                        />
-                    </View>
-                </View>
-            </View>
-
-            {/* UNIT & QUANTITY SECTION */}
-            <View
-                style={{
-                    marginTop: PADDING_LARGE * 2,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    width: '100%',
-                }}
-            >
-                <View
-                    style={{ flexDirection: 'row', flex: 1, height: '100%', alignItems: 'center' }}
-                >
-                    <Text
-                        style={{
-                            color: colors.text,
-                            paddingLeft: PADDING_LARGE,
-                            fontFamily: POPPINS_REGULAR,
-                            textAlign: 'center',
-                            fontSize: 18,
-                        }}
-                    >
-                        Time of day
-                    </Text>
-                </View>
-                <View
-                    style={{
-                        flexDirection: 'row',
-                        flex: 1,
-                        alignItems: 'center',
-                    }}
-                >
-                    <View style={{ width: PADDING_LARGE }} />
-                    <View
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            borderColor: colors.secondary_text,
-                            borderWidth: 1,
-                            borderRadius: 5,
-                            flex: 1,
-                            backgroundColor: colors.background_light,
                         }}
                     >
                         <Text
                             style={{
                                 color: colors.text,
+                                paddingLeft: PADDING_LARGE,
                                 fontFamily: POPPINS_REGULAR,
                                 textAlign: 'center',
                                 fontSize: 18,
-                                paddingVertical: PADDING_LARGE / 2,
                             }}
-                            numberOfLines={1}
-                            ref={textInputRef}
                         >
-                            {timeOfDayPretty}
+                            {unitsPretty}
                         </Text>
                     </View>
-                    <View style={{ width: PADDING_LARGE }} />
+                </TutorialIslandElement>
+                <View style={{ flex: 1 }}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            flex: 1,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <TutorialIslandElement
+                            optionKey={TutorialIslandOptionKey.UPDATE_HABIT_MODAL__QUANTITY_MINUS}
+                        >
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    paddingHorizontal: PADDING_LARGE / 2,
+                                }}
+                            >
+                                <Ionicons
+                                    name={'remove'}
+                                    size={30}
+                                    color={colors.text}
+                                    onPress={() => {
+                                        setSelectedValue((selectedValue ?? 0) - 1);
+                                        setInputWasFocused(true);
+                                    }}
+                                />
+                            </View>
+                        </TutorialIslandElement>
+                        <TutorialIslandElement
+                            style={{
+                                flex: 1,
+                            }}
+                            optionKey={TutorialIslandOptionKey.UPDATE_HABIT_MODAL__QUANTITY}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderColor: colors.secondary_text,
+                                    borderWidth: 1,
+                                    borderRadius: 5,
+                                    flex: 1,
+                                    backgroundColor: colors.background_light,
+                                }}
+                            >
+                                <TextInput
+                                    style={{
+                                        color: colors.text,
+                                        fontFamily: POPPINS_REGULAR,
+                                        textAlign: 'center',
+                                        fontSize: 18,
+                                        paddingVertical: PADDING_LARGE / 2,
+                                    }}
+                                    numberOfLines={1}
+                                    keyboardType={'numeric'}
+                                    ref={textInputRef}
+                                    onBlur={() => {
+                                        setKeyboardFocused(false);
+                                    }}
+                                    onSubmitEditing={() => {
+                                        onUpdateWrapper();
+                                    }}
+                                    onFocus={() => {
+                                        setInputWasFocused(true);
+                                        setKeyboardFocused(true);
+                                        textInputRef.current?.setNativeProps({
+                                            selection: {
+                                                start: 0,
+                                                end: selectedValue?.toString().length,
+                                            },
+                                        });
+                                    }}
+                                    value={selectedValue?.toString()}
+                                    onChangeText={(text) => {
+                                        textInputRef.current?.setNativeProps({
+                                            selection: {
+                                                start: text.length,
+                                                end: text.length,
+                                            },
+                                        });
+
+                                        if (text.length > 0 && isNaN(parseInt(text))) {
+                                            return;
+                                        }
+
+                                        setSelectedValue(text.length === 0 ? null : parseInt(text));
+                                    }}
+                                />
+                                <View
+                                    style={{
+                                        zIndex: 1,
+                                        position: 'absolute',
+                                        bottom: -5.5,
+                                        backgroundColor: colors.background_light,
+                                        right: 5,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        borderRadius: 2,
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            color: colors.secondary_text,
+                                            fontSize: 10,
+                                            paddingRight: 5,
+                                            textAlign: 'center',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            left: 2.5,
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color:
+                                                    (selectedValue ?? 0) >=
+                                                        (plannedTask.quantity ?? 0)
+                                                        ? colors.progress_bar_complete
+                                                        : colors.secondary_text,
+                                            }}
+                                        >
+                                            Goal: {plannedTask.quantity}
+                                        </Text>
+                                    </Text>
+                                </View>
+                            </View>
+                        </TutorialIslandElement>
+
+                        <TutorialIslandElement
+                            optionKey={TutorialIslandOptionKey.UPDATE_HABIT_MODAL__QUANTITY_PLUS}
+                        >
+                            <View
+                                style={{
+                                    alignItems: 'center',
+                                    paddingHorizontal: PADDING_LARGE / 2,
+                                }}
+                            >
+                                <Ionicons
+                                    name={'add'}
+                                    size={30}
+                                    color={colors.text}
+                                    onPress={() => {
+                                        setSelectedValue((selectedValue ?? 0) + 1);
+                                        setInputWasFocused(true);
+                                    }}
+                                />
+                            </View>
+                        </TutorialIslandElement>
+                    </View>
                 </View>
             </View>
+
+            {/* UNIT & QUANTITY SECTION */}
+
+            <TutorialIslandElement
+                optionKey={TutorialIslandOptionKey.UPDATE_HABIT_MODAL__ADVANCED_TIME_OF_DAY}
+            >
+                <View
+                    style={{
+                        marginTop: PADDING_LARGE * 2,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        width: '100%',
+                    }}
+                >
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            flex: 1,
+                            height: '100%',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: colors.text,
+                                paddingLeft: PADDING_LARGE,
+                                fontFamily: POPPINS_REGULAR,
+                                textAlign: 'center',
+                                fontSize: 18,
+                            }}
+                        >
+                            Time of day
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            flex: 1,
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View style={{ width: PADDING_LARGE }} />
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                borderColor: colors.secondary_text,
+                                borderWidth: 1,
+                                borderRadius: 5,
+                                flex: 1,
+                                backgroundColor: colors.background_light,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: colors.text,
+                                    fontFamily: POPPINS_REGULAR,
+                                    textAlign: 'center',
+                                    fontSize: 18,
+                                    paddingVertical: PADDING_LARGE / 2,
+                                }}
+                                numberOfLines={1}
+                                ref={textInputRef}
+                            >
+                                {timeOfDayPretty}
+                            </Text>
+                        </View>
+                        <View style={{ width: PADDING_LARGE }} />
+                    </View>
+                </View>
+            </TutorialIslandElement>
 
             {/* UPDATE & ADVANCED OPTIONS BUTTONS */}
             <View
@@ -489,61 +533,79 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
                             flexDirection: 'row',
                         }}
                     >
-                        <View
-                            style={{
-                                width: '100%',
-                                backgroundColor: colors.accent_color,
-                                borderTopLeftRadius: 5,
-                                borderBottomLeftRadius: 5,
-                                flex: 9,
-                            }}
+                        <TutorialIslandElement
+                            ref={tutorialPressedRef}
+                            optionKey={TutorialIslandOptionKey.UPDATE_HABIT_MODAL__ADVANCED_UPDATE}
+                            style={{ flex: 9 }}
                         >
-                            <TouchableOpacity onPress={onUpdateWrapper}>
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                        color: colors.text,
-                                        fontFamily: POPPINS_REGULAR,
-                                        fontSize: 16,
-                                        paddingLeft: '10%',
-                                        marginLeft: 3,
-                                        paddingVertical: 6,
-                                    }}
-                                >
-                                    update
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <View
-                            style={{
-                                backgroundColor: colors.secondary_text,
-                                width: StyleSheet.hairlineWidth,
-                                height: '100%',
-                            }}
-                        />
-                        <TouchableOpacity
-                            style={{
-                                flex: 1,
-                                borderTopRightRadius: 5,
-                                borderBottomRightRadius: 5,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                paddingHorizontal: 3,
-                                backgroundColor: colors.accent_color,
-                            }}
-                            onPress={() => {
-                                setMenuVisible(!menuVisible);
-                            }}
-                        >
-                            <Ionicons
+                            <View
+                                onLayout={(event) => {
+                                    setButtonHeight(event.nativeEvent.layout.height);
+                                }}
                                 style={{
                                     backgroundColor: colors.accent_color,
+                                    borderTopLeftRadius: 5,
+                                    borderBottomLeftRadius: 5,
                                 }}
-                                name={menuVisible ? 'chevron-up' : 'chevron-down'}
-                                size={20}
-                                color={colors.text}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        tutorialPressedRef.current?.reportOptionPressed();
+                                        onUpdateWrapper();
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                            color: colors.text,
+                                            fontFamily: POPPINS_REGULAR,
+                                            fontSize: 16,
+                                            paddingLeft: '10%',
+                                            marginLeft: 3,
+                                            paddingVertical: 6,
+                                        }}
+                                    >
+                                        update
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: colors.secondary_text,
+                                    width: StyleSheet.hairlineWidth,
+                                }}
                             />
-                        </TouchableOpacity>
+                        </TutorialIslandElement>
+                        <TutorialIslandElement
+                            optionKey={TutorialIslandOptionKey.UPDATE_HABIT_MODAL__ADVANCED_CHEVRON}
+                            style={{
+                                borderTopRightRadius: 5,
+                                borderBottomRightRadius: 5,
+                                flex: 1,
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={{
+                                    flex: 1,
+                                    borderTopRightRadius: 5,
+                                    borderBottomRightRadius: 5,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    paddingHorizontal: 3,
+                                    backgroundColor: colors.accent_color,
+                                    height: buttonHeight,
+                                }}
+                                onPress={() => {
+                                    setMenuVisible(!menuVisible);
+                                }}
+                            >
+                                <Ionicons
+                                    name={menuVisible ? 'chevron-up' : 'chevron-down'}
+                                    size={20}
+                                    color={colors.text}
+                                />
+                            </TouchableOpacity>
+                        </TutorialIslandElement>
                     </View>
 
                     <Animated.View
@@ -554,97 +616,99 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
                             height: advancedOptionsHeight,
                         }}
                     >
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                width: '100%',
-                                height: 20,
-                                paddingHorizontal: PADDING_LARGE,
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={onRemove}
+                        <TutorialIslandElement optionKey={TutorialIslandOptionKey.INVALID}>
+                            <View
                                 style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    paddingLeft: 6,
+                                    flexDirection: 'row',
+                                    width: '100%',
+                                    height: 20,
+                                    paddingHorizontal: PADDING_LARGE,
                                 }}
                             >
-                                <Text
+                                <TouchableOpacity
+                                    onPress={onRemove}
                                     style={{
-                                        fontFamily,
-                                        fontSize,
-                                        color: colors.archive,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        paddingLeft: 6,
                                     }}
                                 >
-                                    remove
-                                </Text>
-                            </TouchableOpacity>
+                                    <Text
+                                        style={{
+                                            fontFamily,
+                                            fontSize,
+                                            color: colors.archive,
+                                        }}
+                                    >
+                                        remove
+                                    </Text>
+                                </TouchableOpacity>
 
-                            {/* spacer */}
-                            <View style={{ flex: 1 }} />
+                                {/* spacer */}
+                                <View style={{ flex: 1 }} />
 
-                            <TouchableOpacity
-                                onPress={onEdit}
-                                style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Text
+                                <TouchableOpacity
+                                    onPress={onEdit}
                                     style={{
-                                        fontFamily,
-                                        fontSize,
-                                        color: colors.link,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                     }}
                                 >
-                                    edit
-                                </Text>
-                            </TouchableOpacity>
+                                    <Text
+                                        style={{
+                                            fontFamily,
+                                            fontSize,
+                                            color: colors.link,
+                                        }}
+                                    >
+                                        edit
+                                    </Text>
+                                </TouchableOpacity>
 
-                            {/* spacer */}
-                            <View style={{ flex: 1 }} />
+                                {/* spacer */}
+                                <View style={{ flex: 1 }} />
 
-                            <TouchableOpacity
-                                onPress={onSkip}
-                                style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Text
+                                <TouchableOpacity
+                                    onPress={onSkip}
                                     style={{
-                                        fontFamily,
-                                        fontSize,
-                                        color: colors.progress_bar_skipped,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                     }}
                                 >
-                                    skip
-                                </Text>
-                            </TouchableOpacity>
+                                    <Text
+                                        style={{
+                                            fontFamily,
+                                            fontSize,
+                                            color: colors.progress_bar_skipped,
+                                        }}
+                                    >
+                                        skip
+                                    </Text>
+                                </TouchableOpacity>
 
-                            {/* spacer */}
-                            <View style={{ flex: 1 }} />
+                                {/* spacer */}
+                                <View style={{ flex: 1 }} />
 
-                            <TouchableOpacity
-                                onPress={onCompleteWrapper}
-                                style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    paddingRight: 6,
-                                }}
-                            >
-                                <Text
+                                <TouchableOpacity
+                                    onPress={onCompleteWrapper}
                                     style={{
-                                        fontFamily,
-                                        fontSize,
-                                        color: colors.timeline_label_user_post,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        paddingRight: 6,
                                     }}
                                 >
-                                    complete
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                                    <Text
+                                        style={{
+                                            fontFamily,
+                                            fontSize,
+                                            color: colors.timeline_label_user_post,
+                                        }}
+                                    >
+                                        complete
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </TutorialIslandElement>
                     </Animated.View>
                 </View>
             </View>

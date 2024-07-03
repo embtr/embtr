@@ -39,7 +39,6 @@ export const TutorialIslandToday = () => {
                         setTutorialIslandState(TutorialIslandInvalidFlow);
                     }}
                 />
-                <View style={{ height: 10 }} />
 
                 <Button
                     title="Start Create Habit Flow"
@@ -47,8 +46,6 @@ export const TutorialIslandToday = () => {
                         setTutorialIslandState(TutorialIslandCreateHabitFlow);
                     }}
                 />
-
-                <View style={{ height: 10 }} />
 
                 <Button
                     title="Start Complete Habit Flow"

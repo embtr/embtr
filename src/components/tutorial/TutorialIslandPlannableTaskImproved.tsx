@@ -13,7 +13,10 @@ import React from 'react';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { Swipeable } from 'react-native-gesture-handler';
-import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
+import {
+    setUpdateModalPlannedTask,
+    setUpdateTutorialIslandModalPlannedTask,
+} from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImageData } from '../common/images/OptimalImage';
 import { Constants } from 'resources/types/constants/constants';
@@ -206,7 +209,7 @@ export const TutorialIslandPlannableTaskImproved = ({
                 }}
                 onPress={() => {
                     dispatch(
-                        setUpdateModalPlannedTask({
+                        setUpdateTutorialIslandModalPlannedTask({
                             plannedTask: plannedTask,
                             callback: (plannedTask: PlannedTask) => {
                                 setPlannedTask(plannedTask);

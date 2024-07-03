@@ -57,7 +57,7 @@ export const TutorialIslandTooltip = ({ tooltip, onDismiss, parentWidth, parentH
                 bottom: getTooltipBottom(tooltip, parentHeight),
                 top: getTooltipTop(tooltip, parentHeight),
                 borderRadius: 9,
-                right: tooltip.alignment === 'flex-end' ? PADDING : undefined,
+                right: tooltip.alignment === 'flex-end' ? PADDING / 2 : undefined,
                 left: tooltip.alignment === 'flex-start' ? PADDING / 2 : undefined,
                 width: width,
             }}

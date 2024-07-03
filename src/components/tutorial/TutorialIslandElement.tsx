@@ -29,27 +29,11 @@ interface InnerProps {
 }
 
 const Targeted = React.forwardRef<TutorialIslandElementRef, InnerProps>(
-    (
-        {
-            children,
-            optionKey,
-            onPress,
-            onPressReportable,
-            tooltip,
-            nextFlowKey,
-            style,
-        }: InnerProps,
-        ref
-    ) => {
-        const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
+    ({ children, optionKey, onPress, onPressReportable, tooltip, style }: InnerProps, ref) => {
         const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
 
         const advance = () => {
-            if (nextFlowKey) {
-                //setTutorialIslandState(nextFlowKey);
-            } else {
-                reportOptionPressed(optionKey);
-            }
+            reportOptionPressed(optionKey);
         };
 
         const [layout, setLayout] = React.useState({ width: 0, height: 0 });
@@ -188,7 +172,6 @@ export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, 
 
         const tooltip = option?.tooltip;
         const onPressReportable = option?.onPressReportable;
-        const nextFlowKey = option?.nextFlowKey;
 
         return (
             <Targeted
@@ -198,7 +181,6 @@ export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, 
                 onPress={onPress}
                 tooltip={tooltip}
                 onPressReportable={onPressReportable}
-                nextFlowKey={nextFlowKey}
             >
                 {children}
             </Targeted>
