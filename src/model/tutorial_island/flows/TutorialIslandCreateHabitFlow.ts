@@ -11,21 +11,6 @@ export const TutorialIslandCreateHabitFlow: TutorialIslandFlow = {
     key: TutorialIslandFlowKey.CREATE_HABIT,
     steps: [
         {
-            key: TutorialIslandStepKey.CREATE_HABIT_FLOW__NOTIFY_CREATE_HABIT,
-            options: [
-                {
-                    key: TutorialIslandOptionKey.GENERAL_NOTIFICATION,
-                    onPressReportable: false,
-                    tooltip: {
-                        text: "Welcome to Embtr! Let's create your first habit.",
-                        position: TooltipPosition.CENTER,
-                        alignment: 'center',
-                        dismissableText: "Let's Go!",
-                    },
-                },
-            ],
-        },
-        {
             key: TutorialIslandStepKey.CREATE_HABIT_FLOW__PRESS_HABITS_TAB,
             options: [
                 {

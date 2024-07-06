@@ -2,6 +2,8 @@ import * as WebBrowser from 'expo-web-browser';
 import { GoogleAuthProvider, signInWithCredential, getAuth } from 'firebase/auth';
 import { AuthSessionResult } from 'expo-auth-session';
 import { GoogleAuthenticate } from 'src/components/login/google/GoogleAuthenticate';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { setGlobalLoading } from 'src/redux/user/GlobalState';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -10,6 +12,8 @@ interface Props {
 }
 
 export const FirebaseAuthenticate = ({ buttonText }: Props) => {
+    const dispatch = useAppDispatch();
+
     const onLoginResponse = (response: AuthSessionResult) => {
         if (response.type === 'success') {
             const { authentication } = response;
@@ -17,7 +21,7 @@ export const FirebaseAuthenticate = ({ buttonText }: Props) => {
 
             const credential = GoogleAuthProvider.credential(idToken, accessToken);
 
-            //auth with firebase specifically
+            dispatch(setGlobalLoading(true));
             signInWithCredential(getAuth(), credential);
         }
     };

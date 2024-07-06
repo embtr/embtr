@@ -19,6 +19,7 @@ import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getFireConfetti } from 'src/redux/user/GlobalState';
 import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandScheduledHabitBanner } from './TutorialIslandScheduledHabitBanner';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -73,7 +74,7 @@ export const TutorialIslandCreateEditScheduledHabit = () => {
                     }}
                 />
 
-                <ScheduledHabitBanner
+                <TutorialIslandScheduledHabitBanner
                     isCreateCustomHabit={!!isCreateCustomHabit}
                     isCreatedNewScheduledHabit={isCreatedNewScheduledHabit}
                     onArchiveSheduledHabit={() => {

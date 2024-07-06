@@ -1,7 +1,11 @@
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { TutorialIslandDashboard } from '../tutorial/TutorialIslandDashboard';
-import { TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
+import { Routes, TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
 import { TutorialIslandCreateEditScheduledHabit } from '../tutorial/TutorialIslandCreateEditScheduledHabit';
+import { NewUserProfilePopulation } from '../profile/NewUserProfilePopulation';
+import { TermsApprovalModal } from '../profile/TermsApprovalModal';
+import { UpdateAvailableModal } from '../modal/UpdateAvailableModal';
+import { IntroModal } from '../modal/IntroModal';
 
 const Stack = createStackNavigator();
 
@@ -17,6 +21,23 @@ export const TutorialIslandSecureMainStack = () => {
                 component={TutorialIslandCreateEditScheduledHabit}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
+
+            <Stack.Screen
+                name={Routes.NEW_USER_PROFILE_POPULATION}
+                component={NewUserProfilePopulation}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name={Routes.TERMS_APPROVAL_MODAL}
+                component={TermsApprovalModal}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name={Routes.UPDATE_AVAILABLE_MODAL}
+                component={UpdateAvailableModal}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen name={Routes.INTRO_MODAL} component={IntroModal} />
         </Stack.Navigator>
     );
 };

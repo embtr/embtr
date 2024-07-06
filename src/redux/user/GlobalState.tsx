@@ -12,7 +12,9 @@ import { DayKey } from 'resources/types/custom_schema/DayKey';
 import {
     INVALID_FLOW_STATE,
     TutorialIslandFlowState,
+    TutorialIslandStepKey,
 } from 'src/model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -127,6 +129,10 @@ export const GlobalState = createSlice({
             state.globalBlurBackground = false;
             state.showQuickAddModal = false;
             state.appleAuthUserInfo = DEFAULT_APPLE_AUTH_USER_INFO;
+            state.tutorialIslandState = {
+                flow: TutorialIslandInvalidFlow,
+                currentStepKey: TutorialIslandStepKey.INVALID,
+            };
         },
         setUpdateModalPlannedTask(state, action: { payload: UpdateModalPlannedTask }) {
             state.updateModalPlannedTask = action.payload;

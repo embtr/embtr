@@ -19,6 +19,10 @@ export const TutorialIslandModal = ({ }: Props) => {
 
     const tutorialIslandState = useAppSelector(getTutorialIslandState);
 
+    if (!tutorialIslandState.flow || !tutorialIslandState.currentStepKey) {
+        return null;
+    }
+
     const currentStep =
         TutorialIslandService.getStepFromFlow(
             tutorialIslandState.flow,

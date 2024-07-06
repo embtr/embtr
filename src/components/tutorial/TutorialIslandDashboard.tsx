@@ -12,6 +12,7 @@ import { TutorialIslandTimelineTab } from './navigation/tabs/TutorialIslandTimel
 import { TutorialIslandMyJourneyTab } from './navigation/tabs/TutorialIslandJourneyTab';
 import { TutorialIslandProfileTab } from './navigation/tabs/TutorialIslandProfileTab';
 import { TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
+import { OnLoginHooks } from 'src/hooks/OnLoginHooks';
 
 const Tab = createBottomTabNavigator();
 
@@ -27,8 +28,7 @@ export const TUTORIAL_TIMELINE_TABS = {
 export const TutorialIslandDashboard = () => {
     const dispatch = useAppDispatch();
 
-    // TODO: May want this
-    //OnLoginHooks.useOnLogin();
+    OnLoginHooks.useOnLogin();
 
     return (
         <View style={{ flex: 1, overflow: isDesktopBrowser() ? 'hidden' : undefined }}>

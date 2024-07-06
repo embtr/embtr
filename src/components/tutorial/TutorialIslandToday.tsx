@@ -5,12 +5,9 @@ import { NotificationController } from 'src/controller/notification/Notification
 import { Screen } from 'src/components/common/Screen';
 import { TimelineCustomHooks } from 'src/controller/timeline/TimelineController';
 import { TutorialIslandBanner } from './TutorialIslandBanner';
-import { Button, View } from 'react-native';
-import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
+import { View } from 'react-native';
 import { TutorialIslandPlanningWidgetImproved } from './TutorialIslandPlanningWidgetImproved';
-import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
-import { TutorialIslandCreateHabitFlow } from 'src/model/tutorial_island/flows/TutorialIslandCreateHabitFlow';
-import { TutorialIslandCompleteHabitFlow } from 'src/model/tutorial_island/flows/TutorialIslandCompleteHabitFlow';
+import { PADDING_LARGE } from 'src/util/constants';
 
 export const TutorialIslandToday = () => {
     useFocusEffect(
@@ -26,37 +23,12 @@ export const TutorialIslandToday = () => {
         timelineData.push(...(page?.elements ?? []));
     });
 
-    const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
-
     return (
         <Screen>
             <TutorialIslandBanner name={'Today'} />
 
-            <View style={{ flex: 1 }}>
-                <Button
-                    title="Clear Create Habit Flow"
-                    onPress={() => {
-                        setTutorialIslandState(TutorialIslandInvalidFlow);
-                    }}
-                />
-
-                <Button
-                    title="Start Create Habit Flow"
-                    onPress={() => {
-                        setTutorialIslandState(TutorialIslandCreateHabitFlow);
-                    }}
-                />
-
-                <Button
-                    title="Start Complete Habit Flow"
-                    onPress={() => {
-                        setTutorialIslandState(TutorialIslandCompleteHabitFlow);
-                    }}
-                />
-
-                <View style={{ flex: 1 }}>
-                    <TutorialIslandPlanningWidgetImproved />
-                </View>
+            <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
+                <TutorialIslandPlanningWidgetImproved />
             </View>
         </Screen>
     );

@@ -10,6 +10,8 @@ import { TutorialIslandCompleteHabitFlow } from 'src/model/tutorial_island/flows
 import { TutorialIslandCreateHabitFlow } from 'src/model/tutorial_island/flows/TutorialIslandCreateHabitFlow';
 import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
 
+//  «Tutorial island isn’t going to take that long» - TheIbraDev - 2024-07-04
+
 export class TutorialIslandService {
     public static flowContainsStep(flow: TutorialIslandFlow, step: TutorialIslandStepKey): boolean {
         return flow.steps.some((flowStep) => flowStep.key === step);
@@ -47,6 +49,7 @@ export class TutorialIslandService {
     }
 
     public static getStepFromFlow(flow: TutorialIslandFlow, stepKey: TutorialIslandStepKey) {
+        console.log('getting steps for flow', flow);
         return flow.steps.find((step) => step.key === stepKey);
     }
 

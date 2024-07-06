@@ -1,6 +1,9 @@
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { TutorialIslandTimeline } from '../../TutorialIslandTimeline';
-import { TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
+import { Routes, TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
+import { NewUserProfilePopulation } from 'src/components/profile/NewUserProfilePopulation';
+import { TermsApprovalModal } from 'src/components/profile/TermsApprovalModal';
+import { UpdateAvailableModal } from 'src/components/modal/UpdateAvailableModal';
 
 const Stack = createStackNavigator();
 

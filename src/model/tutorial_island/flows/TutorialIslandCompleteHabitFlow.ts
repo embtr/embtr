@@ -124,7 +124,7 @@ export const TutorialIslandCompleteHabitFlow: TutorialIslandFlow = {
                     key: TutorialIslandOptionKey.UPDATE_HABIT_MODAL__ADVANCED_CHEVRON,
                     onPressReportable: true,
                     tooltip: {
-                        text: 'Tap the chevron for advanced options such as remove and edit.',
+                        text: 'Tap the down-arrow for advanced options such as remove and edit.',
                         position: TooltipPosition.BOTTOM,
                         alignment: 'flex-end',
                         padding: PADDING_LARGE,
@@ -155,7 +155,7 @@ export const TutorialIslandCompleteHabitFlow: TutorialIslandFlow = {
                     key: TutorialIslandOptionKey.GENERAL_NOTIFICATION,
                     onPressReportable: false,
                     tooltip: {
-                        text: 'Your onboarding is complete! Explore the remaining tabs on your own and enjoy your habit building experience! Welcome to Embtr 🎉',
+                        text: 'Your onboarding is complete! Explore the remaining tabs on your own and enjoy your habit building experience!\n\nWelcome to Embtr 🎉',
                         position: TooltipPosition.CENTER,
                         alignment: 'center',
                         padding: PADDING_LARGE,
@@ -163,6 +163,10 @@ export const TutorialIslandCompleteHabitFlow: TutorialIslandFlow = {
                     },
                 },
             ],
+        },
+        {
+            key: TutorialIslandStepKey.COMPLETE,
+            options: [],
         },
     ],
 };

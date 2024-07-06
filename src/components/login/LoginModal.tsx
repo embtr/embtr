@@ -18,8 +18,8 @@ import { Code } from 'resources/codes';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getFireConfetti } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getFireConfetti, setGlobalLoading } from 'src/redux/user/GlobalState';
 
 enum LoginResponseState {
     ERROR,
@@ -61,13 +61,13 @@ export const LoginModal = () => {
     const [email, setEmail] = React.useState(newAccountEmail ?? '');
     const [password, setPassword] = React.useState('');
     const [loginResponseState, setLoginResponseState] = React.useState(LoginResponseState.DEFAULT);
-    const [isLoggingIn, setIsLoggingIn] = React.useState(false);
 
     const textPadding = isShortDevice() ? PADDING_SMALL : PADDING_LARGE;
     const formValid = email.length > 0 && password.length > 0;
     const error = getErrorMessage(loginResponseState);
 
     const useConfetti = useAppSelector(getFireConfetti);
+    const dispatch = useAppDispatch();
 
     React.useEffect(() => {
         if (newAccountEmail) {
@@ -78,17 +78,19 @@ export const LoginModal = () => {
     const onLogin = async () => {
         Keyboard.dismiss();
         const auth = getAuth();
-        setIsLoggingIn(true);
+        dispatch(setGlobalLoading(true));
 
         try {
             const userCredentials = await signInWithEmailAndPassword(auth, email, password);
             if (!userCredentials.user?.emailVerified) {
+                dispatch(setGlobalLoading(false));
                 setLoginResponseState(LoginResponseState.EMAIL_REQUIRES_VERIFICATION);
                 getAuth().signOut();
             } else {
                 setLoginResponseState(LoginResponseState.SUCCESS);
             }
         } catch (error: any) {
+            dispatch(setGlobalLoading(false));
             handleLoginError(error);
         }
     };

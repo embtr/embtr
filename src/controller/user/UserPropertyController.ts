@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { User } from 'resources/schema';
 import { Constants } from 'resources/types/constants/constants';
 import {
     GetUserReminderNotificationResponse,
     GetUserSocialNotificationResponse,
     GetUserTimezoneResponse,
+    GetUserTutorialCompletionStateResponse,
     GetUserWarningNotificationResponse,
     SetUserReminderNotificationRequest,
     SetUserReminderNotificationResponse,
@@ -11,6 +13,8 @@ import {
     SetUserSocialNotificationResponse,
     SetUserTimezoneRequest,
     SetUserTimezoneResponse,
+    SetUserTutorialCompletionStateRequest,
+    SetUserTutorialCompletionStateResponse,
     SetUserWarningNotificationRequest,
     SetUserWarningNotificationResponse,
 } from 'resources/types/requests/UserPropertyTypes';
@@ -36,6 +40,34 @@ export class UserPropertyController {
             })
             .catch((error) => {
                 return error.response.data;
+            });
+    }
+
+    public static async setTutorialCompletionState(
+        state: Constants.CompletionState
+    ): Promise<User | undefined> {
+        const request: SetUserTutorialCompletionStateRequest = { state };
+
+        return await axiosInstance
+            .post<SetUserTutorialCompletionStateResponse>(`/user/property/tutorial`, request)
+            .then((success) => {
+                return success.data.user;
+            })
+            .catch(() => {
+                return undefined;
+            });
+    }
+
+    public static async getTutorialCompletionState(): Promise<
+        Constants.CompletionState | undefined
+    > {
+        return await axiosInstance
+            .get<GetUserTutorialCompletionStateResponse>(`/user/property/tutorial`)
+            .then((success) => {
+                return success.data.state;
+            })
+            .catch(() => {
+                return undefined;
             });
     }
 
@@ -197,6 +229,16 @@ export class UserPropertyController {
 }
 
 export namespace UserPropertyCustomHooks {
+    export const useTutorialComlete = () => {
+        const { status, data, fetchStatus } = useQuery({
+            queryKey: ['tutorial'],
+            queryFn: () => UserPropertyController.getTimezone(),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
     export const useTimezone = () => {
         const { status, data, fetchStatus } = useQuery({
             queryKey: ['timezone'],

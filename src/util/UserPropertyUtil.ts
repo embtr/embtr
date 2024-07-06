@@ -7,15 +7,34 @@ export class UserPropertyUtil {
             return false;
         }
 
+        const awayProperty = this.getProperty(user, Constants.UserPropertyKey.AWAY_MODE);
+        return !!awayProperty && awayProperty.value === Constants.AwayMode.ENABLED;
+    }
+
+    public static hasStartedTutorialIsland(user: User) {
+        if (!user.properties) {
+            return false;
+        }
+
+        const tutorialCompletedProperty = this.getProperty(
+            user,
+            Constants.UserPropertyKey.TUTORIAL_COMPLETED
+        );
+
+        return !!tutorialCompletedProperty;
+    }
+
+    private static getProperty(user: User, key: Constants.UserPropertyKey) {
+        if (!user.properties) {
+            return null;
+        }
+
         for (const property of user.properties) {
-            if (
-                property.key === Constants.UserPropertyKey.AWAY_MODE &&
-                property.value === Constants.AwayMode.ENABLED
-            ) {
-                return true;
+            if (property.key === key) {
+                return property;
             }
         }
 
-        return false;
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import {
+    ActivityIndicator,
     Image,
     Keyboard,
     Linking,
@@ -23,9 +24,11 @@ import { UserService, UsernameAvailabilityResult } from 'src/service/UserService
 import { Checkbox } from 'src/components/checkbox/Checkbox';
 import { MetadataCustomHooks } from 'src/controller/metadata/MetadataController';
 import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getAppleAuthUserInfo } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getAppleAuthUserInfo, setGlobalLoading } from 'src/redux/user/GlobalState';
 import { AppleAuthUserInfo } from 'src/model/GlobalState';
+import { UserPropertyController } from 'src/controller/user/UserPropertyController';
+import { Constants } from 'resources/types/constants/constants';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
@@ -74,6 +77,7 @@ export const NewUserProfilePopulation = () => {
         React.useState<UsernameAvailabilityResult>({ message: 'available', available: true });
 
     const navigation = useNavigation<StackNavigationProp<MasterScreens>>();
+    const dispatch = useAppDispatch();
 
     const termsVersion = MetadataCustomHooks.useLatestTermsVersion();
     const currentUser = UserCustomHooks.useCurrentUser();
@@ -109,6 +113,8 @@ export const NewUserProfilePopulation = () => {
     };
 
     const submitProfileData = async () => {
+        dispatch(setGlobalLoading(true));
+
         const terms = termsVersion.data ? Number(termsVersion.data) : 0;
         const userClone = { ...currentUser.data };
         userClone.username = username;
@@ -138,10 +144,15 @@ export const NewUserProfilePopulation = () => {
             });
         } else {
             await UserController.invalidateCurrentUser();
+            await UserPropertyController.setTutorialCompletionState(
+                Constants.CompletionState.INCOMPLETE
+            );
             navigation.navigate(Routes.INTRO_MODAL);
             // move to next page
             //navigation.popToTop();
         }
+
+        dispatch(setGlobalLoading(false));
     };
 
     const setUsernameAvailability = async (targetUsername: string) => {
@@ -393,6 +404,9 @@ export const NewUserProfilePopulation = () => {
                             disabled={!formValid}
                             style={{
                                 width: '100%',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 backgroundColor: formValid
                                     ? colors.accent_color
                                     : colors.accent_color_dim,

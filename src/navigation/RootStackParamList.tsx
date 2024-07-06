@@ -26,6 +26,10 @@ export type TutorialIslandScreens = {
         isCreateCustomHabit?: boolean;
         scheduledHabitId?: number;
     };
+    NewUserProfilePopulation: undefined;
+    TermsApprovalModal: undefined;
+    UpdateAvailableModal: undefined;
+    IntroModal: undefined;
 };
 
 export type TutorialIslandTimelineTabScreens = TutorialIslandScreens & {};

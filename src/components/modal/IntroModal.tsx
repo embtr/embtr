@@ -3,16 +3,19 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { MainTabScreens, Routes } from 'src/navigation/RootStackParamList';
+import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
+import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
+import { TutorialIslandCreateHabitFlow } from 'src/model/tutorial_island/flows/TutorialIslandCreateHabitFlow';
 
 export const IntroModal = () => {
     const { colors } = useTheme();
     const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
 
+    const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
     const onLetsGo = () => {
         navigation.popToTop();
-        navigation.navigate('JourneyTab', { screen: Routes.JOURNEY });
+        setTutorialIslandState(TutorialIslandCreateHabitFlow);
     };
 
     return (
@@ -61,9 +64,7 @@ export const IntroModal = () => {
                                 textAlign: 'center',
                             }}
                         >
-                            To ensure you are off to a great start with Embtr, we have created a
-                            checklist for you to complete. This will help show you around the app
-                            and get you started on your journey to better habits.
+                            Let's run a quick tutorial to help you learn the basics of embtr.
                         </Text>
                     </View>
                 </View>

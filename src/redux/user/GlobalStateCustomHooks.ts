@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { getTutorialIslandState, setTutorialIslandState } from './GlobalState';
+import { getTutorialIslandState, setCurrentUser, setTutorialIslandState } from './GlobalState';
 import {
     TutorialIslandFlow,
     TutorialIslandFlowState,
@@ -7,7 +7,9 @@ import {
     TutorialIslandStepKey,
 } from 'src/model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandService } from 'src/service/TutorialIslandService';
-import { current } from '@reduxjs/toolkit';
+import { UserPropertyController } from 'src/controller/user/UserPropertyController';
+import { AppDispatch } from '../store';
+import { Constants } from 'resources/types/constants/constants';
 
 export namespace GlobalStateCustomHooks {
     export const useTutorialIslandState = () => {
@@ -25,10 +27,7 @@ export namespace GlobalStateCustomHooks {
                 tutorialIslandState.currentStepKey
             );
 
-            console.log('currentStep', currentStep);
-
             if (!currentStep) {
-                console.log('Invalid current step', tutorialIslandState.currentStepKey);
                 return;
             }
 
@@ -37,10 +36,7 @@ export namespace GlobalStateCustomHooks {
                 optionKey
             );
 
-            console.log('stepContainsOption', stepContainsOption);
-
             if (!stepContainsOption) {
-                console.log('Invalid option', optionKey);
                 return;
             }
 
@@ -48,24 +44,17 @@ export namespace GlobalStateCustomHooks {
                 (step) => step.key === tutorialIslandState.currentStepKey
             );
 
-            console.log('currentStepIndex', currentStepIndex);
-
             if (currentStepIndex === tutorialIslandState.flow.steps.length - 1) {
-                console.log('Last step reached');
                 const currentOption = currentStep.options.find(
                     (option) => option.key === optionKey
                 );
 
-                console.log('currentOption', currentOption);
-
                 if (currentOption?.nextFlowKey) {
                     const flow = TutorialIslandService.getFlowFromKey(currentOption.nextFlowKey);
-                    console.log('flow', flow);
                     const nextFlowState: TutorialIslandFlowState = {
                         flow,
                         currentStepKey: flow.steps[0]?.key ?? TutorialIslandStepKey.INVALID,
                     };
-                    console.log('nextFlowState', nextFlowState);
 
                     dispatch(setTutorialIslandState(nextFlowState));
                 }
@@ -73,18 +62,26 @@ export namespace GlobalStateCustomHooks {
                 return;
             }
 
-            const nextStep = tutorialIslandState.flow.steps[currentStepIndex + 1].key;
-            console.log('nextStep', nextStep);
+            const nextStepKey = tutorialIslandState.flow.steps[currentStepIndex + 1].key;
 
             const nextFlowState: TutorialIslandFlowState = {
                 flow: tutorialIslandState.flow,
-                currentStepKey: nextStep,
+                currentStepKey: nextStepKey,
             };
 
-            console.log('nextFlowState', nextFlowState);
+            if (nextStepKey === TutorialIslandStepKey.COMPLETE) {
+                completeTutorialIsland(dispatch);
+            }
 
             dispatch(setTutorialIslandState(nextFlowState));
         };
+    };
+
+    const completeTutorialIsland = async (dispatch: AppDispatch) => {
+        const user = await UserPropertyController.setTutorialCompletionState(
+            Constants.CompletionState.COMPLETE
+        );
+        dispatch(setCurrentUser(user));
     };
 
     export const useSetTutorialIslandState = () => {

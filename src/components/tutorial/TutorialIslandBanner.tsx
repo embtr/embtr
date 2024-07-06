@@ -11,6 +11,8 @@ import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import { PADDING_MEDIUM, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { isNarrowDevice } from 'src/util/DeviceUtil';
+import { TutorialIslandElement } from './TutorialIslandElement';
+import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
 
 interface Props {
     name: string;
@@ -133,53 +135,55 @@ export const TutorialIslandBanner = ({
                         alignItems: 'center',
                     }}
                 >
-                    {/* LEFT ICON */}
-                    {leftIcon ? (
-                        <Ionicons
-                            name={leftIcon}
-                            size={iconSize}
-                            color={colors.text}
-                            onPress={leftOnPress}
-                        />
-                    ) : leftText ? (
-                        <View
-                            style={{
-                                paddingLeft: 10,
-                                paddingRight: 10,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <Text
+                    <TutorialIslandElement optionKey={TutorialIslandOptionKey.INVALID}>
+                        {/* LEFT ICON */}
+                        {leftIcon ? (
+                            <Ionicons
+                                name={leftIcon}
+                                size={iconSize}
+                                color={colors.text}
                                 onPress={leftOnPress}
+                            />
+                        ) : leftText ? (
+                            <View
                                 style={{
-                                    textAlign: 'center',
-                                    fontFamily: 'Poppins_400Regular',
-                                    color: colors.link,
-                                    fontSize: 16,
+                                    paddingLeft: 10,
+                                    paddingRight: 10,
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                 }}
                             >
-                                {leftText}
-                            </Text>
-                        </View>
-                    ) : (
-                        <View />
-                    )}
+                                <Text
+                                    onPress={leftOnPress}
+                                    style={{
+                                        textAlign: 'center',
+                                        fontFamily: 'Poppins_400Regular',
+                                        color: colors.link,
+                                        fontSize: 16,
+                                    }}
+                                >
+                                    {leftText}
+                                </Text>
+                            </View>
+                        ) : (
+                            <View />
+                        )}
 
-                    {/* INNER LEFT ICON */}
-                    {innerLeftIcon ? (
-                        <Ionicons
-                            style={{ paddingLeft: 10 }}
-                            name={innerLeftIcon}
-                            size={iconSize}
-                            color={colors.text}
-                            onPress={() => {
-                                if (innerLeftCallback) innerLeftCallback();
-                            }}
-                        />
-                    ) : (
-                        <View />
-                    )}
+                        {/* INNER LEFT ICON */}
+                        {innerLeftIcon ? (
+                            <Ionicons
+                                style={{ paddingLeft: 10 }}
+                                name={innerLeftIcon}
+                                size={iconSize}
+                                color={colors.text}
+                                onPress={() => {
+                                    if (innerLeftCallback) innerLeftCallback();
+                                }}
+                            />
+                        ) : (
+                            <View />
+                        )}
+                    </TutorialIslandElement>
                 </View>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -207,96 +211,98 @@ export const TutorialIslandBanner = ({
                         alignItems: 'center',
                     }}
                 >
-                    {/* INNER RIGHT ICON */}
-                    {!isConnectedToNetwork ? (
-                        <Ionicons
-                            style={{ paddingRight: 10 }}
-                            name={'cloud-offline-outline'}
-                            size={iconSize}
-                            color={colors.progress_bar_failed}
-                            onPress={() => {
-                                if (innerRightOnClick) innerRightOnClick();
-                            }}
-                        />
-                    ) : (
-                        innerRightIcon && (
+                    <TutorialIslandElement optionKey={TutorialIslandOptionKey.INVALID}>
+                        {/* INNER RIGHT ICON */}
+                        {!isConnectedToNetwork ? (
                             <Ionicons
                                 style={{ paddingRight: 10 }}
-                                name={innerRightIcon}
+                                name={'cloud-offline-outline'}
                                 size={iconSize}
-                                color={colors.text}
+                                color={colors.progress_bar_failed}
                                 onPress={() => {
                                     if (innerRightOnClick) innerRightOnClick();
                                 }}
                             />
-                        )
-                    )}
-
-                    {/* RIGHT ICON */}
-                    {rightIcon && (
-                        <View style={{ alignItems: 'flex-end' }}>
-                            {rightIconNotificationCount ? (
-                                <View
-                                    style={{
-                                        paddingRight: 1,
-                                        zIndex: 1,
-                                        position: 'absolute',
+                        ) : (
+                            innerRightIcon && (
+                                <Ionicons
+                                    style={{ paddingRight: 10 }}
+                                    name={innerRightIcon}
+                                    size={iconSize}
+                                    color={colors.text}
+                                    onPress={() => {
+                                        if (innerRightOnClick) innerRightOnClick();
                                     }}
-                                >
+                                />
+                            )
+                        )}
+
+                        {/* RIGHT ICON */}
+                        {rightIcon && (
+                            <View style={{ alignItems: 'flex-end' }}>
+                                {rightIconNotificationCount ? (
                                     <View
                                         style={{
-                                            backgroundColor: colors.accent_color,
-                                            borderRadius: 50,
-                                            width: 9,
-                                            height: 9,
+                                            paddingRight: 1,
+                                            zIndex: 1,
+                                            position: 'absolute',
                                         }}
-                                    />
-                                </View>
-                            ) : (
-                                <></>
-                            )}
+                                    >
+                                        <View
+                                            style={{
+                                                backgroundColor: colors.accent_color,
+                                                borderRadius: 50,
+                                                width: 9,
+                                                height: 9,
+                                            }}
+                                        />
+                                    </View>
+                                ) : (
+                                    <></>
+                                )}
 
-                            <Ionicons
-                                name={rightIcon}
-                                size={iconSize}
-                                color={rightColor ?? colors.text}
-                                onPress={handleRightClick}
-                            />
-                        </View>
-                    )}
+                                <Ionicons
+                                    name={rightIcon}
+                                    size={iconSize}
+                                    color={rightColor ?? colors.text}
+                                    onPress={handleRightClick}
+                                />
+                            </View>
+                        )}
 
-                    {/* RIGHT ICON */}
-                    {rightText && (
-                        <View style={{ alignItems: 'flex-end', flex: 1 }}>
-                            <View
-                                style={{
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                    flex: 1,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Text
-                                    onPress={
-                                        rightEnabled === false
-                                            ? undefined
-                                            : () => {
-                                                rightOnPress();
-                                            }
-                                    }
+                        {/* RIGHT ICON */}
+                        {rightText && (
+                            <View style={{ alignItems: 'flex-end', flex: 1 }}>
+                                <View
                                     style={{
-                                        textAlign: 'center',
-                                        fontFamily: POPPINS_REGULAR,
-                                        color: rightColor ?? colors.link,
-                                        fontSize: 16,
+                                        paddingLeft: 10,
+                                        paddingRight: 10,
+                                        flex: 1,
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                     }}
                                 >
-                                    {rightText}
-                                </Text>
+                                    <Text
+                                        onPress={
+                                            rightEnabled === false
+                                                ? undefined
+                                                : () => {
+                                                    rightOnPress();
+                                                }
+                                        }
+                                        style={{
+                                            textAlign: 'center',
+                                            fontFamily: POPPINS_REGULAR,
+                                            color: rightColor ?? colors.link,
+                                            fontSize: 16,
+                                        }}
+                                    >
+                                        {rightText}
+                                    </Text>
+                                </View>
                             </View>
-                        </View>
-                    )}
+                        )}
+                    </TutorialIslandElement>
                 </View>
             </View>
             <View style={{ height: PADDING_MEDIUM }} />

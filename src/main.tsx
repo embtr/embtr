@@ -15,8 +15,13 @@ import {
     Poppins_600SemiBold,
 } from '@expo-google-fonts/poppins';
 import UserController from './controller/user/UserController';
-import { resetToDefault, setCurrentUser, setTutorialIslandState } from 'src/redux/user/GlobalState';
-import { useAppDispatch } from 'src/redux/Hooks';
+import {
+    getCurrentUser,
+    resetToDefault,
+    setCurrentUser,
+    setGlobalLoading,
+} from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { ModalContainingComponent } from './components/common/modal/ModalContainingComponent';
 import { ConfettiView } from './components/common/animated_view/ConfettiView';
 import { DropDownAlert } from './components/common/drop_down_alert/DropDownAlert';
@@ -31,10 +36,8 @@ import { EnvironmentIndicator } from 'src/components/debug/EnvironmentIndicator'
 import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
 import { RevenueCatProvider } from './controller/revenuecat/RevenueCatProvider';
 import { TutorialIslandSecureMainStack } from './components/home/TutorialIslandSecureMainStack';
-import { TutorialIslandModal } from './components/tutorial/TutorialIslandModal';
-import { TutorialIslandInvalidFlow } from './model/tutorial_island/flows/TutorialIslandInvalidFlow';
-import { TutorialIslandStepKey } from './model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandMainComponents } from './components/tutorial/TutorialIslandMainComponents';
+import { UserPropertyUtil } from './util/UserPropertyUtil';
 
 //start up firebase connection
 firebaseApp;
@@ -50,6 +53,9 @@ export const Main = () => {
 
     const dispatch = useAppDispatch();
     const [loggedIn, setLoggedIn] = React.useState(LoginState.LOADING);
+
+    const currentUser = useAppSelector(getCurrentUser);
+    const tutorialIslandComplete = UserPropertyUtil.hasStartedTutorialIsland(currentUser);
 
     let [fontsLoaded] = useFonts({
         Poppins_400Regular_Italic,
@@ -69,15 +75,12 @@ export const Main = () => {
             if (firebaseUser) {
                 const loggedInUser = await UserController.loginUser();
                 if (loggedInUser) {
-                    dispatch(
-                        setTutorialIslandState({
-                            flow: TutorialIslandInvalidFlow,
-                            currentStepKey: TutorialIslandStepKey.INVALID,
-                        })
-                    );
                     setLoggedIn(LoginState.LOGGED_IN);
+
                     revenueCat.login();
+
                     dispatch(setCurrentUser(loggedInUser));
+                    dispatch(setGlobalLoading(false));
                 }
             } else {
                 setLoggedIn(LoginState.LOGGED_OUT);
@@ -92,8 +95,11 @@ export const Main = () => {
 
     let view: JSX.Element =
         loggedIn === LoginState.LOGGED_IN ? (
-            //<SecureMainStack />
-            <TutorialIslandSecureMainStack />
+            tutorialIslandComplete ? (
+                <SecureMainStack />
+            ) : (
+                <TutorialIslandSecureMainStack />
+            )
         ) : (
             <InsecureMainStack />
         );

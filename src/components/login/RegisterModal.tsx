@@ -2,13 +2,7 @@ import React from 'react';
 
 import { Image, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    POPPINS_MEDIUM,
-    POPPINS_REGULAR,
-    PADDING_LARGE,
-    PADDING_SMALL,
-    PADDING_MEDIUM,
-} from 'src/util/constants';
+import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE, PADDING_SMALL } from 'src/util/constants';
 import { EmbtrKeyboardAvoidingScrollView } from 'src/components/common/scrollview/EmbtrKeyboardAvoidingScrollView';
 import { Banner } from 'src/components/common/Banner';
 import { isShortDevice } from 'src/util/DeviceUtil';
@@ -18,6 +12,8 @@ import UserController from 'src/controller/user/UserController';
 import { Code } from 'resources/codes';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
+import { useAppDispatch } from 'src/redux/Hooks';
+import { setGlobalLoading } from 'src/redux/user/GlobalState';
 
 const enum EmailFormState {
     DEFAULT,
@@ -72,6 +68,7 @@ export const RegisterModal = () => {
     const { colors } = useTheme();
 
     const navigation = useEmbtrNavigation();
+    const dispatch = useAppDispatch();
 
     const onSuccessComplete = () => {
         navigation.goBack();
@@ -90,7 +87,6 @@ export const RegisterModal = () => {
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [passwordAgain, setPasswordAgain] = React.useState('');
-    const [waitingForResponse, setWaitingForResponse] = React.useState(false);
 
     const textPadding = isShortDevice() ? PADDING_SMALL : PADDING_LARGE;
     const formValid = email.length > 0 && password.length > 0 && password === passwordAgain;
@@ -101,6 +97,7 @@ export const RegisterModal = () => {
     };
 
     const handleSignUp = async () => {
+        dispatch(setGlobalLoading(true));
         clearFormState();
         const result: Response = await UserController.createAccount(email, password);
         switch (result.internalCode) {
@@ -120,8 +117,7 @@ export const RegisterModal = () => {
                 setPasswordFormState(PasswordFormState.INVALID_PASSWORD);
                 break;
         }
-
-        setWaitingForResponse(false);
+        dispatch(setGlobalLoading(false));
     };
 
     const passwordAgainFormState =
@@ -284,7 +280,6 @@ export const RegisterModal = () => {
                             <TouchableOpacity
                                 onPress={async () => {
                                     Keyboard.dismiss();
-                                    setWaitingForResponse(true);
                                     await handleSignUp();
                                 }}
                                 disabled={!formValid}

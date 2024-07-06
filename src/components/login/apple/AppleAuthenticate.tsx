@@ -3,7 +3,7 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
 import { OAuthProvider, getAuth, signInWithCredential } from 'firebase/auth';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { setAppleAuthUserInfo } from 'src/redux/user/GlobalState';
+import { setAppleAuthUserInfo, setGlobalLoading } from 'src/redux/user/GlobalState';
 import { DEFAULT_APPLE_AUTH_USER_INFO } from 'src/model/GlobalState';
 
 export const AppleAuthenticate = () => {
@@ -42,6 +42,7 @@ export const AppleAuthenticate = () => {
                                     idToken: identityToken!,
                                     rawNonce: nonce,
                                 });
+                                dispatch(setGlobalLoading(true));
                                 signInWithCredential(getAuth(), credential);
                                 // Successful sign in is handled by firebase.auth().onAuthStateChanged
                             })
