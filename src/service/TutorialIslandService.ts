@@ -49,7 +49,6 @@ export class TutorialIslandService {
     }
 
     public static getStepFromFlow(flow: TutorialIslandFlow, stepKey: TutorialIslandStepKey) {
-        console.log('getting steps for flow', flow);
         return flow.steps.find((step) => step.key === stepKey);
     }
 

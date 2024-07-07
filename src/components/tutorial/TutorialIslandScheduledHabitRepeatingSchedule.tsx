@@ -6,8 +6,7 @@ import { DaysOfTheWeekToggle } from 'src/components/plan/habit/DaysOfTheWeekTogg
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { runCreateEditScheduledHabitAnimation } from './TutorialIslandCreateEditScheduledHabit';
-import { TutorialIslandOption } from 'src/model/tutorial_island/TutorialIslandModels';
-import { TutorialIslandElement } from './TutorialIslandElement';
+import { TutorialIslandDaysOfTheWeekToggle } from './TutorialIslandDaysOfTheWeekToggle';
 
 export const TutorialIslandScheduleHabitRepeatingSchedule = () => {
     const { colors } = useTheme();
@@ -19,6 +18,8 @@ export const TutorialIslandScheduleHabitRepeatingSchedule = () => {
         daysOfWeek,
     } = useCreateEditScheduleHabit();
     const [height] = React.useState<Animated.Value>(new Animated.Value(0));
+
+    const requiredDayOfWeekIndex = new Date().getDay();
 
     React.useEffect(() => {
         runCreateEditScheduledHabitAnimation(
@@ -37,55 +38,47 @@ export const TutorialIslandScheduleHabitRepeatingSchedule = () => {
                 }}
             >
                 <View style={{ flexDirection: 'row', flex: 1 }}>
-                    <TutorialIslandElement
-                        option={TutorialIslandOption.CREATE_EDIT_HABIT__DAYS_OF_THE_WEEK_TITLE}
+                    <Text
+                        style={{
+                            color: colors.text,
+                            fontFamily: POPPINS_MEDIUM,
+                            fontSize: 16,
+                        }}
                     >
+                        Days of the Week
+                    </Text>
+
+                    {repeatingScheduleEnabled && daysOfWeek.length < 1 && (
                         <Text
                             style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 16,
+                                alignSelf: 'flex-end',
+                                color: colors.tab_selected,
+                                paddingLeft: 5,
+                                paddingBottom: 3,
+                                fontFamily: POPPINS_REGULAR,
+                                fontSize: 10,
                             }}
                         >
-                            Days of the Week
+                            cannot be blank
                         </Text>
-
-                        {repeatingScheduleEnabled && daysOfWeek.length < 1 && (
-                            <Text
-                                style={{
-                                    alignSelf: 'flex-end',
-                                    color: colors.tab_selected,
-                                    paddingLeft: 5,
-                                    paddingBottom: 3,
-                                    fontFamily: POPPINS_REGULAR,
-                                    fontSize: 10,
-                                }}
-                            >
-                                cannot be blank
-                            </Text>
-                        )}
-                    </TutorialIslandElement>
+                    )}
                 </View>
 
-                <TutorialIslandElement
-                    option={TutorialIslandOption.CREATE_EDIT_HABIT__DAYS_OF_THE_WEEK_TOGGLE}
-                >
-                    <View style={{ flexDirection: 'row' }}>
-                        <Switch
-                            value={repeatingScheduleEnabled}
-                            onValueChange={() => {
-                                setRepeatingScheduleEnabled(!repeatingScheduleEnabled);
-                            }}
-                            style={isAndroidDevice() ? { height: 20 } : {}}
-                            trackColor={{
-                                false: colors.secondary_text,
-                                true: colors.accent_color,
-                            }}
-                            thumbColor={colors.toggle}
-                            ios_backgroundColor={colors.toggle_background_unselected}
-                        />
-                    </View>
-                </TutorialIslandElement>
+                <View style={{ flexDirection: 'row' }}>
+                    <Switch
+                        value={repeatingScheduleEnabled}
+                        onResponderRelease={() => {
+                            setRepeatingScheduleEnabled(!repeatingScheduleEnabled);
+                        }}
+                        style={isAndroidDevice() ? { height: 20 } : {}}
+                        trackColor={{
+                            false: colors.secondary_text,
+                            true: colors.accent_color,
+                        }}
+                        thumbColor={colors.toggle}
+                        ios_backgroundColor={colors.toggle_background_unselected}
+                    />
+                </View>
             </View>
 
             <Animated.View
@@ -95,7 +88,9 @@ export const TutorialIslandScheduleHabitRepeatingSchedule = () => {
                     overflow: 'hidden',
                 }}
             >
-                <DaysOfTheWeekToggle />
+                <TutorialIslandDaysOfTheWeekToggle
+                    requiredDayOfTheWeekIndex={requiredDayOfWeekIndex}
+                />
             </Animated.View>
         </View>
     );

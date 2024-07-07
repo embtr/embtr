@@ -13,8 +13,8 @@ import PlannedTaskController from 'src/controller/planning/PlannedTaskController
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { Logger } from 'src/util/GeneralUtility';
 import { ScheduledHabitController } from 'src/controller/habit/ScheduledHabitController';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getSelectedDayKey } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { getSelectedDayKey, setGlobalLoading } from 'src/redux/user/GlobalState';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import TaskController from 'src/controller/planning/TaskController';
 import { HabitController } from 'src/controller/habit/HabitController';
@@ -59,6 +59,7 @@ export const CreateEditHabitSaveButton = ({
         timesOfDay,
         editMode,
     } = useCreateEditScheduleHabit();
+    const dispatch = useAppDispatch();
 
     const formIsValid = () => {
         if (timesOfDayEnabled && (timesOfDay.length < 1 || timesOfDay[0].id === 5)) {
@@ -249,6 +250,7 @@ export const CreateEditHabitSaveButton = ({
     };
 
     const onPress = async () => {
+        dispatch(setGlobalLoading(true));
         switch (editMode) {
             case CreateEditHabitMode.CREATE_CUSTOM_HABIT:
                 await createNewCustomHabit();
@@ -283,6 +285,8 @@ export const CreateEditHabitSaveButton = ({
         if (onExit) {
             onExit();
         }
+
+        dispatch(setGlobalLoading(false));
 
         if (isFromHabitSummaryDetails) {
             navigation.goBack();

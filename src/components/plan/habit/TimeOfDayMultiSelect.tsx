@@ -17,10 +17,14 @@ export const TimeOfDayMultiSelect = () => {
     const [night, setNight] = React.useState<boolean>(false);
 
     React.useEffect(() => {
-        setMorning(toggledTimesOfDay?.some((time) => time.period === 'MORNING') ?? false);
-        setAfternoon(toggledTimesOfDay?.some((time) => time.period === 'AFTERNOON') ?? false);
-        setEvening(toggledTimesOfDay?.some((time) => time.period === 'EVENING') ?? false);
-        setNight(toggledTimesOfDay?.some((time) => time.period === 'NIGHT') ?? false);
+        if (toggledTimesOfDay?.length === 0) {
+            return;
+        }
+
+        setMorning(toggledTimesOfDay?.some((time) => time.period === 'MORNING'));
+        setAfternoon(toggledTimesOfDay?.some((time) => time.period === 'AFTERNOON'));
+        setEvening(toggledTimesOfDay?.some((time) => time.period === 'EVENING'));
+        setNight(toggledTimesOfDay?.some((time) => time.period === 'NIGHT'));
     }, [toggledTimesOfDay]);
 
     React.useEffect(() => {
@@ -53,6 +57,7 @@ export const TimeOfDayMultiSelect = () => {
                     break;
             }
         }
+
         onTimesChanged(toggledTimesOfDay);
     }, [timesOfDay, morning, afternoon, evening, night]);
 

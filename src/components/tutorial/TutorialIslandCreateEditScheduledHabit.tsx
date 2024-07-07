@@ -4,7 +4,6 @@ import { Routes } from 'src/navigation/RootStackParamList';
 import { PADDING_LARGE } from 'src/util/constants';
 import { View, Animated, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { ScheduleHabitRepeatingSchedule } from 'src/components/plan/habit/ScheduledHabitRepeatingSchedule';
 import { CreateEditScheduledHabitProvider } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { ScheduledHabitTitle } from 'src/components/plan/habit/ScheduledHabitTitle';
 import { ScheduledHabitTimeOfDay } from 'src/components/plan/habit/ScheduledHabitTimeOfDay';
@@ -12,7 +11,6 @@ import { ScheduledHabitDetails } from 'src/components/plan/habit/ScheduledHabitD
 import { CreateEditHabitSaveButton } from 'src/components/plan/habit/CreateEditHabitSaveButton';
 import { useEmbtrRoute } from 'src/hooks/NavigationHooks';
 import { ScheduledHabitModals } from '../plan/habit/ScheduledHabitModals';
-import { ScheduledHabitBanner } from '../plan/habit/ScheduledHabitBanner';
 import { TutorialIslandElement } from './TutorialIslandElement';
 import { ScheduleHabitDescription } from '../plan/habit/ScheduleHabitDescription';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
@@ -20,6 +18,7 @@ import { useAppSelector } from 'src/redux/Hooks';
 import { getFireConfetti } from 'src/redux/user/GlobalState';
 import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandScheduledHabitBanner } from './TutorialIslandScheduledHabitBanner';
+import { TutorialIslandScheduleHabitRepeatingSchedule } from './TutorialIslandScheduledHabitRepeatingSchedule';
 
 // 600 lines? Thems rookie numbers - TheCaptainCoder - 2023-10-06
 
@@ -111,7 +110,7 @@ export const TutorialIslandCreateEditScheduledHabit = () => {
                                 TutorialIslandOptionKey.CREATE_EDIT_HABIT__DAYS_OF_THE_WEEK_TOGGLE
                             }
                         >
-                            <ScheduleHabitRepeatingSchedule />
+                            <TutorialIslandScheduleHabitRepeatingSchedule />
                         </TutorialIslandElement>
 
                         <TutorialIslandElement

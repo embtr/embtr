@@ -218,7 +218,7 @@ export const TutorialIslandPlanDay = ({ plannedDay, hideComplete, dayKey }: Prop
     const renderItem = ({ item }: { item: PlannedTask | TimeOfDayDivider }) => {
         if (isPlannedTask(item)) {
             return (
-                <View style={{ paddingBottom: PADDING_LARGE / 2 }}>
+                <View key={item.id} style={{ paddingBottom: PADDING_LARGE / 2 }}>
                     <TutorialIslandElement
                         ref={ref}
                         optionKey={TutorialIslandOptionKey.PLAN_DAY__PLANNED_TASK}

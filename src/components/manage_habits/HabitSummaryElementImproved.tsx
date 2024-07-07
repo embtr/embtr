@@ -23,7 +23,11 @@ const getDaysOfWeekText = (scheduledHabit: ScheduledHabit): string => {
     }
 
     const count = scheduledHabit.daysOfWeek?.length ?? 0;
-    return count === 7 ? 'every day' : `${count} days a week`;
+    return count === 7
+        ? 'every day'
+        : count === 1
+            ? `every ${scheduledHabit.daysOfWeek?.[0]?.day?.charAt(0).toUpperCase()}${scheduledHabit.daysOfWeek?.[0]?.day?.substring(1).toLowerCase()}`
+            : `${count} days a week`;
 };
 
 const getTimesOfDayText = (scheduledHabit: ScheduledHabit): string => {
