@@ -110,7 +110,6 @@ export const TutorialIslandTooltip = ({ tooltip, onDismiss, parentWidth, parentH
                             borderRadius: 6,
                         }}
                         onPress={() => {
-                            console.log('dismiss');
                             onDismiss?.();
                         }}
                     >
