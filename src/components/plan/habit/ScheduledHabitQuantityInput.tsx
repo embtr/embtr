@@ -10,6 +10,12 @@ export const ScheduledHabitQuantityInput = () => {
 
     const handleTextChange = (text: string) => {
         if (text.length > 0 && isNaN(parseInt(text))) {
+            setQuantity(quantity ?? 0 + 1);
+            return;
+        }
+
+        if (text.length > 0 && parseInt(text) <= 0) {
+            setQuantity(quantity ?? 0 + 1);
             return;
         }
 
