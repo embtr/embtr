@@ -18,7 +18,7 @@ elif [[ "$2" == "--dry" ]]; then
     dry=1
 fi
 
-currentVersion="$(cat app.json | grep -o '"buildNumber": .*' | cut -d' ' -f2 | sed 's/"//g' | tr -d '[:space:]')"
+currentVersion="$(cat app.json | grep -o '"buildNumber": .*' | cut -d' ' -f2 | gsed 's/"//g' | tr -d '[:space:]')"
 currentVersionCode="$(cat app.json | grep -o '"versionCode": [0-9]*' | cut -d' ' -f2)"
 
 read -r major minor patch <<< "$(echo "$currentVersion" | tr '.' ' ')"
@@ -36,7 +36,7 @@ newVersion="$major.$minor.$patch"
 
 # 001002003
 # first three are major, next three are minor, last three are patch
-read -r versionCodeMajor versionCodeMinor versionCodePatch <<< "$(echo "$currentVersionCode" | sed 's/.\{3\}/& /g')"
+read -r versionCodeMajor versionCodeMinor versionCodePatch <<< "$(echo "$currentVersionCode" | gsed 's/.\{3\}/& /g')"
 
 if [[ "$level" == "major" ]]; then 
     versionCodeMajor=$(printf "%03d" $((10#$versionCodeMajor + 1)))
@@ -51,10 +51,10 @@ fi
 
 newVersionCode="$versionCodeMajor$versionCodeMinor$versionCodePatch"
 
-if [[ dry -eq 0 ]]; then 
-    sed -i "s/\"$currentVersion/\"$newVersion/g" package.json
-    sed -i "s/\"$currentVersion/\"$newVersion/g" app.json
-    sed -i "s/$currentVersionCode/$newVersionCode/g" app.json
+if [[ $dry -eq 0 ]]; then
+    gsed -i "s/\"$currentVersion/\"$newVersion/g" package.json
+    gsed -i "s/\"$currentVersion/\"$newVersion/g" app.json
+    gsed -i "s/$currentVersionCode/$newVersionCode/g" app.json
 fi
 
 echo "$currentVersion => $newVersion"
