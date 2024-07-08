@@ -146,6 +146,7 @@ export const TutorialIslandTabBar = ({ state, navigation }: BottomTabBarProps) =
 
         elements.push(
             <TutorialIslandElement
+                key={index}
                 ref={
                     optionKey === TutorialIslandOptionKey.TAB__TIMELINE
                         ? timelineRef

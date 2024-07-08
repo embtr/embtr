@@ -44,7 +44,7 @@ export const SwipeableCard = React.forwardRef<Swipeable, Props>(
             });
 
             return (
-                <Animated.View style={[{ translateX }]}>
+                <Animated.View key={leftOptions?.length} style={[{ translateX }]}>
                     <View
                         style={{
                             height: '100%',
@@ -54,14 +54,14 @@ export const SwipeableCard = React.forwardRef<Swipeable, Props>(
                     >
                         {leftOptions?.map((option, index) => {
                             return (
-                                <View style={{ paddingRight: PADDING_SMALL }}>
+                                <View key={index} style={{ paddingRight: PADDING_SMALL }}>
                                     <SwipeableCardElement data={option} />
                                 </View>
                             );
                         })}
 
                         {leftSnapOption && (
-                            <View style={{ paddingRight: PADDING_SMALL }}>
+                            <View key={leftOptions?.length} style={{ paddingRight: PADDING_SMALL }}>
                                 <SwipeableCardElement data={leftSnapOption} />
                             </View>
                         )}
@@ -78,7 +78,7 @@ export const SwipeableCard = React.forwardRef<Swipeable, Props>(
             });
 
             return (
-                <Animated.View style={[{ translateX }]}>
+                <Animated.View key={rightOptions?.length} style={[{ translateX }]}>
                     <View
                         style={{
                             height: '100%',
@@ -88,14 +88,14 @@ export const SwipeableCard = React.forwardRef<Swipeable, Props>(
                     >
                         {rightOptions?.map((option, index) => {
                             return (
-                                <View style={{ paddingLeft: PADDING_SMALL }}>
+                                <View key={index} style={{ paddingLeft: PADDING_SMALL }}>
                                     <SwipeableCardElement data={option} />
                                 </View>
                             );
                         })}
 
                         {rightSnapOption && (
-                            <View style={{ paddingLeft: PADDING_SMALL }}>
+                            <View key={rightOptions?.length} style={{ paddingLeft: PADDING_SMALL }}>
                                 <SwipeableCardElement data={rightSnapOption} />
                             </View>
                         )}
