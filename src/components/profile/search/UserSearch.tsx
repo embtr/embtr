@@ -1,14 +1,23 @@
 import * as React from 'react';
-import { ScrollView, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { Banner } from 'src/components/common/Banner';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { CARD_SHADOW, USER_SEARCH_WIDTH } from 'src/util/constants';
+import { CARD_SHADOW, PADDING_LARGE, USER_SEARCH_WIDTH } from 'src/util/constants';
 import { User } from 'resources/schema';
 import UserController from 'src/controller/user/UserController';
 import { UserSearchResult } from './UserSearchResult';
 import { ModelKeyGenerator } from 'src/util/model/ModelKeyGenerator';
+import { FlatList } from 'react-native-gesture-handler';
+
+const render = (user: User) => {
+    return (
+        <View style={{ width: '100%', paddingBottom: PADDING_LARGE }} key={user.uid}>
+            <UserSearchResult user={user} />
+        </View>
+    );
+};
 
 export const UserSearch = () => {
     const { colors } = useTheme();
@@ -35,21 +44,22 @@ export const UserSearch = () => {
 
     return (
         <Screen>
-            <View style={{ paddingBottom: 20 }}>
-                <Banner name="User Search" leftIcon={'arrow-back'} leftRoute="Timeline" />
-            </View>
+            <View style={{ flex: 1 }}>
+                <View style={{ paddingBottom: 20 }}>
+                    <Banner name="User Search" leftIcon={'arrow-back'} leftRoute="Timeline" />
+                </View>
 
-            <ScrollView>
-                <View style={{ alignItems: 'center' }}>
+                <View style={{ width: '100%', alignItems: 'center' }}>
                     <View
                         style={[
                             {
                                 backgroundColor: colors.button_background,
-                                height: 75,
-                                borderRadius: 15,
+                                borderRadius: 9,
+                                paddingVertical: PADDING_LARGE * 2,
                                 width: USER_SEARCH_WIDTH,
                                 flexDirection: 'row',
                                 alignItems: 'center',
+                                marginBottom: PADDING_LARGE,
                             },
                             CARD_SHADOW,
                         ]}
@@ -84,10 +94,15 @@ export const UserSearch = () => {
                             autoCapitalize="none"
                         />
                     </View>
-
-                    <View style={{ paddingTop: 10, width: '100%' }}>{userViews}</View>
                 </View>
-            </ScrollView>
+
+                <FlatList
+                    style={{ flex: 1 }}
+                    data={users}
+                    keyExtractor={(item) => ModelKeyGenerator.generateUserKey(item)}
+                    renderItem={({ item }) => render(item)}
+                />
+            </View>
         </Screen>
     );
 };

@@ -180,10 +180,9 @@ class UserController {
 
     public static async search(query: string) {
         return await axiosInstance
-            .get(`/${USER_ENDPOINT}/search`, { params: { query } })
+            .get<GetUsersResponse>(`/user/search`, { params: { query } })
             .then((success) => {
-                const usersResponse: GetUsersResponse = success.data;
-                return usersResponse.users;
+                return success.data.users;
             })
             .catch((error) => {
                 return error.response.data;

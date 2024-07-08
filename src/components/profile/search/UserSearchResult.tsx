@@ -4,10 +4,16 @@ import { Text, View, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
-import { FollowUserButton } from 'src/components/profile/FollowUserButton';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
-import { CARD_SHADOW, USER_SEARCH_WIDTH } from 'src/util/constants';
+import {
+    CARD_SHADOW,
+    PADDING_LARGE,
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    USER_SEARCH_WIDTH,
+} from 'src/util/constants';
 import { User } from 'resources/schema';
+import { BadgeBelt } from 'src/components/common/badge/BadgeBelt';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
@@ -31,13 +37,12 @@ export const UserSearchResult = ({ user }: Props) => {
                 <View
                     style={[
                         {
-                            backgroundColor: colors.button_background,
+                            backgroundColor: colors.card_background,
                             alignItems: 'center',
-                            height: 75,
-                            borderRadius: 15,
-                            width: '100%',
+                            borderRadius: 9,
+                            paddingVertical: PADDING_LARGE,
                             flexDirection: 'row',
-                            paddingLeft: 20,
+                            paddingLeft: PADDING_LARGE,
                         },
                         CARD_SHADOW,
                     ]}
@@ -46,33 +51,17 @@ export const UserSearchResult = ({ user }: Props) => {
                         <NavigatableUserImage user={user} size={35} />
                         <Text
                             style={{
-                                fontFamily: 'Poppins_500Medium',
+                                fontFamily: POPPINS_MEDIUM,
                                 fontSize: 15,
                                 color: colors.user_search_name,
-                                paddingLeft: 10,
+                                paddingLeft: PADDING_LARGE,
                             }}
                         >
                             {user.displayName}
                         </Text>
-                    </View>
-
-                    <View
-                        style={{
-                            flex: 1,
-                            alignContent: 'center',
-                            alignItems: 'flex-end',
-                            paddingRight: 15,
-                        }}
-                    >
-                        {/*<View style={{ width: 100 }}>
-                            <FollowUserButton
-                                userProfileModel={userProfileModel}
-                                onFollowUser={onFollowUser}
-                                onUnfollowUser={onUnfollowUser}
-                                following={following}
-                            />
+                        <View style={{ paddingLeft: PADDING_SMALL / 2 }}>
+                            <BadgeBelt user={user} size={15} />
                         </View>
-                    */}
                     </View>
                 </View>
             </TouchableOpacity>
