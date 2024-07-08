@@ -55,4 +55,12 @@ export namespace PlannedTaskUtil {
 
         return optimalImage;
     };
+
+    export const getQuantity = (plannedTask?: PlannedTask): number => {
+        return plannedTask?.quantity ?? plannedTask?.scheduledHabit?.quantity ?? 1;
+    };
+
+    export const getUnit = (plannedTask?: PlannedTask) => {
+        return plannedTask?.unit ?? plannedTask?.scheduledHabit?.unit;
+    };
 }

@@ -14,6 +14,7 @@ import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { ScheduledHabitCustomHooks } from 'src/controller/habit/ScheduledHabitController';
 import { ScheduledHabitUtil } from 'src/util/ScheduledHabitUtil';
 import { Constants } from 'resources/types/constants/constants';
+import { PlannedTaskUtil } from 'src/util/PlannedTaskUtil';
 
 export enum CreateEditHabitMode {
     CREATE_CUSTOM_HABIT = 'CREATE_CUSTOM_HABIT',
@@ -224,25 +225,21 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (newPlannedHabitScheduledHabit.data) {
-            setRemoteImageUrl(newPlannedHabitScheduledHabit.data.task?.remoteImageUrl ?? '');
-            setLocalImage(newPlannedHabitScheduledHabit.data.task?.localImage ?? '');
-            setIcon(newPlannedHabitScheduledHabit.data.task?.icon ?? undefined);
-            setStartDate(newPlannedHabitScheduledHabit.data.startDate ?? undefined);
-            setEndDate(newPlannedHabitScheduledHabit.data.endDate ?? undefined);
-            setDaysOfWeek(newPlannedHabitScheduledHabit.data.daysOfWeek ?? []);
+            setTitle(ScheduledHabitUtil.getTitle(newPlannedHabitScheduledHabit.data));
+            setDescription(ScheduledHabitUtil.getDescription(newPlannedHabitScheduledHabit.data));
+            setIcon(ScheduledHabitUtil.getIcon(newPlannedHabitScheduledHabit.data));
             setTimesOfDay(newPlannedHabitData?.timeOfDay ? [newPlannedHabitData.timeOfDay] : []);
-            setQuantity(newPlannedHabitScheduledHabit.data.quantity ?? 1);
+            setQuantity(ScheduledHabitUtil.getQuantity(newPlannedHabitScheduledHabit.data));
+            setUnit(ScheduledHabitUtil.getUnit(newPlannedHabitScheduledHabit.data));
             setCompletedQuantity(0);
-            setUnit(newPlannedHabitScheduledHabit.data.unit ?? undefined);
-            setIsChallenge(false);
+            setIsChallenge(
+                (newPlannedHabitScheduledHabit.data.task?.challengeRequirements?.length ?? 0) > 0
+            );
             setChallengeIds([]);
 
-            setDaysOfWeekEnabled(newPlannedHabitScheduledHabit.data.daysOfWeek?.length !== 0);
-            setTimesOfDayEnabled(newPlannedHabitScheduledHabit.data.timesOfDay?.length !== 0);
-            setDetailsEnabled(
-                newPlannedHabitScheduledHabit.data.quantity !== undefined ||
-                newPlannedHabitScheduledHabit.data.unit !== undefined
-            );
+            setDaysOfWeekEnabled(newPlannedHabitScheduledHabit.data.daysOfWeekEnabled ?? false);
+            setTimesOfDayEnabled(newPlannedHabitScheduledHabit.data.timesOfDayEnabled ?? false);
+            setDetailsEnabled(newPlannedHabitScheduledHabit.data.detailsEnabled ?? false);
         }
     }, [newPlannedHabitScheduledHabit.data]);
 
@@ -251,22 +248,23 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (plannedHabit.data) {
-            setRemoteImageUrl(plannedHabit.data.remoteImageUrl ?? '');
-            setLocalImage(plannedHabit.data.localImage ?? '');
-            setIcon(plannedHabit.data.icon ?? undefined);
-            setTitle(plannedHabit.data.title ?? '');
-            setDescription(plannedHabit.data.description ?? '');
+            console.log('time of day', plannedHabit.data.timeOfDay);
+            setIcon(PlannedTaskUtil.getIcon(plannedHabit.data));
+            setTitle(PlannedTaskUtil.getTitle(plannedHabit.data));
+            setDescription(PlannedTaskUtil.getDescription(plannedHabit.data));
             setDaysOfWeek([]);
             setTimesOfDay(plannedHabit.data.timeOfDay ? [plannedHabit.data.timeOfDay] : []);
-            setQuantity(plannedHabit.data.quantity ?? 1);
+            setQuantity(PlannedTaskUtil.getQuantity(plannedHabit.data));
             setCompletedQuantity(plannedHabit.data.completedQuantity ?? 0);
-            setUnit(plannedHabit.data.unit ?? undefined);
+            setUnit(PlannedTaskUtil.getUnit(plannedHabit.data));
             setIsChallenge(
                 plannedHabit.data.scheduledHabit?.task?.type === Constants.TaskType.CHALLENGE
             );
             setChallengeIds([]);
 
-            setTimesOfDayEnabled(!!plannedHabit.data.timeOfDay);
+            setTimesOfDayEnabled(
+                !!plannedHabit.data.timeOfDay && plannedHabit.data.timeOfDay.period !== 'DEFAULT'
+            );
             setDetailsEnabled(
                 plannedHabit.data.quantity !== undefined || plannedHabit.data.unit !== undefined
             );

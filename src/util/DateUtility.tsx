@@ -185,3 +185,7 @@ export function getHumanReadableDate(d: Date): string {
             }.`;
     }
 }
+
+export function getDayOfWeekFromIndex(index: number): string {
+    return daysOfWeek[index].toUpperCase();
+}

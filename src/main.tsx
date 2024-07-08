@@ -43,16 +43,16 @@ import { UserPropertyUtil } from './util/UserPropertyUtil';
 firebaseApp;
 
 enum LoginState {
-    LOGGED_IN,
-    LOGGED_OUT,
-    LOADING,
+    LOGGED_IN = 'LOGGED_IN',
+    LOGGED_OUT = 'LOGGED_OUT',
+    LOADING = 'LOADING',
 }
 
 export const Main = () => {
     const revenueCat: RevenueCat = RevenueCatProvider.get();
 
     const dispatch = useAppDispatch();
-    const [loggedIn, setLoggedIn] = React.useState(LoginState.LOADING);
+    const [loggedInState, setLoggedInState] = React.useState(LoginState.LOADING);
 
     const currentUser = useAppSelector(getCurrentUser);
     const tutorialIslandComplete = UserPropertyUtil.hasStartedTutorialIsland(currentUser);
@@ -75,7 +75,7 @@ export const Main = () => {
             if (firebaseUser) {
                 const loggedInUser = await UserController.loginUser();
                 if (loggedInUser) {
-                    setLoggedIn(LoginState.LOGGED_IN);
+                    setLoggedInState(LoginState.LOGGED_IN);
 
                     revenueCat.login();
 
@@ -83,7 +83,7 @@ export const Main = () => {
                     dispatch(setGlobalLoading(false));
                 }
             } else {
-                setLoggedIn(LoginState.LOGGED_OUT);
+                setLoggedInState(LoginState.LOGGED_OUT);
                 dispatch(setCurrentUser({}));
             }
         });
@@ -94,9 +94,9 @@ export const Main = () => {
     }, []);
 
     let view: JSX.Element =
-        tutorialIslandComplete === undefined ? (
+        loggedInState === LoginState.LOGGED_IN && tutorialIslandComplete === undefined ? (
             <LoadingPage />
-        ) : loggedIn === LoginState.LOGGED_IN ? (
+        ) : loggedInState === LoginState.LOGGED_IN ? (
             tutorialIslandComplete ? (
                 <SecureMainStack />
             ) : (
@@ -121,7 +121,7 @@ export const Main = () => {
                     <UpdatePlannedTaskModal />
                     <EditHabitModal />
                     <TutorialIslandMainComponents />
-                    {!fontsLoaded || loggedIn === LoginState.LOADING ? <LoadingPage /> : view}
+                    {!fontsLoaded || loggedInState === LoginState.LOADING ? <LoadingPage /> : view}
                 </NavigationContainer>
             </SafeAreaView>
         </Screen>

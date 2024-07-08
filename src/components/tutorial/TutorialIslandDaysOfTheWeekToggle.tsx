@@ -5,6 +5,7 @@ import { DayOfWeekCustomHooks } from 'src/controller/day_of_week/DayOfWeekContro
 import { DayOfWeek } from 'resources/schema';
 import { useCreateEditScheduleHabit } from 'src/contexts/habit/CreateEditScheduledHabitContext';
 import { DayOfTheWeekToggle } from '../plan/habit/DayOfTheWeekToggle';
+import { getDayOfWeekFromIndex } from 'src/util/DateUtility';
 
 interface Props {
     requiredDayOfTheWeekIndex?: number;
@@ -15,12 +16,9 @@ export const TutorialIslandDaysOfTheWeekToggle = ({ requiredDayOfTheWeekIndex }:
 
     const { setDaysOfWeek } = useCreateEditScheduleHabit();
 
-    const requiredDayOfTheWeek =
-        requiredDayOfTheWeekIndex === undefined
-            ? 'INVALID'
-            : requiredDayOfTheWeekIndex === 0
-                ? 'SUNDAY'
-                : allDaysOfWeek[requiredDayOfTheWeekIndex - 1].day;
+    const requiredDayOfTheWeek = !requiredDayOfTheWeekIndex
+        ? 'INVALID'
+        : getDayOfWeekFromIndex(requiredDayOfTheWeekIndex);
 
     const [monday, setMonday] = React.useState<boolean>(requiredDayOfTheWeek === 'MONDAY');
     const [tuesday, setTuesday] = React.useState<boolean>(requiredDayOfTheWeek === 'TUESDAY');

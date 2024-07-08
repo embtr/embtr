@@ -30,4 +30,12 @@ export namespace ScheduledHabitUtil {
 
         return optimalImage;
     };
+
+    export const getQuantity = (scheduledHabit?: ScheduledHabit): number => {
+        return scheduledHabit?.quantity ?? 0;
+    };
+
+    export const getUnit = (scheduledHabit?: ScheduledHabit) => {
+        return scheduledHabit?.unit;
+    };
 }

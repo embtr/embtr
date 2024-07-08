@@ -9,7 +9,6 @@ import {
     POPPINS_SEMI_BOLD,
     PADDING_LARGE,
 } from 'src/util/constants';
-import { SvgUri } from 'react-native-svg';
 import { getDatePrettyFullMonth } from 'src/util/DateUtility';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
@@ -22,6 +21,8 @@ import { DEFAULT_UPDATE_MODAL_PLANNED_TASK } from 'src/model/GlobalState';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
+import { OptimalImage, OptimalImageData } from 'src/components/common/images/OptimalImage';
+import { PlannedTaskUtil } from 'src/util/PlannedTaskUtil';
 
 export const EditHabitModal = () => {
     const { colors } = useTheme();
@@ -41,6 +42,11 @@ export const EditHabitModal = () => {
     const modalHeight = isLargerScreen ? getWindowHeight() / 3.5 : getWindowHeight() / 3;
     const modalWidth = isLargerScreen ? getWindowHeight() / 3 : getWindowHeight() / 2.5;
 
+    const optimalImage: OptimalImageData = {
+        localImage: PlannedTaskUtil.getLocalImage(plannedHabit),
+        remoteImageUrl: PlannedTaskUtil.getRemoteImageUrl(plannedHabit),
+    };
+
     let date = new Date();
     if (dayKey && dayKey !== '' && dayKey.length === '2021-01-01'.length) {
         try {
@@ -50,8 +56,6 @@ export const EditHabitModal = () => {
         }
     }
     const fullDatePretty = getDatePrettyFullMonth(date);
-
-    const svgUri = '';
 
     const navigateToEditPlannedHabit = (id: number) => {
         dismiss();
@@ -101,7 +105,7 @@ export const EditHabitModal = () => {
                     }}
                 >
                     <View style={{ height: 25, width: 25 }}>
-                        {svgUri && <SvgUri width={25} height={25} uri={svgUri} />}
+                        <OptimalImage data={optimalImage} style={{ height: 25, width: 25 }} />
                     </View>
                     <View style={{ width: PADDING_LARGE / 2 }} />
                     <View style={{ flex: 1 }}>
@@ -111,7 +115,7 @@ export const EditHabitModal = () => {
                                 fontSize: 20,
                                 width: '100%',
                                 fontFamily: POPPINS_MEDIUM,
-                                color: colors.accent_color,
+                                color: colors.text,
                                 paddingRight: PADDING_LARGE,
                             }}
                         >
@@ -131,19 +135,18 @@ export const EditHabitModal = () => {
             >
                 <Text
                     style={{
-                        fontSize: 12,
-                        fontFamily: 'Poppins_400Regular',
+                        fontFamily: POPPINS_REGULAR,
                         paddingHorizontal: PADDING_LARGE,
                         color: colors.text,
+                        fontSize: 16,
                     }}
                 >
-                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD }}>Edit this habit </Text>
-                    for
-                    <Text style={{ fontFamily: POPPINS_SEMI_BOLD, color: colors.accent_color }}>
+                    Edit thid habit for
+                    <Text style={{ fontFamily: POPPINS_MEDIUM, color: colors.accent_color_light }}>
                         {' '}
                         {fullDatePretty}{' '}
                     </Text>
-                    or edit the entire schedule
+                    or edit the entire schedule.
                 </Text>
             </View>
 
