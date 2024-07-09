@@ -21,6 +21,7 @@ import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
+    getFireConfetti,
     getUpdateTutorialIslandModalPlannedTask,
     setEditTutorialIslandModalPlannedTask,
     setRemovalTutorialIslandModalPlannedTask,
@@ -67,6 +68,7 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
     const [advancedOptionsHeight] = React.useState<Animated.Value>(
         new Animated.Value(MAX_OPTIONS_HEIGHT)
     );
+    const fireConfetti = useAppSelector(getFireConfetti);
 
     const dismiss = () => {
         dispatch(setUpdateTutorialIslandModalPlannedTask(DEFAULT_UPDATE_MODAL_PLANNED_TASK));
@@ -551,6 +553,7 @@ export const TutorialIslandUpdatePlannedTaskModal = () => {
                                 <TouchableOpacity
                                     onPress={() => {
                                         tutorialPressedRef.current?.reportOptionPressed();
+                                        fireConfetti();
                                         onUpdateWrapper();
                                     }}
                                 >

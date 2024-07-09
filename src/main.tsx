@@ -94,9 +94,7 @@ export const Main = () => {
     }, []);
 
     let view: JSX.Element =
-        loggedInState === LoginState.LOGGED_IN && tutorialIslandComplete === undefined ? (
-            <LoadingPage />
-        ) : loggedInState === LoginState.LOGGED_IN ? (
+        loggedInState === LoginState.LOGGED_IN ? (
             tutorialIslandComplete ? (
                 <SecureMainStack />
             ) : (

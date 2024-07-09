@@ -13,7 +13,7 @@ export class UserPropertyUtil {
 
     public static hasStartedTutorialIsland(user: User) {
         if (!user.properties) {
-            return undefined;
+            return false;
         }
 
         const tutorialCompletedProperty = this.getProperty(
@@ -26,7 +26,7 @@ export class UserPropertyUtil {
 
     private static getProperty(user: User, key: Constants.UserPropertyKey) {
         if (!user.properties) {
-            return null;
+            return undefined;
         }
 
         for (const property of user.properties) {
@@ -35,6 +35,6 @@ export class UserPropertyUtil {
             }
         }
 
-        return null;
+        return undefined;
     }
 }
