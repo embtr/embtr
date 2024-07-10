@@ -81,7 +81,10 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect, is
 
     return (
         <TouchableOpacity
-            style={{ width: DAY_PICKER_ELEMENT_WIDTH }}
+            style={{
+                display: elementData.dayKey === '' ? 'none' : undefined,
+                width: DAY_PICKER_ELEMENT_WIDTH,
+            }}
             onPress={() => {
                 onSelect(elementData);
             }}

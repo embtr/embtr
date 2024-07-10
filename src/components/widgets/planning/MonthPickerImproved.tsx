@@ -41,17 +41,6 @@ const renderItem = ({
     />
 );
 
-const scrollToSelected = (
-    flatListRef: React.RefObject<FlatList>,
-    month: MonthPickerElementData
-) => {
-    flatListRef.current?.scrollToIndex({
-        index: month.index,
-        animated: true,
-        viewPosition: 0.5, // Centers the selected item
-    });
-};
-
 interface Props {
     allMonths: MonthPickerElementData[];
     selectedMonth: MonthPickerElementData;
@@ -67,16 +56,46 @@ export const MonthPickerImproved = React.forwardRef(
         const [advancedVisible, setAdvancedVisible] = React.useState<boolean>(false);
 
         const onSelectionChangeWrapper = (month: MonthPickerElementData) => {
-            scrollToSelected(ref, month);
             onSelectionChange(month);
         };
+
+        const scroll = (animated: boolean) => {
+            if (selectedMonth.index === undefined) {
+                return;
+            }
+
+            if (!advancedVisible) {
+                return;
+            }
+
+            if (!ref.current) {
+                return;
+            }
+
+            ref.current?.scrollToIndex({
+                index: selectedMonth.index,
+                animated: animated,
+                viewPosition: 0.5,
+            });
+        };
+
+        React.useEffect(() => {
+            setTimeout(() => {
+                scroll(false);
+            }, 0);
+        }, [advancedVisible]);
+
+        React.useEffect(() => {
+            setTimeout(() => {
+                scroll(true);
+            }, 0);
+        }, [selectedMonth]);
 
         return (
             <View style={{ width: '100%' }}>
                 {/* display the current month */}
                 <CurrentMonthText
                     onPress={() => {
-                        scrollToSelected(ref, selectedMonth);
                         runAnimation(!advancedVisible, advancedOptionsHeight);
                         setAdvancedVisible(!advancedVisible);
                     }}

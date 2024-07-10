@@ -47,6 +47,17 @@ export const generateDaysOfMonth = (month: MonthPickerElementData): DayPickerEle
         date.setDate(date.getDate() + 1);
     }
 
+    // add placeholders until we have 31 days
+    while (days.length < 31) {
+        days.push({
+            dayKey: '',
+            dayShort: '',
+            dayFull: '',
+            displayNumber: 0,
+            index: days.length,
+        });
+    }
+
     return days;
 };
 
@@ -205,7 +216,7 @@ interface DayData {
     dayFull: string;
 }
 
-const DAYS: DayData[] = [
+export const DAYS: DayData[] = [
     { dayShort: 'Sun', dayFull: 'Sunday' },
     { dayShort: 'Mon', dayFull: 'Monday' },
     { dayShort: 'Tue', dayFull: 'Tuesday' },

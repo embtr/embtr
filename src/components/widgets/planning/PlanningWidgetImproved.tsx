@@ -4,6 +4,7 @@ import { DayPickerImproved } from './DayPickerImproved';
 import { useAppDispatch } from 'src/redux/Hooks';
 import { WidgetBase } from '../WidgetBase';
 import {
+    DAYS,
     DayPickerElementData,
     MonthPickerElementData,
     getDaysForMonth,
@@ -15,6 +16,7 @@ import { setSelectedDayKey } from 'src/redux/user/GlobalState';
 import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
 import { FlatList } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
+import { getDayKeyFromDate } from 'src/controller/planning/PlannedDayController';
 
 const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerElementData) => {
     const year = monthData.year;
@@ -45,6 +47,11 @@ const useCurrentDayData = () => {
     return { months, daysOfMonth, currentMonth, currentDay };
 };
 
+interface SelectedDateData {
+    selectedMonth: MonthPickerElementData;
+    selectedDay: DayPickerElementData;
+}
+
 export const PlanningWidgetImproved = () => {
     const currentDayData = useCurrentDayData();
 
@@ -52,53 +59,73 @@ export const PlanningWidgetImproved = () => {
     const monthScrollRef = React.useRef<FlatList>(null);
     const dayScrollRef = React.useRef<FlatList>(null);
 
-    const [selectedMonth, setSelectedMonth] = React.useState<MonthPickerElementData>(
-        currentDayData.currentMonth
-    );
-    const [selectedDay, setSelectedDay] = React.useState<DayPickerElementData>(
-        currentDayData.currentDay
-    );
+    const [selectedDateData, setSelectedDateData] = React.useState<SelectedDateData>({
+        selectedMonth: currentDayData.currentMonth,
+        selectedDay: currentDayData.currentDay,
+    });
 
     React.useEffect(() => {
-        const newDayKey = generateDayKey(selectedDay, selectedMonth);
+        const newDayKey = generateDayKey(
+            selectedDateData.selectedDay,
+            selectedDateData.selectedMonth
+        );
         dispatch(setSelectedDayKey(newDayKey));
     }, []);
 
     const onMonthSelected = (monthData: MonthPickerElementData) => {
-        setSelectedMonth(monthData);
+        const firstOfMonth = new Date(monthData.year, monthData.month, 1);
+        const lastOfMonth = new Date(monthData.year, monthData.month + 1, 0);
 
-        const newDayKey = generateDayKey(selectedDay, monthData);
+        const newMonthAheadOfCurrentMonth =
+            monthData.year > selectedDateData.selectedMonth.year ||
+            (monthData.year === selectedDateData.selectedMonth.year &&
+                monthData.month > selectedDateData.selectedMonth.month);
+
+        const dateToUse = newMonthAheadOfCurrentMonth ? firstOfMonth : lastOfMonth;
+        const dayData = DAYS[firstOfMonth.getDay()];
+        const newDay = {
+            dayKey: getDayKeyFromDate(dateToUse),
+            dayShort: dayData.dayShort,
+            dayFull: dayData.dayFull,
+            displayNumber: dateToUse.getDate(),
+            index: dateToUse.getDate() - 1,
+        };
+
+        const newSelectedDateData = {
+            selectedMonth: monthData,
+            selectedDay: newDay,
+        };
+        setSelectedDateData(newSelectedDateData);
+
+        const newDayKey = generateDayKey(
+            newSelectedDateData.selectedDay,
+            newSelectedDateData.selectedMonth
+        );
         dispatch(setSelectedDayKey(newDayKey));
     };
 
     const onDaySelected = (dayData: DayPickerElementData) => {
-        setSelectedDay(dayData);
+        const newSelectedDateData = {
+            selectedMonth: selectedDateData.selectedMonth,
+            selectedDay: dayData,
+        };
+        setSelectedDateData(newSelectedDateData);
 
-        const newDayKey = generateDayKey(dayData, selectedMonth);
+        const newDayKey = generateDayKey(dayData, newSelectedDateData.selectedMonth);
         dispatch(setSelectedDayKey(newDayKey));
     };
 
     const scrollToToday = () => {
-        setSelectedMonth(currentDayData.currentMonth);
-        setSelectedDay(currentDayData.currentDay);
+        setSelectedDateData({
+            selectedMonth: currentDayData.currentMonth,
+            selectedDay: currentDayData.currentDay,
+        });
 
         dispatch(
             setSelectedDayKey(
                 generateDayKey(currentDayData.currentDay, currentDayData.currentMonth)
             )
         );
-
-        dayScrollRef.current?.scrollToIndex({
-            index: currentDayData.currentDay.index,
-            animated: true,
-            viewPosition: 0.5, // Centers the selected item
-        });
-
-        monthScrollRef.current?.scrollToIndex({
-            index: currentDayData.currentMonth.index,
-            animated: true,
-            viewPosition: 0.5, // Centers the selected item
-        });
     };
 
     return (
@@ -106,16 +133,17 @@ export const PlanningWidgetImproved = () => {
             <MonthPickerImproved
                 ref={monthScrollRef}
                 allMonths={currentDayData.months}
-                selectedMonth={selectedMonth}
+                selectedMonth={selectedDateData.selectedMonth}
                 onSelectionChange={onMonthSelected}
                 onScrollToToday={scrollToToday}
             />
 
             <View style={{ height: PADDING_LARGE / 2 }} />
+
             <DayPickerImproved
                 ref={dayScrollRef}
-                selectedDay={selectedDay}
-                selectedMonth={selectedMonth}
+                selectedDay={selectedDateData.selectedDay}
+                selectedMonth={selectedDateData.selectedMonth}
                 onSelectionChange={onDaySelected}
                 daysOfTheMonth={currentDayData.daysOfMonth}
             />

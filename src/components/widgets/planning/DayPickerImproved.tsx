@@ -40,18 +40,9 @@ const render = ({
     );
 };
 
-const scrollToSelected = (flatListRef: React.RefObject<FlatList>, index: number) => {
-    flatListRef.current?.scrollToIndex({
-        index: index,
-        animated: true,
-        viewPosition: 0.5, // Centers the selected item
-    });
-};
-
 export const DayPickerImproved = React.forwardRef(
     ({ selectedDay, selectedMonth, onSelectionChange, daysOfTheMonth }: Props, ref: any) => {
         const onSelectionChangeWrapper = (day: DayPickerElementData) => {
-            scrollToSelected(ref, day.index);
             onSelectionChange(day);
         };
 
@@ -61,6 +52,20 @@ export const DayPickerImproved = React.forwardRef(
         const zeroPaddedMonth = selectedMonth.month.toString().padStart(2, '0');
         const key = `${selectedMonth.year}${zeroPaddedMonth}`;
         const days = daysOfTheMonth.get(key);
+
+        React.useEffect(() => {
+            setTimeout(() => {
+                if (selectedDay.index === undefined) {
+                    return;
+                }
+
+                ref.current?.scrollToIndex({
+                    index: selectedDay.index,
+                    animated: true,
+                    viewPosition: 0.5,
+                });
+            }, 0);
+        }, [selectedDay]);
 
         return (
             <View>
