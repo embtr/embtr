@@ -2,13 +2,14 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { PADDING_LARGE, PADDING_SMALL, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
-import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
+import { OptimalImage } from '../common/images/OptimalImage';
+import { Icon } from 'resources/schema';
 
 interface Props {
     titlePrefix: string;
     titlePostfix: string;
     body: string;
-    icon: OptimalImageData;
+    icon: Icon;
     note?: string;
 }
 

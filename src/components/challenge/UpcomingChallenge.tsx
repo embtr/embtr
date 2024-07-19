@@ -19,6 +19,7 @@ import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { HorizontalLine } from '../common/HorizontalLine';
 import { ChallengeAward } from './ChallengeAward';
+import * as StoreReview from 'expo-store-review';
 
 interface Props {
     challengeSummary: ChallengeSummary;
@@ -62,6 +63,10 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
         }
 
         await ChallengeController.register(challengeSummary.id);
+        const isAvailable = await StoreReview.isAvailableAsync();
+        if (isAvailable) {
+            StoreReview.requestReview();
+        }
     };
 
     return (

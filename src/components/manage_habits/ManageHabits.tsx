@@ -31,7 +31,7 @@ export const ManageHabits = () => {
 
     return (
         <Screen>
-            <Banner name={'My Habits'} />
+            <Banner name={'My Habits'} innerRightPoints={true} />
 
             <View style={{ flex: 1 }}>
                 <ScrollView

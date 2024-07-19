@@ -74,8 +74,9 @@ export const LandingPage = () => {
                         color={colors.link}
                         buttonText="Debug Login"
                         callback={() => {
+                            console.log('Debug login');
                             const auth = getAuth();
-                            signInWithEmailAndPassword(auth, 'brent@embtr.com', 'Password');
+                            signInWithEmailAndPassword(auth, 'brent@embtr.com', 'mononz');
                         }}
                     />
                 </View>

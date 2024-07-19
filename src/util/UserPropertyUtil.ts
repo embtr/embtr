@@ -24,6 +24,19 @@ export class UserPropertyUtil {
         return !!tutorialCompletedProperty;
     }
 
+    public static getPoints(user: User) {
+        if (!user.properties) {
+            return 0;
+        }
+
+        const pointsProperty = this.getProperty(user, Constants.UserPropertyKey.POINTS);
+        if (!pointsProperty?.value) {
+            return 0;
+        }
+
+        return pointsProperty ? parseInt(pointsProperty.value) : 0;
+    }
+
     private static getProperty(user: User, key: Constants.UserPropertyKey) {
         if (!user.properties) {
             return undefined;

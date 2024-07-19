@@ -111,6 +111,7 @@ export type MasterScreens = {
     AwayMode: undefined;
     HabitDetails: { id: number };
     HabitStreakTierSummary: undefined;
+    PointsSummary: undefined;
 };
 
 export type TimelineTabScreens = MasterScreens & {};
@@ -163,6 +164,7 @@ export namespace Routes {
     export const AWAY_MODE = 'AwayMode';
     export const HABIT_DETAILS = 'HabitDetails';
     export const HABIT_STREAK_TIER_SUMMARY = 'HabitStreakTierSummary';
+    export const POINTS_SUMMARY = 'PointsSummary';
 }
 
 export namespace TutorialIslandRoutes {

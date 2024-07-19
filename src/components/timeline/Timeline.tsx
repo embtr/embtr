@@ -45,6 +45,7 @@ export const Timeline = () => {
                 rightIcon={'notifications-outline'}
                 rightRoute={'Notifications'}
                 rightIconNotificationCount={unreadNotificationCount.data ?? 0}
+                innerRightPoints={true}
             />
             <FilteredTimeline
                 timelineElements={timelineData}

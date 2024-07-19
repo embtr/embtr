@@ -95,6 +95,22 @@ export namespace LocalImageRepo {
         };
     }
 
+    export namespace General {
+        export const POINTS = require('assets/points.png');
+        export const POINTS_LEVEL_1 = require('assets/points_level_1.png');
+
+        export const get = (key: string) => {
+            switch (key) {
+                case 'POINTS':
+                    return POINTS;
+                case 'POINTS_LEVEL_1':
+                    return POINTS_LEVEL_1;
+            }
+
+            throw new Error('Invalid General namespace key: ' + key);
+        };
+    }
+
     export const get = (string: string) => {
         const namespace = string.split('.')[0];
         const key = string.split('.')[1];
@@ -108,8 +124,10 @@ export namespace LocalImageRepo {
                 return Profile.get(key);
             case 'HABIT_STREAK_TIER':
                 return HabitStreakTier.get(key);
+            case 'GENERAL':
+                return General.get(key);
         }
 
-        throw new Error('Invalid ImageRepo namespace: ' + namespace);
+        return undefined;
     };
 }

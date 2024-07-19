@@ -35,7 +35,12 @@ export const CurrentUserProfileImpl = ({ user }: Props) => {
 
     return (
         <Screen>
-            <Banner name="You" rightIcon={'cog-outline'} rightRoute="UserSettings" />
+            <Banner
+                name="You"
+                rightIcon={'cog-outline'}
+                rightRoute="UserSettings"
+                innerRightPoints={true}
+            />
             <EmbtrMenuCustom />
             <ScrollView
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}

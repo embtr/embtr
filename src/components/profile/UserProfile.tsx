@@ -62,7 +62,12 @@ export const UserProfileImpl = ({ user }: Props) => {
     };
 
     const banner = isCurrentUser ? (
-        <Banner name="User Profile" leftIcon={'arrow-back'} leftRoute="BACK" />
+        <Banner
+            name="User Profile"
+            leftIcon={'arrow-back'}
+            leftRoute="BACK"
+            innerRightPoints={true}
+        />
     ) : (
         <Banner
             name="User Profile"
@@ -70,6 +75,7 @@ export const UserProfileImpl = ({ user }: Props) => {
             rightIcon={'ellipsis-horizontal-outline'}
             rightOnClick={onOptionsPressed}
             leftRoute="BACK"
+            innerRightPoints={true}
         />
     );
 

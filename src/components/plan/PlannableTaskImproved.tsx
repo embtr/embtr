@@ -12,9 +12,9 @@ import { UnitUtility } from 'src/util/UnitUtility';
 import React from 'react';
 import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
-import { useAppDispatch } from 'src/redux/Hooks';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { Swipeable } from 'react-native-gesture-handler';
-import { setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
+import { addPoints, getFirePoints, setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImageData } from '../common/images/OptimalImage';
 import { PlanningService } from 'src/util/planning/PlanningService';
@@ -105,6 +105,7 @@ export const PlannableTaskImproved = ({
 }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
+    const firePoints = useAppSelector(getFirePoints);
 
     const [plannedTask, setPlannedTask] = React.useState<PlannedTask>(initialPlannedTask);
 
@@ -141,6 +142,8 @@ export const PlannableTaskImproved = ({
                     status: Constants.CompletionState.INCOMPLETE,
                     completedQuantity: 0,
                 });
+                firePoints(-50);
+                dispatch(addPoints(-50));
                 await PlannedTaskService.incomplete(plannedTask, dayKey);
             } else {
                 setPlannedTask({
@@ -148,6 +151,9 @@ export const PlannableTaskImproved = ({
                     status: Constants.CompletionState.COMPLETE,
                     completedQuantity: plannedTask.quantity,
                 });
+                firePoints(50);
+                dispatch(addPoints(50));
+
                 await PlannedTaskService.complete(plannedTask, dayKey);
             }
 

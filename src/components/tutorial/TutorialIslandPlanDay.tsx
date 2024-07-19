@@ -7,7 +7,6 @@ import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
 import { getCurrentUser, getFireConfetti } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
 import { Constants } from 'resources/types/constants/constants';
-import UserController from 'src/controller/user/UserController';
 import { PlanDayHeader } from '../plan/planning/PlanDayHeader';
 import { TutorialIslandElement, TutorialIslandElementRef } from './TutorialIslandElement';
 import { TutorialIslandPlannableTaskImproved } from './TutorialIslandPlannableTaskImproved';
@@ -118,14 +117,10 @@ const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: nu
 export const TutorialIslandPlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     const [elements, setElements] = React.useState<PlanningSections>(defaultPlannedSections);
     const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
-    const [previousCompletionHistory, setPreviousCompletionHistory] =
-        React.useState<CompletionHistory | null>(null);
 
     const tutorialIslandState = GlobalStateCustomHooks.useTutorialIslandState();
-    const fireConfetti = useAppSelector(getFireConfetti);
     const currentUser = useAppSelector(getCurrentUser);
     const currentUserId = currentUser.id;
-    const currentUserUid = currentUser.uid;
     const isCurrentUser = plannedDay.user?.id === currentUserId;
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
@@ -135,31 +130,6 @@ export const TutorialIslandPlanDay = ({ plannedDay, hideComplete, dayKey }: Prop
         const expand = !hasPlannedTasks || allHabitsAreComplete;
         const expandHeight = !hasPlannedTasks ? 60 : 60 + PADDING_LARGE;
         runAnimation(expand ?? false, detailsViewHeight, expandHeight);
-
-        const completionHistory: CompletionHistory = {
-            dayKey,
-            completed: allHabitsAreComplete,
-        };
-
-        //terrible hack, unsure on how to fix this
-        if (previousCompletionHistory?.completed !== allHabitsAreComplete) {
-            setTimeout(() => {
-                UserController.invalidateUserHabitStreakTier(currentUserId ?? 0);
-                UserController.invalidateUser(currentUserUid ?? '');
-                UserController.invalidateCurrentUser();
-            }, 1000);
-        }
-
-        if (previousCompletionHistory && previousCompletionHistory.dayKey === dayKey) {
-            if (
-                allHabitsAreComplete === true &&
-                previousCompletionHistory.completed !== allHabitsAreComplete
-            ) {
-                fireConfetti();
-            }
-        }
-
-        setPreviousCompletionHistory(completionHistory);
     }, [allHabitsAreComplete, hasPlannedTasks, dayKey]);
 
     React.useEffect(() => {

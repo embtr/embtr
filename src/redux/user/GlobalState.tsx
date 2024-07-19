@@ -15,6 +15,7 @@ import {
     TutorialIslandStepKey,
 } from 'src/model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
+import { LevelDetails } from 'resources/types/dto/Level';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -25,7 +26,12 @@ const INITIAL_STATE: GlobalState = {
         'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media&token=ff2e0e76-dc26-43f3-9354-9a14a240dcd6',
     showCardShadow: true,
     cardRefreshRequests: [],
-    fireConfetti: () => { },
+    fireConfetti: () => {
+        console.log('I SUCK');
+    },
+    firePoints: () => {
+        console.log('I SUCK (ALSO)');
+    },
     displayDropDownAlert: () => { },
     selectedDayKey: '',
     currentUser: {},
@@ -43,6 +49,12 @@ const INITIAL_STATE: GlobalState = {
     acknowledgedVersion: '0.0.0',
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
     tutorialIslandState: INVALID_FLOW_STATE,
+    points: 0,
+    levelDetails: {
+        level: 1,
+        points: 0,
+        pointsToNextLevel: 0,
+    },
 };
 interface GlobalState {
     menuOptions: EmbtrMenuOptions;
@@ -53,6 +65,7 @@ interface GlobalState {
     showCardShadow: boolean;
     cardRefreshRequests: string[];
     fireConfetti: Function;
+    firePoints: Function;
     displayDropDownAlert: Function;
     selectedDayKey: DayKey;
     currentUser: User;
@@ -69,6 +82,8 @@ interface GlobalState {
     acknowledgedVersion: string;
     appleAuthUserInfo: AppleAuthUserInfo;
     tutorialIslandState: TutorialIslandFlowState;
+    points: number;
+    levelDetails: LevelDetails;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -97,6 +112,9 @@ export const GlobalState = createSlice({
         },
         setFireConfetti(state, action) {
             state.fireConfetti = action.payload;
+        },
+        setFirePoints(state, action) {
+            state.firePoints = action.payload;
         },
         setDisplayDropDownAlert(state, action) {
             state.displayDropDownAlert = action.payload;
@@ -164,6 +182,23 @@ export const GlobalState = createSlice({
         setTutorialIslandState(state, action) {
             state.tutorialIslandState = action.payload;
         },
+        setPoints(state, action) {
+            state.points = action.payload;
+        },
+        addPoints(state, action) {
+            if (!state.points) {
+                state.points = 0;
+            }
+
+            state.points += action.payload;
+        },
+        subtractPoints(state, action) {
+            state.points = Math.min(0, state.points - action.payload);
+        },
+
+        setLevelDetails(state, action) {
+            state.levelDetails = action.payload;
+        },
     },
 });
 
@@ -221,6 +256,14 @@ export const getFireConfetti = (state: RootState): Function => {
     }
 
     return state.globalState.fireConfetti;
+};
+
+export const getFirePoints = (state: RootState): Function => {
+    if (!state?.globalState.firePoints) {
+        return INITIAL_STATE.firePoints;
+    }
+
+    return state.globalState.firePoints;
 };
 
 export const getDisplayDropDownAlert = (state: RootState): Function => {
@@ -355,6 +398,22 @@ export const getTutorialIslandState = (state: RootState): TutorialIslandFlowStat
     return state.globalState.tutorialIslandState;
 };
 
+export const getPoints = (state: RootState): number => {
+    if (state?.globalState.points === undefined) {
+        return INITIAL_STATE.points;
+    }
+
+    return state.globalState.points;
+};
+
+export const getLevelDetails = (state: RootState): LevelDetails => {
+    if (state?.globalState.levelDetails === undefined) {
+        return INITIAL_STATE.levelDetails;
+    }
+
+    return state.globalState.levelDetails;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -363,6 +422,9 @@ export const {
     setUserProfileImage,
     setShowCardShadow,
     setFireConfetti,
+    setFirePoints,
+    addPoints,
+    subtractPoints,
     setDisplayDropDownAlert,
     setSelectedDayKey,
     setCurrentUser,
@@ -380,4 +442,6 @@ export const {
     setAcknowledgedVersion,
     setAppleAuthUserInfo,
     setTutorialIslandState,
+    setPoints,
+    setLevelDetails,
 } = GlobalState.actions;

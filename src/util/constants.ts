@@ -7,6 +7,7 @@ export const USER_SEARCH_WIDTH = '95%';
 export const PADDING_LARGE = 12;
 export const PADDING_MEDIUM = PADDING_LARGE * 0.75;
 export const PADDING_SMALL = PADDING_LARGE * 0.5;
+export const PADDING_TINY = PADDING_LARGE * 0.25;
 export const TIMELINE_CARD_ICON_SIZE = 25;
 export const TIMELINE_CARD_ICON_COUNT_SIZE = 12;
 

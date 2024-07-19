@@ -17,6 +17,7 @@ import {
 import UserController from './controller/user/UserController';
 import {
     getCurrentUser,
+    getFirePoints,
     resetToDefault,
     setCurrentUser,
     setGlobalLoading,
@@ -38,6 +39,9 @@ import { RevenueCatProvider } from './controller/revenuecat/RevenueCatProvider';
 import { TutorialIslandSecureMainStack } from './components/home/TutorialIslandSecureMainStack';
 import { TutorialIslandMainComponents } from './components/tutorial/TutorialIslandMainComponents';
 import { UserPropertyUtil } from './util/UserPropertyUtil';
+import { WebSocketCustomHooks, WebSocketService } from './service/WebSocketService';
+import { PointsView } from './components/common/animated_view/PointsView';
+import { Button } from 'react-native';
 
 //start up firebase connection
 firebaseApp;
@@ -55,7 +59,9 @@ export const Main = () => {
     const [loggedInState, setLoggedInState] = React.useState(LoginState.LOADING);
 
     const currentUser = useAppSelector(getCurrentUser);
+    const firePoints = useAppSelector(getFirePoints);
     const tutorialIslandComplete = UserPropertyUtil.hasStartedTutorialIsland(currentUser);
+    const webSocket = WebSocketCustomHooks.useWebSocket();
 
     let [fontsLoaded] = useFonts({
         Poppins_400Regular_Italic,
@@ -81,6 +87,8 @@ export const Main = () => {
 
                     dispatch(setCurrentUser(loggedInUser));
                     dispatch(setGlobalLoading(false));
+
+                    WebSocketService.connect(firebaseUser);
                 }
             } else {
                 setLoggedInState(LoginState.LOGGED_OUT);
@@ -113,6 +121,7 @@ export const Main = () => {
                     <ModalContainingComponent />
                     <QuickAddModal />
                     <ConfettiView />
+                    <PointsView />
                     <DropDownAlert />
                     <LoadingOverlay />
                     <RemoveHabitModal />

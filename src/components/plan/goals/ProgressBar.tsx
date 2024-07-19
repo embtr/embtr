@@ -4,11 +4,12 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 
 interface Props {
     progress: number;
+    color?: string;
     status?: string;
     showPercent?: boolean;
 }
 
-export const ProgressBar = ({ progress, status, showPercent }: Props) => {
+export const ProgressBar = ({ progress, color, status, showPercent }: Props) => {
     const { colors } = useTheme();
 
     let currentProgress = progress === Number.POSITIVE_INFINITY ? 100 : Math.round(progress);
@@ -31,7 +32,7 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
                     style={{
                         width: progressPercent,
                         height: 6,
-                        backgroundColor: colors.secondary_accent_color,
+                        backgroundColor: color ?? colors.secondary_accent_color,
                         borderRadius: 10,
                     }}
                 />
@@ -43,7 +44,7 @@ export const ProgressBar = ({ progress, status, showPercent }: Props) => {
                             fontFamily: 'Poppins_500Medium',
                             fontSize: 11,
                             textAlign: 'center',
-                            color: colors.secondary_accent_color,
+                            color: color ?? colors.secondary_accent_color,
                         }}
                     >
                         {' '}

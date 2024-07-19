@@ -6,6 +6,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { CARD_SHADOW, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import * as StoreReview from 'expo-store-review';
 
 interface Props {
     challengeId: number;
@@ -33,6 +34,11 @@ export const ChallengeRecentlyJoinedDetails = ({
         }
 
         await ChallengeController.register(challengeId);
+
+        const isAvailable = await StoreReview.isAvailableAsync();
+        if (isAvailable) {
+            StoreReview.requestReview();
+        }
     };
 
     const disableButton = isAParticipant || !canJoin;

@@ -6,6 +6,7 @@ import { UserCustomHooks } from 'src/controller/user/UserController';
 import { EmptyScreen } from 'src/components/common/EmptyScreen';
 import StoryController from 'src/controller/timeline/story/StoryController';
 import { TimelineController } from 'src/controller/timeline/TimelineController';
+import * as StoreReview from 'expo-store-review';
 
 export const CreateUserPost = () => {
     const navigation = useEmbtrNavigation();
@@ -22,6 +23,12 @@ export const CreateUserPost = () => {
 
     const onSubmit = async (userPost: UserPost) => {
         await StoryController.createViaApi(userPost);
+
+        const isAvailable = await StoreReview.isAvailableAsync();
+        if (isAvailable) {
+            StoreReview.requestReview();
+        }
+
         TimelineController.invalidateCache();
         navigation.goBack();
     };

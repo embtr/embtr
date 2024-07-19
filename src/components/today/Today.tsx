@@ -2,7 +2,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
-import { TodaysCountdownWidget } from '../widgets/TodaysCountdownWidget';
 import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { PADDING_LARGE } from 'src/util/constants';
@@ -13,6 +12,7 @@ import { AwayModeWidget } from '../widgets/AwayModeWidget';
 import { OnHabitStreakWidget } from '../widgets/OnHabitStreakWidget';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 import { User } from 'resources/schema';
+import { PointsWidget } from '../widgets/PointsWidget';
 
 interface Props {
     user: User;
@@ -23,15 +23,16 @@ export const TodayImpl = ({ user }: Props) => {
     return (
         <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
             <Screen>
+                <Banner name="Today" innerRightPoints={true} />
                 <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
-                    <Banner name="Today" />
-
                     <ScrollView>
+                        <GetPremiumWidget />
+
                         <AwayModeWidget user={user} />
 
                         <OnHabitStreakWidget user={user} />
 
-                        <GetPremiumWidget />
+                        <PointsWidget user={user} />
 
                         <QuoteOfTheDayWidget />
 
