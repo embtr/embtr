@@ -17,7 +17,6 @@ export const UserBadge = ({ userBadge, size }: Props) => {
             style={{
                 width: size,
                 height: size,
-                bottom: 0.5,
             }}
         />
     );

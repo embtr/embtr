@@ -59,9 +59,10 @@ export const Main = () => {
     const [loggedInState, setLoggedInState] = React.useState(LoginState.LOADING);
 
     const currentUser = useAppSelector(getCurrentUser);
-    const firePoints = useAppSelector(getFirePoints);
     const tutorialIslandComplete = UserPropertyUtil.hasStartedTutorialIsland(currentUser);
-    const webSocket = WebSocketCustomHooks.useWebSocket();
+
+    //needed to register the user with the websocket
+    WebSocketCustomHooks.useWebSocket();
 
     let [fontsLoaded] = useFonts({
         Poppins_400Regular_Italic,

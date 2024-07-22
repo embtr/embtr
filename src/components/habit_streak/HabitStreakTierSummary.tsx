@@ -1,11 +1,10 @@
-import { Text, View } from 'react-native';
+import { Text, View, FlatList } from 'react-native';
 import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { HabitStreakCustomHooks } from 'src/controller/habit_streak/HabitStreakController';
 import { HabitStreakTier } from 'resources/schema';
 import { HabitStreakTierElement } from './HabitStreakTierElement';
 import { Screen } from '../common/Screen';
 import { Banner } from '../common/Banner';
-import { FlatList } from 'react-native-gesture-handler';
 import { useTheme } from '../theme/ThemeProvider';
 
 const getDescription = (habitStreakTier: HabitStreakTier) => {
@@ -80,10 +79,8 @@ const HabitStreakTierSummaryImpl = ({ habitStreakTiers }: ImplProps) => {
                     }}
                 >
                     <FlatList
-                        enabled={false}
                         renderItem={renderItem}
                         data={habitStreakTiers}
-                        showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => (item.id ?? 0).toString()}
                     />
                 </View>

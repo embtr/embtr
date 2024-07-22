@@ -1,8 +1,6 @@
-import { Icon } from '../../schema';
+import { Level } from '../../schema';
 
 export interface LevelDetails {
-    level: number;
+    level: Level;
     points: number;
-    pointsToNextLevel: number;
-    icon: Icon;
 }

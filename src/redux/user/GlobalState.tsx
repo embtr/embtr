@@ -49,11 +49,9 @@ const INITIAL_STATE: GlobalState = {
     acknowledgedVersion: '0.0.0',
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
     tutorialIslandState: INVALID_FLOW_STATE,
-    points: 0,
     levelDetails: {
-        level: 1,
+        level: {},
         points: 0,
-        pointsToNextLevel: 0,
     },
 };
 interface GlobalState {
@@ -82,7 +80,6 @@ interface GlobalState {
     acknowledgedVersion: string;
     appleAuthUserInfo: AppleAuthUserInfo;
     tutorialIslandState: TutorialIslandFlowState;
-    points: number;
     levelDetails: LevelDetails;
 }
 
@@ -182,20 +179,9 @@ export const GlobalState = createSlice({
         setTutorialIslandState(state, action) {
             state.tutorialIslandState = action.payload;
         },
-        setPoints(state, action) {
-            state.points = action.payload;
-        },
         addPoints(state, action) {
-            if (!state.points) {
-                state.points = 0;
-            }
-
-            state.points += action.payload;
+            state.levelDetails.points += action.payload;
         },
-        subtractPoints(state, action) {
-            state.points = Math.min(0, state.points - action.payload);
-        },
-
         setLevelDetails(state, action) {
             state.levelDetails = action.payload;
         },
@@ -398,14 +384,6 @@ export const getTutorialIslandState = (state: RootState): TutorialIslandFlowStat
     return state.globalState.tutorialIslandState;
 };
 
-export const getPoints = (state: RootState): number => {
-    if (state?.globalState.points === undefined) {
-        return INITIAL_STATE.points;
-    }
-
-    return state.globalState.points;
-};
-
 export const getLevelDetails = (state: RootState): LevelDetails => {
     if (state?.globalState.levelDetails === undefined) {
         return INITIAL_STATE.levelDetails;
@@ -424,7 +402,6 @@ export const {
     setFireConfetti,
     setFirePoints,
     addPoints,
-    subtractPoints,
     setDisplayDropDownAlert,
     setSelectedDayKey,
     setCurrentUser,
@@ -442,6 +419,5 @@ export const {
     setAcknowledgedVersion,
     setAppleAuthUserInfo,
     setTutorialIslandState,
-    setPoints,
     setLevelDetails,
 } = GlobalState.actions;

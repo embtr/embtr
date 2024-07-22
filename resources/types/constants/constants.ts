@@ -224,6 +224,7 @@ export namespace Constants {
         AWAY = 'AWAY',
         NEW_USER = 'NEW_USER',
         HABIT_STREAK_TIER = 'HABIT_STREAK_TIER',
+        LEVEL = 'LEVEL',
     }
 
     export const getBadgeCategory = (category: string): BadgeCategory => {
@@ -236,48 +237,32 @@ export namespace Constants {
                 return BadgeCategory.NEW_USER;
             case 'HABIT_STREAK_TIER':
                 return BadgeCategory.HABIT_STREAK_TIER;
+            case 'LEVEL':
+                return BadgeCategory.LEVEL;
 
             default:
                 return BadgeCategory.INVALID;
         }
     };
 
-    export enum PointDefinition {
+    export enum PointDefinitionType {
         INVALID = 'INVALID',
         HABIT_COMPLETE = 'HABIT_COMPLETE',
         DAY_COMPLETE = 'DAY_COMPLETE',
         PLANNED_DAY_RESULT_CREATED = 'PLANNED_DAY_RESULT_CREATED',
     }
 
-    export const getPointDefinition = (category: string): PointDefinition => {
+    export const getPointDefinition = (category: string): PointDefinitionType => {
         switch (category) {
             case 'HABIT_COMPLETE':
-                return PointDefinition.HABIT_COMPLETE;
+                return PointDefinitionType.HABIT_COMPLETE;
             case 'DAY_COMPLETE':
-                return PointDefinition.DAY_COMPLETE;
+                return PointDefinitionType.DAY_COMPLETE;
             case 'PLANNED_DAY_RESULT_CREATED':
-                return PointDefinition.PLANNED_DAY_RESULT_CREATED;
+                return PointDefinitionType.PLANNED_DAY_RESULT_CREATED;
 
             default:
-                return PointDefinition.INVALID;
-        }
-    };
-
-    export enum PointTransactionType {
-        INVALID = 'INVALID',
-        ADD = 'ADD',
-        SUBTRACT = 'SUBTRACT',
-    }
-
-    export const getPointTransactionType = (type: string): PointTransactionType => {
-        switch (type) {
-            case 'ADD':
-                return PointTransactionType.ADD;
-            case 'SUBTRACT':
-                return PointTransactionType.SUBTRACT;
-
-            default:
-                return PointTransactionType.INVALID;
+                return PointDefinitionType.INVALID;
         }
     };
 

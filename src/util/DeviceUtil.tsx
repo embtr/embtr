@@ -62,6 +62,22 @@ export const isAndroidDevice = (): boolean => {
     return Platform.OS === 'android';
 };
 
+export const hasIosBottomBar = (): boolean => {
+    try {
+        const modelId = Device.modelId;
+        if (!modelId.includes('iPhone')) {
+            return false;
+        }
+
+        const fullModelNumber = modelId.replace('iPhone', '');
+        const majorModelNumber = parseInt(fullModelNumber.split(',')[0]);
+
+        return majorModelNumber >= 10 && majorModelNumber != 12;
+    } catch (e) {
+        return false;
+    }
+};
+
 export const isExpoGo = (): boolean => {
     return Constants.appOwnership === 'expo';
 };

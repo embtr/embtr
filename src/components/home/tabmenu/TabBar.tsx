@@ -6,7 +6,7 @@ import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Image } from 'expo-image';
 import { TABS } from 'src/components/home/Dashboard';
 import { UserTabElement } from 'src/components/home/tabmenu/UserTabElement';
-import { isAndroidDevice } from 'src/util/DeviceUtil';
+import { hasIosBottomBar, isAndroidDevice } from 'src/util/DeviceUtil';
 import { ShadowUtility } from 'src/util/ui/shadow/ShadowUtility';
 
 export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
@@ -14,7 +14,7 @@ export const TabBar = ({ state, navigation }: BottomTabBarProps) => {
 
     const style = StyleSheet.create({
         tabContainer: {
-            paddingBottom: isAndroidDevice() ? 2.5 : 25,
+            paddingBottom: hasIosBottomBar() ? 25 : 2.5,
             shadowOffset: {
                 width: 0,
                 height: -1,

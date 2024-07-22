@@ -11,6 +11,7 @@ import { TrophyCaseWidget } from 'src/components/widgets/trophy_case/TrophyCaseW
 import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStreakWidget';
 import { AwayModeWidget } from 'src/components/widgets/AwayModeWidget';
 import { OnHabitStreakWidget } from 'src/components/widgets/OnHabitStreakWidget';
+import { PointsWidget } from 'src/components/widgets/PointsWidget';
 
 interface Props {
     user: User;
@@ -31,6 +32,7 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
             <View style={{ height: '100%', paddingHorizontal: PADDING_LARGE }}>
                 <View style={{ height: PADDING_MEDIUM }} />
                 <AwayModeWidget user={user} />
+                <PointsWidget user={user} />
                 <OnHabitStreakWidget user={user} />
                 <HabitStreakWidget user={user} />
                 <TrophyCaseWidget userId={user.id} />

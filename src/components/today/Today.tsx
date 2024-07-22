@@ -30,9 +30,9 @@ export const TodayImpl = ({ user }: Props) => {
 
                         <AwayModeWidget user={user} />
 
-                        <OnHabitStreakWidget user={user} />
-
                         <PointsWidget user={user} />
+
+                        <OnHabitStreakWidget user={user} />
 
                         <QuoteOfTheDayWidget />
 

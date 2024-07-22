@@ -45,7 +45,7 @@ export const OptimalImage = ({ data, style }: Props) => {
     }
 
     if (data.remoteImageUrl) {
-        return <ExpoImage source={{ uri: data.remoteImageUrl }} style={style} />;
+        return <ExpoImage source={{ uri: data.remoteImageUrl }} style={[style]} />;
     }
 
     if (data.ionicon) {

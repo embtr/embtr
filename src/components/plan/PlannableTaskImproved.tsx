@@ -142,8 +142,8 @@ export const PlannableTaskImproved = ({
                     status: Constants.CompletionState.INCOMPLETE,
                     completedQuantity: 0,
                 });
-                firePoints(-50);
-                dispatch(addPoints(-50));
+                //firePoints(-50);
+                //dispatch(addPoints(-50));
                 await PlannedTaskService.incomplete(plannedTask, dayKey);
             } else {
                 setPlannedTask({
@@ -151,8 +151,8 @@ export const PlannableTaskImproved = ({
                     status: Constants.CompletionState.COMPLETE,
                     completedQuantity: plannedTask.quantity,
                 });
-                firePoints(50);
-                dispatch(addPoints(50));
+                //firePoints(50);
+                //dispatch(addPoints(50));
 
                 await PlannedTaskService.complete(plannedTask, dayKey);
             }

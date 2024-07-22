@@ -27,6 +27,7 @@ import { AwayMode } from '../away_mode/AwayMode';
 import { HabitDetails } from '../habit/HabitDetails';
 import { HabitStreakTierSummary } from '../habit_streak/HabitStreakTierSummary';
 import { Dashboard } from './Dashboard';
+import { LevelSummary } from '../level/LevelSummary';
 
 const Stack = createStackNavigator();
 
@@ -108,6 +109,11 @@ export const SecureMainStack = () => {
             <Stack.Screen
                 name={Routes.HABIT_STREAK_TIER_SUMMARY}
                 component={HabitStreakTierSummary}
+                options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
+            />
+            <Stack.Screen
+                name={Routes.LEVEL_SUMMARY}
+                component={LevelSummary}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
         </Stack.Navigator>

@@ -9,8 +9,8 @@ import {
     getCurrentUser,
     getFireConfetti,
     getFirePoints,
+    getLevelDetails,
     setLevelDetails,
-    setPoints,
 } from 'src/redux/user/GlobalState';
 import { getApiUrl } from 'src/util/UrlUtility';
 import * as StoreReview from 'expo-store-review';
@@ -39,6 +39,7 @@ export namespace WebSocketCustomHooks {
         const fireConfetti = useAppSelector(getFireConfetti);
         const firePoints = useAppSelector(getFirePoints);
         const currentUser = useAppSelector(getCurrentUser);
+        const currentLevelDetails = useAppSelector(getLevelDetails);
         const dispatch = useAppDispatch();
 
         /*
@@ -108,6 +109,16 @@ export namespace WebSocketCustomHooks {
                 (payload: WebSocketPayload) => {
                     const levelDetails = payload.payload.levelDetails;
                     dispatch(setLevelDetails(levelDetails));
+
+                    const points = levelDetails.points - currentLevelDetails.points;
+                    if (points != 0) {
+                        firePoints(levelDetails.points - currentLevelDetails.points);
+                    }
+
+                    const levelChange = levelDetails.level - (currentLevelDetails.level.level ?? 0);
+                    if (levelChange > 0) {
+                        fireConfetti();
+                    }
                 }
             );
 
@@ -116,6 +127,6 @@ export namespace WebSocketCustomHooks {
                     Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED
                 );
             };
-        }, [firePoints]);
+        }, [fireConfetti, firePoints, currentLevelDetails]);
     };
 }
