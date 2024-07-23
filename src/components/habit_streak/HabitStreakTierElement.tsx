@@ -32,7 +32,7 @@ export const HabitStreakTierElement = ({ titlePrefix, titlePostfix, body, icon, 
                 </View>
             </View>
 
-            <View>
+            <View style={{ flex: 1 }}>
                 <Text
                     style={{
                         color: colors.text,

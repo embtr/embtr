@@ -128,5 +128,22 @@ export namespace WebSocketCustomHooks {
                 );
             };
         }, [fireConfetti, firePoints, currentLevelDetails]);
+
+        /*
+         * USER_UPDATED EVENT
+         */
+        React.useEffect(() => {
+            WebSocketService.getSocket().on(
+                Constants.WebSocketEventType.USER_UPDATED,
+                (payload: WebSocketPayload) => {
+                    //UserController.refreshCurrentUser();
+                    UserController.invalidateCurrentUser();
+                }
+            );
+
+            return () => {
+                WebSocketService.getSocket().off(Constants.WebSocketEventType.USER_UPDATED);
+            };
+        }, []);
     };
 }

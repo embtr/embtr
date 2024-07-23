@@ -257,6 +257,12 @@ class UserController {
         await getAuth().currentUser?.getIdToken(true);
     }
 
+    public static async refreshCurrentUser() {
+        await UserController.forceRefreshIdToken();
+        const currentUser = await UserController.getCurrentUser();
+        Store.dispatch(setCurrentUser(currentUser));
+    }
+
     public static async uploadProfilePhoto(): Promise<string | undefined> {
         const result: ImagePickerResult = await pickImage();
 
