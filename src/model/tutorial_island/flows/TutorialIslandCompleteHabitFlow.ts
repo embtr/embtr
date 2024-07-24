@@ -78,7 +78,7 @@ export const TutorialIslandCompleteHabitFlow: TutorialIslandFlow = {
                     key: TutorialIslandOptionKey.PLAN_DAY__PLANNED_TASK,
                     onPressReportable: false,
                     tooltip: {
-                        text: 'Reset your habit by swiping left letting it SNAP.',
+                        text: 'Reset your habit by swiping right letting it SNAP.',
                         position: TooltipPosition.BOTTOM,
                         alignment: 'center',
                         padding: PADDING_LARGE,
