@@ -14,6 +14,7 @@ import {
 } from 'src/redux/user/GlobalState';
 import { getApiUrl } from 'src/util/UrlUtility';
 import * as StoreReview from 'expo-store-review';
+import { AppState } from 'react-native';
 
 export class WebSocketService {
     private static socket: Socket = io(getApiUrl(), {
@@ -30,63 +31,78 @@ export class WebSocketService {
             token: 'Bearer ' + token,
         };
 
+        this.socket.on('connect', () => {
+            console.log('WebSocketService connected');
+        });
+
+        this.socket.on('disconnect', () => {
+            console.log('WebSocketService disconnected');
+        });
+
         this.socket.connect();
     }
 }
 
 export namespace WebSocketCustomHooks {
     export const useWebSocket = () => {
+        const socket = WebSocketService.getSocket();
+
         const fireConfetti = useAppSelector(getFireConfetti);
         const firePoints = useAppSelector(getFirePoints);
         const currentUser = useAppSelector(getCurrentUser);
         const currentLevelDetails = useAppSelector(getLevelDetails);
         const dispatch = useAppDispatch();
 
+        React.useEffect(() => {
+            console.log('adding event listeners');
+            AppState.addEventListener('change', (e) => {
+                if (e === 'active') {
+                    socket.connect();
+                } else {
+                    socket.disconnect();
+                }
+            });
+        }, []);
+
         /*
          * FIRE_CONFETTI EVENT
          */
         React.useEffect(() => {
-            WebSocketService.getSocket().on(
-                Constants.WebSocketEventType.FIRE_CONFETTI,
-                (payload: WebSocketPayload) => {
-                    fireConfetti();
-                }
-            );
+            socket.on(Constants.WebSocketEventType.FIRE_CONFETTI, (payload: WebSocketPayload) => {
+                fireConfetti();
+            });
 
             return () => {
-                WebSocketService.getSocket().off(Constants.WebSocketEventType.FIRE_CONFETTI);
+                socket.off(Constants.WebSocketEventType.FIRE_CONFETTI);
             };
-        }, [fireConfetti]);
+        }, [fireConfetti, socket]);
 
         /*
          * DAY_COMPLETE EVENT
          */
         React.useEffect(() => {
-            WebSocketService.getSocket().on(
-                Constants.WebSocketEventType.DAY_COMPLETE,
-                (payload: WebSocketPayload) => {
-                    const requestReview = async () => {
-                        const isAvailable = await StoreReview.isAvailableAsync();
-                        if (isAvailable) {
-                            StoreReview.requestReview();
-                        }
-                    };
+            socket.on(Constants.WebSocketEventType.DAY_COMPLETE, (payload: WebSocketPayload) => {
+                const requestReview = async () => {
+                    const isAvailable = await StoreReview.isAvailableAsync();
+                    if (isAvailable) {
+                        StoreReview.requestReview();
+                    }
+                };
 
-                    requestReview();
-                    fireConfetti();
-                }
-            );
+                requestReview();
+                fireConfetti();
+            });
 
             return () => {
-                WebSocketService.getSocket().off(Constants.WebSocketEventType.DAY_COMPLETE);
+                socket.off(Constants.WebSocketEventType.DAY_COMPLETE);
             };
-        }, [fireConfetti]);
+        }, [fireConfetti, socket]);
 
         /*
          * HABIT_STREAK_UPDATED EVENT
          */
         React.useEffect(() => {
-            WebSocketService.getSocket().on(
+            socket.on(
                 Constants.WebSocketEventType.HABIT_STREAK_UPDATED,
                 (payload: WebSocketPayload) => {
                     UserController.invalidateUserHabitStreakTier(currentUser.id ?? 0);
@@ -96,15 +112,15 @@ export namespace WebSocketCustomHooks {
             );
 
             return () => {
-                WebSocketService.getSocket().off(Constants.WebSocketEventType.HABIT_STREAK_UPDATED);
+                socket.off(Constants.WebSocketEventType.HABIT_STREAK_UPDATED);
             };
-        }, []);
+        }, [socket]);
 
         /*
          * LEVEL_DETAILS_UPDATED EVENT
          */
         React.useEffect(() => {
-            WebSocketService.getSocket().on(
+            socket.on(
                 Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED,
                 (payload: WebSocketPayload) => {
                     const levelDetails = payload.payload.levelDetails;
@@ -123,27 +139,22 @@ export namespace WebSocketCustomHooks {
             );
 
             return () => {
-                WebSocketService.getSocket().off(
-                    Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED
-                );
+                socket.off(Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED);
             };
-        }, [fireConfetti, firePoints, currentLevelDetails]);
+        }, [fireConfetti, firePoints, currentLevelDetails, socket]);
 
         /*
          * USER_UPDATED EVENT
          */
         React.useEffect(() => {
-            WebSocketService.getSocket().on(
-                Constants.WebSocketEventType.USER_UPDATED,
-                (payload: WebSocketPayload) => {
-                    //UserController.refreshCurrentUser();
-                    UserController.invalidateCurrentUser();
-                }
-            );
+            socket.on(Constants.WebSocketEventType.USER_UPDATED, (payload: WebSocketPayload) => {
+                //UserController.refreshCurrentUser();
+                UserController.invalidateCurrentUser();
+            });
 
             return () => {
-                WebSocketService.getSocket().off(Constants.WebSocketEventType.USER_UPDATED);
+                socket.off(Constants.WebSocketEventType.USER_UPDATED);
             };
-        }, []);
+        }, [socket]);
     };
 }
