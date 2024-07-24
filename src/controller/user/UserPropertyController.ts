@@ -7,6 +7,7 @@ import {
     GetUserTimezoneResponse,
     GetUserTutorialCompletionStateResponse,
     GetUserWarningNotificationResponse,
+    SetOperatingSystemRequest,
     SetUserReminderNotificationRequest,
     SetUserReminderNotificationResponse,
     SetUserSocialNotificationRequest,
@@ -25,6 +26,7 @@ import {
 } from 'resources/types/requests/UserTypes';
 import axiosInstance from 'src/axios/axios';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { isAndroidDevice, isIosApp } from 'src/util/DeviceUtil';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 
 export class UserPropertyController {
@@ -43,9 +45,22 @@ export class UserPropertyController {
             });
     }
 
-    public static async setTutorialCompletionState(
-        state: Constants.CompletionState
-    ): Promise<User | undefined> {
+    public static async setOperatingSystem() {
+        const request: SetOperatingSystemRequest = {
+            operatingSystem: isIosApp()
+                ? Constants.OperatingSystemCategory.IOS
+                : isAndroidDevice()
+                    ? Constants.OperatingSystemCategory.ANDROID
+                    : Constants.OperatingSystemCategory.INVALID,
+        };
+
+        return await axiosInstance.post<SetOperatingSystemRequest>(
+            `/user/property/operating-system`,
+            request
+        );
+    }
+
+    public static async setTutorialCompletionState(state: string): Promise<User | undefined> {
         const request: SetUserTutorialCompletionStateRequest = { state };
 
         return await axiosInstance
@@ -229,10 +244,10 @@ export class UserPropertyController {
 }
 
 export namespace UserPropertyCustomHooks {
-    export const useTutorialComlete = () => {
+    export const useTutorialComplete = () => {
         const { status, data, fetchStatus } = useQuery({
             queryKey: ['tutorial'],
-            queryFn: () => UserPropertyController.getTimezone(),
+            queryFn: () => UserPropertyController.getTutorialCompletionState(),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 

@@ -41,7 +41,6 @@ import { TutorialIslandMainComponents } from './components/tutorial/TutorialIsla
 import { UserPropertyUtil } from './util/UserPropertyUtil';
 import { WebSocketCustomHooks, WebSocketService } from './service/WebSocketService';
 import { PointsView } from './components/common/animated_view/PointsView';
-import { Button } from 'react-native';
 
 //start up firebase connection
 firebaseApp;

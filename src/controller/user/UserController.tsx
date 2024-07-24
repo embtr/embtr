@@ -36,6 +36,7 @@ import { Store } from 'src/redux/store';
 import { PremiumController } from '../PremiumController';
 import { UserHabitStreakTier } from 'resources/types/dto/HabitStreak';
 import { GetUserHabitStreakTierResponse } from 'resources/types/requests/HabitStreakTypes';
+import { UserPropertyController } from './UserPropertyController';
 
 export interface UserModel {
     uid: string;
@@ -204,9 +205,13 @@ class UserController {
         let user: User | undefined = await this.getCurrentUser();
         if (!user) {
             user = await this.createUser();
+
             await this.forceRefreshIdToken();
-            //todo - fix me
-            //await this.setDefaultTimezone();
+
+            await Promise.allSettled([
+                UserPropertyController.setDefaultTimezone(),
+                UserPropertyController.setOperatingSystem(),
+            ]);
         }
 
         return user;

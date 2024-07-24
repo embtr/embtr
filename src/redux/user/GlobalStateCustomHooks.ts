@@ -70,18 +70,22 @@ export namespace GlobalStateCustomHooks {
             };
 
             if (nextStepKey === TutorialIslandStepKey.COMPLETE) {
-                completeTutorialIsland(dispatch);
+                completeTutorialIsland(dispatch, nextStepKey);
+            } else {
+                updateTutorialIslandProgress(dispatch, nextStepKey);
             }
 
             dispatch(setTutorialIslandState(nextFlowState));
         };
     };
 
-    const completeTutorialIsland = async (dispatch: AppDispatch) => {
-        const user = await UserPropertyController.setTutorialCompletionState(
-            Constants.CompletionState.COMPLETE
-        );
+    const completeTutorialIsland = async (dispatch: AppDispatch, state: string) => {
+        const user = await UserPropertyController.setTutorialCompletionState(state);
         dispatch(setCurrentUser(user));
+    };
+
+    const updateTutorialIslandProgress = async (dispatch: AppDispatch, state: string) => {
+        UserPropertyController.setTutorialCompletionState(state);
     };
 
     export const useSetTutorialIslandState = () => {
