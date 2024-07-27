@@ -80,6 +80,7 @@ export type MaterialCommunityIconName = keyof typeof MaterialCommunityIcons.glyp
 
 export namespace ReactQueryStaleTimes {
     export const INSTANTLY = 0;
+    export const ONE_HOUR = 3600000;
     export const INFINITY = Infinity;
 }
 

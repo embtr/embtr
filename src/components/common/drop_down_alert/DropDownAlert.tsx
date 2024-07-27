@@ -59,7 +59,7 @@ export const DropDownAlert = () => {
             toValue: -200,
             duration,
             useNativeDriver: true,
-        }).start(() => {});
+        }).start(() => { });
 
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
@@ -92,7 +92,7 @@ export const DropDownAlert = () => {
                     alignItems: 'center',
                 }}
             >
-                <SvgUri width={50} height={50} uri={model?.badgeUrl ?? ''} />
+                <SvgUri width={50} height={50} uri={model?.icon.remoteImageUrl ?? ''} />
                 <View>
                     <Text
                         style={{

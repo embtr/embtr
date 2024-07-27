@@ -7,6 +7,7 @@ import UserController from 'src/controller/user/UserController';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
+    getDisplayDropDownAlert,
     getFireConfetti,
     getFirePoints,
     getLevelDetails,
@@ -15,6 +16,8 @@ import {
 import { getApiUrl } from 'src/util/UrlUtility';
 import * as StoreReview from 'expo-store-review';
 import { AppState } from 'react-native';
+import { PointCustomHooks } from 'src/controller/PointController';
+import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
 
 export class WebSocketService {
     private static socket: Socket = io(getApiUrl(), {
@@ -48,9 +51,11 @@ export namespace WebSocketCustomHooks {
         const socket = WebSocketService.getSocket();
 
         const fireConfetti = useAppSelector(getFireConfetti);
-        const firePoints = useAppSelector(getFirePoints);
         const currentUser = useAppSelector(getCurrentUser);
         const currentLevelDetails = useAppSelector(getLevelDetails);
+        const firePoints = useAppSelector(getFirePoints);
+        const displayDropDownAlert = useAppSelector(getDisplayDropDownAlert);
+        const dayCompletePoints = PointCustomHooks.useDayCompletePoints();
         const dispatch = useAppDispatch();
 
         React.useEffect(() => {
@@ -91,12 +96,26 @@ export namespace WebSocketCustomHooks {
 
                 requestReview();
                 fireConfetti();
+                firePoints(dayCompletePoints);
             });
 
             return () => {
                 socket.off(Constants.WebSocketEventType.DAY_COMPLETE);
             };
-        }, [fireConfetti, socket]);
+        }, [fireConfetti, socket, firePoints, dayCompletePoints]);
+
+        /*
+         * DAY_INCOMPLETE EVENT
+         */
+        React.useEffect(() => {
+            socket.on(Constants.WebSocketEventType.DAY_INCOMPLETE, (payload: WebSocketPayload) => {
+                firePoints(-dayCompletePoints);
+            });
+
+            return () => {
+                socket.off(Constants.WebSocketEventType.DAY_INCOMPLETE);
+            };
+        }, [socket, firePoints, dayCompletePoints]);
 
         /*
          * HABIT_STREAK_UPDATED EVENT
@@ -126,13 +145,14 @@ export namespace WebSocketCustomHooks {
                     const levelDetails = payload.payload.levelDetails;
                     dispatch(setLevelDetails(levelDetails));
 
-                    const points = levelDetails.points - currentLevelDetails.points;
-                    if (points != 0) {
-                        firePoints(levelDetails.points - currentLevelDetails.points);
-                    }
-
-                    const levelChange = levelDetails.level - (currentLevelDetails.level.level ?? 0);
+                    const levelChange =
+                        levelDetails.level.level - (currentLevelDetails.level.level ?? 0);
                     if (levelChange > 0) {
+                        const dropDownAlertModel: DropDownAlertModal = {
+                            title: 'Level Up!',
+                            body: `You've reached level ${levelDetails.level.level}!`,
+                            icon: levelDetails.level.badge.icon,
+                        };
                         fireConfetti();
                     }
                 }
@@ -141,7 +161,7 @@ export namespace WebSocketCustomHooks {
             return () => {
                 socket.off(Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED);
             };
-        }, [fireConfetti, firePoints, currentLevelDetails, socket]);
+        }, [fireConfetti, currentLevelDetails, socket]);
 
         /*
          * USER_UPDATED EVENT

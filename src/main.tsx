@@ -60,9 +60,6 @@ export const Main = () => {
     const currentUser = useAppSelector(getCurrentUser);
     const tutorialIslandComplete = UserPropertyUtil.hasStartedTutorialIsland(currentUser);
 
-    //needed to register the user with the websocket
-    WebSocketCustomHooks.useWebSocket();
-
     let [fontsLoaded] = useFonts({
         Poppins_400Regular_Italic,
         Poppins_400Regular,

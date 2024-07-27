@@ -12,6 +12,7 @@ import React from 'react';
 import { OnLoginHooks } from 'src/hooks/OnLoginHooks';
 import { MyHabitsTab } from '../manage_habits/MyHabitsTab';
 import { JourneyTab } from '../journey/JourneyTab';
+import { WebSocketCustomHooks } from 'src/service/WebSocketService';
 
 const Tab = createBottomTabNavigator();
 
@@ -28,6 +29,7 @@ export const Dashboard = () => {
     const dispatch = useAppDispatch();
 
     OnLoginHooks.useOnLogin();
+    WebSocketCustomHooks.useWebSocket();
 
     React.useEffect(() => {
         dispatch(setCurrentTab(TABS.TODAY));

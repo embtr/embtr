@@ -14,7 +14,7 @@ import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { Swipeable } from 'react-native-gesture-handler';
-import { addPoints, getFirePoints, setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
+import { getFirePoints, setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
 import { OptimalImageData } from '../common/images/OptimalImage';
 import { PlanningService } from 'src/util/planning/PlanningService';
@@ -29,6 +29,7 @@ import {
 } from '../common/swipeable/SwipeableCardElement';
 import { HabitIcon } from './habit/HabitIcon';
 import { ChallengeBadge } from '../common/comments/general/ChallengeBadge';
+import { PointCustomHooks } from 'src/controller/PointController';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -105,9 +106,13 @@ export const PlannableTaskImproved = ({
 }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
-    const firePoints = useAppSelector(getFirePoints);
 
     const [plannedTask, setPlannedTask] = React.useState<PlannedTask>(initialPlannedTask);
+
+    const firePoints = useAppSelector(getFirePoints);
+    const pointDivisor = plannedTask.scheduledHabit?.timesOfDay?.length ?? 1;
+    const habitCompletePoints = PointCustomHooks.useHabitCompletePoints() / pointDivisor;
+    console.log(habitCompletePoints);
 
     const unitPretty = plannedTask.unit
         ? UnitUtility.getReadableUnit(plannedTask.unit, plannedTask.quantity ?? 0)
@@ -136,14 +141,17 @@ export const PlannableTaskImproved = ({
         text: showReset ? 'Reset' : 'Done',
         color: showReset ? 'gray' : colors.progress_bar_complete,
         onAction: async () => {
+            const originalStatus = plannedTask.status;
+
             if (showReset) {
                 setPlannedTask({
                     ...plannedTask,
                     status: Constants.CompletionState.INCOMPLETE,
                     completedQuantity: 0,
                 });
-                //firePoints(-50);
-                //dispatch(addPoints(-50));
+                if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
+                    firePoints(-habitCompletePoints);
+                }
                 await PlannedTaskService.incomplete(plannedTask, dayKey);
             } else {
                 setPlannedTask({
@@ -151,9 +159,9 @@ export const PlannableTaskImproved = ({
                     status: Constants.CompletionState.COMPLETE,
                     completedQuantity: plannedTask.quantity,
                 });
-                //firePoints(50);
-                //dispatch(addPoints(50));
-
+                if (habitCompletePoints) {
+                    firePoints(habitCompletePoints);
+                }
                 await PlannedTaskService.complete(plannedTask, dayKey);
             }
 
@@ -167,11 +175,17 @@ export const PlannableTaskImproved = ({
             text: 'Skip',
             color: colors.progress_bar_skipped,
             onAction: async () => {
+                const originalStatus = plannedTask.status;
+
                 setPlannedTask({
                     ...plannedTask,
                     status: Constants.CompletionState.SKIPPED,
                 });
                 ref.current?.close();
+
+                if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
+                    firePoints(-habitCompletePoints);
+                }
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await PlannedTaskService.skip(plannedTask, dayKey);
@@ -182,11 +196,17 @@ export const PlannableTaskImproved = ({
             text: 'Fail',
             color: colors.progress_bar_failed,
             onAction: async () => {
+                const originalStatus = plannedTask.status;
+
                 setPlannedTask({
                     ...plannedTask,
                     status: Constants.CompletionState.FAILED,
                 });
                 ref.current?.close();
+
+                if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
+                    firePoints(-habitCompletePoints);
+                }
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await PlannedTaskService.fail(plannedTask, dayKey);
