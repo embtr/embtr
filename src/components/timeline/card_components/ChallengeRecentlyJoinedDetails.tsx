@@ -1,12 +1,13 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Award } from 'resources/schema';
 import { ChallengeBadge } from 'src/components/challenge/ChallengeBadge';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { CARD_SHADOW, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import * as StoreReview from 'expo-store-review';
+import { Award } from 'resources/types/dto/Challenge';
+import { OptimalImageData } from 'src/components/common/images/OptimalImage';
 
 interface Props {
     challengeId: number;
@@ -22,6 +23,11 @@ export const ChallengeRecentlyJoinedDetails = ({
     canJoin,
 }: Props) => {
     const { colors } = useTheme();
+
+    const optimalImage: OptimalImageData = {
+        remoteImageUrl: award.remoteImageUrl,
+        localImage: award.localImage,
+    };
 
     const registerForChallenge = async () => {
         if (!challengeId) {
@@ -61,7 +67,7 @@ export const ChallengeRecentlyJoinedDetails = ({
                 <View style={{ flex: 1 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ paddingRight: 8 }}>
-                            <ChallengeBadge award={award} size={30} />
+                            <ChallengeBadge optimalImage={optimalImage} size={30} />
                         </View>
 
                         <Text

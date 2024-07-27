@@ -2,8 +2,9 @@ import { CARD_SHADOW, POPPINS_REGULAR } from 'src/util/constants';
 import { View, Text } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { shouldUseNarrowView } from 'src/util/GeneralUtility';
-import { Award } from 'resources/schema';
 import { ChallengeBadge } from './ChallengeBadge';
+import { Award } from 'resources/types/dto/Challenge';
+import { OptimalImageData } from '../common/images/OptimalImage';
 
 interface Props {
     award: Award;
@@ -12,6 +13,11 @@ interface Props {
 export const ChallengeAward = ({ award }: Props) => {
     const { colors } = useTheme();
     const useNarrowView = shouldUseNarrowView();
+
+    const optimalImage: OptimalImageData = {
+        remoteImageUrl: award.remoteImageUrl,
+        localImage: award.localImage,
+    };
 
     if (!award.remoteImageUrl) {
         return <View />;
@@ -31,7 +37,7 @@ export const ChallengeAward = ({ award }: Props) => {
                 CARD_SHADOW,
             ]}
         >
-            <ChallengeBadge award={award} size={30} />
+            <ChallengeBadge optimalImage={optimalImage} size={30} />
             <Text
                 style={{
                     paddingLeft: 7,

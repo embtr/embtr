@@ -1,25 +1,18 @@
 import { View } from 'react-native';
-import { SvgUri } from 'react-native-svg';
-import { Award } from 'resources/schema';
+import { OptimalImage, OptimalImageData } from '../common/images/OptimalImage';
 
 interface Props {
-    award: Award;
+    optimalImage: OptimalImageData;
     size: number;
     opaque?: boolean;
 }
 
-export const ChallengeBadge = ({ award, size, opaque }: Props) => {
-    if (!award.remoteImageUrl) {
-        return <View style={{ width: size, height: size }} />;
-    }
-
+export const ChallengeBadge = ({ optimalImage: imageData, size, opaque }: Props) => {
     return (
         <View style={{ width: size, height: size }}>
-            <SvgUri
-                width={size}
-                height={size}
-                uri={award.remoteImageUrl}
-                opacity={opaque ? 0.2 : undefined}
+            <OptimalImage
+                data={imageData}
+                style={{ height: size, width: size, opacity: opaque ? 0.2 : undefined }}
             />
         </View>
     );
