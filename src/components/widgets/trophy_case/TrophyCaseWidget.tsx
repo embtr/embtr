@@ -2,14 +2,7 @@ import React from 'react';
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { WidgetBase } from '../WidgetBase';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    CARD_SHADOW,
-    PADDING_LARGE,
-    PADDING_MEDIUM,
-    PADDING_SMALL,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-} from 'src/util/constants';
+import { PADDING_SMALL, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { ChallengeParticipant } from 'resources/schema';
 import { SvgUri } from 'react-native-svg';
 import { TrophyDetailsModal } from 'src/components/trophy_case/TrophyDetailsModal';
