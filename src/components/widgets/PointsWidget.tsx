@@ -84,19 +84,15 @@ const getBody = (
     const randomStartPositiveNoteIndex = new Date().getDate() % startPositiveNotes.length;
     const startPositiveNote = startPositiveNotes[randomStartPositiveNoteIndex];
     const gritRemaining =
-        pointsRemaining < 1 ? '1 more Grit' : `${commaSeparatedPointsRemaining} more Grit!`;
+        pointsRemaining < 1 ? '1 more Grit' : `${commaSeparatedPointsRemaining} more Grit`;
 
     const isCurrentUser = displayName === undefined;
 
     let body = '';
     if (!isCurrentUser) {
-        body += `${displayName} ${startPositiveNote}, ${gritRemaining}`;
-    }
-
-    if (isCurrentUser) {
-        body += ` until Level ${nextLevel}, ${positiveNote}`;
+        body += `${displayName} ${startPositiveNote}, ${gritRemaining} to level up!`;
     } else {
-        body += ` to level up`;
+        body += `${gritRemaining} until Level ${nextLevel}, ${positiveNote}`;
     }
 
     return body;
@@ -176,7 +172,7 @@ const CurrentUserPointsWidget = () => {
         dispatch(setLevelDetails(updatedLevelDetails));
     };
 
-    if (!levelDetails.level.minPoints) {
+    if (!levelDetails.level.maxPoints) {
         fetchLevelDetails();
         return null;
     }
