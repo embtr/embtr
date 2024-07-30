@@ -7,6 +7,7 @@ import {
     PADDING_LARGE,
     PADDING_MEDIUM,
     PADDING_SMALL,
+    POPPINS_REGULAR,
     POPPINS_SEMI_BOLD,
 } from 'src/util/constants';
 import { ChallengeParticipant } from 'resources/schema';
@@ -70,17 +71,36 @@ export const TrophyCaseWidget = ({ userId }: Props) => {
                     setSelectedChallenge(undefined);
                 }}
             />
-            <Text
-                style={{
-                    color: colors.text,
-                    fontFamily: POPPINS_SEMI_BOLD,
-                    fontSize: 15,
-                    lineHeight: 17,
-                    bottom: 2,
-                }}
-            >
-                Trophy Case
-            </Text>
+            <View style={{ flexDirection: 'row' }}>
+                <View style={{ flex: 1 }}>
+                    <Text
+                        style={{
+                            color: colors.text,
+                            fontFamily: POPPINS_SEMI_BOLD,
+                            fontSize: 15,
+                            lineHeight: 17,
+                            bottom: 2,
+                        }}
+                    >
+                        Trophy Case
+                    </Text>
+                </View>
+
+                <View>
+                    <Text
+                        style={{
+                            color: colors.accent_color_light,
+                            fontFamily: POPPINS_REGULAR,
+                            fontSize: 12,
+                            lineHeight: 14,
+                            bottom: 2,
+                        }}
+                    >
+                        {completedChallenges.data?.length ?? 0}{' '}
+                        {completedChallenges.data?.length === 1 ? 'Trophy' : 'Trophies'}
+                    </Text>
+                </View>
+            </View>
             <View style={{ paddingTop: PADDING_SMALL }}>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     {trophyElements}

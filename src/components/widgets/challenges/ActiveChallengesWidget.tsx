@@ -1,12 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import {
-    PADDING_LARGE,
-    PADDING_SMALL,
-    POPPINS_REGULAR,
-    POPPINS_SEMI_BOLD,
-} from 'src/util/constants';
+import { PADDING_SMALL, POPPINS_REGULAR, POPPINS_SEMI_BOLD } from 'src/util/constants';
 import { WidgetBase } from '../WidgetBase';
 import { ActiveChallengeElement } from './ActiveChallengeElement';
 import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';

@@ -17,7 +17,6 @@ import {
 import UserController from './controller/user/UserController';
 import {
     getCurrentUser,
-    getFirePoints,
     resetToDefault,
     setCurrentUser,
     setGlobalLoading,
@@ -39,8 +38,9 @@ import { RevenueCatProvider } from './controller/revenuecat/RevenueCatProvider';
 import { TutorialIslandSecureMainStack } from './components/home/TutorialIslandSecureMainStack';
 import { TutorialIslandMainComponents } from './components/tutorial/TutorialIslandMainComponents';
 import { UserPropertyUtil } from './util/UserPropertyUtil';
-import { WebSocketCustomHooks, WebSocketService } from './service/WebSocketService';
+import { WebSocketService } from './service/WebSocketService';
 import { PointsView } from './components/common/animated_view/PointsView';
+import PushNotificationController from './controller/notification/PushNotificationController';
 
 //start up firebase connection
 firebaseApp;
@@ -86,6 +86,7 @@ export const Main = () => {
                     dispatch(setGlobalLoading(false));
 
                     WebSocketService.connect(firebaseUser);
+                    PushNotificationController.registerPushNotificationToken();
                 }
             } else {
                 setLoggedInState(LoginState.LOGGED_OUT);
