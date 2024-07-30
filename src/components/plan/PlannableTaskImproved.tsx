@@ -112,7 +112,6 @@ export const PlannableTaskImproved = ({
     const firePoints = useAppSelector(getFirePoints);
     const pointDivisor = plannedTask.scheduledHabit?.timesOfDay?.length ?? 1;
     const habitCompletePoints = PointCustomHooks.useHabitCompletePoints() / pointDivisor;
-    console.log(habitCompletePoints);
 
     const unitPretty = plannedTask.unit
         ? UnitUtility.getReadableUnit(plannedTask.unit, plannedTask.quantity ?? 0)

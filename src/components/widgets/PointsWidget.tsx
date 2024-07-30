@@ -11,9 +11,9 @@ import { ProgressBar } from '../plan/goals/ProgressBar';
 import { PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from '../theme/ThemeProvider';
 import { LevelDetails } from 'resources/types/dto/Level';
-import { getLevelDetails } from 'src/redux/user/GlobalState';
-import { useAppSelector } from 'src/redux/Hooks';
-import { LevelCustomHooks } from 'src/controller/level/LevelController';
+import { getCurrentUser, getLevelDetails, setLevelDetails } from 'src/redux/user/GlobalState';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { LevelController, LevelCustomHooks } from 'src/controller/level/LevelController';
 
 const beginningPositiveNotes = [
     'keep grinding!',
@@ -55,19 +55,62 @@ const endPositiveNotes = [
     'final stretch!',
 ];
 
-const getBody = (pointsRemaining: number, progress: number, nextLevel: number) => {
+const startPositiveNotes = [
+    'is grinding',
+    'is focused',
+    'is on a roll',
+    'is on fire',
+    'is determined',
+    'is motivated',
+    'is pushing',
+    'is on the move',
+    'is thriving',
+    'is on track',
+    'is climbing',
+];
+
+const getBody = (
+    pointsRemaining: number,
+    progress: number,
+    nextLevel: number,
+    displayName?: string
+) => {
+    const commaSeparatedPointsRemaining = pointsRemaining.toLocaleString();
+
     const positiveNotes = progress < 75 ? beginningPositiveNotes : endPositiveNotes;
     //random index based on day of the month
-    const randomIndex = new Date().getDate() % positiveNotes.length;
-    const positiveNote = positiveNotes[randomIndex];
+    const randomPositiveNoteIndex = new Date().getDate() % positiveNotes.length;
+    const positiveNote = positiveNotes[randomPositiveNoteIndex];
+    const randomStartPositiveNoteIndex = new Date().getDate() % startPositiveNotes.length;
+    const startPositiveNote = startPositiveNotes[randomStartPositiveNoteIndex];
+    const gritRemaining =
+        pointsRemaining < 1 ? '1 more Grit' : `${commaSeparatedPointsRemaining} more Grit!`;
 
-    return `${pointsRemaining} more Grit until Level ${nextLevel}, ${positiveNote}`;
+    const isCurrentUser = displayName === undefined;
+
+    let body = '';
+    if (!isCurrentUser) {
+        body += `${displayName} ${startPositiveNote}, ${gritRemaining}`;
+    }
+
+    if (isCurrentUser) {
+        body += ` until Level ${nextLevel}, ${positiveNote}`;
+    } else {
+        body += ` to level up`;
+    }
+
+    return body;
+};
+
+const getTitlePrefix = (displayName?: string) => {
+    return displayName ? `${displayName} is ` : 'You are ';
 };
 
 interface ImplProps {
     levelDetails: LevelDetails;
+    displayName?: string;
 }
-const PointsWidgetImpl = ({ levelDetails }: ImplProps) => {
+const PointsWidgetImpl = ({ levelDetails, displayName }: ImplProps) => {
     const navigation = useEmbtrNavigation();
 
     const colors = useTheme().colors;
@@ -76,11 +119,15 @@ const PointsWidgetImpl = ({ levelDetails }: ImplProps) => {
     const maxPoints = level.maxPoints ?? 0;
     const pointsInLevel = maxPoints - minPoints;
     const progress = ((levelDetails.points - minPoints) / pointsInLevel) * 100;
+
     const body = getBody(
         maxPoints - levelDetails.points,
         progress,
-        (levelDetails.level.level ?? 0) + 1
+        (levelDetails.level.level ?? 0) + 1,
+        displayName
     );
+    const titlePrefix = getTitlePrefix(displayName);
+
     const icon = level.badge?.icon ?? { localImage: 'GENERAL.POINTS_LEVEL_1' };
 
     return (
@@ -92,7 +139,7 @@ const PointsWidgetImpl = ({ levelDetails }: ImplProps) => {
             >
                 <WidgetBase>
                     <HabitStreakTierElement
-                        titlePrefix={'You are '}
+                        titlePrefix={titlePrefix}
                         titlePostfix={`Level ${level.level}`}
                         note="learn more"
                         body={body}
@@ -117,7 +164,23 @@ interface Props {
 }
 
 const CurrentUserPointsWidget = () => {
+    const dispatch = useAppDispatch();
     const levelDetails = useAppSelector(getLevelDetails);
+    const currentUser = useAppSelector(getCurrentUser);
+
+    const fetchLevelDetails = async () => {
+        const updatedLevelDetails = await LevelController.getLevelDetailsForUser(
+            currentUser.id ?? 0
+        );
+
+        dispatch(setLevelDetails(updatedLevelDetails));
+    };
+
+    if (!levelDetails.level.minPoints) {
+        fetchLevelDetails();
+        return null;
+    }
+
     return <PointsWidgetImpl levelDetails={levelDetails} />;
 };
 
@@ -128,7 +191,7 @@ const OtherUserPointsWidget = ({ user }: Props) => {
         return null;
     }
 
-    return <PointsWidgetImpl levelDetails={levelDetails.data} />;
+    return <PointsWidgetImpl levelDetails={levelDetails.data} displayName={user.displayName} />;
 };
 
 export const PointsWidget = ({ user }: Props) => {

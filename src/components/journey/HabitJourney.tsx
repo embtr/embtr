@@ -66,8 +66,8 @@ export const HabitJourney = () => {
 
     return (
         <Screen>
-            <View style={{ height: '100%', backgroundColor: '10' }}>
-                <Banner name="Habit Journey" />
+            <View style={{ height: '100%' }}>
+                <Banner name="Habit Journey" innerRightPoints={true} />
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}

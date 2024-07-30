@@ -248,7 +248,6 @@ export const CreateEditScheduledHabitProvider = ({
      */
     React.useEffect(() => {
         if (plannedHabit.data) {
-            console.log('time of day', plannedHabit.data.timeOfDay);
             setIcon(PlannedTaskUtil.getIcon(plannedHabit.data));
             setTitle(PlannedTaskUtil.getTitle(plannedHabit.data));
             setDescription(PlannedTaskUtil.getDescription(plannedHabit.data));

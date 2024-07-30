@@ -148,6 +148,10 @@ export const GlobalState = createSlice({
                 flow: TutorialIslandInvalidFlow,
                 currentStepKey: TutorialIslandStepKey.INVALID,
             };
+            state.levelDetails = {
+                level: {},
+                points: 0,
+            };
         },
         setUpdateModalPlannedTask(state, action: { payload: UpdateModalPlannedTask }) {
             state.updateModalPlannedTask = action.payload;

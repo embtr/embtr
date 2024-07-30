@@ -120,15 +120,12 @@ export class HabitStreakController {
             userId,
         ]);
 
-        console.log('currentValue', currentValue);
         if (!currentValue) {
             return;
         }
 
         const newCurrentStreak = currentValue.currentStreak + 1;
         const newLongestStreak = Math.max(newCurrentStreak, currentValue.longestStreak);
-
-        console.log('newCurrentStreak', newCurrentStreak, 'newLongestStreak', newLongestStreak);
 
         reactQueryClient.setQueryData(['simpleHabitStreak', userId], {
             currentStreak: newCurrentStreak,
@@ -142,15 +139,12 @@ export class HabitStreakController {
             userId,
         ]);
 
-        console.log('currentValue', currentValue);
         if (!currentValue) {
             return;
         }
 
         const newCurrentStreak = currentValue.currentStreak - 1;
         const newLongestStreak = currentValue.longestStreak;
-
-        console.log('newCurrentStreak', newCurrentStreak, 'newLongestStreak', newLongestStreak);
 
         reactQueryClient.setQueryData(['simpleHabitStreak', userId], {
             currentStreak: newCurrentStreak,
