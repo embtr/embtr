@@ -46,7 +46,7 @@ export const UserSearch = () => {
         <Screen>
             <View style={{ flex: 1 }}>
                 <View style={{ paddingBottom: 20 }}>
-                    <Banner name="User Search" leftIcon={'arrow-back'} leftRoute="Timeline" />
+                    <Banner name="User Search" leftIcon={'arrow-back'} leftRoute="BACK" />
                 </View>
 
                 <View style={{ width: '100%', alignItems: 'center' }}>

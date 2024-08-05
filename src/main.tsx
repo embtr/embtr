@@ -31,7 +31,6 @@ import { RemoveHabitModal } from './components/plan/habit/RemoveHabitModal';
 import { UpdatePlannedTaskModal } from './components/plan/UpdatePlannedTaskModal';
 import { EditHabitModal } from './components/plan/habit/EditHabitModal';
 import { linking } from 'src/navigation/Linking';
-import firebaseApp from './firebase/Firebase';
 import { EnvironmentIndicator } from 'src/components/debug/EnvironmentIndicator';
 import { RevenueCat } from 'src/controller/revenuecat/RevenueCat';
 import { RevenueCatProvider } from './controller/revenuecat/RevenueCatProvider';
@@ -42,8 +41,7 @@ import { WebSocketService } from './service/WebSocketService';
 import { PointsView } from './components/common/animated_view/PointsView';
 import PushNotificationController from './controller/notification/PushNotificationController';
 
-//start up firebase connection
-firebaseApp;
+import './firebase/Firebase';
 
 enum LoginState {
     LOGGED_IN = 'LOGGED_IN',

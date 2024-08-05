@@ -14,7 +14,7 @@ const getDescription = (level: Level) => {
   const points = (level.minPoints ?? 1) - 1;
   const commaSeparatedMinPoints = points.toLocaleString();
 
-  return `Requres ${commaSeparatedMinPoints} Grit to reach this level.`;
+  return `Requires ${commaSeparatedMinPoints} Grit to reach this level.`;
 };
 
 interface Props {

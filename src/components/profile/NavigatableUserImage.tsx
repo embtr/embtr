@@ -1,12 +1,11 @@
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { CachedImage } from '../common/images/CachedImage';
 import { TouchableWithoutFeedback } from 'react-native';
 import { User } from 'resources/schema';
-import { CARD_SHADOW } from 'src/util/constants';
 
 type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
 
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     image: {
-        borderRadius: 50,
         overflow: 'hidden',
+        borderRadius: 100,
     },
 });

@@ -30,6 +30,7 @@ import {
 import { HabitIcon } from './habit/HabitIcon';
 import { ChallengeBadge } from '../common/comments/general/ChallengeBadge';
 import { PointCustomHooks } from 'src/controller/PointController';
+import { PureDate } from 'resources/types/date/PureDate';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -98,6 +99,17 @@ const getStatusColor = (colors: any, status?: string) => {
     }
 };
 
+const conditionallyFirePoints = (firePoints: Function, points: number, dayKey: string) => {
+    const habitPureDate = PureDate.fromString(dayKey);
+    const cutoffDate = PureDate.fromString('2024-08-01');
+
+    if (habitPureDate < cutoffDate) {
+        return;
+    }
+
+    firePoints(points);
+};
+
 export const PlannableTaskImproved = ({
     initialPlannedTask,
     dayKey,
@@ -149,7 +161,7 @@ export const PlannableTaskImproved = ({
                     completedQuantity: 0,
                 });
                 if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
-                    firePoints(-habitCompletePoints);
+                    conditionallyFirePoints(firePoints, -habitCompletePoints, dayKey);
                 }
                 await PlannedTaskService.incomplete(plannedTask, dayKey);
             } else {
@@ -159,7 +171,7 @@ export const PlannableTaskImproved = ({
                     completedQuantity: plannedTask.quantity,
                 });
                 if (habitCompletePoints) {
-                    firePoints(habitCompletePoints);
+                    conditionallyFirePoints(firePoints, habitCompletePoints, dayKey);
                 }
                 await PlannedTaskService.complete(plannedTask, dayKey);
             }
@@ -183,7 +195,7 @@ export const PlannableTaskImproved = ({
                 ref.current?.close();
 
                 if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
-                    firePoints(-habitCompletePoints);
+                    conditionallyFirePoints(firePoints, -habitCompletePoints, dayKey);
                 }
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -204,7 +216,7 @@ export const PlannableTaskImproved = ({
                 ref.current?.close();
 
                 if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
-                    firePoints(-habitCompletePoints);
+                    conditionallyFirePoints(firePoints, -habitCompletePoints, dayKey);
                 }
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);

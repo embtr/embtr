@@ -153,6 +153,7 @@ export namespace WebSocketCustomHooks {
                             body: `You've reached level ${levelDetails.level.level}!`,
                             icon: levelDetails.level.badge.icon,
                         };
+                        displayDropDownAlert(dropDownAlertModel);
                         fireConfetti();
                     }
                 }

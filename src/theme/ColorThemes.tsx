@@ -34,12 +34,6 @@ export const lightColors = {
     scroll_tab_background: 'rgba(000,000,000,.15)',
 
     text_input_background: '#EEEEEE',
-    text_input_background_secondary: '#FFFFFF',
-    text_input_border: '#DEDEDE',
-
-    timeline_card_header: '#444B66',
-    timeline_card_body: '#292929',
-    timeline_card_footer: '#444B66',
 
     notification_dot: '#FF5E7C',
 
