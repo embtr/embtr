@@ -5,6 +5,7 @@ import { isExtraWideDevice } from 'src/util/DeviceUtil';
 export const USER_SEARCH_WIDTH = '95%';
 
 export const PADDING_LARGE = 12;
+export const PADDING_EXTRA_LARGE = PADDING_LARGE * 2;
 export const PADDING_MEDIUM = PADDING_LARGE * 0.75;
 export const PADDING_SMALL = PADDING_LARGE * 0.5;
 export const PADDING_TINY = PADDING_LARGE * 0.25;

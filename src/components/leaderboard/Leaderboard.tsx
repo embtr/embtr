@@ -1,18 +1,17 @@
 import React from 'react';
-import { ScrollView, View, Text } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { LeaderboardSelector } from './selector/LeaderboardSelector';
-import { LeaderboardHightlightedLeader } from './selector/LeaderboardHighlightedLeader';
 import { LeaderboardList } from './selector/LeaderboardList';
 import { Constants } from 'resources/types/constants/constants';
 import { LeaderboardCustomHooks } from 'src/controller/LeaderboardController';
-import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_EXTRA_LARGE, PADDING_LARGE } from 'src/util/constants';
 import { LeaderboardElement } from 'resources/types/dto/Leaderboard';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
-import { useTheme } from '../theme/ThemeProvider';
+import { HorizontalLine } from '../common/HorizontalLine';
+import { LeaderboardPodium } from './LeaderboardPodium';
 
 export const Leaderboard = () => {
-    const colors = useTheme().colors;
     const [leaderboardType, setLeaderboardType] = React.useState(Constants.LeaderboardType.TODAY);
 
     const currentUser = useAppSelector(getCurrentUser);
@@ -25,34 +24,24 @@ export const Leaderboard = () => {
     };
 
     return (
-        <View style={{ flex: 1 }}>
-            <View style={{ paddingTop: PADDING_LARGE }}>
+        <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
+            <View style={{ paddingVertical: PADDING_EXTRA_LARGE }}>
                 <LeaderboardSelector
                     selectedType={leaderboardType}
                     setSelectedType={setLeaderboardType}
                 />
             </View>
 
-            {leaderboardData.data?.summary && (
-                <View style={{ paddingTop: PADDING_LARGE }}>
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            fontFamily: POPPINS_REGULAR,
-                            color: colors.secondary_text,
-                        }}
-                    >
-                        {leaderboardData.data?.summary}
-                    </Text>
-                </View>
-            )}
-
             <ScrollView style={{ flex: 1 }}>
-                {leaderboardData.data?.entries?.[0] && (
-                    <LeaderboardHightlightedLeader element={leaderboardData.data.entries[0]} />
+                {leaderboardData.data && (
+                    <View>
+                        <LeaderboardPodium leaderboardData={leaderboardData.data} />
+                        <View style={{ height: PADDING_EXTRA_LARGE }} />
+                        <HorizontalLine />
+                    </View>
                 )}
 
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, paddingTop: PADDING_LARGE }}>
                     {leaderboardData.data && (
                         <LeaderboardList
                             leaderboardData={leaderboardData.data}

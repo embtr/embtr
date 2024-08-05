@@ -1,13 +1,9 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { View, StyleSheet } from 'react-native';
-import { TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { CachedImage } from '../common/images/CachedImage';
 import { TouchableWithoutFeedback } from 'react-native';
 import { User } from 'resources/schema';
-
-type userProfileScreenProp = StackNavigationProp<TimelineTabScreens, 'UserProfile'>;
+import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 interface Props {
     user: User;
@@ -15,8 +11,9 @@ interface Props {
     denyNavigation?: boolean;
 }
 
-export const NavigatableUserImage = ({ user, size, denyNavigation }: Props) => {
-    const navigation = useNavigation<userProfileScreenProp>();
+export const NavigatableUserImage = ({ user, size }: Props) => {
+    const navigation = useEmbtrNavigation();
+
     const toUserProfile = () => {
         if (user.uid === 'system') {
             return;

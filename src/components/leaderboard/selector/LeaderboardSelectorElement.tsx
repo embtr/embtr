@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 import { Constants } from 'resources/types/constants/constants';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { PADDING_MEDIUM, PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
+import { PADDING_SMALL, POPPINS_REGULAR } from 'src/util/constants';
 
 interface Props {
     type: Constants.LeaderboardType;

@@ -1,6 +1,5 @@
 import { View, Text } from 'react-native';
 import { LeaderboardElement } from 'resources/types/dto/Leaderboard';
-import { BadgeBelt } from 'src/components/common/badge/BadgeBelt';
 import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImage';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getWindowWidth } from 'src/util/GeneralUtility';
@@ -14,15 +13,18 @@ export const LeaderboardHightlightedLeader = ({ element }: Props) => {
     const colors = useTheme().colors;
 
     const user = element.user;
+    const position = element.position;
     const commaSeparatedPoints = element.points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const windowWidth = getWindowWidth() - PADDING_LARGE * 2;
 
     return (
         <View>
-            <View style={{ height: PADDING_LARGE }} />
+            <NavigatableUserImage
+                user={user}
+                size={windowWidth / (position === 1 ? 3 : position === 2 ? 5 : 6.5)}
+            />
 
-            <NavigatableUserImage user={user} size={getWindowWidth() / 3} />
-
-            <View style={{ width: '100%', alignItems: 'center' }}>
+            <View style={{ alignItems: 'center' }}>
                 <View
                     style={{
                         flexDirection: 'row',
@@ -32,17 +34,16 @@ export const LeaderboardHightlightedLeader = ({ element }: Props) => {
                     }}
                 >
                     <Text
+                        numberOfLines={1}
+                        ellipsizeMode="clip"
                         style={{
                             color: colors.text,
                             fontFamily: POPPINS_MEDIUM,
-                            fontSize: 16,
-                            paddingRight: PADDING_SMALL / 2,
+                            fontSize: 14,
                         }}
                     >
                         {user.displayName}
                     </Text>
-
-                    <BadgeBelt user={user} size={15} />
                 </View>
                 <View>
                     <Text

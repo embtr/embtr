@@ -15,7 +15,6 @@ import {
     NotificationCustomHooks,
 } from 'src/controller/notification/NotificationController';
 import { Leaderboard } from '../leaderboard/Leaderboard';
-import { HorizontalLine } from '../common/HorizontalLine';
 
 export const HomeTab = () => {
     const { colors } = useTheme();

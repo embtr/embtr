@@ -12,7 +12,7 @@ const renderItem = (
     setSelectedType: (type: Constants.LeaderboardType) => void
 ) => {
     return (
-        <View style={{ paddingLeft: PADDING_LARGE }}>
+        <View style={{ paddingRight: PADDING_LARGE }}>
             <TouchableOpacity onPress={() => setSelectedType(type)}>
                 <LeaderboardSelectorElement type={type} isSelected={type === selectedType} />
             </TouchableOpacity>
@@ -35,7 +35,6 @@ interface Props {
 export const LeaderboardSelector = ({ selectedType, setSelectedType }: Props) => {
     return (
         <View>
-            <View style={{ height: PADDING_LARGE }} />
             <FlatList
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}

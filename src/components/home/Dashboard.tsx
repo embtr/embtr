@@ -60,13 +60,13 @@ export const Dashboard = () => {
                                 route &&
                                 route.state &&
                                 route.state.routes.length >= 1 &&
-                                route.state.routes[0]['name'] !== 'Timeline'
+                                route.state.routes[0]['name'] !== 'HomeTab'
                             ) {
                                 e.preventDefault();
                                 navigation.dispatch(
                                     CommonActions.reset({
                                         index: 0,
-                                        routes: [{ name: 'Timeline' }],
+                                        routes: [{ name: 'HomeTab' }],
                                     })
                                 );
                             }
