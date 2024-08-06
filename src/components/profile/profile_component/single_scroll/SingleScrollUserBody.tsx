@@ -12,6 +12,7 @@ import { HabitStreakWidget } from 'src/components/widgets/habit_streak/HabitStre
 import { AwayModeWidget } from 'src/components/widgets/AwayModeWidget';
 import { OnHabitStreakWidget } from 'src/components/widgets/OnHabitStreakWidget';
 import { PointsWidget } from 'src/components/widgets/PointsWidget';
+import { SocialBlacklistWidget } from 'src/components/widgets/SocialBlacklistWidget';
 
 interface Props {
     user: User;
@@ -31,6 +32,7 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
         <Screen>
             <View style={{ height: '100%', paddingHorizontal: PADDING_LARGE }}>
                 <View style={{ height: PADDING_MEDIUM }} />
+                <SocialBlacklistWidget user={user} />
                 <AwayModeWidget user={user} />
                 <PointsWidget user={user} />
                 <OnHabitStreakWidget user={user} />

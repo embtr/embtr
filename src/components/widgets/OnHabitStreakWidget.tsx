@@ -10,6 +10,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { HabitStreakTierElement } from '../habit_streak/HabitStreakTierElement';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { Routes } from 'src/navigation/RootStackParamList';
+import { UserPropertyUtil } from 'src/util/UserPropertyUtil';
 
 const getTitle = (isCurrentUser: boolean, isOnHabitStreak: boolean, currentStreak: number) => {
     let prefix = '';
@@ -65,6 +66,11 @@ interface ImplProps {
 
 export const OnHabitStreakWidgetImpl = ({ user, userHabitStreakTier }: ImplProps) => {
     const navigation = useEmbtrNavigation();
+
+    const userIsBlacklisted = UserPropertyUtil.isSocialBlacklisted(user);
+    if (userIsBlacklisted) {
+        return null;
+    }
 
     const isCurrentUser = getCurrentUid() === user.uid;
     const isOnHabitStreak =

@@ -11,6 +11,22 @@ export class UserPropertyUtil {
         return !!awayProperty && awayProperty.value === Constants.AwayMode.ENABLED;
     }
 
+    public static isSocialBlacklisted(user: User) {
+        if (!user.properties) {
+            return false;
+        }
+
+        const socialBlacklistProperty = this.getProperty(
+            user,
+            Constants.UserPropertyKey.SOCIAL_BLACKLIST
+        );
+
+        return (
+            !!socialBlacklistProperty &&
+            socialBlacklistProperty.value === Constants.BooleanState.ENABLED
+        );
+    }
+
     public static hasStartedTutorialIsland(user: User) {
         if (!user.properties) {
             return false;

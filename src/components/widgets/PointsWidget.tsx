@@ -14,6 +14,7 @@ import { LevelDetails } from 'resources/types/dto/Level';
 import { getCurrentUser, getLevelDetails, setLevelDetails } from 'src/redux/user/GlobalState';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { LevelController, LevelCustomHooks } from 'src/controller/level/LevelController';
+import { UserPropertyUtil } from 'src/util/UserPropertyUtil';
 
 const beginningPositiveNotes = [
     'keep grinding!',
@@ -104,17 +105,23 @@ const getTitlePrefix = (displayName?: string) => {
 
 interface ImplProps {
     levelDetails: LevelDetails;
-    displayName?: string;
+    user: User;
 }
-const PointsWidgetImpl = ({ levelDetails, displayName }: ImplProps) => {
+const PointsWidgetImpl = ({ levelDetails, user }: ImplProps) => {
     const navigation = useEmbtrNavigation();
-
     const colors = useTheme().colors;
+
+    const userIsBlacklisted = UserPropertyUtil.isSocialBlacklisted(user);
+    if (userIsBlacklisted) {
+        return null;
+    }
+
     const level = levelDetails.level;
     const minPoints = level.minPoints ?? 0;
     const maxPoints = level.maxPoints ?? 0;
     const pointsInLevel = maxPoints - minPoints;
     const progress = ((levelDetails.points - minPoints) / pointsInLevel) * 100;
+    const displayName = user.displayName;
 
     const body = getBody(
         maxPoints - levelDetails.points,
@@ -177,7 +184,7 @@ const CurrentUserPointsWidget = () => {
         return null;
     }
 
-    return <PointsWidgetImpl levelDetails={levelDetails} />;
+    return <PointsWidgetImpl user={currentUser} levelDetails={levelDetails} />;
 };
 
 const OtherUserPointsWidget = ({ user }: Props) => {
@@ -187,7 +194,7 @@ const OtherUserPointsWidget = ({ user }: Props) => {
         return null;
     }
 
-    return <PointsWidgetImpl levelDetails={levelDetails.data} displayName={user.displayName} />;
+    return <PointsWidgetImpl user={user} levelDetails={levelDetails.data} />;
 };
 
 export const PointsWidget = ({ user }: Props) => {
