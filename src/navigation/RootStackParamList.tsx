@@ -88,6 +88,7 @@ export type MasterScreens = {
     EditUserPost: { id: number };
     UserPostDetails: { id: number };
     PlannedDayResultDetails: { id: number };
+    FeatureVote: undefined;
 
     CreateEditScheduledHabit_SlideUp: {
         onExit?: () => void;
@@ -165,6 +166,7 @@ export namespace Routes {
     export const HABIT_DETAILS = 'HabitDetails';
     export const HABIT_STREAK_TIER_SUMMARY = 'HabitStreakTierSummary';
     export const LEVEL_SUMMARY = 'LevelSummary';
+    export const FEATURE_VOTE = 'FeatureVote';
 }
 
 export namespace TutorialIslandRoutes {

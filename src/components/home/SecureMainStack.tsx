@@ -28,6 +28,7 @@ import { HabitDetails } from '../habit/HabitDetails';
 import { HabitStreakTierSummary } from '../habit_streak/HabitStreakTierSummary';
 import { Dashboard } from './Dashboard';
 import { LevelSummary } from '../level/LevelSummary';
+import { FeatureVote } from '../feature_vote/FeatureVote';
 
 const Stack = createStackNavigator();
 
@@ -116,6 +117,7 @@ export const SecureMainStack = () => {
                 component={LevelSummary}
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
+            <Stack.Screen name={Routes.FEATURE_VOTE} component={FeatureVote} />
         </Stack.Navigator>
     );
 };

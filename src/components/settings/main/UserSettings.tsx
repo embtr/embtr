@@ -12,6 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SettingsNotifications } from '../notifications/SettingsNotifications';
 import { SettingsTimezone } from './SettingsTimezone';
 import { SettingsAwayMode } from '../away/SettingsAwayMode';
+import { SettingsFeatureVote } from '../feature_vote/SettingsFeatureVote';
 
 export const UserSettings = () => {
     return (
@@ -34,6 +35,8 @@ export const UserSettings = () => {
                     <SettingsAwayMode />
                     <View style={{ height: PADDING_LARGE / 2 }} />
                     <EditProfileSettingsButton />
+                    <View style={{ height: PADDING_LARGE / 2 }} />
+                    <SettingsFeatureVote />
                     <View style={{ height: PADDING_LARGE / 2 }} />
                     <SettingsMembership />
                     <View style={{ height: PADDING_LARGE / 2 }} />

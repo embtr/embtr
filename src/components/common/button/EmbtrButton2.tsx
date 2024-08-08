@@ -1,7 +1,9 @@
 import { TouchableOpacity, Text, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { CARD_SHADOW, POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
+import { CARD_SHADOW, POPPINS_MEDIUM, PADDING_LARGE } from 'src/util/constants';
+
+const MATERIAL_ICONS = ['pillar', 'vote-outline'];
 
 interface Props {
     text: string;
@@ -85,9 +87,9 @@ export const EmbtrButton2 = ({ text, secondaryText, secondaryTextColor, icon, on
                         }}
                     >
                         {icon ? (
-                            icon === 'pillar' ? (
+                            MATERIAL_ICONS.includes(icon) ? (
                                 <MaterialCommunityIcons
-                                    name="pillar"
+                                    name={icon}
                                     size={32}
                                     color={colors.goal_secondary_font}
                                 />

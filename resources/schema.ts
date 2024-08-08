@@ -435,6 +435,11 @@ export interface BlockedUser {
 export interface Feature {
   id?: number;
   name?: string;
+  description?: string;
+  status?: string;
+  active?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
   requesterRoles?: Role[];
   targetRoles?: Role[];
 }
@@ -563,6 +568,7 @@ export interface PointLedgerRecord {
   userId?: number;
   user?: User;
   relevantId?: number;
+  dayKey?: string;
   pointDefinitionType?: string;
   points?: number;
   active?: boolean;

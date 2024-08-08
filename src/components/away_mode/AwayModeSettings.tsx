@@ -1,5 +1,5 @@
-import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import React from 'react';
+import { WidgetBase } from 'src/components/widgets/WidgetBase';
 import { PADDING_SMALL } from 'src/util/constants';
 import { View } from 'react-native';
 import { Constants } from 'resources/types/constants/constants';
