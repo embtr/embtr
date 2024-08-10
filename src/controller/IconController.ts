@@ -11,7 +11,7 @@ export class IconController {
             .then((success) => {
                 return success.data.icon;
             })
-            .catch((error) => {
+            .catch(() => {
                 return undefined;
             });
     }
