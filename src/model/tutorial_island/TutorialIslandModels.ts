@@ -25,6 +25,7 @@ export interface TutorialIslandOption {
     hidden?: boolean;
     nextFlowKey?: TutorialIslandFlowKey;
     tooltip?: TutorialIslandTooltipData;
+    blocked?: boolean;
 }
 
 export interface TutorialIslandTooltipData {

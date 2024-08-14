@@ -91,10 +91,10 @@ export const TutorialIslandCreateHabitFlow: TutorialIslandFlow = {
                     key: TutorialIslandOptionKey.CREATE_EDIT_HABIT__CHANGE_NOTES,
                     onPressReportable: false,
                 },
-
                 {
                     key: TutorialIslandOptionKey.CREATE_EDIT_HABIT__CREATE_BUTTON,
                     onPressReportable: false,
+                    blocked: true,
                     tooltip: {
                         text: 'When you are finished, create the habit!',
                         position: TooltipPosition.TOP,

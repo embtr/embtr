@@ -24,10 +24,11 @@ interface InnerProps {
     tooltip?: TutorialIslandTooltipData;
     nextFlowKey?: TutorialIslandFlowKey;
     style?: any;
+    blocked?: boolean;
 }
 
 const Targeted = React.forwardRef<TutorialIslandElementRef, InnerProps>(
-    ({ children, optionKey, onPressReportable, tooltip, style }: InnerProps, ref) => {
+    ({ children, optionKey, onPressReportable, tooltip, style, blocked }: InnerProps, ref) => {
         const reportOptionPressed = GlobalStateCustomHooks.useReportOptionPressed();
 
         const advance = () => {
@@ -52,7 +53,12 @@ const Targeted = React.forwardRef<TutorialIslandElementRef, InnerProps>(
                     setLayout(event.nativeEvent.layout);
                 }}
             >
-                <View>{children}</View>
+                <View
+                    style={{ opacity: blocked ? 0.15 : undefined }}
+                    pointerEvents={blocked ? 'none' : undefined}
+                >
+                    {children}
+                </View>
 
                 {tooltip && (
                     <TutorialIslandTooltip
@@ -157,6 +163,7 @@ export const TutorialIslandElement = React.forwardRef<TutorialIslandElementRef, 
                 optionKey={optionKey}
                 tooltip={tooltip}
                 onPressReportable={onPressReportable}
+                blocked={option.blocked}
             >
                 {children}
             </Targeted>
