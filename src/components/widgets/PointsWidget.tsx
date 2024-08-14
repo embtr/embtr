@@ -105,9 +105,10 @@ const getTitlePrefix = (displayName?: string) => {
 
 interface ImplProps {
     levelDetails: LevelDetails;
+    isCurrentUser: boolean;
     user: User;
 }
-const PointsWidgetImpl = ({ levelDetails, user }: ImplProps) => {
+const PointsWidgetImpl = ({ levelDetails, isCurrentUser, user }: ImplProps) => {
     const navigation = useEmbtrNavigation();
     const colors = useTheme().colors;
 
@@ -121,7 +122,7 @@ const PointsWidgetImpl = ({ levelDetails, user }: ImplProps) => {
     const maxPoints = level.maxPoints ?? 0;
     const pointsInLevel = maxPoints - minPoints;
     const progress = ((levelDetails.points - minPoints) / pointsInLevel) * 100;
-    const displayName = user.displayName;
+    const displayName = isCurrentUser ? undefined : user.displayName;
 
     const body = getBody(
         maxPoints - levelDetails.points,
@@ -184,7 +185,7 @@ const CurrentUserPointsWidget = () => {
         return null;
     }
 
-    return <PointsWidgetImpl user={currentUser} levelDetails={levelDetails} />;
+    return <PointsWidgetImpl user={currentUser} isCurrentUser={true} levelDetails={levelDetails} />;
 };
 
 const OtherUserPointsWidget = ({ user }: Props) => {
@@ -194,7 +195,7 @@ const OtherUserPointsWidget = ({ user }: Props) => {
         return null;
     }
 
-    return <PointsWidgetImpl user={user} levelDetails={levelDetails.data} />;
+    return <PointsWidgetImpl user={user} isCurrentUser={false} levelDetails={levelDetails.data} />;
 };
 
 export const PointsWidget = ({ user }: Props) => {

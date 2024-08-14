@@ -15,10 +15,6 @@ export const NavigatableUserImage = ({ user, size }: Props) => {
     const navigation = useEmbtrNavigation();
 
     const toUserProfile = () => {
-        if (user.uid === 'system') {
-            return;
-        }
-
         navigation.navigate('UserProfile', { id: user?.uid ? user.uid : '' });
     };
 

@@ -24,7 +24,6 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
     const [isAnimating, setIsAnimating] = React.useState(false);
     const animation = React.useRef<LottieView>(null);
 
-
     const menu = isCurrentUser ? (
         <View />
     ) : (
@@ -41,7 +40,7 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                     [
                         {
                             text: 'Cancel',
-                            onPress: () => {},
+                            onPress: () => { },
                             style: 'cancel',
                         },
                         {
@@ -54,7 +53,7 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                                     [
                                         {
                                             text: 'OK',
-                                            onPress: () => {},
+                                            onPress: () => { },
                                         },
                                     ]
                                 );
@@ -123,9 +122,7 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                                 style={{ display: isAnimating ? 'none' : undefined }}
                                 name={interactableData.isLiked ? 'heart' : 'heart-outline'}
                                 size={TIMELINE_CARD_ICON_SIZE}
-                                color={
-                                    interactableData.isLiked ? 'red' : colors.timeline_card_footer
-                                }
+                                color={interactableData.isLiked ? 'red' : colors.text}
                             />
                         </View>
                     </Pressable>
@@ -133,12 +130,14 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                     <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
                         <Text
                             style={{
-                                color: colors.timeline_card_footer,
+                                color: colors.text,
                                 fontSize: TIMELINE_CARD_ICON_COUNT_SIZE,
                                 fontFamily: POPPINS_REGULAR,
                             }}
                         >
-                            {interactableData.likeCount}
+                            {interactableData.likeCount === 0
+                                ? 'Be the first!'
+                                : interactableData.likeCount}
                         </Text>
                     </View>
 
@@ -146,19 +145,21 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                         <Ionicons
                             name={'chatbox-outline'}
                             size={TIMELINE_CARD_ICON_SIZE}
-                            color={colors.timeline_card_footer}
+                            color={colors.text}
                         />
                     </View>
 
                     <View style={{ justifyContent: 'center', paddingLeft: 4 }}>
                         <Text
                             style={{
-                                color: colors.timeline_card_footer,
+                                color: colors.text,
                                 fontSize: TIMELINE_CARD_ICON_COUNT_SIZE,
-                                fontFamily: 'Poppins_500Medium',
+                                fontFamily: POPPINS_REGULAR,
                             }}
                         >
-                            {interactableData.comments.length}
+                            {interactableData.comments.length === 0
+                                ? 'Be the first!'
+                                : interactableData.comments.length}
                         </Text>
                     </View>
                 </View>

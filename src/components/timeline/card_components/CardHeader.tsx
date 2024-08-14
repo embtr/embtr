@@ -4,6 +4,8 @@ import { NavigatableUserImage } from 'src/components/profile/NavigatableUserImag
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { getHumanReadableDate } from 'src/util/DateUtility';
 import {
+    PADDING_LARGE,
+    PADDING_MEDIUM,
     PADDING_SMALL,
     POPPINS_MEDIUM,
     POPPINS_REGULAR,
@@ -13,100 +15,113 @@ import { TimelineElementType } from 'resources/types/requests/Timeline';
 import { getDateFromDayKey } from 'src/controller/planning/PlannedDayController';
 import { format } from 'date-fns';
 import { BadgeBelt } from 'src/components/common/badge/BadgeBelt';
+import { OptimalImage } from 'src/components/common/images/OptimalImage';
 
-interface Props {
+interface ImplProps {
     date: Date;
-    user: User;
-    dayKey?: string;
-    secondaryText?: string;
+    displayImage: JSX.Element;
+    badgeBelt: JSX.Element;
+    header: string;
+    subHeader: string;
     type: TimelineElementType;
+    dayKey?: string;
 }
 
-export const CardHeader = ({ date, user, dayKey, secondaryText, type }: Props) => {
+const getLabel = (type: TimelineElementType, dayKey: string) => {
+    switch (type) {
+        case TimelineElementType.USER_POST:
+            return 'Post';
+        case TimelineElementType.PLANNED_DAY_RESULT:
+            return format(getDateFromDayKey(dayKey ?? ''), 'MMMM dd, yyyy');
+        case TimelineElementType.USER_FEATURED_POST:
+            return 'Featured Post';
+        default:
+            return 'Challenge';
+    }
+};
+
+const getLabelColor = (type: TimelineElementType, colors: any) => {
+    switch (type) {
+        case TimelineElementType.USER_POST:
+            return colors.timeline_label_user_post;
+        case TimelineElementType.USER_FEATURED_POST:
+            return colors.accent_color;
+        case TimelineElementType.PLANNED_DAY_RESULT:
+            return colors.link;
+        case TimelineElementType.RECENTLY_JOINED_CHALLENGE:
+            return colors.secondary_accent_color;
+    }
+};
+
+const CardHeaderImpl = ({
+    date,
+    dayKey,
+    displayImage,
+    badgeBelt,
+    header,
+    subHeader,
+    type,
+}: ImplProps) => {
     const { colors } = useTheme();
 
     let datePretty = getHumanReadableDate(date);
 
-    const label =
-        type === TimelineElementType.USER_POST
-            ? 'Post'
-            : type === TimelineElementType.PLANNED_DAY_RESULT
-                ? '' + format(getDateFromDayKey(dayKey ?? ''), 'MMMM dd, yyyy')
-                : 'Challenge';
-
-    const color =
-        type === TimelineElementType.USER_POST
-            ? colors.timeline_label_user_post
-            : type === TimelineElementType.PLANNED_DAY_RESULT
-                ? colors.link
-                : colors.secondary_accent_color;
+    const label = getLabel(type, dayKey ?? '');
+    const color = getLabelColor(type, colors);
 
     return (
-        <View style={{ flexDirection: 'row' }}>
+        <View
+            style={{
+                flexDirection: 'row',
+                alignItems: 'center', // Align items vertically
+            }}
+        >
             {/* User Details */}
-            <View
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    flexGrow: 1,
-                }}
-            >
-                <NavigatableUserImage user={user} size={45} />
+            {displayImage}
+            <View style={{ paddingLeft: PADDING_LARGE, flexShrink: 1 }}>
                 <View
                     style={{
-                        paddingLeft: 12,
-                        alignItems: 'center',
                         flexDirection: 'row',
-                        flex: 1,
+                        alignItems: 'center',
                     }}
                 >
-                    <View>
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontFamily: POPPINS_SEMI_BOLD,
-                                    fontSize: 16,
-                                    includeFontPadding: false,
-                                    color: colors.text,
-                                }}
-                            >
-                                {user.displayName}
-                            </Text>
+                    <Text
+                        numberOfLines={1}
+                        ellipsizeMode={'clip'}
+                        style={{
+                            fontFamily: POPPINS_SEMI_BOLD,
+                            fontSize: 16,
+                            includeFontPadding: false,
+                            color: colors.text,
+                            flexShrink: 1,
+                        }}
+                    >
+                        {header}
+                    </Text>
 
-                            <View
-                                style={{
-                                    width: PADDING_SMALL / 2,
-                                }}
-                            />
-                            <BadgeBelt user={user} size={13} />
-                        </View>
-                        <Text
-                            style={{
-                                includeFontPadding: false,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 11,
-                                color: colors.secondary_text,
-                            }}
-                        >
-                            {secondaryText ?? user.location}
-                        </Text>
-                    </View>
+                    <View style={{ paddingLeft: PADDING_SMALL }}>{badgeBelt}</View>
                 </View>
+
+                <Text
+                    style={{
+                        includeFontPadding: false,
+                        fontFamily: POPPINS_MEDIUM,
+                        fontSize: 11,
+                        color: colors.secondary_text,
+                        paddingBottom: PADDING_SMALL,
+                        flexShrink: 1,
+                    }}
+                    numberOfLines={1} // Truncate subHeader if needed
+                >
+                    {subHeader}
+                </Text>
             </View>
 
-            {/* Post and date details*/}
-            <View
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    paddingTop: 4,
-                }}
-            >
+            {/* Spacer to push Post and date details to the right */}
+            <View style={{ flex: 1 }} />
+
+            {/* Post and date details */}
+            <View style={{ alignItems: 'flex-end', paddingLeft: PADDING_MEDIUM }}>
                 <Text
                     style={{
                         includeFontPadding: false,
@@ -114,12 +129,15 @@ export const CardHeader = ({ date, user, dayKey, secondaryText, type }: Props) =
                         fontSize: 10,
                         color: colors.secondary_text,
                         textAlign: 'right',
+                        paddingBottom: PADDING_SMALL,
                     }}
                 >
                     Posted {datePretty}
                 </Text>
+
                 <View
                     style={{
+                        marginBottom: PADDING_MEDIUM,
                         backgroundColor: color,
                         paddingHorizontal: 12,
                         paddingVertical: 2,
@@ -140,5 +158,82 @@ export const CardHeader = ({ date, user, dayKey, secondaryText, type }: Props) =
                 </View>
             </View>
         </View>
+    );
+};
+
+interface Props {
+    date: Date;
+    user?: User;
+    dayKey?: string;
+    header?: string;
+    subHeader?: string;
+    type: TimelineElementType;
+}
+
+const UserCardHeader = ({ date, user, dayKey, header, subHeader, type }: Props) => {
+    if (!user) {
+        return <View />;
+    }
+
+    const displayImage = <NavigatableUserImage user={user} size={45} />;
+    const badgeBelt = <BadgeBelt user={user} size={13} />;
+
+    return (
+        <CardHeaderImpl
+            date={date}
+            dayKey={dayKey}
+            displayImage={displayImage}
+            badgeBelt={badgeBelt}
+            header={header ?? user.displayName ?? ''}
+            subHeader={subHeader ?? user.location ?? ''}
+            type={type}
+        />
+    );
+};
+
+const FeaturedPostCardHeader = ({ date, dayKey, type, header, subHeader }: Props) => {
+    const displayImage = (
+        <OptimalImage
+            data={{ localImage: 'GENERAL.LOGO' }}
+            style={{ height: 45, width: 45, borderRadius: 100 }}
+        />
+    );
+    const badgeBelt = <View />;
+
+    return (
+        <CardHeaderImpl
+            date={date}
+            dayKey={dayKey}
+            displayImage={displayImage}
+            badgeBelt={badgeBelt}
+            header={header ?? ''}
+            subHeader={subHeader ?? ''}
+            type={type}
+        />
+    );
+};
+
+export const CardHeader = ({ date, user, dayKey, header, subHeader, type }: Props) => {
+    if (user) {
+        return (
+            <UserCardHeader
+                date={date}
+                user={user}
+                dayKey={dayKey}
+                header={header}
+                subHeader={subHeader}
+                type={type}
+            />
+        );
+    }
+
+    return (
+        <FeaturedPostCardHeader
+            date={date}
+            dayKey={dayKey}
+            header={header}
+            subHeader={subHeader}
+            type={type}
+        />
     );
 };

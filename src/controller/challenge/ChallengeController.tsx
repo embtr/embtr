@@ -13,13 +13,10 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
 import { ChallengeDetails, ChallengeSummary } from 'resources/types/dto/Challenge';
-import { Keyboard } from 'react-native';
 import { ScheduledHabitController } from '../habit/ScheduledHabitController';
 import { TimelineController } from '../timeline/TimelineController';
 import PlannedDayController from '../planning/PlannedDayController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
-import { getSelectedDayKey } from 'src/redux/user/GlobalState';
-import { Store } from 'src/redux/store';
 import { ReduxService } from 'src/redux/ReduxService';
 
 export class ChallengeController {

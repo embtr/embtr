@@ -32,7 +32,7 @@ export const BadgeBelt = ({ user, size }: Props) => {
     const badgeElements = [];
     for (const badge of filteredBadges ?? []) {
         badgeElements.push(
-            <View style={{ paddingRight: PADDING_SMALL / 3 }}>
+            <View key={badge.id} style={{ paddingRight: PADDING_SMALL / 3 }}>
                 <UserBadge key={badge.userId + '_' + badge.id} size={size} userBadge={badge} />
             </View>
         );

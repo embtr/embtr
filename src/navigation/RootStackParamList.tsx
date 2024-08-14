@@ -87,6 +87,7 @@ export type MasterScreens = {
     CreateUserPost: undefined;
     EditUserPost: { id: number };
     UserPostDetails: { id: number };
+    FeaturedPostDetails: { id: number };
     PlannedDayResultDetails: { id: number };
     FeatureVote: undefined;
 
@@ -142,6 +143,7 @@ export namespace Routes {
     export const CREATE_USER_POST = 'CreateUserPost';
     export const EDIT_USER_POST = 'EditUserPost';
     export const USER_POST_DETAILS = 'UserPostDetails';
+    export const FEATURED_POST_DETAILS = 'FeaturedPostDetails';
     export const ADD_HABIT_CATEGORY = 'AddHabitCategory';
     export const ADD_HABIT_CATEGORIES = 'AddHabitCategories';
     export const CREATE_EDIT_SCHEDULED_HABIT = 'CreateEditScheduledHabit';

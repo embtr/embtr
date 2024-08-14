@@ -5,6 +5,7 @@ import { TimelineElement, TimelineElementType } from 'resources/types/requests/T
 import { UserPostTimelineElement } from './user_post/UserPostTimelineElement';
 import { PlannedDayResultTimelineElement } from './planned_day_result/PlannedDayResultTimelineElement';
 import { ChallengeRecentlyJoinedTimelineElement } from './challenge/ChallengeRecentlyJoinedTimelineElement';
+import { FeaturedPostTimelineElement } from './featured_post/FeaturedPostTimelineElement';
 
 const createFooter = (hasMore: boolean, colors: any) => {
     const footer = hasMore ? (
@@ -74,6 +75,20 @@ const renderItem = (item: TimelineElement, index: number) => {
                 <ChallengeRecentlyJoinedTimelineElement
                     challengeRecentlyJoined={item.challengeRecentlyJoined}
                 />
+            </View>
+        );
+    } else if (
+        item.type === TimelineElementType.USER_FEATURED_POST &&
+        item.userFeaturedPost?.featuredPost
+    ) {
+        return (
+            <View
+                style={{
+                    paddingTop: isTop ? 0 : PADDING_LARGE,
+                    paddingHorizontal: PADDING_LARGE,
+                }}
+            >
+                <FeaturedPostTimelineElement featuredPost={item.userFeaturedPost?.featuredPost} />
             </View>
         );
     }

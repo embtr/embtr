@@ -29,6 +29,7 @@ import { HabitStreakTierSummary } from '../habit_streak/HabitStreakTierSummary';
 import { Dashboard } from './Dashboard';
 import { LevelSummary } from '../level/LevelSummary';
 import { FeatureVote } from '../feature_vote/FeatureVote';
+import { FeaturedPostDetails } from '../timeline/featured_post/FeaturedPostDetails';
 
 const Stack = createStackNavigator();
 
@@ -98,6 +99,7 @@ export const SecureMainStack = () => {
             <Stack.Screen name={Routes.EDIT_PLANNED_DAY_RESULT} component={EditPlannedDayResult} />
             <Stack.Screen name={Routes.HABIT_SUMMARY_DETAILS} component={HabitSummaryDetails} />
             <Stack.Screen name={Routes.USER_POST_DETAILS} component={UserPostDetails} />
+            <Stack.Screen name={Routes.FEATURED_POST_DETAILS} component={FeaturedPostDetails} />
             <Stack.Screen name={Routes.USER_NOTIFICATIONS} component={UserNotifications} />
             <Stack.Screen name={Routes.CHALLENGE_DETAILS_VIEW} component={ChallengeDetailsView} />
             <Stack.Screen

@@ -98,6 +98,7 @@ export namespace LocalImageRepo {
     export namespace General {
         export const POINTS = require('assets/points.png');
         export const POINTS_LEVEL_1 = require('assets/points_level_1.png');
+        export const LOGO = require('assets/app_icon.png');
 
         export const get = (key: string) => {
             switch (key) {
@@ -105,6 +106,8 @@ export namespace LocalImageRepo {
                     return POINTS;
                 case 'POINTS_LEVEL_1':
                     return POINTS_LEVEL_1;
+                case 'LOGO':
+                    return LOGO;
             }
 
             throw new Error('Invalid General namespace key: ' + key);
