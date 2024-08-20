@@ -341,12 +341,12 @@ export namespace UserCustomHooks {
         const fireConfetti = useAppSelector(getFireConfetti);
 
         const runPremiumWorkflow = async (source: string) => {
-            const premiumWasPurchasd = await UserController.runPremiumWorkflow(source);
-            if (premiumWasPurchasd) {
+            const premiumWasPurchased = await UserController.runPremiumWorkflow(source);
+            if (premiumWasPurchased) {
                 fireConfetti();
             }
 
-            return premiumWasPurchasd;
+            return premiumWasPurchased;
         };
 
         return runPremiumWorkflow;

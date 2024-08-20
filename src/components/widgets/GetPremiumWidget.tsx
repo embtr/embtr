@@ -35,7 +35,7 @@ export const GetPremiumWidget = () => {
                             top: 2,
                         }}
                     >
-                        Upgrade now to unlock detailed statistics, detailed reminders, streakhabit
+                        Upgrade now to unlock detailed statistics, detailed reminders, habit streak
                         preservation and much more!
                     </Text>
                 </View>

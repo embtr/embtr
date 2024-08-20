@@ -34,6 +34,7 @@ export interface User {
   userBadges?: UserBadge[];
   pointLedgerRecords?: PointLedgerRecord[];
   userFeaturedPosts?: UserFeaturedPost[];
+  pushNotificationReceipts?: PushNotificationReceipt[];
 }
 
 export interface Property {
@@ -54,6 +55,7 @@ export interface PushNotificationToken {
   active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+  pushNotificationReceipts?: PushNotificationReceipt[];
 }
 
 export interface Task extends TaskCustom {
@@ -604,6 +606,23 @@ export interface UserFeaturedPost {
   isViewed?: boolean;
   active?: boolean;
   sortDate?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface PushNotificationReceipt {
+  id?: number;
+  userId?: number;
+  user?: User;
+  pushNotificationTokenId?: number;
+  pushNotificationToken?: PushNotificationToken;
+  message?: string;
+  status?: string;
+  expoStatus?: string;
+  expoTicketId?: string;
+  expoErrorMessage?: string;
+  expoErrorDetail?: string;
+  active?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

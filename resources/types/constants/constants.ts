@@ -363,4 +363,13 @@ export namespace Constants {
         CHALLENGE,
         FEATURED_POST,
     }
+
+    export enum PushNotificationStatus {
+        INVALID = 'INVALID',
+        PENDING = 'PENDING',
+        SENT = 'SENT',
+        FAILED = 'FAILED',
+        FAILED_ACKNOWLEDGED = 'FAILED_ACKNOWLEDGED',
+        FAILED_INVALIDATED = 'FAILED_INVALIDATED',
+    }
 }
