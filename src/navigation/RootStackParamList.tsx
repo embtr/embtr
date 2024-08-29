@@ -1,6 +1,5 @@
 import { NavigatorScreenParams } from '@react-navigation/native';
 import { NewPlannedHabitData } from 'src/model/PlannedHabitModels';
-import { HabitCategoryType } from 'src/util/habit_category/HabitCategoryUtility';
 
 export type MainTabScreens = {
     TimelineTab: NavigatorScreenParams<TimelineTabScreens>;
@@ -72,7 +71,7 @@ export type MasterScreens = {
     AdvancedUserSettings: undefined;
     EditUserProfile: undefined;
     AddHabitCategories: undefined;
-    AddHabitCategory: { id?: number; type?: HabitCategoryType };
+    AddHabitCategory: { id: number };
     MyHabitsCategoryElement: undefined;
     NewUserProfilePopulation: undefined;
     TermsApprovalModal: undefined;

@@ -8,15 +8,9 @@ interface Props {
     optimalImageData: OptimalImageData;
     name: string;
     description: string;
-    highlightElement?: boolean;
 }
 
-export const AddHabitElement = ({
-    optimalImageData,
-    name,
-    description,
-    highlightElement,
-}: Props) => {
+export const AddHabitElement = ({ optimalImageData, name, description }: Props) => {
     const { colors } = useTheme();
 
     return (
@@ -24,14 +18,14 @@ export const AddHabitElement = ({
             style={{
                 width: '100%',
                 paddingHorizontal: 12,
-                paddingTop: 12,
+                paddingBottom: 12,
                 flexDirection: 'row',
             }}
         >
             <View
                 style={[
                     {
-                        backgroundColor: highlightElement ? colors.accent_color_dim : '#282828',
+                        backgroundColor: '#282828',
                         borderRadius: 9,
                         flex: 1,
                         flexDirection: 'row',

@@ -103,7 +103,6 @@ export class HabitController {
     public static async getAllHabitCategories(): Promise<HabitCategory[]> {
         const requests = [HabitController.getAllGenericHabitCategories()];
 
-        // consider using Promise.allSettled
         const [generic] = await Promise.all(requests);
         const allCategories: HabitCategory[] = [];
         if (generic) {

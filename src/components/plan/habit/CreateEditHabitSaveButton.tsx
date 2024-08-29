@@ -293,6 +293,9 @@ export const CreateEditHabitSaveButton = ({
         } else {
             navigation.popToTop();
         }
+
+        // invalidate me
+        ScheduledHabitController.invalidateActiveScheduledHabits();
     };
 
     const createModes = [

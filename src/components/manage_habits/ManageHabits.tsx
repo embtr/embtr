@@ -7,10 +7,7 @@ import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants'
 import { RefreshControl, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Routes } from 'src/navigation/RootStackParamList';
 import { useTheme } from '../theme/ThemeProvider';
-import {
-    ScheduledHabitController,
-    ScheduledHabitCustomHooks,
-} from 'src/controller/habit/ScheduledHabitController';
+import { ScheduledHabitCustomHooks } from 'src/controller/habit/ScheduledHabitController';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 import { ManageHabitsNoHabitsMessage } from './ManageHabitsNoHabitsMessage';
 
@@ -21,12 +18,7 @@ export const ManageHabits = () => {
     const scheduledHabits = ScheduledHabitCustomHooks.useActive();
 
     const handleNavigation = () => {
-        navigation.navigate(Routes.CREATE_EDIT_SCHEDULED_HABIT_SLIDE_UP, {
-            isCreateCustomHabit: true,
-            onExit: () => {
-                ScheduledHabitController.invalidateActiveScheduledHabits();
-            },
-        });
+        navigation.navigate(Routes.ADD_HABIT_CATEGORIES);
     };
 
     return (

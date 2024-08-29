@@ -8,7 +8,7 @@ module.exports = ({ config }) => {
                     ? 'https://api.embtr.com'
                     : process.env.APP_ENV === 'staging'
                         ? 'https://staging.embtr.com'
-                        : 'http://192.168.5.11:3000',
+                        : 'http://10.0.0.146:3000',
         },
     };
 };

@@ -18,24 +18,9 @@ export const AddHabitCategory = ({ id, type }: Props) => {
     const navigation = useEmbtrNavigation();
     const route = useEmbtrRoute(Routes.ADD_HABIT_CATEGORY);
     const habitCategoryId = id ?? Number(route.params.id);
-    const habitCategoryType = type ?? Number(route.params.type);
     const needsBanner = !id;
 
     const currentHabitCategory = HabitCustomHooks.useHabitCategory(habitCategoryId);
-
-    const isCustomHabits = habitCategoryType === HabitCategoryType.CUSTOM_HABITS;
-
-    const createCreateCustomHabitOption = () => {
-        const createOptionOptimalImage: OptimalImageData = {
-            remoteImageUrl:
-                'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/habit_categories%2Fadd.svg?alt=media',
-        };
-        return createOption(
-            createOptionOptimalImage,
-            'Create A New Custom Habit',
-            'Create a habit to start working towards your goals!'
-        );
-    };
 
     const createOption = (
         optimalImageData: OptimalImageData,
@@ -66,14 +51,11 @@ export const AddHabitCategory = ({ id, type }: Props) => {
     };
 
     const elements: JSX.Element[] = [];
-    if (isCustomHabits) {
-        elements.push(createCreateCustomHabitOption());
-    }
 
     currentHabitCategory?.tasks?.forEach((task) => {
+        console.log(task);
         const optimalImageData: OptimalImageData = {
-            localImage: task.localImage,
-            remoteImageUrl: task.remoteImageUrl,
+            icon: task.icon,
         };
 
         elements.push(
