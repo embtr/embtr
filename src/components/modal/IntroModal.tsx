@@ -1,21 +1,22 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
-import { MainTabScreens } from 'src/navigation/RootStackParamList';
 import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
-import { TutorialIslandCreateHabitFlow } from 'src/model/tutorial_island/flows/TutorialIslandCreateHabitFlow';
+import { TutorialIslandQuickFlow } from 'src/model/tutorial_island/flows/TutorialIslandQuickFlow';
+import { useEmbtrTutorialIslandNavigation } from 'src/hooks/NavigationHooks';
+import { TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
 
 export const IntroModal = () => {
     const { colors } = useTheme();
-    const navigation = useNavigation<StackNavigationProp<MainTabScreens>>();
+    const navigation = useEmbtrTutorialIslandNavigation();
 
     const setTutorialIslandState = GlobalStateCustomHooks.useSetTutorialIslandState();
-    const onLetsGo = () => {
+
+    const onJumpRightIn = () => {
         navigation.popToTop();
-        setTutorialIslandState(TutorialIslandCreateHabitFlow);
+        navigation.navigate(TutorialIslandRoutes.TUTROIAL_ISLAND_QUICK_CREATE_HABITS);
+        setTutorialIslandState(TutorialIslandQuickFlow);
     };
 
     return (
@@ -27,73 +28,80 @@ export const IntroModal = () => {
             }}
         >
             <View style={{ flex: 0.125 }} />
-            <View style={{ alignItems: 'center', flex: 1 }}>
-                <Image source={require('assets/logo.png')} style={{ width: 150, height: 150 }} />
-                <View>
-                    <Text
-                        style={{
-                            paddingTop: PADDING_LARGE,
-                            color: colors.text,
-                            textAlign: 'center',
-                            fontSize: 24,
-                            fontFamily: POPPINS_MEDIUM,
-                        }}
-                    >
-                        Getting Started
-                    </Text>
-                </View>
-
-                <View
-                    style={{
-                        paddingTop: PADDING_LARGE,
-                        paddingHorizontal: PADDING_LARGE,
-                        flexDirection: 'row',
-                        width: '100%',
-                    }}
-                >
-                    <View
-                        style={{
-                            flex: 1,
-                        }}
-                    >
+            <View style={{ flex: 1 }}>
+                <View style={{ alignItems: 'center', flex: 1 }}>
+                    <Image
+                        source={require('assets/logo.png')}
+                        style={{ width: 150, height: 150 }}
+                    />
+                    <View>
                         <Text
                             style={{
-                                color: colors.secondary_text,
-                                fontFamily: POPPINS_REGULAR,
-                                fontSize: 14,
+                                paddingTop: PADDING_LARGE,
+                                color: colors.text,
                                 textAlign: 'center',
+                                fontSize: 24,
+                                fontFamily: POPPINS_MEDIUM,
                             }}
                         >
-                            Let's run a quick tutorial to help you learn the basics of embtr.
+                            Getting Started
                         </Text>
+                    </View>
+
+                    <View
+                        style={{
+                            paddingTop: PADDING_LARGE,
+                            paddingHorizontal: PADDING_LARGE,
+                            flexDirection: 'row',
+                            width: '100%',
+                        }}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: colors.secondary_text,
+                                    fontFamily: POPPINS_REGULAR,
+                                    fontSize: 14,
+                                    textAlign: 'center',
+                                }}
+                            >
+                                It's time to build those habits and crush your goals!
+                            </Text>
+                        </View>
                     </View>
                 </View>
 
-                <View
-                    style={{
-                        width: '100%',
-                        paddingTop: PADDING_LARGE * 2,
-                    }}
-                >
-                    <TouchableOpacity
-                        onPress={onLetsGo}
+                <View style={{ flex: 1 }}>
+                    <View
                         style={{
-                            marginHorizontal: PADDING_LARGE,
-                            backgroundColor: colors.accent_color,
-                            borderRadius: 5,
+                            width: '100%',
+                            paddingTop: PADDING_LARGE * 2,
                         }}
                     >
-                        <Text
+                        <TouchableOpacity
+                            onPress={onJumpRightIn}
                             style={{
-                                color: colors.text,
-                                textAlign: 'center',
-                                fontFamily: POPPINS_MEDIUM,
-                                paddingVertical: PADDING_LARGE / 2,
+                                marginHorizontal: PADDING_LARGE,
+                                backgroundColor: colors.accent_color,
+                                borderRadius: 5,
                             }}
                         >
-                            Let's Go!
-                        </Text>
-                    </TouchableOpacity>
+                            <Text
+                                style={{
+                                    color: colors.text,
+                                    textAlign: 'center',
+                                    fontFamily: POPPINS_MEDIUM,
+                                    paddingVertical: PADDING_LARGE / 2,
+                                }}
+                            >
+                                Let's Get It!
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </View>

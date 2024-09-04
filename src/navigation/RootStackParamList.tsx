@@ -29,6 +29,9 @@ export type TutorialIslandScreens = {
     TermsApprovalModal: undefined;
     UpdateAvailableModal: undefined;
     IntroModal: undefined;
+    TutorialIslandQuickCreateHabits: undefined;
+    TutorialIslandToday: undefined;
+    TutorialIslandPlan: undefined;
 };
 
 export type TutorialIslandTimelineTabScreens = TutorialIslandScreens & {};
@@ -171,6 +174,7 @@ export namespace Routes {
 }
 
 export namespace TutorialIslandRoutes {
+    export const TUTROIAL_ISLAND_QUICK_CREATE_HABITS = 'TutorialIslandQuickCreateHabits';
     export const TUTORIAL_ISLAND_TIMELINE = 'TutorialIslandTimeline';
     export const TUTORIAL_ISLAND_CURRENT_USER = 'TutorialIslandCurrentUser';
     export const TUTORIAL_ISLAND_JOURNEY = 'TutorialIslandJourney';

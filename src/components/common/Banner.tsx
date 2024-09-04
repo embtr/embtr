@@ -82,8 +82,8 @@ export const Banner = ({
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
     const levelDetails = useAppSelector(getLevelDetails);
 
-    // format with commas
-    const pointsText = levelDetails.points.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    // localizing the points
+    const pointsText = levelDetails.points.toLocaleString();
 
     const netInfo = useNetInfo();
     const isConnectedToNetwork = netInfo.isConnected;
@@ -94,7 +94,6 @@ export const Banner = ({
     };
 
     const openMenu = useAppSelector(getOpenMenu);
-    const closeMenu = useAppSelector(getCloseMenu);
 
     const handleRightClick = () => {
         if (rightOnClick) {

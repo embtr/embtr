@@ -42,6 +42,12 @@ export namespace PlannedTaskUtil {
         return (
             plannedTask?.icon ??
             plannedTask?.scheduledHabit?.icon ??
+            plannedTask?.scheduledHabit?.task?.icon,
+            plannedTask?.scheduledHabit?.icon ??
+            plannedTask?.scheduledHabit?.task?.icon ??
+            plannedTask?.scheduledHabit?.task?.icon,
+            plannedTask?.scheduledHabit?.task?.icon ??
+            plannedTask?.scheduledHabit?.task?.icon ??
             plannedTask?.scheduledHabit?.task?.icon
         );
     };

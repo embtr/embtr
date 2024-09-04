@@ -6,6 +6,7 @@ import { NewUserProfilePopulation } from '../profile/NewUserProfilePopulation';
 import { TermsApprovalModal } from '../profile/TermsApprovalModal';
 import { UpdateAvailableModal } from '../modal/UpdateAvailableModal';
 import { IntroModal } from '../modal/IntroModal';
+import { TutorialIslandQuickCreateHabits } from '../tutorial/TutorialIslandQuickCreateHabits';
 
 const Stack = createStackNavigator();
 
@@ -38,6 +39,10 @@ export const TutorialIslandSecureMainStack = () => {
                 options={{ ...TransitionPresets.ModalSlideFromBottomIOS }}
             />
             <Stack.Screen name={Routes.INTRO_MODAL} component={IntroModal} />
+            <Stack.Screen
+                name={TutorialIslandRoutes.TUTROIAL_ISLAND_QUICK_CREATE_HABITS}
+                component={TutorialIslandQuickCreateHabits}
+            />
         </Stack.Navigator>
     );
 };

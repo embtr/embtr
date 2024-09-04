@@ -2,12 +2,10 @@ import React from 'react';
 import { Animated, Easing, View } from 'react-native';
 import { PlannedDay, PlannedTask } from 'resources/schema';
 import { PADDING_LARGE } from 'src/util/constants';
-import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
 import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
 import { getCurrentUser, getFireConfetti } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
 import { Constants } from 'resources/types/constants/constants';
-import { PlanDayHeader } from '../plan/planning/PlanDayHeader';
 import { TutorialIslandElement, TutorialIslandElementRef } from './TutorialIslandElement';
 import { TutorialIslandPlannableTaskImproved } from './TutorialIslandPlannableTaskImproved';
 import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
@@ -121,7 +119,7 @@ export const TutorialIslandPlanDay = ({ plannedDay, hideComplete, dayKey }: Prop
     const tutorialIslandState = GlobalStateCustomHooks.useTutorialIslandState();
     const currentUser = useAppSelector(getCurrentUser);
     const currentUserId = currentUser.id;
-    const isCurrentUser = plannedDay.user?.id === currentUserId;
+    const fireConfetti = useAppSelector(getFireConfetti);
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
     const allHabitsAreComplete = getAllHabitsAreComplete(plannedDay);
@@ -149,38 +147,17 @@ export const TutorialIslandPlanDay = ({ plannedDay, hideComplete, dayKey }: Prop
         };
     }, [plannedDay, hideComplete]);
 
-    const header = isCurrentUser ? (
-        <Animated.View
-            style={{
-                height: detailsViewHeight,
-                overflow: 'hidden',
-            }}
-        >
-            <PlanDayHeader
-                plannedDay={plannedDay}
-                hasPlannedTasks={hasPlannedTasks ?? false}
-                allHabitsAreComplete={allHabitsAreComplete ?? false}
-            />
-        </Animated.View>
-    ) : (
-        <PlanDayHeaderGuest
-            plannedDay={plannedDay}
-            hasPlannedTasks={hasPlannedTasks ?? false}
-            allHabitsAreComplete={allHabitsAreComplete ?? false}
-            dayKey={dayKey}
-        />
-    );
-
     const ref = React.useRef<TutorialIslandElementRef>(null);
 
+    // todo add swipe support here
     const canSwipeLeft =
         tutorialIslandState.currentStepKey ===
-        TutorialIslandStepKey.COMPLETE_HABIT_FLOW__SWIPE_COMPLETE ||
+        TutorialIslandStepKey.QUICK_CREATE_HABITS__SWIPE_COMPLETE ||
         tutorialIslandState.currentStepKey ===
-        TutorialIslandStepKey.COMPLETE_HABIT_FLOW__SWIPE_RESET;
+        TutorialIslandStepKey.QUICK_CREATE_HABITS__SWIPE_RESET;
     const canSwipeRight =
         tutorialIslandState.currentStepKey ===
-        TutorialIslandStepKey.COMPLETE_HABIT_FLOW__SWIPE_FAIL;
+        TutorialIslandStepKey.QUICK_CREATE_HABITS__SWIPE_SKIP;
     const canPress =
         tutorialIslandState.currentStepKey ===
         TutorialIslandStepKey.COMPLETE_HABIT_FLOW__PRESS_EDIT;
@@ -207,6 +184,7 @@ export const TutorialIslandPlanDay = ({ plannedDay, hideComplete, dayKey }: Prop
                                 ref.current?.reportOptionPressed();
                             }}
                             onReset={() => {
+                                fireConfetti();
                                 ref.current?.reportOptionPressed();
                             }}
                             onSkipFail={() => {

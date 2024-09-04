@@ -31,6 +31,9 @@ import { HabitIcon } from './habit/HabitIcon';
 import { ChallengeBadge } from '../common/comments/general/ChallengeBadge';
 import { PointCustomHooks } from 'src/controller/PointController';
 import { PureDate } from 'resources/types/date/PureDate';
+import { WebSocketService } from 'src/service/WebSocketService';
+import { getAuth } from 'firebase/auth';
+import { PlannedTaskUtil } from 'src/util/PlannedTaskUtil';
 
 interface Props {
     initialPlannedTask: PlannedTask;
@@ -135,11 +138,7 @@ export const PlannableTaskImproved = ({
 
     const dispatch = useAppDispatch();
 
-    const habitIconImage: OptimalImageData = {
-        icon: plannedTask.icon,
-        remoteImageUrl: plannedTask.remoteImageUrl,
-        localImage: plannedTask.localImage,
-    };
+    const habitIconImage = PlannedTaskUtil.getOptimalImage(plannedTask);
 
     const ref = React.useRef<Swipeable>(null);
 
@@ -152,6 +151,8 @@ export const PlannableTaskImproved = ({
         text: showReset ? 'Reset' : 'Done',
         color: showReset ? 'gray' : colors.progress_bar_complete,
         onAction: async () => {
+            WebSocketService.connectIfNotConnected();
+
             const originalStatus = plannedTask.status;
 
             if (showReset) {
@@ -176,7 +177,9 @@ export const PlannableTaskImproved = ({
                 await PlannedTaskService.complete(plannedTask, dayKey);
             }
 
+            console.log('Z');
             PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
+            //PlannedDayController.invalidatePlannedDayIsComplete(dayKey);
         },
         snapPoint: 100,
     };
@@ -200,6 +203,7 @@ export const PlannableTaskImproved = ({
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await PlannedTaskService.skip(plannedTask, dayKey);
+                console.log('Y');
                 PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
         },
@@ -221,6 +225,7 @@ export const PlannableTaskImproved = ({
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 await PlannedTaskService.fail(plannedTask, dayKey);
+                console.log('X');
                 PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
         },

@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { Screen } from 'src/components/common/Screen';
 import { User } from 'resources/schema';
-import { TodaysActivitiesWidget, WidgetSource } from 'src/components/widgets/TodaysTasksWidget';
 import { UserPostsWidget } from 'src/components/widgets/daily_history/UserPostsWidget';
 import { UserDailyResultsWidget } from 'src/components/widgets/daily_history/UserDailyResultsWidget';
 import React from 'react';
@@ -39,7 +38,6 @@ export const SingleScrollUserBody = ({ user, setHeight }: Props) => {
                 <HabitStreakWidget user={user} />
                 <TrophyCaseWidget userId={user.id} />
                 <ActiveChallengesWidget userId={user.id ?? 0} />
-                <TodaysActivitiesWidget user={user} source={WidgetSource.PROFILE} />
                 <UserPostsWidget userId={user.id} />
                 <UserDailyResultsWidget userId={user.id} />
             </View>

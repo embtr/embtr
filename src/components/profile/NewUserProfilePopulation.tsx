@@ -38,7 +38,7 @@ import { Constants } from 'resources/types/constants/constants';
  */
 
 const PROFILE_IMAGE =
-    'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media';
+    'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/icons%2Fnew%20user?alt=media';
 
 const PADDING = PADDING_LARGE * 0.6;
 
@@ -240,20 +240,63 @@ export const NewUserProfilePopulation = () => {
                                     setImageHeight(e.nativeEvent.layout.height);
                                 }}
                             >
-                                <View>
-                                    <TouchableOpacity onPress={uploadProfilePhoto}>
-                                        <View>
-                                            <CachedImage
+                                {userProfileUrl === PROFILE_IMAGE ? (
+                                    <View>
+                                        <TouchableOpacity onPress={uploadProfilePhoto}>
+                                            <View
                                                 style={{
                                                     width: imageHeight,
                                                     height: imageHeight,
                                                     borderRadius: 50,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    backgroundColor: colors.text_input_background,
                                                 }}
-                                                uri={userProfileUrl}
-                                            />
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
+                                            >
+                                                <View
+                                                    style={{
+                                                        width: imageHeight,
+                                                        height: imageHeight,
+                                                        borderRadius: 50000,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        overflow: 'hidden',
+                                                        bottom: 4,
+                                                    }}
+                                                >
+                                                    <CachedImage
+                                                        style={{
+                                                            width: imageHeight * 0.75,
+                                                            height: imageHeight * 0.75,
+                                                            top: 12,
+                                                            right: 4,
+                                                        }}
+                                                        uri={userProfileUrl}
+                                                    />
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (
+                                    <View>
+                                        <TouchableOpacity onPress={uploadProfilePhoto}>
+                                            <View>
+                                                <CachedImage
+                                                    style={{
+                                                        width: imageHeight,
+                                                        height: imageHeight,
+                                                        borderRadius: 50,
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        backgroundColor:
+                                                            colors.text_input_background,
+                                                    }}
+                                                    uri={userProfileUrl}
+                                                />
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                                 <View
                                     style={{
                                         flex: 1,

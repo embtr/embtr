@@ -4,6 +4,8 @@ import {
     GetHabitCategoriesResponse,
     GetHabitCategoryResponse,
     GetHabitJourneyResponse,
+    GetHabitsResponse,
+    TutorialHabitSelectedRequest,
 } from 'resources/types/requests/HabitTypes';
 import axiosInstance from 'src/axios/axios';
 import { useQuery } from '@tanstack/react-query';
@@ -24,6 +26,35 @@ export class HabitController {
             })
             .catch((error) => {
                 return undefined;
+            });
+    }
+
+    public static async getTutorialRecommendedHabits(): Promise<Task[] | undefined> {
+        return await axiosInstance
+            .get<GetHabitsResponse>('/tutorial/recommended')
+            .then((success) => {
+                return success.data.habits;
+            })
+            .catch((error) => {
+                Logger.titledLog('error from /tutorial/recommended', error);
+                return undefined;
+            });
+    }
+
+    public static async tutorialHabitSelected(id?: number, text?: string) {
+        const request: TutorialHabitSelectedRequest = {
+            id,
+            text,
+        };
+
+        return await axiosInstance
+            .post(`/tutorial/selected`, request)
+            .then((success) => {
+                return true;
+            })
+            .catch((error) => {
+                Logger.titledLog('error from /tutorial/habit/:id/selected', error);
+                return false;
             });
     }
 
@@ -103,6 +134,7 @@ export class HabitController {
     public static async getAllHabitCategories(): Promise<HabitCategory[]> {
         const requests = [HabitController.getAllGenericHabitCategories()];
 
+        // consider using Promise.allSettled
         const [generic] = await Promise.all(requests);
         const allCategories: HabitCategory[] = [];
         if (generic) {
@@ -187,6 +219,16 @@ export namespace HabitCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const useTutorialRecommendedHabits = () => {
+        const { status, error, data } = useQuery({
+            queryKey: ['tutorialRecommendedHabits'],
+            queryFn: HabitController.getTutorialRecommendedHabits,
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return data ?? [];
     };
 
     export const useIcons = () => {

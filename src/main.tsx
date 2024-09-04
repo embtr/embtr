@@ -77,7 +77,6 @@ export const Main = () => {
                 const loggedInUser = await UserController.loginUser();
                 if (loggedInUser) {
                     setLoggedInState(LoginState.LOGGED_IN);
-
                     revenueCat.login();
 
                     dispatch(setCurrentUser(loggedInUser));

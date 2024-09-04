@@ -4,9 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { DayPickerElementData } from 'src/model/PlanningWidget';
 import { POPPINS_REGULAR, POPPINS_SEMI_BOLD, PADDING_LARGE } from 'src/util/constants';
-import { Ionicons } from '@expo/vector-icons';
-import { CompleteResultIcon } from 'src/components/common/timeline/result_icons/CompleteResultIcon';
-import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
+import { DayPickerOverheadIcon } from './DayPickerOverheadIcon';
 
 interface MemoizedProps {
     elementData: DayPickerElementData;
@@ -66,18 +64,10 @@ export const MemoizedDayPickerElementImproved = React.memo(
 export const DayPickerElementImproved = ({ elementData, isSelected, onSelect, isToday }: Props) => {
     const { colors } = useTheme();
 
-    const isCompleted = PlannedDayCustomHooks.usePlannedDayIsComplete(elementData.dayKey);
-
     const textColor = isSelected
         ? colors.accent_color_light
         : colors.today_calendar_picker_unselected;
     const underscoreColor = isSelected ? colors.accent_color : colors.card_background;
-
-    const iconAbove = isToday ? (
-        <Ionicons name={'sunny-outline'} size={12} color={textColor} />
-    ) : isCompleted ? (
-        <CompleteResultIcon size={12} />
-    ) : null;
 
     return (
         <TouchableOpacity
@@ -90,7 +80,13 @@ export const DayPickerElementImproved = ({ elementData, isSelected, onSelect, is
             }}
         >
             <View style={{ alignContent: 'center', alignItems: 'center' }}>
-                <View style={{ height: 12 }}>{iconAbove}</View>
+                <View style={{ height: 12 }}>
+                    <DayPickerOverheadIcon
+                        dayKey={elementData.dayKey}
+                        isToday={isToday}
+                        isSelected={isSelected}
+                    />
+                </View>
                 <Text style={[styles.wordText, { color: textColor }]}>{elementData.dayShort}</Text>
                 <Text style={[styles.numberText, { color: textColor }]}>
                     {elementData.displayNumber}

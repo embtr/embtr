@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { CompletedHabit } from 'resources/types/planned_day_result/PlannedDayResult';
 import { CompletedHabitElement } from './CompletedHabitElement';

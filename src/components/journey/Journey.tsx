@@ -9,6 +9,9 @@ import { User } from 'resources/schema';
 import { ActiveChallengesWidget } from '../widgets/challenges/ActiveChallengesWidget';
 import { ChallengeController } from 'src/controller/challenge/ChallengeController';
 import { HabitStreakWidget } from '../widgets/habit_streak/HabitStreakWidget';
+import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
+import { OnHabitStreakWidget } from '../widgets/OnHabitStreakWidget';
+import { PointsWidget } from '../widgets/PointsWidget';
 
 const onRefresh = (user: User, setRefreshing: Function) => {
     setRefreshing(true);
@@ -54,6 +57,8 @@ export const Journey = () => {
                     <View
                         style={{ height: '100%', width: '100%', paddingHorizontal: PADDING_LARGE }}
                     >
+                        <PointsWidget user={currentUser.data} />
+                        <OnHabitStreakWidget user={currentUser.data} />
                         <HabitStreakWidget user={currentUser.data} />
                         <ActiveChallengesWidget userId={currentUser.data.id ?? 0} />
                     </View>

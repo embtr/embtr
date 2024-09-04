@@ -120,7 +120,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
 
     const currentUser = useAppSelector(getCurrentUser);
     const currentUserId = currentUser.id;
-    const isCurrentUser = plannedDay.user?.id === currentUserId;
+    const isCurrentUser = plannedDay.userId === currentUserId;
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
     const allHabitsAreComplete = getAllHabitsAreComplete(plannedDay);

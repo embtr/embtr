@@ -4,7 +4,13 @@ import {
     TutorialIslandTooltipData,
 } from 'src/model/tutorial_island/TutorialIslandModels';
 import { useTheme } from '../theme/ThemeProvider';
-import { PADDING_LARGE, PADDING_MEDIUM, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import {
+    PADDING_LARGE,
+    PADDING_MEDIUM,
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+} from 'src/util/constants';
 import { getWindowWidth } from 'src/util/GeneralUtility';
 import React from 'react';
 import { isNarrowDevice } from 'src/util/DeviceUtil';
@@ -43,7 +49,7 @@ export const TutorialIslandTooltip = ({ tooltip, onDismiss, parentWidth, parentH
 
     const textWidth = tooltip.text.length * 7.5;
     const minWidth = 150;
-    const maxWidth = getWindowWidth() * 0.55;
+    const maxWidth = getWindowWidth() * (tooltip.wide ? 0.75 : 0.55);
     const width = Math.min(Math.max(textWidth, minWidth), maxWidth);
 
     return (
@@ -94,6 +100,19 @@ export const TutorialIslandTooltip = ({ tooltip, onDismiss, parentWidth, parentH
             >
                 {tooltip.text}
             </Text>
+            {tooltip.page && (
+                <Text
+                    style={{
+                        color: '#141414',
+                        fontFamily: POPPINS_MEDIUM,
+                        fontSize: textSize,
+                        paddingBottom: PADDING_SMALL,
+                        textAlign: 'center',
+                    }}
+                >
+                    {tooltip.page}
+                </Text>
+            )}
 
             {tooltip.dismissableText && (
                 <View

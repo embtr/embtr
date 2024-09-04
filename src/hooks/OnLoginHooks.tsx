@@ -6,9 +6,7 @@ import Constants from 'expo-constants';
 import { UpdateUtility } from 'src/util/updates/UpdateUtility';
 import { useAppSelector } from 'src/redux/Hooks';
 import { getAcknowledgedVersion } from 'src/redux/user/GlobalState';
-import PushNotificationController from 'src/controller/notification/PushNotificationController';
 import { isIosApp } from 'src/util/DeviceUtil';
-import React from 'react';
 
 const handleLoginModals = () => {
     const navigation = useEmbtrNavigation();

@@ -12,9 +12,8 @@ import { HabitSummaryDetailsElement } from './HabitSummaryDetailsElement';
 import { PADDING_LARGE } from 'src/util/constants';
 import { HabitSummaryDetailsHeader } from './HabitSummaryDetailsHeader';
 import { ScheduledHabit } from 'resources/schema';
-import { Checkbox } from 'src/components/checkbox/Checkbox';
 import React from 'react';
-import { getDayKey, getTodayKey } from 'src/controller/planning/PlannedDayController';
+import { getTodayKey } from 'src/controller/planning/PlannedDayController';
 import { PureDate } from 'resources/types/date/PureDate';
 
 export const HabitSummaryDetails = () => {

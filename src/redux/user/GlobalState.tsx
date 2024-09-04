@@ -148,6 +148,8 @@ export const GlobalState = createSlice({
                 flow: TutorialIslandInvalidFlow,
                 currentStepKey: TutorialIslandStepKey.INVALID,
             };
+        },
+        resetPoints(state) {
             state.levelDetails = {
                 level: {},
                 points: 0,
@@ -414,6 +416,7 @@ export const {
     setShowQuickAddModal,
     setGlobalLoading,
     resetToDefault,
+    resetPoints,
     setUpdateModalPlannedTask,
     setRemovalModalPlannedTask,
     setEditModalPlannedTask,

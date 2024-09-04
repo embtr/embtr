@@ -9,7 +9,6 @@ import {
 import { TutorialIslandService } from 'src/service/TutorialIslandService';
 import { UserPropertyController } from 'src/controller/user/UserPropertyController';
 import { AppDispatch } from '../store';
-import { Constants } from 'resources/types/constants/constants';
 
 export namespace GlobalStateCustomHooks {
     export const useTutorialIslandState = () => {
@@ -82,6 +81,19 @@ export namespace GlobalStateCustomHooks {
     const completeTutorialIsland = async (dispatch: AppDispatch, state: string) => {
         const user = await UserPropertyController.setTutorialCompletionState(state);
         dispatch(setCurrentUser(user));
+    };
+
+    export const useSkipTutorialIsland = () => {
+        const dispatch = useAppDispatch();
+
+        const skipTutorialIsland = async () => {
+            const user = await UserPropertyController.setTutorialCompletionState(
+                TutorialIslandStepKey.SKIPPED
+            );
+            dispatch(setCurrentUser(user));
+        };
+
+        return skipTutorialIsland;
     };
 
     const updateTutorialIslandProgress = async (dispatch: AppDispatch, state: string) => {

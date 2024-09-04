@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth';
+import { User, getAuth } from 'firebase/auth';
 import React from 'react';
 import { Constants } from 'resources/types/constants/constants';
 import { WebSocketPayload } from 'resources/types/requests/WebSocket';
@@ -18,6 +18,8 @@ import * as StoreReview from 'expo-store-review';
 import { AppState } from 'react-native';
 import { PointCustomHooks } from 'src/controller/PointController';
 import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
+import PlannedDayController from 'src/controller/planning/PlannedDayController';
+import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 
 export class WebSocketService {
     private static socket: Socket = io(getApiUrl(), {
@@ -43,6 +45,13 @@ export class WebSocketService {
         });
 
         this.socket.connect();
+    }
+
+    public static async connectIfNotConnected() {
+        const currentUser = getAuth().currentUser;
+        if (currentUser && !this.socket.connected) {
+            await this.connect(currentUser);
+        }
     }
 }
 
@@ -94,6 +103,16 @@ export namespace WebSocketCustomHooks {
                     }
                 };
 
+                //TODO -  try and  make this no async
+                getUserIdFromToken().then((userId) => {
+                    if (userId) {
+                        PlannedDayController.invalidatePlannedDayIsComplete(
+                            userId,
+                            payload.payload.dayKey
+                        );
+                    }
+                });
+
                 requestReview();
                 fireConfetti();
                 firePoints(dayCompletePoints);
@@ -109,6 +128,15 @@ export namespace WebSocketCustomHooks {
          */
         React.useEffect(() => {
             socket.on(Constants.WebSocketEventType.DAY_INCOMPLETE, (payload: WebSocketPayload) => {
+                getUserIdFromToken().then((userId) => {
+                    if (userId) {
+                        PlannedDayController.invalidatePlannedDayIsComplete(
+                            userId,
+                            payload.payload.dayKey
+                        );
+                    }
+                });
+
                 firePoints(-dayCompletePoints);
             });
 
@@ -152,6 +180,7 @@ export namespace WebSocketCustomHooks {
                             title: 'Level Up!',
                             body: `You've reached level ${levelDetails.level.level}!`,
                             icon: levelDetails.level.badge.icon,
+                            badgeUrl: '',
                         };
                         displayDropDownAlert(dropDownAlertModel);
                         fireConfetti();

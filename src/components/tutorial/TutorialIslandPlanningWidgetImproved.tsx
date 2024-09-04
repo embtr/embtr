@@ -8,7 +8,6 @@ import {
 import { View } from 'react-native';
 import { PADDING_LARGE } from 'src/util/constants';
 import { setSelectedDayKey } from 'src/redux/user/GlobalState';
-import { PlanSelectedDay } from 'src/components/plan/planning/PlanSelectedDay';
 import { FlatList } from 'react-native-gesture-handler';
 import { useFocusEffect } from '@react-navigation/native';
 import { useAppDispatch } from 'src/redux/Hooks';
@@ -16,10 +15,7 @@ import { WidgetBase } from '../widgets/WidgetBase';
 import { MonthPickerImproved } from '../widgets/planning/MonthPickerImproved';
 import { DayPickerImproved } from '../widgets/planning/DayPickerImproved';
 import { TutorialIslandElement } from './TutorialIslandElement';
-import {
-    TutorialIslandOption,
-    TutorialIslandOptionKey,
-} from 'src/model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandPlanSelectedDay } from './TutorialIslandPlanSelectedDay';
 
 const generateDayKey = (dayData: DayPickerElementData, monthData: MonthPickerElementData) => {

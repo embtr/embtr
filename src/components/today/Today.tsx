@@ -9,10 +9,8 @@ import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImprov
 import { ScrollView } from 'react-native-gesture-handler';
 import { GetPremiumWidget } from '../widgets/GetPremiumWidget';
 import { AwayModeWidget } from '../widgets/AwayModeWidget';
-import { OnHabitStreakWidget } from '../widgets/OnHabitStreakWidget';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 import { User } from 'resources/schema';
-import { PointsWidget } from '../widgets/PointsWidget';
 
 interface Props {
     user: User;
@@ -27,14 +25,7 @@ export const TodayImpl = ({ user }: Props) => {
                 <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
                     <ScrollView>
                         <GetPremiumWidget />
-
                         <AwayModeWidget user={user} />
-
-                        <PointsWidget user={user} />
-
-                        <OnHabitStreakWidget user={user} />
-
-                        <QuoteOfTheDayWidget />
 
                         <View
                             onLayout={(e) => {
