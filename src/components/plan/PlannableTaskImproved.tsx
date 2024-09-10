@@ -1,5 +1,5 @@
 import { View, Text, TextStyle, Pressable } from 'react-native';
-import { PlannedTask } from 'resources/schema';
+import { PlannedDay, PlannedTask } from 'resources/schema';
 import {
     CARD_SHADOW,
     POPPINS_REGULAR,
@@ -14,9 +14,12 @@ import { TimeOfDayUtility } from 'src/util/time_of_day/TimeOfDayUtility';
 import { ProgressSvg } from './task/progress/ProgressSvg';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { Swipeable } from 'react-native-gesture-handler';
-import { getFirePoints, setUpdateModalPlannedTask } from 'src/redux/user/GlobalState';
+import {
+    getFireConfetti,
+    getFirePoints,
+    setUpdateModalPlannedTask,
+} from 'src/redux/user/GlobalState';
 import { Image } from 'react-native';
-import { OptimalImageData } from '../common/images/OptimalImage';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { Constants } from 'resources/types/constants/constants';
 import { SwipeableCard } from '../common/swipeable/SwipeableCard';
@@ -32,13 +35,15 @@ import { ChallengeBadge } from '../common/comments/general/ChallengeBadge';
 import { PointCustomHooks } from 'src/controller/PointController';
 import { PureDate } from 'resources/types/date/PureDate';
 import { WebSocketService } from 'src/service/WebSocketService';
-import { getAuth } from 'firebase/auth';
 import { PlannedTaskUtil } from 'src/util/PlannedTaskUtil';
+import { PlannedDayUtil } from 'src/util/PlannedDayUtil';
+import { LevelController } from 'src/controller/level/LevelController';
 
 interface Props {
     initialPlannedTask: PlannedTask;
     dayKey: string;
     currentUserId: number;
+    plannedDay: PlannedDay;
     isGuest?: boolean;
 }
 
@@ -71,10 +76,11 @@ const generateStyles = (colors: any): Styles => {
 };
 
 export const MemoizedPlannableTaskImproved = React.memo(
-    ({ initialPlannedTask, dayKey, isGuest, currentUserId }: Props) => {
+    ({ initialPlannedTask, plannedDay, dayKey, isGuest, currentUserId }: Props) => {
         return (
             <PlannableTaskImproved
                 initialPlannedTask={initialPlannedTask}
+                plannedDay={plannedDay}
                 dayKey={dayKey}
                 isGuest={isGuest}
                 currentUserId={currentUserId}
@@ -102,19 +108,30 @@ const getStatusColor = (colors: any, status?: string) => {
     }
 };
 
-const conditionallyFirePoints = (firePoints: Function, points: number, dayKey: string) => {
+const conditionallyFirePoints = (
+    userId: number,
+    firePoints: Function,
+    points: number,
+    dayKey: string
+) => {
     const habitPureDate = PureDate.fromString(dayKey);
     const cutoffDate = PureDate.fromString('2024-08-01');
 
     if (habitPureDate < cutoffDate) {
+        console.log('Skipping points for date', habitPureDate);
         return;
     }
 
+    console.log('Firing points', points);
+
+    LevelController.clearDebounce();
+    LevelController.addPointsToLevelDetails(userId, points);
     firePoints(points);
 };
 
 export const PlannableTaskImproved = ({
     initialPlannedTask,
+    plannedDay,
     dayKey,
     isGuest,
     currentUserId,
@@ -124,6 +141,7 @@ export const PlannableTaskImproved = ({
 
     const [plannedTask, setPlannedTask] = React.useState<PlannedTask>(initialPlannedTask);
 
+    const fireConfetti = useAppSelector(getFireConfetti);
     const firePoints = useAppSelector(getFirePoints);
     const pointDivisor = plannedTask.scheduledHabit?.timesOfDay?.length ?? 1;
     const habitCompletePoints = PointCustomHooks.useHabitCompletePoints() / pointDivisor;
@@ -153,33 +171,107 @@ export const PlannableTaskImproved = ({
         onAction: async () => {
             WebSocketService.connectIfNotConnected();
 
+            const wasComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(
+                plannedDay,
+                [],
+                []
+            );
+
             const originalStatus = plannedTask.status;
 
             if (showReset) {
+                plannedDay.plannedTasks?.forEach((task) => {
+                    const isThePlannedTask =
+                        task.scheduledHabitId === plannedTask.scheduledHabitId &&
+                        task.timeOfDayId === plannedTask.timeOfDayId &&
+                        task.originalTimeOfDayId === plannedTask.originalTimeOfDayId;
+
+                    if (
+                        (task.id && plannedTask.id && task.id === plannedTask.id) ||
+                        isThePlannedTask
+                    ) {
+                        task.status = Constants.CompletionState.INCOMPLETE;
+                        task.completedQuantity = 0;
+                    }
+                });
+
                 setPlannedTask({
                     ...plannedTask,
                     status: Constants.CompletionState.INCOMPLETE,
                     completedQuantity: 0,
                 });
-                if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
-                    conditionallyFirePoints(firePoints, -habitCompletePoints, dayKey);
+
+                const isComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(
+                    plannedDay,
+                    [],
+                    []
+                );
+
+                PlannedDayController.setPlannedDayIsComplete(currentUserId, dayKey, isComplete);
+
+                if (wasComplete && !isComplete) {
+                    setTimeout(() => {
+                        conditionallyFirePoints(currentUserId, firePoints, -300, dayKey);
+                    }, 250);
                 }
-                await PlannedTaskService.incomplete(plannedTask, dayKey);
+
+                if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
+                    conditionallyFirePoints(
+                        currentUserId,
+                        firePoints,
+                        -habitCompletePoints,
+                        dayKey
+                    );
+                }
+
+                PlannedTaskService.incomplete(plannedTask, dayKey);
             } else {
+                plannedDay.plannedTasks?.forEach((task) => {
+                    const isThePlannedTask =
+                        task.scheduledHabitId === plannedTask.scheduledHabitId &&
+                        task.timeOfDayId === plannedTask.timeOfDayId &&
+                        task.originalTimeOfDayId === plannedTask.originalTimeOfDayId;
+
+                    if (
+                        (task.id && plannedTask.id && task.id === plannedTask.id) ||
+                        isThePlannedTask
+                    ) {
+                        task.status = Constants.CompletionState.COMPLETE;
+                        task.completedQuantity = plannedTask.quantity;
+                    }
+                });
+
                 setPlannedTask({
                     ...plannedTask,
                     status: Constants.CompletionState.COMPLETE,
                     completedQuantity: plannedTask.quantity,
                 });
-                if (habitCompletePoints) {
-                    conditionallyFirePoints(firePoints, habitCompletePoints, dayKey);
+
+                const isComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(
+                    plannedDay,
+                    [plannedTask],
+                    []
+                );
+
+                PlannedDayController.setPlannedDayIsComplete(currentUserId, dayKey, isComplete);
+
+                if (isComplete) {
+                    fireConfetti();
+
+                    setTimeout(() => {
+                        conditionallyFirePoints(currentUserId, firePoints, 300, dayKey);
+                    }, 250);
                 }
-                await PlannedTaskService.complete(plannedTask, dayKey);
+
+                if (habitCompletePoints) {
+                    conditionallyFirePoints(currentUserId, firePoints, habitCompletePoints, dayKey);
+                }
+
+                PlannedTaskService.complete(plannedTask, dayKey);
             }
 
-            console.log('Z');
-            PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
-            //PlannedDayController.invalidatePlannedDayIsComplete(dayKey);
+            //PlannedDayController.setPlannedDay(currentUserId, dayKey, plannedDay);
+            //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
         },
         snapPoint: 100,
     };
@@ -198,13 +290,24 @@ export const PlannableTaskImproved = ({
                 ref.current?.close();
 
                 if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
-                    conditionallyFirePoints(firePoints, -habitCompletePoints, dayKey);
+                    conditionallyFirePoints(
+                        currentUserId,
+                        firePoints,
+                        -habitCompletePoints,
+                        dayKey
+                    );
                 }
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                await PlannedTaskService.skip(plannedTask, dayKey);
-                console.log('Y');
-                PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
+                PlannedTaskService.skip(plannedTask, dayKey);
+
+                plannedDay.plannedTasks?.forEach((task) => {
+                    if (task.id === plannedTask.id) {
+                        task.status = Constants.CompletionState.SKIPPED;
+                    }
+                });
+                //PlannedDayController.setPlannedDay(currentUserId, dayKey, plannedDay);
+                //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
         },
         {
@@ -220,13 +323,24 @@ export const PlannableTaskImproved = ({
                 ref.current?.close();
 
                 if (originalStatus === Constants.CompletionState.COMPLETE && habitCompletePoints) {
-                    conditionallyFirePoints(firePoints, -habitCompletePoints, dayKey);
+                    conditionallyFirePoints(
+                        currentUserId,
+                        firePoints,
+                        -habitCompletePoints,
+                        dayKey
+                    );
                 }
 
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                await PlannedTaskService.fail(plannedTask, dayKey);
-                console.log('X');
-                PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
+                PlannedTaskService.fail(plannedTask, dayKey);
+
+                plannedDay.plannedTasks?.forEach((task) => {
+                    if (task.id === plannedTask.id) {
+                        task.status = Constants.CompletionState.FAILED;
+                    }
+                });
+                //PlannedDayController.setPlannedDay(currentUserId, dayKey, plannedDay);
+                //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
         },
     ];

@@ -1,4 +1,4 @@
-import { View, Text, TextStyle } from 'react-native';
+import { View, Text, TextStyle, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -6,16 +6,13 @@ import { RootStackParamList } from 'src/navigation/RootStackParamList';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import {
-    getOpenMenu,
-    getCloseMenu,
-    setMenuOptions,
-    getLevelDetails,
-} from 'src/redux/user/GlobalState';
+import { getOpenMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
 import {
+    CARD_SHADOW,
     PADDING_LARGE,
     PADDING_MEDIUM,
+    PADDING_SMALL,
     PADDING_TINY,
     POPPINS_MEDIUM,
     POPPINS_REGULAR,
@@ -23,6 +20,7 @@ import {
 import { useNetInfo } from '@react-native-community/netinfo';
 import { isNarrowDevice } from 'src/util/DeviceUtil';
 import { OptimalImage } from './images/OptimalImage';
+import { LevelCustomHooks } from 'src/controller/level/LevelController';
 
 interface Props {
     name: string;
@@ -45,6 +43,7 @@ interface Props {
     rightIconNotificationCount?: number;
 
     rightEnabled?: boolean;
+    rightButton?: boolean;
 
     menuOptions?: EmbtrMenuOptions;
 }
@@ -68,6 +67,7 @@ export const Banner = ({
     innerRightIcon,
     innerRightOnClick,
     rightEnabled,
+    rightButton,
 }: Props) => {
     const { colors } = useTheme();
 
@@ -80,10 +80,10 @@ export const Banner = ({
     const bannerSize = isNarrowDevice() ? 18 : 20;
 
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-    const levelDetails = useAppSelector(getLevelDetails);
+    const levelDetails = LevelCustomHooks.useLevelDetailsForCurrentUser();
 
     // localizing the points
-    const pointsText = levelDetails.points.toLocaleString();
+    const pointsText = levelDetails.data?.points.toLocaleString() ?? '0';
 
     const netInfo = useNetInfo();
     const isConnectedToNetwork = netInfo.isConnected;
@@ -343,6 +343,38 @@ export const Banner = ({
                                         {rightText}
                                     </Text>
                                 </View>
+                            </View>
+                        )}
+
+                        {/* RIGHT TEXT */}
+                        {rightButton && (
+                            <View>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        //scrollToToday();
+                                    }}
+                                    style={[
+                                        {
+                                            flexDirection: 'row',
+                                            backgroundColor: '#404040',
+                                            borderRadius: 5,
+                                            paddingHorizontal: 4,
+                                            paddingVertical: 2,
+                                        },
+                                        CARD_SHADOW,
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            color: colors.text,
+                                            fontSize: 12,
+                                            fontFamily: POPPINS_REGULAR,
+                                            paddingHorizontal: PADDING_SMALL / 2,
+                                        }}
+                                    >
+                                        Today
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                         )}
                     </View>

@@ -10,16 +10,14 @@ import {
     getDisplayDropDownAlert,
     getFireConfetti,
     getFirePoints,
-    getLevelDetails,
-    setLevelDetails,
 } from 'src/redux/user/GlobalState';
 import { getApiUrl } from 'src/util/UrlUtility';
 import * as StoreReview from 'expo-store-review';
 import { AppState } from 'react-native';
 import { PointCustomHooks } from 'src/controller/PointController';
-import { DropDownAlertModal } from 'src/model/DropDownAlertModel';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
+import { LevelController } from 'src/controller/level/LevelController';
 
 export class WebSocketService {
     private static socket: Socket = io(getApiUrl(), {
@@ -61,11 +59,8 @@ export namespace WebSocketCustomHooks {
 
         const fireConfetti = useAppSelector(getFireConfetti);
         const currentUser = useAppSelector(getCurrentUser);
-        const currentLevelDetails = useAppSelector(getLevelDetails);
         const firePoints = useAppSelector(getFirePoints);
-        const displayDropDownAlert = useAppSelector(getDisplayDropDownAlert);
         const dayCompletePoints = PointCustomHooks.useDayCompletePoints();
-        const dispatch = useAppDispatch();
 
         React.useEffect(() => {
             console.log('adding event listeners');
@@ -103,19 +98,9 @@ export namespace WebSocketCustomHooks {
                     }
                 };
 
-                //TODO -  try and  make this no async
-                getUserIdFromToken().then((userId) => {
-                    if (userId) {
-                        PlannedDayController.invalidatePlannedDayIsComplete(
-                            userId,
-                            payload.payload.dayKey
-                        );
-                    }
-                });
-
                 requestReview();
-                fireConfetti();
-                firePoints(dayCompletePoints);
+                //fireConfetti();
+                //firePoints(dayCompletePoints);
             });
 
             return () => {
@@ -137,7 +122,7 @@ export namespace WebSocketCustomHooks {
                     }
                 });
 
-                firePoints(-dayCompletePoints);
+                //firePoints(-dayCompletePoints);
             });
 
             return () => {
@@ -171,7 +156,12 @@ export namespace WebSocketCustomHooks {
                 Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED,
                 (payload: WebSocketPayload) => {
                     const levelDetails = payload.payload.levelDetails;
-                    dispatch(setLevelDetails(levelDetails));
+                    LevelController.debounceLevelDetails(currentUser.id ?? 0, levelDetails);
+
+                    /*
+                    // send to some service to debounce it
+
+                    //dispatch(setLevel(levelDetails.level.level));
 
                     const levelChange =
                         levelDetails.level.level - (currentLevelDetails.level.level ?? 0);
@@ -185,13 +175,14 @@ export namespace WebSocketCustomHooks {
                         displayDropDownAlert(dropDownAlertModel);
                         fireConfetti();
                     }
+                    */
                 }
             );
 
             return () => {
                 socket.off(Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED);
             };
-        }, [fireConfetti, currentLevelDetails, socket]);
+        }, [fireConfetti, socket]);
 
         /*
          * USER_UPDATED EVENT

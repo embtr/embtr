@@ -262,6 +262,10 @@ class PlannedDayController {
             });
     }
 
+    public static setPlannedDayIsComplete(userId: number, dayKey: string, isComplete: boolean) {
+        reactQueryClient.setQueryData(['plannedDayIsComplete', userId, dayKey], isComplete);
+    }
+
     public static async prefetchAllPlannedDayData() {
         const currentUserId = await getUserIdFromToken();
         if (!currentUserId) {
@@ -288,13 +292,17 @@ class PlannedDayController {
         });
     }
 
+    public static async setPlannedDay(userId: number, dayKey: string, plannedDay: PlannedDay) {
+        reactQueryClient.setQueryData(['plannedDay', userId, dayKey], plannedDay);
+    }
+
     public static async invalidatePlannedDay(userId: number, dayKey: string) {
         reactQueryClient.invalidateQueries(['plannedDay', userId, dayKey]);
-        reactQueryClient.invalidateQueries(['plannedDayIsComplete', userId, dayKey]);
+        //reactQueryClient.invalidateQueries(['plannedDayIsComplete', userId, dayKey]);
     }
 
     public static async invalidatePlannedDayIsComplete(userId: number, dayKey: string) {
-        reactQueryClient.invalidateQueries(['plannedDayIsComplete', userId, dayKey]);
+        //reactQueryClient.invalidateQueries(['plannedDayIsComplete', userId, dayKey]);
     }
 }
 
@@ -357,7 +365,7 @@ export namespace PlannedDayCustomHooks {
         const { data } = useQuery({
             queryKey: ['plannedDayIsComplete', userId, dayKey],
             queryFn: () => PlannedDayController.isComplete(userId, dayKey),
-            staleTime: ReactQueryStaleTimes.INSTANTLY,
+            staleTime: ReactQueryStaleTimes.INFINITY,
             enabled:
                 dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
         });

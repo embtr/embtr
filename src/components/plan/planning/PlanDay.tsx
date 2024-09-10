@@ -11,6 +11,7 @@ import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
 import { Constants } from 'resources/types/constants/constants';
+import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
 
 const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
     return 'completedQuantity' in item;
@@ -123,7 +124,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     const isCurrentUser = plannedDay.userId === currentUserId;
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
-    const allHabitsAreComplete = getAllHabitsAreComplete(plannedDay);
+    const allHabitsAreComplete = PlannedDayCustomHooks.usePlannedDayIsComplete(dayKey);
 
     React.useEffect(() => {
         const expand = !hasPlannedTasks || allHabitsAreComplete;
@@ -176,6 +177,7 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
                 <View style={{ paddingBottom: PADDING_LARGE / 2 }}>
                     <MemoizedPlannableTaskImproved
                         initialPlannedTask={item}
+                        plannedDay={plannedDay}
                         dayKey={dayKey}
                         isGuest={!isCurrentUser}
                         currentUserId={currentUserId ?? 0}

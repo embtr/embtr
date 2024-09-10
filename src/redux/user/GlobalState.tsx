@@ -49,11 +49,8 @@ const INITIAL_STATE: GlobalState = {
     acknowledgedVersion: '0.0.0',
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
     tutorialIslandState: INVALID_FLOW_STATE,
-    levelDetails: {
-        level: {},
-        points: 0,
-    },
 };
+
 interface GlobalState {
     menuOptions: EmbtrMenuOptions;
     openMenu: Function;
@@ -80,7 +77,6 @@ interface GlobalState {
     acknowledgedVersion: string;
     appleAuthUserInfo: AppleAuthUserInfo;
     tutorialIslandState: TutorialIslandFlowState;
-    levelDetails: LevelDetails;
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -149,12 +145,6 @@ export const GlobalState = createSlice({
                 currentStepKey: TutorialIslandStepKey.INVALID,
             };
         },
-        resetPoints(state) {
-            state.levelDetails = {
-                level: {},
-                points: 0,
-            };
-        },
         setUpdateModalPlannedTask(state, action: { payload: UpdateModalPlannedTask }) {
             state.updateModalPlannedTask = action.payload;
         },
@@ -184,12 +174,6 @@ export const GlobalState = createSlice({
         },
         setTutorialIslandState(state, action) {
             state.tutorialIslandState = action.payload;
-        },
-        addPoints(state, action) {
-            state.levelDetails.points += action.payload;
-        },
-        setLevelDetails(state, action) {
-            state.levelDetails = action.payload;
         },
     },
 });
@@ -390,14 +374,6 @@ export const getTutorialIslandState = (state: RootState): TutorialIslandFlowStat
     return state.globalState.tutorialIslandState;
 };
 
-export const getLevelDetails = (state: RootState): LevelDetails => {
-    if (state?.globalState.levelDetails === undefined) {
-        return INITIAL_STATE.levelDetails;
-    }
-
-    return state.globalState.levelDetails;
-};
-
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -407,7 +383,6 @@ export const {
     setShowCardShadow,
     setFireConfetti,
     setFirePoints,
-    addPoints,
     setDisplayDropDownAlert,
     setSelectedDayKey,
     setCurrentUser,
@@ -416,7 +391,6 @@ export const {
     setShowQuickAddModal,
     setGlobalLoading,
     resetToDefault,
-    resetPoints,
     setUpdateModalPlannedTask,
     setRemovalModalPlannedTask,
     setEditModalPlannedTask,
@@ -426,5 +400,4 @@ export const {
     setAcknowledgedVersion,
     setAppleAuthUserInfo,
     setTutorialIslandState,
-    setLevelDetails,
 } = GlobalState.actions;

@@ -2,7 +2,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { Banner } from '../common/Banner';
 import { Screen } from '../common/Screen';
-import { QuoteOfTheDayWidget } from '../widgets/quote_of_the_day/QuoteOfTheDayWidget';
 import { TodayPageLayoutContextProvider } from './TodayPageLayoutContext';
 import { PADDING_LARGE } from 'src/util/constants';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';

@@ -14,6 +14,10 @@ export const TutorialIslandQuickFlow: TutorialIslandFlow = {
             key: TutorialIslandStepKey.QUICK_CREATE_HABITS__CREATE_HABITS,
             options: [
                 {
+                    key: TutorialIslandOptionKey.BANNER_RIGHT,
+                    onPressReportable: false,
+                },
+                {
                     key: TutorialIslandOptionKey.QUICK_CREATE_HABITS__CREATE_HABITS,
                     onPressReportable: false,
                 },
@@ -22,6 +26,10 @@ export const TutorialIslandQuickFlow: TutorialIslandFlow = {
         {
             key: TutorialIslandStepKey.QUICK_CREATE_HABITS__VIEW_MANAGE_HABITS,
             options: [
+                {
+                    key: TutorialIslandOptionKey.BANNER_RIGHT,
+                    onPressReportable: false,
+                },
                 {
                     key: TutorialIslandOptionKey.TAB__MY_HABITS_TAB,
                     onPressReportable: true,
@@ -38,6 +46,10 @@ export const TutorialIslandQuickFlow: TutorialIslandFlow = {
             key: TutorialIslandStepKey.QUICK_CREATE_HABITS__VIEW_UPDATE_HABITS,
             options: [
                 {
+                    key: TutorialIslandOptionKey.BANNER_RIGHT,
+                    onPressReportable: false,
+                },
+                {
                     key: TutorialIslandOptionKey.TAB__TODAY,
                     onPressReportable: true,
                     tooltip: {
@@ -53,6 +65,10 @@ export const TutorialIslandQuickFlow: TutorialIslandFlow = {
         {
             key: TutorialIslandStepKey.QUICK_CREATE_HABITS__SWIPE_COMPLETE,
             options: [
+                {
+                    key: TutorialIslandOptionKey.BANNER_RIGHT,
+                    onPressReportable: false,
+                },
                 {
                     key: TutorialIslandOptionKey.PLAN_DAY__PLANNED_TASK,
                     onPressReportable: false,
@@ -85,6 +101,10 @@ export const TutorialIslandQuickFlow: TutorialIslandFlow = {
         {
             key: TutorialIslandStepKey.QUICK_CREATE_HABITS__SWIPE_RESET,
             options: [
+                {
+                    key: TutorialIslandOptionKey.BANNER_RIGHT,
+                    onPressReportable: false,
+                },
                 {
                     key: TutorialIslandOptionKey.PLAN_DAY__PLANNED_TASK,
                     onPressReportable: false,

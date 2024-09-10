@@ -1,4 +1,4 @@
-import { View, Text, TextStyle } from 'react-native';
+import { View, Text, TextStyle, TouchableOpacity } from 'react-native';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +8,13 @@ import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
 import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
 import { getOpenMenu, getCloseMenu, setMenuOptions } from 'src/redux/user/GlobalState';
 import { useFonts, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
-import { PADDING_MEDIUM, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import {
+    CARD_SHADOW,
+    PADDING_MEDIUM,
+    PADDING_SMALL,
+    POPPINS_MEDIUM,
+    POPPINS_REGULAR,
+} from 'src/util/constants';
 import { useNetInfo } from '@react-native-community/netinfo';
 import { isNarrowDevice } from 'src/util/DeviceUtil';
 import { TutorialIslandElement } from './TutorialIslandElement';
@@ -34,6 +40,7 @@ interface Props {
     rightIconNotificationCount?: number;
 
     rightEnabled?: boolean;
+    rightButton?: string;
 
     menuOptions?: EmbtrMenuOptions;
 }
@@ -56,6 +63,7 @@ export const TutorialIslandBanner = ({
     innerRightIcon,
     innerRightOnClick,
     rightEnabled,
+    rightButton,
 }: Props) => {
     const { colors } = useTheme();
 
@@ -211,7 +219,7 @@ export const TutorialIslandBanner = ({
                         alignItems: 'center',
                     }}
                 >
-                    <TutorialIslandElement optionKey={TutorialIslandOptionKey.INVALID}>
+                    <TutorialIslandElement optionKey={TutorialIslandOptionKey.BANNER_RIGHT}>
                         {/* INNER RIGHT ICON */}
                         {!isConnectedToNetwork ? (
                             <Ionicons
@@ -300,6 +308,38 @@ export const TutorialIslandBanner = ({
                                         {rightText}
                                     </Text>
                                 </View>
+                            </View>
+                        )}
+
+                        {/* RIGHT TEXT */}
+                        {rightButton && (
+                            <View>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        rightOnClick?.();
+                                    }}
+                                    style={[
+                                        {
+                                            flexDirection: 'row',
+                                            backgroundColor: colors.accent_color,
+                                            borderRadius: 5,
+                                            paddingHorizontal: 4,
+                                            paddingVertical: 2,
+                                        },
+                                        CARD_SHADOW,
+                                    ]}
+                                >
+                                    <Text
+                                        style={{
+                                            color: colors.text,
+                                            fontSize: 12,
+                                            fontFamily: POPPINS_REGULAR,
+                                            paddingHorizontal: PADDING_SMALL / 2,
+                                        }}
+                                    >
+                                        {rightButton}
+                                    </Text>
+                                </TouchableOpacity>
                             </View>
                         )}
                     </TutorialIslandElement>

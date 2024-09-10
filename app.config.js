@@ -9,9 +9,9 @@ module.exports = ({ config }) => {
                     : process.env.APP_ENV === 'staging'
                         ? 'https://staging.embtr.com'
                         : //   ethernet
-                        'http://10.0.0.146:3000',
-            //   wifi
-            //'http://10.0.0.91:3000',
+                        //'http://10.0.0.146:3000',
+                        //   wifi
+                        'http://10.0.0.91:3000',
         },
     };
 };

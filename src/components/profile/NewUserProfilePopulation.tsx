@@ -1,7 +1,6 @@
 import React from 'react';
 
 import {
-    ActivityIndicator,
     Image,
     Keyboard,
     Linking,
@@ -29,18 +28,22 @@ import { getAppleAuthUserInfo, setGlobalLoading } from 'src/redux/user/GlobalSta
 import { AppleAuthUserInfo } from 'src/model/GlobalState';
 import { UserPropertyController } from 'src/controller/user/UserPropertyController';
 import { Constants } from 'resources/types/constants/constants';
+import { OptimalImage } from '../common/images/OptimalImage';
 
 /*
  * Title -> Introduction -> Username / handle -> Shown Name ->
  * About yourself -> Age -> Location ->(Next page) Add a photo of
- * yourself -> (Next page) -> Find your friends (when we have that option) ->
+ * yo urself -> (Next page) -> Find your friends (when we have that option) ->
  *  (Next page) -> Set up your first habit
  */
 
-const PROFILE_IMAGE =
+const ADD_PROFILE_IMAGE =
     'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/icons%2Fnew%20user?alt=media';
+const DEFAULT_PROFILE_IMAGE =
+    'https://firebasestorage.googleapis.com/v0/b/embtr-app.appspot.com/o/common%2Fdefault_profile.png?alt=media';
 
 const PADDING = PADDING_LARGE * 0.6;
+const isLargerScreen = getWindowHeight() > 800;
 
 const getAppleUsername = (appleAuthUserInfo: AppleAuthUserInfo) => {
     const givenName: string = (appleAuthUserInfo.givenName ?? '').toLowerCase();
@@ -63,7 +66,6 @@ export const NewUserProfilePopulation = () => {
     const { colors } = useTheme();
 
     const [imageHeight, setImageHeight] = React.useState(0);
-    const [imageUploading, setImageUploading] = React.useState(false);
 
     const appleAuthUserInfo = useAppSelector(getAppleAuthUserInfo);
     const defaultUsername = appleAuthUserInfo ? getAppleUsername(appleAuthUserInfo) : '';
@@ -71,7 +73,7 @@ export const NewUserProfilePopulation = () => {
     const [username, setUsername] = React.useState(defaultUsername);
     const [displayName, setDisplayName] = React.useState(defaultUsername);
     const [bio, setBio] = React.useState('');
-    const [userProfileUrl, setUserProfileUrl] = React.useState(PROFILE_IMAGE);
+    const [userProfileUrl, setUserProfileUrl] = React.useState(DEFAULT_PROFILE_IMAGE);
     const [termsApproved, setTermsApproved] = React.useState(false);
     const [usernameAvailabilityResult, setUsernameAvailabilityResult] =
         React.useState<UsernameAvailabilityResult>({ message: 'available', available: true });
@@ -104,12 +106,12 @@ export const NewUserProfilePopulation = () => {
     }, [currentUser.data]);
 
     const uploadProfilePhoto = async () => {
-        setImageUploading(true);
+        dispatch(setGlobalLoading(true));
         const url = await UserController.uploadProfilePhoto();
         if (url) {
             setUserProfileUrl(url);
         }
-        setImageUploading(false);
+        dispatch(setGlobalLoading(false));
     };
 
     const submitProfileData = async () => {
@@ -240,7 +242,7 @@ export const NewUserProfilePopulation = () => {
                                     setImageHeight(e.nativeEvent.layout.height);
                                 }}
                             >
-                                {userProfileUrl === PROFILE_IMAGE ? (
+                                {userProfileUrl === DEFAULT_PROFILE_IMAGE ? (
                                     <View>
                                         <TouchableOpacity onPress={uploadProfilePhoto}>
                                             <View
@@ -264,14 +266,14 @@ export const NewUserProfilePopulation = () => {
                                                         bottom: 4,
                                                     }}
                                                 >
-                                                    <CachedImage
+                                                    <OptimalImage
                                                         style={{
                                                             width: imageHeight * 0.75,
                                                             height: imageHeight * 0.75,
-                                                            top: 12,
+                                                            top: isLargerScreen ? 16 : 12,
                                                             right: 4,
                                                         }}
-                                                        uri={userProfileUrl}
+                                                        data={{ remoteImageUrl: ADD_PROFILE_IMAGE }}
                                                     />
                                                 </View>
                                             </View>

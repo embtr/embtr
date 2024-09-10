@@ -11,9 +11,9 @@ import { ProgressBar } from '../plan/goals/ProgressBar';
 import { PADDING_LARGE } from 'src/util/constants';
 import { useTheme } from '../theme/ThemeProvider';
 import { LevelDetails } from 'resources/types/dto/Level';
-import { getCurrentUser, getLevelDetails, setLevelDetails } from 'src/redux/user/GlobalState';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
-import { LevelController, LevelCustomHooks } from 'src/controller/level/LevelController';
+import { getCurrentUser } from 'src/redux/user/GlobalState';
+import { useAppSelector } from 'src/redux/Hooks';
+import { LevelCustomHooks } from 'src/controller/level/LevelController';
 import { UserPropertyUtil } from 'src/util/UserPropertyUtil';
 
 const beginningPositiveNotes = [
@@ -121,7 +121,7 @@ const PointsWidgetImpl = ({ levelDetails, isCurrentUser, user }: ImplProps) => {
     const minPoints = level.minPoints ?? 0;
     const maxPoints = level.maxPoints ?? 0;
     const pointsInLevel = maxPoints - minPoints;
-    const progress = ((levelDetails.points - minPoints) / pointsInLevel) * 100;
+    const progress = Math.min(((levelDetails.points - minPoints) / pointsInLevel) * 100, 100);
     const displayName = isCurrentUser ? undefined : user.displayName;
 
     const body = getBody(
@@ -168,24 +168,14 @@ interface Props {
 }
 
 const CurrentUserPointsWidget = () => {
-    const dispatch = useAppDispatch();
-    const levelDetails = useAppSelector(getLevelDetails);
-    const currentUser = useAppSelector(getCurrentUser);
+    const user = useAppSelector(getCurrentUser);
+    const levelDetails = LevelCustomHooks.useLevelDetailsForCurrentUser();
 
-    const fetchLevelDetails = async () => {
-        const updatedLevelDetails = await LevelController.getLevelDetailsForUser(
-            currentUser.id ?? 0
-        );
-
-        dispatch(setLevelDetails(updatedLevelDetails));
-    };
-
-    if (!levelDetails.level.maxPoints) {
-        fetchLevelDetails();
+    if (!levelDetails.data) {
         return null;
     }
 
-    return <PointsWidgetImpl user={currentUser} isCurrentUser={true} levelDetails={levelDetails} />;
+    return <PointsWidgetImpl user={user} isCurrentUser={false} levelDetails={levelDetails.data} />;
 };
 
 const OtherUserPointsWidget = ({ user }: Props) => {

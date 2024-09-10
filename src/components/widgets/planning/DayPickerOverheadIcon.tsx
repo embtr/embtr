@@ -13,7 +13,6 @@ export const DayPickerOverheadIcon = ({ dayKey, isToday, isSelected }: Props) =>
     const colors = useTheme().colors;
 
     const isComplete = PlannedDayCustomHooks.usePlannedDayIsComplete(dayKey);
-    console.log('rerendering DayPickerOverheadIcon');
 
     const textColor = isSelected
         ? colors.accent_color_light

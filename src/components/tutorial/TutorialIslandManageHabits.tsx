@@ -1,7 +1,6 @@
 import React from 'react';
 import { HabitSummaries } from 'src/components/manage_habits/HabitSummaries';
 import { Screen } from 'src/components/common/Screen';
-import { Banner } from 'src/components/common/Banner';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { CARD_SHADOW, PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
 import { TutorialIslandRoutes } from 'src/navigation/RootStackParamList';
@@ -14,6 +13,8 @@ import { useEmbtrTutorialIslandNavigation } from 'src/hooks/NavigationHooks';
 import { ManageHabitsNoHabitsMessage } from '../manage_habits/ManageHabitsNoHabitsMessage';
 import { TutorialIslandElement, TutorialIslandElementRef } from './TutorialIslandElement';
 import { TutorialIslandOptionKey } from 'src/model/tutorial_island/TutorialIslandModels';
+import { TutorialIslandBanner } from './TutorialIslandBanner';
+import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
 
 export const TutorialIslandManageHabits = () => {
     const colors = useTheme().colors;
@@ -31,9 +32,15 @@ export const TutorialIslandManageHabits = () => {
         });
     };
 
+    const skipTutorialIsland = GlobalStateCustomHooks.useSkipTutorialIsland();
+
     return (
         <Screen>
-            <Banner name={'My Habits'} />
+            <TutorialIslandBanner
+                name={'My Habits'}
+                rightButton="Skip Tutorial"
+                rightOnClick={skipTutorialIsland}
+            />
 
             <View style={{ flex: 1 }}>
                 {scheduledHabits.data?.length === 0 && (

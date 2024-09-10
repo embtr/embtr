@@ -8,6 +8,7 @@ import { TutorialIslandBanner } from './TutorialIslandBanner';
 import { View } from 'react-native';
 import { TutorialIslandPlanningWidgetImproved } from './TutorialIslandPlanningWidgetImproved';
 import { PADDING_LARGE } from 'src/util/constants';
+import { GlobalStateCustomHooks } from 'src/redux/user/GlobalStateCustomHooks';
 
 export const TutorialIslandToday = () => {
     useFocusEffect(
@@ -23,9 +24,15 @@ export const TutorialIslandToday = () => {
         timelineData.push(...(page?.elements ?? []));
     });
 
+    const skipTutorialIsland = GlobalStateCustomHooks.useSkipTutorialIsland();
+
     return (
         <Screen>
-            <TutorialIslandBanner name={'Today'} />
+            <TutorialIslandBanner
+                name={'Today'}
+                rightButton="Skip Tutorial"
+                rightOnClick={skipTutorialIsland}
+            />
 
             <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
                 <TutorialIslandPlanningWidgetImproved />
