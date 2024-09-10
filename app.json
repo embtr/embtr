@@ -3,7 +3,7 @@
         "jsEngine": "hermes",
         "name": "embtr",
         "slug": "embtr",
-        "version": "5.0.26",
+        "version": "5.0.27",
         "orientation": "portrait",
         "icon": "assets/app_icon.png",
         "scheme": "embtr",
@@ -24,7 +24,7 @@
             "config": {
                 "usesNonExemptEncryption": false
             },
-            "buildNumber": "5.0.26"
+            "buildNumber": "5.0.27"
         },
         "android": {
             "adaptiveIcon": {
@@ -34,7 +34,7 @@
             "userInterfaceStyle": "automatic",
             "package": "com.brentryczak.embtr",
             "googleServicesFile": "./google-services.json",
-            "versionCode": 605000026
+            "versionCode": 605000027
         },
         "web": {
             "favicon": "assets/favicon.png"
