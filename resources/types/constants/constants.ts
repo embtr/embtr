@@ -372,4 +372,35 @@ export namespace Constants {
         FAILED_ACKNOWLEDGED = 'FAILED_ACKNOWLEDGED',
         FAILED_INVALIDATED = 'FAILED_INVALIDATED',
     }
+
+    export enum ChallengeFilterOption {
+        INVALID = 'INVALID',
+        UPCOMING = 'UPCOMING',
+        ONGOING = 'ONGOING',
+        JOINABLE = 'JOINABLE',
+        JOINED = 'JOINED',
+        FINISHED = 'FINISHED',
+    }
+
+    export const getChallengeFilterOptions = (options: string[]): ChallengeFilterOption[] => {
+        return options.map((option) => getChallengeFilterOption(option));
+    };
+
+    export const getChallengeFilterOption = (option: string): ChallengeFilterOption => {
+        switch (option) {
+            case 'UPCOMING':
+                return ChallengeFilterOption.UPCOMING;
+            case 'ONGOING':
+                return ChallengeFilterOption.ONGOING;
+            case 'JOINABLE':
+                return ChallengeFilterOption.JOINABLE;
+            case 'JOINED':
+                return ChallengeFilterOption.JOINED;
+            case 'FINISHED':
+                return ChallengeFilterOption.FINISHED;
+
+            default:
+                return ChallengeFilterOption.INVALID;
+        }
+    };
 }

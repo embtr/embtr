@@ -1,9 +1,7 @@
 import * as React from 'react';
-import { View, Text } from 'react-native';
-import { TabView, TabBar, SceneRendererProps } from 'react-native-tab-view';
-import { useTheme } from 'src/components/theme/ThemeProvider';
+import { View } from 'react-native';
 import { Banner } from '../common/Banner';
-import { POPPINS_MEDIUM, POPPINS_REGULAR, PADDING_LARGE } from 'src/util/constants';
+import { PADDING_LARGE } from 'src/util/constants';
 import { Screen } from '../common/Screen';
 import { PlanningWidgetImproved } from '../widgets/planning/PlanningWidgetImproved';
 import { ScrollView } from 'react-native-gesture-handler';

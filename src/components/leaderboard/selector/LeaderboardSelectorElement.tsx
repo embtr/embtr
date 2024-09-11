@@ -21,10 +21,10 @@ export const LeaderboardSelectorElement = ({ type, isSelected }: Props) => {
     return (
         <View
             style={{
-                backgroundColor: colors.card_background,
-                borderColor: isSelected ? colors.secondary_text : colors.card_background,
-                borderWidth: 1,
+                alignContent: 'center',
+                justifyContent: 'center',
                 borderRadius: 3,
+                backgroundColor: isSelected ? colors.accent_color : colors.background_light,
             }}
         >
             <Text

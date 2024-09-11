@@ -15,7 +15,7 @@ import {
     TutorialIslandStepKey,
 } from 'src/model/tutorial_island/TutorialIslandModels';
 import { TutorialIslandInvalidFlow } from 'src/model/tutorial_island/flows/TutorialIslandInvalidFlow';
-import { LevelDetails } from 'resources/types/dto/Level';
+import { Constants } from 'resources/types/constants/constants';
 
 const INITIAL_STATE: GlobalState = {
     menuOptions: { uniqueIdentifier: 'invalid', options: [] },
@@ -49,6 +49,7 @@ const INITIAL_STATE: GlobalState = {
     acknowledgedVersion: '0.0.0',
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
     tutorialIslandState: INVALID_FLOW_STATE,
+    challengeFilters: [],
 };
 
 interface GlobalState {
@@ -77,6 +78,7 @@ interface GlobalState {
     acknowledgedVersion: string;
     appleAuthUserInfo: AppleAuthUserInfo;
     tutorialIslandState: TutorialIslandFlowState;
+    challengeFilters: Constants.ChallengeFilterOption[];
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -174,6 +176,9 @@ export const GlobalState = createSlice({
         },
         setTutorialIslandState(state, action) {
             state.tutorialIslandState = action.payload;
+        },
+        setChallengeFilters(state, action) {
+            state.challengeFilters = action.payload;
         },
     },
 });
@@ -374,6 +379,14 @@ export const getTutorialIslandState = (state: RootState): TutorialIslandFlowStat
     return state.globalState.tutorialIslandState;
 };
 
+export const getChallengeFilters = (state: RootState): Constants.ChallengeFilterOption[] => {
+    if (state?.globalState.challengeFilters === undefined) {
+        return INITIAL_STATE.challengeFilters;
+    }
+
+    return state.globalState.challengeFilters;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -400,4 +413,5 @@ export const {
     setAcknowledgedVersion,
     setAppleAuthUserInfo,
     setTutorialIslandState,
+    setChallengeFilters,
 } = GlobalState.actions;

@@ -18,6 +18,7 @@ import { TimelineController } from '../timeline/TimelineController';
 import PlannedDayController from '../planning/PlannedDayController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { ReduxService } from 'src/redux/ReduxService';
+import { Constants } from 'resources/types/constants/constants';
 
 export class ChallengeController {
     public static async getAllDetails(): Promise<ChallengeDetails[] | undefined> {
@@ -34,6 +35,21 @@ export class ChallengeController {
     public static async getAllSummaries(): Promise<ChallengeSummary[] | undefined> {
         return axiosInstance
             .get<GetChallengesSummariesResponse>(`/challenge/summary`)
+            .then((result) => {
+                return result.data.challengesSummaries;
+            })
+            .catch((error) => {
+                return undefined;
+            });
+    }
+
+    public static async getFilteredSummaries(
+        filters: Constants.ChallengeFilterOption[]
+    ): Promise<ChallengeSummary[] | undefined> {
+        return axiosInstance
+            .get<GetChallengesSummariesResponse>(`/challenge/summary`, {
+                params: { filters: filters.join(',') },
+            })
             .then((result) => {
                 return result.data.challengesSummaries;
             })
@@ -242,6 +258,21 @@ export namespace ChallengeCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
+    };
+
+    export const useFilteredChallengeSummaries = (filters: Constants.ChallengeFilterOption[]) => {
+        const { status, error, data, fetchStatus, refetch } = useQuery({
+            queryKey: [Keys.CHALLENGE_SUMMARIES_QUERY_KEY, filters],
+            queryFn: async () => ChallengeController.getFilteredSummaries(filters),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return {
+            isLoading: status === 'loading' && fetchStatus !== 'idle',
+            fetchStatus,
+            data,
+            refetch,
+        };
     };
 
     export const useChallengeDetails = (id: number) => {
