@@ -70,6 +70,7 @@ export const HabitJourney = () => {
                 <Banner name="Habit Journey" innerRightPoints={true} />
                 <TabView
                     navigationState={{ index, routes }}
+                    swipeEnabled={false}
                     renderScene={renderScene}
                     onIndexChange={indexChanged}
                     renderTabBar={(props: any) => (

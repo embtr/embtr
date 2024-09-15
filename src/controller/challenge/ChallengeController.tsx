@@ -1,4 +1,4 @@
-import { ChallengeParticipant, Comment } from 'resources/schema';
+import { ChallengeParticipant, Comment, Tag } from 'resources/schema';
 import { Interactable } from 'resources/types/interactable/Interactable';
 import {
     GetChallengeDetailsResponse,
@@ -44,11 +44,12 @@ export class ChallengeController {
     }
 
     public static async getFilteredSummaries(
-        filters: Constants.ChallengeFilterOption[]
+        filters: Constants.ChallengeFilterOption[],
+        tags: string[]
     ): Promise<ChallengeSummary[] | undefined> {
         return axiosInstance
             .get<GetChallengesSummariesResponse>(`/challenge/summary`, {
-                params: { filters: filters.join(',') },
+                params: { filters: filters.join(','), tags: tags.join(',') },
             })
             .then((result) => {
                 return result.data.challengesSummaries;
@@ -260,10 +261,13 @@ export namespace ChallengeCustomHooks {
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data, refetch };
     };
 
-    export const useFilteredChallengeSummaries = (filters: Constants.ChallengeFilterOption[]) => {
-        const { status, error, data, fetchStatus, refetch } = useQuery({
-            queryKey: [Keys.CHALLENGE_SUMMARIES_QUERY_KEY, filters],
-            queryFn: async () => ChallengeController.getFilteredSummaries(filters),
+    export const useFilteredChallengeSummaries = (
+        filters: Constants.ChallengeFilterOption[],
+        tags: string[]
+    ) => {
+        const { status, error, data, fetchStatus, refetch, isFetching } = useQuery({
+            queryKey: [Keys.CHALLENGE_SUMMARIES_QUERY_KEY, filters, tags],
+            queryFn: async () => ChallengeController.getFilteredSummaries(filters, tags),
             staleTime: ReactQueryStaleTimes.INSTANTLY,
         });
 
@@ -272,6 +276,7 @@ export namespace ChallengeCustomHooks {
             fetchStatus,
             data,
             refetch,
+            isFetching,
         };
     };
 

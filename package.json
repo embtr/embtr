@@ -1,6 +1,6 @@
 {
   "name": "embtr",
-  "version": "5.0.27",
+  "version": "5.0.28",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "npx expo start",

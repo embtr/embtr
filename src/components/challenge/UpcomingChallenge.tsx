@@ -2,6 +2,7 @@ import React from 'react';
 import {
     CARD_SHADOW,
     PADDING_LARGE,
+    PADDING_MEDIUM,
     PADDING_SMALL,
     POPPINS_MEDIUM,
     POPPINS_REGULAR,
@@ -31,6 +32,9 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
 
     const interactableData =
         ChallengeSummaryInteractableElementCustomHooks.useInteractableElement(challengeSummary);
+
+    let tagName = challengeSummary.tag.name ?? '';
+    tagName = tagName.charAt(0).toUpperCase() + tagName.slice(1).toLowerCase();
 
     const participantCount = challengeSummary.participantCount ?? 0;
     const userIsAParticipant = challengeSummary.isParticipant;
@@ -97,17 +101,54 @@ export const UpcomingChallenge = ({ challengeSummary }: Props) => {
                 {/* TOP SECTION */}
                 <View>
                     {/* HEADER */}
-                    <View>
-                        <Text
-                            numberOfLines={1}
+                    <View style={{ width: '100%' }}>
+                        <View
                             style={{
-                                color: colors.text,
-                                fontFamily: POPPINS_MEDIUM,
-                                fontSize: 16,
+                                width: '100%',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'center', // Ensures proper vertical alignment
                             }}
                         >
-                            {challengeSummary.name}
-                        </Text>
+                            <Text
+                                numberOfLines={1}
+                                ellipsizeMode="tail"
+                                style={{
+                                    flex: 1, // Allows the text to take up available space but not push the tag out
+                                    color: colors.text,
+                                    fontFamily: POPPINS_MEDIUM,
+                                    fontSize: 16,
+                                }}
+                            >
+                                {challengeSummary.name}
+                            </Text>
+
+                            <View
+                                style={{
+                                    marginBottom: PADDING_MEDIUM,
+                                    backgroundColor: challengeSummary.tag.color,
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 2,
+                                    borderRadius: 50,
+                                    flexShrink: 1, // Ensures the tag container doesn't expand too much
+                                    maxWidth: '40%', // Optional: Limit the width of the tag container
+                                }}
+                            >
+                                <Text
+                                    numberOfLines={1} // Adds truncation for the tagName if needed
+                                    ellipsizeMode="tail"
+                                    style={{
+                                        includeFontPadding: false,
+                                        fontFamily: POPPINS_SEMI_BOLD,
+                                        fontSize: 9,
+                                        color: colors.text,
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    {tagName}
+                                </Text>
+                            </View>
+                        </View>
 
                         <View>
                             <Text

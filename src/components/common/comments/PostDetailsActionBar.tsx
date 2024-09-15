@@ -12,6 +12,57 @@ import LottieView from 'lottie-react-native';
 import { wait } from 'src/util/GeneralUtility';
 import { InteractableData } from 'src/components/timeline/interactable/InteractableElementCustomHooks';
 
+const onMenuPressed = (interactableData: InteractableData) => {
+    Alert.alert(
+        'Advanced Options',
+        '',
+        [
+            {
+                text: 'Cancel',
+                onPress: () => { },
+                style: 'cancel',
+            },
+            {
+                text: 'Report Post',
+                onPress: () => {
+                    interactableData.report();
+                    Alert.alert(
+                        'Reported',
+                        'The post has been reported. Thank you for your feedback.',
+                        [
+                            {
+                                text: 'OK',
+                                onPress: () => { },
+                            },
+                        ]
+                    );
+                },
+                style: 'destructive',
+            },
+        ],
+        { cancelable: true }
+    );
+};
+
+const onHeartPressed = async (
+    interactableData: InteractableData,
+    setIsAnimating: Function,
+    animation: React.RefObject<LottieView>
+) => {
+    if (interactableData.isLiked) {
+        return;
+    }
+
+    animation.current?.play();
+    setIsAnimating(true);
+    wait(1000).then(() => {
+        animation.current?.reset();
+        setIsAnimating(false);
+    });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    interactableData.onLike();
+};
+
 interface Props {
     interactableData: InteractableData;
     isCurrentUser: boolean;
@@ -33,37 +84,7 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
-            onPress={() => {
-                Alert.alert(
-                    'Advanced Options',
-                    '',
-                    [
-                        {
-                            text: 'Cancel',
-                            onPress: () => { },
-                            style: 'cancel',
-                        },
-                        {
-                            text: 'Report Post',
-                            onPress: async () => {
-                                await interactableData.report();
-                                Alert.alert(
-                                    'Reported',
-                                    'The post has been reported. Thank you for your feedback.',
-                                    [
-                                        {
-                                            text: 'OK',
-                                            onPress: () => { },
-                                        },
-                                    ]
-                                );
-                            },
-                            style: 'destructive',
-                        },
-                    ],
-                    { cancelable: true }
-                );
-            }}
+            onPress={() => onMenuPressed(interactableData)}
         >
             <Ionicons
                 name={'ellipsis-horizontal-outline'}
@@ -72,21 +93,6 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
             />
         </Pressable>
     );
-
-    const onHeartPressed = () => {
-        if (interactableData.isLiked) {
-            return;
-        }
-
-        animation.current?.play();
-        setIsAnimating(true);
-        wait(1000).then(() => {
-            animation.current?.reset();
-            setIsAnimating(false);
-        });
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        interactableData.onLike();
-    };
 
     return (
         <View style={{ padding: padding ?? undefined }}>
@@ -116,7 +122,13 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                 </View>
 
                 <View style={{ flexDirection: 'row' }}>
-                    <Pressable onPress={interactableData.isLiked ? undefined : onHeartPressed}>
+                    <Pressable
+                        onPress={
+                            interactableData.isLiked
+                                ? undefined
+                                : () => onHeartPressed(interactableData, setIsAnimating, animation)
+                        }
+                    >
                         <View style={{ width: TIMELINE_CARD_ICON_SIZE }}>
                             <Ionicons
                                 style={{ display: isAnimating ? 'none' : undefined }}
@@ -165,23 +177,7 @@ const PostDetailsActionBar = ({ interactableData, padding, isCurrentUser }: Prop
                 </View>
 
                 <View style={{ flex: 1 }} />
-                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    {menu}
-                    {/*<Pressable*/}
-                    {/*    style={{*/}
-                    {/*        flexDirection: 'row',*/}
-                    {/*        justifyContent: 'center',*/}
-                    {/*        alignItems: 'center',*/}
-                    {/*    }}*/}
-                    {/*    onPress={() => {}}*/}
-                    {/*>*/}
-                    {/*    <Ionicons*/}
-                    {/*        name={'share-outline'}*/}
-                    {/*        size={TIMELINE_CARD_ICON_SIZE}*/}
-                    {/*        color={colors.secondary_text}*/}
-                    {/*    />*/}
-                    {/*</Pressable>*/}
-                </View>
+                <View style={{ alignItems: 'center', justifyContent: 'center' }}>{menu}</View>
             </View>
         </View>
     );

@@ -1,10 +1,9 @@
 import { Pressable, Text } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
 import { PADDING_SMALL } from 'src/util/constants';
-import { Constants } from 'resources/types/constants/constants';
 
 interface Props {
-    option: Constants.ChallengeFilterOption;
+    option: string;
     selected: boolean;
     onPressed: Function;
 }

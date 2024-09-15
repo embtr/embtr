@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from 'src/redux/store';
 import { EmbtrMenuOptions } from 'src/components/common/menu/EmbtrMenuOption';
-import { User } from 'resources/schema';
+import { Tag, User } from 'resources/schema';
 import {
     AppleAuthUserInfo,
     DEFAULT_APPLE_AUTH_USER_INFO,
@@ -50,6 +50,7 @@ const INITIAL_STATE: GlobalState = {
     appleAuthUserInfo: DEFAULT_APPLE_AUTH_USER_INFO,
     tutorialIslandState: INVALID_FLOW_STATE,
     challengeFilters: [],
+    challengeTagFilters: [],
 };
 
 interface GlobalState {
@@ -79,6 +80,7 @@ interface GlobalState {
     appleAuthUserInfo: AppleAuthUserInfo;
     tutorialIslandState: TutorialIslandFlowState;
     challengeFilters: Constants.ChallengeFilterOption[];
+    challengeTagFilters: Tag[];
 }
 
 const initialState: GlobalState = INITIAL_STATE;
@@ -146,6 +148,8 @@ export const GlobalState = createSlice({
                 flow: TutorialIslandInvalidFlow,
                 currentStepKey: TutorialIslandStepKey.INVALID,
             };
+            state.challengeFilters = [Constants.ChallengeFilterOption.INVALID];
+            state.challengeTagFilters = [];
         },
         setUpdateModalPlannedTask(state, action: { payload: UpdateModalPlannedTask }) {
             state.updateModalPlannedTask = action.payload;
@@ -179,6 +183,9 @@ export const GlobalState = createSlice({
         },
         setChallengeFilters(state, action) {
             state.challengeFilters = action.payload;
+        },
+        setChallengeTagFilters(state, action) {
+            state.challengeTagFilters = action.payload;
         },
     },
 });
@@ -387,6 +394,14 @@ export const getChallengeFilters = (state: RootState): Constants.ChallengeFilter
     return state.globalState.challengeFilters;
 };
 
+export const getChallengeTagFilters = (state: RootState): Tag[] => {
+    if (state?.globalState.challengeTagFilters === undefined) {
+        return INITIAL_STATE.challengeTagFilters;
+    }
+
+    return state.globalState.challengeTagFilters;
+};
+
 export const {
     setMenuOptions,
     setOpenMenu,
@@ -414,4 +429,5 @@ export const {
     setAppleAuthUserInfo,
     setTutorialIslandState,
     setChallengeFilters,
+    setChallengeTagFilters,
 } = GlobalState.actions;

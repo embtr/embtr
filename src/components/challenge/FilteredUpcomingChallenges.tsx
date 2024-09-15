@@ -1,11 +1,20 @@
-import { RefreshControl, ScrollView, View } from 'react-native';
+import { RefreshControl, ScrollView, Text, View } from 'react-native';
 import { useTheme } from '../theme/ThemeProvider';
-import { ChallengeCustomHooks } from 'src/controller/challenge/ChallengeController';
+import {
+    ChallengeController,
+    ChallengeCustomHooks,
+} from 'src/controller/challenge/ChallengeController';
 import { UpcomingChallenge } from './UpcomingChallenge';
-import { PADDING_LARGE } from 'src/util/constants';
-import { useAppSelector } from 'src/redux/Hooks';
-import { getChallengeFilters } from 'src/redux/user/GlobalState';
+import { PADDING_LARGE, POPPINS_MEDIUM, POPPINS_REGULAR } from 'src/util/constants';
+import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import {
+    getChallengeFilters,
+    getChallengeTagFilters,
+    setGlobalLoading,
+} from 'src/redux/user/GlobalState';
 import { ChallengeSummary } from 'resources/types/dto/Challenge';
+import { Constants } from 'resources/types/constants/constants';
+import { DEFAULT_CHALLENGE_FILTERS } from './ChallengeTagFilters';
 
 interface Props {
     challengeSummaries: ChallengeSummary[];
@@ -16,7 +25,6 @@ export const FilteredUpcomingChallengesImpl = ({ challengeSummaries }: Props) =>
     const challengeElements: JSX.Element[] = [];
     for (const challengeSummary of challengeSummaries) {
         const challengeElement = (
-            // to do - improve3 this rendering
             <UpcomingChallenge key={challengeSummary.id} challengeSummary={challengeSummary} />
         );
         challengeElements.push(challengeElement);
@@ -40,19 +48,54 @@ export const FilteredUpcomingChallengesImpl = ({ challengeSummaries }: Props) =>
                     colors={[colors.accent_color_light]}
                     progressBackgroundColor={'white'}
                     refreshing={false}
-                    onRefresh={() => { }}
+                    onRefresh={() => {
+                        ChallengeController.invalidateAllChallengeSummaries();
+                    }}
                 />
             }
         >
             {challengeViews}
+
+            {challengeSummaries.length === 0 && (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontFamily: POPPINS_MEDIUM, color: colors.text }}>
+                        No Challenges Found
+                    </Text>
+
+                    <Text
+                        style={{
+                            fontFamily: POPPINS_REGULAR,
+                            color: colors.secondary_text,
+                            fontSize: 13,
+                        }}
+                    >
+                        change filters to see more
+                    </Text>
+                </View>
+            )}
             <View style={{ height: PADDING_LARGE }} />
         </ScrollView>
     );
 };
 
 export const FilteredUpcomingChallenges = () => {
-    const filters = useAppSelector(getChallengeFilters);
-    const challengeSummaries = ChallengeCustomHooks.useFilteredChallengeSummaries(filters);
+    let filters = useAppSelector(getChallengeFilters);
+    if (filters.length === 1 && filters[0] === Constants.ChallengeFilterOption.INVALID) {
+        filters = [...DEFAULT_CHALLENGE_FILTERS];
+    }
+
+    const tags = useAppSelector(getChallengeTagFilters);
+    const tagNames = tags.map((tag) => tag.name ?? '');
+
+    const challengeSummaries = ChallengeCustomHooks.useFilteredChallengeSummaries(
+        filters,
+        tagNames
+    );
+
+    const dispatch = useAppDispatch();
+    if (challengeSummaries.isFetching === false) {
+        dispatch(setGlobalLoading(false));
+    }
 
     if (!challengeSummaries.data) {
         return null;

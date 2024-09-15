@@ -11,6 +11,18 @@ export class ChallengeUtility {
             return `starts tomorrow`;
         }
 
+        if (daysRemaining === 0) {
+            return 'ends today';
+        }
+
+        if (daysRemaining === 1) {
+            return 'ends tomorrow';
+        }
+
+        if (daysRemaining < 0) {
+            return 'ended';
+        }
+
         return `${daysRemaining} day${daysRemaining === 1 ? '' : 's'} left`;
     }
 

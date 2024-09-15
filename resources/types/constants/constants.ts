@@ -403,4 +403,25 @@ export namespace Constants {
                 return ChallengeFilterOption.INVALID;
         }
     };
+
+    export enum TagCategory {
+        INVALID = 'INVALID',
+        DEFAULT = 'DEFAULT',
+        ICON = 'ICON',
+        CHALLENGE = 'CHALLENGE',
+    }
+
+    export const getTagCategory = (category: string): TagCategory => {
+        switch (category) {
+            case 'DEFAULT':
+                return TagCategory.DEFAULT;
+            case 'ICON':
+                return TagCategory.ICON;
+            case 'CHALLENGE':
+                return TagCategory.CHALLENGE;
+
+            default:
+                return TagCategory.INVALID;
+        }
+    };
 }

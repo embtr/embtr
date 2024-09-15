@@ -4,16 +4,23 @@ import { PADDING_LARGE } from 'src/util/constants';
 import React from 'react';
 import { Constants } from 'resources/types/constants/constants';
 import { useAppDispatch } from 'src/redux/Hooks';
-import { setChallengeFilters } from 'src/redux/user/GlobalState';
+import { setChallengeFilters, setGlobalLoading } from 'src/redux/user/GlobalState';
+
+export const DEFAULT_CHALLENGE_FILTERS = [
+    Constants.ChallengeFilterOption.UPCOMING,
+    Constants.ChallengeFilterOption.ONGOING,
+];
 
 const ItemSeparatorComponent = () => {
     return <View style={{ width: PADDING_LARGE }} />;
 };
 
-export const ChallengeFilters = () => {
+export const ChallengeGeneralFilters = () => {
     const dispatch = useAppDispatch();
 
-    const [selected, setSelected] = React.useState<Constants.ChallengeFilterOption[]>([]);
+    const [selected, setSelected] = React.useState<Constants.ChallengeFilterOption[]>([
+        ...DEFAULT_CHALLENGE_FILTERS,
+    ]);
     const options = Object.values(Constants.ChallengeFilterOption).filter(
         (value) => value !== Constants.ChallengeFilterOption.INVALID
     );
@@ -28,6 +35,7 @@ export const ChallengeFilters = () => {
 
             setSelected(newSelected);
 
+            dispatch(setGlobalLoading(true));
             setTimeout(() => {
                 dispatch(setChallengeFilters(newSelected));
             }, 0);
@@ -43,7 +51,7 @@ export const ChallengeFilters = () => {
     };
 
     return (
-        <View style={{ paddingHorizontal: PADDING_LARGE }}>
+        <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
             <FlatList
                 data={options}
                 renderItem={renderChallengeFilterOption}
