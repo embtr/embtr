@@ -118,11 +118,8 @@ const conditionallyFirePoints = (
     const cutoffDate = PureDate.fromString('2024-08-01');
 
     if (habitPureDate < cutoffDate) {
-        console.log('Skipping points for date', habitPureDate);
         return;
     }
-
-    console.log('Firing points', points);
 
     LevelController.clearDebounce();
     LevelController.addPointsToLevelDetails(userId, points);
@@ -171,27 +168,17 @@ export const PlannableTaskImproved = ({
         onAction: async () => {
             WebSocketService.connectIfNotConnected();
 
-            const wasComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(
-                plannedDay,
-                [],
-                []
-            );
+            const wasComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(plannedDay);
 
             const originalStatus = plannedTask.status;
 
             if (showReset) {
                 plannedDay.plannedTasks?.forEach((task) => {
-                    const isThePlannedTask =
-                        task.scheduledHabitId === plannedTask.scheduledHabitId &&
-                        task.timeOfDayId === plannedTask.timeOfDayId &&
-                        task.originalTimeOfDayId === plannedTask.originalTimeOfDayId;
-
-                    if (
-                        (task.id && plannedTask.id && task.id === plannedTask.id) ||
-                        isThePlannedTask
-                    ) {
+                    const isThePlannedTask = PlannedTaskUtil.isThePlannedTask(task, plannedTask);
+                    if (isThePlannedTask) {
                         task.status = Constants.CompletionState.INCOMPLETE;
                         task.completedQuantity = 0;
+                        return;
                     }
                 });
 
@@ -201,12 +188,7 @@ export const PlannableTaskImproved = ({
                     completedQuantity: 0,
                 });
 
-                const isComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(
-                    plannedDay,
-                    [],
-                    []
-                );
-
+                const isComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(plannedDay);
                 PlannedDayController.setPlannedDayIsComplete(currentUserId, dayKey, isComplete);
 
                 if (wasComplete && !isComplete) {
@@ -227,10 +209,7 @@ export const PlannableTaskImproved = ({
                 PlannedTaskService.incomplete(plannedTask, dayKey);
             } else {
                 plannedDay.plannedTasks?.forEach((task) => {
-                    const isThePlannedTask =
-                        task.scheduledHabitId === plannedTask.scheduledHabitId &&
-                        task.timeOfDayId === plannedTask.timeOfDayId &&
-                        task.originalTimeOfDayId === plannedTask.originalTimeOfDayId;
+                    const isThePlannedTask = PlannedTaskUtil.isThePlannedTask(task, plannedTask);
 
                     if (
                         (task.id && plannedTask.id && task.id === plannedTask.id) ||
@@ -238,6 +217,7 @@ export const PlannableTaskImproved = ({
                     ) {
                         task.status = Constants.CompletionState.COMPLETE;
                         task.completedQuantity = plannedTask.quantity;
+                        return;
                     }
                 });
 
@@ -249,11 +229,13 @@ export const PlannableTaskImproved = ({
 
                 const isComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(
                     plannedDay,
-                    [plannedTask],
-                    []
+                    plannedTask
                 );
-
                 PlannedDayController.setPlannedDayIsComplete(currentUserId, dayKey, isComplete);
+
+                plannedDay.status = isComplete
+                    ? Constants.CompletionState.COMPLETE
+                    : Constants.CompletionState.INCOMPLETE;
 
                 if (isComplete) {
                     fireConfetti();
@@ -269,9 +251,6 @@ export const PlannableTaskImproved = ({
 
                 PlannedTaskService.complete(plannedTask, dayKey);
             }
-
-            //PlannedDayController.setPlannedDay(currentUserId, dayKey, plannedDay);
-            //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
         },
         snapPoint: 100,
     };
@@ -281,6 +260,7 @@ export const PlannableTaskImproved = ({
             text: 'Skip',
             color: colors.progress_bar_skipped,
             onAction: async () => {
+                const wasComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(plannedDay);
                 const originalStatus = plannedTask.status;
 
                 setPlannedTask({
@@ -298,15 +278,30 @@ export const PlannableTaskImproved = ({
                     );
                 }
 
+                const isComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(
+                    plannedDay,
+                    plannedTask
+                );
+
+                PlannedDayController.setPlannedDayIsComplete(currentUserId, dayKey, isComplete);
+
+                if (!wasComplete && isComplete) {
+                    fireConfetti();
+
+                    setTimeout(() => {
+                        conditionallyFirePoints(currentUserId, firePoints, 300, dayKey);
+                    }, 250);
+                }
+
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 PlannedTaskService.skip(plannedTask, dayKey);
 
                 plannedDay.plannedTasks?.forEach((task) => {
-                    if (task.id === plannedTask.id) {
+                    const isThePlannedTask = PlannedTaskUtil.isThePlannedTask(task, plannedTask);
+                    if (isThePlannedTask) {
                         task.status = Constants.CompletionState.SKIPPED;
                     }
                 });
-                //PlannedDayController.setPlannedDay(currentUserId, dayKey, plannedDay);
                 //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
         },
@@ -314,6 +309,7 @@ export const PlannableTaskImproved = ({
             text: 'Fail',
             color: colors.progress_bar_failed,
             onAction: async () => {
+                const wasComplete = PlannedDayUtil.getAllHabitsAreCompleteOptimistic(plannedDay);
                 const originalStatus = plannedTask.status;
 
                 setPlannedTask({
@@ -331,15 +327,24 @@ export const PlannableTaskImproved = ({
                     );
                 }
 
+                if (wasComplete) {
+                    fireConfetti();
+
+                    setTimeout(() => {
+                        conditionallyFirePoints(currentUserId, firePoints, -300, dayKey);
+                    }, 250);
+                }
+
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 PlannedTaskService.fail(plannedTask, dayKey);
 
                 plannedDay.plannedTasks?.forEach((task) => {
-                    if (task.id === plannedTask.id) {
+                    const isThePlannedTask = PlannedTaskUtil.isThePlannedTask(task, plannedTask);
+                    if (isThePlannedTask) {
                         task.status = Constants.CompletionState.FAILED;
                     }
                 });
-                //PlannedDayController.setPlannedDay(currentUserId, dayKey, plannedDay);
+
                 //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
         },

@@ -53,7 +53,6 @@ export const AddHabitCategory = ({ id, type }: Props) => {
     const elements: JSX.Element[] = [];
 
     currentHabitCategory?.tasks?.forEach((task) => {
-        console.log(task);
         const optimalImageData: OptimalImageData = {
             icon: task.icon,
         };

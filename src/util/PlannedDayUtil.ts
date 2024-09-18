@@ -1,5 +1,6 @@
 import { PlannedDay, PlannedTask } from 'resources/schema';
 import { Constants } from 'resources/types/constants/constants';
+import { PlannedTaskUtil } from './PlannedTaskUtil';
 
 export namespace PlannedDayUtil {
     export const getAllHabitsAreComplete = (plannedDay: PlannedDay): boolean => {
@@ -27,8 +28,7 @@ export namespace PlannedDayUtil {
 
     export const getAllHabitsAreCompleteOptimistic = (
         plannedDay: PlannedDay,
-        plannedTaskIdsToAssumeComplete: PlannedTask[],
-        plannedTaskIdsToAssumeIncomplete: PlannedTask[]
+        plannedTaskToAssumeComplete?: PlannedTask
     ): boolean => {
         const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
         if (!hasPlannedTasks) {
@@ -36,35 +36,11 @@ export namespace PlannedDayUtil {
         }
 
         for (const task of plannedDay.plannedTasks ?? []) {
-            if (
-                plannedTaskIdsToAssumeIncomplete?.some((plannedTask) => {
-                    const isThePlannedTask =
-                        task.scheduledHabitId === plannedTask.scheduledHabitId &&
-                        task.timeOfDayId === plannedTask.timeOfDayId &&
-                        task.originalTimeOfDayId === plannedTask.originalTimeOfDayId;
+            const isPlannedTaskToAssumeComplete =
+                plannedTaskToAssumeComplete &&
+                PlannedTaskUtil.isThePlannedTask(task, plannedTaskToAssumeComplete);
 
-                    return (
-                        (task.id && plannedTask.id && task.id === plannedTask.id) ||
-                        isThePlannedTask
-                    );
-                })
-            ) {
-                return false;
-            }
-
-            if (
-                plannedTaskIdsToAssumeComplete?.some((plannedTask) => {
-                    const isThePlannedTask =
-                        task.scheduledHabitId === plannedTask.scheduledHabitId &&
-                        task.timeOfDayId === plannedTask.timeOfDayId &&
-                        task.originalTimeOfDayId === plannedTask.originalTimeOfDayId;
-
-                    return (
-                        (task.id && plannedTask.id && task.id === plannedTask.id) ||
-                        isThePlannedTask
-                    );
-                })
-            ) {
+            if (isPlannedTaskToAssumeComplete) {
                 continue;
             }
 

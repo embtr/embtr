@@ -4,7 +4,7 @@ import { Constants } from 'resources/types/constants/constants';
 import { WebSocketPayload } from 'resources/types/requests/WebSocket';
 import { Socket, io } from 'socket.io-client';
 import UserController from 'src/controller/user/UserController';
-import { useAppDispatch, useAppSelector } from 'src/redux/Hooks';
+import { useAppSelector } from 'src/redux/Hooks';
 import {
     getCurrentUser,
     getDisplayDropDownAlert,
@@ -18,6 +18,9 @@ import { PointCustomHooks } from 'src/controller/PointController';
 import PlannedDayController from 'src/controller/planning/PlannedDayController';
 import { getUserIdFromToken } from 'src/util/user/CurrentUserUtil';
 import { LevelController } from 'src/controller/level/LevelController';
+import { UserPropertyUtil } from 'src/util/UserPropertyUtil';
+
+// Stuck in WebSocket limbo, dreaming of simplicity - TheIbraDev - 2024-09-18
 
 export class WebSocketService {
     private static socket: Socket = io(getApiUrl(), {
@@ -60,6 +63,7 @@ export namespace WebSocketCustomHooks {
         const fireConfetti = useAppSelector(getFireConfetti);
         const currentUser = useAppSelector(getCurrentUser);
         const firePoints = useAppSelector(getFirePoints);
+        const displayDropDownAlert = useAppSelector(getDisplayDropDownAlert);
         const dayCompletePoints = PointCustomHooks.useDayCompletePoints();
 
         React.useEffect(() => {
@@ -138,8 +142,6 @@ export namespace WebSocketCustomHooks {
                 Constants.WebSocketEventType.HABIT_STREAK_UPDATED,
                 (payload: WebSocketPayload) => {
                     UserController.invalidateUserHabitStreakTier(currentUser.id ?? 0);
-                    UserController.invalidateUser(currentUser.uid ?? '');
-                    UserController.invalidateCurrentUser();
                 }
             );
 
@@ -156,7 +158,12 @@ export namespace WebSocketCustomHooks {
                 Constants.WebSocketEventType.LEVEL_DETAILS_UPDATED,
                 (payload: WebSocketPayload) => {
                     const levelDetails = payload.payload.levelDetails;
-                    LevelController.debounceLevelDetails(currentUser.id ?? 0, levelDetails);
+                    LevelController.debounceLevelDetails(
+                        currentUser.id ?? 0,
+                        levelDetails,
+                        displayDropDownAlert,
+                        fireConfetti
+                    );
 
                     /*
                     // send to some service to debounce it
@@ -190,7 +197,7 @@ export namespace WebSocketCustomHooks {
         React.useEffect(() => {
             socket.on(Constants.WebSocketEventType.USER_UPDATED, (payload: WebSocketPayload) => {
                 //UserController.refreshCurrentUser();
-                UserController.invalidateCurrentUser();
+                //UserController.invalidateCurrentUser();
             });
 
             return () => {

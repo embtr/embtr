@@ -69,4 +69,20 @@ export namespace PlannedTaskUtil {
     export const getUnit = (plannedTask?: PlannedTask) => {
         return plannedTask?.unit ?? plannedTask?.scheduledHabit?.unit;
     };
+
+    export const isThePlannedTask = (
+        plannedTaskA: PlannedTask,
+        plannedTaskB: PlannedTask
+    ): boolean => {
+        if (plannedTaskA.id && plannedTaskB.id && plannedTaskA.id === plannedTaskB.id) {
+            return true;
+        }
+
+        const isThePlannedTask =
+            plannedTaskA.scheduledHabitId === plannedTaskB.scheduledHabitId &&
+            plannedTaskA.timeOfDayId === plannedTaskB.timeOfDayId &&
+            plannedTaskA.originalTimeOfDayId === plannedTaskB.originalTimeOfDayId;
+
+        return isThePlannedTask;
+    };
 }

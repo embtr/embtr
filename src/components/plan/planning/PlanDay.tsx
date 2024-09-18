@@ -1,17 +1,14 @@
 import React from 'react';
-import { Animated, Easing, View } from 'react-native';
+import { View } from 'react-native';
 import { MemoizedPlannableTaskImproved } from '../PlannableTaskImproved';
 import { PlannedDay, PlannedTask } from 'resources/schema';
 import { PADDING_LARGE } from 'src/util/constants';
 import { FlatList } from 'react-native-gesture-handler';
 import { PlanningService } from 'src/util/planning/PlanningService';
 import { PlanDayHeader } from './PlanDayHeader';
-import { PlanDayHeaderGuest } from 'src/components/plan/planning/PlanDayHeaderGuest';
 import { TimeOfDayDivider } from 'src/components/plan/TimeOfDayDivider';
 import { getCurrentUser } from 'src/redux/user/GlobalState';
 import { useAppSelector } from 'src/redux/Hooks';
-import { Constants } from 'resources/types/constants/constants';
-import { PlannedDayCustomHooks } from 'src/controller/planning/PlannedDayController';
 
 const isPlannedTask = (item: PlannedTask | TimeOfDayDivider): item is PlannedTask => {
     return 'completedQuantity' in item;
@@ -83,54 +80,20 @@ const buildElementList = (plannedSections: PlanningSections): Array<PlannedTask>
     return elements;
 };
 
-const getAllHabitsAreComplete = (plannedDay: PlannedDay): boolean => {
-    const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
-
-    const allHabitsAreComplete =
-        hasPlannedTasks &&
-        plannedDay.plannedTasks?.reduce(
-            (acc, task) =>
-                acc &&
-                (task.status === Constants.CompletionState.FAILED ||
-                    task.status === Constants.CompletionState.SKIPPED ||
-                    (task.completedQuantity ?? 0) >= (task.quantity ?? 1)),
-            true
-        );
-
-    return allHabitsAreComplete ?? false;
-};
-
 interface Props {
     plannedDay: PlannedDay;
     dayKey: string;
     hideComplete?: boolean;
 }
 
-const runAnimation = (expand: boolean, viewHeight: Animated.Value, maxHeight: number) => {
-    Animated.timing(viewHeight, {
-        toValue: expand ? maxHeight : 0, // Set the desired height
-        duration: 125, // Adjust the duration as needed
-        easing: Easing.ease, // Adjust the easing function as needed
-        useNativeDriver: false, // Make sure to set this to false for height animation
-    }).start();
-};
-
 export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     const [elements, setElements] = React.useState<PlanningSections>(defaultPlannedSections);
-    const [detailsViewHeight] = React.useState<Animated.Value>(new Animated.Value(60));
 
     const currentUser = useAppSelector(getCurrentUser);
     const currentUserId = currentUser.id;
     const isCurrentUser = plannedDay.userId === currentUserId;
 
     const hasPlannedTasks = plannedDay.plannedTasks && plannedDay.plannedTasks.length > 0;
-    const allHabitsAreComplete = PlannedDayCustomHooks.usePlannedDayIsComplete(dayKey);
-
-    React.useEffect(() => {
-        const expand = !hasPlannedTasks || allHabitsAreComplete;
-        const expandHeight = !hasPlannedTasks ? 60 : 60 + PADDING_LARGE;
-        runAnimation(expand ?? false, detailsViewHeight, expandHeight);
-    }, [allHabitsAreComplete, hasPlannedTasks, dayKey]);
 
     React.useEffect(() => {
         const allPlannedTasks = hideComplete
@@ -150,26 +113,8 @@ export const PlanDay = ({ plannedDay, hideComplete, dayKey }: Props) => {
     }, [plannedDay, hideComplete]);
 
     const header = isCurrentUser ? (
-        <Animated.View
-            style={{
-                height: detailsViewHeight,
-                overflow: 'hidden',
-            }}
-        >
-            <PlanDayHeader
-                plannedDay={plannedDay}
-                hasPlannedTasks={hasPlannedTasks ?? false}
-                allHabitsAreComplete={allHabitsAreComplete ?? false}
-            />
-        </Animated.View>
-    ) : (
-        <PlanDayHeaderGuest
-            plannedDay={plannedDay}
-            hasPlannedTasks={hasPlannedTasks ?? false}
-            allHabitsAreComplete={allHabitsAreComplete ?? false}
-            dayKey={dayKey}
-        />
-    );
+        <PlanDayHeader hasPlannedTasks={hasPlannedTasks ?? false} />
+    ) : null;
 
     const renderItem = ({ item }: { item: PlannedTask | TimeOfDayDivider }) => {
         if (isPlannedTask(item)) {

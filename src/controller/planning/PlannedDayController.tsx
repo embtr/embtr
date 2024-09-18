@@ -292,10 +292,6 @@ class PlannedDayController {
         });
     }
 
-    public static async setPlannedDay(userId: number, dayKey: string, plannedDay: PlannedDay) {
-        reactQueryClient.setQueryData(['plannedDay', userId, dayKey], plannedDay);
-    }
-
     public static async invalidatePlannedDay(userId: number, dayKey: string) {
         reactQueryClient.invalidateQueries(['plannedDay', userId, dayKey]);
         //reactQueryClient.invalidateQueries(['plannedDayIsComplete', userId, dayKey]);
@@ -356,6 +352,22 @@ export namespace PlannedDayCustomHooks {
         const plannedDay = PlannedDayCustomHooks.usePlannedDay(user.id ?? 0, todayDayKey);
 
         return { todayDayKey, plannedDay };
+    };
+
+    export const useSelectedPlannedDayIsComplete = () => {
+        const dayKey = useAppSelector(getSelectedDayKey);
+        const currentUser = useAppSelector(getCurrentUser);
+        const userId = currentUser.id ?? 0;
+
+        const { data } = useQuery({
+            queryKey: ['plannedDayIsComplete', userId, dayKey],
+            queryFn: () => PlannedDayController.isComplete(userId, dayKey),
+            staleTime: ReactQueryStaleTimes.INFINITY,
+            enabled:
+                dayKey !== undefined && dayKey.length > 0 && userId !== undefined && userId > 0,
+        });
+
+        return data ?? false;
     };
 
     export const usePlannedDayIsComplete = (dayKey: string) => {

@@ -148,7 +148,6 @@ export const PlanningWidgetImproved = () => {
                 daysOfTheMonth={currentDayData.daysOfMonth}
             />
 
-            <View style={{ height: PADDING_LARGE }} />
             <PlanSelectedDay />
         </WidgetBase>
     );

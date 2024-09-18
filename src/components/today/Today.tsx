@@ -10,6 +10,7 @@ import { GetPremiumWidget } from '../widgets/GetPremiumWidget';
 import { AwayModeWidget } from '../widgets/AwayModeWidget';
 import { UserCustomHooks } from 'src/controller/user/UserController';
 import { User } from 'resources/schema';
+import { PlanDayFooter } from '../plan/planning/PlanDayFooter';
 
 interface Props {
     user: User;
@@ -21,7 +22,14 @@ export const TodayImpl = ({ user }: Props) => {
         <TodayPageLayoutContextProvider planningWidgetHeight={planningWidgetHeight}>
             <Screen>
                 <Banner name="Today" innerRightPoints={true} />
-                <View style={{ flex: 1, paddingHorizontal: PADDING_LARGE }}>
+                <View
+                    style={{
+                        flex: 1,
+                        paddingHorizontal: PADDING_LARGE,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
                     <ScrollView>
                         <GetPremiumWidget />
                         <AwayModeWidget user={user} />
@@ -39,6 +47,8 @@ export const TodayImpl = ({ user }: Props) => {
 
                         <View style={{ height: PADDING_LARGE * 1.5 }} />
                     </ScrollView>
+
+                    <PlanDayFooter />
                 </View>
             </Screen>
         </TodayPageLayoutContextProvider>

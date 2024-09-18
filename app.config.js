@@ -11,7 +11,9 @@ module.exports = ({ config }) => {
                         : //   ethernet
                         //'http://10.0.0.146:3000',
                         //   wifi
-                        'http://10.0.0.91:3000',
+                        //'http://10.0.0.91:3000',
+                        // other wifi
+                        'http://192.168.5.11:3000',
         },
     };
 };

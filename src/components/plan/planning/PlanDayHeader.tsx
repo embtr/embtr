@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
+import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { PlannedDay } from 'resources/schema';
 import { useTheme } from 'src/components/theme/ThemeProvider';
 import { Routes } from 'src/navigation/RootStackParamList';
-import { PADDING_LARGE, POPPINS_REGULAR } from 'src/util/constants';
+import { POPPINS_REGULAR } from 'src/util/constants';
 import { useEmbtrNavigation } from 'src/hooks/NavigationHooks';
 
 interface Styles {
@@ -46,74 +46,17 @@ const generateStyles = (colors: any): Styles => {
 };
 
 interface Props {
-    plannedDay: PlannedDay;
     hasPlannedTasks: boolean;
-    allHabitsAreComplete: boolean;
 }
 
-export const PlanDayHeader = ({ plannedDay, hasPlannedTasks, allHabitsAreComplete }: Props) => {
+export const PlanDayHeader = ({ hasPlannedTasks }: Props) => {
     const { colors } = useTheme();
     const styles = generateStyles(colors);
 
-    const plannedDayResultsAreShared = (plannedDay.plannedDayResults?.length ?? 0) > 0;
     const navigation = useEmbtrNavigation();
 
-    const navigateToCreatePlannedDayResult = () => {
-        navigation.navigate(Routes.CREATE_PLANNED_DAY_RESULT, { dayKey: plannedDay.dayKey ?? '' });
-    };
-
-    const navigateToPlannedDayResultDetails = () => {
-        const id = plannedDay.plannedDayResults?.[0]?.id;
-        if (!id) {
-            return;
-        }
-
-        navigation.navigate(Routes.PLANNED_DAY_RESULT_DETAILS, { id: id });
-    };
-
     let header = undefined;
-    if (allHabitsAreComplete) {
-        header = (
-            <View style={styles.container}>
-                <Text style={styles.topText}>All of today's habits are complete 🎉</Text>
-                {!plannedDayResultsAreShared ? (
-                    <View
-                        style={{
-                            flex: 1,
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={navigateToCreatePlannedDayResult}
-                            style={{
-                                backgroundColor: colors.accent_color,
-                                borderRadius: 2.5,
-                                marginHorizontal: PADDING_LARGE,
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    paddingVertical: PADDING_LARGE / 8,
-                                    lineHeight: 20,
-                                    color: colors.text,
-                                    textAlign: 'center',
-                                    fontFamily: POPPINS_REGULAR,
-                                }}
-                            >
-                                Share Your Results!
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                ) : (
-                    <View style={styles.bottomTextContainer}>
-                        <Text onPress={navigateToPlannedDayResultDetails} style={styles.bottomText}>
-                            View today's results
-                        </Text>
-                    </View>
-                )}
-            </View>
-        );
-    } else if (!hasPlannedTasks) {
+    if (!hasPlannedTasks) {
         header = (
             <View style={styles.container}>
                 <Text style={styles.topText}>No habits planned for today...</Text>
