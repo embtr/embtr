@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Routes, TimelineTabScreens } from 'src/navigation/RootStackParamList';
 import { Alert, View } from 'react-native';
 import DailyResultController, {
@@ -85,6 +85,9 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
                             PlannedDayController.prefetchPlannedDayData(
                                 plannedDayResult.plannedDay.dayKey
                             );
+                            DailyResultController.invalidateByDayKey(
+                                plannedDayResult.plannedDay.dayKey
+                            );
                         }
                         navigation.goBack();
                     },
@@ -157,7 +160,9 @@ export const DailyResultDetailsImplementation = ({ plannedDayResult }: DailyResu
 
 export const PlannedDayResultDetails = () => {
     const route = useEmbtrRoute(Routes.PLANNED_DAY_RESULT_DETAILS);
-    const plannedDayResult = PlannedDayResultCustomHooks.usePlannedDayResult(route.params.id);
+    const plannedDayResult = route.params.id
+        ? PlannedDayResultCustomHooks.usePlannedDayResult(route.params.id)
+        : PlannedDayResultCustomHooks.usePlannedDayResultByDayKey(route.params.dayKey ?? '');
 
     if (!plannedDayResult.data) {
         return <DailyResultDetailsPlaceholder />;

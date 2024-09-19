@@ -18,6 +18,7 @@ import { PlannedDayResultSummary } from 'resources/types/planned_day_result/Plan
 import { useQuery } from '@tanstack/react-query';
 import { ReactQueryStaleTimes } from 'src/util/constants';
 import { reactQueryClient } from 'src/react_query/ReactQueryClient';
+import { GetBooleanResponse } from 'resources/types/requests/GeneralTypes';
 
 class DailyResultController {
     public static readonly UPLOAD_BUCKET = 'daily_results';
@@ -50,17 +51,11 @@ class DailyResultController {
             });
     }
 
-    public static async getByPlannedDay(
-        plannedDay: PlannedDay
-    ): Promise<PlannedDayResult | undefined> {
-        if (!plannedDay.dayKey) {
-            return undefined;
-        }
-
+    public static async getByDayKey(dayKey: string): Promise<PlannedDayResult | undefined> {
         const userId = await getUserIdFromToken();
 
         return await axiosInstance
-            .get(`${PLANNED_DAY_RESULT}${userId}/${plannedDay.dayKey}`)
+            .get(`${PLANNED_DAY_RESULT}${userId}/${dayKey}`)
             .then((success) => {
                 const response = success.data as GetPlannedDayResultResponse;
                 return response.plannedDayResult;
@@ -124,6 +119,19 @@ class DailyResultController {
         return await CommentController.delete(Interactable.PLANNED_DAY_RESULT, comment);
     }
 
+    public static async existsByDayKey(dayKey: string): Promise<boolean> {
+        const userId = await getUserIdFromToken();
+
+        return await axiosInstance
+            .get<GetBooleanResponse>(`planned-day-result/${userId}/${dayKey}/exists`)
+            .then((success) => {
+                return success.data.result === true;
+            })
+            .catch((error) => {
+                return false;
+            });
+    }
+
     /*
      * OLD LOGIC
      */
@@ -139,6 +147,11 @@ class DailyResultController {
     public static async invalidate(id: number) {
         reactQueryClient.invalidateQueries(['plannedDayResult', id]);
     }
+
+    public static async invalidateByDayKey(dayKey: string) {
+        reactQueryClient.invalidateQueries(['plannedDayResult', dayKey]);
+        reactQueryClient.invalidateQueries(['plannedDayResultExists', dayKey]);
+    }
 }
 
 export default DailyResultController;
@@ -153,5 +166,31 @@ export namespace PlannedDayResultCustomHooks {
         });
 
         return { isLoading: status === 'loading' && fetchStatus !== 'idle', data };
+    };
+
+    export const usePlannedDayResultByDayKey = (dayKey: string) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['plannedDayResult', dayKey],
+            queryFn: async () => await DailyResultController.getByDayKey(dayKey),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return {
+            isLoading: status === 'loading' && fetchStatus !== 'idle',
+            data,
+        };
+    };
+
+    export const usePlannedDayResultExistsByDayKey = (dayKey: string) => {
+        const { status, error, data, fetchStatus } = useQuery({
+            queryKey: ['plannedDayResultExists', dayKey],
+            queryFn: async () => await DailyResultController.existsByDayKey(dayKey),
+            staleTime: ReactQueryStaleTimes.INSTANTLY,
+        });
+
+        return {
+            isLoading: status === 'loading' && fetchStatus !== 'idle',
+            data,
+        };
     };
 }

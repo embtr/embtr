@@ -90,7 +90,7 @@ export type MasterScreens = {
     EditUserPost: { id: number };
     UserPostDetails: { id: number };
     FeaturedPostDetails: { id: number };
-    PlannedDayResultDetails: { id: number };
+    PlannedDayResultDetails: { id?: number; dayKey?: string };
     FeatureVote: undefined;
 
     CreateEditScheduledHabit_SlideUp: {

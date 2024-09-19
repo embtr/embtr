@@ -32,7 +32,7 @@ export const TodaysPhotosWidget = () => {
         const imageUrls = await DailyResultController.uploadImages(onImageUploadProgressReport);
         const images: Image[] = createImages(imageUrls);
 
-        let plannedDayResult = await DailyResultController.getByPlannedDay(plannedDay);
+        let plannedDayResult = await DailyResultController.getByDayKey(plannedDay.dayKey);
         if (!plannedDayResult) {
             plannedDayResult = await DailyResultController.create(plannedDay.id ?? 0);
             if (plannedDayResult) {

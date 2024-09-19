@@ -45,7 +45,8 @@ export const TodayImpl = ({ user }: Props) => {
                             <PlanningWidgetImproved />
                         </View>
 
-                        <View style={{ height: PADDING_LARGE * 1.5 }} />
+                        {/* Add some padding to the bottom of the screen to make room for footer */}
+                        <View style={{ height: PADDING_LARGE * 6 }} />
                     </ScrollView>
 
                     <PlanDayFooter />

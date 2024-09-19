@@ -34,6 +34,7 @@ export const CreatePlannedDayResult = () => {
 
         await DailyResultController.create(plannedDayResult);
         DailyResultController.invalidate(plannedDayResult.id ?? 0);
+        DailyResultController.invalidateByDayKey(route.params.dayKey);
         PlannedDayController.invalidatePlannedDay(currentUserId.data, route.params.dayKey);
         TimelineController.invalidateCache();
 

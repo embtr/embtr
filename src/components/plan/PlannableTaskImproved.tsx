@@ -300,6 +300,7 @@ export const PlannableTaskImproved = ({
                     const isThePlannedTask = PlannedTaskUtil.isThePlannedTask(task, plannedTask);
                     if (isThePlannedTask) {
                         task.status = Constants.CompletionState.SKIPPED;
+                        return;
                     }
                 });
                 //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
@@ -328,8 +329,6 @@ export const PlannableTaskImproved = ({
                 }
 
                 if (wasComplete) {
-                    fireConfetti();
-
                     setTimeout(() => {
                         conditionallyFirePoints(currentUserId, firePoints, -300, dayKey);
                     }, 250);
@@ -342,8 +341,10 @@ export const PlannableTaskImproved = ({
                     const isThePlannedTask = PlannedTaskUtil.isThePlannedTask(task, plannedTask);
                     if (isThePlannedTask) {
                         task.status = Constants.CompletionState.FAILED;
+                        return;
                     }
                 });
+                PlannedDayController.setPlannedDayIsComplete(currentUserId, dayKey, false);
 
                 //PlannedDayController.invalidatePlannedDay(currentUserId, dayKey);
             },
