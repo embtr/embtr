@@ -78,11 +78,14 @@ export namespace PlannedTaskUtil {
             return true;
         }
 
-        const isThePlannedTask =
-            plannedTaskA.scheduledHabitId === plannedTaskB.scheduledHabitId &&
-            plannedTaskA.timeOfDayId === plannedTaskB.timeOfDayId &&
-            plannedTaskA.originalTimeOfDayId === plannedTaskB.originalTimeOfDayId;
+        const plannedTaskAUniqueIdentifier = getUniqueIdentifier(plannedTaskA);
+        const plannedTaskBUniqueIdentifier = getUniqueIdentifier(plannedTaskB);
+        const isThePlannedTask = plannedTaskAUniqueIdentifier === plannedTaskBUniqueIdentifier;
 
         return isThePlannedTask;
+    };
+
+    export const getUniqueIdentifier = (plannedTask: PlannedTask): string => {
+        return `${plannedTask.scheduledHabitId}${plannedTask.timeOfDayId}${plannedTask.originalTimeOfDayId}`;
     };
 }
