@@ -53,7 +53,7 @@ export const ChallengeRecentlyJoinedElement = ({
             <CardHeader
                 date={challengeRecentlyJoined.timelineTimestamp ?? new Date()}
                 user={user}
-                secondaryText={secondaryHeader}
+                subHeader={secondaryHeader}
                 type={TimelineElementType.RECENTLY_JOINED_CHALLENGE}
             />
 
